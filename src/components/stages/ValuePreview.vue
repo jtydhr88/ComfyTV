@@ -88,12 +88,27 @@
       <div v-if="compact" :class="compactSummary">
         <span class="ctv:text-[22px] ctv:leading-none"><i class="pi pi-volume-up" /></span>
       </div>
-      <audio
+      <div
         v-else
-        :src="String(content)"
-        class="ctv:block ctv:w-full ctv:mt-3.5"
-        controls preload="metadata"
-      />
+        class="vp-img-host ctv:group ctv:relative ctv:w-full"
+      >
+        <audio
+          :src="String(content)"
+          class="ctv:block ctv:w-full ctv:mt-3.5"
+          controls preload="metadata"
+        />
+        <div :class="imgActionsClass">
+          <MediaActionBar
+            :url="String(content)"
+            :label="nameFromUrl(String(content))"
+            :media-type="previewMediaType"
+            :saved="isSaved(String(content))"
+            @download="onDownload"
+            @tag="onTagFromBar"
+            @load-asset="onLoadAssetFromBar"
+          />
+        </div>
+      </div>
     </template>
 
     <template v-else-if="type === 'COMFYTV_MODEL'">

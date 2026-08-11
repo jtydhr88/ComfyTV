@@ -9,6 +9,9 @@
     "AssetVideoLoaderStage": {
       "display_name": "Load Video from Asset"
     },
+    "AudioClipStage": {
+      "display_name": "Audio Trim"
+    },
     "AudioExtractBgStage": {
       "display_name": "Audio · Background Only"
     },
@@ -20,6 +23,9 @@
     },
     "AudioStage": {
       "display_name": "Music Stage"
+    },
+    "AudioSplitStage": {
+      "display_name": "Audio Split"
     },
     "AudioVideoDemuxAudioStage": {
       "display_name": "Demux · Audio Track"
@@ -1636,6 +1642,25 @@
       },
       "1": {
         "name": "Video B"
+      }
+    }
+  },
+  "ComfyTV_AudioClipStage": {
+    "display_name": "Audio Trim",
+    "outputs": {
+      "0": {
+        "name": "Audio"
+      }
+    }
+  },
+  "ComfyTV_AudioSplitStage": {
+    "display_name": "Audio Split",
+    "outputs": {
+      "0": {
+        "name": "Audio A"
+      },
+      "1": {
+        "name": "Audio B"
       }
     }
   },

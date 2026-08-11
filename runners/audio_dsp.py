@@ -270,6 +270,38 @@ def segment_export(view_url: str, segments: list | None = None,
     return {'files': files, 'count': len(files)}
 
 
+def trim_audio(view_url: str, start_s: float, end_s: float = 0.0,
+               out_codec: str = 'wav') -> str:
+    arr = _decode_audio_to_array(localize(view_url))
+    if arr.shape[1] == 0:
+        raise RuntimeError("audio trim: source has no audio")
+    total = arr.shape[1]
+    a = max(0, int(round(float(start_s) * _AUDIO_RATE)))
+    b = total if float(end_s or 0.0) <= 0 \
+        else min(total, int(round(float(end_s) * _AUDIO_RATE)))
+    if b <= a:
+        raise RuntimeError(
+            f"audio trim: end ({end_s}s) must be after start ({start_s}s) "
+            f"and inside the clip (0–{total / _AUDIO_RATE:.2f}s).")
+    return _write_wav(arr[:, a:b], out_codec)
+
+
+def split_audio(view_url: str, split_s: float,
+                out_codec: str = 'wav') -> tuple:
+    arr = _decode_audio_to_array(localize(view_url))
+    if arr.shape[1] == 0:
+        raise RuntimeError("audio split: source has no audio")
+    dur = arr.shape[1] / _AUDIO_RATE
+    s = float(split_s or 0.0)
+    if not (0.05 <= s <= max(0.05, dur - 0.05)):
+        raise RuntimeError(
+            f"audio split: split point ({s}s) must fall inside the clip "
+            f"(0–{dur:.2f}s).")
+    cut = int(round(s * _AUDIO_RATE))
+    return (_write_wav(arr[:, :cut], out_codec),
+            _write_wav(arr[:, cut:], out_codec))
+
+
 from .audio_render import *  # noqa: F401,F403
 from .audio_ir import *  # noqa: F401,F403
 
@@ -279,6 +311,7 @@ __all__ = [
     'LOUDNESS_PLATFORMS', 'evaluate_loudness_compliance',
     'mix_audios', 'dither_quantize',
     'audible_segments', 'segment_export',
+    'trim_audio', 'split_audio',
     'render_waveform_image', 'render_spectrogram_image',
     'convolve_ir', 'ess_sweep', 'deconvolve_ir',
 ]

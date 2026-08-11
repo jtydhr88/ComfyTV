@@ -1,6 +1,8 @@
 from ._common import *  # noqa: F401, F403
 from ...runners.media_filter import crossfade_audios, duck_audio, AFADE_CURVES
-from ...runners.audio_dsp import mix_audios, segment_export
+from ...runners.audio_dsp import (
+    mix_audios, segment_export, trim_audio, split_audio,
+)
 
 from .common.fx_helpers import (  # noqa: F401
     _pick_source, _progress_cb, _f,
@@ -217,3 +219,65 @@ class AudioSegmentExportStage(io.ComfyNode):
         payload = json.dumps(result)
         return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
                                 parent_output_id=parent_output_id)
+
+
+class AudioClipStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.AudioClipStage",
+            display_name="Audio Trim",
+            category="ComfyTV/AudioFX",
+            inputs=[
+                *_standard_stage_inputs(),
+                _hidden_float("start_s", 0.0, 0.0, 36000.0, step=0.01),
+                _hidden_float("end_s", 0.0, 0.0, 36000.0, step=0.01),
+                COMFYTV_AUDIO.Input("audio", optional=True),
+                COMFYTV_VIDEO.Input("video", optional=True),
+            ],
+            outputs=[COMFYTV_AUDIO.Output("audio")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                start_s=0.0, end_s=0.0, audio="", video=""):
+        src = _pick_source(audio, video, "Audio Trim")
+        payload = trim_audio(src, float(start_s or 0.0), float(end_s or 0.0))
+        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
+                                parent_output_id=parent_output_id)
+
+
+class AudioSplitStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.AudioSplitStage",
+            display_name="Audio Split",
+            category="ComfyTV/AudioFX",
+            inputs=[
+                *_standard_stage_inputs(),
+                _hidden_float("split_s", 0.0, 0.0, 36000.0, step=0.01),
+                COMFYTV_AUDIO.Input("audio", optional=True),
+                COMFYTV_VIDEO.Input("video", optional=True),
+            ],
+            outputs=[COMFYTV_AUDIO.Output("audio_a"),
+                     COMFYTV_AUDIO.Output("audio_b")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                split_s=0.0, audio="", video=""):
+        src = _pick_source(audio, video, "Audio Split")
+        part_a, part_b = split_audio(src, float(split_s or 0.0))
+        _persist(cls=cls, project_id=project_id, output_type='audio',
+                 payload_url=part_b, parent_output_id=parent_output_id)
+        _emit_progress(cls, 1, 1, text="done")
+        return _stage_emit(cls, project_id=project_id, output_type='audio',
+                           payload_str=part_a, parent_output_id=parent_output_id,
+                           picked_payload=part_b)

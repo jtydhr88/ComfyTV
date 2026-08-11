@@ -17,10 +17,18 @@
         preload="metadata"
         class="ctv:size-full ctv:object-cover ctv:pointer-events-none"
       />
-      <IconVolume2
+      <button
         v-else-if="asset.media_type === 'audio'"
-        class="ctv:size-4 ctv:text-muted-foreground"
-      />
+        type="button"
+        class="ctv:flex ctv:size-full ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none
+               ctv:border-none ctv:bg-transparent ctv:text-muted-foreground ctv:hover:text-base-foreground"
+        :title="audioPlaying ? $t('assets.card.pausePreview') : $t('assets.card.playPreview')"
+        @click.stop="toggleAudio(asset.payload_url)"
+        @pointerdown.stop
+      >
+        <IconPause v-if="audioPlaying" class="ctv:size-4" />
+        <IconPlay v-else class="ctv:size-4" />
+      </button>
       <ModelThumb
         v-else-if="asset.media_type === 'model'"
         :src="asset.payload_url"
@@ -89,10 +97,12 @@ import { assetPreviewUrl } from '@/utils/assetMedia'
 import ProxiedVideo from '@/components/widgets/ProxiedVideo.vue'
 import IconEllipsis from '~icons/lucide/ellipsis'
 import IconMaximize from '~icons/lucide/maximize-2'
-import IconVolume2 from '~icons/lucide/volume-2'
+import IconPause from '~icons/lucide/pause'
+import IconPlay from '~icons/lucide/play'
 
 import type { Asset } from '@/api/schemas'
 import ModelThumb from '@/components/widgets/ModelThumb.vue'
+import { useAudioPreview } from '@/composables/sidebar/useAudioPreview'
 
 const props = defineProps<{
   asset: Asset
@@ -109,6 +119,9 @@ const emit = defineEmits<{
 const secondary = computed(() =>
   [props.meta, props.categoryNames.join(', ')].filter(Boolean).join(' · '),
 )
+
+const { playingUrl, toggle: toggleAudio } = useAudioPreview()
+const audioPlaying = computed(() => playingUrl.value === props.asset.payload_url)
 </script>
 
 <style scoped>

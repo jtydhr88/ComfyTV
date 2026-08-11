@@ -81,6 +81,8 @@ STAGE_META: dict[str, dict] = {
     'AudioVisualizeStage':          {'kind': 'image'},
     'AudioMixStage':                {'kind': 'audio'},
     'AudioSegmentExportStage':      {'kind': 'text'},
+    'AudioClipStage':               {'kind': 'audio'},
+    'AudioSplitStage':              {'kind': 'audio'},
     'AudioConvolveStage':           {'kind': 'audio'},
     'AudioSweepStage':              {'kind': 'audio'},
     'AudioDeconvolveStage':         {'kind': 'audio'},

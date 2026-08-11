@@ -82,7 +82,7 @@ from .audio_effects import (
 )
 from .audio_edit import (
     AudioCrossfadeStage, AudioMixStage, AudioSegmentExportStage,
-    AudioDuckStage,
+    AudioDuckStage, AudioClipStage, AudioSplitStage,
 )
 from .audio_measure import (
     AudioAnalyzeStage, AudioVisualizeStage, AudioSweepStage,
@@ -146,6 +146,7 @@ class ComfyTVExtension(ComfyExtension):
             AudioTimePitchStage, AudioRepairStage, AudioSaturateStage,
             AudioCrossfadeStage, AudioAnalyzeStage, AudioVisualizeStage,
             AudioMixStage, AudioSegmentExportStage, AudioConvolveStage,
+            AudioClipStage, AudioSplitStage,
             AudioSweepStage, AudioDeconvolveStage,
             VideoCompositeStage, VideoTransformStage, CornerPinStage,
             RotoMaskStage, MotionTrackStage, TitleStage, SubtitleStage,

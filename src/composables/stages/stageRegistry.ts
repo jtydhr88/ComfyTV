@@ -65,6 +65,8 @@ import AudioAnalyzeStageCard from '@/components/stages/AudioAnalyzeStageCard.vue
 import AudioVisualizeStageCard from '@/components/stages/AudioVisualizeStageCard.vue'
 import AudioMixStageCard from '@/components/stages/AudioMixStageCard.vue'
 import AudioSegmentExportStageCard from '@/components/stages/AudioSegmentExportStageCard.vue'
+import AudioClipStageCard from '@/components/stages/AudioClipStageCard.vue'
+import AudioSplitStageCard from '@/components/stages/AudioSplitStageCard.vue'
 import AudioConvolveStageCard from '@/components/stages/AudioConvolveStageCard.vue'
 import AudioSweepStageCard from '@/components/stages/AudioSweepStageCard.vue'
 import AudioDeconvolveStageCard from '@/components/stages/AudioDeconvolveStageCard.vue'
@@ -256,6 +258,8 @@ export const RICH_STAGE_CARDS: Record<string, any> = {
   'ComfyTV.AudioVisualizeStage':      AudioVisualizeStageCard,
   'ComfyTV.AudioMixStage':            AudioMixStageCard,
   'ComfyTV.AudioSegmentExportStage':  AudioSegmentExportStageCard,
+  'ComfyTV.AudioClipStage':           AudioClipStageCard,
+  'ComfyTV.AudioSplitStage':          AudioSplitStageCard,
   'ComfyTV.AudioConvolveStage':       AudioConvolveStageCard,
   'ComfyTV.AudioSweepStage':          AudioSweepStageCard,
   'ComfyTV.AudioDeconvolveStage':     AudioDeconvolveStageCard,
@@ -319,6 +323,8 @@ export const FLEX_FILL_STAGES = new Set([
   'ComfyTV.SplitPartStage',
   'ComfyTV.VideoClipStage',
   'ComfyTV.VideoSplitStage',
+  'ComfyTV.AudioClipStage',
+  'ComfyTV.AudioSplitStage',
 ])
 
 export const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
@@ -329,6 +335,8 @@ export const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
   'ComfyTV.EraseStage':      640,
   'ComfyTV.CropStage':       620,
   'ComfyTV.VideoClipStage':  680,
+  'ComfyTV.AudioClipStage':  420,
+  'ComfyTV.AudioSplitStage': 420,
   'ComfyTV.VideoCropStage':  700,
   'ComfyTV.VideoConcatStage': 560,
   'ComfyTV.VideoSpeedStage':  620,

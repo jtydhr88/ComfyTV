@@ -258,6 +258,8 @@
       "loadNode": "作为节点添加到画布",
       "makeProxy": "生成预览代理",
       "more": "更多操作",
+      "playPreview": "试听",
+      "pausePreview": "暂停",
       "fileMissing": "文件缺失",
       "fileMissingHint": "本地文件已被删除，资产条目仍保留；可重新导入或从资产库移除"
     },
@@ -1013,6 +1015,26 @@
     "adjustThenRun": "旋转 / 翻转（预览即时生效），然后 Run"
   },
   "videoSplit": {
+    "splitPoint": "切割点",
+    "splitting": "分割中…",
+    "done": "分割完成 — A、B 两段可供下游使用",
+    "adjustThenRun": "拖动把手确定切割点，然后 Run"
+  },
+  "audioTrim": {
+    "noInputAudio": "无输入音频 — 请上游连接音频或视频",
+    "loading": "加载中…",
+    "loadError": "音频加载失败",
+    "playSelection": "播放选段",
+    "pause": "暂停",
+    "start": "入点",
+    "end": "出点",
+    "reset": "重置",
+    "resetTooltip": "选中整段音频",
+    "trimming": "剪辑中…",
+    "trimmed": "剪辑完成 — 下游可直接使用",
+    "adjustThenRun": "拖动把手选择范围，然后 Run"
+  },
+  "audioSplit": {
     "splitPoint": "切割点",
     "splitting": "分割中…",
     "done": "分割完成 — A、B 两段可供下游使用",

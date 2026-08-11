@@ -13,6 +13,7 @@ ALL_AUDIO_PRO_CLASSES = [
     "AudioCrossfadeStage", "AudioAnalyzeStage", "AudioVisualizeStage",
     "AudioMixStage", "AudioSegmentExportStage", "AudioConvolveStage",
     "AudioSweepStage", "AudioDeconvolveStage",
+    "AudioClipStage", "AudioSplitStage",
 ]
 
 
@@ -434,6 +435,71 @@ class TestSegments:
         with pytest.raises(RuntimeError, match="segments"):
             _classes()["AudioSegmentExportStage"].execute(
                 project_id="p1", detect='json', segments='[]', video=clip)
+
+
+class TestTrimSplit:
+    @staticmethod
+    def _tone(seconds=1.0):
+        from ComfyTV.runners.audio_dsp import _write_wav
+        from ComfyTV.runners.media import _AUDIO_RATE
+        t = np.arange(int(seconds * _AUDIO_RATE)) / _AUDIO_RATE
+        tone = (0.3 * np.sin(2 * np.pi * 440 * t)).astype(np.float32)
+        return _write_wav(np.stack([tone, tone]))
+
+    def test_trim_range(self):
+        from ComfyTV.runners.audio_dsp import trim_audio
+        from ComfyTV.runners.media import (
+            _AUDIO_RATE, _decode_audio_to_array, localize,
+        )
+        out = trim_audio(self._tone(1.0), 0.2, 0.7)
+        arr = _decode_audio_to_array(localize(out))
+        assert abs(arr.shape[1] - int(0.5 * _AUDIO_RATE)) <= 2
+
+    def test_trim_open_end_runs_to_tail(self):
+        from ComfyTV.runners.audio_dsp import trim_audio
+        from ComfyTV.runners.media import (
+            _AUDIO_RATE, _decode_audio_to_array, localize,
+        )
+        out = trim_audio(self._tone(1.0), 0.25, 0.0)
+        arr = _decode_audio_to_array(localize(out))
+        assert abs(arr.shape[1] - int(0.75 * _AUDIO_RATE)) <= 2
+
+    def test_trim_rejects_inverted_range(self):
+        from ComfyTV.runners.audio_dsp import trim_audio
+        with pytest.raises(RuntimeError, match="after start"):
+            trim_audio(self._tone(1.0), 0.8, 0.3)
+
+    def test_split_halves(self):
+        from ComfyTV.runners.audio_dsp import split_audio
+        from ComfyTV.runners.media import (
+            _AUDIO_RATE, _decode_audio_to_array, localize,
+        )
+        url_a, url_b = split_audio(self._tone(1.0), 0.4)
+        a = _decode_audio_to_array(localize(url_a))
+        b = _decode_audio_to_array(localize(url_b))
+        assert abs(a.shape[1] - int(0.4 * _AUDIO_RATE)) <= 2
+        assert abs(b.shape[1] - int(0.6 * _AUDIO_RATE)) <= 2
+
+    @pytest.mark.parametrize("point", [0.0, 5.0])
+    def test_split_rejects_out_of_range(self, point):
+        from ComfyTV.runners.audio_dsp import split_audio
+        with pytest.raises(RuntimeError, match="inside the clip"):
+            split_audio(self._tone(1.0), point)
+
+    def test_stage_trim(self, clip):
+        _classes()["AudioClipStage"].execute(
+            project_id="p1", start_s=0.2, end_s=0.9, video=clip)
+
+    def test_stage_trim_needs_source(self):
+        with pytest.raises(RuntimeError, match="audio or video"):
+            _classes()["AudioClipStage"].execute(project_id="p1")
+
+    def test_stage_split_emits_both_parts(self, clip):
+        out = _classes()["AudioSplitStage"].execute(
+            project_id="p1", split_s=0.5, video=clip)
+        assert out.values[0]
+        assert out.values[1]
+        assert out.values[0] != out.values[1]
 
 
 class TestConvolve:

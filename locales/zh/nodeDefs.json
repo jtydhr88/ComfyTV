@@ -9,6 +9,9 @@
     "AssetVideoLoaderStage": {
       "display_name": "从资产加载视频"
     },
+    "AudioClipStage": {
+      "display_name": "音频剪辑"
+    },
     "AudioExtractBgStage": {
       "display_name": "音频 · 仅背景声"
     },
@@ -20,6 +23,9 @@
     },
     "AudioStage": {
       "display_name": "音乐阶段"
+    },
+    "AudioSplitStage": {
+      "display_name": "音频分割"
     },
     "AudioVideoDemuxAudioStage": {
       "display_name": "分离 · 音轨"
@@ -1630,6 +1636,41 @@
   },
   "ComfyTV_VideoSplitStage": {
     "display_name": "视频分割",
+    "outputs": {
+      "0": {
+        "name": "前段 A"
+      },
+      "1": {
+        "name": "后段 B"
+      }
+    }
+  },
+  "ComfyTV_AudioClipStage": {
+    "display_name": "音频剪辑",
+    "inputs": {
+      "audio": {
+        "name": "音频"
+      },
+      "video": {
+        "name": "视频"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "音频"
+      }
+    }
+  },
+  "ComfyTV_AudioSplitStage": {
+    "display_name": "音频分割",
+    "inputs": {
+      "audio": {
+        "name": "音频"
+      },
+      "video": {
+        "name": "视频"
+      }
+    },
     "outputs": {
       "0": {
         "name": "前段 A"

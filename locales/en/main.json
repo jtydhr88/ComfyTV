@@ -258,6 +258,8 @@
       "loadNode": "Add as node to canvas",
       "makeProxy": "Generate preview proxy",
       "more": "More options",
+      "playPreview": "Play",
+      "pausePreview": "Pause",
       "fileMissing": "File missing",
       "fileMissingHint": "The file on disk was deleted; the library entry remains — re-import it or remove the asset"
     },
@@ -1013,6 +1015,26 @@
     "adjustThenRun": "Rotate / flip (preview is live), then Run"
   },
   "videoSplit": {
+    "splitPoint": "Cut",
+    "splitting": "Splitting…",
+    "done": "Split done — A and B ready for downstream",
+    "adjustThenRun": "Drag the handle to place the cut, then Run"
+  },
+  "audioTrim": {
+    "noInputAudio": "No input audio — connect an audio or video upstream",
+    "loading": "Loading…",
+    "loadError": "Failed to load audio",
+    "playSelection": "Play selection",
+    "pause": "Pause",
+    "start": "In",
+    "end": "Out",
+    "reset": "Reset",
+    "resetTooltip": "Select the whole audio",
+    "trimming": "Trimming…",
+    "trimmed": "Audio trimmed — ready for downstream",
+    "adjustThenRun": "Drag the handles to pick a range, then Run"
+  },
+  "audioSplit": {
     "splitPoint": "Cut",
     "splitting": "Splitting…",
     "done": "Split done — A and B ready for downstream",
