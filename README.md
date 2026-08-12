@@ -107,6 +107,26 @@ The full documentation lives at **[comfytv.org](https://comfytv.org)** — guide
 
 ---
 
+## MCP server (agent access)
+
+ComfyTV ships a built-in, **read-only** [MCP](https://modelcontextprotocol.io) endpoint so AI agents (Claude Code, Claude Desktop, any MCP client) can inspect your ComfyTV state — projects, the live canvas, workflows, outputs, assets, remote jobs, and recent execution errors. Nothing here can run or modify anything.
+
+It runs inside the ComfyUI server process — no extra install:
+
+```
+claude mcp add --transport http comfytv http://127.0.0.1:8188/comfytv/mcp
+```
+
+Notes:
+
+- **Canvas visibility needs an open browser tab.** The `get_canvas` tool reads a snapshot the ComfyTV frontend mirrors to the backend every few seconds; with no tab open the tool reports `available: false` rather than guessing.
+- **Zero cost when unused.** The canvas mirror stays dormant until an MCP client actually connects — users who never attach an agent get no background ticks or requests. Right after connecting, give the mirror ~10 seconds to warm up before the first `get_canvas`.
+- **Trust boundary.** The endpoint has the same (lack of) auth as every other ComfyUI route — if you expose port 8188 beyond localhost, the MCP endpoint is exposed with it.
+- **Pairs with [comfy-mcp](https://github.com/Comfy-Org/comfy-mcp).** comfytv-mcp covers the product layer (projects/canvas/stages); the official comfy-mcp covers the machine layer (installing nodes, downloading models, running raw workflows). Agents work best with both connected.
+- Local stage failures are also captured in a small in-memory buffer (`exec_errors` tool / `GET /comfytv/exec_errors`) so an agent can diagnose a failed run without tailing logs.
+
+---
+
 ## Quick tour
 
 1. Drop a **Generate → Image** node, type a prompt, pick `Local SD1.5` as the workflow, click **Run**. It produces a set of images and auto-spawns an **Image Picker**.

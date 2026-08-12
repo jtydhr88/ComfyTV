@@ -42,6 +42,7 @@ import type { ComfyExtension, ComfyNodeDef } from '@comfyorg/comfyui-frontend-ty
 import { applyHiddenWidgetFlags, getWidget } from '@/utils/widget'
 import { checkThemeTokens } from '@/utils/devTokenCheck'
 import { installGlobalRunBridge } from '@/utils/globalRunBridge'
+import { installCanvasMirror } from '@/composables/stages/useCanvasMirror'
 
 ;(window as any).__comfytv_host_pinia = getActivePinia()
 
@@ -211,6 +212,12 @@ const extension: ComfyExtension = {
       resolveStore: () => useStageStore(pinia),
       toast: (opts) => a.extensionManager?.toast?.add?.(opts),
       t: (key, params) => i18n.global.t(key, params ?? {}),
+    })
+
+    installCanvasMirror(a, {
+      resolveApp: () => a,
+      resolveProjectId: () => useProjectStore(pinia).currentProjectId,
+      resolveStageState: (node) => useStageStore(pinia).getStage(node),
     })
 
     try {

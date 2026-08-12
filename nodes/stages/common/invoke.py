@@ -9,6 +9,7 @@ from .inputs import (
 from .emit import _stage_emit_auto
 from .timing import reset_invoke_duration, set_invoke_duration
 from ....runners import RUNNER_REGISTRY, RunnerContext
+from ....runners.exec_errors import record_exec_error
 
 
 class StageError(RuntimeError):
@@ -92,6 +93,35 @@ def _merge_custom_params(kind: str, custom_params, options: dict | None,
 
 
 async def invoke_runner(
+    *,
+    kind: str,
+    label: str,
+    main_prompt=None,
+    upstream=None,
+    options=None,
+    custom_params=None,
+    option_defaults=None,
+    progress=None,
+):
+    try:
+        return await _invoke_runner(
+            kind=kind,
+            label=label,
+            main_prompt=main_prompt,
+            upstream=upstream,
+            options=options,
+            custom_params=custom_params,
+            option_defaults=option_defaults,
+            progress=progress,
+        )
+    except Exception as e:
+        project_id = (options or {}).get('project_id')
+        record_exec_error(kind=kind, label=label, error=e,
+                          project_id=project_id if isinstance(project_id, str) else None)
+        raise
+
+
+async def _invoke_runner(
     *,
     kind: str,
     label: str,

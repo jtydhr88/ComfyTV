@@ -14627,7 +14627,7 @@ const UpsertEntrySchema = object({
 const DeleteEntrySchema = object({
   ok: literal(true)
 });
-const OkSchema = object({
+const OkSchema$1 = object({
   ok: boolean()
 });
 const OutputSchema = object({
@@ -15177,7 +15177,7 @@ function updateServer(id, patch) {
   return apiSend(`/comfytv/servers/${id}`, "PATCH", MutateServerSchema, patch);
 }
 function deleteServer(id) {
-  return apiSend(`/comfytv/servers/${id}`, "DELETE", OkSchema);
+  return apiSend(`/comfytv/servers/${id}`, "DELETE", OkSchema$1);
 }
 function testServer(input) {
   return apiSend("/comfytv/servers/test", "POST", TestServerResultSchema, input);
@@ -15221,7 +15221,7 @@ function renameResource(id, name) {
   return apiSend(`/comfytv/resources/${id}`, "PATCH", MutateResourceSchema, { name });
 }
 function deleteResource(id) {
-  return apiSend(`/comfytv/resources/${id}`, "DELETE", OkSchema);
+  return apiSend(`/comfytv/resources/${id}`, "DELETE", OkSchema$1);
 }
 function fetchSettings() {
   return apiFetch("/comfytv/settings", ListSettingsSchema);
@@ -15243,7 +15243,7 @@ function updateStagePreset(id, patch) {
   return apiSend(`/comfytv/presets/${id}`, "PATCH", MutateStagePresetSchema, patch);
 }
 function deleteStagePreset(id) {
-  return apiSend(`/comfytv/presets/${id}`, "DELETE", OkSchema);
+  return apiSend(`/comfytv/presets/${id}`, "DELETE", OkSchema$1);
 }
 function fetchStageDefaults(nodeId) {
   return apiFetch(`/comfytv/stage_defaults?node_id=${encodeURIComponent(nodeId)}`, StageDefaultsSchema);
@@ -15256,7 +15256,7 @@ function listRemoteJobs(status) {
   return apiFetch(`/comfytv/remote_jobs${q}`, ListRemoteJobsSchema);
 }
 function cancelRemoteJob(jobId) {
-  return apiSend(`/comfytv/remote_jobs/${encodeURIComponent(jobId)}/cancel`, "POST", OkSchema);
+  return apiSend(`/comfytv/remote_jobs/${encodeURIComponent(jobId)}/cancel`, "POST", OkSchema$1);
 }
 function adoptAssets() {
   return apiSend("/comfytv/assets/adopt", "POST", AdoptAssetsSchema);
@@ -56378,7 +56378,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-C-PlK65-.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-DggjCrZA.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -71221,7 +71221,7 @@ ComfyTV will use that API prompt directly and skip conversion.`
       console.info(
         `[ComfyTV/workflow-prep] ${kind}/${label}: converted via headless iframe (${nodeCount} nodes)`
       );
-      await apiSend("/comfytv/workflows/api_json", "POST", OkSchema, {
+      await apiSend("/comfytv/workflows/api_json", "POST", OkSchema$1, {
         kind,
         label,
         api_json: apiJson,
@@ -71356,7 +71356,7 @@ function useWorkflowConfig(t2) {
       await apiSend(
         `/comfytv/workflows/${config2.value.id}/reset_to_preset`,
         "POST",
-        OkSchema
+        OkSchema$1
       );
       const sel2 = selection.selected;
       if ((sel2 == null ? void 0 : sel2.workflowKind) && (sel2 == null ? void 0 : sel2.workflowLabel)) {
@@ -71441,7 +71441,7 @@ function useWorkflowConfig(t2) {
   async function postBinding(payload) {
     if (!config2.value) return;
     try {
-      await apiSend("/comfytv/workflows/config/binding", "POST", OkSchema, {
+      await apiSend("/comfytv/workflows/config/binding", "POST", OkSchema$1, {
         workflow_id: config2.value.id,
         ...payload
       });
@@ -71453,7 +71453,7 @@ function useWorkflowConfig(t2) {
   async function postMeta(payload) {
     if (!config2.value) return;
     try {
-      await apiSend("/comfytv/workflows/config/meta", "POST", OkSchema, {
+      await apiSend("/comfytv/workflows/config/meta", "POST", OkSchema$1, {
         workflow_id: config2.value.id,
         ...payload
       });
@@ -71469,7 +71469,7 @@ function useWorkflowConfig(t2) {
   async function deleteBinding(node_id, widget_name) {
     if (!config2.value) return;
     try {
-      await apiSend("/comfytv/workflows/config/binding", "DELETE", OkSchema, {
+      await apiSend("/comfytv/workflows/config/binding", "DELETE", OkSchema$1, {
         workflow_id: config2.value.id,
         node_id,
         input_name: widget_name
@@ -72428,7 +72428,7 @@ const useStageParamStore = /* @__PURE__ */ defineStore("stageParams", () => {
   async function remove2(id) {
     params.value = params.value.filter((p2) => p2.id !== id);
     try {
-      await apiSend(`/comfytv/stage_params/${id}`, "DELETE", OkSchema);
+      await apiSend(`/comfytv/stage_params/${id}`, "DELETE", OkSchema$1);
     } catch (e) {
       console.warn("[ComfyTV/stage-params] delete failed", id, e);
     }
@@ -111250,21 +111250,21 @@ class VideoWaveWarpRenderer extends FxPreviewRenderer {
     );
   }
 }
-function widgetValue(node, name, def2) {
+function widgetValue$1(node, name, def2) {
   const widgets = (node == null ? void 0 : node.widgets) ?? [];
   const found2 = widgets.find((x) => (x == null ? void 0 : x.name) === name);
   return (found2 == null ? void 0 : found2.value) ?? def2;
 }
 function num$b(node, name, def2) {
-  const v = Number(widgetValue(node, name, def2));
+  const v = Number(widgetValue$1(node, name, def2));
   return Number.isFinite(v) ? v : def2;
 }
 function str$6(node, name, def2) {
-  const v = widgetValue(node, name, def2);
+  const v = widgetValue$1(node, name, def2);
   return typeof v === "string" ? v : def2;
 }
 function bool$6(node, name, def2) {
-  return Boolean(widgetValue(node, name, def2));
+  return Boolean(widgetValue$1(node, name, def2));
 }
 const lutTextCache = /* @__PURE__ */ new Map();
 class ChainLutRenderer {
@@ -130547,7 +130547,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-D7GMr6ct.mjs");
+    const { STLLoader } = await import("./STLLoader-Bm4gKhXn.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -130555,7 +130555,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-BqCUuZfH.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-B-pWF3eE.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -185083,7 +185083,7 @@ const _sfc_main$1p = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const AudioTrimBar = /* @__PURE__ */ _export_sfc(_sfc_main$1p, [["__scopeId", "data-v-83d4f128"]]);
+const AudioTrimBar = /* @__PURE__ */ _export_sfc(_sfc_main$1p, [["__scopeId", "data-v-bc7dca3d"]]);
 const _hoisted_1$1q = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow" };
 const _hoisted_2$1n = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
 const _hoisted_3$1n = {
@@ -204735,6 +204735,133 @@ function installGlobalRunBridge(app2, deps) {
   };
   return true;
 }
+const OkSchema = object({ ok: boolean() });
+const ActivitySchema = object({ active: boolean() });
+const MCP_ACTIVITY_EVENT = "comfytv-mcp-activity";
+const TICK_MS = 5e3;
+const HEARTBEAT_MS = 15e3;
+const PROMPT_MAX_CHARS = 4e3;
+const MENTION_PAT = /@([A-Za-z]+_\d+)/g;
+function widgetValue(node, name) {
+  const w = (node.widgets ?? []).find((w2) => (w2 == null ? void 0 : w2.name) === name);
+  return (w == null ? void 0 : w.value) == null ? "" : String(w.value);
+}
+function resolveLink(graph, linkId) {
+  var _a2;
+  const links = graph == null ? void 0 : graph.links;
+  if (!links) return null;
+  if (typeof links.get === "function") return links.get(linkId);
+  return links[linkId] ?? ((_a2 = graph == null ? void 0 : graph.getLink) == null ? void 0 : _a2.call(graph, linkId)) ?? null;
+}
+function stageInputs(graph, node) {
+  var _a2;
+  const out = [];
+  for (const inp of node.inputs ?? []) {
+    if ((inp == null ? void 0 : inp.link) == null) continue;
+    const link2 = resolveLink(graph, inp.link);
+    if (!link2) continue;
+    const src = (_a2 = graph == null ? void 0 : graph.getNodeById) == null ? void 0 : _a2.call(graph, link2.origin_id);
+    out.push({
+      slot: String(inp.name ?? ""),
+      from_node: String(link2.origin_id),
+      from_uid: src ? getStageUid(src) : ""
+    });
+  }
+  return out;
+}
+function lastRun(state2) {
+  if (state2 == null ? void 0 : state2.error) return { status: "error", error: state2.error.message };
+  if (state2 == null ? void 0 : state2.output) return { status: "ok" };
+  return { status: "never" };
+}
+function buildCanvasSnapshot(deps) {
+  const app2 = deps.resolveApp();
+  const projectId = deps.resolveProjectId();
+  const graph = app2 == null ? void 0 : app2.graph;
+  if (!projectId || !graph) return null;
+  const stages = [];
+  for (const node of graph._nodes ?? []) {
+    const cls = String((node == null ? void 0 : node.comfyClass) ?? (node == null ? void 0 : node.type) ?? "");
+    if (!cls.startsWith("ComfyTV.")) continue;
+    const prompt = widgetValue(node, "main_prompt");
+    stages.push({
+      uid: getStageUid(node),
+      graph_node_id: String(node.id),
+      node_id: cls,
+      stage_class: stageClassName(node),
+      title: String(node.title ?? ""),
+      workflow: widgetValue(node, "workflow"),
+      prompt: prompt.slice(0, PROMPT_MAX_CHARS),
+      mentions: [...prompt.matchAll(MENTION_PAT)].map((m) => m[1]),
+      inputs: stageInputs(graph, node),
+      last_run: lastRun(deps.resolveStageState(node))
+    });
+  }
+  return { project_id: projectId, stages };
+}
+function installCanvasMirror(app2, deps) {
+  var _a2, _b2;
+  if (app2.__comfytvCanvasMirrorInstalled) return false;
+  app2.__comfytvCanvasMirrorInstalled = true;
+  let lastPosted = "";
+  let lastPostedProject = "";
+  let lastPostAt = 0;
+  let inFlight = false;
+  let timer = null;
+  async function tick() {
+    if (inFlight) return;
+    const snapshot = buildCanvasSnapshot(deps);
+    if (!snapshot) return;
+    const serialized = JSON.stringify(snapshot);
+    const now = Date.now();
+    const changed = serialized !== lastPosted;
+    const heartbeatDue = now - lastPostAt >= HEARTBEAT_MS;
+    if (!changed && !heartbeatDue) return;
+    inFlight = true;
+    try {
+      if (changed) {
+        await apiSend("/comfytv/canvas_state", "POST", OkSchema, snapshot);
+        lastPosted = serialized;
+        lastPostedProject = snapshot.project_id;
+      } else {
+        try {
+          await apiSend("/comfytv/canvas_state", "POST", OkSchema, {
+            project_id: lastPostedProject || snapshot.project_id,
+            heartbeat: true
+          });
+        } catch (e) {
+          lastPosted = "";
+          throw e;
+        }
+      }
+      lastPostAt = now;
+    } catch {
+    } finally {
+      inFlight = false;
+    }
+  }
+  function start2() {
+    if (timer != null) return;
+    timer = setInterval(tick, TICK_MS);
+    void tick();
+  }
+  const onActivity = () => start2();
+  (_b2 = (_a2 = app2.api) == null ? void 0 : _a2.addEventListener) == null ? void 0 : _b2.call(_a2, MCP_ACTIVITY_EVENT, onActivity);
+  void (async () => {
+    try {
+      const status = await apiFetch("/comfytv/mcp_activity", ActivitySchema);
+      if (status.active) start2();
+    } catch {
+    }
+  })();
+  return () => {
+    var _a3, _b3;
+    if (timer != null) clearInterval(timer);
+    timer = null;
+    (_b3 = (_a3 = app2.api) == null ? void 0 : _a3.removeEventListener) == null ? void 0 : _b3.call(_a3, MCP_ACTIVITY_EVENT, onActivity);
+    app2.__comfytvCanvasMirrorInstalled = false;
+  };
+}
 window.__comfytv_host_pinia = getActivePinia();
 const pinia = createPinia();
 setActivePinia(pinia);
@@ -204889,6 +205016,11 @@ const extension = {
         return (_c2 = (_b3 = (_a3 = a2.extensionManager) == null ? void 0 : _a3.toast) == null ? void 0 : _b3.add) == null ? void 0 : _c2.call(_b3, opts);
       },
       t: (key, params) => i18n.global.t(key, params ?? {})
+    });
+    installCanvasMirror(a2, {
+      resolveApp: () => a2,
+      resolveProjectId: () => useProjectStore(pinia).currentProjectId,
+      resolveStageState: (node) => useStageStore(pinia).getStage(node)
     });
     try {
       const ComfyButton = (_b2 = (_a2 = window.comfyAPI) == null ? void 0 : _a2.button) == null ? void 0 : _b2.ComfyButton;
@@ -205111,4 +205243,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-B8mRVQaG.mjs.map
+//# sourceMappingURL=main-BEKiXG8b.mjs.map

@@ -8,9 +8,8 @@ from ..runners import RUNNER_REGISTRY, WORKFLOW_KINDS
 from ._common import routes
 
 
-@routes.get("/comfytv/stages")
-async def list_stages(_request: web.Request) -> web.Response:
-    stages = [
+def stages_payload() -> list[dict]:
+    return [
         {
             "node_id": f"ComfyTV.{cls_name}",
             "kind": meta.get("kind", "image"),
@@ -19,7 +18,11 @@ async def list_stages(_request: web.Request) -> web.Response:
         }
         for cls_name, meta in STAGE_META.items()
     ]
-    return web.json_response({"stages": stages})
+
+
+@routes.get("/comfytv/stages")
+async def list_stages(_request: web.Request) -> web.Response:
+    return web.json_response({"stages": stages_payload()})
 
 
 @routes.get("/comfytv/caps")
@@ -70,8 +73,7 @@ def _compute_input_usage(bindings: list[dict]) -> dict:
     }
 
 
-@routes.get("/comfytv/workflow_info")
-async def workflow_info(_request: web.Request) -> web.Response:
+def workflow_info_payload() -> dict:
     from ..runners import workflow_db
     out: dict[str, dict[str, dict]] = {kind: {} for kind in WORKFLOW_KINDS}
 
@@ -91,4 +93,9 @@ async def workflow_info(_request: web.Request) -> web.Response:
                     "max_inputs":     {k_: 0     for k_ in _KINDS},
                 }
 
-    return web.json_response(out)
+    return out
+
+
+@routes.get("/comfytv/workflow_info")
+async def workflow_info(_request: web.Request) -> web.Response:
+    return web.json_response(workflow_info_payload())

@@ -867,12 +867,12 @@
   background-position: 0 0, 8px 8px;
 }\r
 
-.ctv-trim-input[data-v-83d4f128] { -moz-appearance: textfield;
+.ctv-trim-input[data-v-bc7dca3d] { -moz-appearance: textfield;
 }
-.ctv-trim-input[data-v-83d4f128]::-webkit-inner-spin-button,
-.ctv-trim-input[data-v-83d4f128]::-webkit-outer-spin-button {
+.ctv-trim-input[data-v-bc7dca3d]::-webkit-inner-spin-button,\r
+.ctv-trim-input[data-v-bc7dca3d]::-webkit-outer-spin-button {\r
   -webkit-appearance: none;
-}
+}\r
 
 .ctv-seq-btn[data-v-2c7b8d2d] {\r
   display: flex;\r
@@ -5970,5 +5970,5 @@ body > .p-overlay-mask.p-blockui-mask-document.p-overlay-mask-leave:empty {\r
     console.error("vite-plugin-css-injected-by-js", e);
   }
 })();
-import "./assets/main-B8mRVQaG.mjs";
+import "./assets/main-BEKiXG8b.mjs";
 //# sourceMappingURL=main.js.map
