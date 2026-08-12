@@ -10,5 +10,8 @@
   },
   "dependencies": {
     "mint": "^4.2.700"
+  },
+  "overrides": {
+    "tar": "7.5.21"
   }
 }
