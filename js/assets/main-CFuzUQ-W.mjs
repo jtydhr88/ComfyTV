@@ -14627,7 +14627,7 @@ const UpsertEntrySchema = object({
 const DeleteEntrySchema = object({
   ok: literal(true)
 });
-const OkSchema$1 = object({
+const OkSchema$2 = object({
   ok: boolean()
 });
 const OutputSchema = object({
@@ -15177,7 +15177,7 @@ function updateServer(id, patch) {
   return apiSend(`/comfytv/servers/${id}`, "PATCH", MutateServerSchema, patch);
 }
 function deleteServer(id) {
-  return apiSend(`/comfytv/servers/${id}`, "DELETE", OkSchema$1);
+  return apiSend(`/comfytv/servers/${id}`, "DELETE", OkSchema$2);
 }
 function testServer(input) {
   return apiSend("/comfytv/servers/test", "POST", TestServerResultSchema, input);
@@ -15221,7 +15221,7 @@ function renameResource(id, name) {
   return apiSend(`/comfytv/resources/${id}`, "PATCH", MutateResourceSchema, { name });
 }
 function deleteResource(id) {
-  return apiSend(`/comfytv/resources/${id}`, "DELETE", OkSchema$1);
+  return apiSend(`/comfytv/resources/${id}`, "DELETE", OkSchema$2);
 }
 function fetchSettings() {
   return apiFetch("/comfytv/settings", ListSettingsSchema);
@@ -15243,7 +15243,7 @@ function updateStagePreset(id, patch) {
   return apiSend(`/comfytv/presets/${id}`, "PATCH", MutateStagePresetSchema, patch);
 }
 function deleteStagePreset(id) {
-  return apiSend(`/comfytv/presets/${id}`, "DELETE", OkSchema$1);
+  return apiSend(`/comfytv/presets/${id}`, "DELETE", OkSchema$2);
 }
 function fetchStageDefaults(nodeId) {
   return apiFetch(`/comfytv/stage_defaults?node_id=${encodeURIComponent(nodeId)}`, StageDefaultsSchema);
@@ -15256,7 +15256,7 @@ function listRemoteJobs(status) {
   return apiFetch(`/comfytv/remote_jobs${q}`, ListRemoteJobsSchema);
 }
 function cancelRemoteJob(jobId) {
-  return apiSend(`/comfytv/remote_jobs/${encodeURIComponent(jobId)}/cancel`, "POST", OkSchema$1);
+  return apiSend(`/comfytv/remote_jobs/${encodeURIComponent(jobId)}/cancel`, "POST", OkSchema$2);
 }
 function adoptAssets() {
   return apiSend("/comfytv/assets/adopt", "POST", AdoptAssetsSchema);
@@ -56378,7 +56378,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-DggjCrZA.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-C2XmSJqO.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -71221,7 +71221,7 @@ ComfyTV will use that API prompt directly and skip conversion.`
       console.info(
         `[ComfyTV/workflow-prep] ${kind}/${label}: converted via headless iframe (${nodeCount} nodes)`
       );
-      await apiSend("/comfytv/workflows/api_json", "POST", OkSchema$1, {
+      await apiSend("/comfytv/workflows/api_json", "POST", OkSchema$2, {
         kind,
         label,
         api_json: apiJson,
@@ -71356,7 +71356,7 @@ function useWorkflowConfig(t2) {
       await apiSend(
         `/comfytv/workflows/${config2.value.id}/reset_to_preset`,
         "POST",
-        OkSchema$1
+        OkSchema$2
       );
       const sel2 = selection.selected;
       if ((sel2 == null ? void 0 : sel2.workflowKind) && (sel2 == null ? void 0 : sel2.workflowLabel)) {
@@ -71441,7 +71441,7 @@ function useWorkflowConfig(t2) {
   async function postBinding(payload) {
     if (!config2.value) return;
     try {
-      await apiSend("/comfytv/workflows/config/binding", "POST", OkSchema$1, {
+      await apiSend("/comfytv/workflows/config/binding", "POST", OkSchema$2, {
         workflow_id: config2.value.id,
         ...payload
       });
@@ -71453,7 +71453,7 @@ function useWorkflowConfig(t2) {
   async function postMeta(payload) {
     if (!config2.value) return;
     try {
-      await apiSend("/comfytv/workflows/config/meta", "POST", OkSchema$1, {
+      await apiSend("/comfytv/workflows/config/meta", "POST", OkSchema$2, {
         workflow_id: config2.value.id,
         ...payload
       });
@@ -71469,7 +71469,7 @@ function useWorkflowConfig(t2) {
   async function deleteBinding(node_id, widget_name) {
     if (!config2.value) return;
     try {
-      await apiSend("/comfytv/workflows/config/binding", "DELETE", OkSchema$1, {
+      await apiSend("/comfytv/workflows/config/binding", "DELETE", OkSchema$2, {
         workflow_id: config2.value.id,
         node_id,
         input_name: widget_name
@@ -72428,7 +72428,7 @@ const useStageParamStore = /* @__PURE__ */ defineStore("stageParams", () => {
   async function remove2(id) {
     params.value = params.value.filter((p2) => p2.id !== id);
     try {
-      await apiSend(`/comfytv/stage_params/${id}`, "DELETE", OkSchema$1);
+      await apiSend(`/comfytv/stage_params/${id}`, "DELETE", OkSchema$2);
     } catch (e) {
       console.warn("[ComfyTV/stage-params] delete failed", id, e);
     }
@@ -130547,7 +130547,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-Bm4gKhXn.mjs");
+    const { STLLoader } = await import("./STLLoader-DUEMoFIs.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -130555,7 +130555,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-B-pWF3eE.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-QU9KRk6X.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -204735,7 +204735,7 @@ function installGlobalRunBridge(app2, deps) {
   };
   return true;
 }
-const OkSchema = object({ ok: boolean() });
+const OkSchema$1 = object({ ok: boolean() });
 const ActivitySchema = object({ active: boolean() });
 const MCP_ACTIVITY_EVENT = "comfytv-mcp-activity";
 const TICK_MS = 5e3;
@@ -204770,6 +204770,7 @@ function stageInputs(graph, node) {
   return out;
 }
 function lastRun(state2) {
+  if (state2 == null ? void 0 : state2.running) return { status: "running" };
   if (state2 == null ? void 0 : state2.error) return { status: "error", error: state2.error.message };
   if (state2 == null ? void 0 : state2.output) return { status: "ok" };
   return { status: "never" };
@@ -204809,6 +204810,7 @@ function installCanvasMirror(app2, deps) {
   let inFlight = false;
   let timer = null;
   async function tick() {
+    var _a3, _b3;
     if (inFlight) return;
     const snapshot = buildCanvasSnapshot(deps);
     if (!snapshot) return;
@@ -204820,12 +204822,18 @@ function installCanvasMirror(app2, deps) {
     inFlight = true;
     try {
       if (changed) {
-        await apiSend("/comfytv/canvas_state", "POST", OkSchema, snapshot);
+        const clientId = (_b3 = (_a3 = deps.resolveApp()) == null ? void 0 : _a3.api) == null ? void 0 : _b3.clientId;
+        await apiSend(
+          "/comfytv/canvas_state",
+          "POST",
+          OkSchema$1,
+          clientId ? { ...snapshot, client_id: String(clientId) } : snapshot
+        );
         lastPosted = serialized;
         lastPostedProject = snapshot.project_id;
       } else {
         try {
-          await apiSend("/comfytv/canvas_state", "POST", OkSchema, {
+          await apiSend("/comfytv/canvas_state", "POST", OkSchema$1, {
             project_id: lastPostedProject || snapshot.project_id,
             heartbeat: true
           });
@@ -204860,6 +204868,221 @@ function installCanvasMirror(app2, deps) {
     timer = null;
     (_b3 = (_a3 = app2.api) == null ? void 0 : _a3.removeEventListener) == null ? void 0 : _b3.call(_a3, MCP_ACTIVITY_EVENT, onActivity);
     app2.__comfytvCanvasMirrorInstalled = false;
+  };
+}
+const OkSchema = object({ ok: boolean() });
+const COMMAND_EVENT = "comfytv-mcp-command";
+const RESULT_PATH = "/comfytv/mcp_command_result";
+function isStageNode(node) {
+  return String((node == null ? void 0 : node.comfyClass) ?? (node == null ? void 0 : node.type) ?? "").startsWith("ComfyTV.");
+}
+function findStageNode(graph, ref2) {
+  var _a2, _b2;
+  for (const node of (graph == null ? void 0 : graph._nodes) ?? []) {
+    if (isStageNode(node) && getStageUid(node) === ref2) return node;
+  }
+  const byId = ((_a2 = graph == null ? void 0 : graph.getNodeById) == null ? void 0 : _a2.call(graph, Number(ref2))) ?? ((_b2 = graph == null ? void 0 : graph.getNodeById) == null ? void 0 : _b2.call(graph, ref2));
+  return byId && isStageNode(byId) ? byId : null;
+}
+function autoPos(graph) {
+  var _a2, _b2, _c, _d, _e2;
+  let anchor2 = null;
+  for (const node of (graph == null ? void 0 : graph._nodes) ?? []) {
+    if (!isStageNode(node)) continue;
+    if (!anchor2 || (((_a2 = node.pos) == null ? void 0 : _a2[0]) ?? 0) > (((_b2 = anchor2.pos) == null ? void 0 : _b2[0]) ?? 0)) anchor2 = node;
+  }
+  if (!anchor2) return [200, 200];
+  return [
+    (((_c = anchor2.pos) == null ? void 0 : _c[0]) ?? 0) + (((_d = anchor2.size) == null ? void 0 : _d[0]) ?? 280) + 80,
+    ((_e2 = anchor2.pos) == null ? void 0 : _e2[1]) ?? 0
+  ];
+}
+function applyStageFields(node, cmd) {
+  const updated = [];
+  if (cmd.workflow != null) {
+    if (!getWidget(node, "workflow")) {
+      throw new Error("this stage has no workflow selector");
+    }
+    writeWidget(node, "workflow", String(cmd.workflow));
+    updated.push("workflow");
+  }
+  if (cmd.prompt != null) {
+    if (!getWidget(node, "main_prompt")) {
+      throw new Error("this stage has no prompt field");
+    }
+    writeWidget(node, "main_prompt", String(cmd.prompt));
+    const state2 = useStageStore().getStage(node);
+    if (state2) state2.mainPrompt = String(cmd.prompt);
+    updated.push("prompt");
+  }
+  if (cmd.title != null) {
+    node.title = String(cmd.title);
+    updated.push("title");
+  }
+  if (cmd.widgets != null) {
+    if (typeof cmd.widgets !== "object" || Array.isArray(cmd.widgets)) {
+      throw new Error("widgets must be an object mapping widget name -> value");
+    }
+    for (const [name, value] of Object.entries(cmd.widgets)) {
+      if (!getWidget(node, name)) {
+        const names = (node.widgets ?? []).map((w) => String((w == null ? void 0 : w.name) ?? "")).filter(Boolean).join(", ");
+        throw new Error(`no widget '${name}' on this stage; widgets: ${names || "(none)"}`);
+      }
+      writeWidget(node, name, value);
+      updated.push(`widgets.${name}`);
+    }
+  }
+  if (cmd.server != null) {
+    const raw = String(cmd.server).toLowerCase();
+    node.properties = node.properties ?? {};
+    node.properties.comfytv_server = raw === "local" || raw === "" ? "" : String(cmd.server);
+    updated.push("server");
+  }
+  if (cmd.asset_refs != null) {
+    if (!Array.isArray(cmd.asset_refs)) {
+      throw new Error("asset_refs must be an array of {asset_id, slot?, type?} objects");
+    }
+    const refs = cmd.asset_refs.map((r, i) => {
+      const id = Number(r == null ? void 0 : r.asset_id);
+      if (!Number.isInteger(id)) throw new Error(`asset_refs[${i}] needs a numeric asset_id`);
+      const slot = Number.isInteger(Number(r == null ? void 0 : r.slot)) ? Number(r.slot) : i;
+      const type = (r == null ? void 0 : r.type) === "video" || (r == null ? void 0 : r.type) === "audio" ? r.type : void 0;
+      return type ? { asset_id: id, slot, type } : { asset_id: id, slot };
+    });
+    writeImageRefs(node, refs);
+    updated.push("asset_refs");
+  }
+  return updated;
+}
+function handleAddStage(app2, cmd) {
+  var _a2;
+  const graph = app2 == null ? void 0 : app2.graph;
+  const pos = Array.isArray(cmd.pos) && cmd.pos.length === 2 ? [Number(cmd.pos[0]), Number(cmd.pos[1])] : autoPos(graph);
+  const node = createNodeAt(String(cmd.node_class), pos);
+  if (!node) throw new Error(`could not create node ${cmd.node_class}`);
+  claimStageUid(node);
+  applyStageFields(node, cmd);
+  (_a2 = graph == null ? void 0 : graph.setDirtyCanvas) == null ? void 0 : _a2.call(graph, true, true);
+  return { graph_node_id: String(node.id), uid: getStageUid(node) };
+}
+function handleSetStage(app2, cmd) {
+  var _a2, _b2;
+  const node = findStageNode(app2 == null ? void 0 : app2.graph, String(cmd.node));
+  if (!node) throw new Error(`stage ${cmd.node} not found on the canvas`);
+  const updated = applyStageFields(node, cmd);
+  (_b2 = (_a2 = app2 == null ? void 0 : app2.graph) == null ? void 0 : _a2.setDirtyCanvas) == null ? void 0 : _b2.call(_a2, true, true);
+  return { graph_node_id: String(node.id), uid: getStageUid(node), updated };
+}
+function inputNames(node) {
+  return (node.inputs ?? []).map((i) => String((i == null ? void 0 : i.name) ?? "")).join(", ") || "(none)";
+}
+function handleConnectStages(app2, cmd) {
+  var _a2, _b2, _c, _d, _e2;
+  const graph = app2 == null ? void 0 : app2.graph;
+  const src = findStageNode(graph, String(cmd.from_node));
+  if (!src) throw new Error(`from_node ${cmd.from_node} not found on the canvas`);
+  const dst = findStageNode(graph, String(cmd.to_node));
+  if (!dst) throw new Error(`to_node ${cmd.to_node} not found on the canvas`);
+  const fromSlot = Number(cmd.from_slot ?? 0);
+  const out = (_a2 = src.outputs) == null ? void 0 : _a2[fromSlot];
+  if (!out) throw new Error(`from_node has no output slot ${fromSlot}`);
+  let toSlot = -1;
+  if (cmd.to_slot != null) {
+    const name = String(cmd.to_slot);
+    toSlot = findNamedSlot(dst, name);
+    if (toSlot < 0) toSlot = findFirstAutogrowSlot(dst, name);
+    if (toSlot < 0) {
+      throw new Error(`to_node has no input '${name}'; inputs: ${inputNames(dst)}`);
+    }
+  } else {
+    const accepts = (inpType) => inpType === "*" || String(inpType ?? "").split(",").includes(String(out.type));
+    for (let i = 0; i < (((_b2 = dst.inputs) == null ? void 0 : _b2.length) ?? 0); i++) {
+      const inp = dst.inputs[i];
+      if ((inp == null ? void 0 : inp.link) != null) continue;
+      if (accepts(inp == null ? void 0 : inp.type)) {
+        toSlot = i;
+        break;
+      }
+    }
+    if (toSlot < 0) {
+      throw new Error(
+        `no free input on to_node compatible with output type ${String(out.type)}; inputs: ${inputNames(dst)}`
+      );
+    }
+  }
+  const link2 = src.connect(fromSlot, dst, toSlot);
+  if (!link2) throw new Error("the graph rejected the connection (type mismatch?)");
+  (_c = graph == null ? void 0 : graph.setDirtyCanvas) == null ? void 0 : _c.call(graph, true, true);
+  return {
+    from: String(src.id),
+    to: String(dst.id),
+    input: String(((_e2 = (_d = dst.inputs) == null ? void 0 : _d[toSlot]) == null ? void 0 : _e2.name) ?? toSlot)
+  };
+}
+async function handleRunStage(app2, cmd) {
+  var _a2, _b2, _c, _d;
+  const node = findStageNode(app2 == null ? void 0 : app2.graph, String(cmd.node));
+  if (!node) throw new Error(`stage ${cmd.node} not found on the canvas`);
+  const stageApi = node.__comfytvStageApi;
+  if (!(stageApi == null ? void 0 : stageApi.onRunRequest)) {
+    throw new Error("stage card is not mounted yet — cannot run");
+  }
+  if ((_a2 = stageApi.state) == null ? void 0 : _a2.running) throw new Error("stage is already running");
+  await stageApi.onRunRequest();
+  if ((_b2 = stageApi.state) == null ? void 0 : _b2.running) {
+    return { started: true, graph_node_id: String(node.id), uid: getStageUid(node) };
+  }
+  throw new Error(
+    ((_d = (_c = stageApi.state) == null ? void 0 : _c.error) == null ? void 0 : _d.message) || "run did not start (loader stage, workflow still preparing, or upstream outputs missing)"
+  );
+}
+async function executeCommand(app2, cmd) {
+  switch (cmd.action) {
+    case "add_stage":
+      return handleAddStage(app2, cmd);
+    case "set_stage":
+      return handleSetStage(app2, cmd);
+    case "connect_stages":
+      return handleConnectStages(app2, cmd);
+    case "run_stage":
+      return handleRunStage(app2, cmd);
+    default:
+      throw new Error(`unknown command action ${String(cmd.action)}`);
+  }
+}
+function installMcpCommandBus(app2, deps) {
+  var _a2, _b2;
+  if (app2.__comfytvMcpCommandBusInstalled) return false;
+  app2.__comfytvMcpCommandBusInstalled = true;
+  const onCommand = async (event) => {
+    var _a3;
+    const cmd = (event == null ? void 0 : event.detail) ?? event ?? {};
+    if (!cmd.id || !cmd.action) return;
+    const a2 = deps.resolveApp();
+    if (cmd.target_client_id && ((_a3 = a2 == null ? void 0 : a2.api) == null ? void 0 : _a3.clientId) && cmd.target_client_id !== a2.api.clientId) return;
+    if (cmd.project_id && deps.resolveProjectId() !== cmd.project_id) return;
+    let body;
+    try {
+      const result = await executeCommand(a2, cmd);
+      body = { command_id: cmd.id, ok: true, result };
+    } catch (e) {
+      body = {
+        command_id: cmd.id,
+        ok: false,
+        error: e instanceof Error ? e.message : String(e)
+      };
+    }
+    try {
+      await apiSend(RESULT_PATH, "POST", OkSchema, body);
+    } catch (e) {
+      console.warn("[ComfyTV/mcp] failed to post command result", e);
+    }
+  };
+  (_b2 = (_a2 = app2.api) == null ? void 0 : _a2.addEventListener) == null ? void 0 : _b2.call(_a2, COMMAND_EVENT, onCommand);
+  return () => {
+    var _a3, _b3;
+    (_b3 = (_a3 = app2.api) == null ? void 0 : _a3.removeEventListener) == null ? void 0 : _b3.call(_a3, COMMAND_EVENT, onCommand);
+    app2.__comfytvMcpCommandBusInstalled = false;
   };
 }
 window.__comfytv_host_pinia = getActivePinia();
@@ -204927,6 +205150,7 @@ function mountStage(node, kind, variant = "generator") {
   });
   installTextPreviewCap(node);
   const { state: state2, onRunRequest, onCancelRequest, onDisconnect, onAction } = useStageNode(node, kind, variant);
+  node.__comfytvStageApi = { state: state2, onRunRequest, onCancelRequest };
   const Card = RICH_STAGE_CARDS[node.comfyClass] ?? StageCard;
   const props = {
     state: state2,
@@ -204940,6 +205164,7 @@ function mountStage(node, kind, variant = "generator") {
   const mountKey = `stage-${mountKeySeq++}`;
   registerMount(mountKey, container, Card, props);
   node.onRemoved = useChainCallback(node.onRemoved, () => {
+    delete node.__comfytvStageApi;
     unregisterMount(mountKey);
   });
 }
@@ -205021,6 +205246,10 @@ const extension = {
       resolveApp: () => a2,
       resolveProjectId: () => useProjectStore(pinia).currentProjectId,
       resolveStageState: (node) => useStageStore(pinia).getStage(node)
+    });
+    installMcpCommandBus(a2, {
+      resolveApp: () => a2,
+      resolveProjectId: () => useProjectStore(pinia).currentProjectId
     });
     try {
       const ComfyButton = (_b2 = (_a2 = window.comfyAPI) == null ? void 0 : _a2.button) == null ? void 0 : _b2.ComfyButton;
@@ -205243,4 +205472,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-BEKiXG8b.mjs.map
+//# sourceMappingURL=main-CFuzUQ-W.mjs.map

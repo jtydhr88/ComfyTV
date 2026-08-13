@@ -23,5 +23,6 @@ from . import settings   # noqa: F401
 from . import canvas_state  # noqa: F401
 from . import exec_errors   # noqa: F401
 from . import mcp        # noqa: F401
+from . import mcp_commands  # noqa: F401
 
 from .stages import _compute_input_usage  # noqa: F401

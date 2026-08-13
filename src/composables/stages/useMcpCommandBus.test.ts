@@ -1,0 +1,365 @@
+import { createPinia, setActivePinia } from 'pinia'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { app } from '@/lib/comfyApp'
+import { findStageNode, installMcpCommandBus } from './useMcpCommandBus'
+
+function makeNode(overrides: any = {}) {
+  return {
+    id: 3,
+    comfyClass: 'ComfyTV.ImageStage',
+    title: 'Image',
+    properties: { comfytv_stage_uid: 'u1' },
+    widgets: [
+      { name: 'workflow', value: 'Old Workflow' },
+      { name: 'main_prompt', value: 'old prompt' },
+    ],
+    inputs: [],
+    outputs: [{ type: 'COMFYTV_IMAGE', links: [] }],
+    connect: vi.fn(() => ({ id: 1 })),
+    ...overrides,
+  }
+}
+
+function makeHost(nodes: any[], projectId = 'p1') {
+  const graph = {
+    _nodes: nodes,
+    getNodeById: (id: any) => nodes.find((n) => String(n.id) === String(id)),
+    setDirtyCanvas: vi.fn(),
+    add: vi.fn((n: any) => nodes.push(n)),
+  }
+  const host: any = {
+    graph,
+    api: {
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      clientId: 'tab-1',
+    },
+  }
+  const deps = {
+    resolveApp: () => host,
+    resolveProjectId: () => projectId,
+  }
+  return { host, graph, deps }
+}
+
+function commandHandler(host: any): ((event: any) => Promise<void>) | undefined {
+  const call = host.api.addEventListener.mock.calls.find(
+    ([event]: [string]) => event === 'comfytv-mcp-command',
+  )
+  return call?.[1]
+}
+
+describe('installMcpCommandBus', () => {
+  let fetchApi: ReturnType<typeof vi.fn>
+  let uninstall: (() => void) | false
+
+  beforeEach(() => {
+    setActivePinia(createPinia())
+    fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    fetchApi.mockClear()
+    fetchApi.mockImplementation(async () =>
+      new Response(JSON.stringify({ ok: true }), {
+        status: 200,
+        headers: { 'content-type': 'application/json' },
+      }))
+    uninstall = false
+  })
+
+  afterEach(() => {
+    if (uninstall) uninstall()
+    delete (window as any).LiteGraph
+  })
+
+  function postedResults(): any[] {
+    return fetchApi.mock.calls
+      .filter(([path]) => String(path).includes('/comfytv/mcp_command_result'))
+      .map(([, init]) => JSON.parse((init as RequestInit).body as string))
+  }
+
+  async function dispatch(host: any, cmd: any) {
+    await commandHandler(host)!({ detail: cmd })
+  }
+
+  it('ignores malformed, mistargeted and other-project commands', async () => {
+    const { host, deps } = makeHost([makeNode()])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, {})
+    await dispatch(host, { id: 'c1', action: 'run_stage', target_client_id: 'tab-9' })
+    await dispatch(host, { id: 'c2', action: 'run_stage', project_id: 'other' })
+    expect(postedResults()).toHaveLength(0)
+  })
+
+  it('installs once and uninstalls cleanly', () => {
+    const { host, deps } = makeHost([])
+    uninstall = installMcpCommandBus(host, deps)
+    expect(uninstall).not.toBe(false)
+    expect(installMcpCommandBus(host, deps)).toBe(false)
+    ;(uninstall as () => void)()
+    uninstall = false
+    expect(host.api.removeEventListener).toHaveBeenCalled()
+  })
+
+  it('add_stage creates, claims a uid and applies fields', async () => {
+    const { host, deps } = makeHost([makeNode()])
+    const created = makeNode({ id: 9, properties: {}, title: '' })
+    ;(window as any).LiteGraph = { createNode: vi.fn(() => created) }
+    uninstall = installMcpCommandBus(host, deps)
+
+    await dispatch(host, {
+      id: 'c1', action: 'add_stage', node_class: 'ComfyTV.ImageStage',
+      title: 'Hero', prompt: 'a cat',
+    })
+
+    const [result] = postedResults()
+    expect(result.ok).toBe(true)
+    expect(result.command_id).toBe('c1')
+    expect(result.result.graph_node_id).toBe('9')
+    expect(result.result.uid).toBe(created.properties.comfytv_stage_uid)
+    expect(created.title).toBe('Hero')
+    expect(created.widgets[1].value).toBe('a cat')
+  })
+
+  it('add_stage reports unknown node classes', async () => {
+    const { host, deps } = makeHost([])
+    ;(window as any).LiteGraph = { createNode: vi.fn(() => null) }
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, { id: 'c1', action: 'add_stage', node_class: 'ComfyTV.Nope' })
+    const [result] = postedResults()
+    expect(result.ok).toBe(false)
+    expect(result.error).toContain('could not create node')
+  })
+
+  it('set_stage finds by uid and reports updated fields', async () => {
+    const node = makeNode()
+    const { host, deps } = makeHost([node])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, {
+      id: 'c1', action: 'set_stage', node: 'u1',
+      prompt: 'new prompt', workflow: 'New Workflow', title: 'Renamed',
+    })
+    const [result] = postedResults()
+    expect(result.ok).toBe(true)
+    expect(result.result.updated).toEqual(['workflow', 'prompt', 'title'])
+    expect(node.widgets[0].value).toBe('New Workflow')
+    expect(node.widgets[1].value).toBe('new prompt')
+    expect(node.title).toBe('Renamed')
+  })
+
+  it('set_stage applies arbitrary widgets by name', async () => {
+    const node = makeNode({
+      widgets: [
+        { name: 'workflow', value: '' },
+        { name: 'main_prompt', value: '' },
+        { name: 'duration', value: 5 },
+        { name: 'end_zoom', value: 1.3 },
+      ],
+    })
+    const { host, deps } = makeHost([node])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, {
+      id: 'c1', action: 'set_stage', node: 'u1',
+      widgets: { duration: 8, end_zoom: 1.5 },
+    })
+    const [result] = postedResults()
+    expect(result.ok).toBe(true)
+    expect(result.result.updated).toEqual(['widgets.duration', 'widgets.end_zoom'])
+    expect(node.widgets[2].value).toBe(8)
+    expect(node.widgets[3].value).toBe(1.5)
+  })
+
+  it('set_stage routes the stage to a server and back to local', async () => {
+    const node = makeNode()
+    const { host, deps } = makeHost([node])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, { id: 'c1', action: 'set_stage', node: 'u1', server: '3' })
+    expect(node.properties.comfytv_server).toBe('3')
+    await dispatch(host, { id: 'c2', action: 'set_stage', node: 'u1', server: 'local' })
+    expect(node.properties.comfytv_server).toBe('')
+    const results = postedResults()
+    expect(results[0].result.updated).toEqual(['server'])
+    expect(results[1].ok).toBe(true)
+  })
+
+  it('set_stage writes asset refs with slot autofill', async () => {
+    const node = makeNode()
+    const { host, deps } = makeHost([node])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, {
+      id: 'c1', action: 'set_stage', node: 'u1',
+      asset_refs: [{ asset_id: 5 }, { asset_id: 9, type: 'video' }, { asset_id: 7, slot: 6 }],
+    })
+    const [result] = postedResults()
+    expect(result.ok).toBe(true)
+    expect(result.result.updated).toEqual(['asset_refs'])
+    expect(node.properties.comfytv_image_refs).toEqual([
+      { asset_id: 5, slot: 0 },
+      { asset_id: 9, slot: 1, type: 'video' },
+      { asset_id: 7, slot: 6 },
+    ])
+  })
+
+  it('set_stage clears asset refs with an empty array', async () => {
+    const node = makeNode({
+      properties: { comfytv_stage_uid: 'u1', comfytv_image_refs: [{ asset_id: 1, slot: 0 }] },
+    })
+    const { host, deps } = makeHost([node])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, { id: 'c1', action: 'set_stage', node: 'u1', asset_refs: [] })
+    expect(node.properties.comfytv_image_refs).toEqual([])
+  })
+
+  it('set_stage lists widget names on an unknown widget', async () => {
+    const node = makeNode()
+    const { host, deps } = makeHost([node])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, {
+      id: 'c1', action: 'set_stage', node: 'u1', widgets: { nope: 1 },
+    })
+    const [result] = postedResults()
+    expect(result.ok).toBe(false)
+    expect(result.error).toContain("no widget 'nope'")
+    expect(result.error).toContain('main_prompt')
+  })
+
+  it('set_stage errors on a missing node', async () => {
+    const { host, deps } = makeHost([makeNode()])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, { id: 'c1', action: 'set_stage', node: 'nope', prompt: 'x' })
+    const [result] = postedResults()
+    expect(result.ok).toBe(false)
+    expect(result.error).toContain('not found')
+  })
+
+  it('connect_stages resolves named and autogrow slots', async () => {
+    const src = makeNode({ id: 1, properties: { comfytv_stage_uid: 'u-src' } })
+    const dst = makeNode({
+      id: 2,
+      properties: { comfytv_stage_uid: 'u-dst' },
+      inputs: [{ name: 'images.0', type: 'COMFYTV_IMAGE', link: null }],
+    })
+    const { host, deps } = makeHost([src, dst])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, {
+      id: 'c1', action: 'connect_stages',
+      from_node: 'u-src', to_node: 'u-dst', to_slot: 'images',
+    })
+    const [result] = postedResults()
+    expect(result.ok).toBe(true)
+    expect(result.result.input).toBe('images.0')
+    expect(src.connect).toHaveBeenCalledWith(0, dst, 0)
+  })
+
+  it('connect_stages auto-picks the first free type-compatible input', async () => {
+    const src = makeNode({ id: 1, properties: { comfytv_stage_uid: 'u-src' } })
+    const dst = makeNode({
+      id: 2,
+      properties: { comfytv_stage_uid: 'u-dst' },
+      inputs: [
+        { name: 'video', type: 'COMFYTV_VIDEO', link: null },
+        { name: 'images.0', type: 'COMFYTV_IMAGE', link: 7 },
+        { name: 'images.1', type: 'COMFYTV_IMAGE', link: null },
+      ],
+    })
+    const { host, deps } = makeHost([src, dst])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, {
+      id: 'c1', action: 'connect_stages', from_node: '1', to_node: '2',
+    })
+    const [result] = postedResults()
+    expect(result.ok).toBe(true)
+    expect(result.result.input).toBe('images.1')
+  })
+
+  it('connect_stages auto-matches comma-separated multi-type inputs', async () => {
+    const src = makeNode({ id: 1 })
+    const dst = makeNode({
+      id: 2,
+      properties: { comfytv_stage_uid: 'u-dst' },
+      inputs: [
+        { name: 'batch', type: 'COMFYTV_IMAGES,COMFYTV_IMAGE', link: null },
+      ],
+    })
+    const { host, deps } = makeHost([src, dst])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, {
+      id: 'c1', action: 'connect_stages', from_node: '1', to_node: '2',
+    })
+    const [result] = postedResults()
+    expect(result.ok).toBe(true)
+    expect(result.result.input).toBe('batch')
+  })
+
+  it('connect_stages errors when no compatible input exists', async () => {
+    const src = makeNode({ id: 1 })
+    const dst = makeNode({
+      id: 2,
+      properties: { comfytv_stage_uid: 'u-dst' },
+      inputs: [{ name: 'video', type: 'COMFYTV_VIDEO', link: null }],
+    })
+    const { host, deps } = makeHost([src, dst])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, {
+      id: 'c1', action: 'connect_stages', from_node: '1', to_node: '2',
+    })
+    const [result] = postedResults()
+    expect(result.ok).toBe(false)
+    expect(result.error).toContain('no free input')
+    expect(result.error).toContain('video')
+  })
+
+  it('run_stage reuses the mounted stage API and reports started', async () => {
+    const state = { running: false, error: null }
+    const node = makeNode({
+      __comfytvStageApi: {
+        state,
+        onRunRequest: vi.fn(async () => { state.running = true }),
+      },
+    })
+    const { host, deps } = makeHost([node])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, { id: 'c1', action: 'run_stage', node: 'u1' })
+    const [result] = postedResults()
+    expect(result.ok).toBe(true)
+    expect(result.result.started).toBe(true)
+    expect(node.__comfytvStageApi.onRunRequest).toHaveBeenCalled()
+  })
+
+  it('run_stage surfaces the stage error when the run does not start', async () => {
+    const state = { running: false, error: { message: 'upstream not ready' } }
+    const node = makeNode({
+      __comfytvStageApi: { state, onRunRequest: vi.fn(async () => {}) },
+    })
+    const { host, deps } = makeHost([node])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, { id: 'c1', action: 'run_stage', node: 'u1' })
+    const [result] = postedResults()
+    expect(result.ok).toBe(false)
+    expect(result.error).toBe('upstream not ready')
+  })
+
+  it('run_stage errors when the stage card is not mounted', async () => {
+    const { host, deps } = makeHost([makeNode()])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, { id: 'c1', action: 'run_stage', node: 'u1' })
+    const [result] = postedResults()
+    expect(result.ok).toBe(false)
+    expect(result.error).toContain('not mounted')
+  })
+})
+
+describe('findStageNode', () => {
+  it('prefers uid matches and falls back to graph ids, stages only', () => {
+    const stage = makeNode()
+    const native = { id: 8, comfyClass: 'KSampler' }
+    const graph = {
+      _nodes: [stage, native],
+      getNodeById: (id: any) =>
+        [stage, native].find((n) => String(n.id) === String(id)),
+    }
+    expect(findStageNode(graph, 'u1')).toBe(stage)
+    expect(findStageNode(graph, '3')).toBe(stage)
+    expect(findStageNode(graph, '8')).toBeNull()
+    expect(findStageNode(graph, 'missing')).toBeNull()
+  })
+})

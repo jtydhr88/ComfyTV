@@ -65,7 +65,7 @@ class TestProtocol:
         assert result["protocolVersion"] == "2025-06-18"
         assert result["serverInfo"]["name"] == "comfytv-mcp"
         assert result["capabilities"] == {"tools": {}}
-        assert "READ-ONLY" in result["instructions"] or "Read-only" in result["instructions"]
+        assert "add_stage" in result["instructions"]
 
     async def test_initialize_unknown_version_falls_back(self, client):
         data = await _rpc(client, "initialize", {"protocolVersion": "2099-01-01"})
@@ -115,6 +115,7 @@ class TestProtocol:
         assert set(tools) == {
             "server_info", "projects", "stage_catalog", "list_workflows",
             "get_canvas", "outputs", "assets", "jobs", "exec_errors",
+            "add_stage", "set_stage", "connect_stages", "run_stage", "servers",
         }
         for t in tools.values():
             assert t["description"]
@@ -153,7 +154,8 @@ class TestMcpActivity:
 class TestReadTools:
     async def test_server_info(self, client):
         info = _tool_json(await _call_tool(client, "server_info"))
-        assert info["readonly"] is True
+        assert info["readonly"] is False
+        assert info["write_tools_need_open_tab"] is True
         assert info["comfytv_version"] != "unknown"
         assert info["stage_types"] > 0
         assert info["canvas_mirror"] == "absent"

@@ -1,4 +1,5 @@
 
+import math
 import os
 import re
 from pathlib import Path
@@ -55,8 +56,8 @@ def render_text_rgba(text: str, *, font='', size=48, color='#FFFFFF',
     d = ImageDraw.Draw(probe)
     box = d.multiline_textbbox((0, 0), text, font=fnt, align=align,
                                stroke_width=int(stroke))
-    w = max(2, box[2] - box[0] + 4)
-    h = max(2, box[3] - box[1] + 4)
+    w = max(2, int(math.ceil(box[2] - box[0])) + 4)
+    h = max(2, int(math.ceil(box[3] - box[1])) + 4)
     img = Image.new('RGBA', (w, h), (0, 0, 0, 0))
     ImageDraw.Draw(img).multiline_text(
         (2 - box[0], 2 - box[1]), text, font=fnt, fill=color, align=align,

@@ -43,6 +43,7 @@ import { applyHiddenWidgetFlags, getWidget } from '@/utils/widget'
 import { checkThemeTokens } from '@/utils/devTokenCheck'
 import { installGlobalRunBridge } from '@/utils/globalRunBridge'
 import { installCanvasMirror } from '@/composables/stages/useCanvasMirror'
+import { installMcpCommandBus } from '@/composables/stages/useMcpCommandBus'
 
 ;(window as any).__comfytv_host_pinia = getActivePinia()
 
@@ -117,6 +118,7 @@ function mountStage(node: ComfyNode, kind: StageKind, variant: StageVariant = 'g
   installTextPreviewCap(node)
 
   const { state, onRunRequest, onCancelRequest, onDisconnect, onAction } = useStageNode(node, kind, variant)
+  ;(node as any).__comfytvStageApi = { state, onRunRequest, onCancelRequest }
 
   const Card = RICH_STAGE_CARDS[node.comfyClass] ?? StageCard
   const props: any = {
@@ -128,6 +130,7 @@ function mountStage(node: ComfyNode, kind: StageKind, variant: StageVariant = 'g
   registerMount(mountKey, container, Card, props)
 
   node.onRemoved = useChainCallback(node.onRemoved, () => {
+    delete (node as any).__comfytvStageApi
     unregisterMount(mountKey)
   })
 }
@@ -218,6 +221,11 @@ const extension: ComfyExtension = {
       resolveApp: () => a,
       resolveProjectId: () => useProjectStore(pinia).currentProjectId,
       resolveStageState: (node) => useStageStore(pinia).getStage(node),
+    })
+
+    installMcpCommandBus(a, {
+      resolveApp: () => a,
+      resolveProjectId: () => useProjectStore(pinia).currentProjectId,
     })
 
     try {

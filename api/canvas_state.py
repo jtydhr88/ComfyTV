@@ -56,6 +56,19 @@ def get_canvas_state(project_id: str | None = None) -> dict:
     }
 
 
+def get_mirror_client_id(project_id: str | None = None) -> str | None:
+    if project_id is None:
+        if len(_mirrors) != 1:
+            return None
+        project_id = next(iter(_mirrors))
+    entry = _mirrors.get(project_id)
+    if entry is None:
+        return None
+    if time.time() - entry["received_at"] > STALE_AFTER_S:
+        return None
+    return entry.get("client_id") or None
+
+
 def mirror_summary() -> list[dict]:
     now = time.time()
     return [

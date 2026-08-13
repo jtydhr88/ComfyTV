@@ -38,7 +38,7 @@ const TARGET_GROUP_BY_KIND: Record<StageKind, 'texts' | 'images' | 'videos' | 'm
   material:       'images',
 }
 
-function findFirstAutogrowSlot(node: any, groupPrefix: string): number {
+export function findFirstAutogrowSlot(node: any, groupPrefix: string): number {
   if (!node.inputs) return -1
   for (let i = 0; i < node.inputs.length; i++) {
     const n = String(node.inputs[i].name || '')
@@ -47,7 +47,7 @@ function findFirstAutogrowSlot(node: any, groupPrefix: string): number {
   return -1
 }
 
-function findNamedSlot(node: any, name: string): number {
+export function findNamedSlot(node: any, name: string): number {
   if (!node.inputs) return -1
   for (let i = 0; i < node.inputs.length; i++) {
     if (String(node.inputs[i].name || '') === name) return i
@@ -60,7 +60,7 @@ export function outputHasLinks(node: any, idx: number): boolean {
   return !!(out?.links && out.links.length > 0)
 }
 
-function createNodeAt(targetClass: string, pos: [number, number]): any | null {
+export function createNodeAt(targetClass: string, pos: [number, number]): any | null {
   const win = window as any
   if (!win.LiteGraph?.createNode) {
     console.error('[ComfyTV/action] LiteGraph.createNode not available')

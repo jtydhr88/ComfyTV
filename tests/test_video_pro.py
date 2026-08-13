@@ -207,6 +207,13 @@ class TestText:
         assert arr.ndim == 3 and arr.shape[2] == 4
         assert arr[..., 3].max() > 200  # something was drawn
 
+    def test_render_multiline_text(self):
+        from ComfyTV.runners.text_overlay import render_text_rgba
+        arr = render_text_rgba('A U R E L I U S\nSilence, at full speed.',
+                               size=56, stroke=2)
+        assert arr.ndim == 3 and arr.shape[2] == 4
+        assert arr[..., 3].max() > 200
+
     def test_parse_srt(self):
         from ComfyTV.runners.text_overlay import parse_subtitles
         srt = """1

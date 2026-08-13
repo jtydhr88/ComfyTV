@@ -211,6 +211,14 @@ def create_asset(
         return _asset_to_dict(asset, sorted(valid))
 
 
+def get_asset(asset_id: int) -> Optional[dict]:
+    with db.get_session() as s:
+        asset = s.get(Asset, asset_id)
+        if asset is None:
+            return None
+        return _asset_dict_for(s, asset)
+
+
 def update_asset(
     asset_id: int,
     *,

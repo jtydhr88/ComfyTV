@@ -16,7 +16,7 @@ const MENTION_PAT = /@([A-Za-z]+_\d+)/g
 export interface CanvasMirrorDeps {
   resolveApp: () => any
   resolveProjectId: () => string
-  resolveStageState: (node: any) => { output?: string | null; error?: { message: string } | null } | undefined
+  resolveStageState: (node: any) => { output?: string | null; running?: boolean; error?: { message: string } | null } | undefined
 }
 
 function widgetValue(node: any, name: string): string {
@@ -47,7 +47,8 @@ function stageInputs(graph: any, node: any): { slot: string; from_node: string; 
   return out
 }
 
-function lastRun(state: { output?: string | null; error?: { message: string } | null } | undefined) {
+function lastRun(state: { output?: string | null; running?: boolean; error?: { message: string } | null } | undefined) {
+  if (state?.running) return { status: 'running' }
   if (state?.error) return { status: 'error', error: state.error.message }
   if (state?.output) return { status: 'ok' }
   return { status: 'never' }
@@ -103,7 +104,9 @@ export function installCanvasMirror(app: any, deps: CanvasMirrorDeps): (() => vo
     inFlight = true
     try {
       if (changed) {
-        await apiSend('/comfytv/canvas_state', 'POST', OkSchema, snapshot)
+        const clientId = deps.resolveApp()?.api?.clientId
+        await apiSend('/comfytv/canvas_state', 'POST', OkSchema,
+                      clientId ? { ...snapshot, client_id: String(clientId) } : snapshot)
         lastPosted = serialized
         lastPostedProject = snapshot.project_id
       } else {
