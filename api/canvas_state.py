@@ -10,21 +10,31 @@ _mirrors: dict[str, dict] = {}
 
 
 def store_canvas_state(project_id: str, stages: list[dict],
-                       client_id: str | None = None) -> None:
+                       client_id: str | None = None,
+                       ws_connected: bool | None = None) -> None:
     _mirrors[project_id] = {
         "project_id": project_id,
         "client_id": client_id,
+        "ws_connected": ws_connected,
         "stages": stages,
         "received_at": time.time(),
     }
 
 
-def touch_canvas_state(project_id: str) -> bool:
+def touch_canvas_state(project_id: str, client_id: str | None = None,
+                       ws_connected: bool | None = None) -> str:
     entry = _mirrors.get(project_id)
     if entry is None:
-        return False
+        return "missing"
+    owner = entry.get("client_id")
+    if owner and client_id and owner != client_id:
+        if time.time() - entry["received_at"] > STALE_AFTER_S:
+            return "stale_owner"
+        return "owned_by_other"
     entry["received_at"] = time.time()
-    return True
+    if ws_connected is not None:
+        entry["ws_connected"] = ws_connected
+    return "ok"
 
 
 def get_canvas_state(project_id: str | None = None) -> dict:
@@ -47,21 +57,28 @@ def get_canvas_state(project_id: str | None = None) -> dict:
             "mirrored_project_ids": sorted(_mirrors),
         }
     age = time.time() - entry["received_at"]
-    return {
+    out = {
         "available": True,
         "project_id": project_id,
         "stale": age > STALE_AFTER_S,
         "age_seconds": round(age, 1),
         "stages": entry["stages"],
     }
+    if entry.get("ws_connected") is not None:
+        out["tab_ws_connected"] = entry["ws_connected"]
+    return out
 
 
-def get_mirror_client_id(project_id: str | None = None) -> str | None:
+def get_mirror_entry(project_id: str | None = None) -> dict | None:
     if project_id is None:
         if len(_mirrors) != 1:
             return None
         project_id = next(iter(_mirrors))
-    entry = _mirrors.get(project_id)
+    return _mirrors.get(project_id)
+
+
+def get_mirror_client_id(project_id: str | None = None) -> str | None:
+    entry = get_mirror_entry(project_id)
     if entry is None:
         return None
     if time.time() - entry["received_at"] > STALE_AFTER_S:
@@ -71,15 +88,18 @@ def get_mirror_client_id(project_id: str | None = None) -> str | None:
 
 def mirror_summary() -> list[dict]:
     now = time.time()
-    return [
-        {
+    out = []
+    for pid, entry in sorted(_mirrors.items()):
+        row = {
             "project_id": pid,
             "stale": now - entry["received_at"] > STALE_AFTER_S,
             "age_seconds": round(now - entry["received_at"], 1),
             "stage_count": len(entry["stages"]),
         }
-        for pid, entry in sorted(_mirrors.items())
-    ]
+        if entry.get("ws_connected") is not None:
+            row["tab_ws_connected"] = entry["ws_connected"]
+        out.append(row)
+    return out
 
 
 def clear_canvas_state() -> None:
@@ -95,18 +115,28 @@ async def post_canvas_state(request: web.Request) -> web.Response:
     project_id = (body.get("project_id") or "").strip()
     if not project_id:
         return web.json_response({"error": "project_id required"}, status=400)
+    client_id = body.get("client_id")
+    ws_connected = body.get("ws_connected")
+    if not isinstance(ws_connected, bool):
+        ws_connected = None
 
     if body.get("heartbeat") is True:
-        if not touch_canvas_state(project_id):
-            return web.json_response({"error": "no snapshot to refresh"}, status=404)
-        return web.json_response({"ok": True})
+        outcome = touch_canvas_state(
+            project_id, client_id=str(client_id) if client_id else None,
+            ws_connected=ws_connected)
+        if outcome == "ok":
+            return web.json_response({"ok": True})
+        if outcome == "owned_by_other":
+            return web.json_response(
+                {"error": "another tab owns this project's mirror"}, status=409)
+        return web.json_response({"error": "no snapshot to refresh"}, status=404)
 
     stages = body.get("stages")
     if not isinstance(stages, list):
         return web.json_response({"error": "stages must be a list"}, status=400)
-    client_id = body.get("client_id")
     store_canvas_state(project_id, stages,
-                       client_id=str(client_id) if client_id else None)
+                       client_id=str(client_id) if client_id else None,
+                       ws_connected=ws_connected)
     return web.json_response({"ok": True})
 
 

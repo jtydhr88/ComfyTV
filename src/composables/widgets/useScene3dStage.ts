@@ -77,6 +77,10 @@ import {
   createDefaultModel,
   createDefaultPrimitive
 } from '@/widgets/three/scene3d/types'
+import {
+  applySceneOps,
+  type SceneOpResult
+} from '@/widgets/three/scene3d/mcpOps'
 
 const SCENE_WIDGET = 'scene_state'
 const CHANNEL_WIDGET = 'channel'
@@ -313,6 +317,8 @@ export function useScene3dStage(
   function cleanup(): void {
     viewport?.remove()
     viewport = null
+    const api = (node as any).__comfytvStageApi
+    if (api?.scene3d) delete api.scene3d
   }
 
   const handleMouseEnter = (): void => {
@@ -1030,6 +1036,105 @@ export function useScene3dStage(
     } finally {
       recording.value = false
       recordProgress.value = null
+    }
+  }
+
+  async function mcpApplyOps(ops: any[]): Promise<SceneOpResult[]> {
+    if (Array.isArray(ops)
+        && ops.some((op) => op?.op === 'add_model' && op.asset_id != null)) {
+      await assetStore.hydrate()
+    }
+    const { next, results } = applySceneOps(state.value, ops, {
+      resolveModel: (assetId, url) => {
+        if (url) return { url, name: url.split('filename=')[1] ?? 'model' }
+        if (assetId == null) return null
+        const asset = assetStore.byId(assetId)
+        if (!asset || asset.media_type !== 'model'
+            || !isMeshModelUrl(asset.payload_url)) {
+          return null
+        }
+        return { url: asset.payload_url, name: asset.name || `asset ${assetId}` }
+      },
+      resolvePresetFile: (presetId) =>
+        cameraPresets.value.find((preset) => preset.id === presetId)?.file ?? null,
+      editorPose: () => viewport?.getEditorCameraPose(),
+    })
+    commit(next)
+    return results
+  }
+
+  function mcpConfigureOutput(patch: {
+    channel?: string
+    width?: number
+    height?: number
+  }): void {
+    if (patch.channel && (SCENE_CHANNELS as readonly string[]).includes(patch.channel)) {
+      channel.value = patch.channel as SceneChannel
+      writeWidget(node, CHANNEL_WIDGET, patch.channel, { fireCallback: false })
+      viewport?.setPreviewChannel(channel.value)
+    }
+    if (Number.isFinite(patch.width)) {
+      outputWidth.value = Number(patch.width)
+      writeWidget(node, WIDTH_WIDGET, outputWidth.value, { fireCallback: false })
+    }
+    if (Number.isFinite(patch.height)) {
+      outputHeight.value = Number(patch.height)
+      writeWidget(node, HEIGHT_WIDGET, outputHeight.value, { fireCallback: false })
+    }
+  }
+
+  {
+    const hostApi = ((node as any).__comfytvStageApi ??= {})
+    hostApi.scene3d = {
+      getState: () => JSON.parse(JSON.stringify(state.value)),
+      resources: () => JSON.parse(JSON.stringify({
+        characters: availableModels.value,
+        camera_presets: cameraPresets.value.map((preset) => ({
+          id: preset.id, name: (preset as any).name ?? preset.id,
+        })),
+        model_assets: modelAssets.value.map((asset) => ({
+          id: asset.id, name: asset.name,
+        })),
+        channels: SCENE_CHANNELS,
+      })),
+      applyOps: mcpApplyOps,
+      configureOutput: mcpConfigureOutput,
+      clipNames: async (id: string): Promise<string[]> => {
+        const character = state.value.characters.find((entry) => entry.id === id)
+        if (character) return await getCharacterClipNames(character.model)
+        const model = state.value.models.find((entry) => entry.id === id)
+        if (model) return await getCustomModelClipNames(model.url)
+        throw new Error(`'${id}' is not a character or model`)
+      },
+      isBusy: () => capturing.value || recording.value,
+      hasRecordableDuration: () => hasRecordableDuration.value,
+      capture: async () => {
+        const before = capturedImageUrl.value
+        await capture()
+        if (capturedImageUrl.value === before) {
+          throw new Error('capture produced no output — see the ComfyTV tab for details')
+        }
+        return {
+          image: capturedImageUrl.value,
+          images: readWidgetStr(node, IMAGES_WIDGET, ''),
+        }
+      },
+      record: async () => {
+        if (!recordingSupported) {
+          throw new Error('video recording is not supported in this browser tab')
+        }
+        if (!hasRecordableDuration.value) {
+          throw new Error(
+            'nothing to record — bind a camera preset, add an animated '
+            + 'character/model, or set a frame_count via scene_edit set_output')
+        }
+        const before = capturedVideoUrl.value
+        await record()
+        if (capturedVideoUrl.value === before) {
+          throw new Error('record produced no output — see the ComfyTV tab for details')
+        }
+        return { video: capturedVideoUrl.value }
+      },
     }
   }
 

@@ -1,5 +1,5 @@
 import { useDebounceFn } from '@vueuse/core'
-import { computed, type Ref, ref, watch } from 'vue'
+import { computed, getCurrentScope, onScopeDispose, type Ref, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import type { Asset } from '@/api/schemas'
@@ -25,6 +25,7 @@ import {
   readImageRefs,
   refKey,
   refType,
+  subscribeImageRefs,
   writeImageRefs,
 } from '@/composables/stages/imageRefs'
 import { importAssetFiles } from '@/composables/sidebar/assetImport'
@@ -64,6 +65,13 @@ export function useImageReferences(
   const selectionStore = useSelectionStore()
 
   const refs = ref<ImageRef[]>(readImageRefs(getNode()))
+  const stopRefSync = subscribeImageRefs(getNode(), () => {
+    const current = readImageRefs(getNode())
+    if (JSON.stringify(current) !== JSON.stringify(refs.value)) {
+      refs.value = current
+    }
+  })
+  if (getCurrentScope()) onScopeDispose(stopRefSync)
   const pickerOpen = ref(false)
   const slotPicker = ref<SlotPickerState | null>(null)
   const slotWarnings = ref<string[]>([])

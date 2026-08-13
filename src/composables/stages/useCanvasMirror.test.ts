@@ -210,6 +210,52 @@ describe('installCanvasMirror', () => {
     expect(bodies[bodies.length - 1].stages).toBeDefined()
   })
 
+  it('includes client_id and ws_connected when the api exposes them', async () => {
+    const nodes = [makeNode()]
+    const graph = {
+      _nodes: nodes,
+      links: new Map(),
+      getNodeById: (id: any) => nodes.find((n) => n.id === id),
+    }
+    const deps = {
+      resolveApp: () => ({
+        graph,
+        api: { clientId: 'tab-9', socket: { readyState: 1 } },
+      }),
+      resolveProjectId: () => 'p1',
+      resolveStageState: () => undefined,
+    }
+    const host = makeHost()
+    uninstall = installCanvasMirror(host, deps)
+    await flush()
+    const [full] = postedBodies()
+    expect(full.client_id).toBe('tab-9')
+    expect(full.ws_connected).toBe(true)
+
+    await vi.advanceTimersByTimeAsync(15000)
+    const bodies = postedBodies()
+    expect(bodies[1].heartbeat).toBe(true)
+    expect(bodies[1].client_id).toBe('tab-9')
+    expect(bodies[1].ws_connected).toBe(true)
+  })
+
+  it('stands by on a 409 heartbeat instead of re-posting', async () => {
+    const { deps } = makeDeps([makeNode()])
+    const host = makeHost()
+    uninstall = installCanvasMirror(host, deps)
+    await flush()
+    expect(postedBodies()).toHaveLength(1)
+
+    fetchApi.mockImplementationOnce(
+      async () => new Response('{"error":"another tab owns this"}', { status: 409 }),
+    )
+    await vi.advanceTimersByTimeAsync(15000) // heartbeat -> 409
+    await vi.advanceTimersByTimeAsync(5000)
+    const bodies = postedBodies()
+    expect(bodies[bodies.length - 1].heartbeat).toBe(true) // still heartbeating, no full repost
+    expect(bodies.filter((b) => b.stages).length).toBe(1)
+  })
+
   it('refuses a second install and unsubscribes on uninstall', async () => {
     const { deps } = makeDeps([makeNode()])
     const host = makeHost()

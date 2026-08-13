@@ -338,6 +338,102 @@ describe('installMcpCommandBus', () => {
     expect(result.error).toBe('upstream not ready')
   })
 
+  it('remove_stage removes the node from the graph', async () => {
+    const node = makeNode()
+    const { host, deps, graph } = makeHost([node])
+    ;(graph as any).remove = vi.fn()
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, { id: 'c1', action: 'remove_stage', node: 'u1' })
+    const [result] = postedResults()
+    expect(result.ok).toBe(true)
+    expect(result.result.removed).toBe(true)
+    expect(result.result.uid).toBe('u1')
+    expect((graph as any).remove).toHaveBeenCalledWith(node)
+  })
+
+  it('remove_stage errors on unknown or non-stage nodes', async () => {
+    const { host, deps, graph } = makeHost([makeNode()])
+    ;(graph as any).remove = vi.fn()
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, { id: 'c1', action: 'remove_stage', node: 'missing' })
+    const [result] = postedResults()
+    expect(result.ok).toBe(false)
+    expect(result.error).toContain('not found')
+    expect((graph as any).remove).not.toHaveBeenCalled()
+  })
+
+  it('scene tools route to the mounted scene3d api', async () => {
+    const sceneApi = {
+      getState: vi.fn(() => ({
+        version: 1,
+        primitives: [],
+        characters: [{ id: 'char_1', model: 'dragon' }],
+        models: [],
+      })),
+      clipNames: vi.fn(async () => ['fly', 'idle', 'roar']),
+      resources: vi.fn(() => ({ camera_presets: [] })),
+      isBusy: vi.fn(() => false),
+      hasRecordableDuration: vi.fn(() => true),
+      applyOps: vi.fn(async () => [{ op: 'add_primitive', id: 'prim_1' }]),
+      configureOutput: vi.fn(),
+      capture: vi.fn(async () => ({ image: '/view?a.png', images: '' })),
+      record: vi.fn(async () => ({ video: '/view?a.webm' })),
+    }
+    const node = makeNode({
+      comfyClass: 'ComfyTV.Scene3DStage',
+      __comfytvStageApi: { scene3d: sceneApi },
+    })
+    const { host, deps } = makeHost([node])
+    uninstall = installMcpCommandBus(host, deps)
+
+    await dispatch(host, { id: 'c1', action: 'scene_get', node: 'u1' })
+    await dispatch(host, {
+      id: 'c2', action: 'scene_edit', node: 'u1',
+      ops: [{ op: 'add_primitive', shape: 'cube' }],
+    })
+    await dispatch(host, {
+      id: 'c3', action: 'scene_capture', node: 'u1', channel: 'depth',
+    })
+    await dispatch(host, { id: 'c4', action: 'scene_record', node: 'u1' })
+
+    const results = postedResults()
+    expect(results[0].result.scene.characters[0].available_clips)
+      .toEqual(['fly', 'idle', 'roar'])
+    expect(sceneApi.clipNames).toHaveBeenCalledWith('char_1')
+    expect(results[0].result.has_recordable_duration).toBe(true)
+    expect(results[1].result.applied).toEqual([{ op: 'add_primitive', id: 'prim_1' }])
+    expect(sceneApi.applyOps).toHaveBeenCalledWith([{ op: 'add_primitive', shape: 'cube' }])
+    expect(results[2].result.image).toBe('/view?a.png')
+    expect(sceneApi.configureOutput).toHaveBeenCalledWith(
+      { channel: 'depth', width: undefined, height: undefined })
+    expect(results[3].result.video).toBe('/view?a.webm')
+  })
+
+  it('scene tools error on non-scene3d stages and busy scenes', async () => {
+    const plain = makeNode()
+    const busyNode = makeNode({
+      id: 5,
+      properties: { comfytv_stage_uid: 'u5' },
+      __comfytvStageApi: { scene3d: {
+        isBusy: () => true,
+        getState: () => ({}), resources: () => ({}),
+        hasRecordableDuration: () => false,
+      } },
+    })
+    const { host, deps } = makeHost([plain, busyNode])
+    uninstall = installMcpCommandBus(host, deps)
+
+    await dispatch(host, { id: 'c1', action: 'scene_get', node: 'u1' })
+    await dispatch(host, {
+      id: 'c2', action: 'scene_edit', node: 'u5', ops: [{ op: 'remove', id: 'x' }],
+    })
+    const results = postedResults()
+    expect(results[0].ok).toBe(false)
+    expect(results[0].error).toContain('not a mounted Scene3D stage')
+    expect(results[1].ok).toBe(false)
+    expect(results[1].error).toContain('busy')
+  })
+
   it('run_stage errors when the stage card is not mounted', async () => {
     const { host, deps } = makeHost([makeNode()])
     uninstall = installMcpCommandBus(host, deps)

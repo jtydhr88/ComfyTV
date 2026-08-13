@@ -99,6 +99,14 @@ describe('useImageReferences', () => {
     expect(ir.refs.value).toEqual([{ asset_id: 5, slot: 1 }])
   })
 
+  it('syncs refs when an external writeImageRefs lands on the node', async () => {
+    const node = { ...IMAGES_NODE, properties: { comfytv_image_refs: [{ asset_id: 5, slot: 1 }] } }
+    const ir = useImageReferences(() => node, rootElStub())
+    const { writeImageRefs } = await import('@/composables/stages/imageRefs')
+    writeImageRefs(node, [{ asset_id: 9, slot: 0, type: 'video' }])
+    expect(ir.refs.value).toEqual([{ asset_id: 9, slot: 0, type: 'video' }])
+  })
+
   it('accepts only nodes with an images autogrow group', () => {
     expect(useImageReferences(() => IMAGES_NODE, rootElStub()).accepts.value).toBe(true)
     const noImages = { inputs: [{ name: 'texts.text0' }], properties: {} }

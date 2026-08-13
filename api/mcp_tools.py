@@ -283,6 +283,63 @@ async def _run_stage(args: dict) -> dict:
     return await submit_command("run_stage", payload, timeout=60.0)
 
 
+async def _remove_stage(args: dict) -> dict:
+    node = args.get("node")
+    if not node:
+        raise ValueError("node is required (stage uid or graph node id)")
+    payload = _command_payload(args, ("project_id",))
+    payload["node"] = str(node)
+    return await submit_command("remove_stage", payload)
+
+
+_SCENE_CHANNELS = ("color", "depth", "normal", "openpose")
+
+
+def _scene_target(args: dict) -> dict:
+    node = args.get("node")
+    if not node:
+        raise ValueError("node is required (a ComfyTV.Scene3DStage uid or graph node id)")
+    payload = _command_payload(args, ("project_id",))
+    payload["node"] = str(node)
+    return payload
+
+
+def _validate_channel(args: dict) -> None:
+    channel = args.get("channel")
+    if channel is not None and channel not in _SCENE_CHANNELS:
+        raise ValueError(
+            f"channel must be one of {', '.join(_SCENE_CHANNELS)}")
+
+
+async def _scene_get(args: dict) -> dict:
+    return await submit_command("scene_get", _scene_target(args))
+
+
+async def _scene_edit(args: dict) -> dict:
+    ops = args.get("ops")
+    if not isinstance(ops, list) or not ops:
+        raise ValueError("ops must be a non-empty array of operation objects")
+    if not all(isinstance(op, dict) and op.get("op") for op in ops):
+        raise ValueError("every op must be an object with an 'op' field")
+    payload = _scene_target(args)
+    payload["ops"] = ops
+    return await submit_command("scene_edit", payload)
+
+
+async def _scene_capture(args: dict) -> dict:
+    _validate_channel(args)
+    payload = _scene_target(args)
+    payload.update(_command_payload(args, ("channel", "width", "height")))
+    return await submit_command("scene_capture", payload, timeout=120.0)
+
+
+async def _scene_record(args: dict) -> dict:
+    _validate_channel(args)
+    payload = _scene_target(args)
+    payload.update(_command_payload(args, ("channel", "width", "height")))
+    return await submit_command("scene_record", payload, timeout=300.0)
+
+
 TOOLS: dict[str, dict] = {
     "server_info": {
         "description": (
@@ -483,6 +540,133 @@ TOOLS: dict[str, dict] = {
             "additionalProperties": False,
         },
         "handler": _set_stage,
+    },
+    "remove_stage": {
+        "description": (
+            "Remove a ComfyTV stage node from the live canvas (its stored "
+            "outputs stay in the project history). node is a stage uid or "
+            "graph_node_id from get_canvas. Only ComfyTV stages can be "
+            "removed. Requires an open ComfyTV tab."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "node": {"type": "string"},
+                "project_id": {"type": "string"},
+            },
+            "required": ["node"],
+            "additionalProperties": False,
+        },
+        "handler": _remove_stage,
+    },
+    "scene_get": {
+        "description": (
+            "Read a Scene3D stage's full scene: characters, primitives, models, "
+            "lights, cameras (with motion presets), environment and output "
+            "settings, plus available resources (character library, camera "
+            "motion presets, model assets, capture channels) and busy state. "
+            "Characters and models in the scene include available_clips — "
+            "pick one with scene_edit set_animation {id, clip}, otherwise "
+            "the character holds a static pose and only the camera moves. "
+            "ALWAYS call this before scene_edit to see current ids and "
+            "resources. node is the Scene3DStage uid or graph_node_id."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "node": {"type": "string"},
+                "project_id": {"type": "string"},
+            },
+            "required": ["node"],
+            "additionalProperties": False,
+        },
+        "handler": _scene_get,
+    },
+    "scene_edit": {
+        "description": (
+            "Build/modify a Scene3D scene with an atomic array of structured "
+            "ops (one undo step). Ops: add_primitive {shape: cube|sphere|"
+            "cylinder|plane, color?, name?}, add_model {asset_id|url}, "
+            "add_character {model (from resources)}, add_light {type: "
+            "directional|point|spot, color?, intensity?, position?, target?}, "
+            "add_camera {fov?, output?}, set_transform {id, position?, "
+            "rotation_deg?|quaternion?|look_at?, scale?}, set_color, "
+            "patch_light, set_animation {id, clip (an available_clips name "
+            "from scene_get — required for a character/model to actually "
+            "move), speed?, loop?}, rename, "
+            "set_hidden, remove, set_environment {show_grid?, background?, "
+            "show_room?}, set_output {fps?, frame_count?, camera_id?}, "
+            "bind_camera_preset {id, preset_id (from resources — this is how "
+            "you get dolly/orbit/push camera moves), speed?}, "
+            "set_camera_tuning {id, reverse?, path_scale?, yaw_degrees?, ...}, "
+            "set_camera_fov. All add_* ops accept position/rotation_deg/"
+            "look_at/scale; positions are [x,y,z] with y up, units≈meters. "
+            "After editing, verify visually with scene_capture. An unknown op "
+            "or id errors with the full valid list and applies nothing."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "node": {"type": "string"},
+                "ops": {"type": "array", "items": {"type": "object"},
+                        "minItems": 1},
+                "project_id": {"type": "string"},
+            },
+            "required": ["node", "ops"],
+            "additionalProperties": False,
+        },
+        "handler": _scene_edit,
+    },
+    "scene_capture": {
+        "description": (
+            "Render the Scene3D scene to still image(s) — every camera plus "
+            "the free view when no output camera is set — and return their "
+            "URLs. channel: color (default), depth, normal or openpose. Use "
+            "after every scene_edit to visually verify the scene (fetch the "
+            "returned URL and look at it) before recording. Also writes the "
+            "capture into the stage so run_stage persists it to history."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "node": {"type": "string"},
+                "channel": {"type": "string",
+                            "enum": list(_SCENE_CHANNELS)},
+                "width": {"type": "integer", "minimum": 64, "maximum": 4096},
+                "height": {"type": "integer", "minimum": 64, "maximum": 4096},
+                "project_id": {"type": "string"},
+            },
+            "required": ["node"],
+            "additionalProperties": False,
+        },
+        "handler": _scene_capture,
+    },
+    "scene_record": {
+        "description": (
+            "Record the Scene3D scene along its timeline into a webm video "
+            "and return its URL — the reference-video output. Duration comes "
+            "from bound camera motion presets / character animations, or an "
+            "explicit set_output frame_count; fps from set_output. Requires "
+            "something recordable (bind_camera_preset, an animated character, "
+            "or frame_count > 0). channel works like scene_capture (e.g. "
+            "depth/openpose sequences for ControlNet-style guidance). The "
+            "webm can feed VideoStage workflows (e.g. MiniMax H3 R2V) as a "
+            "reference."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "node": {"type": "string"},
+                "channel": {"type": "string",
+                            "enum": list(_SCENE_CHANNELS)},
+                "width": {"type": "integer", "minimum": 64, "maximum": 4096},
+                "height": {"type": "integer", "minimum": 64, "maximum": 4096},
+                "project_id": {"type": "string"},
+            },
+            "required": ["node"],
+            "additionalProperties": False,
+        },
+        "handler": _scene_record,
     },
     "servers": {
         "description": (

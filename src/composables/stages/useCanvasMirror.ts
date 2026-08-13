@@ -91,6 +91,15 @@ export function installCanvasMirror(app: any, deps: CanvasMirrorDeps): (() => vo
   let inFlight = false
   let timer: ReturnType<typeof setInterval> | null = null
 
+  function tabInfo() {
+    const api = deps.resolveApp()?.api
+    const readyState = api?.socket?.readyState
+    return {
+      clientId: api?.clientId ? String(api.clientId) : undefined,
+      wsConnected: typeof readyState === 'number' ? readyState === 1 : undefined,
+    }
+  }
+
   async function tick() {
     if (inFlight) return
     const snapshot = buildCanvasSnapshot(deps)
@@ -103,10 +112,13 @@ export function installCanvasMirror(app: any, deps: CanvasMirrorDeps): (() => vo
 
     inFlight = true
     try {
+      const { clientId, wsConnected } = tabInfo()
       if (changed) {
-        const clientId = deps.resolveApp()?.api?.clientId
-        await apiSend('/comfytv/canvas_state', 'POST', OkSchema,
-                      clientId ? { ...snapshot, client_id: String(clientId) } : snapshot)
+        await apiSend('/comfytv/canvas_state', 'POST', OkSchema, {
+          ...snapshot,
+          ...(clientId ? { client_id: clientId } : {}),
+          ...(wsConnected !== undefined ? { ws_connected: wsConnected } : {}),
+        })
         lastPosted = serialized
         lastPostedProject = snapshot.project_id
       } else {
@@ -114,9 +126,15 @@ export function installCanvasMirror(app: any, deps: CanvasMirrorDeps): (() => vo
           await apiSend('/comfytv/canvas_state', 'POST', OkSchema, {
             project_id: lastPostedProject || snapshot.project_id,
             heartbeat: true,
+            ...(clientId ? { client_id: clientId } : {}),
+            ...(wsConnected !== undefined ? { ws_connected: wsConnected } : {}),
           })
         } catch (e) {
-          lastPosted = ''
+          if ((e as any)?.status === 409) {
+            lastPosted = serialized
+          } else {
+            lastPosted = ''
+          }
           throw e
         }
       }

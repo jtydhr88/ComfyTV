@@ -71,6 +71,8 @@ def _ensure_comfyui_stubs():
         ps = _PS()
         ps.routes = web.RouteTableDef()
         ps.send_sync = lambda *a, **k: None
+        ps.on_prompt_handlers = []
+        ps.add_on_prompt_handler = ps.on_prompt_handlers.append
         _PS.instance = ps
         _make_module("server", PromptServer=_PS)
 

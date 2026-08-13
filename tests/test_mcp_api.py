@@ -116,6 +116,8 @@ class TestProtocol:
             "server_info", "projects", "stage_catalog", "list_workflows",
             "get_canvas", "outputs", "assets", "jobs", "exec_errors",
             "add_stage", "set_stage", "connect_stages", "run_stage", "servers",
+            "remove_stage",
+            "scene_get", "scene_edit", "scene_capture", "scene_record",
         }
         for t in tools.values():
             assert t["description"]

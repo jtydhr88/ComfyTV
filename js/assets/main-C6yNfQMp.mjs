@@ -56378,7 +56378,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-C2XmSJqO.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-C40IHH7r.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -58070,7 +58070,20 @@ function readImageRefs(node) {
   }
   return out;
 }
+const refListeners = /* @__PURE__ */ new WeakMap();
+function subscribeImageRefs(node, listener) {
+  if (!node || typeof node !== "object") return () => {
+  };
+  let set = refListeners.get(node);
+  if (!set) {
+    set = /* @__PURE__ */ new Set();
+    refListeners.set(node, set);
+  }
+  set.add(listener);
+  return () => set.delete(listener);
+}
 function writeImageRefs(node, refs) {
+  var _a2;
   const n = node;
   if (!n) return;
   if (!n.properties) n.properties = {};
@@ -58080,6 +58093,7 @@ function writeImageRefs(node, refs) {
     }
     return r.type ? { asset_id: r.asset_id, slot: r.slot, type: r.type } : { asset_id: r.asset_id, slot: r.slot };
   });
+  (_a2 = refListeners.get(n)) == null ? void 0 : _a2.forEach((listener) => listener());
 }
 const IMAGE_SLOT_TOKEN_RE = /@image_(\d+)(?![0-9a-zA-Z_-])/gu;
 const SLOT_TOKEN_RES = {
@@ -73980,6 +73994,13 @@ function useImageReferences(getNode, rootEl, opts) {
   const assetStore2 = useAssetStore();
   const selectionStore = useSelectionStore();
   const refs = /* @__PURE__ */ ref(readImageRefs(getNode()));
+  const stopRefSync = subscribeImageRefs(getNode(), () => {
+    const current = readImageRefs(getNode());
+    if (JSON.stringify(current) !== JSON.stringify(refs.value)) {
+      refs.value = current;
+    }
+  });
+  if (getCurrentScope()) onScopeDispose(stopRefSync);
   const pickerOpen = /* @__PURE__ */ ref(false);
   const slotPicker = /* @__PURE__ */ ref(null);
   const slotWarnings = /* @__PURE__ */ ref([]);
@@ -116027,7 +116048,7 @@ const _sfc_main$36 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const LIGHT_TYPES$1 = [
+const LIGHT_TYPES$2 = [
   "directional",
   "point",
   "spot"
@@ -118331,7 +118352,7 @@ const _sfc_main$35 = /* @__PURE__ */ defineComponent({
         ]),
         unref(selectedLight) ? (openBlock(), createElementBlock("div", _hoisted_11$Z, [
           createBaseVNode("div", _hoisted_12$S, [
-            (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(LIGHT_TYPES$1), (type) => {
+            (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(LIGHT_TYPES$2), (type) => {
               return openBlock(), createElementBlock("button", {
                 key: type,
                 type: "button",
@@ -118407,7 +118428,7 @@ const _sfc_main$35 = /* @__PURE__ */ defineComponent({
   }
 });
 function isLightType(value) {
-  return typeof value === "string" && LIGHT_TYPES$1.includes(value);
+  return typeof value === "string" && LIGHT_TYPES$2.includes(value);
 }
 function toVec3$1(value, fallback) {
   const v = value;
@@ -130547,7 +130568,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-DUEMoFIs.mjs");
+    const { STLLoader } = await import("./STLLoader-BEDnOjvN.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -130555,7 +130576,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-QU9KRk6X.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-DHVetddM.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -136687,8 +136708,8 @@ function eulerDegreesToQuat(degrees) {
     w: quaternion.w
   };
 }
-const PRIMITIVE_SHAPES = ["cube", "sphere", "cylinder", "plane"];
-const LIGHT_TYPES = ["directional", "point", "spot"];
+const PRIMITIVE_SHAPES$1 = ["cube", "sphere", "cylinder", "plane"];
+const LIGHT_TYPES$1 = ["directional", "point", "spot"];
 function createDefaultEnvironment() {
   return { showGrid: true, background: "", showRoom: false };
 }
@@ -147729,7 +147750,7 @@ const COLOR_PATTERN = /^#[0-9a-fA-F]{6}$/;
 function toPrimitive(value, index, takenIds) {
   if (typeof value !== "object" || value === null) return null;
   const source = value;
-  if (!PRIMITIVE_SHAPES.includes(source.shape)) return null;
+  if (!PRIMITIVE_SHAPES$1.includes(source.shape)) return null;
   const color = typeof source.color === "string" && COLOR_PATTERN.test(source.color) ? source.color : "#9aa0a6";
   return {
     id: claimId(source, "prim", index, takenIds),
@@ -147742,7 +147763,7 @@ function toPrimitive(value, index, takenIds) {
 function toLight(value, index, takenIds) {
   if (typeof value !== "object" || value === null) return null;
   const source = value;
-  if (!LIGHT_TYPES.includes(source.type)) return null;
+  if (!LIGHT_TYPES$1.includes(source.type)) return null;
   const type = source.type;
   const light = {
     id: claimId(source, "light", index, takenIds),
@@ -147888,6 +147909,344 @@ function normalizeSceneValue(value) {
       cameraId
     }
   };
+}
+const PRIMITIVE_SHAPES = ["cube", "sphere", "cylinder", "plane"];
+const LIGHT_TYPES = ["directional", "point", "spot"];
+const OPS = [
+  "add_primitive",
+  "add_model",
+  "add_character",
+  "add_light",
+  "add_camera",
+  "set_transform",
+  "set_color",
+  "patch_light",
+  "set_animation",
+  "rename",
+  "set_hidden",
+  "remove",
+  "set_environment",
+  "set_output",
+  "bind_camera_preset",
+  "set_camera_tuning",
+  "set_camera_fov"
+];
+function vec3(value, fallback) {
+  if (Array.isArray(value) && value.length === 3) {
+    return { x: Number(value[0]), y: Number(value[1]), z: Number(value[2]) };
+  }
+  if (value && typeof value === "object" && "x" in value) {
+    return { x: Number(value.x), y: Number(value.y), z: Number(value.z) };
+  }
+  return fallback;
+}
+function quatFrom(op, current, position) {
+  if (op.look_at != null) {
+    const target = vec3(op.look_at, { x: 0, y: 0, z: 0 });
+    const m = new Matrix4().lookAt(
+      new Vector3(position.x, position.y, position.z),
+      new Vector3(target.x, target.y, target.z),
+      new Vector3(0, 1, 0)
+    );
+    const q = new Quaternion().setFromRotationMatrix(m);
+    return { x: q.x, y: q.y, z: q.z, w: q.w };
+  }
+  if (op.rotation_deg != null) {
+    const r = vec3(op.rotation_deg, { x: 0, y: 0, z: 0 });
+    const q = new Quaternion().setFromEuler(new Euler(
+      MathUtils.degToRad(r.x),
+      MathUtils.degToRad(r.y),
+      MathUtils.degToRad(r.z)
+    ));
+    return { x: q.x, y: q.y, z: q.z, w: q.w };
+  }
+  if (op.quaternion != null) {
+    const q = op.quaternion;
+    if (Array.isArray(q) && q.length === 4) {
+      return { x: Number(q[0]), y: Number(q[1]), z: Number(q[2]), w: Number(q[3]) };
+    }
+    return { x: Number(q.x), y: Number(q.y), z: Number(q.z), w: Number(q.w) };
+  }
+  return current;
+}
+function allIds(scene) {
+  return [
+    ...scene.characters,
+    ...scene.primitives,
+    ...scene.models,
+    ...scene.lights,
+    ...scene.cameras
+  ].map((entry) => entry.id);
+}
+function findEntry(scene, id) {
+  for (const key of ["characters", "primitives", "models", "lights", "cameras"]) {
+    const list = scene[key];
+    const index = list.findIndex((entry) => entry.id === id);
+    if (index >= 0) return { key, list, index, entry: list[index] };
+  }
+  return null;
+}
+function requireEntry(scene, id, where) {
+  const found2 = findEntry(scene, String(id ?? ""));
+  if (!found2) {
+    throw new Error(
+      `${where}: no object '${id}' in the scene; ids: ${allIds(scene).join(", ") || "(empty)"}`
+    );
+  }
+  return found2;
+}
+function applyTransformOp(entry, op) {
+  const t2 = entry.transform;
+  if (op.position != null) t2.position = vec3(op.position, t2.position);
+  t2.quaternion = quatFrom(op, t2.quaternion, t2.position);
+  if (op.scale != null && t2.scale) {
+    if (typeof op.scale === "number") {
+      t2.scale = { x: op.scale, y: op.scale, z: op.scale };
+    } else {
+      t2.scale = vec3(op.scale, t2.scale);
+    }
+  }
+}
+function applySceneOps(scene, ops, ctx) {
+  if (!Array.isArray(ops) || ops.length === 0) {
+    throw new Error("ops must be a non-empty array");
+  }
+  const next = cloneScene(scene);
+  const results = [];
+  ops.forEach((op, i) => {
+    var _a2, _b2;
+    const where = `ops[${i}] (${op == null ? void 0 : op.op})`;
+    switch (op == null ? void 0 : op.op) {
+      case "add_primitive": {
+        if (!PRIMITIVE_SHAPES.includes(op.shape)) {
+          throw new Error(`${where}: shape must be one of ${PRIMITIVE_SHAPES.join(", ")}`);
+        }
+        const entry = createDefaultPrimitive(op.shape, allIds(next));
+        if (typeof op.color === "string") entry.color = op.color;
+        if (typeof op.name === "string") entry.name = op.name;
+        applyTransformOp(entry, op);
+        next.primitives.push(entry);
+        results.push({ op: op.op, id: entry.id });
+        break;
+      }
+      case "add_model": {
+        const resolved = ctx.resolveModel(
+          op.asset_id != null ? Number(op.asset_id) : void 0,
+          typeof op.url === "string" ? op.url : void 0
+        );
+        if (!resolved) {
+          throw new Error(
+            `${where}: pass asset_id (a model asset from the assets tool) or url; asset ${op.asset_id ?? op.url ?? "(none)"} did not resolve to a mesh model`
+          );
+        }
+        const entry = createDefaultModel(
+          resolved.url,
+          String(op.name ?? resolved.name),
+          allIds(next)
+        );
+        applyTransformOp(entry, op);
+        next.models.push(entry);
+        results.push({ op: op.op, id: entry.id });
+        break;
+      }
+      case "add_character": {
+        if (typeof op.model !== "string" || !op.model) {
+          throw new Error(`${where}: model is required (a character id from scene_get resources)`);
+        }
+        const entry = createDefaultCharacter(op.model, allIds(next));
+        if (typeof op.name === "string") entry.name = op.name;
+        if (op.animation && typeof op.animation === "object") {
+          entry.animation = { ...entry.animation, ...op.animation };
+        }
+        applyTransformOp(entry, op);
+        next.characters.push(entry);
+        results.push({ op: op.op, id: entry.id });
+        break;
+      }
+      case "add_light": {
+        if (!LIGHT_TYPES.includes(op.type)) {
+          throw new Error(`${where}: type must be one of ${LIGHT_TYPES.join(", ")}`);
+        }
+        const entry = createDefaultLight(op.type, allIds(next));
+        if (typeof op.color === "string") entry.color = op.color;
+        if (Number.isFinite(op.intensity)) entry.intensity = Number(op.intensity);
+        if (op.position != null) entry.position = vec3(op.position, entry.position);
+        if (op.target != null && entry.target) entry.target = vec3(op.target, entry.target);
+        if (Number.isFinite(op.range) && "range" in entry) entry.range = Number(op.range);
+        if (Number.isFinite(op.inner_cone_angle) && "innerConeAngle" in entry) {
+          entry.innerConeAngle = Number(op.inner_cone_angle);
+        }
+        if (Number.isFinite(op.outer_cone_angle) && "outerConeAngle" in entry) {
+          entry.outerConeAngle = Number(op.outer_cone_angle);
+        }
+        next.lights.push(entry);
+        results.push({ op: op.op, id: entry.id });
+        break;
+      }
+      case "add_camera": {
+        const pose = op.position == null && op.look_at == null && op.quaternion == null && op.rotation_deg == null ? (_a2 = ctx.editorPose) == null ? void 0 : _a2.call(ctx) : void 0;
+        const entry = createDefaultCamera(allIds(next), pose);
+        if (Number.isFinite(op.fov)) entry.fov = Number(op.fov);
+        if (op.position != null) {
+          entry.transform.position = vec3(op.position, entry.transform.position);
+        }
+        entry.transform.quaternion = quatFrom(
+          op,
+          entry.transform.quaternion,
+          entry.transform.position
+        );
+        if (typeof op.name === "string") entry.name = op.name;
+        next.cameras.push(entry);
+        if (!next.output.cameraId || op.output === true) next.output.cameraId = entry.id;
+        results.push({ op: op.op, id: entry.id });
+        break;
+      }
+      case "set_transform": {
+        const found2 = requireEntry(next, op.id, where);
+        applyTransformOp(found2.entry, op);
+        results.push({ op: op.op, id: found2.entry.id });
+        break;
+      }
+      case "set_color": {
+        const found2 = requireEntry(next, op.id, where);
+        if (!("color" in found2.entry) || found2.key === "lights") {
+          throw new Error(`${where}: '${op.id}' has no primitive color (use patch_light for lights)`);
+        }
+        found2.entry.color = String(op.color ?? found2.entry.color);
+        results.push({ op: op.op, id: found2.entry.id });
+        break;
+      }
+      case "patch_light": {
+        const found2 = requireEntry(next, op.id, where);
+        if (found2.key !== "lights") {
+          throw new Error(`${where}: '${op.id}' is not a light`);
+        }
+        const light = found2.entry;
+        if (typeof op.color === "string") light.color = op.color;
+        if (Number.isFinite(op.intensity)) light.intensity = Number(op.intensity);
+        if (op.position != null) light.position = vec3(op.position, light.position);
+        if (op.target != null && light.target) light.target = vec3(op.target, light.target);
+        if (Number.isFinite(op.range) && "range" in light) light.range = Number(op.range);
+        if (Number.isFinite(op.inner_cone_angle) && "innerConeAngle" in light) {
+          light.innerConeAngle = Number(op.inner_cone_angle);
+        }
+        if (Number.isFinite(op.outer_cone_angle) && "outerConeAngle" in light) {
+          light.outerConeAngle = Number(op.outer_cone_angle);
+        }
+        results.push({ op: op.op, id: light.id });
+        break;
+      }
+      case "set_animation": {
+        const found2 = requireEntry(next, op.id, where);
+        if (found2.key !== "characters" && found2.key !== "models") {
+          throw new Error(`${where}: '${op.id}' has no animation (characters/models only)`);
+        }
+        const patch = {};
+        if (typeof op.clip === "string") patch.clip = op.clip;
+        if (Number.isFinite(op.speed)) patch.speed = Number(op.speed);
+        if (typeof op.loop === "boolean") patch.loop = op.loop;
+        if (Number.isFinite(op.start_offset)) patch.startOffset = Number(op.start_offset);
+        found2.entry.animation = { ...found2.entry.animation, ...patch };
+        results.push({ op: op.op, id: found2.entry.id });
+        break;
+      }
+      case "rename": {
+        const found2 = requireEntry(next, op.id, where);
+        found2.entry.name = String(op.name ?? "");
+        results.push({ op: op.op, id: found2.entry.id });
+        break;
+      }
+      case "set_hidden": {
+        const found2 = requireEntry(next, op.id, where);
+        found2.entry.hidden = op.hidden !== false;
+        results.push({ op: op.op, id: found2.entry.id });
+        break;
+      }
+      case "remove": {
+        const found2 = requireEntry(next, op.id, where);
+        found2.list.splice(found2.index, 1);
+        if (found2.key === "cameras" && next.output.cameraId === op.id) {
+          next.output.cameraId = ((_b2 = next.cameras[0]) == null ? void 0 : _b2.id) ?? "";
+        }
+        results.push({ op: op.op, id: String(op.id) });
+        break;
+      }
+      case "set_environment": {
+        if (typeof op.show_grid === "boolean") next.environment.showGrid = op.show_grid;
+        if (typeof op.background === "string") next.environment.background = op.background;
+        if (typeof op.show_room === "boolean") next.environment.showRoom = op.show_room;
+        results.push({ op: op.op });
+        break;
+      }
+      case "set_output": {
+        if (Number.isFinite(op.fps)) next.output.fps = Number(op.fps);
+        if (Number.isFinite(op.frame_count)) next.output.frameCount = Number(op.frame_count);
+        if (typeof op.camera_id === "string") {
+          if (op.camera_id && !next.cameras.some((c2) => c2.id === op.camera_id)) {
+            throw new Error(`${where}: no camera '${op.camera_id}'; cameras: ${next.cameras.map((c2) => c2.id).join(", ") || "(none)"}`);
+          }
+          next.output.cameraId = op.camera_id;
+        }
+        results.push({ op: op.op });
+        break;
+      }
+      case "bind_camera_preset": {
+        const found2 = requireEntry(next, op.id, where);
+        if (found2.key !== "cameras") throw new Error(`${where}: '${op.id}' is not a camera`);
+        if (op.preset_id == null || op.preset_id === "") {
+          found2.entry.preset = null;
+          results.push({ op: op.op, id: found2.entry.id, preset: null });
+          break;
+        }
+        const file = ctx.resolvePresetFile(String(op.preset_id));
+        if (!file) {
+          throw new Error(
+            `${where}: unknown camera preset '${op.preset_id}' — see scene_get resources.camera_presets`
+          );
+        }
+        found2.entry.preset = {
+          presetId: String(op.preset_id),
+          file,
+          tuning: {},
+          speed: Number.isFinite(op.speed) ? Number(op.speed) : 1
+        };
+        results.push({ op: op.op, id: found2.entry.id, preset: String(op.preset_id) });
+        break;
+      }
+      case "set_camera_tuning": {
+        const found2 = requireEntry(next, op.id, where);
+        if (found2.key !== "cameras" || !found2.entry.preset) {
+          throw new Error(`${where}: '${op.id}' is not a camera with a bound preset`);
+        }
+        const tuning = { ...found2.entry.preset.tuning };
+        if (typeof op.reverse === "boolean") tuning.reverse = op.reverse;
+        if (op.position_offset != null) {
+          tuning.positionOffset = vec3(op.position_offset, { x: 0, y: 0, z: 0 });
+        }
+        if (Number.isFinite(op.path_scale)) tuning.pathScale = Number(op.path_scale);
+        if (Number.isFinite(op.yaw_degrees)) tuning.yawDegrees = Number(op.yaw_degrees);
+        if (Number.isFinite(op.roll_degrees)) tuning.rollDegrees = Number(op.roll_degrees);
+        if (Number.isFinite(op.fov_scale)) tuning.fovScale = Number(op.fov_scale);
+        found2.entry.preset.tuning = tuning;
+        if (Number.isFinite(op.speed)) found2.entry.preset.speed = Number(op.speed);
+        results.push({ op: op.op, id: found2.entry.id });
+        break;
+      }
+      case "set_camera_fov": {
+        const found2 = requireEntry(next, op.id, where);
+        if (found2.key !== "cameras") throw new Error(`${where}: '${op.id}' is not a camera`);
+        if (!Number.isFinite(op.fov)) throw new Error(`${where}: fov must be a number`);
+        found2.entry.fov = Math.min(Math.max(Number(op.fov), 10), 140);
+        results.push({ op: op.op, id: found2.entry.id });
+        break;
+      }
+      default:
+        throw new Error(
+          `ops[${i}]: unknown op '${op == null ? void 0 : op.op}'; valid ops: ${OPS.join(", ")}`
+        );
+    }
+  });
+  return { next, results };
 }
 const SCENE_WIDGET = "scene_state";
 const CHANNEL_WIDGET = "channel";
@@ -148063,6 +148422,8 @@ function useScene3dStage(node, opts) {
   function cleanup() {
     viewport2 == null ? void 0 : viewport2.remove();
     viewport2 = null;
+    const api = node.__comfytvStageApi;
+    if (api == null ? void 0 : api.scene3d) delete api.scene3d;
   }
   const handleMouseEnter = () => {
     viewport2 == null ? void 0 : viewport2.updateStatusMouseOnScene(true);
@@ -148208,7 +148569,7 @@ function useScene3dStage(node, opts) {
     }
   }
   async function addCharacter(model) {
-    const character = createDefaultCharacter(model, allIds());
+    const character = createDefaultCharacter(model, allIds2());
     try {
       const clipNames = await getCharacterClipNames(model);
       character.animation.clip = clipNames[0] ?? "";
@@ -148222,7 +148583,7 @@ function useScene3dStage(node, opts) {
     commit(next);
   }
   function addPrimitive(shape) {
-    const primitive = createDefaultPrimitive(shape, allIds());
+    const primitive = createDefaultPrimitive(shape, allIds2());
     const next = cloneScene(state2.value);
     next.primitives.push(primitive);
     selectedId.value = primitive.id;
@@ -148233,7 +148594,7 @@ function useScene3dStage(node, opts) {
     const model = createDefaultModel(
       asset.payload_url,
       asset.name || "model",
-      allIds()
+      allIds2()
     );
     try {
       const assets2 = await loadCustomModelAssets(asset.payload_url);
@@ -148263,7 +148624,7 @@ function useScene3dStage(node, opts) {
     }
   }
   function addLight(type) {
-    const light = createDefaultLight(type, allIds());
+    const light = createDefaultLight(type, allIds2());
     const next = cloneScene(state2.value);
     next.lights.push(light);
     selectedId.value = light.id;
@@ -148320,7 +148681,7 @@ function useScene3dStage(node, opts) {
     var _a2;
     setObjectHidden(id, !((_a2 = findLabelEntry(state2.value, id)) == null ? void 0 : _a2.hidden));
   }
-  function allIds() {
+  function allIds2() {
     return [
       ...state2.value.characters.map((entry) => entry.id),
       ...state2.value.primitives.map((entry) => entry.id),
@@ -148330,7 +148691,7 @@ function useScene3dStage(node, opts) {
     ];
   }
   function addCamera() {
-    const camera2 = createDefaultCamera(allIds(), viewport2 == null ? void 0 : viewport2.getEditorCameraPose());
+    const camera2 = createDefaultCamera(allIds2(), viewport2 == null ? void 0 : viewport2.getEditorCameraPose());
     const next = cloneScene(state2.value);
     next.cameras.push(camera2);
     if (!next.output.cameraId) next.output.cameraId = camera2.id;
@@ -148672,6 +149033,100 @@ function useScene3dStage(node, opts) {
       recording.value = false;
       recordProgress.value = null;
     }
+  }
+  async function mcpApplyOps(ops) {
+    if (Array.isArray(ops) && ops.some((op) => (op == null ? void 0 : op.op) === "add_model" && op.asset_id != null)) {
+      await assetStore2.hydrate();
+    }
+    const { next, results } = applySceneOps(state2.value, ops, {
+      resolveModel: (assetId, url) => {
+        if (url) return { url, name: url.split("filename=")[1] ?? "model" };
+        if (assetId == null) return null;
+        const asset = assetStore2.byId(assetId);
+        if (!asset || asset.media_type !== "model" || !isMeshModelUrl(asset.payload_url)) {
+          return null;
+        }
+        return { url: asset.payload_url, name: asset.name || `asset ${assetId}` };
+      },
+      resolvePresetFile: (presetId) => {
+        var _a2;
+        return ((_a2 = cameraPresets.value.find((preset2) => preset2.id === presetId)) == null ? void 0 : _a2.file) ?? null;
+      },
+      editorPose: () => viewport2 == null ? void 0 : viewport2.getEditorCameraPose()
+    });
+    commit(next);
+    return results;
+  }
+  function mcpConfigureOutput(patch) {
+    if (patch.channel && SCENE_CHANNELS.includes(patch.channel)) {
+      channel.value = patch.channel;
+      writeWidget(node, CHANNEL_WIDGET, patch.channel, { fireCallback: false });
+      viewport2 == null ? void 0 : viewport2.setPreviewChannel(channel.value);
+    }
+    if (Number.isFinite(patch.width)) {
+      outputWidth.value = Number(patch.width);
+      writeWidget(node, WIDTH_WIDGET$2, outputWidth.value, { fireCallback: false });
+    }
+    if (Number.isFinite(patch.height)) {
+      outputHeight.value = Number(patch.height);
+      writeWidget(node, HEIGHT_WIDGET$2, outputHeight.value, { fireCallback: false });
+    }
+  }
+  {
+    const hostApi = node.__comfytvStageApi ?? (node.__comfytvStageApi = {});
+    hostApi.scene3d = {
+      getState: () => JSON.parse(JSON.stringify(state2.value)),
+      resources: () => JSON.parse(JSON.stringify({
+        characters: availableModels.value,
+        camera_presets: cameraPresets.value.map((preset2) => ({
+          id: preset2.id,
+          name: preset2.name ?? preset2.id
+        })),
+        model_assets: modelAssets.value.map((asset) => ({
+          id: asset.id,
+          name: asset.name
+        })),
+        channels: SCENE_CHANNELS
+      })),
+      applyOps: mcpApplyOps,
+      configureOutput: mcpConfigureOutput,
+      clipNames: async (id) => {
+        const character = state2.value.characters.find((entry) => entry.id === id);
+        if (character) return await getCharacterClipNames(character.model);
+        const model = state2.value.models.find((entry) => entry.id === id);
+        if (model) return await getCustomModelClipNames(model.url);
+        throw new Error(`'${id}' is not a character or model`);
+      },
+      isBusy: () => capturing.value || recording.value,
+      hasRecordableDuration: () => hasRecordableDuration.value,
+      capture: async () => {
+        const before = capturedImageUrl.value;
+        await capture();
+        if (capturedImageUrl.value === before) {
+          throw new Error("capture produced no output — see the ComfyTV tab for details");
+        }
+        return {
+          image: capturedImageUrl.value,
+          images: readWidgetStr(node, IMAGES_WIDGET$2, "")
+        };
+      },
+      record: async () => {
+        if (!recordingSupported) {
+          throw new Error("video recording is not supported in this browser tab");
+        }
+        if (!hasRecordableDuration.value) {
+          throw new Error(
+            "nothing to record — bind a camera preset, add an animated character/model, or set a frame_count via scene_edit set_output"
+          );
+        }
+        const before = capturedVideoUrl.value;
+        await record2();
+        if (capturedVideoUrl.value === before) {
+          throw new Error("record produced no output — see the ComfyTV tab for details");
+        }
+        return { video: capturedVideoUrl.value };
+      }
+    };
   }
   loadFromNode();
   resetHistoryBaseline();
@@ -149330,7 +149785,7 @@ const _sfc_main$2h = /* @__PURE__ */ defineComponent({
                     value: "",
                     disabled: ""
                   }, "+", -1)),
-                  (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(PRIMITIVE_SHAPES), (shape) => {
+                  (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(PRIMITIVE_SHAPES$1), (shape) => {
                     return openBlock(), createElementBlock("option", {
                       key: shape,
                       value: shape
@@ -149431,7 +149886,7 @@ const _sfc_main$2h = /* @__PURE__ */ defineComponent({
                     value: "",
                     disabled: ""
                   }, "+", -1)),
-                  (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(LIGHT_TYPES), (type) => {
+                  (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(LIGHT_TYPES$1), (type) => {
                     return openBlock(), createElementBlock("option", {
                       key: type,
                       value: type
@@ -190976,7 +191431,7 @@ const _sfc_main$X = /* @__PURE__ */ defineComponent({
   },
   setup(__props) {
     const props = __props;
-    const OPS = [
+    const OPS2 = [
       { value: "erode", label: "Erode" },
       { value: "dilate", label: "Dilate" },
       { value: "open", label: "Open" },
@@ -191004,7 +191459,7 @@ const _sfc_main$X = /* @__PURE__ */ defineComponent({
             createVNode(_sfc_main$1V, {
               modelValue: unref(op),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(op) ? op.value = $event : null),
-              options: OPS
+              options: OPS2
             }, null, 8, ["modelValue"]),
             createVNode(FxSlider, {
               modelValue: unref(sizeX),
@@ -204809,8 +205264,16 @@ function installCanvasMirror(app2, deps) {
   let lastPostAt = 0;
   let inFlight = false;
   let timer = null;
-  async function tick() {
+  function tabInfo() {
     var _a3, _b3;
+    const api = (_a3 = deps.resolveApp()) == null ? void 0 : _a3.api;
+    const readyState = (_b3 = api == null ? void 0 : api.socket) == null ? void 0 : _b3.readyState;
+    return {
+      clientId: (api == null ? void 0 : api.clientId) ? String(api.clientId) : void 0,
+      wsConnected: typeof readyState === "number" ? readyState === 1 : void 0
+    };
+  }
+  async function tick() {
     if (inFlight) return;
     const snapshot = buildCanvasSnapshot(deps);
     if (!snapshot) return;
@@ -204821,24 +205284,29 @@ function installCanvasMirror(app2, deps) {
     if (!changed && !heartbeatDue) return;
     inFlight = true;
     try {
+      const { clientId, wsConnected } = tabInfo();
       if (changed) {
-        const clientId = (_b3 = (_a3 = deps.resolveApp()) == null ? void 0 : _a3.api) == null ? void 0 : _b3.clientId;
-        await apiSend(
-          "/comfytv/canvas_state",
-          "POST",
-          OkSchema$1,
-          clientId ? { ...snapshot, client_id: String(clientId) } : snapshot
-        );
+        await apiSend("/comfytv/canvas_state", "POST", OkSchema$1, {
+          ...snapshot,
+          ...clientId ? { client_id: clientId } : {},
+          ...wsConnected !== void 0 ? { ws_connected: wsConnected } : {}
+        });
         lastPosted = serialized;
         lastPostedProject = snapshot.project_id;
       } else {
         try {
           await apiSend("/comfytv/canvas_state", "POST", OkSchema$1, {
             project_id: lastPostedProject || snapshot.project_id,
-            heartbeat: true
+            heartbeat: true,
+            ...clientId ? { client_id: clientId } : {},
+            ...wsConnected !== void 0 ? { ws_connected: wsConnected } : {}
           });
         } catch (e) {
-          lastPosted = "";
+          if ((e == null ? void 0 : e.status) === 409) {
+            lastPosted = serialized;
+          } else {
+            lastPosted = "";
+          }
           throw e;
         }
       }
@@ -205036,12 +205504,89 @@ async function handleRunStage(app2, cmd) {
     ((_d = (_c = stageApi.state) == null ? void 0 : _c.error) == null ? void 0 : _d.message) || "run did not start (loader stage, workflow still preparing, or upstream outputs missing)"
   );
 }
+function sceneApi(app2, cmd) {
+  var _a2;
+  const node = findStageNode(app2 == null ? void 0 : app2.graph, String(cmd.node));
+  if (!node) throw new Error(`stage ${cmd.node} not found on the canvas`);
+  const api = (_a2 = node.__comfytvStageApi) == null ? void 0 : _a2.scene3d;
+  if (!api) {
+    throw new Error(
+      `stage ${cmd.node} is not a mounted Scene3D stage — scene tools need a ComfyTV.Scene3DStage whose card is open in the tab`
+    );
+  }
+  return api;
+}
+async function handleSceneGet(app2, cmd) {
+  const api = sceneApi(app2, cmd);
+  const scene = api.getState();
+  if (typeof api.clipNames === "function") {
+    const animated = [...scene.characters ?? [], ...scene.models ?? []];
+    for (const entry of animated) {
+      try {
+        entry.available_clips = await api.clipNames(entry.id);
+      } catch {
+        entry.available_clips = [];
+      }
+    }
+  }
+  return {
+    scene,
+    resources: api.resources(),
+    busy: api.isBusy(),
+    has_recordable_duration: api.hasRecordableDuration()
+  };
+}
+async function handleSceneEdit(app2, cmd) {
+  const api = sceneApi(app2, cmd);
+  if (api.isBusy()) throw new Error("scene is busy capturing/recording — retry after it finishes");
+  const results = await api.applyOps(cmd.ops);
+  return { applied: results };
+}
+async function handleSceneCapture(app2, cmd) {
+  const api = sceneApi(app2, cmd);
+  if (api.isBusy()) throw new Error("scene is busy capturing/recording — retry after it finishes");
+  api.configureOutput({
+    channel: cmd.channel,
+    width: cmd.width,
+    height: cmd.height
+  });
+  return await api.capture();
+}
+async function handleSceneRecord(app2, cmd) {
+  const api = sceneApi(app2, cmd);
+  if (api.isBusy()) throw new Error("scene is busy capturing/recording — retry after it finishes");
+  api.configureOutput({
+    channel: cmd.channel,
+    width: cmd.width,
+    height: cmd.height
+  });
+  return await api.record();
+}
+function handleRemoveStage(app2, cmd) {
+  var _a2, _b2;
+  const node = findStageNode(app2 == null ? void 0 : app2.graph, String(cmd.node));
+  if (!node) throw new Error(`stage ${cmd.node} not found on the canvas`);
+  const removed = { graph_node_id: String(node.id), uid: getStageUid(node) };
+  app2.graph.remove(node);
+  (_b2 = (_a2 = app2 == null ? void 0 : app2.graph) == null ? void 0 : _a2.setDirtyCanvas) == null ? void 0 : _b2.call(_a2, true, true);
+  return { removed: true, ...removed };
+}
 async function executeCommand(app2, cmd) {
   switch (cmd.action) {
     case "add_stage":
       return handleAddStage(app2, cmd);
     case "set_stage":
       return handleSetStage(app2, cmd);
+    case "remove_stage":
+      return handleRemoveStage(app2, cmd);
+    case "scene_get":
+      return handleSceneGet(app2, cmd);
+    case "scene_edit":
+      return handleSceneEdit(app2, cmd);
+    case "scene_capture":
+      return handleSceneCapture(app2, cmd);
+    case "scene_record":
+      return handleSceneRecord(app2, cmd);
     case "connect_stages":
       return handleConnectStages(app2, cmd);
     case "run_stage":
@@ -205472,4 +206017,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-CFuzUQ-W.mjs.map
+//# sourceMappingURL=main-C6yNfQMp.mjs.map

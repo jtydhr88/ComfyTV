@@ -49,6 +49,19 @@ export function readImageRefs(node: unknown): ImageRef[] {
   return out
 }
 
+const refListeners = new WeakMap<object, Set<() => void>>()
+
+export function subscribeImageRefs(node: unknown, listener: () => void): () => void {
+  if (!node || typeof node !== 'object') return () => {}
+  let set = refListeners.get(node)
+  if (!set) {
+    set = new Set()
+    refListeners.set(node, set)
+  }
+  set.add(listener)
+  return () => set!.delete(listener)
+}
+
 export function writeImageRefs(node: unknown, refs: ImageRef[]): void {
   const n = node as { properties?: Record<string, unknown> } | null
   if (!n) return
@@ -60,4 +73,5 @@ export function writeImageRefs(node: unknown, refs: ImageRef[]): void {
     return r.type ? { asset_id: r.asset_id, slot: r.slot, type: r.type }
                   : { asset_id: r.asset_id, slot: r.slot }
   })
+  refListeners.get(n as object)?.forEach((listener) => listener())
 }

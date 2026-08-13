@@ -1,12 +1,13 @@
 import asyncio
 import logging
+import time
 import uuid
 
 from aiohttp import web
 from server import PromptServer
 
 from ._common import routes
-from .canvas_state import get_mirror_client_id
+from .canvas_state import STALE_AFTER_S, get_mirror_client_id, get_mirror_entry
 
 _log = logging.getLogger(__name__)
 
@@ -16,16 +17,43 @@ DEFAULT_TIMEOUT_S = 15.0
 _pending: dict[str, asyncio.Future] = {}
 
 
+def _timeout_message(action: str, timeout: float, project_id: str | None) -> str:
+    entry = get_mirror_entry(project_id)
+    if entry is not None:
+        age = time.time() - entry["received_at"]
+        if age <= STALE_AFTER_S:
+            return (
+                f"a ComfyTV tab is mirroring the canvas (last update "
+                f"{age:.0f}s ago) but did not pick up the {action!r} command "
+                f"within {timeout:.0f}s — its websocket connection is likely "
+                "broken; ask the user to reload the ComfyTV page"
+            )
+    return (
+        f"no ComfyTV tab picked up the {action!r} command within "
+        f"{timeout:.0f}s — is the ComfyTV page open in a browser?"
+    )
+
+
 async def submit_command(action: str, payload: dict,
                          timeout: float = DEFAULT_TIMEOUT_S) -> dict:
+    project_id = payload.get("project_id")
+    project_id = project_id if isinstance(project_id, str) else None
+
+    entry = get_mirror_entry(project_id)
+    if entry is not None and entry.get("ws_connected") is False:
+        raise ValueError(
+            "the ComfyTV tab mirroring this project reports its websocket is "
+            "disconnected — commands cannot reach it; ask the user to reload "
+            "the ComfyTV page"
+        )
+
     command_id = uuid.uuid4().hex
     loop = asyncio.get_running_loop()
     future: asyncio.Future = loop.create_future()
     _pending[command_id] = future
 
     message = {"id": command_id, "action": action, **payload}
-    project_id = payload.get("project_id")
-    target = get_mirror_client_id(project_id if isinstance(project_id, str) else None)
+    target = get_mirror_client_id(project_id)
     if target:
         message["target_client_id"] = target
 
@@ -33,10 +61,7 @@ async def submit_command(action: str, payload: dict,
         PromptServer.instance.send_sync(COMMAND_EVENT, message)
         return await asyncio.wait_for(future, timeout)
     except asyncio.TimeoutError:
-        raise ValueError(
-            f"no ComfyTV tab picked up the {action!r} command within "
-            f"{timeout:.0f}s — is the ComfyTV page open in a browser?"
-        )
+        raise ValueError(_timeout_message(action, timeout, project_id))
     finally:
         _pending.pop(command_id, None)
 

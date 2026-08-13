@@ -197,10 +197,82 @@ async function handleRunStage(app: any, cmd: any): Promise<CommandResult> {
 
 type CommandResult = Record<string, unknown>
 
+function sceneApi(app: any, cmd: any) {
+  const node = findStageNode(app?.graph, String(cmd.node))
+  if (!node) throw new Error(`stage ${cmd.node} not found on the canvas`)
+  const api = (node as any).__comfytvStageApi?.scene3d
+  if (!api) {
+    throw new Error(
+      `stage ${cmd.node} is not a mounted Scene3D stage — scene tools need a `
+      + 'ComfyTV.Scene3DStage whose card is open in the tab')
+  }
+  return api
+}
+
+async function handleSceneGet(app: any, cmd: any): Promise<CommandResult> {
+  const api = sceneApi(app, cmd)
+  const scene = api.getState()
+  if (typeof api.clipNames === 'function') {
+    const animated = [...(scene.characters ?? []), ...(scene.models ?? [])]
+    for (const entry of animated) {
+      try {
+        entry.available_clips = await api.clipNames(entry.id)
+      } catch {
+        entry.available_clips = []
+      }
+    }
+  }
+  return {
+    scene,
+    resources: api.resources(),
+    busy: api.isBusy(),
+    has_recordable_duration: api.hasRecordableDuration(),
+  }
+}
+
+async function handleSceneEdit(app: any, cmd: any): Promise<CommandResult> {
+  const api = sceneApi(app, cmd)
+  if (api.isBusy()) throw new Error('scene is busy capturing/recording — retry after it finishes')
+  const results = await api.applyOps(cmd.ops)
+  return { applied: results }
+}
+
+async function handleSceneCapture(app: any, cmd: any): Promise<CommandResult> {
+  const api = sceneApi(app, cmd)
+  if (api.isBusy()) throw new Error('scene is busy capturing/recording — retry after it finishes')
+  api.configureOutput({
+    channel: cmd.channel, width: cmd.width, height: cmd.height,
+  })
+  return await api.capture()
+}
+
+async function handleSceneRecord(app: any, cmd: any): Promise<CommandResult> {
+  const api = sceneApi(app, cmd)
+  if (api.isBusy()) throw new Error('scene is busy capturing/recording — retry after it finishes')
+  api.configureOutput({
+    channel: cmd.channel, width: cmd.width, height: cmd.height,
+  })
+  return await api.record()
+}
+
+function handleRemoveStage(app: any, cmd: any): CommandResult {
+  const node = findStageNode(app?.graph, String(cmd.node))
+  if (!node) throw new Error(`stage ${cmd.node} not found on the canvas`)
+  const removed = { graph_node_id: String(node.id), uid: getStageUid(node) }
+  app.graph.remove(node)
+  app?.graph?.setDirtyCanvas?.(true, true)
+  return { removed: true, ...removed }
+}
+
 async function executeCommand(app: any, cmd: any): Promise<CommandResult> {
   switch (cmd.action) {
     case 'add_stage': return handleAddStage(app, cmd)
     case 'set_stage': return handleSetStage(app, cmd)
+    case 'remove_stage': return handleRemoveStage(app, cmd)
+    case 'scene_get': return handleSceneGet(app, cmd)
+    case 'scene_edit': return handleSceneEdit(app, cmd)
+    case 'scene_capture': return handleSceneCapture(app, cmd)
+    case 'scene_record': return handleSceneRecord(app, cmd)
     case 'connect_stages': return handleConnectStages(app, cmd)
     case 'run_stage': return handleRunStage(app, cmd)
     default: throw new Error(`unknown command action ${String(cmd.action)}`)

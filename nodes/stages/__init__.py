@@ -119,7 +119,7 @@ from .split_part import SplitPartStage, MaskCleanup
 class ComfyTVExtension(ComfyExtension):
     @override
     async def get_node_list(self) -> list[type[io.ComfyNode]]:
-        return [
+        classes = [
             ProjectStage,
             TextStage, ImageStage, VideoStage, AudioStage, SpeechStage,
             DirectorStage,
@@ -185,6 +185,11 @@ class ComfyTVExtension(ComfyExtension):
             SplitPartStage, MaskCleanup,
             *_bridge_classes(),
         ]
+        from ...runners.exec_errors import install_exec_error_recorder
+        for cls in classes:
+            meta = STAGE_META.get(cls.__name__) or {}
+            install_exec_error_recorder(cls, meta.get("kind", "stage"))
+        return classes
 
 
 def _bridge_classes() -> list:
