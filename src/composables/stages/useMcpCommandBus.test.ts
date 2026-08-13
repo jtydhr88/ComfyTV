@@ -338,6 +338,30 @@ describe('installMcpCommandBus', () => {
     expect(result.error).toBe('upstream not ready')
   })
 
+  it('remove_stage removes the node from the graph', async () => {
+    const node = makeNode()
+    const { host, deps, graph } = makeHost([node])
+    ;(graph as any).remove = vi.fn()
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, { id: 'c1', action: 'remove_stage', node: 'u1' })
+    const [result] = postedResults()
+    expect(result.ok).toBe(true)
+    expect(result.result.removed).toBe(true)
+    expect(result.result.uid).toBe('u1')
+    expect((graph as any).remove).toHaveBeenCalledWith(node)
+  })
+
+  it('remove_stage errors on unknown or non-stage nodes', async () => {
+    const { host, deps, graph } = makeHost([makeNode()])
+    ;(graph as any).remove = vi.fn()
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, { id: 'c1', action: 'remove_stage', node: 'missing' })
+    const [result] = postedResults()
+    expect(result.ok).toBe(false)
+    expect(result.error).toContain('not found')
+    expect((graph as any).remove).not.toHaveBeenCalled()
+  })
+
   it('run_stage errors when the stage card is not mounted', async () => {
     const { host, deps } = makeHost([makeNode()])
     uninstall = installMcpCommandBus(host, deps)

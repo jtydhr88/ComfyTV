@@ -197,10 +197,20 @@ async function handleRunStage(app: any, cmd: any): Promise<CommandResult> {
 
 type CommandResult = Record<string, unknown>
 
+function handleRemoveStage(app: any, cmd: any): CommandResult {
+  const node = findStageNode(app?.graph, String(cmd.node))
+  if (!node) throw new Error(`stage ${cmd.node} not found on the canvas`)
+  const removed = { graph_node_id: String(node.id), uid: getStageUid(node) }
+  app.graph.remove(node)
+  app?.graph?.setDirtyCanvas?.(true, true)
+  return { removed: true, ...removed }
+}
+
 async function executeCommand(app: any, cmd: any): Promise<CommandResult> {
   switch (cmd.action) {
     case 'add_stage': return handleAddStage(app, cmd)
     case 'set_stage': return handleSetStage(app, cmd)
+    case 'remove_stage': return handleRemoveStage(app, cmd)
     case 'connect_stages': return handleConnectStages(app, cmd)
     case 'run_stage': return handleRunStage(app, cmd)
     default: throw new Error(`unknown command action ${String(cmd.action)}`)

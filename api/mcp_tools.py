@@ -283,6 +283,15 @@ async def _run_stage(args: dict) -> dict:
     return await submit_command("run_stage", payload, timeout=60.0)
 
 
+async def _remove_stage(args: dict) -> dict:
+    node = args.get("node")
+    if not node:
+        raise ValueError("node is required (stage uid or graph node id)")
+    payload = _command_payload(args, ("project_id",))
+    payload["node"] = str(node)
+    return await submit_command("remove_stage", payload)
+
+
 TOOLS: dict[str, dict] = {
     "server_info": {
         "description": (
@@ -483,6 +492,24 @@ TOOLS: dict[str, dict] = {
             "additionalProperties": False,
         },
         "handler": _set_stage,
+    },
+    "remove_stage": {
+        "description": (
+            "Remove a ComfyTV stage node from the live canvas (its stored "
+            "outputs stay in the project history). node is a stage uid or "
+            "graph_node_id from get_canvas. Only ComfyTV stages can be "
+            "removed. Requires an open ComfyTV tab."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "node": {"type": "string"},
+                "project_id": {"type": "string"},
+            },
+            "required": ["node"],
+            "additionalProperties": False,
+        },
+        "handler": _remove_stage,
     },
     "servers": {
         "description": (

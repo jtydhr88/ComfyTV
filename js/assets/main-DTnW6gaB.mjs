@@ -56378,7 +56378,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-C2XmSJqO.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-D72L4k74.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -130547,7 +130547,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-DUEMoFIs.mjs");
+    const { STLLoader } = await import("./STLLoader-DY-cJc-5.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -130555,7 +130555,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-QU9KRk6X.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-rvMuqBi_.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -204809,8 +204809,16 @@ function installCanvasMirror(app2, deps) {
   let lastPostAt = 0;
   let inFlight = false;
   let timer = null;
-  async function tick() {
+  function tabInfo() {
     var _a3, _b3;
+    const api = (_a3 = deps.resolveApp()) == null ? void 0 : _a3.api;
+    const readyState = (_b3 = api == null ? void 0 : api.socket) == null ? void 0 : _b3.readyState;
+    return {
+      clientId: (api == null ? void 0 : api.clientId) ? String(api.clientId) : void 0,
+      wsConnected: typeof readyState === "number" ? readyState === 1 : void 0
+    };
+  }
+  async function tick() {
     if (inFlight) return;
     const snapshot = buildCanvasSnapshot(deps);
     if (!snapshot) return;
@@ -204821,24 +204829,29 @@ function installCanvasMirror(app2, deps) {
     if (!changed && !heartbeatDue) return;
     inFlight = true;
     try {
+      const { clientId, wsConnected } = tabInfo();
       if (changed) {
-        const clientId = (_b3 = (_a3 = deps.resolveApp()) == null ? void 0 : _a3.api) == null ? void 0 : _b3.clientId;
-        await apiSend(
-          "/comfytv/canvas_state",
-          "POST",
-          OkSchema$1,
-          clientId ? { ...snapshot, client_id: String(clientId) } : snapshot
-        );
+        await apiSend("/comfytv/canvas_state", "POST", OkSchema$1, {
+          ...snapshot,
+          ...clientId ? { client_id: clientId } : {},
+          ...wsConnected !== void 0 ? { ws_connected: wsConnected } : {}
+        });
         lastPosted = serialized;
         lastPostedProject = snapshot.project_id;
       } else {
         try {
           await apiSend("/comfytv/canvas_state", "POST", OkSchema$1, {
             project_id: lastPostedProject || snapshot.project_id,
-            heartbeat: true
+            heartbeat: true,
+            ...clientId ? { client_id: clientId } : {},
+            ...wsConnected !== void 0 ? { ws_connected: wsConnected } : {}
           });
         } catch (e) {
-          lastPosted = "";
+          if ((e == null ? void 0 : e.status) === 409) {
+            lastPosted = serialized;
+          } else {
+            lastPosted = "";
+          }
           throw e;
         }
       }
@@ -205036,12 +205049,23 @@ async function handleRunStage(app2, cmd) {
     ((_d = (_c = stageApi.state) == null ? void 0 : _c.error) == null ? void 0 : _d.message) || "run did not start (loader stage, workflow still preparing, or upstream outputs missing)"
   );
 }
+function handleRemoveStage(app2, cmd) {
+  var _a2, _b2;
+  const node = findStageNode(app2 == null ? void 0 : app2.graph, String(cmd.node));
+  if (!node) throw new Error(`stage ${cmd.node} not found on the canvas`);
+  const removed = { graph_node_id: String(node.id), uid: getStageUid(node) };
+  app2.graph.remove(node);
+  (_b2 = (_a2 = app2 == null ? void 0 : app2.graph) == null ? void 0 : _a2.setDirtyCanvas) == null ? void 0 : _b2.call(_a2, true, true);
+  return { removed: true, ...removed };
+}
 async function executeCommand(app2, cmd) {
   switch (cmd.action) {
     case "add_stage":
       return handleAddStage(app2, cmd);
     case "set_stage":
       return handleSetStage(app2, cmd);
+    case "remove_stage":
+      return handleRemoveStage(app2, cmd);
     case "connect_stages":
       return handleConnectStages(app2, cmd);
     case "run_stage":
@@ -205472,4 +205496,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-CFuzUQ-W.mjs.map
+//# sourceMappingURL=main-DTnW6gaB.mjs.map
