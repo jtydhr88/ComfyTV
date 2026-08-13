@@ -109,6 +109,7 @@ from .geometry import (
     LineArtStage, MeshOpStage, MeshPrimitiveStage, MeshBooleanStage, MeshBakeMapsStage,
 )
 from .scene3d import Scene3DStage
+from .previz import PrevizStage
 from .layer_editor import LayerEditorStage
 from .poster import PosterStage
 from .storyboard_editor import StoryboardEditorStage
@@ -178,6 +179,7 @@ class ComfyTVExtension(ComfyExtension):
             MeshOpStage, MeshPrimitiveStage, MeshBooleanStage, MeshBakeMapsStage,
             LineArtStage,
             Scene3DStage,
+            PrevizStage,
             LayerEditorStage,
             PosterStage,
             StoryboardEditorStage,

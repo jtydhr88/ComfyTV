@@ -1954,6 +1954,23 @@
       }
     }
   },
+  "ComfyTV_PrevizStage": {
+    "display_name": "3D Director",
+    "outputs": {
+      "0": {
+        "name": "Image",
+        "tooltip": "Last captured shot frame."
+      },
+      "1": {
+        "name": "Video",
+        "tooltip": "Last recorded previz clip (webm)."
+      },
+      "2": {
+        "name": "Images",
+        "tooltip": "All captures from the last Capture — one per shot."
+      }
+    }
+  },
   "ComfyTV_LayerEditorStage": {
     "display_name": "Layer Editor",
     "outputs": {
