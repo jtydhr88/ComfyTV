@@ -50602,8 +50602,8 @@ function WebGLRenderState(extensions) {
   function pushShadow(shadowLight) {
     shadowsArray.push(shadowLight);
   }
-  function pushLightProbeGrid(volume) {
-    lightProbeGridArray.push(volume);
+  function pushLightProbeGrid(volume2) {
+    lightProbeGridArray.push(volume2);
   }
   function setupLights() {
     lights.setup(lightsArray);
@@ -56013,11 +56013,11 @@ class WebGLRenderer {
         }
         materials.refreshMaterialUniforms(m_uniforms, material, _pixelRatio, _height, currentRenderState.state.transmissionRenderTarget[camera2.id]);
         if (materialProperties.needsLights && materialProperties.lightProbeGrid) {
-          const volume = materialProperties.lightProbeGrid;
-          m_uniforms.probesSH.value = volume.texture;
-          m_uniforms.probesMin.value.copy(volume.boundingBox.min);
-          m_uniforms.probesMax.value.copy(volume.boundingBox.max);
-          m_uniforms.probesResolution.value.copy(volume.resolution);
+          const volume2 = materialProperties.lightProbeGrid;
+          m_uniforms.probesSH.value = volume2.texture;
+          m_uniforms.probesMin.value.copy(volume2.boundingBox.min);
+          m_uniforms.probesMax.value.copy(volume2.boundingBox.max);
+          m_uniforms.probesResolution.value.copy(volume2.resolution);
         }
         WebGLUniforms.upload(_gl, getUniformList(materialProperties), m_uniforms, textures);
       }
@@ -56930,7 +56930,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-H4X9Fyl_.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-JAAb1LhA.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -123259,13 +123259,13 @@ const _sfc_main$2U = /* @__PURE__ */ defineComponent({
   setup(__props) {
     const props = __props;
     const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, "video"));
-    const volume = /* @__PURE__ */ ref(readWidgetNum(props.node, "volume", 1));
+    const volume2 = /* @__PURE__ */ ref(readWidgetNum(props.node, "volume", 1));
     const fadeIn = /* @__PURE__ */ ref(readWidgetNum(props.node, "fade_in_s", 0));
     const fadeOut = /* @__PURE__ */ ref(readWidgetNum(props.node, "fade_out_s", 0));
     function setVolume(v) {
       if (!Number.isFinite(v)) return;
-      volume.value = Math.min(8, Math.max(0, Math.round(v * 100) / 100));
-      writeWidget(props.node, "volume", volume.value);
+      volume2.value = Math.min(8, Math.max(0, Math.round(v * 100) / 100));
+      writeWidget(props.node, "volume", volume2.value);
     }
     function setFade(name, raw) {
       const v = Number(raw);
@@ -123277,7 +123277,7 @@ const _sfc_main$2U = /* @__PURE__ */ defineComponent({
     }
     bindWidgetCallback(props.node, "volume", (value) => {
       const v = Number(value);
-      if (Number.isFinite(v) && v !== volume.value) volume.value = v;
+      if (Number.isFinite(v) && v !== volume2.value) volume2.value = v;
     });
     bindWidgetCallback(props.node, "fade_in_s", (value) => {
       const v = Number(value);
@@ -123288,7 +123288,7 @@ const _sfc_main$2U = /* @__PURE__ */ defineComponent({
       if (Number.isFinite(v) && v !== fadeOut.value) fadeOut.value = v;
     });
     onNodeConfigure(props.node, () => {
-      volume.value = readWidgetNum(props.node, "volume", volume.value);
+      volume2.value = readWidgetNum(props.node, "volume", volume2.value);
       fadeIn.value = readWidgetNum(props.node, "fade_in_s", fadeIn.value);
       fadeOut.value = readWidgetNum(props.node, "fade_out_s", fadeOut.value);
     });
@@ -123297,7 +123297,7 @@ const _sfc_main$2U = /* @__PURE__ */ defineComponent({
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             "source-video-url": sourceVideoUrl.value,
-            volume: Math.min(1, volume.value),
+            volume: Math.min(1, volume2.value),
             "default-muted": false
           }, null, 8, ["source-video-url", "volume"])
         ]),
@@ -123319,7 +123319,7 @@ const _sfc_main$2U = /* @__PURE__ */ defineComponent({
                 max: "2",
                 step: "0.05",
                 class: "ctv:flex-1 ctv:accent-primary-background ctv:cursor-pointer",
-                value: Math.min(2, volume.value),
+                value: Math.min(2, volume2.value),
                 onInput: _cache2[0] || (_cache2[0] = (e) => setVolume(Number(e.target.value)))
               }, null, 40, _hoisted_3$2H),
               createBaseVNode("input", {
@@ -123328,7 +123328,7 @@ const _sfc_main$2U = /* @__PURE__ */ defineComponent({
                 max: "800",
                 step: "5",
                 class: "ctv-num-input ctv:w-14 ctv:py-0.5 ctv:px-1 ctv:text-right ctv:text-[11px] ctv:font-mono ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground",
-                value: Math.round(volume.value * 100),
+                value: Math.round(volume2.value * 100),
                 onChange: _cache2[1] || (_cache2[1] = (e) => setVolume(Number(e.target.value) / 100))
               }, null, 40, _hoisted_4$2i),
               _cache2[7] || (_cache2[7] = createBaseVNode("span", { class: "ctv:text-2xs ctv:text-muted-foreground" }, "%", -1))
@@ -123363,7 +123363,7 @@ const _sfc_main$2U = /* @__PURE__ */ defineComponent({
             ])
           ], 32),
           createBaseVNode("div", _hoisted_12$M, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_13$I, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_14$H, toDisplayString$1(_ctx.$t("videoVolume.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_15$B, toDisplayString$1(_ctx.$t("videoVolume.done")), 1)) : volume.value > 1 ? (openBlock(), createElementBlock("span", _hoisted_16$w, toDisplayString$1(_ctx.$t("videoVolume.previewCapNote")), 1)) : (openBlock(), createElementBlock("span", _hoisted_17$u, toDisplayString$1(_ctx.$t("videoVolume.adjustThenRun")), 1))
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_13$I, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_14$H, toDisplayString$1(_ctx.$t("videoVolume.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_15$B, toDisplayString$1(_ctx.$t("videoVolume.done")), 1)) : volume2.value > 1 ? (openBlock(), createElementBlock("span", _hoisted_16$w, toDisplayString$1(_ctx.$t("videoVolume.previewCapNote")), 1)) : (openBlock(), createElementBlock("span", _hoisted_17$u, toDisplayString$1(_ctx.$t("videoVolume.adjustThenRun")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
@@ -131128,7 +131128,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-CZ5wc2nY.mjs");
+    const { STLLoader } = await import("./STLLoader-Bng3Atzs.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -131136,7 +131136,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-Pt2i2chb.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-BAxS_Pib.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -152682,6 +152682,40 @@ function sampleAim(action, seconds, fallback) {
     pitchDeg: pitch && pitch.bezt.length ? Math.max(-85, Math.min(85, M(pitch, frame) * 180 / Math.PI)) : fallback.pitchDeg
   };
 }
+const OVERLAP_EXEMPT_KINDS = /* @__PURE__ */ new Set(["road"]);
+const OVERLAP_RATIO_THRESHOLD = 0.15;
+function volume(info) {
+  return Math.max(0, info.max[0] - info.min[0]) * Math.max(0, info.max[1] - info.min[1]) * Math.max(0, info.max[2] - info.min[2]);
+}
+function intersectionVolume(a2, b) {
+  const dx = Math.min(a2.max[0], b.max[0]) - Math.max(a2.min[0], b.min[0]);
+  const dy = Math.min(a2.max[1], b.max[1]) - Math.max(a2.min[1], b.min[1]);
+  const dz = Math.min(a2.max[2], b.max[2]) - Math.max(a2.min[2], b.min[2]);
+  if (dx <= 0 || dy <= 0 || dz <= 0) return 0;
+  return dx * dy * dz;
+}
+function actorOverlapWarnings(infos) {
+  const candidates = infos.filter(
+    (info) => !OVERLAP_EXEMPT_KINDS.has(info.kind) && !info.mounted
+  );
+  const warnings = [];
+  for (let i = 0; i < candidates.length; i++) {
+    for (let j2 = i + 1; j2 < candidates.length; j2++) {
+      const a2 = candidates[i];
+      const b = candidates[j2];
+      const overlap = intersectionVolume(a2, b);
+      if (overlap <= 0) continue;
+      const smaller = Math.min(volume(a2), volume(b));
+      if (smaller <= 0) continue;
+      const ratio = overlap / smaller;
+      if (ratio < OVERLAP_RATIO_THRESHOLD) continue;
+      warnings.push(
+        `'${a2.label}' (${a2.kind}) overlaps '${b.label}' (${b.kind}) by ~${Math.round(ratio * 100)}% of the smaller one — move one via update_actor {pos} or remove it`
+      );
+    }
+  }
+  return warnings;
+}
 const PREVIZ_LOCK_GLOBAL = "";
 const PREVIZ_LOCK_MANUAL = "__manual__";
 const PREVIZ_VERSION = 2;
@@ -155090,6 +155124,8 @@ function usePrevizStage(node, opts) {
   function cleanup() {
     cleanupViewport();
     world.dispose();
+    const api = node.__comfytvStageApi;
+    if (api == null ? void 0 : api.previz) delete api.previz;
   }
   watch(selected, () => syncViewportTracks());
   function uniqueLabel(base2) {
@@ -155544,6 +155580,406 @@ function usePrevizStage(node, opts) {
     historyVersion.value++;
     reloadWorld();
   });
+  bindWidgetCallback(node, STATE_WIDGET$2, (value) => {
+    project2.value = parseProjectJson(String(value ?? "{}"));
+    lastCommitted = snapshot();
+    history2.clear();
+    historyVersion.value++;
+    reloadWorld();
+  });
+  function mcpVec2(value) {
+    if (!Array.isArray(value) || value.length < 2) return null;
+    return [Number(value[0]), Number(value[value.length - 1])];
+  }
+  function mcpActor(label) {
+    const actor = world.actorByLabel(String(label ?? ""));
+    if (!actor) {
+      throw new Error(
+        `no actor '${label}'; actors: ` + (world.actors.map((a2) => a2.label).join(", ") || "(none)")
+      );
+    }
+    return actor;
+  }
+  function mcpActorBounds() {
+    return world.actors.map((actor) => {
+      const box = new Box3();
+      actor.obj.traverse((child) => {
+        if (child !== actor.labelSprite && child.isMesh) {
+          box.expandByObject(child);
+        }
+      });
+      return {
+        label: actor.label,
+        kind: actor.data.kind,
+        mounted: !!actor.data.mount,
+        min: [box.min.x, box.min.y, box.min.z],
+        max: [box.max.x, box.max.y, box.max.z]
+      };
+    });
+  }
+  function mcpPlaceActor(actor, pos) {
+    const lim = PREVIZ_STAGE_LIMIT;
+    actor.obj.position.x = Math.max(-lim, Math.min(lim, pos[0]));
+    actor.obj.position.z = Math.max(-lim, Math.min(lim, pos[1]));
+    world.alignActor(actor);
+    commit(`actor:${actor.label}`);
+  }
+  function mcpShot(index) {
+    const i = Number(index);
+    const shot = world.shots[i];
+    if (!shot) {
+      throw new Error(
+        `no shot ${index}; shots: 0..${world.shots.length - 1}`
+      );
+    }
+    return { shot, index: i };
+  }
+  function mcpActorPatch(op) {
+    const patch = {};
+    const pos = mcpVec2(op.pos);
+    if (pos) patch.pos = pos;
+    if (op.rot_y !== void 0 || op.rotY !== void 0) {
+      patch.rotY = Number(op.rot_y ?? op.rotY);
+    }
+    for (const key of ["height", "scale", "timeOffset"]) {
+      const snake = key === "timeOffset" ? op.time_offset : op[key];
+      if (snake !== void 0) patch[key] = Number(snake);
+    }
+    if (op.pose !== void 0) {
+      if (!PREVIZ_POSES.has(String(op.pose))) {
+        throw new Error(`pose must be one of ${[...PREVIZ_POSES].join(", ")}`);
+      }
+      patch.pose = op.pose;
+    }
+    if (op.time_link !== void 0) {
+      if (!PREVIZ_TIME_LINKS.has(String(op.time_link))) {
+        throw new Error(
+          `time_link must be one of ${[...PREVIZ_TIME_LINKS].join(", ")}`
+        );
+      }
+      patch.timeLink = op.time_link;
+    }
+    if (op.time_link_shot !== void 0) patch.timeLinkShot = Number(op.time_link_shot);
+    if (op.mount !== void 0) patch.mount = op.mount ? String(op.mount) : "";
+    return patch;
+  }
+  function mcpShotPatch(op) {
+    const patch = {};
+    for (const key of ["name", "desc", "lock"]) {
+      if (op[key] !== void 0) patch[key] = String(op[key]);
+    }
+    for (const key of ["dur", "fov", "yaw", "pitch"]) {
+      if (op[key] !== void 0) patch[key] = Number(op[key]);
+    }
+    if (op.timing_mode !== void 0) {
+      if (!PREVIZ_TIMING_MODES.has(String(op.timing_mode))) {
+        throw new Error(
+          `timing_mode must be one of ${[...PREVIZ_TIMING_MODES].join(", ")}`
+        );
+      }
+      patch.timingMode = op.timing_mode;
+    }
+    if (op.sync_actor !== void 0) patch.syncActor = String(op.sync_actor ?? "");
+    return patch;
+  }
+  function mcpTrackPoints(value, withHeight) {
+    if (!Array.isArray(value) || value.length < 2) {
+      throw new Error("points must be an array of at least 2 positions");
+    }
+    return value.map((p2, i) => {
+      if (!Array.isArray(p2) || p2.length < 2) {
+        throw new Error(`points[${i}] must be [x, z] or [x, y, z]`);
+      }
+      if (withHeight) {
+        const y = p2.length > 2 ? Number(p2[1]) : 1.6;
+        const z2 = p2.length > 2 ? Number(p2[2]) : Number(p2[1]);
+        return new Vector3(Number(p2[0]), Math.max(0.2, Math.min(30, y)), z2);
+      }
+      return new Vector3(Number(p2[0]), 0, Number(p2[p2.length - 1]));
+    });
+  }
+  async function mcpApplyOps(ops) {
+    if (!Array.isArray(ops) || ops.length === 0) {
+      throw new Error("ops must be a non-empty array");
+    }
+    const results = [];
+    for (let i = 0; i < ops.length; i++) {
+      const op = ops[i];
+      const where = `ops[${i}] (${op == null ? void 0 : op.op})`;
+      try {
+        switch (op == null ? void 0 : op.op) {
+          case "add_actor": {
+            if (!PREVIZ_ACTOR_KINDS.has(String(op.kind))) {
+              throw new Error(
+                `kind must be one of ${[...PREVIZ_ACTOR_KINDS].join(", ")}`
+              );
+            }
+            addActor(op.kind);
+            const actor = world.actors[world.actors.length - 1];
+            const patch = mcpActorPatch(op);
+            if (Object.keys(patch).length) updateActor(actor.label, patch);
+            if (patch.pos) mcpPlaceActor(actor, patch.pos);
+            results.push({ op: op.op, label: actor.label });
+            break;
+          }
+          case "update_actor": {
+            const actor = mcpActor(op.label);
+            const patch = mcpActorPatch(op);
+            updateActor(actor.label, patch);
+            if (patch.pos) mcpPlaceActor(actor, patch.pos);
+            results.push({ op: op.op, label: actor.label });
+            break;
+          }
+          case "remove_actor": {
+            const actor = mcpActor(op.label);
+            removeActor(actor.label);
+            results.push({ op: op.op, label: actor.label });
+            break;
+          }
+          case "set_actor_joint": {
+            const actor = mcpActor(op.label);
+            if (!PREVIZ_JOINT_KEYS.includes(String(op.key))) {
+              throw new Error(
+                `key must be one of ${PREVIZ_JOINT_KEYS.join(", ")}`
+              );
+            }
+            setActorJoint(actor.label, String(op.key), Number(op.value));
+            results.push({ op: op.op, label: actor.label });
+            break;
+          }
+          case "set_actor_track": {
+            const actor = world.pathOwner(mcpActor(op.label));
+            const points = mcpTrackPoints(op.points, false);
+            actor.track = makeTrackAction(points);
+            if (op.straight === true) setTrackStraight(actor.track, true);
+            distributeSpeed(actor.track, 0, world.sceneDuration());
+            world.invalidateTrack(actor.track);
+            syncViewportTracks();
+            viewport2 == null ? void 0 : viewport2.refreshTracks();
+            commit();
+            results.push({
+              op: op.op,
+              label: actor.label,
+              anchors: anchorCount(actor.track)
+            });
+            break;
+          }
+          case "clear_actor_track": {
+            const actor = world.pathOwner(mcpActor(op.label));
+            actor.track = null;
+            world.invalidateTrack(actor.track);
+            syncViewportTracks();
+            viewport2 == null ? void 0 : viewport2.refreshTracks();
+            commit();
+            results.push({ op: op.op, label: actor.label });
+            break;
+          }
+          case "set_actor_straight": {
+            const actor = mcpActor(op.label);
+            setActorStraight(actor.label, op.straight !== false);
+            results.push({ op: op.op, label: actor.label });
+            break;
+          }
+          case "set_actor_path_time": {
+            const actor = mcpActor(op.label);
+            setActorPathTime(actor.label, Number(op.index), Number(op.time));
+            results.push({ op: op.op, label: actor.label });
+            break;
+          }
+          case "add_shot": {
+            addShot();
+            const index = world.shots.length - 1;
+            const patch = mcpShotPatch(op);
+            if (Object.keys(patch).length) updateShot(index, patch);
+            results.push({ op: op.op, index });
+            break;
+          }
+          case "remove_shot": {
+            const { index } = mcpShot(op.index);
+            removeShot(index);
+            results.push({ op: op.op, index });
+            break;
+          }
+          case "update_shot": {
+            const { index } = mcpShot(op.index);
+            updateShot(index, mcpShotPatch(op));
+            results.push({ op: op.op, index });
+            break;
+          }
+          case "select_shot": {
+            const { index } = mcpShot(op.index);
+            setShot(index);
+            results.push({ op: op.op, index });
+            break;
+          }
+          case "set_shot_track": {
+            const { shot, index } = mcpShot(op.index);
+            const points = mcpTrackPoints(op.points, true);
+            Object.assign(shot.action, makeTrackAction(points));
+            if (op.straight === true) setTrackStraight(shot.action, true);
+            if (shot.timingMode === "custom") ensureSpeedCurve(shot.action, shot.dur);
+            world.invalidateTrack(shot.action);
+            viewport2 == null ? void 0 : viewport2.refreshTracks();
+            commit();
+            results.push({ op: op.op, index, anchors: anchorCount(shot.action) });
+            break;
+          }
+          case "set_shot_straight": {
+            const { index } = mcpShot(op.index ?? shotIdx.value);
+            setShot(index);
+            setShotStraight(op.straight !== false);
+            results.push({ op: op.op, index });
+            break;
+          }
+          case "set_cam_point_y": {
+            const { index } = mcpShot(op.shot);
+            setCamPoint(index, Number(op.index), { y: Number(op.y) });
+            results.push({ op: op.op, index });
+            break;
+          }
+          case "set_cam_key": {
+            const { index } = mcpShot(op.shot);
+            setCamKey(index, Number(op.index), {
+              yaw: op.yaw !== void 0 ? Number(op.yaw) : void 0,
+              pitch: op.pitch !== void 0 ? Number(op.pitch) : void 0,
+              fov: op.fov !== void 0 ? Number(op.fov) : void 0
+            });
+            results.push({ op: op.op, index });
+            break;
+          }
+          case "set_cam_time": {
+            const { index } = mcpShot(op.shot);
+            setCamTime(index, Number(op.index), Number(op.time));
+            results.push({ op: op.op, index });
+            break;
+          }
+          case "set_sun": {
+            const patch = {};
+            if (op.enabled !== void 0) patch.enabled = op.enabled !== false;
+            if (Array.isArray(op.pos) && op.pos.length === 3) {
+              patch.pos = op.pos.map(Number);
+            }
+            for (const key of ["intensity", "temp", "ambient", "softness"]) {
+              if (op[key] !== void 0) patch[key] = Number(op[key]);
+            }
+            if (op.quality !== void 0) patch.quality = op.quality;
+            updateSun(patch);
+            results.push({ op: op.op });
+            break;
+          }
+          case "set_ground": {
+            if (!PREVIZ_GROUND_STYLES.has(String(op.style))) {
+              throw new Error(
+                `style must be one of ${[...PREVIZ_GROUND_STYLES].join(", ")}`
+              );
+            }
+            updateGround({
+              style: op.style,
+              ...op.color ? { color: String(op.color) } : {}
+            });
+            results.push({ op: op.op });
+            break;
+          }
+          case "set_aspect": {
+            if (!(String(op.aspect) in PREVIZ_ASPECTS)) {
+              throw new Error(
+                `aspect must be one of ${Object.keys(PREVIZ_ASPECTS).join(", ")}`
+              );
+            }
+            setAspect(String(op.aspect));
+            results.push({ op: op.op });
+            break;
+          }
+          case "set_collision": {
+            setCollision(op.on !== false);
+            results.push({ op: op.op });
+            break;
+          }
+          case "set_labels": {
+            setLabels(op.on !== false);
+            results.push({ op: op.op });
+            break;
+          }
+          default:
+            throw new Error(
+              `unknown op '${op == null ? void 0 : op.op}'; valid ops: add_actor, update_actor, remove_actor, set_actor_joint, set_actor_track, clear_actor_track, set_actor_straight, set_actor_path_time, add_shot, remove_shot, update_shot, select_shot, set_shot_track, set_shot_straight, set_cam_point_y, set_cam_key, set_cam_time, set_sun, set_ground, set_aspect, set_collision, set_labels`
+            );
+        }
+      } catch (error2) {
+        const detail = error2 instanceof Error ? error2.message : String(error2);
+        throw new Error(
+          `${where}: ${detail} (ops before this one were already applied)`
+        );
+      }
+    }
+    return results;
+  }
+  {
+    const hostApi = node.__comfytvStageApi ?? (node.__comfytvStageApi = {});
+    hostApi.previz = {
+      getState: () => {
+        const bounds = mcpActorBounds();
+        return {
+          ...JSON.parse(JSON.stringify(project2.value)),
+          duration: duration2.value,
+          shot_index: shotIdx.value,
+          actor_labels: world.actors.map((a2) => a2.label),
+          actor_bounds: bounds,
+          overlap_warnings: actorOverlapWarnings(bounds)
+        };
+      },
+      resources: () => ({
+        actor_kinds: [...PREVIZ_ACTOR_KINDS],
+        poses: [...PREVIZ_POSES],
+        time_links: [...PREVIZ_TIME_LINKS],
+        timing_modes: [...PREVIZ_TIMING_MODES],
+        ground_styles: [...PREVIZ_GROUND_STYLES],
+        aspects: Object.keys(PREVIZ_ASPECTS),
+        joint_keys: [...PREVIZ_JOINT_KEYS],
+        stage_limit: PREVIZ_STAGE_LIMIT,
+        shot_duration_min: PREVIZ_SHOT_DURATION_MIN
+      }),
+      applyOps: async (ops) => {
+        const results = await mcpApplyOps(ops);
+        return {
+          results,
+          warnings: actorOverlapWarnings(mcpActorBounds())
+        };
+      },
+      configureOutput: (patch) => {
+        if (Number.isFinite(patch.width)) {
+          writeWidget(node, WIDTH_WIDGET$2, Number(patch.width), { fireCallback: false });
+        }
+        if (Number.isFinite(patch.height)) {
+          writeWidget(node, HEIGHT_WIDGET$2, Number(patch.height), { fireCallback: false });
+        }
+      },
+      isBusy: () => capturing.value || recording.value,
+      hasRecordableDuration: () => duration2.value > 0,
+      capture: async () => {
+        const before = capturedImageUrl.value;
+        await capture();
+        if (capturedImageUrl.value === before) {
+          throw new Error("capture produced no output — see the ComfyTV tab for details");
+        }
+        return {
+          image: capturedImageUrl.value,
+          images: readWidgetStr(node, IMAGES_WIDGET$2, "")
+        };
+      },
+      record: async () => {
+        if (!recordingSupported) {
+          throw new Error("video recording is not supported in this browser tab");
+        }
+        const before = capturedVideoUrl.value;
+        await record2();
+        if (capturedVideoUrl.value === before) {
+          throw new Error("record produced no output — see the ComfyTV tab for details");
+        }
+        return { video: capturedVideoUrl.value };
+      }
+    };
+  }
   return {
     world,
     project: project2,
@@ -211876,14 +212312,17 @@ function applyStageFields(node, cmd) {
     if (!Array.isArray(cmd.asset_refs)) {
       throw new Error("asset_refs must be an array of {asset_id, slot?, type?} objects");
     }
+    const nextSlot = { image: 0, video: 0, audio: 0 };
     const refs = cmd.asset_refs.map((r, i) => {
       const id = Number(r == null ? void 0 : r.asset_id);
       if (!Number.isInteger(id)) throw new Error(`asset_refs[${i}] needs a numeric asset_id`);
-      const slot = Number.isInteger(Number(r == null ? void 0 : r.slot)) ? Number(r.slot) : i;
       const type = (r == null ? void 0 : r.type) === "video" || (r == null ? void 0 : r.type) === "audio" ? r.type : void 0;
+      const typeKey = type ?? "image";
+      const slot = Number.isInteger(Number(r == null ? void 0 : r.slot)) ? Number(r.slot) : nextSlot[typeKey]++;
       return type ? { asset_id: id, slot, type } : { asset_id: id, slot };
     });
     writeImageRefs(node, refs);
+    void useAssetStore().refresh();
     updated.push("asset_refs");
   }
   return updated;
@@ -211970,17 +212409,55 @@ async function handleRunStage(app2, cmd) {
     ((_d = (_c = stageApi.state) == null ? void 0 : _c.error) == null ? void 0 : _d.message) || "run did not start (loader stage, workflow still preparing, or upstream outputs missing)"
   );
 }
-function sceneApi(app2, cmd) {
+function stageSubApi(app2, cmd, key, label) {
   var _a2;
   const node = findStageNode(app2 == null ? void 0 : app2.graph, String(cmd.node));
   if (!node) throw new Error(`stage ${cmd.node} not found on the canvas`);
-  const api = (_a2 = node.__comfytvStageApi) == null ? void 0 : _a2.scene3d;
+  const api = (_a2 = node.__comfytvStageApi) == null ? void 0 : _a2[key];
   if (!api) {
     throw new Error(
-      `stage ${cmd.node} is not a mounted Scene3D stage — scene tools need a ComfyTV.Scene3DStage whose card is open in the tab`
+      `stage ${cmd.node} is not a mounted ${label} stage — these tools need a ComfyTV.${label}Stage whose card is open in the tab`
     );
   }
   return api;
+}
+function sceneApi(app2, cmd) {
+  return stageSubApi(app2, cmd, "scene3d", "Scene3D");
+}
+function previzApi(app2, cmd) {
+  return stageSubApi(app2, cmd, "previz", "Previz");
+}
+async function handlePrevizGet(app2, cmd) {
+  const api = previzApi(app2, cmd);
+  return {
+    project: api.getState(),
+    resources: api.resources(),
+    busy: api.isBusy(),
+    has_recordable_duration: api.hasRecordableDuration()
+  };
+}
+async function handlePrevizEdit(app2, cmd) {
+  const api = previzApi(app2, cmd);
+  if (api.isBusy()) throw new Error("previz is busy capturing/recording — retry after it finishes");
+  const out = await api.applyOps(cmd.ops);
+  const applied = Array.isArray(out) ? out : out.results;
+  const warnings = Array.isArray(out) ? [] : out.warnings ?? [];
+  return {
+    applied,
+    ...warnings.length ? { warnings } : {}
+  };
+}
+async function handlePrevizCapture(app2, cmd) {
+  const api = previzApi(app2, cmd);
+  if (api.isBusy()) throw new Error("previz is busy capturing/recording — retry after it finishes");
+  api.configureOutput({ width: cmd.width, height: cmd.height });
+  return await api.capture();
+}
+async function handlePrevizRecord(app2, cmd) {
+  const api = previzApi(app2, cmd);
+  if (api.isBusy()) throw new Error("previz is busy capturing/recording — retry after it finishes");
+  api.configureOutput({ width: cmd.width, height: cmd.height });
+  return await api.record();
 }
 async function handleSceneGet(app2, cmd) {
   const api = sceneApi(app2, cmd);
@@ -212053,6 +212530,14 @@ async function executeCommand(app2, cmd) {
       return handleSceneCapture(app2, cmd);
     case "scene_record":
       return handleSceneRecord(app2, cmd);
+    case "previz_get":
+      return handlePrevizGet(app2, cmd);
+    case "previz_edit":
+      return handlePrevizEdit(app2, cmd);
+    case "previz_capture":
+      return handlePrevizCapture(app2, cmd);
+    case "previz_record":
+      return handlePrevizRecord(app2, cmd);
     case "connect_stages":
       return handleConnectStages(app2, cmd);
     case "run_stage":
@@ -212483,4 +212968,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-DsWvRV8t.mjs.map
+//# sourceMappingURL=main-BPe-mxB-.mjs.map

@@ -194,8 +194,28 @@ describe('installMcpCommandBus', () => {
     expect(result.result.updated).toEqual(['asset_refs'])
     expect(node.properties.comfytv_image_refs).toEqual([
       { asset_id: 5, slot: 0 },
-      { asset_id: 9, slot: 1, type: 'video' },
+      { asset_id: 9, slot: 0, type: 'video' },
       { asset_id: 7, slot: 6 },
+    ])
+  })
+
+  it('set_stage autofills slots per type namespace', async () => {
+    const node = makeNode()
+    const { host, deps } = makeHost([node])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, {
+      id: 'c1', action: 'set_stage', node: 'u1',
+      asset_refs: [
+        { asset_id: 1 }, { asset_id: 2 }, { asset_id: 3, type: 'video' },
+        { asset_id: 4, type: 'audio' }, { asset_id: 5, type: 'video' },
+      ],
+    })
+    expect(node.properties.comfytv_image_refs).toEqual([
+      { asset_id: 1, slot: 0 },
+      { asset_id: 2, slot: 1 },
+      { asset_id: 3, slot: 0, type: 'video' },
+      { asset_id: 4, slot: 0, type: 'audio' },
+      { asset_id: 5, slot: 1, type: 'video' },
     ])
   })
 
@@ -407,6 +427,56 @@ describe('installMcpCommandBus', () => {
     expect(sceneApi.configureOutput).toHaveBeenCalledWith(
       { channel: 'depth', width: undefined, height: undefined })
     expect(results[3].result.video).toBe('/view?a.webm')
+  })
+
+  it('previz tools route to the mounted previz api', async () => {
+    const previz = {
+      getState: vi.fn(() => ({ aspect: '16:9', scenes: [] })),
+      resources: vi.fn(() => ({ actor_kinds: ['char'] })),
+      isBusy: vi.fn(() => false),
+      hasRecordableDuration: vi.fn(() => true),
+      applyOps: vi.fn(async () => ({
+        results: [{ op: 'add_actor', label: 'Character' }],
+        warnings: ["'Tree' (tree) overlaps 'House' (house) by ~40% of the smaller one"],
+      })),
+      configureOutput: vi.fn(),
+      capture: vi.fn(async () => ({ image: '/view?p.png', images: '' })),
+      record: vi.fn(async () => ({ video: '/view?p.webm' })),
+    }
+    const node = makeNode({
+      comfyClass: 'ComfyTV.PrevizStage',
+      __comfytvStageApi: { previz },
+    })
+    const { host, deps } = makeHost([node])
+    uninstall = installMcpCommandBus(host, deps)
+
+    await dispatch(host, { id: 'c1', action: 'previz_get', node: 'u1' })
+    await dispatch(host, {
+      id: 'c2', action: 'previz_edit', node: 'u1',
+      ops: [{ op: 'add_actor', kind: 'char' }],
+    })
+    await dispatch(host, {
+      id: 'c3', action: 'previz_capture', node: 'u1', width: 640, height: 360,
+    })
+    await dispatch(host, { id: 'c4', action: 'previz_record', node: 'u1' })
+
+    const results = postedResults()
+    expect(results[0].result.project).toEqual({ aspect: '16:9', scenes: [] })
+    expect(results[1].result.applied).toEqual([{ op: 'add_actor', label: 'Character' }])
+    expect(results[1].result.warnings[0]).toContain('overlaps')
+    expect(previz.applyOps).toHaveBeenCalledWith([{ op: 'add_actor', kind: 'char' }])
+    expect(previz.configureOutput).toHaveBeenCalledWith({ width: 640, height: 360 })
+    expect(results[2].result.image).toBe('/view?p.png')
+    expect(results[3].result.video).toBe('/view?p.webm')
+  })
+
+  it('previz tools error on non-previz stages', async () => {
+    const { host, deps } = makeHost([makeNode()])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, { id: 'c1', action: 'previz_get', node: 'u1' })
+    const [result] = postedResults()
+    expect(result.ok).toBe(false)
+    expect(result.error).toContain('not a mounted Previz stage')
   })
 
   it('scene tools error on non-scene3d stages and busy scenes', async () => {

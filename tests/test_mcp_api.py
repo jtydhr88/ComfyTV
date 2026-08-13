@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import json
 
@@ -118,6 +118,7 @@ class TestProtocol:
             "add_stage", "set_stage", "connect_stages", "run_stage", "servers",
             "remove_stage",
             "scene_get", "scene_edit", "scene_capture", "scene_record",
+            "previz_get", "previz_edit", "previz_capture", "previz_record",
         }
         for t in tools.values():
             assert t["description"]

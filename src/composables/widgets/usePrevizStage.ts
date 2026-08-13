@@ -5,6 +5,7 @@ import { i18n } from '@/i18n'
 import type { LGraphNode } from '@/lib/comfyApp'
 import { app } from '@/lib/comfyApp'
 import {
+  bindWidgetCallback,
   onNodeConfigure,
   readWidgetNum,
   readWidgetStr,
@@ -38,6 +39,10 @@ import {
   trackPath,
   trackTimes
 } from '@/widgets/three/previz/dollyTrack'
+import {
+  actorOverlapWarnings,
+  type ActorBoundsInfo
+} from '@/widgets/three/previz/mcpChecks'
 import { PrevizClock, evaluateActors, evaluateShotCam } from '@/widgets/three/previz/playback'
 import { PrevizViewport, type PrevizPickTarget } from '@/widgets/three/previz/PrevizViewport'
 import { PrevizWorld, type PrevizActor, type RuntimeShot } from '@/widgets/three/previz/PrevizWorld'
@@ -52,7 +57,17 @@ import type {
   PrevizShotData,
   PrevizSun
 } from '@/widgets/three/previz/types'
-import { PREVIZ_ASPECTS, PREVIZ_SHOT_DURATION_MIN } from '@/widgets/three/previz/types'
+import {
+  PREVIZ_ACTOR_KINDS,
+  PREVIZ_ASPECTS,
+  PREVIZ_GROUND_STYLES,
+  PREVIZ_JOINT_KEYS,
+  PREVIZ_POSES,
+  PREVIZ_SHOT_DURATION_MIN,
+  PREVIZ_STAGE_LIMIT,
+  PREVIZ_TIME_LINKS,
+  PREVIZ_TIMING_MODES
+} from '@/widgets/three/previz/types'
 
 const STATE_WIDGET = 'previz_state'
 const WIDTH_WIDGET = 'width'
@@ -304,6 +319,8 @@ export function usePrevizStage(node: LGraphNode, opts?: UsePrevizStageOptions) {
   function cleanup(): void {
     cleanupViewport()
     world.dispose()
+    const api = (node as any).__comfytvStageApi
+    if (api?.previz) delete api.previz
   }
 
   watch(selected, () => syncViewportTracks())
@@ -795,6 +812,409 @@ export function usePrevizStage(node: LGraphNode, opts?: UsePrevizStageOptions) {
     historyVersion.value++
     reloadWorld()
   })
+
+  bindWidgetCallback(node, STATE_WIDGET, (value) => {
+    project.value = parseProjectJson(String(value ?? '{}'))
+    lastCommitted = snapshot()
+    history.clear()
+    historyVersion.value++
+    reloadWorld()
+  })
+
+  function mcpVec2(value: any): [number, number] | null {
+    if (!Array.isArray(value) || value.length < 2) return null
+    return [Number(value[0]), Number(value[value.length - 1])]
+  }
+
+  function mcpActor(label: unknown): PrevizActor {
+    const actor = world.actorByLabel(String(label ?? ''))
+    if (!actor) {
+      throw new Error(
+        `no actor '${label}'; actors: `
+        + (world.actors.map((a) => a.label).join(', ') || '(none)'))
+    }
+    return actor
+  }
+
+  function mcpActorBounds(): ActorBoundsInfo[] {
+    return world.actors.map((actor) => {
+      const box = new THREE.Box3()
+      actor.obj.traverse((child) => {
+        if (child !== actor.labelSprite && (child as THREE.Mesh).isMesh) {
+          box.expandByObject(child)
+        }
+      })
+      return {
+        label: actor.label,
+        kind: actor.data.kind,
+        mounted: !!actor.data.mount,
+        min: [box.min.x, box.min.y, box.min.z] as [number, number, number],
+        max: [box.max.x, box.max.y, box.max.z] as [number, number, number],
+      }
+    })
+  }
+
+  function mcpPlaceActor(actor: PrevizActor, pos: [number, number]): void {
+    const lim = PREVIZ_STAGE_LIMIT
+    actor.obj.position.x = Math.max(-lim, Math.min(lim, pos[0]))
+    actor.obj.position.z = Math.max(-lim, Math.min(lim, pos[1]))
+    world.alignActor(actor)
+    commit(`actor:${actor.label}`)
+  }
+
+  function mcpShot(index: unknown): { shot: RuntimeShot; index: number } {
+    const i = Number(index)
+    const shot = world.shots[i]
+    if (!shot) {
+      throw new Error(
+        `no shot ${index}; shots: 0..${world.shots.length - 1}`)
+    }
+    return { shot, index: i }
+  }
+
+  function mcpActorPatch(op: any): Partial<PrevizActor['data']> {
+    const patch: Record<string, unknown> = {}
+    const pos = mcpVec2(op.pos)
+    if (pos) patch.pos = pos
+    if (op.rot_y !== undefined || op.rotY !== undefined) {
+      patch.rotY = Number(op.rot_y ?? op.rotY)
+    }
+    for (const key of ['height', 'scale', 'timeOffset'] as const) {
+      const snake = key === 'timeOffset' ? op.time_offset : op[key]
+      if (snake !== undefined) patch[key] = Number(snake)
+    }
+    if (op.pose !== undefined) {
+      if (!PREVIZ_POSES.has(String(op.pose))) {
+        throw new Error(`pose must be one of ${[...PREVIZ_POSES].join(', ')}`)
+      }
+      patch.pose = op.pose
+    }
+    if (op.time_link !== undefined) {
+      if (!PREVIZ_TIME_LINKS.has(String(op.time_link))) {
+        throw new Error(
+          `time_link must be one of ${[...PREVIZ_TIME_LINKS].join(', ')}`)
+      }
+      patch.timeLink = op.time_link
+    }
+    if (op.time_link_shot !== undefined) patch.timeLinkShot = Number(op.time_link_shot)
+    if (op.mount !== undefined) patch.mount = op.mount ? String(op.mount) : ''
+    return patch as Partial<PrevizActor['data']>
+  }
+
+  function mcpShotPatch(op: any): Partial<PrevizShotData> {
+    const patch: Record<string, unknown> = {}
+    for (const key of ['name', 'desc', 'lock'] as const) {
+      if (op[key] !== undefined) patch[key] = String(op[key])
+    }
+    for (const key of ['dur', 'fov', 'yaw', 'pitch'] as const) {
+      if (op[key] !== undefined) patch[key] = Number(op[key])
+    }
+    if (op.timing_mode !== undefined) {
+      if (!PREVIZ_TIMING_MODES.has(String(op.timing_mode))) {
+        throw new Error(
+          `timing_mode must be one of ${[...PREVIZ_TIMING_MODES].join(', ')}`)
+      }
+      patch.timingMode = op.timing_mode
+    }
+    if (op.sync_actor !== undefined) patch.syncActor = String(op.sync_actor ?? '')
+    return patch as Partial<PrevizShotData>
+  }
+
+  function mcpTrackPoints(value: any, withHeight: boolean): THREE.Vector3[] {
+    if (!Array.isArray(value) || value.length < 2) {
+      throw new Error('points must be an array of at least 2 positions')
+    }
+    return value.map((p: any, i: number) => {
+      if (!Array.isArray(p) || p.length < 2) {
+        throw new Error(`points[${i}] must be [x, z] or [x, y, z]`)
+      }
+      if (withHeight) {
+        const y = p.length > 2 ? Number(p[1]) : 1.6
+        const z = p.length > 2 ? Number(p[2]) : Number(p[1])
+        return new THREE.Vector3(Number(p[0]), Math.max(0.2, Math.min(30, y)), z)
+      }
+      return new THREE.Vector3(Number(p[0]), 0, Number(p[p.length - 1]))
+    })
+  }
+
+  async function mcpApplyOps(ops: any[]): Promise<Array<Record<string, unknown>>> {
+    if (!Array.isArray(ops) || ops.length === 0) {
+      throw new Error('ops must be a non-empty array')
+    }
+    const results: Array<Record<string, unknown>> = []
+    for (let i = 0; i < ops.length; i++) {
+      const op = ops[i]
+      const where = `ops[${i}] (${op?.op})`
+      try {
+        switch (op?.op) {
+          case 'add_actor': {
+            if (!PREVIZ_ACTOR_KINDS.has(String(op.kind))) {
+              throw new Error(
+                `kind must be one of ${[...PREVIZ_ACTOR_KINDS].join(', ')}`)
+            }
+            addActor(op.kind)
+            const actor = world.actors[world.actors.length - 1]
+            const patch = mcpActorPatch(op)
+            if (Object.keys(patch).length) updateActor(actor.label, patch)
+            if (patch.pos) mcpPlaceActor(actor, patch.pos as [number, number])
+            results.push({ op: op.op, label: actor.label })
+            break
+          }
+          case 'update_actor': {
+            const actor = mcpActor(op.label)
+            const patch = mcpActorPatch(op)
+            updateActor(actor.label, patch)
+            if (patch.pos) mcpPlaceActor(actor, patch.pos as [number, number])
+            results.push({ op: op.op, label: actor.label })
+            break
+          }
+          case 'remove_actor': {
+            const actor = mcpActor(op.label)
+            removeActor(actor.label)
+            results.push({ op: op.op, label: actor.label })
+            break
+          }
+          case 'set_actor_joint': {
+            const actor = mcpActor(op.label)
+            if (!PREVIZ_JOINT_KEYS.includes(String(op.key))) {
+              throw new Error(
+                `key must be one of ${PREVIZ_JOINT_KEYS.join(', ')}`)
+            }
+            setActorJoint(actor.label, String(op.key), Number(op.value))
+            results.push({ op: op.op, label: actor.label })
+            break
+          }
+          case 'set_actor_track': {
+            const actor = world.pathOwner(mcpActor(op.label))
+            const points = mcpTrackPoints(op.points, false)
+            actor.track = makeTrackAction(points)
+            if (op.straight === true) setTrackStraight(actor.track, true)
+            distributeSpeed(actor.track, 0, world.sceneDuration())
+            world.invalidateTrack(actor.track)
+            syncViewportTracks()
+            viewport?.refreshTracks()
+            commit()
+            results.push({ op: op.op, label: actor.label,
+                           anchors: anchorCount(actor.track) })
+            break
+          }
+          case 'clear_actor_track': {
+            const actor = world.pathOwner(mcpActor(op.label))
+            actor.track = null
+            world.invalidateTrack(actor.track)
+            syncViewportTracks()
+            viewport?.refreshTracks()
+            commit()
+            results.push({ op: op.op, label: actor.label })
+            break
+          }
+          case 'set_actor_straight': {
+            const actor = mcpActor(op.label)
+            setActorStraight(actor.label, op.straight !== false)
+            results.push({ op: op.op, label: actor.label })
+            break
+          }
+          case 'set_actor_path_time': {
+            const actor = mcpActor(op.label)
+            setActorPathTime(actor.label, Number(op.index), Number(op.time))
+            results.push({ op: op.op, label: actor.label })
+            break
+          }
+          case 'add_shot': {
+            addShot()
+            const index = world.shots.length - 1
+            const patch = mcpShotPatch(op)
+            if (Object.keys(patch).length) updateShot(index, patch)
+            results.push({ op: op.op, index })
+            break
+          }
+          case 'remove_shot': {
+            const { index } = mcpShot(op.index)
+            removeShot(index)
+            results.push({ op: op.op, index })
+            break
+          }
+          case 'update_shot': {
+            const { index } = mcpShot(op.index)
+            updateShot(index, mcpShotPatch(op))
+            results.push({ op: op.op, index })
+            break
+          }
+          case 'select_shot': {
+            const { index } = mcpShot(op.index)
+            setShot(index)
+            results.push({ op: op.op, index })
+            break
+          }
+          case 'set_shot_track': {
+            const { shot, index } = mcpShot(op.index)
+            const points = mcpTrackPoints(op.points, true)
+            Object.assign(shot.action, makeTrackAction(points))
+            if (op.straight === true) setTrackStraight(shot.action, true)
+            if (shot.timingMode === 'custom') ensureSpeedCurve(shot.action, shot.dur)
+            world.invalidateTrack(shot.action)
+            viewport?.refreshTracks()
+            commit()
+            results.push({ op: op.op, index, anchors: anchorCount(shot.action) })
+            break
+          }
+          case 'set_shot_straight': {
+            const { index } = mcpShot(op.index ?? shotIdx.value)
+            setShot(index)
+            setShotStraight(op.straight !== false)
+            results.push({ op: op.op, index })
+            break
+          }
+          case 'set_cam_point_y': {
+            const { index } = mcpShot(op.shot)
+            setCamPoint(index, Number(op.index), { y: Number(op.y) })
+            results.push({ op: op.op, index })
+            break
+          }
+          case 'set_cam_key': {
+            const { index } = mcpShot(op.shot)
+            setCamKey(index, Number(op.index), {
+              yaw: op.yaw !== undefined ? Number(op.yaw) : undefined,
+              pitch: op.pitch !== undefined ? Number(op.pitch) : undefined,
+              fov: op.fov !== undefined ? Number(op.fov) : undefined
+            })
+            results.push({ op: op.op, index })
+            break
+          }
+          case 'set_cam_time': {
+            const { index } = mcpShot(op.shot)
+            setCamTime(index, Number(op.index), Number(op.time))
+            results.push({ op: op.op, index })
+            break
+          }
+          case 'set_sun': {
+            const patch: Record<string, unknown> = {}
+            if (op.enabled !== undefined) patch.enabled = op.enabled !== false
+            if (Array.isArray(op.pos) && op.pos.length === 3) {
+              patch.pos = op.pos.map(Number)
+            }
+            for (const key of ['intensity', 'temp', 'ambient', 'softness'] as const) {
+              if (op[key] !== undefined) patch[key] = Number(op[key])
+            }
+            if (op.quality !== undefined) patch.quality = op.quality
+            updateSun(patch as Partial<PrevizSun>)
+            results.push({ op: op.op })
+            break
+          }
+          case 'set_ground': {
+            if (!PREVIZ_GROUND_STYLES.has(String(op.style))) {
+              throw new Error(
+                `style must be one of ${[...PREVIZ_GROUND_STYLES].join(', ')}`)
+            }
+            updateGround({ style: op.style,
+                           ...(op.color ? { color: String(op.color) } : {}) })
+            results.push({ op: op.op })
+            break
+          }
+          case 'set_aspect': {
+            if (!(String(op.aspect) in PREVIZ_ASPECTS)) {
+              throw new Error(
+                `aspect must be one of ${Object.keys(PREVIZ_ASPECTS).join(', ')}`)
+            }
+            setAspect(String(op.aspect))
+            results.push({ op: op.op })
+            break
+          }
+          case 'set_collision': {
+            setCollision(op.on !== false)
+            results.push({ op: op.op })
+            break
+          }
+          case 'set_labels': {
+            setLabels(op.on !== false)
+            results.push({ op: op.op })
+            break
+          }
+          default:
+            throw new Error(
+              `unknown op '${op?.op}'; valid ops: add_actor, update_actor, `
+              + 'remove_actor, set_actor_joint, set_actor_track, '
+              + 'clear_actor_track, set_actor_straight, set_actor_path_time, '
+              + 'add_shot, remove_shot, update_shot, select_shot, '
+              + 'set_shot_track, set_shot_straight, set_cam_point_y, '
+              + 'set_cam_key, set_cam_time, set_sun, set_ground, set_aspect, '
+              + 'set_collision, set_labels')
+        }
+      } catch (error) {
+        const detail = error instanceof Error ? error.message : String(error)
+        throw new Error(
+          `${where}: ${detail} (ops before this one were already applied)`)
+      }
+    }
+    return results
+  }
+
+  {
+    const hostApi = ((node as any).__comfytvStageApi ??= {})
+    hostApi.previz = {
+      getState: () => {
+        const bounds = mcpActorBounds()
+        return {
+          ...JSON.parse(JSON.stringify(project.value)),
+          duration: duration.value,
+          shot_index: shotIdx.value,
+          actor_labels: world.actors.map((a) => a.label),
+          actor_bounds: bounds,
+          overlap_warnings: actorOverlapWarnings(bounds),
+        }
+      },
+      resources: () => ({
+        actor_kinds: [...PREVIZ_ACTOR_KINDS],
+        poses: [...PREVIZ_POSES],
+        time_links: [...PREVIZ_TIME_LINKS],
+        timing_modes: [...PREVIZ_TIMING_MODES],
+        ground_styles: [...PREVIZ_GROUND_STYLES],
+        aspects: Object.keys(PREVIZ_ASPECTS),
+        joint_keys: [...PREVIZ_JOINT_KEYS],
+        stage_limit: PREVIZ_STAGE_LIMIT,
+        shot_duration_min: PREVIZ_SHOT_DURATION_MIN,
+      }),
+      applyOps: async (ops: any[]) => {
+        const results = await mcpApplyOps(ops)
+        return {
+          results,
+          warnings: actorOverlapWarnings(mcpActorBounds()),
+        }
+      },
+      configureOutput: (patch: { width?: number; height?: number }) => {
+        if (Number.isFinite(patch.width)) {
+          writeWidget(node, WIDTH_WIDGET, Number(patch.width), { fireCallback: false })
+        }
+        if (Number.isFinite(patch.height)) {
+          writeWidget(node, HEIGHT_WIDGET, Number(patch.height), { fireCallback: false })
+        }
+      },
+      isBusy: () => capturing.value || recording.value,
+      hasRecordableDuration: () => duration.value > 0,
+      capture: async () => {
+        const before = capturedImageUrl.value
+        await capture()
+        if (capturedImageUrl.value === before) {
+          throw new Error('capture produced no output — see the ComfyTV tab for details')
+        }
+        return {
+          image: capturedImageUrl.value,
+          images: readWidgetStr(node, IMAGES_WIDGET, ''),
+        }
+      },
+      record: async () => {
+        if (!recordingSupported) {
+          throw new Error('video recording is not supported in this browser tab')
+        }
+        const before = capturedVideoUrl.value
+        await record()
+        if (capturedVideoUrl.value === before) {
+          throw new Error('record produced no output — see the ComfyTV tab for details')
+        }
+        return { video: capturedVideoUrl.value }
+      },
+    }
+  }
 
   return {
     world,

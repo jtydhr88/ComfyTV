@@ -8,6 +8,7 @@ import {
 } from '@/composables/stages/spawnFollowUp'
 import { writeImageRefs, type ImageRef } from '@/composables/stages/imageRefs'
 import { claimStageUid, getStageUid } from '@/composables/stages/stageIdentity'
+import { useAssetStore } from '@/stores/assetStore'
 import { useStageStore } from '@/stores/stageStore'
 import { getWidget, writeWidget } from '@/utils/widget'
 
@@ -92,14 +93,17 @@ function applyStageFields(node: any, cmd: any): string[] {
     if (!Array.isArray(cmd.asset_refs)) {
       throw new Error('asset_refs must be an array of {asset_id, slot?, type?} objects')
     }
+    const nextSlot = { image: 0, video: 0, audio: 0 }
     const refs: ImageRef[] = cmd.asset_refs.map((r: any, i: number) => {
       const id = Number(r?.asset_id)
       if (!Number.isInteger(id)) throw new Error(`asset_refs[${i}] needs a numeric asset_id`)
-      const slot = Number.isInteger(Number(r?.slot)) ? Number(r.slot) : i
       const type = r?.type === 'video' || r?.type === 'audio' ? r.type : undefined
+      const typeKey = (type ?? 'image') as 'image' | 'video' | 'audio'
+      const slot = Number.isInteger(Number(r?.slot)) ? Number(r.slot) : nextSlot[typeKey]++
       return type ? { asset_id: id, slot, type } : { asset_id: id, slot }
     })
     writeImageRefs(node, refs)
+    void useAssetStore().refresh()
     updated.push('asset_refs')
   }
   return updated
@@ -197,16 +201,60 @@ async function handleRunStage(app: any, cmd: any): Promise<CommandResult> {
 
 type CommandResult = Record<string, unknown>
 
-function sceneApi(app: any, cmd: any) {
+function stageSubApi(app: any, cmd: any, key: string, label: string) {
   const node = findStageNode(app?.graph, String(cmd.node))
   if (!node) throw new Error(`stage ${cmd.node} not found on the canvas`)
-  const api = (node as any).__comfytvStageApi?.scene3d
+  const api = (node as any).__comfytvStageApi?.[key]
   if (!api) {
     throw new Error(
-      `stage ${cmd.node} is not a mounted Scene3D stage — scene tools need a `
-      + 'ComfyTV.Scene3DStage whose card is open in the tab')
+      `stage ${cmd.node} is not a mounted ${label} stage — these tools need `
+      + `a ComfyTV.${label}Stage whose card is open in the tab`)
   }
   return api
+}
+
+function sceneApi(app: any, cmd: any) {
+  return stageSubApi(app, cmd, 'scene3d', 'Scene3D')
+}
+
+function previzApi(app: any, cmd: any) {
+  return stageSubApi(app, cmd, 'previz', 'Previz')
+}
+
+async function handlePrevizGet(app: any, cmd: any): Promise<CommandResult> {
+  const api = previzApi(app, cmd)
+  return {
+    project: api.getState(),
+    resources: api.resources(),
+    busy: api.isBusy(),
+    has_recordable_duration: api.hasRecordableDuration(),
+  }
+}
+
+async function handlePrevizEdit(app: any, cmd: any): Promise<CommandResult> {
+  const api = previzApi(app, cmd)
+  if (api.isBusy()) throw new Error('previz is busy capturing/recording — retry after it finishes')
+  const out = await api.applyOps(cmd.ops)
+  const applied = Array.isArray(out) ? out : out.results
+  const warnings = Array.isArray(out) ? [] : (out.warnings ?? [])
+  return {
+    applied,
+    ...(warnings.length ? { warnings } : {}),
+  }
+}
+
+async function handlePrevizCapture(app: any, cmd: any): Promise<CommandResult> {
+  const api = previzApi(app, cmd)
+  if (api.isBusy()) throw new Error('previz is busy capturing/recording — retry after it finishes')
+  api.configureOutput({ width: cmd.width, height: cmd.height })
+  return await api.capture()
+}
+
+async function handlePrevizRecord(app: any, cmd: any): Promise<CommandResult> {
+  const api = previzApi(app, cmd)
+  if (api.isBusy()) throw new Error('previz is busy capturing/recording — retry after it finishes')
+  api.configureOutput({ width: cmd.width, height: cmd.height })
+  return await api.record()
 }
 
 async function handleSceneGet(app: any, cmd: any): Promise<CommandResult> {
@@ -273,6 +321,10 @@ async function executeCommand(app: any, cmd: any): Promise<CommandResult> {
     case 'scene_edit': return handleSceneEdit(app, cmd)
     case 'scene_capture': return handleSceneCapture(app, cmd)
     case 'scene_record': return handleSceneRecord(app, cmd)
+    case 'previz_get': return handlePrevizGet(app, cmd)
+    case 'previz_edit': return handlePrevizEdit(app, cmd)
+    case 'previz_capture': return handlePrevizCapture(app, cmd)
+    case 'previz_record': return handlePrevizRecord(app, cmd)
     case 'connect_stages': return handleConnectStages(app, cmd)
     case 'run_stage': return handleRunStage(app, cmd)
     default: throw new Error(`unknown command action ${String(cmd.action)}`)

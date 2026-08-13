@@ -340,6 +340,33 @@ async def _scene_record(args: dict) -> dict:
     return await submit_command("scene_record", payload, timeout=300.0)
 
 
+async def _previz_get(args: dict) -> dict:
+    return await submit_command("previz_get", _scene_target(args))
+
+
+async def _previz_edit(args: dict) -> dict:
+    ops = args.get("ops")
+    if not isinstance(ops, list) or not ops:
+        raise ValueError("ops must be a non-empty array of operation objects")
+    if not all(isinstance(op, dict) and op.get("op") for op in ops):
+        raise ValueError("every op must be an object with an 'op' field")
+    payload = _scene_target(args)
+    payload["ops"] = ops
+    return await submit_command("previz_edit", payload, timeout=30.0)
+
+
+async def _previz_capture(args: dict) -> dict:
+    payload = _scene_target(args)
+    payload.update(_command_payload(args, ("width", "height")))
+    return await submit_command("previz_capture", payload, timeout=120.0)
+
+
+async def _previz_record(args: dict) -> dict:
+    payload = _scene_target(args)
+    payload.update(_command_payload(args, ("width", "height")))
+    return await submit_command("previz_record", payload, timeout=300.0)
+
+
 TOOLS: dict[str, dict] = {
     "server_info": {
         "description": (
@@ -667,6 +694,114 @@ TOOLS: dict[str, dict] = {
             "additionalProperties": False,
         },
         "handler": _scene_record,
+    },
+    "previz_get": {
+        "description": (
+            "Read a 3D Director (Previz) stage: the project (actors with "
+            "kinds/poses/paths, shots with camera dolly tracks and timing, "
+            "sun/ground/aspect), plus resources (actor kinds, poses, "
+            "time_links, timing_modes, ground styles, aspects, joint keys, "
+            "stage_limit) and busy state. The project includes per-actor "
+            "world bounding boxes (actor_bounds) and overlap_warnings — use "
+            "them to reason about spatial placement and fix clipping. NOTE: "
+            "a fresh PrevizStage ships with demo actors (A, B, Prop) and 3 "
+            "demo shots — remove what you don't need before building. "
+            "Previz is a multi-SHOT blocking tool: actors move along paths "
+            "synced to shot cameras — use it to author blocking+camera "
+            "reference videos. ALWAYS call before previz_edit. node is the "
+            "PrevizStage uid or graph_node_id."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "node": {"type": "string"},
+                "project_id": {"type": "string"},
+            },
+            "required": ["node"],
+            "additionalProperties": False,
+        },
+        "handler": _previz_get,
+    },
+    "previz_edit": {
+        "description": (
+            "Edit a 3D Director (Previz) stage with sequential structured "
+            "ops. Actors: add_actor {kind (char|horse|car|dog|tree|house|"
+            "rock|bush|road|wall|pillar|prop|mount), pos [x,z], rot_y?, "
+            "scale?, pose?, time_link?, mount?} -> returns its label; "
+            "update_actor/remove_actor {label}; set_actor_track {label, "
+            "points [[x,z],...], straight?} lays an explicit movement path "
+            "(actor walks/drives along it over the scene); set_actor_joint "
+            "{label, key, value} poses char joints; clear_actor_track, "
+            "set_actor_straight, set_actor_path_time. Shots: add_shot "
+            "{name?, dur?, fov?} -> index; update_shot {index, dur?, fov?, "
+            "lock (actor label to aim at, or ''), timing_mode?, "
+            "sync_actor?, yaw?, pitch?}; set_shot_track {index, points "
+            "[[x,y,z],...], straight?} lays the camera dolly path (y = "
+            "camera height 0.2-30); set_cam_point_y, set_cam_key {shot, "
+            "index, yaw?, pitch?, fov?}, set_cam_time, set_shot_straight, "
+            "select_shot, remove_shot. Environment: set_sun {pos [x,y,z]?, "
+            "intensity?, temp?, ambient?}, set_ground {style, color?}, "
+            "set_aspect, set_collision, set_labels. Positions are meters, "
+            "stage is ±29.5. Ops apply sequentially (an error stops the "
+            "batch; earlier ops stay). The result includes warnings when "
+            "actor bounding boxes overlap significantly — resolve them by "
+            "moving actors before capturing. Verify with previz_capture "
+            "after editing. Set shot lock to an actor label to keep the "
+            "camera aimed at it while it moves."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "node": {"type": "string"},
+                "ops": {"type": "array", "items": {"type": "object"},
+                        "minItems": 1},
+                "project_id": {"type": "string"},
+            },
+            "required": ["node", "ops"],
+            "additionalProperties": False,
+        },
+        "handler": _previz_edit,
+    },
+    "previz_capture": {
+        "description": (
+            "Render the Previz stage to still image(s): the current time "
+            "plus, with multiple shots, the first frame of every shot — "
+            "returned as URLs. Use after every previz_edit to visually "
+            "verify blocking and framing before recording."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "node": {"type": "string"},
+                "width": {"type": "integer", "minimum": 64, "maximum": 4096},
+                "height": {"type": "integer", "minimum": 64, "maximum": 4096},
+                "project_id": {"type": "string"},
+            },
+            "required": ["node"],
+            "additionalProperties": False,
+        },
+        "handler": _previz_capture,
+    },
+    "previz_record": {
+        "description": (
+            "Record the whole Previz timeline (all shots back-to-back, "
+            "actors moving along their paths, cameras riding their dolly "
+            "tracks) into a webm and return its URL — a blocking+camera "
+            "reference video for driving video models (e.g. MiniMax H3 R2V "
+            "via a video asset ref). Duration = sum of shot durations."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "node": {"type": "string"},
+                "width": {"type": "integer", "minimum": 64, "maximum": 4096},
+                "height": {"type": "integer", "minimum": 64, "maximum": 4096},
+                "project_id": {"type": "string"},
+            },
+            "required": ["node"],
+            "additionalProperties": False,
+        },
+        "handler": _previz_record,
     },
     "servers": {
         "description": (
