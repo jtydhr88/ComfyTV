@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 1,
+  "task": "01.16-web-seedance-white-mp4-validation",
+  "recordedAt": "2026-08-02",
+  "environment": {
+    "platform": "macOS",
+    "browser": "Google Chrome 150.0.7871.187",
+    "userAgentChromeToken": "150.0.0.0",
+    "screenshotPixels": [2560, 1232],
+    "preview": "private-lan-task-preview",
+    "previewPort": 4175,
+    "fixedPreviewPortChanged": false
+  },
+  "scenario": {
+    "scope": "current-shot",
+    "durationSeconds": 5,
+    "projectWasSingleSceneSingleShot": false,
+    "paidSeedanceCalled": false
+  },
+  "red": {
+    "expected": {"frameCount": 150, "duration": 5, "fps": 30},
+    "actual": {"frameCount": 150, "duration": 5.373, "fps": 27.917365},
+    "captureLedger": {
+      "plannedFrameCount": 150,
+      "renderedFrameCount": 150,
+      "requestedFrameCount": 150,
+      "firstRequestAtMs": 237.3,
+      "lastRequestAtMs": 5586.1
+    },
+    "mediaRecorderEvents": {
+      "requestDataAtMs": 5639.5,
+      "dataavailableAtMs": 5648.4,
+      "stopEventAtMs": 5649.4
+    },
+    "strictValidationRejected": true,
+    "zipCreated": false,
+    "downloadRequested": false,
+    "diagnosticPersistedInUi": true,
+    "retryAvailable": true
+  },
+  "r2BlockedFalseGreen": {
+    "reason": "The first fragmented-MP4 inspector summed sample durations but ignored the second fragment tfdt.",
+    "fragmentBoundary": {
+      "firstFragmentNormalizedEndTicks": 101000,
+      "secondFragmentDecodeStartTicks": 104185,
+      "gapTicks": 3185,
+      "timescale": 30000
+    },
+    "ffprobeDurationSeconds": 5.106167,
+    "strictValidationMustNotTreatAsGreen": true
+  },
+  "green": {
+    "expected": {"frameCount": 150, "duration": 5, "fps": 30},
+    "recorderActual": {
+      "container": "mp4",
+      "codec": "H264",
+      "frameCount": 150,
+      "timescale": 30000,
+      "durationTicks": 152374,
+      "duration": 5.079133,
+      "fps": 29.532597,
+      "timelineGapTicks": 147
+    },
+    "actual": {
+      "container": "mp4",
+      "codec": "H264",
+      "frameCount": 150,
+      "timescale": 30000,
+      "durationTicks": 150000,
+      "duration": 5,
+      "fps": 30,
+      "timelineGapTicks": 0,
+      "timelineOverlapTicks": 0
+    },
+    "captureLedger": {
+      "plannedFrameCount": 150,
+      "renderedFrameCount": 150,
+      "requestedFrameCount": 150,
+      "primerFrameCount": 1,
+      "manualFrameControl": true,
+      "startSource": "listener-after-primer",
+      "firstRequestAtMs": 294.7,
+      "lastRequestAtMs": 5274.2,
+      "requestSpanMs": 4979.5,
+      "plannedDurationMs": 5000,
+      "chunkCount": 2,
+      "chunkBytes": 29286
+    },
+    "mediaRecorderEventSequence": [
+      "recorder-created",
+      "start-called",
+      "start-returned",
+      "start-fallback-confirmed-1",
+      "start-fallback-confirmed-2",
+      "primer-frame-requested",
+      "start-event",
+      "recording-confirmed",
+      "frame-requested-1",
+      "frame-requested-150",
+      "drain-started",
+      "request-data-called",
+      "dataavailable",
+      "stop-called",
+      "dataavailable",
+      "stop-event"
+    ],
+    "strictValidationPassed": true,
+    "readyForExplicitDownload": true
+  },
+  "download": {
+    "realUserClickCount": 2,
+    "chromeFinalNameObserved": false,
+    "observedSuffix": ".crdownload",
+    "artifactCount": 2,
+    "artifactBytesEach": 54311,
+    "sha256Each": "ca0b4a3b8a65ddeca50248db01fff092876104270d4861063491bc7e598dc2f0",
+    "saveMethod": "browser-download",
+    "manifestVerifiedEach": true,
+    "embeddedMedia": {
+      "bytes": 29286,
+      "sha256": "844526ae52ee5cde791636f50767a18edea42ad577248541bf7e192eb84c98f3",
+      "container": "mp4",
+      "codec": "H264",
+      "frameCount": 150,
+      "timescale": 30000,
+      "durationTicks": 150000,
+      "duration": 5,
+      "fps": 30,
+      "ffprobeFormatDuration": 5,
+      "ffprobeStreamDuration": 5,
+      "ffprobePacketCount": 150,
+      "ffprobeFrameRate": "30/1",
+      "packet101Dts": 100000,
+      "packet102Dts": 101000,
+      "packetDuration": 1000,
+      "packetDiscontinuities": []
+    }
+  },
+  "selectedShotIdentityRegression": {
+    "userObservedRed": {
+      "selectedShot": "S1C4",
+      "downloadedFilename": "01_white_model_S1C1.mp4",
+      "timestampsShotIndex": 0,
+      "manifestShotIndex": 0,
+      "confirmedFromExtractedPackage": true
+    },
+    "rootCause": "The verified pending C1 ZIP remained downloadable after current-shot navigation because its target identity was not rechecked.",
+    "r2SameObjectContentBlock": {
+      "reproduction": "Mutate yaw from 0 to 17 on the same shot object and call markDirty; object references and indexes still matched, so the old ZIP was downloaded.",
+      "oldPackageDownloadWasUnsafe": true,
+      "repair": "Recompute SHA-256 over project name, scene name, scope, scene/shot index, aspect, and frozen stageToData authoring content before every download.",
+      "pendingIdentityRetainsProjectSceneShotObjects": false,
+      "verifiedBlobRetention": "one bounded pending package retained only for explicit second-click download and retry",
+      "automatedCoverage": ["same-shot-in-place-edit", "scene-scope-in-place-edit", "cancel-retry", "project-stage-history-autosave-zero-write"]
+    },
+    "exactContentFingerprintBuildRetest": {
+      "chrome": "150.0.7871.187",
+      "servedDirectorBytes": 1393279,
+      "servedDirectorSha256": "cded24b07cc8eb7a6e9991bbf193dcbe9e65546180a9c1fc8fb1b2d01e490dac",
+      "downloadCount": {"beforeC1": 302, "afterC1": 303, "afterFirstC4Click": 303, "afterSecondC4Click": 304},
+      "c1": {"filename": "01_white_model_S1C1.mp4", "shotIndex": 0, "zipBytes": 54311, "zipSha256": "4f9f264fdc8b5caddd9e830d97e3f766bcfdf289317be517c931a72af6807485", "media": {"frameCount": 150, "duration": 5, "fps": 30}},
+      "c4": {"filename": "01_white_model_S1C4.mp4", "sceneIndex": 0, "shotIndex": 3, "zipBytes": 1499240, "zipSha256": "fdfbd87fc34c934864053108ca9a33209cc38271fa5db70790ca222399d19d89", "mp4Sha256": "fb54c3fb636f722db1a94d35a22e032051c06de9b74e2f21e2026f2b8c2e7b97", "media": {"codec": "H264/avc1", "resolution": "1920x1080", "frameCount": 105, "duration": 3.5, "fps": 30}, "ffprobePacketDiscontinuities": 0},
+      "manifestTimestampsInspectAssert": "passed",
+      "sameShotEdit": {"durationBefore": 3.5, "durationAfter": 3.6, "downloadCountStayed": 304, "freshGeneration": true, "expectedAndFinal": {"frameCount": 108, "duration": 3.6, "fps": 30}, "recorderDuration": 3.676267, "recorderGapTicks": 172, "restoredWithUndo": true, "thirdPackageDownloaded": false},
+      "chromeTemporaryDownloadName": true
+    },
+    "fixedWorkflow": {
+      "initialSelection": {"sceneIndex": 0, "shotIndex": 0, "filename": "01_white_model_S1C1.mp4"},
+      "initialRealDownloadCount": 1,
+      "nextSelection": {"sceneIndex": 0, "shotIndex": 3, "filename": "01_white_model_S1C4.mp4"},
+      "downloadCountAfterFirstStaleLabelClick": 1,
+      "firstClickStartedFreshGeneration": true,
+      "downloadCountAfterReadySecondClick": 2,
+      "oldC1BytesDownloadedOnSelectionChange": false
+    },
+    "c04Package": {
+      "zipSha256": "d935e598609639b121429548f4d28f5f9eb0bae87458358f8146b410b24e3fce",
+      "manifestVerified": true,
+      "timestampsVerified": true,
+      "filename": "01_white_model_S1C4.mp4",
+      "sceneIndex": 0,
+      "shotIndex": 3,
+      "media": {"codec": "H264", "frameCount": 105, "duration": 3.5, "fps": 30},
+      "inspectAndStrictAssert": "passed",
+      "ffprobePacketCount": 105,
+      "ffprobeDuration": 3.5,
+      "ffprobePacketDiscontinuities": [],
+      "firstAndLastFrameMd5Differ": true,
+      "observedMotionClaim": "image-content-motion-only; the authored C04 camera is fixed"
+    },
+    "pageReadOnlyZeroWriteEvidence": {
+      "businessProjectionSha256Before": "6a81ed1a2c5e39e2acf7e4303ecb8ba16521430fcec48ea22418119e4731e207",
+      "businessProjectionSha256After": "6a81ed1a2c5e39e2acf7e4303ecb8ba16521430fcec48ea22418119e4731e207",
+      "undoStayedDisabled": true,
+      "autosaveStatusTextStayedUnchanged": true,
+      "browserStorageRead": false
+    }
+  },
+  "screenshot": {
+    "file": "chrome-lan-5s.png",
+    "bytes": 1215288,
+    "sha256": "5385648ae9d608f1b41467a8c5aaf3d72bf6fd729a00e4792538916467b5a039"
+  },
+  "automatedVerification": {
+    "node": "24.18.0",
+    "c7": {"passed": 113, "failed": 0},
+    "captureModule": {"passed": 155, "failed": 0},
+    "webRuntime": {"passed": 11, "failed": 0},
+    "webStressHarness": {"passed": 14, "failed": 0},
+    "i18n": {"passed": 217, "failed": 0},
+    "build": {"passed": true, "generatedBytes": 1393274},
+    "gitDiffCheck": "passed",
+    "impactOrFullRun": false
+  }
+}

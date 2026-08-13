@@ -1,0 +1,181 @@
+{
+  "app": "PreVision",
+  "version": 5,
+  "name": "老项目v3",
+  "aspect": "16:9",
+  "assets": {},
+  "settings": {
+    "collision": true,
+    "labels": true
+  },
+  "scenes": [
+    {
+      "name": "旧场景",
+      "desc": "",
+      "script": "",
+      "actors": [
+        {
+          "kind": "char",
+          "label": "主角",
+          "pose": "stand",
+          "pos": [
+            0,
+            0
+          ],
+          "rotY": 0,
+          "height": 0.5,
+          "scale": 1,
+          "pathMode": "curve",
+          "timeLink": "independent",
+          "timeOffset": 0,
+          "path": [
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              4,
+              0
+            ]
+          ],
+          "pathTimes": [
+            0,
+            4.5,
+            9
+          ],
+          "pathEase": [
+            {
+              "type": "linear"
+            },
+            {
+              "type": "easeIn"
+            }
+          ]
+        },
+        {
+          "kind": "prop",
+          "label": "箱子",
+          "pose": "stand",
+          "pos": [
+            3,
+            -2
+          ],
+          "rotY": 0,
+          "height": 0,
+          "scale": 1,
+          "pathMode": "curve",
+          "timeLink": "independent",
+          "timeOffset": 0,
+          "path": [],
+          "pathTimes": [],
+          "pathEase": []
+        }
+      ],
+      "shots": [
+        {
+          "name": "旧镜头A",
+          "desc": "",
+          "dur": 5,
+          "lock": "主角",
+          "fov": 40,
+          "camMode": "curve",
+          "timingMode": "pointSync",
+          "syncActor": "",
+          "yaw": 0,
+          "pitch": 0,
+          "cam": [
+            [
+              -6,
+              2,
+              6
+            ],
+            [
+              -3,
+              2,
+              4
+            ]
+          ],
+          "camTimes": [
+            0,
+            5
+          ],
+          "camAimTimes": [
+            0,
+            5
+          ],
+          "camFovTimes": [
+            0,
+            5
+          ],
+          "camEase": [
+            {
+              "type": "linear"
+            }
+          ],
+          "camAimEase": [
+            {
+              "type": "linear"
+            }
+          ],
+          "camFovEase": [
+            {
+              "type": "linear"
+            }
+          ]
+        },
+        {
+          "name": "旧镜头B",
+          "desc": "",
+          "dur": 4,
+          "lock": "全局",
+          "fov": 40,
+          "camMode": "curve",
+          "timingMode": "pointSync",
+          "syncActor": "",
+          "yaw": 0,
+          "pitch": 0,
+          "cam": [
+            [
+              0,
+              3,
+              8
+            ]
+          ],
+          "camTimes": [
+            0
+          ],
+          "camAimTimes": [
+            0
+          ],
+          "camFovTimes": [
+            0
+          ],
+          "camEase": [],
+          "camAimEase": [],
+          "camFovEase": []
+        }
+      ],
+      "ground": {
+        "style": "checker"
+      },
+      "sun": {
+        "enabled": true,
+        "pos": [
+          8,
+          14,
+          6
+        ],
+        "intensity": 0.9,
+        "temp": 5600,
+        "ambient": 0.28,
+        "softness": 2,
+        "quality": "standard"
+      },
+      "bg": null
+    }
+  ]
+}

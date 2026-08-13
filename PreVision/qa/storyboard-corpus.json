@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "description": "Synthetic scripts for deterministic offline storyboard planning. No private or production script data is included.",
+  "cases": [
+    {
+      "id": "zh-dialogue-fullwidth-punctuation",
+      "script": "内景 咖啡馆 - 夜\n林：你真的要走吗？别走。\n周：天亮前我必须离开！\n林冲到门口，挡住去路；周停下脚步。\n窗外的雨更大了。",
+      "options": { "requestedTemplate": "auto", "mood": "tension", "pace": "standard" },
+      "expect": {
+        "templateId": "dialogue",
+        "requiredBeatTypes": ["environment", "dialogue", "action"],
+        "namedCharacters": ["林", "周"],
+        "minShots": 4,
+        "maxShots": 8
+      }
+    },
+    {
+      "id": "en-screenplay-cues-and-parenthetical",
+      "script": "INT. STATION - NIGHT\nMAYA\n(quietly)\nWhere are you going?\nLEO: I have to leave.\nMaya turns toward the platform.\nRain strikes the glass.",
+      "options": { "requestedTemplate": "auto", "mood": "daily", "pace": "slow" },
+      "expect": {
+        "templateId": "dialogue",
+        "requiredBeatTypes": ["environment", "dialogue", "action"],
+        "namedCharacters": ["MAYA", "LEO"],
+        "minShots": 4,
+        "maxShots": 8
+      }
+    },
+    {
+      "id": "en-action-chase",
+      "script": "EXT. MARKET - DAY\nA courier runs through the stalls.\nA rider chases from the east gate.\nThe courier turns into a narrow street.\nThe rider rushes past a cart.\nBoth race toward the bridge.",
+      "options": { "requestedTemplate": "auto", "mood": "action", "pace": "fast" },
+      "expect": {
+        "templateId": "chase",
+        "requiredBeatTypes": ["environment", "action"],
+        "minShots": 5,
+        "maxShots": 8
+      }
+    },
+    {
+      "id": "mixed-ambiguous-fallback",
+      "script": "仓库里一片寂静。\nMING: Wait...\n他望向门口。\nA blue light flickers.\n然后——一切静止。",
+      "options": { "requestedTemplate": "auto", "mood": "suspense", "pace": "standard" },
+      "expect": {
+        "minAmbiguousBeats": 1,
+        "requiredBeatTypes": ["dialogue", "action"],
+        "minShots": 4,
+        "maxShots": 8
+      }
+    },
+    {
+      "id": "long-dialogue-shot-limit",
+      "script": "INT. CONTROL ROOM - NIGHT\nMAYA: The signal is back.\nLEO: Keep the channel open.\nMAYA: The light is moving.\nLEO: Mark its position.\nMAYA: It crossed the ridge.\nLEO: I can still see it.\nMAYA: The power is falling.\nLEO: Switch to reserve.\nMAYA: Reserve is online.\nLEO: Then we wait.",
+      "options": { "requestedTemplate": "auto", "mood": "suspense", "pace": "standard" },
+      "expect": {
+        "templateId": "dialogue",
+        "namedCharacters": ["MAYA", "LEO"],
+        "shotCount": 8,
+        "requiresMergeReason": true
+      }
+    },
+    {
+      "id": "manual-environment-override",
+      "script": "A runner sprints through the tunnel. The rider chases close behind. They rush toward the exit!",
+      "options": { "requestedTemplate": "establishing", "mood": "daily", "pace": "fast" },
+      "expect": {
+        "templateId": "establishing",
+        "templateReasonCode": "template.manual",
+        "minShots": 4,
+        "maxShots": 8
+      }
+    }
+  ]
+}

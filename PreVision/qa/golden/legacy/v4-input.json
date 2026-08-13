@@ -1,0 +1,99 @@
+{
+  "app": "PreVision",
+  "version": 4,
+  "name": "老项目v4",
+  "aspect": "4:3",
+  "created": "2025-06-15T08:00:00.000Z",
+  "assets": {
+    "sky": {
+      "d": "data:image/png;base64,iVBORw0KGgoAAAABAAAAAQCAYAAAAf8/9hAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+      "w": 2048,
+      "h": 1024
+    }
+  },
+  "settings": {
+    "collision": false
+  },
+  "scenes": [
+    {
+      "name": "旧场景v4",
+      "desc": "带全景与相机朝向",
+      "bg": {
+        "asset": "sky",
+        "yaw": 1.2
+      },
+      "actors": [
+        {
+          "kind": "car",
+          "label": "汽车",
+          "pos": [
+            -8,
+            0
+          ],
+          "rotY": 1.57,
+          "path": [
+            [
+              -8,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          "pathTimes": [
+            0,
+            3,
+            99
+          ]
+        }
+      ],
+      "shots": [
+        {
+          "name": "车头跟拍",
+          "dur": 6,
+          "fov": 45,
+          "lock": "汽车",
+          "cam": [
+            [
+              -10,
+              2,
+              5
+            ],
+            [
+              0,
+              2,
+              5
+            ],
+            [
+              10,
+              2,
+              5
+            ]
+          ],
+          "camAim": [
+            [
+              -20,
+              0,
+              45
+            ],
+            [
+              0,
+              0,
+              45
+            ],
+            [
+              20,
+              0,
+              45
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}

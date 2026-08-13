@@ -1,0 +1,43 @@
+{
+  "task": "01.9-recording-export-single-transaction",
+  "date": "2026-07-16",
+  "baseline": "76582209564a2e2cfc91144bea41fe7686303f4b",
+  "automated": {
+    "capture": "107/107 passed",
+    "robustness": "23/23 passed",
+    "i18n": "21/21 passed",
+    "impact": "passed (app 869/869; foundation 93; coordination 31; i18n 21; project-input; web 10+14)",
+    "full": "passed (app 869/869; project-input; web 10+14; desktop 43; local-install 36+13; foundation 93; coordination 31; i18n 21)"
+  },
+  "thirdReview": {
+    "legacyWithoutRequestFrame": "passed",
+    "recordBlobInitializationTrackGetterFailures": "passed",
+    "legacyInitialStreamStopFailure": "passed",
+    "manualHardCapSavesNonEmpty": "passed",
+    "automaticHardCapRejectsIncomplete": "passed",
+    "outerFinalizeExceptionSafety": "passed",
+    "workspaceBlobCleanupSaveExactlyOnce": "passed",
+    "workspaceGetTracksCleanupFailure": "passed",
+    "unsupportedFeedbackExactlyOnce": "passed",
+    "crossSceneNonZeroActorPointRestore": "passed",
+    "beginAndPreflightRollback": "passed",
+    "workspacePeriodicDrawFailure": "passed",
+    "synchronousStartAndLateEvents": "passed",
+    "postConstructionInitializationCleanup": "passed",
+    "timerClearWarningStillSettles": "passed",
+    "validMediaCleanupWarningSavesOnce": "passed",
+    "saveStatusWarningPreservesSuccess": "passed",
+    "blobUrlRevokeExactlyOnce": "passed",
+    "uniqueAutomatedImpactKey": "passed"
+  },
+  "chrome": {
+    "workspaceRecording": "passed",
+    "container": "mp4",
+    "bytes": 588906,
+    "consoleErrors": 0,
+    "automaticExportStop": "blocked_by_unresponsive_control_channel"
+  },
+  "electronDevelopment": "blocked_by_existing_single_instance",
+  "fixedAppChanged": false,
+  "mediaCommitted": false
+}

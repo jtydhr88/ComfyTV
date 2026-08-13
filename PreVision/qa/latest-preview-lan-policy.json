@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "service": {
+    "label": "com.prevision.latest-preview-lan",
+    "supportDirectoryName": "LanService",
+    "versionsDirectoryName": "Versions",
+    "activeFileName": "active.json",
+    "readyFileName": "ready.json",
+    "stateFileName": "service-state.json",
+    "loaderFileName": "latest-preview-lan-loader.mjs",
+    "port": 4174,
+    "healthPath": "/__prevision/health",
+    "refreshIntervalMilliseconds": 2000,
+    "networkCheckIntervalMilliseconds": 5000,
+    "shutdownGraceMilliseconds": 3000
+  },
+  "snapshot": {
+    "schemaVersion": 1,
+    "stagingDirectoryName": "Staging",
+    "snapshotsDirectoryName": "Snapshots",
+    "metadataFileName": "prevision-lan-snapshot.json",
+    "maximumGitOutputBytes": 67108864,
+    "maximumPointerBytes": 65536,
+    "retainedReadySnapshots": 2
+  },
+  "network": {
+    "physicalInterfacePattern": "^en[0-9]+$",
+    "rejectedInterfacePrefixes": [
+      "utun",
+      "tun",
+      "tap",
+      "tailscale",
+      "bridge",
+      "awdl",
+      "llw",
+      "p2p",
+      "gif",
+      "stf"
+    ],
+    "hostnameSuffix": ".local",
+    "privateIpv4Ranges": [
+      "10.0.0.0/8",
+      "172.16.0.0/12",
+      "192.168.0.0/16"
+    ]
+  },
+  "source": {
+    "launcherPolicyRelativePath": "qa/latest-preview-launcher-policy.json",
+    "webContractRelativePath": "web/runtime-contract.json",
+    "installedResources": [
+      "scripts/latest-preview-lan-service.mjs",
+      "scripts/latest-preview-lan-runtime.mjs",
+      "scripts/latest-preview-launcher-runtime.mjs",
+      "scripts/web-runtime-lib.mjs",
+      "qa/latest-preview-lan-policy.json",
+      "qa/latest-preview-launcher-policy.json"
+    ]
+  }
+}

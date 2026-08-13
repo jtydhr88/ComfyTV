@@ -1,0 +1,388 @@
+{
+  "app": "PreVision",
+  "version": 5,
+  "name": "运镜实验",
+  "aspect": "9:16",
+  "assets": {},
+  "settings": {
+    "collision": false,
+    "labels": false
+  },
+  "scenes": [
+    {
+      "name": "走位与运镜",
+      "desc": "演员走位 + 三种计时模式",
+      "script": "演员从画左走到画右。",
+      "bg": null,
+      "ground": {
+        "style": "color",
+        "color": "#3a4a5a"
+      },
+      "sun": {
+        "enabled": false,
+        "pos": [
+          8,
+          14,
+          6
+        ],
+        "intensity": 0.9,
+        "temp": 5600,
+        "ambient": 0.28,
+        "softness": 2,
+        "quality": "performance"
+      },
+      "actors": [
+        {
+          "kind": "char",
+          "label": "演员",
+          "pose": "stand",
+          "joints": {},
+          "pos": [
+            -5,
+            0
+          ],
+          "rotY": 1.571,
+          "height": 0,
+          "pathMode": "curve",
+          "scale": 1,
+          "pathTimes": [
+            0,
+            3.594,
+            7.406,
+            11
+          ],
+          "pathEase": [
+            {
+              "type": "linear"
+            },
+            {
+              "type": "linear"
+            },
+            {
+              "type": "linear"
+            }
+          ],
+          "timeLink": "cameraNodes",
+          "timeOffset": 0,
+          "timeLinkShot": 1,
+          "path": [
+            [
+              -5,
+              0
+            ],
+            [
+              -2,
+              1
+            ],
+            [
+              1,
+              -0.5
+            ],
+            [
+              4,
+              0.5
+            ]
+          ]
+        },
+        {
+          "kind": "tree",
+          "label": "前景树",
+          "pose": "stand",
+          "pos": [
+            6,
+            -4
+          ],
+          "rotY": 0,
+          "height": 0,
+          "pathMode": "curve",
+          "scale": 1.5,
+          "pathTimes": [],
+          "pathEase": [],
+          "timeLink": "independent",
+          "timeOffset": 0,
+          "timeLinkShot": 0,
+          "path": []
+        }
+      ],
+      "shots": [
+        {
+          "name": "手动朝向摇移",
+          "desc": "逐点朝向关键帧 + 自定义缓动",
+          "dur": 5,
+          "lock": "手动朝向",
+          "fov": 40,
+          "camMode": "curve",
+          "timingMode": "custom",
+          "syncActor": "",
+          "yaw": 0,
+          "pitch": 0,
+          "camTimes": [
+            0,
+            1.5,
+            5
+          ],
+          "camEase": [
+            {
+              "type": "custom",
+              "x1": 0.25,
+              "y1": 0.1,
+              "x2": 0.25,
+              "y2": 1
+            },
+            {
+              "type": "easeInOut"
+            }
+          ],
+          "camAimTimes": [
+            0,
+            2,
+            5
+          ],
+          "camAimEase": [
+            {
+              "type": "linear"
+            },
+            {
+              "type": "custom",
+              "x1": 0.42,
+              "y1": 0,
+              "x2": 0.58,
+              "y2": 1
+            }
+          ],
+          "camFovTimes": [
+            0,
+            2.5,
+            5
+          ],
+          "camFovEase": [
+            {
+              "type": "easeOut"
+            },
+            {
+              "type": "easeIn"
+            }
+          ],
+          "camAim": [
+            [
+              -30,
+              -10,
+              40
+            ],
+            [
+              0,
+              -5,
+              45
+            ],
+            [
+              30,
+              0,
+              55
+            ]
+          ],
+          "cam": [
+            [
+              -8,
+              3,
+              8
+            ],
+            [
+              -4,
+              2.5,
+              6
+            ],
+            [
+              0,
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "name": "节点同步跟拍",
+          "desc": "与演员按同序号节点同步",
+          "dur": 6,
+          "lock": "演员",
+          "fov": 50,
+          "camMode": "curve",
+          "timingMode": "pointSync",
+          "syncActor": "演员",
+          "yaw": 0,
+          "pitch": 0,
+          "camTimes": [
+            0,
+            2,
+            4,
+            6
+          ],
+          "camEase": [
+            {
+              "type": "linear"
+            },
+            {
+              "type": "linear"
+            },
+            {
+              "type": "linear"
+            }
+          ],
+          "camAimTimes": [
+            0,
+            2,
+            4,
+            6
+          ],
+          "camAimEase": [
+            {
+              "type": "linear"
+            },
+            {
+              "type": "linear"
+            },
+            {
+              "type": "linear"
+            }
+          ],
+          "camFovTimes": [
+            0,
+            2,
+            4,
+            6
+          ],
+          "camFovEase": [
+            {
+              "type": "linear"
+            },
+            {
+              "type": "linear"
+            },
+            {
+              "type": "linear"
+            }
+          ],
+          "camAim": [
+            [
+              0,
+              0,
+              50
+            ],
+            [
+              0,
+              0,
+              50
+            ],
+            [
+              0,
+              0,
+              50
+            ],
+            [
+              0,
+              0,
+              50
+            ]
+          ],
+          "cam": [
+            [
+              -7,
+              1.8,
+              4
+            ],
+            [
+              -4,
+              1.8,
+              5
+            ],
+            [
+              -1,
+              1.8,
+              4
+            ],
+            [
+              2,
+              1.8,
+              5
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "静物空景",
+      "desc": "第二场景: 覆盖多场景序列化",
+      "script": "",
+      "actors": [
+        {
+          "kind": "rock",
+          "label": "岩石",
+          "pose": "stand",
+          "pos": [
+            0,
+            0
+          ],
+          "rotY": 0.7,
+          "height": 0,
+          "scale": 2,
+          "pathMode": "curve",
+          "timeLink": "independent",
+          "timeOffset": 0,
+          "path": [],
+          "pathTimes": [],
+          "pathEase": []
+        }
+      ],
+      "shots": [
+        {
+          "name": "固定机位",
+          "desc": "空景固定机位",
+          "dur": 3,
+          "lock": "全局",
+          "fov": 35,
+          "camMode": "curve",
+          "timingMode": "pointSync",
+          "syncActor": "",
+          "yaw": 0,
+          "pitch": 0,
+          "cam": [
+            [
+              0,
+              1.6,
+              6
+            ]
+          ],
+          "camTimes": [
+            0
+          ],
+          "camAimTimes": [
+            0
+          ],
+          "camFovTimes": [
+            0
+          ],
+          "camEase": [],
+          "camAimEase": [],
+          "camFovEase": []
+        }
+      ],
+      "ground": {
+        "style": "white"
+      },
+      "sun": {
+        "enabled": true,
+        "pos": [
+          8,
+          14,
+          6
+        ],
+        "intensity": 0.9,
+        "temp": 5600,
+        "ambient": 0.28,
+        "softness": 2,
+        "quality": "standard"
+      },
+      "bg": null
+    }
+  ],
+  "created": "2026-01-01T00:00:00.000Z",
+  "modified": "2026-01-01T00:00:00.000Z"
+}

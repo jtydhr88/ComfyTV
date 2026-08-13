@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "taskId": "03.10-save-state-responsive-visibility",
+  "date": "2026-07-16",
+  "testedBaseCommit": "62e20fe29066c4fa83d6354e5baacd8b099d2e2e",
+  "testedImplementationCommit": "6c534275c3b6c47cdb5dcb9b81612f9696404e21",
+  "privacy": {
+    "containsUserProject": false,
+    "containsPrivatePath": false,
+    "pathConvention": "temporary synthetic path only"
+  },
+  "screenshots": {
+    "encoding": "png",
+    "exifPrivateMetadata": false,
+    "files": [
+      {
+        "file": "1316x768.png",
+        "width": 1316,
+        "height": 768,
+        "sha256": "ef50086614b680b10ba8bed7648142ecfd2ad0afb1baa95c06cb3656f6387570"
+      },
+      {
+        "file": "1440x900.png",
+        "width": 1440,
+        "height": 900,
+        "sha256": "845d06a7cfa6e60f1c93ed736b2996f72bbbc1e47a4ea81eefebf309246895f3"
+      }
+    ]
+  },
+  "chrome": {
+    "browser": "Google Chrome",
+    "viewports": [
+      {
+        "width": 1316,
+        "height": 768,
+        "mode": "normal",
+        "statusTextKind": "autosave",
+        "display": "block",
+        "visibility": "visible",
+        "rect": { "width": 104.1875, "height": 14 },
+        "uniqueSaveStateCount": 1,
+        "documentOverflowX": 0,
+        "topbarOverflowX": 0,
+        "statusBarOverflowX": 0,
+        "visibleTopbarActionMinimumSize": 29
+      },
+      {
+        "width": 1316,
+        "height": 768,
+        "mode": "director-focus",
+        "statusTextKind": "autosave",
+        "display": "block",
+        "visibility": "visible",
+        "rect": { "width": 104.1875, "height": 14 },
+        "documentOverflowX": 0,
+        "statusBarOverflowX": 0,
+        "screenshot": "1316x768.png"
+      },
+      {
+        "width": 1440,
+        "height": 900,
+        "mode": "normal",
+        "statusTextKind": "autosave",
+        "display": "block",
+        "visibility": "visible",
+        "rect": { "width": 104.1875, "height": 14 },
+        "uniqueSaveStateCount": 1,
+        "documentOverflowX": 0,
+        "topbarOverflowX": 0,
+        "statusBarOverflowX": 0,
+        "screenshot": "1440x900.png"
+      },
+      {
+        "width": 760,
+        "height": 768,
+        "mode": "normal",
+        "statusTextKind": "autosave",
+        "display": "block",
+        "visibility": "visible",
+        "rect": { "width": 104.1875, "height": 14 },
+        "documentOverflowX": 86,
+        "statusBarOverflowX": 0,
+        "note": "existing overall director-console narrow-width constraint; status bar itself does not overflow"
+      }
+    ],
+    "representativeStates": ["autosave", "browser-project-save"],
+    "consoleRuntimeErrors": 0
+  },
+  "electron": {
+    "isolatedUserData": true,
+    "loadedFromCurrentWorktree": true,
+    "contentViewportApprox": { "width": 1229, "height": 768 },
+    "operation": "native-project-save",
+    "statusPath": "<temporary-dir>/prevision-0310-responsive-check.previz.json",
+    "fullPathAccessible": true,
+    "temporaryFileRemoved": true,
+    "temporaryUserDataRemoved": true
+  }
+}

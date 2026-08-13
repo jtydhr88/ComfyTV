@@ -1,0 +1,4970 @@
+{
+  "schemaVersion": 1,
+  "taskId": "04.web-cross-platform-stress",
+  "sourceCommit": "8dcb0ed8ca79b2d2a2096babcf152c1132bdf4d5",
+  "harness": {
+    "schemaVersion": 1,
+    "files": {
+      "scripts/web-stress-lib.mjs": "fa5decdf548b61d78658fc745120e940690e224aa5869bfc494e6f63441f6091",
+      "scripts/run-web-stress.mjs": "e6509d31b5460012584358caf83eae4f3c782f53e6758c73f8450a309a2b905a",
+      "qa/web-stress-matrix.json": "a86d090bfdf950e62d066f6be976b4df43d8ae75039d7b4c4565a77cb959e4ea",
+      "qa/web-stress-evidence-schema.json": "8b6bc6b9e74cb6cb6cb218d4620c15b171ef852e0dbdda9a6da15a2d3481f1c4"
+    }
+  },
+  "profile": "standard",
+  "startedAt": "2026-07-15T20:08:04.111Z",
+  "completedAt": "2026-07-15T20:10:32.318Z",
+  "durationMs": 148207,
+  "environment": {
+    "operatingSystem": "Darwin 25.6.0",
+    "platform": "darwin",
+    "architecture": "arm64",
+    "logicalCpuCount": 11,
+    "totalMemoryGiBRounded": 18,
+    "node": "v24.18.0",
+    "browser": {
+      "name": "chrome",
+      "version": "150.0.7871.124",
+      "automation": "cdp"
+    },
+    "ci": false,
+    "executionEnvironment": "local-physical-machine",
+    "realMachineAttestation": "physical-machine",
+    "targetOsBrowserPair": true,
+    "matrixEvidenceEligible": true,
+    "evidenceEligibilityBasis": "operator-attested-physical-machine",
+    "hostnameExcluded": true,
+    "usernameExcluded": true
+  },
+  "runtime": {
+    "staticBuildHomeMode": "provided-home",
+    "deploymentManifestSha256": "c801ac3aeae1ee4d5e28f4782f957075b27db01fa82ecea923a0aeddcebda9a9",
+    "directorSha256": "65dcf7e866937675816417f09f0403e629f54eafa7f3d3c423ff54fcb29776ef",
+    "route": "/director/",
+    "previewBinding": "127.0.0.1",
+    "applicationNetworkScope": "loopback-only",
+    "renderSchedulingControl": "headful-background-throttling-disabled-visibility-still-observed",
+    "browserExternalNetworkControl": "closed-loopback-browser-and-process-proxy-plus-host-resolver-deny",
+    "projectDataUploadPathPresent": false,
+    "browserIsolation": "temporary-user-data-directory",
+    "generatedArtifactHandling": "in-memory-metadata-only"
+  },
+  "parameters": {
+    "profile": {
+      "settleMs": 1000,
+      "memorySampleMs": 500,
+      "sceneSwitchIterations": 40,
+      "fpsSampleMs": 8000,
+      "playbackMs": 5000,
+      "recordingSeconds": 2,
+      "longSessionDurationMs": 120000,
+      "longSessionActionIntervalMs": 2000,
+      "cooldownMs": 3000
+    },
+    "panorama": {
+      "width": 4096,
+      "height": 2048,
+      "ratio": "2:1",
+      "format": "image/jpeg"
+    },
+    "typicalScene": {
+      "objectCount": 24,
+      "sceneCount": 4
+    },
+    "viewport": {
+      "outerWidth": 1440,
+      "outerHeight": 900
+    }
+  },
+  "bootstrap": {
+    "schemaVersion": 1,
+    "ready": true,
+    "navigation": {
+      "responseStartMs": 220,
+      "domContentLoadedMs": 571.1999999955297,
+      "loadEventMs": 577.5,
+      "transferSize": 1059177,
+      "encodedBodySize": 1058877,
+      "decodedBodySize": 1058877,
+      "firstPaintMs": 392,
+      "firstContentfulPaintMs": 392,
+      "paintTimingStatus": "measured",
+      "paintTimingReasonCode": null
+    },
+    "page": {
+      "atMs": 579.3999999985099,
+      "jsHeap": {
+        "usedJSHeapSize": 9633219,
+        "totalJSHeapSize": 13739583,
+        "jsHeapSizeLimit": 4395630592
+      },
+      "jsHeapStatus": "measured",
+      "jsHeapReasonCode": null,
+      "renderer": {
+        "memory": {
+          "geometries": 147,
+          "textures": 3
+        },
+        "render": {
+          "calls": 34,
+          "triangles": 1724,
+          "points": 0,
+          "lines": 12
+        }
+      },
+      "webgl": {
+        "maxTextureSize": 16384,
+        "maxCubeMapTextureSize": 16384,
+        "maxRenderbufferSize": 16384,
+        "antialias": true,
+        "contextLost": false
+      },
+      "domNodes": 991,
+      "canvases": 3,
+      "viewport": {
+        "outerWidth": 1440,
+        "outerHeight": 900,
+        "innerWidth": 1440,
+        "innerHeight": 757,
+        "devicePixelRatio": 2,
+        "visibilityState": "visible",
+        "mainCanvas": {
+          "width": 1648,
+          "height": 784
+        }
+      },
+      "captureCapabilities": {
+        "mediaRecorder": true,
+        "canvasCaptureStream": true,
+        "requestFrame": true
+      },
+      "contextLost": 0,
+      "contextRestored": 0
+    }
+  },
+  "browserSystem": {
+    "status": "measured",
+    "source": "cdp-system-info",
+    "deviceCount": 1,
+    "category": "apple-silicon-or-apple-gpu",
+    "softwareRenderingDetected": false,
+    "reasonCode": null
+  },
+  "scenarios": [
+    {
+      "id": "default-load",
+      "status": "passed",
+      "failureReasonCode": null,
+      "startedAt": "2026-07-15T20:08:05.555Z",
+      "endedAt": "2026-07-15T20:08:08.057Z",
+      "wallDurationMs": 2502,
+      "page": {
+        "durationMs": 2467.39999999851,
+        "before": {
+          "atMs": 773.2999999970198,
+          "jsHeap": {
+            "usedJSHeapSize": 9390710,
+            "totalJSHeapSize": 15312682,
+            "jsHeapSizeLimit": 4395630592
+          },
+          "jsHeapStatus": "measured",
+          "jsHeapReasonCode": null,
+          "renderer": {
+            "memory": {
+              "geometries": 147,
+              "textures": 3
+            },
+            "render": {
+              "calls": 34,
+              "triangles": 1724,
+              "points": 0,
+              "lines": 12
+            }
+          },
+          "webgl": {
+            "maxTextureSize": 16384,
+            "maxCubeMapTextureSize": 16384,
+            "maxRenderbufferSize": 16384,
+            "antialias": true,
+            "contextLost": false
+          },
+          "domNodes": 991,
+          "canvases": 3,
+          "viewport": {
+            "outerWidth": 1440,
+            "outerHeight": 900,
+            "innerWidth": 1440,
+            "innerHeight": 757,
+            "devicePixelRatio": 2,
+            "visibilityState": "visible",
+            "mainCanvas": {
+              "width": 1648,
+              "height": 784
+            }
+          },
+          "captureCapabilities": {
+            "mediaRecorder": true,
+            "canvasCaptureStream": true,
+            "requestFrame": true
+          },
+          "contextLost": 0,
+          "contextRestored": 0
+        },
+        "after": {
+          "atMs": 3235.89999999851,
+          "jsHeap": {
+            "usedJSHeapSize": 11115934,
+            "totalJSHeapSize": 18720570,
+            "jsHeapSizeLimit": 4395630592
+          },
+          "jsHeapStatus": "measured",
+          "jsHeapReasonCode": null,
+          "renderer": {
+            "memory": {
+              "geometries": 147,
+              "textures": 3
+            },
+            "render": {
+              "calls": 34,
+              "triangles": 1724,
+              "points": 0,
+              "lines": 12
+            }
+          },
+          "webgl": {
+            "maxTextureSize": 16384,
+            "maxCubeMapTextureSize": 16384,
+            "maxRenderbufferSize": 16384,
+            "antialias": true,
+            "contextLost": false
+          },
+          "domNodes": 991,
+          "canvases": 3,
+          "viewport": {
+            "outerWidth": 1440,
+            "outerHeight": 900,
+            "innerWidth": 1440,
+            "innerHeight": 757,
+            "devicePixelRatio": 2,
+            "visibilityState": "visible",
+            "mainCanvas": {
+              "width": 1648,
+              "height": 784
+            }
+          },
+          "captureCapabilities": {
+            "mediaRecorder": true,
+            "canvasCaptureStream": true,
+            "requestFrame": true
+          },
+          "contextLost": 0,
+          "contextRestored": 0
+        },
+        "heapSamples": [
+          {
+            "atMs": 1288.6000000014901,
+            "usedJSHeapSize": 8214414,
+            "totalJSHeapSize": 17671994
+          },
+          {
+            "atMs": 1789.1000000014901,
+            "usedJSHeapSize": 8357342,
+            "totalJSHeapSize": 17934138
+          },
+          {
+            "atMs": 2289.1999999955297,
+            "usedJSHeapSize": 8554234,
+            "totalJSHeapSize": 17934138
+          },
+          {
+            "atMs": 2788.89999999851,
+            "usedJSHeapSize": 8727142,
+            "totalJSHeapSize": 18720570
+          }
+        ]
+      },
+      "details": {
+        "navigation": {
+          "responseStartMs": 220,
+          "domContentLoadedMs": 571.1999999955297,
+          "loadEventMs": 577.5,
+          "transferSize": 1059177,
+          "encodedBodySize": 1058877,
+          "decodedBodySize": 1058877,
+          "firstPaintMs": 392,
+          "firstContentfulPaintMs": 392,
+          "paintTimingStatus": "measured",
+          "paintTimingReasonCode": null
+        },
+        "idleFps": {
+          "durationMs": 1215.8,
+          "frames": 73,
+          "fps": 60.042770192465866,
+          "baselineFrameMs": 16.699999999999818,
+          "missedVsyncEstimate": 0,
+          "estimateMethod": "measured-idle-rAF-baseline",
+          "over33ms": 0,
+          "over50ms": 0,
+          "p50FrameMs": 16.699999999999818,
+          "p95FrameMs": 17.600000000000136,
+          "p99FrameMs": 18.600000000000136,
+          "maxFrameMs": 18.600000000000136,
+          "valid": true,
+          "visibilityChangeCount": 0
+        },
+        "sceneCount": 1,
+        "objectCount": 2
+      },
+      "events": {
+        "alertCount": 0,
+        "contextLost": 0,
+        "contextRestored": 0,
+        "errorCodes": [],
+        "outputs": []
+      },
+      "processMemory": {
+        "status": "measured",
+        "metric": "rss-sum",
+        "beforeBytes": 880214016,
+        "afterBytes": 897236992,
+        "peakBytes": 898301952,
+        "deltaBytes": 17022976,
+        "sampleCount": 5,
+        "processCountPeak": 8,
+        "reasonCode": null
+      }
+    },
+    {
+      "id": "typical-multi-object",
+      "status": "passed",
+      "failureReasonCode": null,
+      "startedAt": "2026-07-15T20:08:08.058Z",
+      "endedAt": "2026-07-15T20:08:09.317Z",
+      "wallDurationMs": 1259,
+      "page": {
+        "durationMs": 1238.0999999940395,
+        "before": {
+          "atMs": 3268.60000000149,
+          "jsHeap": {
+            "usedJSHeapSize": 11115934,
+            "totalJSHeapSize": 18720570,
+            "jsHeapSizeLimit": 4395630592
+          },
+          "jsHeapStatus": "measured",
+          "jsHeapReasonCode": null,
+          "renderer": {
+            "memory": {
+              "geometries": 147,
+              "textures": 3
+            },
+            "render": {
+              "calls": 34,
+              "triangles": 1724,
+              "points": 0,
+              "lines": 12
+            }
+          },
+          "webgl": {
+            "maxTextureSize": 16384,
+            "maxCubeMapTextureSize": 16384,
+            "maxRenderbufferSize": 16384,
+            "antialias": true,
+            "contextLost": false
+          },
+          "domNodes": 991,
+          "canvases": 3,
+          "viewport": {
+            "outerWidth": 1440,
+            "outerHeight": 900,
+            "innerWidth": 1440,
+            "innerHeight": 757,
+            "devicePixelRatio": 2,
+            "visibilityState": "visible",
+            "mainCanvas": {
+              "width": 1648,
+              "height": 784
+            }
+          },
+          "captureCapabilities": {
+            "mediaRecorder": true,
+            "canvasCaptureStream": true,
+            "requestFrame": true
+          },
+          "contextLost": 0,
+          "contextRestored": 0
+        },
+        "after": {
+          "atMs": 4504.60000000149,
+          "jsHeap": {
+            "usedJSHeapSize": 16082882,
+            "totalJSHeapSize": 29823054,
+            "jsHeapSizeLimit": 4395630592
+          },
+          "jsHeapStatus": "measured",
+          "jsHeapReasonCode": null,
+          "renderer": {
+            "memory": {
+              "geometries": 451,
+              "textures": 26
+            },
+            "render": {
+              "calls": 34,
+              "triangles": 1724,
+              "points": 0,
+              "lines": 12
+            }
+          },
+          "webgl": {
+            "maxTextureSize": 16384,
+            "maxCubeMapTextureSize": 16384,
+            "maxRenderbufferSize": 16384,
+            "antialias": true,
+            "contextLost": false
+          },
+          "domNodes": 1942,
+          "canvases": 3,
+          "viewport": {
+            "outerWidth": 1440,
+            "outerHeight": 900,
+            "innerWidth": 1440,
+            "innerHeight": 757,
+            "devicePixelRatio": 2,
+            "visibilityState": "visible",
+            "mainCanvas": {
+              "width": 1648,
+              "height": 784
+            }
+          },
+          "captureCapabilities": {
+            "mediaRecorder": true,
+            "canvasCaptureStream": true,
+            "requestFrame": true
+          },
+          "contextLost": 0,
+          "contextRestored": 0
+        },
+        "heapSamples": [
+          {
+            "atMs": 3771,
+            "usedJSHeapSize": 15440046,
+            "totalJSHeapSize": 29560910
+          },
+          {
+            "atMs": 4271.19999999553,
+            "usedJSHeapSize": 19628050,
+            "totalJSHeapSize": 29560910
+          }
+        ]
+      },
+      "details": {
+        "sceneCount": 4,
+        "objectCount": 24
+      },
+      "events": {
+        "alertCount": 0,
+        "contextLost": 0,
+        "contextRestored": 0,
+        "errorCodes": [],
+        "outputs": []
+      },
+      "processMemory": {
+        "status": "measured",
+        "metric": "rss-sum",
+        "beforeBytes": 915046400,
+        "afterBytes": 988872704,
+        "peakBytes": 988872704,
+        "deltaBytes": 73826304,
+        "sampleCount": 3,
+        "processCountPeak": 8,
+        "reasonCode": null
+      }
+    },
+    {
+      "id": "panorama-4096x2048",
+      "status": "passed",
+      "failureReasonCode": null,
+      "startedAt": "2026-07-15T20:08:09.317Z",
+      "endedAt": "2026-07-15T20:08:10.583Z",
+      "wallDurationMs": 1266,
+      "page": {
+        "durationMs": 1245.1999999955297,
+        "before": {
+          "atMs": 4527.5,
+          "jsHeap": {
+            "usedJSHeapSize": 16082882,
+            "totalJSHeapSize": 29823054,
+            "jsHeapSizeLimit": 4395630592
+          },
+          "jsHeapStatus": "measured",
+          "jsHeapReasonCode": null,
+          "renderer": {
+            "memory": {
+              "geometries": 451,
+              "textures": 26
+            },
+            "render": {
+              "calls": 34,
+              "triangles": 1724,
+              "points": 0,
+              "lines": 12
+            }
+          },
+          "webgl": {
+            "maxTextureSize": 16384,
+            "maxCubeMapTextureSize": 16384,
+            "maxRenderbufferSize": 16384,
+            "antialias": true,
+            "contextLost": false
+          },
+          "domNodes": 1942,
+          "canvases": 3,
+          "viewport": {
+            "outerWidth": 1440,
+            "outerHeight": 900,
+            "innerWidth": 1440,
+            "innerHeight": 757,
+            "devicePixelRatio": 2,
+            "visibilityState": "visible",
+            "mainCanvas": {
+              "width": 1648,
+              "height": 784
+            }
+          },
+          "captureCapabilities": {
+            "mediaRecorder": true,
+            "canvasCaptureStream": true,
+            "requestFrame": true
+          },
+          "contextLost": 0,
+          "contextRestored": 0
+        },
+        "after": {
+          "atMs": 5771.89999999851,
+          "jsHeap": {
+            "usedJSHeapSize": 17656969,
+            "totalJSHeapSize": 32646029,
+            "jsHeapSizeLimit": 4395630592
+          },
+          "jsHeapStatus": "measured",
+          "jsHeapReasonCode": null,
+          "renderer": {
+            "memory": {
+              "geometries": 452,
+              "textures": 27
+            },
+            "render": {
+              "calls": 34,
+              "triangles": 1724,
+              "points": 0,
+              "lines": 12
+            }
+          },
+          "webgl": {
+            "maxTextureSize": 16384,
+            "maxCubeMapTextureSize": 16384,
+            "maxRenderbufferSize": 16384,
+            "antialias": true,
+            "contextLost": false
+          },
+          "domNodes": 1942,
+          "canvases": 3,
+          "viewport": {
+            "outerWidth": 1440,
+            "outerHeight": 900,
+            "innerWidth": 1440,
+            "innerHeight": 757,
+            "devicePixelRatio": 2,
+            "visibilityState": "visible",
+            "mainCanvas": {
+              "width": 1648,
+              "height": 784
+            }
+          },
+          "captureCapabilities": {
+            "mediaRecorder": true,
+            "canvasCaptureStream": true,
+            "requestFrame": true
+          },
+          "contextLost": 0,
+          "contextRestored": 0
+        },
+        "heapSamples": [
+          {
+            "atMs": 5031.10000000149,
+            "usedJSHeapSize": 15392889,
+            "totalJSHeapSize": 32383885
+          },
+          {
+            "atMs": 5531,
+            "usedJSHeapSize": 19355005,
+            "totalJSHeapSize": 32646029
+          }
+        ]
+      },
+      "details": {
+        "width": 4096,
+        "height": 2048,
+        "encodedBytes": 141806,
+        "textureReady": true,
+        "naturalWidth": 4096,
+        "naturalHeight": 2048,
+        "maxTextureSize": 16384
+      },
+      "events": {
+        "alertCount": 0,
+        "contextLost": 0,
+        "contextRestored": 0,
+        "errorCodes": [],
+        "outputs": []
+      },
+      "processMemory": {
+        "status": "measured",
+        "metric": "rss-sum",
+        "beforeBytes": 1243054080,
+        "afterBytes": 1244364800,
+        "peakBytes": 1244364800,
+        "deltaBytes": 1310720,
+        "sampleCount": 2,
+        "processCountPeak": 8,
+        "reasonCode": null
+      }
+    },
+    {
+      "id": "repeated-scene-switch",
+      "status": "passed",
+      "failureReasonCode": null,
+      "startedAt": "2026-07-15T20:08:10.583Z",
+      "endedAt": "2026-07-15T20:08:16.229Z",
+      "wallDurationMs": 5646,
+      "page": {
+        "durationMs": 5624,
+        "before": {
+          "atMs": 5794,
+          "jsHeap": {
+            "usedJSHeapSize": 17656969,
+            "totalJSHeapSize": 32646029,
+            "jsHeapSizeLimit": 4395630592
+          },
+          "jsHeapStatus": "measured",
+          "jsHeapReasonCode": null,
+          "renderer": {
+            "memory": {
+              "geometries": 452,
+              "textures": 27
+            },
+            "render": {
+              "calls": 34,
+              "triangles": 1724,
+              "points": 0,
+              "lines": 12
+            }
+          },
+          "webgl": {
+            "maxTextureSize": 16384,
+            "maxCubeMapTextureSize": 16384,
+            "maxRenderbufferSize": 16384,
+            "antialias": true,
+            "contextLost": false
+          },
+          "domNodes": 1942,
+          "canvases": 3,
+          "viewport": {
+            "outerWidth": 1440,
+            "outerHeight": 900,
+            "innerWidth": 1440,
+            "innerHeight": 757,
+            "devicePixelRatio": 2,
+            "visibilityState": "visible",
+            "mainCanvas": {
+              "width": 1648,
+              "height": 784
+            }
+          },
+          "captureCapabilities": {
+            "mediaRecorder": true,
+            "canvasCaptureStream": true,
+            "requestFrame": true
+          },
+          "contextLost": 0,
+          "contextRestored": 0
+        },
+        "after": {
+          "atMs": 11416.79999999702,
+          "jsHeap": {
+            "usedJSHeapSize": 40543228,
+            "totalJSHeapSize": 94910200,
+            "jsHeapSizeLimit": 4395630592
+          },
+          "jsHeapStatus": "measured",
+          "jsHeapReasonCode": null,
+          "renderer": {
+            "memory": {
+              "geometries": 451,
+              "textures": 27
+            },
+            "render": {
+              "calls": 34,
+              "triangles": 1724,
+              "points": 0,
+              "lines": 12
+            }
+          },
+          "webgl": {
+            "maxTextureSize": 16384,
+            "maxCubeMapTextureSize": 16384,
+            "maxRenderbufferSize": 16384,
+            "antialias": true,
+            "contextLost": false
+          },
+          "domNodes": 1942,
+          "canvases": 3,
+          "viewport": {
+            "outerWidth": 1440,
+            "outerHeight": 900,
+            "innerWidth": 1440,
+            "innerHeight": 757,
+            "devicePixelRatio": 2,
+            "visibilityState": "visible",
+            "mainCanvas": {
+              "width": 1648,
+              "height": 784
+            }
+          },
+          "captureCapabilities": {
+            "mediaRecorder": true,
+            "canvasCaptureStream": true,
+            "requestFrame": true
+          },
+          "contextLost": 0,
+          "contextRestored": 0
+        },
+        "heapSamples": [
+          {
+            "atMs": 6382.79999999702,
+            "usedJSHeapSize": 35319492,
+            "totalJSHeapSize": 60021208
+          },
+          {
+            "atMs": 6906,
+            "usedJSHeapSize": 65849171,
+            "totalJSHeapSize": 107318607
+          },
+          {
+            "atMs": 7370.10000000149,
+            "usedJSHeapSize": 52727890,
+            "totalJSHeapSize": 100664818
+          },
+          {
+            "atMs": 7884.19999999553,
+            "usedJSHeapSize": 47869154,
+            "totalJSHeapSize": 106678086
+          },
+          {
+            "atMs": 8393.39999999851,
+            "usedJSHeapSize": 51540333,
+            "totalJSHeapSize": 100256813
+          },
+          {
+            "atMs": 8852.5,
+            "usedJSHeapSize": 39779176,
+            "totalJSHeapSize": 106272484
+          },
+          {
+            "atMs": 9384.60000000149,
+            "usedJSHeapSize": 34935258,
+            "totalJSHeapSize": 98446250
+          },
+          {
+            "atMs": 9900,
+            "usedJSHeapSize": 34340584,
+            "totalJSHeapSize": 106947232
+          },
+          {
+            "atMs": 10349.89999999851,
+            "usedJSHeapSize": 56222664,
+            "totalJSHeapSize": 112958700
+          },
+          {
+            "atMs": 10796.79999999702,
+            "usedJSHeapSize": 27490880,
+            "totalJSHeapSize": 94123768
+          },
+          {
+            "atMs": 11296.79999999702,
+            "usedJSHeapSize": 27832944,
+            "totalJSHeapSize": 94385912
+          }
+        ]
+      },
+      "details": {
+        "iterations": 40,
+        "durationMs": 4621.80000000447,
+        "finalSceneIndex": 3,
+        "sceneCount": 4,
+        "objectCount": 24
+      },
+      "events": {
+        "alertCount": 0,
+        "contextLost": 0,
+        "contextRestored": 0,
+        "errorCodes": [],
+        "outputs": []
+      },
+      "processMemory": {
+        "status": "measured",
+        "metric": "rss-sum",
+        "beforeBytes": 1245708288,
+        "afterBytes": 1412382720,
+        "peakBytes": 1440301056,
+        "deltaBytes": 166674432,
+        "sampleCount": 12,
+        "processCountPeak": 8,
+        "reasonCode": null
+      }
+    },
+    {
+      "id": "short-shot-playback",
+      "status": "passed",
+      "failureReasonCode": null,
+      "startedAt": "2026-07-15T20:08:16.229Z",
+      "endedAt": "2026-07-15T20:08:19.478Z",
+      "wallDurationMs": 3249,
+      "page": {
+        "durationMs": 3227.2000000029802,
+        "before": {
+          "atMs": 11440,
+          "jsHeap": {
+            "usedJSHeapSize": 40543228,
+            "totalJSHeapSize": 94910200,
+            "jsHeapSizeLimit": 4395630592
+          },
+          "jsHeapStatus": "measured",
+          "jsHeapReasonCode": null,
+          "renderer": {
+            "memory": {
+              "geometries": 451,
+              "textures": 27
+            },
+            "render": {
+              "calls": 34,
+              "triangles": 1724,
+              "points": 0,
+              "lines": 12
+            }
+          },
+          "webgl": {
+            "maxTextureSize": 16384,
+            "maxCubeMapTextureSize": 16384,
+            "maxRenderbufferSize": 16384,
+            "antialias": true,
+            "contextLost": false
+          },
+          "domNodes": 1942,
+          "canvases": 3,
+          "viewport": {
+            "outerWidth": 1440,
+            "outerHeight": 900,
+            "innerWidth": 1440,
+            "innerHeight": 757,
+            "devicePixelRatio": 2,
+            "visibilityState": "visible",
+            "mainCanvas": {
+              "width": 1648,
+              "height": 784
+            }
+          },
+          "captureCapabilities": {
+            "mediaRecorder": true,
+            "canvasCaptureStream": true,
+            "requestFrame": true
+          },
+          "contextLost": 0,
+          "contextRestored": 0
+        },
+        "after": {
+          "atMs": 14666.10000000149,
+          "jsHeap": {
+            "usedJSHeapSize": 40001606,
+            "totalJSHeapSize": 96636574,
+            "jsHeapSizeLimit": 4395630592
+          },
+          "jsHeapStatus": "measured",
+          "jsHeapReasonCode": null,
+          "renderer": {
+            "memory": {
+              "geometries": 451,
+              "textures": 27
+            },
+            "render": {
+              "calls": 34,
+              "triangles": 1724,
+              "points": 0,
+              "lines": 12
+            }
+          },
+          "webgl": {
+            "maxTextureSize": 16384,
+            "maxCubeMapTextureSize": 16384,
+            "maxRenderbufferSize": 16384,
+            "antialias": true,
+            "contextLost": false
+          },
+          "domNodes": 1942,
+          "canvases": 3,
+          "viewport": {
+            "outerWidth": 1440,
+            "outerHeight": 900,
+            "innerWidth": 1440,
+            "innerHeight": 757,
+            "devicePixelRatio": 2,
+            "visibilityState": "visible",
+            "mainCanvas": {
+              "width": 1648,
+              "height": 784
+            }
+          },
+          "captureCapabilities": {
+            "mediaRecorder": true,
+            "canvasCaptureStream": true,
+            "requestFrame": true
+          },
+          "contextLost": 0,
+          "contextRestored": 0
+        },
+        "heapSamples": [
+          {
+            "atMs": 11940.79999999702,
+            "usedJSHeapSize": 16325850,
+            "totalJSHeapSize": 95063710
+          },
+          {
+            "atMs": 12441.89999999851,
+            "usedJSHeapSize": 23513258,
+            "totalJSHeapSize": 95325854
+          },
+          {
+            "atMs": 12941.89999999851,
+            "usedJSHeapSize": 20427178,
+            "totalJSHeapSize": 95587998
+          },
+          {
+            "atMs": 13441.5,
+            "usedJSHeapSize": 17233670,
+            "totalJSHeapSize": 95850142
+          },
+          {
+            "atMs": 13942.39999999851,
+            "usedJSHeapSize": 35451458,
+            "totalJSHeapSize": 96112286
+          },
+          {
+            "atMs": 14442.19999999553,
+            "usedJSHeapSize": 21986590,
+            "totalJSHeapSize": 96636574
+          }
+        ]
+      },
+      "details": {
+        "fps": {
+          "durationMs": 2000,
+          "frames": 120,
+          "fps": 60,
+          "baselineFrameMs": 16.699999999999818,
+          "missedVsyncEstimate": 0,
+          "estimateMethod": "measured-idle-rAF-baseline",
+          "over33ms": 0,
+          "over50ms": 0,
+          "p50FrameMs": 16.69999999999891,
+          "p95FrameMs": 17.700000000000728,
+          "p99FrameMs": 18,
+          "maxFrameMs": 18.700000000000728,
+          "valid": true,
+          "visibilityChangeCount": 0
+        },
+        "configuredShotDurationSeconds": 2,
+        "wallDurationMs": 2190.8000000044703
+      },
+      "events": {
+        "alertCount": 0,
+        "contextLost": 0,
+        "contextRestored": 0,
+        "errorCodes": [],
+        "outputs": []
+      },
+      "processMemory": {
+        "status": "measured",
+        "metric": "rss-sum",
+        "beforeBytes": 1411743744,
+        "afterBytes": 1407582208,
+        "peakBytes": 1411743744,
+        "deltaBytes": -4161536,
+        "sampleCount": 6,
+        "processCountPeak": 8,
+        "reasonCode": null
+      }
+    },
+    {
+      "id": "screenshot-export",
+      "status": "passed",
+      "failureReasonCode": null,
+      "startedAt": "2026-07-15T20:08:19.478Z",
+      "endedAt": "2026-07-15T20:08:20.566Z",
+      "wallDurationMs": 1088,
+      "page": {
+        "durationMs": 1068.1000000014901,
+        "before": {
+          "atMs": 14688.39999999851,
+          "jsHeap": {
+            "usedJSHeapSize": 40001606,
+            "totalJSHeapSize": 96636574,
+            "jsHeapSizeLimit": 4395630592
+          },
+          "jsHeapStatus": "measured",
+          "jsHeapReasonCode": null,
+          "renderer": {
+            "memory": {
+              "geometries": 451,
+              "textures": 27
+            },
+            "render": {
+              "calls": 34,
+              "triangles": 1724,
+              "points": 0,
+              "lines": 12
+            }
+          },
+          "webgl": {
+            "maxTextureSize": 16384,
+            "maxCubeMapTextureSize": 16384,
+            "maxRenderbufferSize": 16384,
+            "antialias": true,
+            "contextLost": false
+          },
+          "domNodes": 1942,
+          "canvases": 3,
+          "viewport": {
+            "outerWidth": 1440,
+            "outerHeight": 900,
+            "innerWidth": 1440,
+            "innerHeight": 757,
+            "devicePixelRatio": 2,
+            "visibilityState": "visible",
+            "mainCanvas": {
+              "width": 1648,
+              "height": 784
+            }
+          },
+          "captureCapabilities": {
+            "mediaRecorder": true,
+            "canvasCaptureStream": true,
+            "requestFrame": true
+          },
+          "contextLost": 0,
+          "contextRestored": 0
+        },
+        "after": {
+          "atMs": 15755.39999999851,
+          "jsHeap": {
+            "usedJSHeapSize": 21497595,
+            "totalJSHeapSize": 86124063,
+            "jsHeapSizeLimit": 4395630592
+          },
+          "jsHeapStatus": "measured",
+          "jsHeapReasonCode": null,
+          "renderer": {
+            "memory": {
+              "geometries": 451,
+              "textures": 27
+            },
+            "render": {
+              "calls": 34,
+              "triangles": 1724,
+              "points": 0,
+              "lines": 12
+            }
+          },
+          "webgl": {
+            "maxTextureSize": 16384,
+            "maxCubeMapTextureSize": 16384,
+            "maxRenderbufferSize": 16384,
+            "antialias": true,
+            "contextLost": false
+          },
+          "domNodes": 1942,
+          "canvases": 3,
+          "viewport": {
+            "outerWidth": 1440,
+            "outerHeight": 900,
+            "innerWidth": 1440,
+            "innerHeight": 757,
+            "devicePixelRatio": 2,
+            "visibilityState": "visible",
+            "mainCanvas": {
+              "width": 1648,
+              "height": 784
+            }
+          },
+          "captureCapabilities": {
+            "mediaRecorder": true,
+            "canvasCaptureStream": true,
+            "requestFrame": true
+          },
+          "contextLost": 0,
+          "contextRestored": 0
+        },
+        "heapSamples": [
+          {
+            "atMs": 15191.39999999851,
+            "usedJSHeapSize": 29596615,
+            "totalJSHeapSize": 86124099
+          },
+          {
+            "atMs": 15691.10000000149,
+            "usedJSHeapSize": 43548011,
+            "totalJSHeapSize": 86124063
+          }
+        ]
+      },
+      "details": {
+        "output": {
+          "sequence": 1,
+          "kind": "screenshot-png",
+          "size": 291623,
+          "type": "image/png",
+          "extension": null,
+          "validation": {
+            "status": "passed",
+            "format": "png",
+            "signatureValid": true,
+            "width": 1920,
+            "height": 1080,
+            "centralDirectoryFound": null,
+            "entryCount": null,
+            "expectedEntriesPresent": null,
+            "allEntriesNonEmpty": null
+          }
+        }
+      },
+      "events": {
+        "alertCount": 0,
+        "contextLost": 0,
+        "contextRestored": 0,
+        "errorCodes": [],
+        "outputs": [
+          {
+            "sequence": 1,
+            "kind": "screenshot-png",
+            "size": 291623,
+            "type": "image/png",
+            "extension": null,
+            "validation": {
+              "status": "passed",
+              "format": "png",
+              "signatureValid": true,
+              "width": 1920,
+              "height": 1080,
+              "centralDirectoryFound": null,
+              "entryCount": null,
+              "expectedEntriesPresent": null,
+              "allEntriesNonEmpty": null
+            }
+          }
+        ]
+      },
+      "processMemory": {
+        "status": "measured",
+        "metric": "rss-sum",
+        "beforeBytes": 1424900096,
+        "afterBytes": 1327759360,
+        "peakBytes": 1424900096,
+        "deltaBytes": -97140736,
+        "sampleCount": 2,
+        "processCountPeak": 8,
+        "reasonCode": null
+      }
+    },
+    {
+      "id": "short-recording",
+      "status": "passed",
+      "failureReasonCode": null,
+      "startedAt": "2026-07-15T20:08:20.567Z",
+      "endedAt": "2026-07-15T20:08:23.766Z",
+      "wallDurationMs": 3199,
+      "page": {
+        "durationMs": 3178.7999999970198,
+        "before": {
+          "atMs": 15777.10000000149,
+          "jsHeap": {
+            "usedJSHeapSize": 21497595,
+            "totalJSHeapSize": 86124063,
+            "jsHeapSizeLimit": 4395630592
+          },
+          "jsHeapStatus": "measured",
+          "jsHeapReasonCode": null,
+          "renderer": {
+            "memory": {
+              "geometries": 451,
+              "textures": 27
+            },
+            "render": {
+              "calls": 34,
+              "triangles": 1724,
+              "points": 0,
+              "lines": 12
+            }
+          },
+          "webgl": {
+            "maxTextureSize": 16384,
+            "maxCubeMapTextureSize": 16384,
+            "maxRenderbufferSize": 16384,
+            "antialias": true,
+            "contextLost": false
+          },
+          "domNodes": 1942,
+          "canvases": 3,
+          "viewport": {
+            "outerWidth": 1440,
+            "outerHeight": 900,
+            "innerWidth": 1440,
+            "innerHeight": 757,
+            "devicePixelRatio": 2,
+            "visibilityState": "visible",
+            "mainCanvas": {
+              "width": 1648,
+              "height": 784
+            }
+          },
+          "captureCapabilities": {
+            "mediaRecorder": true,
+            "canvasCaptureStream": true,
+            "requestFrame": true
+          },
+          "contextLost": 0,
+          "contextRestored": 0
+        },
+        "after": {
+          "atMs": 18953.89999999851,
+          "jsHeap": {
+            "usedJSHeapSize": 29684774,
+            "totalJSHeapSize": 85473426,
+            "jsHeapSizeLimit": 4395630592
+          },
+          "jsHeapStatus": "measured",
+          "jsHeapReasonCode": null,
+          "renderer": {
+            "memory": {
+              "geometries": 451,
+              "textures": 27
+            },
+            "render": {
+              "calls": 34,
+              "triangles": 1724,
+              "points": 0,
+              "lines": 12
+            }
+          },
+          "webgl": {
+            "maxTextureSize": 16384,
+            "maxCubeMapTextureSize": 16384,
+            "maxRenderbufferSize": 16384,
+            "antialias": true,
+            "contextLost": false
+          },
+          "domNodes": 1942,
+          "canvases": 3,
+          "viewport": {
+            "outerWidth": 1440,
+            "outerHeight": 900,
+            "innerWidth": 1440,
+            "innerHeight": 757,
+            "devicePixelRatio": 2,
+            "visibilityState": "visible",
+            "mainCanvas": {
+              "width": 1648,
+              "height": 784
+            }
+          },
+          "captureCapabilities": {
+            "mediaRecorder": true,
+            "canvasCaptureStream": true,
+            "requestFrame": true
+          },
+          "contextLost": 0,
+          "contextRestored": 0
+        },
+        "heapSamples": [
+          {
+            "atMs": 16278.60000000149,
+            "usedJSHeapSize": 36212226,
+            "totalJSHeapSize": 84424806
+          },
+          {
+            "atMs": 16779.79999999702,
+            "usedJSHeapSize": 26950666,
+            "totalJSHeapSize": 84424806
+          },
+          {
+            "atMs": 17279.79999999702,
+            "usedJSHeapSize": 34375214,
+            "totalJSHeapSize": 84686950
+          },
+          {
+            "atMs": 17787.10000000149,
+            "usedJSHeapSize": 40316402,
+            "totalJSHeapSize": 84686950
+          },
+          {
+            "atMs": 18280.60000000149,
+            "usedJSHeapSize": 28011266,
+            "totalJSHeapSize": 84949138
+          },
+          {
+            "atMs": 18779.29999999702,
+            "usedJSHeapSize": 41985430,
+            "totalJSHeapSize": 84949138
+          }
+        ]
+      },
+      "details": {
+        "durationSeconds": 2,
+        "output": {
+          "sequence": null,
+          "kind": "recording-video",
+          "size": 227021,
+          "type": "video/mp4",
+          "extension": "mp4",
+          "validation": {
+            "status": "passed",
+            "format": "mp4",
+            "signatureValid": true,
+            "width": null,
+            "height": null,
+            "centralDirectoryFound": null,
+            "entryCount": null,
+            "expectedEntriesPresent": null,
+            "allEntriesNonEmpty": null
+          }
+        }
+      },
+      "events": {
+        "alertCount": 0,
+        "contextLost": 0,
+        "contextRestored": 0,
+        "errorCodes": [],
+        "outputs": [
+          {
+            "sequence": 1,
+            "kind": "screenshot-png",
+            "size": 291623,
+            "type": "image/png",
+            "extension": null,
+            "validation": {
+              "status": "passed",
+              "format": "png",
+              "signatureValid": true,
+              "width": 1920,
+              "height": 1080,
+              "centralDirectoryFound": null,
+              "entryCount": null,
+              "expectedEntriesPresent": null,
+              "allEntriesNonEmpty": null
+            }
+          }
+        ]
+      },
+      "processMemory": {
+        "status": "measured",
+        "metric": "rss-sum",
+        "beforeBytes": 1326219264,
+        "afterBytes": 1355120640,
+        "peakBytes": 1355120640,
+        "deltaBytes": 28901376,
+        "sampleCount": 7,
+        "processCountPeak": 8,
+        "reasonCode": null
+      }
+    },
+    {
+      "id": "seedance-export",
+      "status": "passed",
+      "failureReasonCode": null,
+      "startedAt": "2026-07-15T20:08:23.766Z",
+      "endedAt": "2026-07-15T20:08:27.100Z",
+      "wallDurationMs": 3334,
+      "page": {
+        "durationMs": 3313.10000000149,
+        "before": {
+          "atMs": 18976.29999999702,
+          "jsHeap": {
+            "usedJSHeapSize": 29684774,
+            "totalJSHeapSize": 85473426,
+            "jsHeapSizeLimit": 4395630592
+          },
+          "jsHeapStatus": "measured",
+          "jsHeapReasonCode": null,
+          "renderer": {
+            "memory": {
+              "geometries": 451,
+              "textures": 27
+            },
+            "render": {
+              "calls": 34,
+              "triangles": 1724,
+              "points": 0,
+              "lines": 12
+            }
+          },
+          "webgl": {
+            "maxTextureSize": 16384,
+            "maxCubeMapTextureSize": 16384,
+            "maxRenderbufferSize": 16384,
+            "antialias": true,
+            "contextLost": false
+          },
+          "domNodes": 1942,
+          "canvases": 3,
+          "viewport": {
+            "outerWidth": 1440,
+            "outerHeight": 900,
+            "innerWidth": 1440,
+            "innerHeight": 757,
+            "devicePixelRatio": 2,
+            "visibilityState": "visible",
+            "mainCanvas": {
+              "width": 1648,
+              "height": 784
+            }
+          },
+          "captureCapabilities": {
+            "mediaRecorder": true,
+            "canvasCaptureStream": true,
+            "requestFrame": true
+          },
+          "contextLost": 0,
+          "contextRestored": 0
+        },
+        "after": {
+          "atMs": 22288.79999999702,
+          "jsHeap": {
+            "usedJSHeapSize": 23869440,
+            "totalJSHeapSize": 84283552,
+            "jsHeapSizeLimit": 4395630592
+          },
+          "jsHeapStatus": "measured",
+          "jsHeapReasonCode": null,
+          "renderer": {
+            "memory": {
+              "geometries": 451,
+              "textures": 27
+            },
+            "render": {
+              "calls": 34,
+              "triangles": 1724,
+              "points": 0,
+              "lines": 12
+            }
+          },
+          "webgl": {
+            "maxTextureSize": 16384,
+            "maxCubeMapTextureSize": 16384,
+            "maxRenderbufferSize": 16384,
+            "antialias": true,
+            "contextLost": false
+          },
+          "domNodes": 1942,
+          "canvases": 3,
+          "viewport": {
+            "outerWidth": 1440,
+            "outerHeight": 900,
+            "innerWidth": 1440,
+            "innerHeight": 757,
+            "devicePixelRatio": 2,
+            "visibilityState": "visible",
+            "mainCanvas": {
+              "width": 1648,
+              "height": 784
+            }
+          },
+          "captureCapabilities": {
+            "mediaRecorder": true,
+            "canvasCaptureStream": true,
+            "requestFrame": true
+          },
+          "contextLost": 0,
+          "contextRestored": 0
+        },
+        "heapSamples": [
+          {
+            "atMs": 19478.39999999851,
+            "usedJSHeapSize": 33559744,
+            "totalJSHeapSize": 81030156
+          },
+          {
+            "atMs": 19977.29999999702,
+            "usedJSHeapSize": 27597340,
+            "totalJSHeapSize": 81292300
+          },
+          {
+            "atMs": 20479.39999999851,
+            "usedJSHeapSize": 33459008,
+            "totalJSHeapSize": 81554444
+          },
+          {
+            "atMs": 20979.39999999851,
+            "usedJSHeapSize": 40810428,
+            "totalJSHeapSize": 82340876
+          },
+          {
+            "atMs": 21479.29999999702,
+            "usedJSHeapSize": 38501044,
+            "totalJSHeapSize": 84021408
+          },
+          {
+            "atMs": 21979.39999999851,
+            "usedJSHeapSize": 25040136,
+            "totalJSHeapSize": 84021408
+          }
+        ]
+      },
+      "details": {
+        "durationSeconds": 2,
+        "output": {
+          "sequence": 2,
+          "kind": "seedance-zip",
+          "size": 733813,
+          "type": "application/zip",
+          "extension": null,
+          "validation": {
+            "status": "passed",
+            "format": "zip",
+            "signatureValid": true,
+            "width": null,
+            "height": null,
+            "centralDirectoryFound": true,
+            "entryCount": 5,
+            "expectedEntriesPresent": true,
+            "allEntriesNonEmpty": true
+          }
+        }
+      },
+      "events": {
+        "alertCount": 0,
+        "contextLost": 0,
+        "contextRestored": 0,
+        "errorCodes": [],
+        "outputs": [
+          {
+            "sequence": 1,
+            "kind": "screenshot-png",
+            "size": 291623,
+            "type": "image/png",
+            "extension": null,
+            "validation": {
+              "status": "passed",
+              "format": "png",
+              "signatureValid": true,
+              "width": 1920,
+              "height": 1080,
+              "centralDirectoryFound": null,
+              "entryCount": null,
+              "expectedEntriesPresent": null,
+              "allEntriesNonEmpty": null
+            }
+          },
+          {
+            "sequence": 2,
+            "kind": "seedance-zip",
+            "size": 733813,
+            "type": "application/zip",
+            "extension": null,
+            "validation": {
+              "status": "passed",
+              "format": "zip",
+              "signatureValid": true,
+              "width": null,
+              "height": null,
+              "centralDirectoryFound": true,
+              "entryCount": 5,
+              "expectedEntriesPresent": true,
+              "allEntriesNonEmpty": true
+            }
+          }
+        ]
+      },
+      "processMemory": {
+        "status": "measured",
+        "metric": "rss-sum",
+        "beforeBytes": 1415528448,
+        "afterBytes": 1405829120,
+        "peakBytes": 1415528448,
+        "deltaBytes": -9699328,
+        "sampleCount": 6,
+        "processCountPeak": 10,
+        "reasonCode": null
+      }
+    },
+    {
+      "id": "long-session",
+      "status": "passed",
+      "failureReasonCode": null,
+      "startedAt": "2026-07-15T20:08:27.100Z",
+      "endedAt": "2026-07-15T20:10:31.320Z",
+      "wallDurationMs": 124220,
+      "page": {
+        "durationMs": 124198.09999999404,
+        "before": {
+          "atMs": 22310.60000000149,
+          "jsHeap": {
+            "usedJSHeapSize": 23869440,
+            "totalJSHeapSize": 84283552,
+            "jsHeapSizeLimit": 4395630592
+          },
+          "jsHeapStatus": "measured",
+          "jsHeapReasonCode": null,
+          "renderer": {
+            "memory": {
+              "geometries": 451,
+              "textures": 27
+            },
+            "render": {
+              "calls": 34,
+              "triangles": 1724,
+              "points": 0,
+              "lines": 12
+            }
+          },
+          "webgl": {
+            "maxTextureSize": 16384,
+            "maxCubeMapTextureSize": 16384,
+            "maxRenderbufferSize": 16384,
+            "antialias": true,
+            "contextLost": false
+          },
+          "domNodes": 1942,
+          "canvases": 3,
+          "viewport": {
+            "outerWidth": 1440,
+            "outerHeight": 900,
+            "innerWidth": 1440,
+            "innerHeight": 757,
+            "devicePixelRatio": 2,
+            "visibilityState": "visible",
+            "mainCanvas": {
+              "width": 1648,
+              "height": 784
+            }
+          },
+          "captureCapabilities": {
+            "mediaRecorder": true,
+            "canvasCaptureStream": true,
+            "requestFrame": true
+          },
+          "contextLost": 0,
+          "contextRestored": 0
+        },
+        "after": {
+          "atMs": 146508.1000000015,
+          "jsHeap": {
+            "usedJSHeapSize": 54723553,
+            "totalJSHeapSize": 105328329,
+            "jsHeapSizeLimit": 4395630592
+          },
+          "jsHeapStatus": "measured",
+          "jsHeapReasonCode": null,
+          "renderer": {
+            "memory": {
+              "geometries": 448,
+              "textures": 27
+            },
+            "render": {
+              "calls": 34,
+              "triangles": 1724,
+              "points": 0,
+              "lines": 12
+            }
+          },
+          "webgl": {
+            "maxTextureSize": 16384,
+            "maxCubeMapTextureSize": 16384,
+            "maxRenderbufferSize": 16384,
+            "antialias": true,
+            "contextLost": false
+          },
+          "domNodes": 1939,
+          "canvases": 3,
+          "viewport": {
+            "outerWidth": 1440,
+            "outerHeight": 900,
+            "innerWidth": 1440,
+            "innerHeight": 757,
+            "devicePixelRatio": 2,
+            "visibilityState": "visible",
+            "mainCanvas": {
+              "width": 1648,
+              "height": 784
+            }
+          },
+          "captureCapabilities": {
+            "mediaRecorder": true,
+            "canvasCaptureStream": true,
+            "requestFrame": true
+          },
+          "contextLost": 0,
+          "contextRestored": 0
+        },
+        "heapSamples": [
+          {
+            "atMs": 22812.60000000149,
+            "usedJSHeapSize": 50311993,
+            "totalJSHeapSize": 94534985
+          },
+          {
+            "atMs": 23313.39999999851,
+            "usedJSHeapSize": 22084657,
+            "totalJSHeapSize": 94489565
+          },
+          {
+            "atMs": 23812.89999999851,
+            "usedJSHeapSize": 18968845,
+            "totalJSHeapSize": 94489565
+          },
+          {
+            "atMs": 24313,
+            "usedJSHeapSize": 43614653,
+            "totalJSHeapSize": 94489565
+          },
+          {
+            "atMs": 24812.89999999851,
+            "usedJSHeapSize": 36448731,
+            "totalJSHeapSize": 96071515
+          },
+          {
+            "atMs": 25312.69999999553,
+            "usedJSHeapSize": 48241783,
+            "totalJSHeapSize": 95918191
+          },
+          {
+            "atMs": 25813.60000000149,
+            "usedJSHeapSize": 28902603,
+            "totalJSHeapSize": 95918191
+          },
+          {
+            "atMs": 26313.29999999702,
+            "usedJSHeapSize": 37654915,
+            "totalJSHeapSize": 95918191
+          },
+          {
+            "atMs": 26812.60000000149,
+            "usedJSHeapSize": 37417127,
+            "totalJSHeapSize": 97761927
+          },
+          {
+            "atMs": 27312.39999999851,
+            "usedJSHeapSize": 32313403,
+            "totalJSHeapSize": 101802907
+          },
+          {
+            "atMs": 27813.79999999702,
+            "usedJSHeapSize": 50452995,
+            "totalJSHeapSize": 102327195
+          },
+          {
+            "atMs": 28313.10000000149,
+            "usedJSHeapSize": 41735591,
+            "totalJSHeapSize": 102327195
+          },
+          {
+            "atMs": 28863,
+            "usedJSHeapSize": 56611038,
+            "totalJSHeapSize": 104695222
+          },
+          {
+            "atMs": 29313.19999999553,
+            "usedJSHeapSize": 45424442,
+            "totalJSHeapSize": 108211914
+          },
+          {
+            "atMs": 29813.5,
+            "usedJSHeapSize": 52424438,
+            "totalJSHeapSize": 108736202
+          },
+          {
+            "atMs": 30313.10000000149,
+            "usedJSHeapSize": 59781506,
+            "totalJSHeapSize": 109260490
+          },
+          {
+            "atMs": 30939.79999999702,
+            "usedJSHeapSize": 74296886,
+            "totalJSHeapSize": 112171858
+          },
+          {
+            "atMs": 31312.10000000149,
+            "usedJSHeapSize": 42342683,
+            "totalJSHeapSize": 110969551
+          },
+          {
+            "atMs": 31813.60000000149,
+            "usedJSHeapSize": 38302099,
+            "totalJSHeapSize": 104975363
+          },
+          {
+            "atMs": 32312.60000000149,
+            "usedJSHeapSize": 35065583,
+            "totalJSHeapSize": 104975363
+          },
+          {
+            "atMs": 32812.79999999702,
+            "usedJSHeapSize": 31832319,
+            "totalJSHeapSize": 104975363
+          },
+          {
+            "atMs": 33313.19999999553,
+            "usedJSHeapSize": 37822703,
+            "totalJSHeapSize": 106403975
+          },
+          {
+            "atMs": 33812.5,
+            "usedJSHeapSize": 46658891,
+            "totalJSHeapSize": 106403975
+          },
+          {
+            "atMs": 34312.39999999851,
+            "usedJSHeapSize": 27371491,
+            "totalJSHeapSize": 106403975
+          },
+          {
+            "atMs": 34812.29999999702,
+            "usedJSHeapSize": 36053015,
+            "totalJSHeapSize": 106403975
+          },
+          {
+            "atMs": 35312.89999999851,
+            "usedJSHeapSize": 32639053,
+            "totalJSHeapSize": 107832229
+          },
+          {
+            "atMs": 35812.79999999702,
+            "usedJSHeapSize": 50828597,
+            "totalJSHeapSize": 107832229
+          },
+          {
+            "atMs": 36313.39999999851,
+            "usedJSHeapSize": 42128945,
+            "totalJSHeapSize": 107832229
+          },
+          {
+            "atMs": 36813.19999999553,
+            "usedJSHeapSize": 33580189,
+            "totalJSHeapSize": 107832229
+          },
+          {
+            "atMs": 37313.69999999553,
+            "usedJSHeapSize": 47518074,
+            "totalJSHeapSize": 109413810
+          },
+          {
+            "atMs": 37812.89999999851,
+            "usedJSHeapSize": 61513542,
+            "totalJSHeapSize": 110309062
+          },
+          {
+            "atMs": 38313,
+            "usedJSHeapSize": 41750666,
+            "totalJSHeapSize": 110309062
+          },
+          {
+            "atMs": 38813.19999999553,
+            "usedJSHeapSize": 48974446,
+            "totalJSHeapSize": 110309062
+          },
+          {
+            "atMs": 39312.69999999553,
+            "usedJSHeapSize": 63201290,
+            "totalJSHeapSize": 114269006
+          },
+          {
+            "atMs": 39812.69999999553,
+            "usedJSHeapSize": 50792230,
+            "totalJSHeapSize": 118309986
+          },
+          {
+            "atMs": 40313.5,
+            "usedJSHeapSize": 33092075,
+            "totalJSHeapSize": 109956103
+          },
+          {
+            "atMs": 40813.29999999702,
+            "usedJSHeapSize": 29865399,
+            "totalJSHeapSize": 109956103
+          },
+          {
+            "atMs": 41324.89999999851,
+            "usedJSHeapSize": 50385287,
+            "totalJSHeapSize": 111538039
+          },
+          {
+            "atMs": 41812.69999999553,
+            "usedJSHeapSize": 35729295,
+            "totalJSHeapSize": 111384715
+          },
+          {
+            "atMs": 42313.29999999702,
+            "usedJSHeapSize": 44092395,
+            "totalJSHeapSize": 111384715
+          },
+          {
+            "atMs": 42812.19999999553,
+            "usedJSHeapSize": 25505239,
+            "totalJSHeapSize": 111384715
+          },
+          {
+            "atMs": 43391.69999999553,
+            "usedJSHeapSize": 58822737,
+            "totalJSHeapSize": 112966293
+          },
+          {
+            "atMs": 43813.69999999553,
+            "usedJSHeapSize": 26384215,
+            "totalJSHeapSize": 92897695
+          },
+          {
+            "atMs": 44312.39999999851,
+            "usedJSHeapSize": 17665647,
+            "totalJSHeapSize": 92897695
+          },
+          {
+            "atMs": 44812.89999999851,
+            "usedJSHeapSize": 35829819,
+            "totalJSHeapSize": 92897695
+          },
+          {
+            "atMs": 45313.10000000149,
+            "usedJSHeapSize": 27559975,
+            "totalJSHeapSize": 92897695
+          },
+          {
+            "atMs": 45813.79999999702,
+            "usedJSHeapSize": 39565843,
+            "totalJSHeapSize": 98258447
+          },
+          {
+            "atMs": 46313.39999999851,
+            "usedJSHeapSize": 50880231,
+            "totalJSHeapSize": 98258447
+          },
+          {
+            "atMs": 46813.69999999553,
+            "usedJSHeapSize": 30224215,
+            "totalJSHeapSize": 98520591
+          },
+          {
+            "atMs": 47313.19999999553,
+            "usedJSHeapSize": 37415119,
+            "totalJSHeapSize": 98520591
+          },
+          {
+            "atMs": 47812.89999999851,
+            "usedJSHeapSize": 23867695,
+            "totalJSHeapSize": 95013895
+          },
+          {
+            "atMs": 48312.60000000149,
+            "usedJSHeapSize": 28259123,
+            "totalJSHeapSize": 95013895
+          },
+          {
+            "atMs": 48813.39999999851,
+            "usedJSHeapSize": 24962711,
+            "totalJSHeapSize": 95013895
+          },
+          {
+            "atMs": 49313.39999999851,
+            "usedJSHeapSize": 21737043,
+            "totalJSHeapSize": 95013895
+          },
+          {
+            "atMs": 49812.60000000149,
+            "usedJSHeapSize": 25662435,
+            "totalJSHeapSize": 98539659
+          },
+          {
+            "atMs": 50313,
+            "usedJSHeapSize": 34887803,
+            "totalJSHeapSize": 98539659
+          },
+          {
+            "atMs": 50813,
+            "usedJSHeapSize": 42887447,
+            "totalJSHeapSize": 98539659
+          },
+          {
+            "atMs": 51312.79999999702,
+            "usedJSHeapSize": 51464879,
+            "totalJSHeapSize": 98539659
+          },
+          {
+            "atMs": 51812.39999999851,
+            "usedJSHeapSize": 28962347,
+            "totalJSHeapSize": 97608259
+          },
+          {
+            "atMs": 52313.39999999851,
+            "usedJSHeapSize": 17154611,
+            "totalJSHeapSize": 94470559
+          },
+          {
+            "atMs": 52813.10000000149,
+            "usedJSHeapSize": 35403487,
+            "totalJSHeapSize": 94470559
+          },
+          {
+            "atMs": 53313.5,
+            "usedJSHeapSize": 27380043,
+            "totalJSHeapSize": 94470559
+          },
+          {
+            "atMs": 53813.79999999702,
+            "usedJSHeapSize": 38227423,
+            "totalJSHeapSize": 99307023
+          },
+          {
+            "atMs": 54313.60000000149,
+            "usedJSHeapSize": 32067935,
+            "totalJSHeapSize": 99307023
+          },
+          {
+            "atMs": 54811.69999999553,
+            "usedJSHeapSize": 40315439,
+            "totalJSHeapSize": 99307023
+          },
+          {
+            "atMs": 55313.60000000149,
+            "usedJSHeapSize": 47429019,
+            "totalJSHeapSize": 99307023
+          },
+          {
+            "atMs": 55844.5,
+            "usedJSHeapSize": 58851367,
+            "totalJSHeapSize": 101169815
+          },
+          {
+            "atMs": 56312.79999999702,
+            "usedJSHeapSize": 22102095,
+            "totalJSHeapSize": 92392455
+          },
+          {
+            "atMs": 56813.29999999702,
+            "usedJSHeapSize": 21496907,
+            "totalJSHeapSize": 92392455
+          },
+          {
+            "atMs": 57312.5,
+            "usedJSHeapSize": 18316195,
+            "totalJSHeapSize": 92392455
+          },
+          {
+            "atMs": 57908.5,
+            "usedJSHeapSize": 47871667,
+            "totalJSHeapSize": 96071543
+          },
+          {
+            "atMs": 58312.29999999702,
+            "usedJSHeapSize": 25957747,
+            "totalJSHeapSize": 95918219
+          },
+          {
+            "atMs": 58812.89999999851,
+            "usedJSHeapSize": 34605851,
+            "totalJSHeapSize": 95918219
+          },
+          {
+            "atMs": 59312.19999999553,
+            "usedJSHeapSize": 43370367,
+            "totalJSHeapSize": 95918219
+          },
+          {
+            "atMs": 59812.39999999851,
+            "usedJSHeapSize": 52066175,
+            "totalJSHeapSize": 95918219
+          },
+          {
+            "atMs": 60312.89999999851,
+            "usedJSHeapSize": 17164015,
+            "totalJSHeapSize": 93684127
+          },
+          {
+            "atMs": 60813.39999999851,
+            "usedJSHeapSize": 35421171,
+            "totalJSHeapSize": 93684127
+          },
+          {
+            "atMs": 61313,
+            "usedJSHeapSize": 26669715,
+            "totalJSHeapSize": 93684127
+          },
+          {
+            "atMs": 61812.5,
+            "usedJSHeapSize": 18105227,
+            "totalJSHeapSize": 93684127
+          },
+          {
+            "atMs": 62313.39999999851,
+            "usedJSHeapSize": 31018891,
+            "totalJSHeapSize": 97996303
+          },
+          {
+            "atMs": 62813.19999999553,
+            "usedJSHeapSize": 43937831,
+            "totalJSHeapSize": 97996303
+          },
+          {
+            "atMs": 63313,
+            "usedJSHeapSize": 51020295,
+            "totalJSHeapSize": 97996303
+          },
+          {
+            "atMs": 63814,
+            "usedJSHeapSize": 30513659,
+            "totalJSHeapSize": 97996303
+          },
+          {
+            "atMs": 64312.29999999702,
+            "usedJSHeapSize": 42000043,
+            "totalJSHeapSize": 97346095
+          },
+          {
+            "atMs": 64813.79999999702,
+            "usedJSHeapSize": 17972659,
+            "totalJSHeapSize": 94489607
+          },
+          {
+            "atMs": 65313.39999999851,
+            "usedJSHeapSize": 42784735,
+            "totalJSHeapSize": 94489607
+          },
+          {
+            "atMs": 65813.39999999851,
+            "usedJSHeapSize": 39597939,
+            "totalJSHeapSize": 94489607
+          },
+          {
+            "atMs": 66312.69999999553,
+            "usedJSHeapSize": 34979935,
+            "totalJSHeapSize": 98955127
+          },
+          {
+            "atMs": 66812.29999999702,
+            "usedJSHeapSize": 47872379,
+            "totalJSHeapSize": 98801803
+          },
+          {
+            "atMs": 67313.60000000149,
+            "usedJSHeapSize": 28691903,
+            "totalJSHeapSize": 98801803
+          },
+          {
+            "atMs": 67812.69999999553,
+            "usedJSHeapSize": 37360299,
+            "totalJSHeapSize": 98801803
+          },
+          {
+            "atMs": 68314.60000000149,
+            "usedJSHeapSize": 20401055,
+            "totalJSHeapSize": 96450859
+          },
+          {
+            "atMs": 68813.79999999702,
+            "usedJSHeapSize": 33889095,
+            "totalJSHeapSize": 93159835
+          },
+          {
+            "atMs": 69312.19999999553,
+            "usedJSHeapSize": 25299507,
+            "totalJSHeapSize": 93159835
+          },
+          {
+            "atMs": 69812.29999999702,
+            "usedJSHeapSize": 43370347,
+            "totalJSHeapSize": 93159835
+          },
+          {
+            "atMs": 70379.5,
+            "usedJSHeapSize": 33351395,
+            "totalJSHeapSize": 97734155
+          },
+          {
+            "atMs": 70813,
+            "usedJSHeapSize": 45743007,
+            "totalJSHeapSize": 97734155
+          },
+          {
+            "atMs": 71313.60000000149,
+            "usedJSHeapSize": 29194235,
+            "totalJSHeapSize": 97734155
+          },
+          {
+            "atMs": 71812.89999999851,
+            "usedJSHeapSize": 36320791,
+            "totalJSHeapSize": 97734155
+          },
+          {
+            "atMs": 72448,
+            "usedJSHeapSize": 54584087,
+            "totalJSHeapSize": 99443623
+          },
+          {
+            "atMs": 72813.5,
+            "usedJSHeapSize": 35355287,
+            "totalJSHeapSize": 95538183
+          },
+          {
+            "atMs": 73313.29999999702,
+            "usedJSHeapSize": 37506011,
+            "totalJSHeapSize": 95538183
+          },
+          {
+            "atMs": 73813.10000000149,
+            "usedJSHeapSize": 34366395,
+            "totalJSHeapSize": 95538183
+          },
+          {
+            "atMs": 74312.69999999553,
+            "usedJSHeapSize": 31106131,
+            "totalJSHeapSize": 95538183
+          },
+          {
+            "atMs": 74812.79999999702,
+            "usedJSHeapSize": 39714947,
+            "totalJSHeapSize": 100374667
+          },
+          {
+            "atMs": 75312.39999999851,
+            "usedJSHeapSize": 48493867,
+            "totalJSHeapSize": 100374667
+          },
+          {
+            "atMs": 75812.60000000149,
+            "usedJSHeapSize": 29187151,
+            "totalJSHeapSize": 100374667
+          },
+          {
+            "atMs": 76312.69999999553,
+            "usedJSHeapSize": 37936199,
+            "totalJSHeapSize": 100374667
+          },
+          {
+            "atMs": 76812.89999999851,
+            "usedJSHeapSize": 38481959,
+            "totalJSHeapSize": 97608259
+          },
+          {
+            "atMs": 77313.19999999553,
+            "usedJSHeapSize": 25244583,
+            "totalJSHeapSize": 94470559
+          },
+          {
+            "atMs": 77812.79999999702,
+            "usedJSHeapSize": 43474295,
+            "totalJSHeapSize": 94470559
+          },
+          {
+            "atMs": 78314,
+            "usedJSHeapSize": 35797843,
+            "totalJSHeapSize": 94470559
+          },
+          {
+            "atMs": 78812.60000000149,
+            "usedJSHeapSize": 45194487,
+            "totalJSHeapSize": 99044879
+          },
+          {
+            "atMs": 79313.29999999702,
+            "usedJSHeapSize": 36403699,
+            "totalJSHeapSize": 99044879
+          },
+          {
+            "atMs": 79813.69999999553,
+            "usedJSHeapSize": 43556463,
+            "totalJSHeapSize": 99044879
+          },
+          {
+            "atMs": 80312.69999999553,
+            "usedJSHeapSize": 50656231,
+            "totalJSHeapSize": 99044879
+          },
+          {
+            "atMs": 80812.5,
+            "usedJSHeapSize": 41519559,
+            "totalJSHeapSize": 100754347
+          },
+          {
+            "atMs": 81312.39999999851,
+            "usedJSHeapSize": 37604831,
+            "totalJSHeapSize": 100781063
+          },
+          {
+            "atMs": 81813.19999999553,
+            "usedJSHeapSize": 36043675,
+            "totalJSHeapSize": 100781063
+          },
+          {
+            "atMs": 82313.19999999553,
+            "usedJSHeapSize": 32756783,
+            "totalJSHeapSize": 100781063
+          },
+          {
+            "atMs": 82831.39999999851,
+            "usedJSHeapSize": 54325667,
+            "totalJSHeapSize": 102362999
+          },
+          {
+            "atMs": 83312.69999999553,
+            "usedJSHeapSize": 37618055,
+            "totalJSHeapSize": 102209675
+          },
+          {
+            "atMs": 83812.69999999553,
+            "usedJSHeapSize": 46033243,
+            "totalJSHeapSize": 102209675
+          },
+          {
+            "atMs": 84313,
+            "usedJSHeapSize": 27397923,
+            "totalJSHeapSize": 102209675
+          },
+          {
+            "atMs": 84894.29999999702,
+            "usedJSHeapSize": 39501693,
+            "totalJSHeapSize": 103791253
+          },
+          {
+            "atMs": 85313.60000000149,
+            "usedJSHeapSize": 55196577,
+            "totalJSHeapSize": 103900073
+          },
+          {
+            "atMs": 85813.39999999851,
+            "usedJSHeapSize": 49264405,
+            "totalJSHeapSize": 105997225
+          },
+          {
+            "atMs": 86313,
+            "usedJSHeapSize": 37612761,
+            "totalJSHeapSize": 105997225
+          },
+          {
+            "atMs": 86813.69999999553,
+            "usedJSHeapSize": 56561841,
+            "totalJSHeapSize": 105997225
+          },
+          {
+            "atMs": 87313.19999999553,
+            "usedJSHeapSize": 45364202,
+            "totalJSHeapSize": 113716938
+          },
+          {
+            "atMs": 87814,
+            "usedJSHeapSize": 53322882,
+            "totalJSHeapSize": 113716938
+          },
+          {
+            "atMs": 88313.79999999702,
+            "usedJSHeapSize": 60379698,
+            "totalJSHeapSize": 113716938
+          },
+          {
+            "atMs": 88813.39999999851,
+            "usedJSHeapSize": 67508410,
+            "totalJSHeapSize": 113979082
+          },
+          {
+            "atMs": 89312.39999999851,
+            "usedJSHeapSize": 72597578,
+            "totalJSHeapSize": 118047846
+          },
+          {
+            "atMs": 89813.60000000149,
+            "usedJSHeapSize": 34644351,
+            "totalJSHeapSize": 114115283
+          },
+          {
+            "atMs": 90312.60000000149,
+            "usedJSHeapSize": 25548887,
+            "totalJSHeapSize": 108121095
+          },
+          {
+            "atMs": 90812.89999999851,
+            "usedJSHeapSize": 22291455,
+            "totalJSHeapSize": 108121095
+          },
+          {
+            "atMs": 91312.60000000149,
+            "usedJSHeapSize": 26921567,
+            "totalJSHeapSize": 109549707
+          },
+          {
+            "atMs": 91812.39999999851,
+            "usedJSHeapSize": 36162539,
+            "totalJSHeapSize": 109549707
+          },
+          {
+            "atMs": 92312.39999999851,
+            "usedJSHeapSize": 44095911,
+            "totalJSHeapSize": 109549707
+          },
+          {
+            "atMs": 92812.89999999851,
+            "usedJSHeapSize": 52742299,
+            "totalJSHeapSize": 109549707
+          },
+          {
+            "atMs": 93313,
+            "usedJSHeapSize": 51719961,
+            "totalJSHeapSize": 111131285
+          },
+          {
+            "atMs": 93813.69999999553,
+            "usedJSHeapSize": 49523237,
+            "totalJSHeapSize": 110977961
+          },
+          {
+            "atMs": 94312.79999999702,
+            "usedJSHeapSize": 40606913,
+            "totalJSHeapSize": 110977961
+          },
+          {
+            "atMs": 94812.89999999851,
+            "usedJSHeapSize": 57920697,
+            "totalJSHeapSize": 110977961
+          },
+          {
+            "atMs": 95312.69999999553,
+            "usedJSHeapSize": 45658990,
+            "totalJSHeapSize": 112559542
+          },
+          {
+            "atMs": 95813.29999999702,
+            "usedJSHeapSize": 34455027,
+            "totalJSHeapSize": 110308695
+          },
+          {
+            "atMs": 96313.5,
+            "usedJSHeapSize": 37239583,
+            "totalJSHeapSize": 105742751
+          },
+          {
+            "atMs": 96813.10000000149,
+            "usedJSHeapSize": 44368611,
+            "totalJSHeapSize": 105742751
+          },
+          {
+            "atMs": 97362.79999999702,
+            "usedJSHeapSize": 29904102,
+            "totalJSHeapSize": 107605878
+          },
+          {
+            "atMs": 97813.29999999702,
+            "usedJSHeapSize": 37522614,
+            "totalJSHeapSize": 107452554
+          },
+          {
+            "atMs": 98313.29999999702,
+            "usedJSHeapSize": 37483542,
+            "totalJSHeapSize": 107452554
+          },
+          {
+            "atMs": 98813.60000000149,
+            "usedJSHeapSize": 34315758,
+            "totalJSHeapSize": 107452554
+          },
+          {
+            "atMs": 99427.10000000149,
+            "usedJSHeapSize": 39168684,
+            "totalJSHeapSize": 109034132
+          },
+          {
+            "atMs": 99812.5,
+            "usedJSHeapSize": 42232068,
+            "totalJSHeapSize": 108880808
+          },
+          {
+            "atMs": 100312.5,
+            "usedJSHeapSize": 50605552,
+            "totalJSHeapSize": 108880808
+          },
+          {
+            "atMs": 100813,
+            "usedJSHeapSize": 59326632,
+            "totalJSHeapSize": 108880808
+          },
+          {
+            "atMs": 101313.79999999702,
+            "usedJSHeapSize": 40651380,
+            "totalJSHeapSize": 108880808
+          },
+          {
+            "atMs": 101813.60000000149,
+            "usedJSHeapSize": 62982850,
+            "totalJSHeapSize": 110571206
+          },
+          {
+            "atMs": 102313.10000000149,
+            "usedJSHeapSize": 58334778,
+            "totalJSHeapSize": 115289798
+          },
+          {
+            "atMs": 102813.5,
+            "usedJSHeapSize": 46765990,
+            "totalJSHeapSize": 115289798
+          },
+          {
+            "atMs": 103313.29999999702,
+            "usedJSHeapSize": 65499886,
+            "totalJSHeapSize": 115551942
+          },
+          {
+            "atMs": 103814.29999999702,
+            "usedJSHeapSize": 54695127,
+            "totalJSHeapSize": 122223079
+          },
+          {
+            "atMs": 104313.79999999702,
+            "usedJSHeapSize": 37221555,
+            "totalJSHeapSize": 117766251
+          },
+          {
+            "atMs": 104812.89999999851,
+            "usedJSHeapSize": 38444135,
+            "totalJSHeapSize": 111772063
+          },
+          {
+            "atMs": 105312.89999999851,
+            "usedJSHeapSize": 18012395,
+            "totalJSHeapSize": 111772063
+          },
+          {
+            "atMs": 105812.5,
+            "usedJSHeapSize": 46720458,
+            "totalJSHeapSize": 114792586
+          },
+          {
+            "atMs": 106313.5,
+            "usedJSHeapSize": 32316498,
+            "totalJSHeapSize": 114792586
+          },
+          {
+            "atMs": 106812.89999999851,
+            "usedJSHeapSize": 29130794,
+            "totalJSHeapSize": 114792586
+          },
+          {
+            "atMs": 107312.89999999851,
+            "usedJSHeapSize": 29244932,
+            "totalJSHeapSize": 91081732
+          },
+          {
+            "atMs": 107813.5,
+            "usedJSHeapSize": 29480664,
+            "totalJSHeapSize": 92510344
+          },
+          {
+            "atMs": 108312.60000000149,
+            "usedJSHeapSize": 42337760,
+            "totalJSHeapSize": 97491080
+          },
+          {
+            "atMs": 108813.39999999851,
+            "usedJSHeapSize": 50591960,
+            "totalJSHeapSize": 97491080
+          },
+          {
+            "atMs": 109313.19999999553,
+            "usedJSHeapSize": 32038988,
+            "totalJSHeapSize": 97753224
+          },
+          {
+            "atMs": 109811.89999999851,
+            "usedJSHeapSize": 38145846,
+            "totalJSHeapSize": 100383378
+          },
+          {
+            "atMs": 110313.5,
+            "usedJSHeapSize": 45074443,
+            "totalJSHeapSize": 104161859
+          },
+          {
+            "atMs": 110813.69999999553,
+            "usedJSHeapSize": 30393583,
+            "totalJSHeapSize": 101024159
+          },
+          {
+            "atMs": 111313.69999999553,
+            "usedJSHeapSize": 18827211,
+            "totalJSHeapSize": 101024159
+          },
+          {
+            "atMs": 111874.39999999851,
+            "usedJSHeapSize": 36778151,
+            "totalJSHeapSize": 102452751
+          },
+          {
+            "atMs": 112313.5,
+            "usedJSHeapSize": 26996583,
+            "totalJSHeapSize": 102452751
+          },
+          {
+            "atMs": 112813.19999999553,
+            "usedJSHeapSize": 33949947,
+            "totalJSHeapSize": 102452751
+          },
+          {
+            "atMs": 113313.79999999702,
+            "usedJSHeapSize": 41128435,
+            "totalJSHeapSize": 102452751
+          },
+          {
+            "atMs": 113945.79999999702,
+            "usedJSHeapSize": 60155939,
+            "totalJSHeapSize": 105101975
+          },
+          {
+            "atMs": 114312.60000000149,
+            "usedJSHeapSize": 60326223,
+            "totalJSHeapSize": 106783659
+          },
+          {
+            "atMs": 114812.79999999702,
+            "usedJSHeapSize": 62963307,
+            "totalJSHeapSize": 106783659
+          },
+          {
+            "atMs": 115313.5,
+            "usedJSHeapSize": 59727459,
+            "totalJSHeapSize": 106783659
+          },
+          {
+            "atMs": 115813.10000000149,
+            "usedJSHeapSize": 56585107,
+            "totalJSHeapSize": 107307947
+          },
+          {
+            "atMs": 116313.39999999851,
+            "usedJSHeapSize": 60912281,
+            "totalJSHeapSize": 115289801
+          },
+          {
+            "atMs": 116813.10000000149,
+            "usedJSHeapSize": 69793997,
+            "totalJSHeapSize": 115551945
+          },
+          {
+            "atMs": 117313.29999999702,
+            "usedJSHeapSize": 50511361,
+            "totalJSHeapSize": 116076233
+          },
+          {
+            "atMs": 117813.29999999702,
+            "usedJSHeapSize": 59091285,
+            "totalJSHeapSize": 116076233
+          },
+          {
+            "atMs": 118313.5,
+            "usedJSHeapSize": 59779127,
+            "totalJSHeapSize": 119601639
+          },
+          {
+            "atMs": 118813.69999999553,
+            "usedJSHeapSize": 43648079,
+            "totalJSHeapSize": 116979819
+          },
+          {
+            "atMs": 119312.69999999553,
+            "usedJSHeapSize": 26176923,
+            "totalJSHeapSize": 110985631
+          },
+          {
+            "atMs": 119813.69999999553,
+            "usedJSHeapSize": 43777619,
+            "totalJSHeapSize": 110985631
+          },
+          {
+            "atMs": 120313.10000000149,
+            "usedJSHeapSize": 32857663,
+            "totalJSHeapSize": 112414223
+          },
+          {
+            "atMs": 120813.29999999702,
+            "usedJSHeapSize": 48190363,
+            "totalJSHeapSize": 112414223
+          },
+          {
+            "atMs": 121313.39999999851,
+            "usedJSHeapSize": 27436383,
+            "totalJSHeapSize": 112414223
+          },
+          {
+            "atMs": 121813,
+            "usedJSHeapSize": 34496871,
+            "totalJSHeapSize": 112414223
+          },
+          {
+            "atMs": 122313.19999999553,
+            "usedJSHeapSize": 48871391,
+            "totalJSHeapSize": 114277015
+          },
+          {
+            "atMs": 122813.10000000149,
+            "usedJSHeapSize": 62801455,
+            "totalJSHeapSize": 114123691
+          },
+          {
+            "atMs": 123313.19999999553,
+            "usedJSHeapSize": 59900523,
+            "totalJSHeapSize": 114123691
+          },
+          {
+            "atMs": 123813.39999999851,
+            "usedJSHeapSize": 56732247,
+            "totalJSHeapSize": 114123691
+          },
+          {
+            "atMs": 124326,
+            "usedJSHeapSize": 52937245,
+            "totalJSHeapSize": 115705269
+          },
+          {
+            "atMs": 124813.39999999851,
+            "usedJSHeapSize": 67681581,
+            "totalJSHeapSize": 116076233
+          },
+          {
+            "atMs": 125313.19999999553,
+            "usedJSHeapSize": 48389617,
+            "totalJSHeapSize": 116076233
+          },
+          {
+            "atMs": 125812.60000000149,
+            "usedJSHeapSize": 57095761,
+            "totalJSHeapSize": 116338377
+          },
+          {
+            "atMs": 126393.10000000149,
+            "usedJSHeapSize": 67881435,
+            "totalJSHeapSize": 119601639
+          },
+          {
+            "atMs": 126813,
+            "usedJSHeapSize": 61180275,
+            "totalJSHeapSize": 124582375
+          },
+          {
+            "atMs": 127313.39999999851,
+            "usedJSHeapSize": 78982519,
+            "totalJSHeapSize": 125106663
+          },
+          {
+            "atMs": 127813.60000000149,
+            "usedJSHeapSize": 25715659,
+            "totalJSHeapSize": 112820639
+          },
+          {
+            "atMs": 128312.69999999553,
+            "usedJSHeapSize": 44919751,
+            "totalJSHeapSize": 112820639
+          },
+          {
+            "atMs": 128812.60000000149,
+            "usedJSHeapSize": 28416319,
+            "totalJSHeapSize": 114249231
+          },
+          {
+            "atMs": 129313.29999999702,
+            "usedJSHeapSize": 35773987,
+            "totalJSHeapSize": 114249231
+          },
+          {
+            "atMs": 129813.79999999702,
+            "usedJSHeapSize": 42853643,
+            "totalJSHeapSize": 114249231
+          },
+          {
+            "atMs": 130313.19999999553,
+            "usedJSHeapSize": 50048867,
+            "totalJSHeapSize": 114249231
+          },
+          {
+            "atMs": 130813.60000000149,
+            "usedJSHeapSize": 47500947,
+            "totalJSHeapSize": 115958699
+          },
+          {
+            "atMs": 131313.5,
+            "usedJSHeapSize": 18929087,
+            "totalJSHeapSize": 92654599
+          },
+          {
+            "atMs": 131812.8999999985,
+            "usedJSHeapSize": 15740363,
+            "totalJSHeapSize": 92654599
+          },
+          {
+            "atMs": 132313.6000000015,
+            "usedJSHeapSize": 40456291,
+            "totalJSHeapSize": 92654599
+          },
+          {
+            "atMs": 132812.79999999702,
+            "usedJSHeapSize": 34118755,
+            "totalJSHeapSize": 94083211
+          },
+          {
+            "atMs": 133312.8999999985,
+            "usedJSHeapSize": 45412055,
+            "totalJSHeapSize": 94083211
+          },
+          {
+            "atMs": 133813.19999999553,
+            "usedJSHeapSize": 25806011,
+            "totalJSHeapSize": 94083211
+          },
+          {
+            "atMs": 134313.6000000015,
+            "usedJSHeapSize": 34463731,
+            "totalJSHeapSize": 94083211
+          },
+          {
+            "atMs": 134813.6000000015,
+            "usedJSHeapSize": 28617689,
+            "totalJSHeapSize": 95773609
+          },
+          {
+            "atMs": 135313,
+            "usedJSHeapSize": 38940067,
+            "totalJSHeapSize": 96035395
+          },
+          {
+            "atMs": 135812.79999999702,
+            "usedJSHeapSize": 24234595,
+            "totalJSHeapSize": 92897695
+          },
+          {
+            "atMs": 136313.6000000015,
+            "usedJSHeapSize": 41495999,
+            "totalJSHeapSize": 92897695
+          },
+          {
+            "atMs": 136813.19999999553,
+            "usedJSHeapSize": 25128415,
+            "totalJSHeapSize": 94479611
+          },
+          {
+            "atMs": 137312.8999999985,
+            "usedJSHeapSize": 39331107,
+            "totalJSHeapSize": 94326287
+          },
+          {
+            "atMs": 137813,
+            "usedJSHeapSize": 46381703,
+            "totalJSHeapSize": 94326287
+          },
+          {
+            "atMs": 138313,
+            "usedJSHeapSize": 25939643,
+            "totalJSHeapSize": 94326287
+          },
+          {
+            "atMs": 138845,
+            "usedJSHeapSize": 34413535,
+            "totalJSHeapSize": 96189079
+          },
+          {
+            "atMs": 139312.6000000015,
+            "usedJSHeapSize": 42232143,
+            "totalJSHeapSize": 97084331
+          },
+          {
+            "atMs": 139812.8999999985,
+            "usedJSHeapSize": 41291887,
+            "totalJSHeapSize": 97084331
+          },
+          {
+            "atMs": 140313.19999999553,
+            "usedJSHeapSize": 38123227,
+            "totalJSHeapSize": 97084331
+          },
+          {
+            "atMs": 140914,
+            "usedJSHeapSize": 36164037,
+            "totalJSHeapSize": 101025205
+          },
+          {
+            "atMs": 141313.6000000015,
+            "usedJSHeapSize": 35324273,
+            "totalJSHeapSize": 102969033
+          },
+          {
+            "atMs": 141812.3999999985,
+            "usedJSHeapSize": 43774189,
+            "totalJSHeapSize": 102969033
+          },
+          {
+            "atMs": 142313.3999999985,
+            "usedJSHeapSize": 52379445,
+            "totalJSHeapSize": 102969033
+          },
+          {
+            "atMs": 142813.29999999702,
+            "usedJSHeapSize": 58450729,
+            "totalJSHeapSize": 103493321
+          },
+          {
+            "atMs": 143313.5,
+            "usedJSHeapSize": 58609121,
+            "totalJSHeapSize": 103493321
+          },
+          {
+            "atMs": 143814.3999999985,
+            "usedJSHeapSize": 58923037,
+            "totalJSHeapSize": 104017609
+          },
+          {
+            "atMs": 144314.29999999702,
+            "usedJSHeapSize": 59167277,
+            "totalJSHeapSize": 104017609
+          },
+          {
+            "atMs": 144813.6000000015,
+            "usedJSHeapSize": 59413737,
+            "totalJSHeapSize": 104279753
+          },
+          {
+            "atMs": 145313.5,
+            "usedJSHeapSize": 59737085,
+            "totalJSHeapSize": 104279753
+          },
+          {
+            "atMs": 145814.19999999553,
+            "usedJSHeapSize": 60008501,
+            "totalJSHeapSize": 104541897
+          },
+          {
+            "atMs": 146313.8999999985,
+            "usedJSHeapSize": 60226357,
+            "totalJSHeapSize": 105066185
+          }
+        ]
+      },
+      "details": {
+        "observationDurationMs": 120000,
+        "cycles": 58,
+        "fps": {
+          "durationMs": 120016.2,
+          "frames": 6821,
+          "fps": 56.833994077466215,
+          "baselineFrameMs": 16.699999999999818,
+          "missedVsyncEstimate": 380,
+          "estimateMethod": "measured-idle-rAF-baseline",
+          "over33ms": 59,
+          "over50ms": 59,
+          "p50FrameMs": 16.69999999999709,
+          "p95FrameMs": 18,
+          "p99FrameMs": 18.599999999998545,
+          "maxFrameMs": 135,
+          "valid": true,
+          "visibilityChangeCount": 0
+        },
+        "before": {
+          "atMs": 22311.39999999851,
+          "jsHeap": {
+            "usedJSHeapSize": 23869440,
+            "totalJSHeapSize": 84283552,
+            "jsHeapSizeLimit": 4395630592
+          },
+          "jsHeapStatus": "measured",
+          "jsHeapReasonCode": null,
+          "renderer": {
+            "memory": {
+              "geometries": 451,
+              "textures": 27
+            },
+            "render": {
+              "calls": 34,
+              "triangles": 1724,
+              "points": 0,
+              "lines": 12
+            }
+          },
+          "webgl": {
+            "maxTextureSize": 16384,
+            "maxCubeMapTextureSize": 16384,
+            "maxRenderbufferSize": 16384,
+            "antialias": true,
+            "contextLost": false
+          },
+          "domNodes": 1942,
+          "canvases": 3,
+          "viewport": {
+            "outerWidth": 1440,
+            "outerHeight": 900,
+            "innerWidth": 1440,
+            "innerHeight": 757,
+            "devicePixelRatio": 2,
+            "visibilityState": "visible",
+            "mainCanvas": {
+              "width": 1648,
+              "height": 784
+            }
+          },
+          "captureCapabilities": {
+            "mediaRecorder": true,
+            "canvasCaptureStream": true,
+            "requestFrame": true
+          },
+          "contextLost": 0,
+          "contextRestored": 0
+        },
+        "after": {
+          "atMs": 145506.6000000015,
+          "jsHeap": {
+            "usedJSHeapSize": 54083877,
+            "totalJSHeapSize": 104541897,
+            "jsHeapSizeLimit": 4395630592
+          },
+          "jsHeapStatus": "measured",
+          "jsHeapReasonCode": null,
+          "renderer": {
+            "memory": {
+              "geometries": 448,
+              "textures": 27
+            },
+            "render": {
+              "calls": 34,
+              "triangles": 1724,
+              "points": 0,
+              "lines": 12
+            }
+          },
+          "webgl": {
+            "maxTextureSize": 16384,
+            "maxCubeMapTextureSize": 16384,
+            "maxRenderbufferSize": 16384,
+            "antialias": true,
+            "contextLost": false
+          },
+          "domNodes": 1939,
+          "canvases": 3,
+          "viewport": {
+            "outerWidth": 1440,
+            "outerHeight": 900,
+            "innerWidth": 1440,
+            "innerHeight": 757,
+            "devicePixelRatio": 2,
+            "visibilityState": "visible",
+            "mainCanvas": {
+              "width": 1648,
+              "height": 784
+            }
+          },
+          "captureCapabilities": {
+            "mediaRecorder": true,
+            "canvasCaptureStream": true,
+            "requestFrame": true
+          },
+          "contextLost": 0,
+          "contextRestored": 0
+        },
+        "usedJSHeapDelta": 30214437,
+        "sceneCount": 4,
+        "objectCount": 24
+      },
+      "events": {
+        "alertCount": 0,
+        "contextLost": 0,
+        "contextRestored": 0,
+        "errorCodes": [],
+        "outputs": [
+          {
+            "sequence": 1,
+            "kind": "screenshot-png",
+            "size": 291623,
+            "type": "image/png",
+            "extension": null,
+            "validation": {
+              "status": "passed",
+              "format": "png",
+              "signatureValid": true,
+              "width": 1920,
+              "height": 1080,
+              "centralDirectoryFound": null,
+              "entryCount": null,
+              "expectedEntriesPresent": null,
+              "allEntriesNonEmpty": null
+            }
+          },
+          {
+            "sequence": 2,
+            "kind": "seedance-zip",
+            "size": 733813,
+            "type": "application/zip",
+            "extension": null,
+            "validation": {
+              "status": "passed",
+              "format": "zip",
+              "signatureValid": true,
+              "width": null,
+              "height": null,
+              "centralDirectoryFound": true,
+              "entryCount": 5,
+              "expectedEntriesPresent": true,
+              "allEntriesNonEmpty": true
+            }
+          }
+        ]
+      },
+      "processMemory": {
+        "status": "measured",
+        "metric": "rss-sum",
+        "beforeBytes": 1405861888,
+        "afterBytes": 1268989952,
+        "peakBytes": 1410170880,
+        "deltaBytes": -136871936,
+        "sampleCount": 248,
+        "processCountPeak": 9,
+        "reasonCode": null
+      }
+    }
+  ],
+  "memory": {
+    "processMemoryMetric": "rss-sum",
+    "processMemorySampledPeakBytes": 1440301056,
+    "processMemoryStatus": "measured",
+    "processMemoryReasonCode": null,
+    "jsHeapSampledPeakBytes": 78982519,
+    "jsHeapStatus": "measured",
+    "jsHeapReasonCode": null,
+    "longSession": {
+      "observationDurationMs": 120000,
+      "processMemoryDeltaBytes": -136871936,
+      "usedJSHeapDeltaBytes": 30214437
+    }
+  },
+  "processMemorySampling": {
+    "requestedIntervalMs": 500,
+    "effectiveIntervalMs": 500,
+    "methodOverhead": "posix-ps-process-table"
+  },
+  "processSamples": [
+    {
+      "atEpochMs": 1784146085058,
+      "memoryBytes": 859553792,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146085667,
+      "memoryBytes": 880214016,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146086102,
+      "memoryBytes": 895647744,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146086589,
+      "memoryBytes": 898301952,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146087094,
+      "memoryBytes": 896139264,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146087593,
+      "memoryBytes": 897236992,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146088099,
+      "memoryBytes": 915046400,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146088589,
+      "memoryBytes": 988168192,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146089090,
+      "memoryBytes": 988872704,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146089593,
+      "memoryBytes": 1243054080,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146090093,
+      "memoryBytes": 1244364800,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146090604,
+      "memoryBytes": 1245708288,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146091100,
+      "memoryBytes": 1306951680,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146091602,
+      "memoryBytes": 1382744064,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146092102,
+      "memoryBytes": 1409204224,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146092602,
+      "memoryBytes": 1412988928,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146093107,
+      "memoryBytes": 1434861568,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146093611,
+      "memoryBytes": 1438351360,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146094114,
+      "memoryBytes": 1440301056,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146094611,
+      "memoryBytes": 1406337024,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146095116,
+      "memoryBytes": 1412382720,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146095615,
+      "memoryBytes": 1411956736,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146096117,
+      "memoryBytes": 1412382720,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146096622,
+      "memoryBytes": 1411743744,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146097122,
+      "memoryBytes": 1411645440,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146097621,
+      "memoryBytes": 1406844928,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146098124,
+      "memoryBytes": 1407156224,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146098624,
+      "memoryBytes": 1407401984,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146099124,
+      "memoryBytes": 1407582208,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146099628,
+      "memoryBytes": 1424900096,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146100131,
+      "memoryBytes": 1327759360,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146100640,
+      "memoryBytes": 1326219264,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146101138,
+      "memoryBytes": 1345585152,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146101636,
+      "memoryBytes": 1345830912,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146102138,
+      "memoryBytes": 1345961984,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146102637,
+      "memoryBytes": 1346404352,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146103137,
+      "memoryBytes": 1349222400,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146103642,
+      "memoryBytes": 1355120640,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146104148,
+      "memoryBytes": 1415528448,
+      "processCount": 10,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146104645,
+      "memoryBytes": 1404059648,
+      "processCount": 9,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146105148,
+      "memoryBytes": 1404108800,
+      "processCount": 9,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146105649,
+      "memoryBytes": 1404403712,
+      "processCount": 9,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146106150,
+      "memoryBytes": 1405812736,
+      "processCount": 9,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146106652,
+      "memoryBytes": 1405829120,
+      "processCount": 9,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146107156,
+      "memoryBytes": 1405861888,
+      "processCount": 9,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146107656,
+      "memoryBytes": 1410039808,
+      "processCount": 9,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146108159,
+      "memoryBytes": 1410138112,
+      "processCount": 9,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146108662,
+      "memoryBytes": 1410170880,
+      "processCount": 9,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146109164,
+      "memoryBytes": 1401896960,
+      "processCount": 9,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146109666,
+      "memoryBytes": 1398374400,
+      "processCount": 9,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146110168,
+      "memoryBytes": 1398882304,
+      "processCount": 9,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146110669,
+      "memoryBytes": 1398898688,
+      "processCount": 9,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146111172,
+      "memoryBytes": 1398800384,
+      "processCount": 9,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146111674,
+      "memoryBytes": 1399472128,
+      "processCount": 9,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146112174,
+      "memoryBytes": 1402798080,
+      "processCount": 9,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146112677,
+      "memoryBytes": 1402486784,
+      "processCount": 9,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146113179,
+      "memoryBytes": 1402716160,
+      "processCount": 9,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146113683,
+      "memoryBytes": 1404665856,
+      "processCount": 9,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146114185,
+      "memoryBytes": 1408548864,
+      "processCount": 9,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146114685,
+      "memoryBytes": 1409024000,
+      "processCount": 9,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146115187,
+      "memoryBytes": 1322860544,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146115685,
+      "memoryBytes": 1333231616,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146116191,
+      "memoryBytes": 1342029824,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146116689,
+      "memoryBytes": 1342242816,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146117190,
+      "memoryBytes": 1342652416,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146117692,
+      "memoryBytes": 1342750720,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146118193,
+      "memoryBytes": 1343225856,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146118695,
+      "memoryBytes": 1343275008,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146119198,
+      "memoryBytes": 1342980096,
+      "processCount": 8,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146119698,
+      "memoryBytes": 1314963456,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146120202,
+      "memoryBytes": 1315209216,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146120703,
+      "memoryBytes": 1315274752,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146121204,
+      "memoryBytes": 1315340288,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146121706,
+      "memoryBytes": 1309442048,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146122208,
+      "memoryBytes": 1309671424,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146122711,
+      "memoryBytes": 1310687232,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146123212,
+      "memoryBytes": 1310703616,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146123717,
+      "memoryBytes": 1310720000,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146124220,
+      "memoryBytes": 1314537472,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146124721,
+      "memoryBytes": 1319550976,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146125221,
+      "memoryBytes": 1319534592,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146125722,
+      "memoryBytes": 1319829504,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146126223,
+      "memoryBytes": 1319796736,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146126727,
+      "memoryBytes": 1319796736,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146127226,
+      "memoryBytes": 1319469056,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146127729,
+      "memoryBytes": 1319174144,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146128233,
+      "memoryBytes": 1319354368,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146128732,
+      "memoryBytes": 1319272448,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146129235,
+      "memoryBytes": 1319190528,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146129735,
+      "memoryBytes": 1319190528,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146130238,
+      "memoryBytes": 1319239680,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146130739,
+      "memoryBytes": 1319288832,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146131241,
+      "memoryBytes": 1319403520,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146131744,
+      "memoryBytes": 1319501824,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146132244,
+      "memoryBytes": 1319583744,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146132750,
+      "memoryBytes": 1320386560,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146133255,
+      "memoryBytes": 1320386560,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146133754,
+      "memoryBytes": 1320402944,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146134257,
+      "memoryBytes": 1306066944,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146134757,
+      "memoryBytes": 1308360704,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146135260,
+      "memoryBytes": 1308377088,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146135762,
+      "memoryBytes": 1308393472,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146136266,
+      "memoryBytes": 1308082176,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146136767,
+      "memoryBytes": 1307721728,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146137268,
+      "memoryBytes": 1307721728,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146137770,
+      "memoryBytes": 1307688960,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146138270,
+      "memoryBytes": 1307705344,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146138773,
+      "memoryBytes": 1308786688,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146139279,
+      "memoryBytes": 1308819456,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146139778,
+      "memoryBytes": 1308835840,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146140277,
+      "memoryBytes": 1308835840,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146140781,
+      "memoryBytes": 1310179328,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146141284,
+      "memoryBytes": 1310097408,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146141784,
+      "memoryBytes": 1310179328,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146142287,
+      "memoryBytes": 1310179328,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146142786,
+      "memoryBytes": 1310310400,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146143286,
+      "memoryBytes": 1310310400,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146143789,
+      "memoryBytes": 1310343168,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146144290,
+      "memoryBytes": 1310048256,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146144792,
+      "memoryBytes": 1312030720,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146145294,
+      "memoryBytes": 1312866304,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146145799,
+      "memoryBytes": 1313390592,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146146300,
+      "memoryBytes": 1308655616,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146146800,
+      "memoryBytes": 1308672000,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146147304,
+      "memoryBytes": 1311703040,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146147805,
+      "memoryBytes": 1311621120,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146148305,
+      "memoryBytes": 1312964608,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146148809,
+      "memoryBytes": 1312964608,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146149311,
+      "memoryBytes": 1314242560,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146149812,
+      "memoryBytes": 1314242560,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146150318,
+      "memoryBytes": 1314226176,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146150817,
+      "memoryBytes": 1314226176,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146151322,
+      "memoryBytes": 1314848768,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146151822,
+      "memoryBytes": 1314914304,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146152322,
+      "memoryBytes": 1314570240,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146152822,
+      "memoryBytes": 1314570240,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146153325,
+      "memoryBytes": 1314242560,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146153828,
+      "memoryBytes": 1314324480,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146154329,
+      "memoryBytes": 1314340864,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146154831,
+      "memoryBytes": 1314422784,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146155334,
+      "memoryBytes": 1314422784,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146155834,
+      "memoryBytes": 1314471936,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146156337,
+      "memoryBytes": 1314439168,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146156836,
+      "memoryBytes": 1314439168,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146157340,
+      "memoryBytes": 1315127296,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146157840,
+      "memoryBytes": 1315127296,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146158343,
+      "memoryBytes": 1312489472,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146158845,
+      "memoryBytes": 1312489472,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146159350,
+      "memoryBytes": 1315979264,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146159851,
+      "memoryBytes": 1315979264,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146160352,
+      "memoryBytes": 1316012032,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146160856,
+      "memoryBytes": 1315717120,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146161354,
+      "memoryBytes": 1315504128,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146161856,
+      "memoryBytes": 1315504128,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146162358,
+      "memoryBytes": 1315504128,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146162862,
+      "memoryBytes": 1315438592,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146163363,
+      "memoryBytes": 1315454976,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146163866,
+      "memoryBytes": 1315553280,
+      "processCount": 7,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146164370,
+      "memoryBytes": 1315569664,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146164870,
+      "memoryBytes": 1315569664,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146165370,
+      "memoryBytes": 1315569664,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146165869,
+      "memoryBytes": 1318977536,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146166371,
+      "memoryBytes": 1318977536,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146166874,
+      "memoryBytes": 1318895616,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146167373,
+      "memoryBytes": 1318977536,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146167876,
+      "memoryBytes": 1319075840,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146168377,
+      "memoryBytes": 1319075840,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146168885,
+      "memoryBytes": 1318715392,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146169385,
+      "memoryBytes": 1318748160,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146169886,
+      "memoryBytes": 1318535168,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146170385,
+      "memoryBytes": 1319256064,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146170887,
+      "memoryBytes": 1318731776,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146171387,
+      "memoryBytes": 1318830080,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146171891,
+      "memoryBytes": 1319862272,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146172392,
+      "memoryBytes": 1324089344,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146172894,
+      "memoryBytes": 1324154880,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146173395,
+      "memoryBytes": 1324236800,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146173899,
+      "memoryBytes": 1327120384,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146174404,
+      "memoryBytes": 1332854784,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146174914,
+      "memoryBytes": 1333166080,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146175403,
+      "memoryBytes": 1333166080,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146175905,
+      "memoryBytes": 1333510144,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146176407,
+      "memoryBytes": 1333510144,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146176910,
+      "memoryBytes": 1333510144,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146177410,
+      "memoryBytes": 1333215232,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146177911,
+      "memoryBytes": 1332903936,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146178415,
+      "memoryBytes": 1332920320,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146178917,
+      "memoryBytes": 1332920320,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146179420,
+      "memoryBytes": 1332953088,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146179924,
+      "memoryBytes": 1333067776,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146180430,
+      "memoryBytes": 1333821440,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146180923,
+      "memoryBytes": 1333673984,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146181426,
+      "memoryBytes": 1333624832,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146181925,
+      "memoryBytes": 1333624832,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146182427,
+      "memoryBytes": 1334296576,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146182931,
+      "memoryBytes": 1324597248,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146183435,
+      "memoryBytes": 1324613632,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146183934,
+      "memoryBytes": 1324613632,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146184436,
+      "memoryBytes": 1324695552,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146184938,
+      "memoryBytes": 1324695552,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146185442,
+      "memoryBytes": 1324417024,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146185942,
+      "memoryBytes": 1324417024,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146186446,
+      "memoryBytes": 1324253184,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146186949,
+      "memoryBytes": 1327431680,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146187447,
+      "memoryBytes": 1327415296,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146187950,
+      "memoryBytes": 1327448064,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146188452,
+      "memoryBytes": 1329201152,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146188954,
+      "memoryBytes": 1331920896,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146189457,
+      "memoryBytes": 1332002816,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146189957,
+      "memoryBytes": 1332002816,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146190462,
+      "memoryBytes": 1334067200,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146190961,
+      "memoryBytes": 1334198272,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146191462,
+      "memoryBytes": 1334198272,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146191965,
+      "memoryBytes": 1334231040,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146192463,
+      "memoryBytes": 1334378496,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146192966,
+      "memoryBytes": 1334689792,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146193468,
+      "memoryBytes": 1334558720,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146193971,
+      "memoryBytes": 1334575104,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146194470,
+      "memoryBytes": 1334263808,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146194970,
+      "memoryBytes": 1322057728,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146195470,
+      "memoryBytes": 1322057728,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146195971,
+      "memoryBytes": 1322008576,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146196469,
+      "memoryBytes": 1322008576,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146196971,
+      "memoryBytes": 1322139648,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146197472,
+      "memoryBytes": 1322237952,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146197973,
+      "memoryBytes": 1322156032,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146198475,
+      "memoryBytes": 1322156032,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146198977,
+      "memoryBytes": 1324351488,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146199485,
+      "memoryBytes": 1324384256,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146199983,
+      "memoryBytes": 1324384256,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146200485,
+      "memoryBytes": 1305542656,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146200988,
+      "memoryBytes": 1307033600,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146201489,
+      "memoryBytes": 1311850496,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146201991,
+      "memoryBytes": 1311883264,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146202492,
+      "memoryBytes": 1311571968,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146202992,
+      "memoryBytes": 1313619968,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146203496,
+      "memoryBytes": 1318731776,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146204003,
+      "memoryBytes": 1315602432,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146204501,
+      "memoryBytes": 1300578304,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146205002,
+      "memoryBytes": 1301364736,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146205504,
+      "memoryBytes": 1288830976,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146206005,
+      "memoryBytes": 1288830976,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146206508,
+      "memoryBytes": 1288847360,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146207007,
+      "memoryBytes": 1283211264,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146207512,
+      "memoryBytes": 1283735552,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146208011,
+      "memoryBytes": 1283719168,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146208517,
+      "memoryBytes": 1283784704,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146209015,
+      "memoryBytes": 1284112384,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146209522,
+      "memoryBytes": 1284751360,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146210023,
+      "memoryBytes": 1284603904,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146210524,
+      "memoryBytes": 1284554752,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146211025,
+      "memoryBytes": 1283981312,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146211527,
+      "memoryBytes": 1286029312,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146212029,
+      "memoryBytes": 1291419648,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146212532,
+      "memoryBytes": 1291911168,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146213035,
+      "memoryBytes": 1292255232,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146213535,
+      "memoryBytes": 1292550144,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146214037,
+      "memoryBytes": 1292566528,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146214539,
+      "memoryBytes": 1292566528,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146215040,
+      "memoryBytes": 1292566528,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146215542,
+      "memoryBytes": 1293352960,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146216046,
+      "memoryBytes": 1293467648,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146216547,
+      "memoryBytes": 1293484032,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146217049,
+      "memoryBytes": 1293484032,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146217550,
+      "memoryBytes": 1293533184,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146218055,
+      "memoryBytes": 1293533184,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146218554,
+      "memoryBytes": 1293500416,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146219056,
+      "memoryBytes": 1270071296,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146219556,
+      "memoryBytes": 1269858304,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146220059,
+      "memoryBytes": 1269858304,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146220565,
+      "memoryBytes": 1269809152,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146221061,
+      "memoryBytes": 1269809152,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146221565,
+      "memoryBytes": 1269858304,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146222067,
+      "memoryBytes": 1269858304,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146222569,
+      "memoryBytes": 1269841920,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146223072,
+      "memoryBytes": 1269841920,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146223571,
+      "memoryBytes": 1270464512,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146224075,
+      "memoryBytes": 1271218176,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146224578,
+      "memoryBytes": 1271234560,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146225081,
+      "memoryBytes": 1271332864,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146225584,
+      "memoryBytes": 1271332864,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146226084,
+      "memoryBytes": 1274003456,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146226588,
+      "memoryBytes": 1274626048,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146227088,
+      "memoryBytes": 1274642432,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146227588,
+      "memoryBytes": 1274036224,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146228089,
+      "memoryBytes": 1274101760,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146228592,
+      "memoryBytes": 1274101760,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146229092,
+      "memoryBytes": 1268711424,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146229595,
+      "memoryBytes": 1268711424,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146230097,
+      "memoryBytes": 1268711424,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146230599,
+      "memoryBytes": 1268826112,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146231102,
+      "memoryBytes": 1268989952,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146231350,
+      "memoryBytes": 1268727808,
+      "processCount": 6,
+      "errorCode": null
+    },
+    {
+      "atEpochMs": 1784146231398,
+      "memoryBytes": 1268744192,
+      "processCount": 6,
+      "errorCode": null
+    }
+  ],
+  "browserEvents": {
+    "consoleCollection": "measured",
+    "consoleErrorCount": 0,
+    "exceptionCount": 0,
+    "crashStatus": "not-observed",
+    "detachedStatus": "not-observed",
+    "consoleLimitationCode": null,
+    "crashDetectionLimitationCode": null
+  },
+  "verdict": {
+    "completed": true,
+    "matrixEvidenceEligible": true,
+    "evidenceEligibilityBasis": "operator-attested-physical-machine",
+    "failedScenarios": [],
+    "crash": {
+      "status": "not-observed",
+      "detection": "cdp-target-and-owned-process",
+      "reasonCode": null
+    },
+    "webglContextLost": {
+      "status": "not-observed",
+      "count": 0,
+      "observationDurationMs": 147239
+    },
+    "optimizationDecision": "No product limit or optimization is inferred automatically; compare this evidence across the required real browsers first."
+  },
+  "evidencePolicy": {
+    "schemaVersion": 1,
+    "exclude": [
+      "hostname",
+      "username",
+      "absolute-path",
+      "browser-profile",
+      "project-content"
+    ],
+    "unsupportedMetricValue": null,
+    "unsupportedMetricReasonRequired": true,
+    "ciOrEmulationCountsAsRealMachine": false
+  },
+  "cleanup": {
+    "status": "passed",
+    "errors": [],
+    "pageTeardown": {
+      "cleaned": true,
+      "errorCodes": []
+    }
+  }
+}

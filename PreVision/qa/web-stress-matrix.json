@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "taskId": "04.web-cross-platform-stress",
+  "runtimeMode": "real-browser-loopback",
+  "resultSchema": "qa/web-stress-evidence-schema.json",
+  "requiredPlatforms": [
+    { "os": "macOS", "browser": "chrome", "realMachineRequired": true },
+    { "os": "macOS", "browser": "safari", "realMachineRequired": true },
+    { "os": "Windows", "browser": "chrome", "realMachineRequired": true },
+    { "os": "Windows", "browser": "edge", "realMachineRequired": true }
+  ],
+  "viewport": { "outerWidth": 1440, "outerHeight": 900 },
+  "panorama": { "width": 4096, "height": 2048, "ratio": "2:1", "format": "image/jpeg" },
+  "typicalScene": { "objectCount": 24, "sceneCount": 4 },
+  "scenarioOrder": [
+    "default-load",
+    "typical-multi-object",
+    "panorama-4096x2048",
+    "repeated-scene-switch",
+    "short-shot-playback",
+    "screenshot-export",
+    "short-recording",
+    "seedance-export",
+    "long-session"
+  ],
+  "requiredMetrics": [
+    "navigation-timing",
+    "js-heap",
+    "browser-process-memory-with-platform-semantics",
+    "gpu-webgl",
+    "fps-and-dropped-frame-estimate",
+    "peak-memory",
+    "long-session-growth",
+    "crash",
+    "webgl-context-lost"
+  ],
+  "profiles": {
+    "smoke": {
+      "settleMs": 350,
+      "memorySampleMs": 250,
+      "sceneSwitchIterations": 8,
+      "fpsSampleMs": 1800,
+      "playbackMs": 1400,
+      "recordingSeconds": 0.75,
+      "longSessionDurationMs": 8000,
+      "longSessionActionIntervalMs": 500,
+      "cooldownMs": 600
+    },
+    "standard": {
+      "settleMs": 1000,
+      "memorySampleMs": 500,
+      "sceneSwitchIterations": 40,
+      "fpsSampleMs": 8000,
+      "playbackMs": 5000,
+      "recordingSeconds": 2,
+      "longSessionDurationMs": 120000,
+      "longSessionActionIntervalMs": 2000,
+      "cooldownMs": 3000
+    }
+  },
+  "evidence": {
+    "schemaVersion": 1,
+    "exclude": ["hostname", "username", "absolute-path", "browser-profile", "project-content"],
+    "unsupportedMetricValue": null,
+    "unsupportedMetricReasonRequired": true,
+    "ciOrEmulationCountsAsRealMachine": false
+  }
+}

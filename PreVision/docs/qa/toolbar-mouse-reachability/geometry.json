@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "task": "03.7-toolbar-mouse-reachability-1316",
+  "capturedAt": "2026-07-16",
+  "baseline": "a9472e3ae4638728eae845fae6d482e2557d3282",
+  "electron": {
+    "viewport": { "width": 1316, "height": 768 },
+    "state": "default-left-and-right-expanded-full-timeline",
+    "toolbar": { "clientWidth": 718, "scrollWidth": 718, "height": 39 },
+    "controls": [
+      { "id": "viewsel", "height": 30, "fontSize": 11.5, "visible": true, "mouseHit": true },
+      { "id": "modeMove", "height": 28, "fontSize": 11.5, "visible": true, "mouseHit": true },
+      { "id": "modeRot", "height": 28, "fontSize": 11.5, "visible": true, "mouseHit": true },
+      { "id": "camDrive", "height": 28, "fontSize": 11.5, "visible": true, "mouseHit": true },
+      { "id": "fitAll", "height": 28, "fontSize": 11.5, "visible": true, "mouseHit": true },
+      { "id": "keys", "height": 28, "fontSize": 11.5, "visible": true, "mouseHit": true },
+      { "id": "showDispatch", "height": 27, "fontSize": 11.5, "visible": true, "mouseHit": true },
+      { "id": "showCamline", "height": 27, "fontSize": 11.5, "visible": true, "mouseHit": true },
+      { "id": "showLabels", "height": 27, "fontSize": 11.5, "visible": true, "mouseHit": true }
+    ],
+    "stateChecks": {
+      "leftCollapsed": { "clientWidth": 927, "scrollWidth": 927, "lastVisible": true },
+      "leftRestored": { "clientWidth": 718, "scrollWidth": 718, "lastVisible": true },
+      "rightCollapsed": { "clientWidth": 1014, "scrollWidth": 1014, "lastVisible": true },
+      "rightRestored": { "clientWidth": 718, "scrollWidth": 718, "lastVisible": true },
+      "rightWiderBy16": { "clientWidth": 706, "scrollWidth": 706, "lastVisible": true },
+      "directorFocus": { "clientWidth": 780, "scrollWidth": 780, "lastVisible": true },
+      "focusRestored": { "clientWidth": 718, "scrollWidth": 718, "lastVisible": true }
+    }
+  },
+  "browser": {
+    "viewport": { "width": 1440, "height": 900 },
+    "toolbar": { "clientWidth": 824, "scrollWidth": 824, "height": 39 },
+    "labelHeight": 27,
+    "lastVisible": true,
+    "preview": "loopback independent port; media and project bytes excluded"
+  },
+  "narrowFallback": {
+    "condition": "center container width <= 650px",
+    "behavior": "thin visible horizontal scrollbar",
+    "reason": "unsupported narrow center widths must not hide overflow without a cue"
+  }
+}

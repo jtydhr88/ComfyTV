@@ -1,0 +1,234 @@
+:root {
+  color-scheme: dark;
+  --red: #ed4035;
+  --ink: #180e09;
+  --focus: #fff5de;
+}
+
+* { box-sizing: border-box; }
+
+html,
+body {
+  width: 100%;
+  min-width: 320px;
+  min-height: 100%;
+  margin: 0;
+  background: #fff;
+}
+
+body {
+  overflow: hidden;
+  font-family: "Avenir Next", "Helvetica Neue", "PingFang SC", sans-serif;
+}
+
+button,
+a { -webkit-tap-highlight-color: transparent; }
+
+.intro {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  min-height: 520px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.intro__video,
+.intro__grade,
+.intro__particles,
+.intro__overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.intro__video {
+  z-index: -3;
+  object-fit: cover;
+  object-position: center;
+  background: #170d08;
+  transition: filter 180ms ease, opacity 700ms ease;
+}
+
+@media (min-aspect-ratio: 4/3) {
+  .intro[data-state="starting"] .intro__video,
+  .intro[data-state="playing"] .intro__video { filter: brightness(.975); }
+}
+
+.intro__grade {
+  z-index: -2;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(8, 5, 4, .05), transparent 48%, rgba(255, 202, 124, .05)),
+    linear-gradient(180deg, rgba(12, 7, 4, .03), transparent 65%, rgba(10, 5, 3, .12));
+  transition: opacity 700ms ease;
+}
+
+.intro__particles {
+  z-index: 8;
+  pointer-events: none;
+}
+
+.intro__overlay { z-index: 2; }
+
+.piece {
+  position: absolute;
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  transform-origin: center;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.piece[hidden] { display: none; }
+
+.piece--tagline {
+  top: 5.8%;
+  left: 66.2%;
+  width: 21.55%;
+}
+
+.piece--social {
+  top: 4.5%;
+  right: 2.65%;
+  width: 4.1%;
+  min-width: 54px;
+  border-radius: 18%;
+  cursor: pointer;
+}
+
+.piece--social img,
+.piece--action img { width: 100%; height: auto; display: block; }
+
+.piece--brand {
+  top: 24.6%;
+  left: 64.75%;
+  width: 25.2%;
+}
+
+.piece--features {
+  top: 48.6%;
+  left: 66.3%;
+  width: 30.2%;
+}
+
+.piece--action {
+  right: 6.6%;
+  bottom: .1%;
+  width: 12.1%;
+  cursor: pointer;
+}
+
+.piece--version {
+  right: 2.5%;
+  bottom: 1.7%;
+  width: 4.2%;
+}
+
+.piece--social,
+.piece--action {
+  transition: transform 180ms ease, filter 180ms ease;
+}
+
+.piece--social:hover,
+.piece--action:hover { transform: translateY(-3px); filter: brightness(1.06); }
+.piece--social:active,
+.piece--action:active { transform: translateY(0) scale(.98); }
+.piece--social:focus-visible,
+.piece--action:focus-visible { outline: 3px solid var(--focus); outline-offset: 5px; }
+
+.intro__status {
+  position: absolute;
+  left: 50%;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  z-index: 10;
+  max-width: min(80vw, 520px);
+  margin: 0;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background: rgba(20, 11, 7, .84);
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.4;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 8px);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.intro__status:not(:empty) { opacity: 1; transform: translate(-50%, 0); }
+
+.intro[data-state="starting"] .piece--social,
+.intro[data-state="starting"] .piece--action,
+.intro[data-state="playing"] .piece--social,
+.intro[data-state="playing"] .piece--action { pointer-events: none; }
+
+.intro[data-state="starting"] .piece,
+.intro[data-state="playing"] .piece { will-change: opacity, transform, filter, clip-path; }
+
+.intro.is-dissolving .piece {
+  animation: magic-dissolve var(--dissolve-duration, 3200ms) cubic-bezier(.2, .56, .16, 1) var(--dissolve-delay, 0ms) both;
+}
+
+.intro.is-dissolving .piece--tagline { --drift-x: 22px; --drift-y: -20px; --spin: 1.2deg; --dissolve-delay: 20ms; }
+.intro.is-dissolving .piece--brand { --drift-x: -34px; --drift-y: 14px; --spin: -1.4deg; --dissolve-delay: 90ms; }
+.intro.is-dissolving .piece--features { --drift-x: 26px; --drift-y: 28px; --spin: .8deg; --dissolve-delay: 175ms; }
+.intro.is-dissolving .piece--version { --drift-x: 15px; --drift-y: 12px; --spin: 2deg; --dissolve-delay: 260ms; }
+.intro.is-dissolving .piece--social { --drift-x: 16px; --drift-y: -18px; --spin: 3deg; --dissolve-delay: 380ms; }
+.intro.is-dissolving .piece--action { --drift-x: -18px; --drift-y: 16px; --spin: -1deg; --dissolve-delay: 430ms; }
+
+@keyframes magic-dissolve {
+  0%, 18% { opacity: 1; transform: translate(0, 0) rotate(0) scale(1); filter: blur(0); }
+  38% { opacity: .92; transform: translate(1px, -1px) rotate(.08deg) scale(.998); filter: blur(.25px); }
+  62% { opacity: .7; transform: translate(5px, 3px) rotate(.22deg) scale(.985); filter: blur(.8px) contrast(1.04); }
+  82% { opacity: .32; transform: translate(12px, 8px) rotate(.5deg) scale(.96); filter: blur(2px) contrast(1.1); }
+  100% { opacity: 0; transform: translate(var(--drift-x), var(--drift-y)) rotate(var(--spin)) scale(.92); filter: blur(4px) contrast(1.18); }
+}
+
+.intro[data-state="complete"] .intro__video,
+.intro[data-state="complete"] .intro__grade { opacity: 0; }
+
+@media (max-aspect-ratio: 4/3) {
+  .intro__video { object-position: 42% center; filter: brightness(.72); }
+  .intro__grade { background: linear-gradient(180deg, rgba(8,5,3,.06), rgba(8,5,3,.38)); }
+  .piece--tagline,
+  .piece--brand,
+  .piece--features,
+  .piece--version {
+    background-color: #f6e8c8;
+    border-radius: 6px;
+  }
+  .piece--tagline { top: 5%; left: 7%; width: 54%; }
+  .piece--social { top: 4%; right: 5%; width: 11%; min-width: 48px; }
+  .piece--brand { top: 25%; left: 7%; width: 76%; }
+  .piece--features { top: 50%; left: 11.7%; width: 86%; }
+  .piece--action { right: 25%; bottom: 2.15%; width: 43%; }
+  .piece--version { right: 5%; bottom: 4%; width: 15%; }
+  .piece--social:focus-visible,
+  .piece--action:focus-visible {
+    outline-color: #180e09;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 5px #f6e8c8;
+  }
+}
+
+@media (max-height: 620px) and (min-aspect-ratio: 4/3) {
+  .piece--tagline { top: 3%; }
+  .piece--brand { top: 20%; }
+  .piece--features { top: 44%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .piece--social,
+  .piece--action,
+  .intro__grade,
+  .intro__status { transition-duration: 1ms; }
+  .intro.is-dissolving .piece { animation: reduced-exit 240ms linear var(--dissolve-delay, 0ms) both; }
+  @keyframes reduced-exit { to { opacity: 0; } }
+}

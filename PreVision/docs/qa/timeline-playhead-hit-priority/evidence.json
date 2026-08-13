@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-07-16",
+  "testedBase": "62e20fe29066c4fa83d6354e5baacd8b099d2e2e",
+  "testedImplementation": "438eff3ef745010242fe15ad6c92d9f38a23a0c8",
+  "runtime": {
+    "node": "v24.14.0",
+    "browser": "Google Chrome",
+    "automation": "codex-chrome-real-pointer",
+    "origin": "temporary-loopback",
+    "consoleErrorCount": 0
+  },
+  "stacking": {
+    "keyAndGroup": 10,
+    "clipGrip": 9,
+    "playhead": 8,
+    "playheadHitWidthCssPx": 13,
+    "playheadPointerEventsDisabled": false
+  },
+  "viewports": [
+    {
+      "width": 1316,
+      "height": 768,
+      "checks": {
+        "previewGroup": { "elementFromPointRole": "preview-group", "startX": 426, "endX": 486, "dragged": true },
+        "previewChild": { "elementFromPointRole": "preview-key", "startX": 486, "endX": 526, "dragged": true },
+        "legacyKey": { "elementFromPointRole": "key", "startX": 434, "endX": 482, "dragged": true },
+        "clipGrip": { "elementFromPointRole": "clip", "startX": 532, "endX": 484, "dragged": true },
+        "blankLane": { "elementFromPointId": "motionPlayhead", "startTimeSeconds": 8.6, "endTimeSeconds": 9.7, "scrubbed": true },
+        "blankRuler": { "endTimeSeconds": 8.0, "scrubbed": true }
+      },
+      "screenshot": { "file": "1316x768.png", "format": "png", "sha256": "2e43914438d27a4f691f319c5415f281155cf144c032bec0ac93e7d4ffaec71c" }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "checks": {
+        "previewGroup": { "elementFromPointRole": "preview-group", "startX": 444, "endX": 489, "dragged": true },
+        "previewChild": { "elementFromPointRole": "preview-key", "startX": 489, "endX": 534, "dragged": true },
+        "legacyKey": { "elementFromPointRole": "key", "startX": 452, "endX": 500, "dragged": true },
+        "clipGrip": { "elementFromPointRole": "clip", "startX": 537, "endX": 489, "dragged": true },
+        "blankLane": { "elementFromPointId": "motionPlayhead", "startTimeSeconds": 9.1, "endTimeSeconds": 10.2, "scrubbed": true },
+        "blankRuler": { "endTimeSeconds": 7.6, "scrubbed": true }
+      },
+      "screenshot": { "file": "1440x900.png", "format": "png", "sha256": "24b3bbb14cb6e2f3f6bd145cd80aae8c28d8784e4214a901c29bda9d55ca982f" }
+    }
+  ],
+  "privacy": {
+    "absolutePaths": false,
+    "userIdentity": false,
+    "projectBytes": false,
+    "mediaBytes": false
+  }
+}

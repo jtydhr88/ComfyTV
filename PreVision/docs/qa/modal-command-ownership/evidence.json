@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "taskId": "01.10-modal-command-ownership",
+  "date": "2026-07-16",
+  "domProbe": {
+    "command": "npm run test:project-input",
+    "modes": ["web", "electron"],
+    "fixtureActorMinimum": 2,
+    "checks": [
+      "button-space-enter-click",
+      "tab-and-shift-tab-focus",
+      "textarea-native-undo",
+      "scroll-top-change",
+      "space-delete-workspace-isolation",
+      "selection-identity",
+      "delete-click-and-alert-zero",
+      "renderer-errors-zero",
+      "native-and-aria-topmost-ownership",
+      "aria-hidden-ancestor-release-and-restore",
+      "native-top-layer-hidden-ancestor"
+    ],
+    "result": "passed"
+  },
+  "manual": {
+    "chrome": {
+      "viewport": [2560, 1288],
+      "profile": "local loopback development preview",
+      "checks": ["shortcut-modal-space-delete", "no-modal-space-restored", "storyboard-fullscreen-two-stage-escape"],
+      "result": "passed",
+      "screenshot": {
+        "file": "chrome-shortcuts.png",
+        "sha256": "7480e9d0165c9d9f923c35c32d4e46f194f5a597d0acd0ee647868076c817677"
+      }
+    },
+    "electron": {
+      "runtime": "Electron 43.1.0 / Chrome 150",
+      "viewport": [1680, 1018],
+      "profile": "ephemeral isolated profile deleted after verification",
+      "checks": ["shortcut-modal-space-delete", "no-modal-space-restored", "storyboard-fullscreen-two-stage-escape"],
+      "result": "passed",
+      "screenshot": {
+        "file": "electron-shortcuts.png",
+        "sha256": "752568dc3e3efa28285d4a923f508a3c0bd415c29e3920740646a57d31f9e8ed"
+      }
+    }
+  },
+  "desktopMenuBoundary": {
+    "coverage": "renderer callbacks executed with mocked bridge in modal open/closed states",
+    "systemFileDialogsClicked": false
+  },
+  "privacy": {
+    "realProjectData": false,
+    "absolutePaths": false,
+    "credentials": false
+  }
+}

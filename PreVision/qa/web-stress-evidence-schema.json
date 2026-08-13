@@ -1,0 +1,554 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://prevision.local/qa/web-stress-evidence-schema.json",
+  "title": "PreVision public Web stress evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "taskId", "sourceCommit", "harness", "profile", "startedAt", "completedAt",
+    "durationMs", "environment", "runtime", "parameters", "bootstrap", "browserSystem", "scenarios",
+    "memory", "processMemorySampling", "processSamples", "browserEvents", "verdict", "evidencePolicy", "cleanup"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "taskId": { "const": "04.web-cross-platform-stress" },
+    "sourceCommit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "harness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "files"],
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "files": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "scripts/web-stress-lib.mjs", "scripts/run-web-stress.mjs", "qa/web-stress-matrix.json",
+            "qa/web-stress-evidence-schema.json"
+          ],
+          "properties": {
+            "scripts/web-stress-lib.mjs": { "$ref": "#/$defs/sha256" },
+            "scripts/run-web-stress.mjs": { "$ref": "#/$defs/sha256" },
+            "qa/web-stress-matrix.json": { "$ref": "#/$defs/sha256" },
+            "qa/web-stress-evidence-schema.json": { "$ref": "#/$defs/sha256" }
+          }
+        }
+      }
+    },
+    "profile": { "enum": ["smoke", "standard"] },
+    "startedAt": { "$ref": "#/$defs/timestamp" },
+    "completedAt": { "$ref": "#/$defs/timestamp" },
+    "durationMs": { "$ref": "#/$defs/numberOrNull" },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operatingSystem", "platform", "architecture", "logicalCpuCount", "totalMemoryGiBRounded", "node",
+        "browser", "ci", "executionEnvironment", "realMachineAttestation", "targetOsBrowserPair",
+        "matrixEvidenceEligible", "evidenceEligibilityBasis", "hostnameExcluded", "usernameExcluded"
+      ],
+      "properties": {
+        "operatingSystem": { "type": "string", "maxLength": 160 },
+        "platform": { "enum": ["darwin", "win32"] },
+        "architecture": { "enum": ["arm64", "x64"] },
+        "logicalCpuCount": { "$ref": "#/$defs/numberOrNull" },
+        "totalMemoryGiBRounded": { "$ref": "#/$defs/numberOrNull" },
+        "node": { "type": "string", "maxLength": 160 },
+        "browser": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "version", "automation"],
+          "properties": {
+            "name": { "enum": ["chrome", "edge", "safari"] },
+            "version": { "type": "string", "maxLength": 160 },
+            "automation": { "enum": ["cdp", "webdriver"] }
+          }
+        },
+        "ci": { "type": "boolean" },
+        "executionEnvironment": {
+          "enum": ["ci", "local-os-unattested", "local-physical-machine", "approved-3d-gpu-vm"]
+        },
+        "realMachineAttestation": { "enum": ["unattested", "physical-machine", "approved-3d-gpu-vm"] },
+        "targetOsBrowserPair": { "type": "boolean" },
+        "matrixEvidenceEligible": { "type": "boolean" },
+        "evidenceEligibilityBasis": {
+          "enum": [
+            "operator-attested-physical-machine", "operator-attested-approved-3d-gpu-vm",
+            "pending-operator-attestation", "ineligible-environment", "software-rendering-detected",
+            "gpu-diagnostics-unavailable"
+          ]
+        },
+        "hostnameExcluded": { "const": true },
+        "usernameExcluded": { "const": true }
+      }
+    },
+    "runtime": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "staticBuildHomeMode", "deploymentManifestSha256", "directorSha256", "route", "previewBinding",
+        "applicationNetworkScope", "renderSchedulingControl", "browserExternalNetworkControl", "projectDataUploadPathPresent",
+        "browserIsolation", "generatedArtifactHandling"
+      ],
+      "properties": {
+        "staticBuildHomeMode": { "enum": ["director-fallback", "provided-home"] },
+        "deploymentManifestSha256": { "$ref": "#/$defs/sha256" },
+        "directorSha256": { "$ref": "#/$defs/sha256" },
+        "route": { "const": "/director/" },
+        "previewBinding": { "const": "127.0.0.1" },
+        "applicationNetworkScope": { "const": "loopback-only" },
+        "renderSchedulingControl": {
+          "enum": [
+            "headful-background-throttling-disabled-visibility-still-observed",
+            "native-safari-scheduling-visibility-observed"
+          ]
+        },
+        "browserExternalNetworkControl": {
+          "enum": ["not-measured-by-webdriver", "closed-loopback-browser-and-process-proxy-plus-host-resolver-deny"]
+        },
+        "projectDataUploadPathPresent": { "const": false },
+        "browserIsolation": { "enum": ["safari-webdriver-isolated-session", "temporary-user-data-directory"] },
+        "generatedArtifactHandling": { "const": "in-memory-metadata-only" }
+      }
+    },
+    "parameters": {
+      "type": "object", "additionalProperties": false,
+      "required": ["profile", "panorama", "typicalScene", "viewport"],
+      "properties": {
+        "profile": { "$ref": "#/$defs/profileParameters" },
+        "panorama": {
+          "type": "object", "additionalProperties": false,
+          "required": ["width", "height", "ratio", "format"],
+          "properties": {
+            "width": { "const": 4096 }, "height": { "const": 2048 },
+            "ratio": { "const": "2:1" }, "format": { "const": "image/jpeg" }
+          }
+        },
+        "typicalScene": {
+          "type": "object", "additionalProperties": false,
+          "required": ["objectCount", "sceneCount"],
+          "properties": { "objectCount": { "const": 24 }, "sceneCount": { "const": 4 } }
+        },
+        "viewport": {
+          "type": "object", "additionalProperties": false,
+          "required": ["outerWidth", "outerHeight"],
+          "properties": { "outerWidth": { "type": "number" }, "outerHeight": { "type": "number" } }
+        }
+      }
+    },
+    "bootstrap": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "ready", "navigation", "page"],
+      "properties": {
+        "schemaVersion": { "const": 1 }, "ready": { "type": "boolean" },
+        "navigation": { "$ref": "#/$defs/navigation" }, "page": { "$ref": "#/$defs/pageMetric" }
+      }
+    },
+    "browserSystem": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "source", "deviceCount", "category", "softwareRenderingDetected", "reasonCode"],
+      "properties": {
+        "status": { "enum": ["measured", "unsupported"] },
+        "source": { "enum": ["cdp-system-info", "webdriver"] },
+        "deviceCount": { "$ref": "#/$defs/numberOrNull" },
+        "category": { "enum": ["software", "apple-silicon-or-apple-gpu", "hardware-unspecified", null] },
+        "softwareRenderingDetected": { "$ref": "#/$defs/booleanOrNull" },
+        "reasonCode": { "enum": ["browser-gpu-diagnostics-unavailable", null] }
+      }
+    },
+    "scenarios": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id", "status", "failureReasonCode", "startedAt", "endedAt", "wallDurationMs", "page",
+          "details", "events", "processMemory"
+        ],
+        "properties": {
+          "id": {
+            "enum": [
+              "default-load", "typical-multi-object", "panorama-4096x2048", "repeated-scene-switch",
+              "short-shot-playback", "screenshot-export", "short-recording", "seedance-export", "long-session"
+            ]
+          },
+          "status": { "enum": ["passed", "failed", "not-run"] },
+          "failureReasonCode": {
+            "enum": ["scenario-error", "browser-alert", "browser-terminated-before-scenario", null]
+          },
+          "startedAt": { "$ref": "#/$defs/timestamp" },
+          "endedAt": { "$ref": "#/$defs/timestamp" },
+          "wallDurationMs": { "$ref": "#/$defs/numberOrNull" },
+          "page": { "$ref": "#/$defs/pageEnvelope" },
+          "details": { "anyOf": [{ "$ref": "#/$defs/scenarioDetails" }, { "type": "null" }] },
+          "events": { "$ref": "#/$defs/scenarioEvents" },
+          "processMemory": { "$ref": "#/$defs/processMemory" }
+        }
+      }
+    },
+    "memory": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "processMemoryMetric", "processMemorySampledPeakBytes", "processMemoryStatus", "processMemoryReasonCode",
+        "jsHeapSampledPeakBytes", "jsHeapStatus", "jsHeapReasonCode", "longSession"
+      ],
+      "properties": {
+        "processMemoryMetric": { "enum": ["rss-sum", "working-set-sum", null] },
+        "processMemorySampledPeakBytes": { "$ref": "#/$defs/numberOrNull" },
+        "processMemoryStatus": { "enum": ["measured", "unsupported"] },
+        "processMemoryReasonCode": { "enum": ["isolated-process-memory-unavailable", null] },
+        "jsHeapSampledPeakBytes": { "$ref": "#/$defs/numberOrNull" },
+        "jsHeapStatus": { "enum": ["measured", "unsupported"] },
+        "jsHeapReasonCode": { "enum": ["performance-memory-unavailable", null] },
+        "longSession": {
+          "type": ["object", "null"], "additionalProperties": false,
+          "required": ["observationDurationMs", "processMemoryDeltaBytes", "usedJSHeapDeltaBytes"],
+          "properties": {
+            "observationDurationMs": { "$ref": "#/$defs/numberOrNull" },
+            "processMemoryDeltaBytes": { "$ref": "#/$defs/numberOrNull" },
+            "usedJSHeapDeltaBytes": { "$ref": "#/$defs/numberOrNull" }
+          }
+        }
+      }
+    },
+    "processMemorySampling": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requestedIntervalMs", "effectiveIntervalMs", "methodOverhead"],
+      "properties": {
+        "requestedIntervalMs": { "$ref": "#/$defs/numberOrNull" },
+        "effectiveIntervalMs": { "$ref": "#/$defs/numberOrNull" },
+        "methodOverhead": {
+          "enum": ["powershell-cim-process-table-every-2s-or-slower", "posix-ps-process-table", "unsupported", null]
+        }
+      }
+    },
+    "processSamples": { "type": "array", "items": { "$ref": "#/$defs/processSample" } },
+    "browserEvents": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "consoleCollection", "consoleErrorCount", "exceptionCount", "crashStatus", "detachedStatus",
+        "consoleLimitationCode", "crashDetectionLimitationCode"
+      ],
+      "properties": {
+        "consoleCollection": { "enum": ["measured", "unsupported"] },
+        "consoleErrorCount": { "$ref": "#/$defs/numberOrNull" },
+        "exceptionCount": { "$ref": "#/$defs/numberOrNull" },
+        "crashStatus": { "enum": ["observed", "not-observed", "unsupported"] },
+        "detachedStatus": { "enum": ["observed", "not-observed"] },
+        "consoleLimitationCode": { "enum": ["browser-console-collection-unavailable", null] },
+        "crashDetectionLimitationCode": { "enum": ["browser-crash-event-unavailable", null] }
+      }
+    },
+    "verdict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "completed", "matrixEvidenceEligible", "evidenceEligibilityBasis", "failedScenarios", "crash",
+        "webglContextLost", "optimizationDecision"
+      ],
+      "properties": {
+        "completed": { "type": "boolean" },
+        "matrixEvidenceEligible": { "type": "boolean" },
+        "evidenceEligibilityBasis": {
+          "enum": [
+            "operator-attested-physical-machine", "operator-attested-approved-3d-gpu-vm",
+            "pending-operator-attestation", "ineligible-environment", "software-rendering-detected",
+            "gpu-diagnostics-unavailable"
+          ]
+        },
+        "failedScenarios": { "type": "array", "items": { "type": "string" } },
+        "crash": {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "detection", "reasonCode"],
+          "properties": {
+            "status": { "enum": ["observed", "not-observed", "unsupported"] },
+            "detection": { "enum": ["cdp-target-and-owned-process", "webdriver-command-channel-only"] },
+            "reasonCode": { "enum": ["browser-crash-event-unavailable", null] }
+          }
+        },
+        "webglContextLost": {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "count", "observationDurationMs"],
+          "properties": {
+            "status": { "enum": ["observed", "not-observed"] },
+            "count": { "$ref": "#/$defs/numberOrNull" },
+            "observationDurationMs": { "$ref": "#/$defs/numberOrNull" }
+          }
+        },
+        "optimizationDecision": { "type": "string" }
+      }
+    },
+    "evidencePolicy": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "schemaVersion", "exclude", "unsupportedMetricValue", "unsupportedMetricReasonRequired", "ciOrEmulationCountsAsRealMachine"
+      ],
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "exclude": {
+          "type": "array",
+          "items": { "enum": ["hostname", "username", "absolute-path", "browser-profile", "project-content"] }
+        },
+        "unsupportedMetricValue": { "const": null },
+        "unsupportedMetricReasonRequired": { "const": true },
+        "ciOrEmulationCountsAsRealMachine": { "const": false }
+      }
+    },
+    "cleanup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "errors", "pageTeardown"],
+      "properties": {
+        "status": { "enum": ["passed", "failed"] },
+        "errors": { "type": "array", "items": { "type": "string" } },
+        "pageTeardown": {
+          "type": "object", "additionalProperties": false,
+          "required": ["cleaned", "errorCodes"],
+          "properties": {
+            "cleaned": { "$ref": "#/$defs/booleanOrNull" },
+            "errorCodes": { "type": "array", "items": { "const": "page-runtime-error" } }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "timestamp": { "type": ["string", "null"], "format": "date-time" },
+    "numberOrNull": { "type": ["number", "null"] },
+    "booleanOrNull": { "type": ["boolean", "null"] },
+    "profileParameters": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "settleMs", "memorySampleMs", "sceneSwitchIterations", "fpsSampleMs", "playbackMs",
+        "recordingSeconds", "longSessionDurationMs", "longSessionActionIntervalMs", "cooldownMs"
+      ],
+      "properties": {
+        "settleMs": { "type": "number" }, "memorySampleMs": { "type": "number" },
+        "sceneSwitchIterations": { "type": "number" }, "fpsSampleMs": { "type": "number" },
+        "playbackMs": { "type": "number" }, "recordingSeconds": { "type": "number" },
+        "longSessionDurationMs": { "type": "number" }, "longSessionActionIntervalMs": { "type": "number" },
+        "cooldownMs": { "type": "number" }
+      }
+    },
+    "navigation": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "responseStartMs", "domContentLoadedMs", "loadEventMs", "transferSize", "encodedBodySize",
+        "decodedBodySize", "firstPaintMs", "firstContentfulPaintMs", "paintTimingStatus", "paintTimingReasonCode"
+      ],
+      "properties": {
+        "responseStartMs": { "$ref": "#/$defs/numberOrNull" },
+        "domContentLoadedMs": { "$ref": "#/$defs/numberOrNull" },
+        "loadEventMs": { "$ref": "#/$defs/numberOrNull" },
+        "transferSize": { "$ref": "#/$defs/numberOrNull" },
+        "encodedBodySize": { "$ref": "#/$defs/numberOrNull" },
+        "decodedBodySize": { "$ref": "#/$defs/numberOrNull" },
+        "firstPaintMs": { "$ref": "#/$defs/numberOrNull" },
+        "firstContentfulPaintMs": { "$ref": "#/$defs/numberOrNull" },
+        "paintTimingStatus": { "enum": ["measured", "unsupported"] },
+        "paintTimingReasonCode": { "enum": ["paint-timing-unavailable", null] }
+      }
+    },
+    "fps": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "durationMs", "frames", "fps", "baselineFrameMs", "missedVsyncEstimate", "estimateMethod",
+        "over33ms", "over50ms", "p50FrameMs", "p95FrameMs", "p99FrameMs", "maxFrameMs", "valid",
+        "visibilityChangeCount"
+      ],
+      "properties": {
+        "durationMs": { "$ref": "#/$defs/numberOrNull" }, "frames": { "$ref": "#/$defs/numberOrNull" },
+        "fps": { "$ref": "#/$defs/numberOrNull" }, "baselineFrameMs": { "$ref": "#/$defs/numberOrNull" },
+        "missedVsyncEstimate": { "$ref": "#/$defs/numberOrNull" },
+        "estimateMethod": { "enum": ["measured-idle-rAF-baseline", "unavailable", null] },
+        "over33ms": { "$ref": "#/$defs/numberOrNull" }, "over50ms": { "$ref": "#/$defs/numberOrNull" },
+        "p50FrameMs": { "$ref": "#/$defs/numberOrNull" }, "p95FrameMs": { "$ref": "#/$defs/numberOrNull" },
+        "p99FrameMs": { "$ref": "#/$defs/numberOrNull" }, "maxFrameMs": { "$ref": "#/$defs/numberOrNull" },
+        "valid": { "$ref": "#/$defs/booleanOrNull" },
+        "visibilityChangeCount": { "$ref": "#/$defs/numberOrNull" }
+      }
+    },
+    "pageMetric": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "atMs", "jsHeap", "jsHeapStatus", "jsHeapReasonCode", "renderer", "webgl", "domNodes", "canvases",
+        "viewport", "captureCapabilities", "contextLost", "contextRestored"
+      ],
+      "properties": {
+        "atMs": { "$ref": "#/$defs/numberOrNull" },
+        "jsHeap": {
+          "type": ["object", "null"], "additionalProperties": false,
+          "required": ["usedJSHeapSize", "totalJSHeapSize", "jsHeapSizeLimit"],
+          "properties": {
+            "usedJSHeapSize": { "$ref": "#/$defs/numberOrNull" },
+            "totalJSHeapSize": { "$ref": "#/$defs/numberOrNull" },
+            "jsHeapSizeLimit": { "$ref": "#/$defs/numberOrNull" }
+          }
+        },
+        "jsHeapStatus": { "enum": ["measured", "unsupported"] },
+        "jsHeapReasonCode": { "enum": ["performance-memory-unavailable", null] },
+        "renderer": {
+          "type": "object", "additionalProperties": false, "required": ["memory", "render"],
+          "properties": {
+            "memory": {
+              "type": "object", "additionalProperties": false, "required": ["geometries", "textures"],
+              "properties": {
+                "geometries": { "$ref": "#/$defs/numberOrNull" },
+                "textures": { "$ref": "#/$defs/numberOrNull" }
+              }
+            },
+            "render": {
+              "type": "object", "additionalProperties": false, "required": ["calls", "triangles", "points", "lines"],
+              "properties": {
+                "calls": { "$ref": "#/$defs/numberOrNull" }, "triangles": { "$ref": "#/$defs/numberOrNull" },
+                "points": { "$ref": "#/$defs/numberOrNull" }, "lines": { "$ref": "#/$defs/numberOrNull" }
+              }
+            }
+          }
+        },
+        "webgl": {
+          "type": "object", "additionalProperties": false,
+          "required": ["maxTextureSize", "maxCubeMapTextureSize", "maxRenderbufferSize", "antialias", "contextLost"],
+          "properties": {
+            "maxTextureSize": { "$ref": "#/$defs/numberOrNull" },
+            "maxCubeMapTextureSize": { "$ref": "#/$defs/numberOrNull" },
+            "maxRenderbufferSize": { "$ref": "#/$defs/numberOrNull" },
+            "antialias": { "$ref": "#/$defs/booleanOrNull" },
+            "contextLost": { "$ref": "#/$defs/booleanOrNull" }
+          }
+        },
+        "domNodes": { "$ref": "#/$defs/numberOrNull" }, "canvases": { "$ref": "#/$defs/numberOrNull" },
+        "viewport": {
+          "type": "object", "additionalProperties": false,
+          "required": ["outerWidth", "outerHeight", "innerWidth", "innerHeight", "devicePixelRatio", "visibilityState", "mainCanvas"],
+          "properties": {
+            "outerWidth": { "$ref": "#/$defs/numberOrNull" }, "outerHeight": { "$ref": "#/$defs/numberOrNull" },
+            "innerWidth": { "$ref": "#/$defs/numberOrNull" }, "innerHeight": { "$ref": "#/$defs/numberOrNull" },
+            "devicePixelRatio": { "$ref": "#/$defs/numberOrNull" },
+            "visibilityState": { "enum": ["visible", "hidden", "prerender", "unloaded", null] },
+            "mainCanvas": {
+              "type": ["object", "null"], "additionalProperties": false,
+              "required": ["width", "height"],
+              "properties": {
+                "width": { "$ref": "#/$defs/numberOrNull" }, "height": { "$ref": "#/$defs/numberOrNull" }
+              }
+            }
+          }
+        },
+        "captureCapabilities": {
+          "type": "object", "additionalProperties": false,
+          "required": ["mediaRecorder", "canvasCaptureStream", "requestFrame"],
+          "properties": {
+            "mediaRecorder": { "$ref": "#/$defs/booleanOrNull" },
+            "canvasCaptureStream": { "$ref": "#/$defs/booleanOrNull" },
+            "requestFrame": { "$ref": "#/$defs/booleanOrNull" }
+          }
+        },
+        "contextLost": { "$ref": "#/$defs/numberOrNull" },
+        "contextRestored": { "$ref": "#/$defs/numberOrNull" }
+      }
+    },
+    "heapSample": {
+      "type": "object", "additionalProperties": false,
+      "required": ["atMs", "usedJSHeapSize", "totalJSHeapSize"],
+      "properties": {
+        "atMs": { "$ref": "#/$defs/numberOrNull" },
+        "usedJSHeapSize": { "$ref": "#/$defs/numberOrNull" },
+        "totalJSHeapSize": { "$ref": "#/$defs/numberOrNull" }
+      }
+    },
+    "pageEnvelope": {
+      "type": "object", "additionalProperties": false,
+      "required": ["durationMs", "before", "after", "heapSamples"],
+      "properties": {
+        "durationMs": { "$ref": "#/$defs/numberOrNull" },
+        "before": { "$ref": "#/$defs/pageMetric" }, "after": { "$ref": "#/$defs/pageMetric" },
+        "heapSamples": { "type": "array", "items": { "$ref": "#/$defs/heapSample" } }
+      }
+    },
+    "artifact": {
+      "type": "object", "additionalProperties": false,
+      "required": ["sequence", "kind", "size", "type", "extension", "validation"],
+      "properties": {
+        "sequence": { "$ref": "#/$defs/numberOrNull" },
+        "kind": { "enum": ["screenshot-png", "recording-video", "seedance-zip", null] },
+        "size": { "$ref": "#/$defs/numberOrNull" },
+        "type": { "enum": ["image/png", "video/mp4", "video/webm", "application/zip", null] },
+        "extension": { "enum": ["mp4", "webm", null] },
+        "validation": {
+          "type": "object", "additionalProperties": false,
+          "required": [
+            "status", "format", "signatureValid", "width", "height", "centralDirectoryFound", "entryCount",
+            "expectedEntriesPresent", "allEntriesNonEmpty"
+          ],
+          "properties": {
+            "status": { "enum": ["passed", "failed", null] },
+            "format": { "enum": ["png", "mp4", "webm", "zip", null] },
+            "signatureValid": { "$ref": "#/$defs/booleanOrNull" },
+            "width": { "$ref": "#/$defs/numberOrNull" }, "height": { "$ref": "#/$defs/numberOrNull" },
+            "centralDirectoryFound": { "$ref": "#/$defs/booleanOrNull" },
+            "entryCount": { "$ref": "#/$defs/numberOrNull" },
+            "expectedEntriesPresent": { "$ref": "#/$defs/booleanOrNull" },
+            "allEntriesNonEmpty": { "$ref": "#/$defs/booleanOrNull" }
+          }
+        }
+      }
+    },
+    "scenarioDetails": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "navigation": { "$ref": "#/$defs/navigation" }, "idleFps": { "$ref": "#/$defs/fps" },
+        "sceneCount": { "$ref": "#/$defs/numberOrNull" }, "objectCount": { "$ref": "#/$defs/numberOrNull" },
+        "width": { "$ref": "#/$defs/numberOrNull" }, "height": { "$ref": "#/$defs/numberOrNull" },
+        "encodedBytes": { "$ref": "#/$defs/numberOrNull" },
+        "textureReady": { "$ref": "#/$defs/booleanOrNull" },
+        "naturalWidth": { "$ref": "#/$defs/numberOrNull" }, "naturalHeight": { "$ref": "#/$defs/numberOrNull" },
+        "maxTextureSize": { "$ref": "#/$defs/numberOrNull" }, "iterations": { "$ref": "#/$defs/numberOrNull" },
+        "durationMs": { "$ref": "#/$defs/numberOrNull" }, "finalSceneIndex": { "$ref": "#/$defs/numberOrNull" },
+        "fps": { "$ref": "#/$defs/fps" },
+        "configuredShotDurationSeconds": { "$ref": "#/$defs/numberOrNull" },
+        "wallDurationMs": { "$ref": "#/$defs/numberOrNull" },
+        "output": { "$ref": "#/$defs/artifact" }, "durationSeconds": { "$ref": "#/$defs/numberOrNull" },
+        "observationDurationMs": { "$ref": "#/$defs/numberOrNull" }, "cycles": { "$ref": "#/$defs/numberOrNull" },
+        "before": { "$ref": "#/$defs/pageMetric" }, "after": { "$ref": "#/$defs/pageMetric" },
+        "usedJSHeapDelta": { "$ref": "#/$defs/numberOrNull" }
+      }
+    },
+    "scenarioEvents": {
+      "type": "object", "additionalProperties": false,
+      "required": ["alertCount", "contextLost", "contextRestored", "errorCodes", "outputs"],
+      "properties": {
+        "alertCount": { "$ref": "#/$defs/numberOrNull" },
+        "contextLost": { "$ref": "#/$defs/numberOrNull" },
+        "contextRestored": { "$ref": "#/$defs/numberOrNull" },
+        "errorCodes": { "type": "array", "items": { "type": "string" } },
+        "outputs": { "type": "array", "items": { "$ref": "#/$defs/artifact" } }
+      }
+    },
+    "processMemory": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "status", "metric", "beforeBytes", "afterBytes", "peakBytes", "deltaBytes", "sampleCount", "processCountPeak", "reasonCode"
+      ],
+      "properties": {
+        "status": { "enum": ["measured", "unsupported"] },
+        "metric": { "enum": ["rss-sum", "working-set-sum", null] },
+        "beforeBytes": { "$ref": "#/$defs/numberOrNull" }, "afterBytes": { "$ref": "#/$defs/numberOrNull" },
+        "peakBytes": { "$ref": "#/$defs/numberOrNull" }, "deltaBytes": { "$ref": "#/$defs/numberOrNull" },
+        "sampleCount": { "$ref": "#/$defs/numberOrNull" },
+        "processCountPeak": { "$ref": "#/$defs/numberOrNull" },
+        "reasonCode": { "enum": ["isolated-process-memory-unavailable", null] }
+      }
+    },
+    "processSample": {
+      "type": "object", "additionalProperties": false,
+      "required": ["atEpochMs", "memoryBytes", "processCount", "errorCode"],
+      "properties": {
+        "atEpochMs": { "$ref": "#/$defs/numberOrNull" }, "memoryBytes": { "$ref": "#/$defs/numberOrNull" },
+        "processCount": { "$ref": "#/$defs/numberOrNull" },
+        "errorCode": { "enum": ["process-memory-sample-failed", null] }
+      }
+    }
+  }
+}

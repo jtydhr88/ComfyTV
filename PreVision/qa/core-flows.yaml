@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "updated": "2026-07-14",
+  "flows": [
+    {
+      "id":"FLOW-BOOT",
+      "name":"启动并进入默认导演台",
+      "risk":"critical",
+      "automated":["npm run test:core"],
+      "manual":["macOS 应用可打开且主画布、项目场景层左栏、右栏和底部播放/调度区可见；底栏没有重复镜头缩略条"]
+    },
+    {
+      "id":"FLOW-PROJECT",
+      "name":"新建、编辑、自动保存、导出并重新打开项目",
+      "risk":"critical",
+      "automated":["npm run test:module -- project","npm run test:desktop"],
+      "manual":["用非敏感测试项目验证系统打开/保存对话框","重启应用后自动恢复"]
+    },
+    {
+      "id":"FLOW-HIERARCHY",
+      "name":"在当前项目的场景与镜头之间分层导航",
+      "risk":"high",
+      "automated":["npm run test:module -- layout","npm run test:module -- timeline","npm run test:module -- project"],
+      "manual":["左栏从项目场景列表进入当前场景的镜头缩略图列表，并可返回上一级","在左栏新增、选择、删除和重命名镜头后，当前场景、监视器与底部调度轨道同步","底栏无镜头缩略图和新增镜头入口，但红色预演、时间码、调度轨道及右侧监视器仍可用"]
+    },
+    {
+      "id":"FLOW-SCENE-AUTHORING",
+      "name":"调整全身关节、新建四构图场景并从剧本生成分镜",
+      "risk":"high",
+      "automated":["npm run test:module -- actor","npm run test:module -- storyboard","npm run test:module -- project","npm run test:i18n"],
+      "manual":["选中人物后头/躯干/肩肘腕/髋膝踝均可达，拖动腕踝后画布姿态可见变化","新建场景弹窗只显示双人对话、单人表演、动作追逐和环境建立四种构图","剧本分镜的自动与手动模板选择均生成 4 个同源镜头并进入左栏镜头层"]
+    },
+    {
+      "id":"FLOW-DISPATCH",
+      "name":"添加对象并编辑调度路径、时间和同步方式",
+      "risk":"high",
+      "automated":["npm run test:module -- actor","npm run test:module -- timeline"],
+      "manual":["拖动路径点和关键帧后播放，确认对象连续运动","检查紧凑与展开轨道布局"]
+    },
+    {
+      "id":"FLOW-CAMERA",
+      "name":"建立多点摄影机路径并逐点设置朝向和焦距",
+      "risk":"critical",
+      "automated":["npm run test:module -- camera"],
+      "manual":["逐点监看与完整预演的构图一致","曲线运动和镜头旋转无可见跳变"]
+    },
+    {
+      "id":"FLOW-LIGHT",
+      "name":"调整太阳并获得一致实时阴影",
+      "risk":"medium",
+      "automated":["npm run test:module -- lighting"],
+      "manual":["主画布、监视器和导出画面的光向与阴影一致"]
+    },
+    {
+      "id":"FLOW-CAPTURE",
+      "name":"截图和录制摄影机画面或预见工作区",
+      "risk":"high",
+      "automated":["npm run test:module -- capture","npm run test:desktop"],
+      "manual":["录制红点可启停","输出文件可播放且不含浏览器地址栏或系统程序栏","长录制帧率和内存稳定"]
+    },
+    {
+      "id":"FLOW-PACKAGE-MAC",
+      "name":"构建并启动 macOS Apple Silicon 分发包",
+      "risk":"critical",
+      "automated":["npm run test:full","npm run test:local-install","npm run app:deliver","npm run make:mac","npm run make:mac:dmg"],
+      "manual":["固定 App 来源 commit 与当前交付一致","从 ~/Applications/PreVision.app 自动启动并看到本次变化","DMG 安装","首次启动与 Gatekeeper 行为"]
+    }
+  ]
+}

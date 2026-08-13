@@ -1,0 +1,54 @@
+{
+  "task": "02.9-shot-reframe-9x16",
+  "title": "02.9｜9:16 当前镜头独立重构图",
+  "baseline": "2def382a9a4b4bddfadb2da9d455864103af0a64",
+  "branch": "feat/02.9-shot-reframe-9x16",
+  "status": "IMPLEMENTED_UNVERIFIED",
+  "preview": {
+    "title": "PreVision 02.9 Preview — NOT INTEGRATED",
+    "electronVersion": "43.1.0",
+    "isolatedProfile": true,
+    "processObserved": true,
+    "aspect": "9:16",
+    "rightPanelState": "expanded",
+    "rightEntryVisible": true,
+    "rightEntryWidth": 317,
+    "rightContentWidth": 335,
+    "rightTopHorizontalOverflow": false,
+    "fixedAppUpdated": false
+  },
+  "automated": {
+    "U6_reframe_math": "17/17",
+    "C1_previz_roundtrip": "52/52",
+    "U4_normalize_malformed": "114/114",
+    "P8_module_boundaries": "41/41",
+    "project": "121/121",
+    "history": "29/29",
+    "camera": "106/106",
+    "playback": "41/41",
+    "viewport": "49/49",
+    "layout": "160/160",
+    "capture": "155/155",
+    "i18n": "217/217",
+    "build": "passed",
+    "diffCheck": "passed"
+  },
+  "p1DiscoverabilityRepair": {
+    "trigger": "Leo real screenshot",
+    "rightEntry": "visible in 9:16 and hidden in 16:9",
+    "stateOwner": "shared reframeEditMode and toggle router",
+    "focusTarget": "main viewport canvas",
+    "ariaPressedSynchronized": true,
+    "horizontalOverflowGuarded": true
+  },
+  "notRunByContract": [
+    "npm run test:impact",
+    "npm run test:full"
+  ],
+  "missingEvidence": [
+    "Electron 1440x900 screenshot",
+    "real UI click matrix",
+    "independent R2 review",
+    "central integration and final regression"
+  ]
+}

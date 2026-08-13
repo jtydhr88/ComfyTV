@@ -1,0 +1,42 @@
+name: 功能建议
+description: 描述一个真实创作场景和希望改进的流程
+title: "[建议] "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: textarea
+    id: scenario
+    attributes:
+      label: 你的创作场景
+      description: 你在设计什么镜头，场景里有哪些角色、道具或摄影机运动？
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: 当前最困难的一步
+      description: 请优先说问题，不必先设计按钮。
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: 你希望达到的结果
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: 可选方案或参考产品
+      description: 如果你有交互设想、截图或参考链接，可以放在这里。
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: 这个需求出现的频率
+      options:
+        - 几乎每个项目
+        - 经常
+        - 偶尔
+        - 只在特殊镜头中
+    validations:
+      required: true
+

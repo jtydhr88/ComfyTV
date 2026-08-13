@@ -1,0 +1,107 @@
+{
+  "task": "02.14-unified-video-export-24fps",
+  "title": "02.14｜普通视频与白模导出统一24fps",
+  "baseline": "a030c9b975fa6fc8158c18557c5b4ac2c21e5f69",
+  "branch": "feat/02.14-unified-video-export-24fps",
+  "status": "AWAITING_INDEPENDENT_R2_REREVIEW",
+  "runtime": {
+    "node": "v24.18.0",
+    "chrome": "150.0.0.0",
+    "ffprobe": "8.1.2",
+    "exportFps": 24,
+    "manualRecordingFps": 30
+  },
+  "electronPreview": {
+    "title": "PreVision 02.14 Preview — NOT INTEGRATED",
+    "source": "task-worktree-generated-html",
+    "isolatedProfile": true,
+    "documentCss": [1512, 862],
+    "outerCss": [1512, 894],
+    "devicePixelRatio": 2,
+    "runningAtHandoff": true,
+    "fixedAppUpdated": false,
+    "stablePointerUpdated": false
+  },
+  "chromeProbe": {
+    "isolatedProfile": true,
+    "loopbackOnly": true,
+    "documentCss": [1512, 808],
+    "outerCss": [1512, 895],
+    "devicePixelRatio": 2,
+    "shotDurationSeconds": 0.5,
+    "ordinaryCurrentShot": {
+      "productExportResult": true,
+      "strictInspector": {"container": "mp4", "codec": "H264", "frameCount": 13, "timescale": 30000, "durationTicks": 16250, "duration": 0.541667, "fps": 24},
+      "ffprobe": {"codec": "h264", "codecTag": "avc1", "resolution": "1920x1080", "frameRate": "24/1", "packetCount": 13, "duration": 0.541667, "bytes": 226977},
+      "sha256": "c0a9e595fe14edbc596f12213deffa40e04ada3f02dbb39d8ddc05426a202db4",
+      "zeroWriteProjection": true,
+      "automaticAnchorDownloadObserved": false,
+      "probeExtraction": "final-real-export-blob-read-only"
+    },
+    "whiteModelCurrentShot": {
+      "planned": {"frameCount": 12, "duration": 0.5, "fps": 24},
+      "recorderActual": {"container": "mp4", "codec": "H264", "frameCount": 12, "timescale": 30000, "durationTicks": 17180, "duration": 0.572667, "fps": 20.954598},
+      "strictActual": {"container": "mp4", "codec": "H264", "frameCount": 12, "timescale": 30000, "durationTicks": 15000, "duration": 0.5, "fps": 24},
+      "captureLedger": {"planned": 12, "rendered": 12, "requested": 12, "primer": 1, "startSource": "listener-after-primer"},
+      "ffprobe": {"codec": "h264", "codecTag": "avc1", "resolution": "1920x1080", "frameRate": "24/1", "packetCount": 12, "duration": 0.5, "bytes": 90078},
+      "mp4Sha256": "aa2dcf879604da4037655fe75424b5adb196d76b8a14bf70d1f65f83f8c0d37a",
+      "zip": {"bytes": 96278, "sha256": "fabc6b12ede2766fce6f6c9037a1194b05af05e82790b1f6db8e7fd821a0dfb4", "downloadCountAfterGeneration": 0, "explicitSecondClickDownloadCompleted": true},
+      "zeroWriteProjection": true
+    },
+    "consoleErrorCount": 0
+  },
+  "fiveSecondWhiteModelContract": {
+    "frameCount": 120,
+    "fps": 24,
+    "firstTimestamp": 0,
+    "lastTimestampExpression": "5-1/24",
+    "sampling": "half-open",
+    "verifiedBy": "C7 ISO-BMFF fixture and runtime transaction regression"
+  },
+  "ordinaryContainerContract": {
+    "preferenceOrder": ["video/mp4;codecs=avc1.640028", "video/mp4", "video/webm;codecs=vp9", "video/webm"],
+    "mp4Validation": "final ISO-BMFF H.264 sample table, normalized timing, and strict 24fps assertion",
+    "webmValidation": "final EBML video track, Block sample count, TimecodeScale, per-sample timecodes, optional DefaultDuration, and duration",
+    "whiteModelRemainsH264Mp4Only": true,
+    "realWebmBrowserProbeRun": false,
+    "realWebmBrowserProbeNotRunReason": "R2 repair explicitly prohibited UI, Electron, and Chrome"
+  },
+  "automated": {
+    "capture": "162/162",
+    "C7_seedance_white_model_profile": "114/114",
+    "C5_seedance_package": "41/41",
+    "i18n": "217/217",
+    "build": "passed (1407568 bytes)",
+    "diffCheck": "passed"
+  },
+  "failClosed": {
+    "wrongFps": "strict ISO-BMFF and EBML per-sample timecode assertions reject",
+    "drop": "white 118/120 plus ordinary MP4/WebM sample-minus-one reject before ZIP/save",
+    "extra": "white 121/120 plus ordinary MP4/WebM sample-plus-one reject before ZIP/save",
+    "zeroDownloadOrSave": true
+  },
+  "topRecordingUnchanged": {
+    "manualFpsConstant": 30,
+    "workspaceCaptureStreamLiteral": 30,
+    "workspaceTimerExpression": "1000/30",
+    "resolutionChanged": false,
+    "bitrateChanged": false,
+    "ordinaryContainerPriorityChanged": false
+  },
+  "independentR2": {
+    "firstResult": "FAIL",
+    "finding": "ordinary WebM fallback selected by preferredRecordingSpec was unconditionally rejected before byte validation",
+    "repair": "same canonical worker and claim now strictly validate WebM bytes and timing while preserving MP4-to-WebM preference order",
+    "rereview": "pending"
+  },
+  "notRunByContract": ["npm run test:impact", "npm run test:full"],
+  "missingEvidence": [
+    "real WebM browser encoding probe",
+    "real long ordinary scene export and long recording",
+    "ordinary Web async anchor automatic-download completion in this isolated automation session",
+    "Safari and Windows media encoding",
+    "independent R2 rereview",
+    "central integration and final regression",
+    "fixed App delivery"
+  ]
+}

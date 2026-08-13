@@ -1,0 +1,173 @@
+{
+  "schemaVersion": 1,
+  "maxConcurrentWriteTasks": 2,
+  "dispatchOwners": [
+    "01",
+    "02",
+    "03",
+    "04"
+  ],
+  "reservationPolicy": {
+    "defaultTtlMinutes": 30,
+    "maxTtlMinutes": 120,
+    "activeClaimsExpire": false
+  },
+  "coordinationRegistry": {
+    "schemaVersion": 3,
+    "coordinationVersion": 3
+  },
+  "taskLifecycle": {
+    "states": [
+      "RESERVED",
+      "WAITING",
+      "ACTIVE",
+      "REVIEW",
+      "HANDED_OFF",
+      "INTEGRATING",
+      "RELEASED",
+      "ARCHIVE_PENDING",
+      "ARCHIVED"
+    ],
+    "reservationStates": [
+      "RESERVED",
+      "WAITING"
+    ],
+    "claimStates": [
+      "ACTIVE",
+      "REVIEW",
+      "HANDED_OFF",
+      "INTEGRATING"
+    ],
+    "terminalStates": [
+      "RELEASED",
+      "ARCHIVE_PENDING",
+      "ARCHIVED"
+    ],
+    "executionVisibility": {
+      "values": [
+        "DESKTOP_LIVE",
+        "BACKGROUND_ONLY",
+        "WAITING",
+        "UNKNOWN"
+      ],
+      "default": "UNKNOWN"
+    },
+    "externalStates": {
+      "rollout": [
+        "present",
+        "missing",
+        "unknown"
+      ],
+      "threadRecord": [
+        "present",
+        "missing",
+        "unknown"
+      ],
+      "sidebar": [
+        "present",
+        "absent",
+        "stale",
+        "unknown"
+      ],
+      "name": [
+        "set",
+        "failed",
+        "unknown"
+      ],
+      "turn": [
+        "not-started",
+        "started",
+        "completed",
+        "disconnected",
+        "unknown"
+      ],
+      "turnOwner": [
+        "desktop",
+        "background",
+        "none",
+        "unknown"
+      ]
+    }
+  },
+  "taskFamilies": {
+    "bug": [
+      "ui-input",
+      "3d-camera-timeline",
+      "project-desktop-stability"
+    ],
+    "feature": [
+      "scene-assets",
+      "camera-scheduling",
+      "storyboard-export-integrations"
+    ],
+    "ui": [
+      "layout-navigation-responsive",
+      "canvas-3d-interaction",
+      "timeline-keyframes",
+      "monitor-inspector-theme-a11y"
+    ],
+    "engineering": [
+      "architecture-performance",
+      "tests-qa-i18n",
+      "electron-version-release"
+    ]
+  },
+  "modules": [
+    "display",
+    "capture",
+    "lighting",
+    "history",
+    "camera",
+    "timeline",
+    "playback",
+    "actor",
+    "storyboard",
+    "project",
+    "viewport",
+    "background",
+    "layout",
+    "robustness",
+    "desktop",
+    "repository",
+    "testing",
+    "i18n",
+    "release"
+  ],
+  "uiSurfaces": [
+    "app-shell",
+    "topbar",
+    "left-rail",
+    "viewport",
+    "canvas-controls",
+    "timeline",
+    "monitor",
+    "inspector",
+    "dialogs",
+    "capture-controls"
+  ],
+  "dataAreas": [
+    "project-v5",
+    "autosave",
+    "shot-camera",
+    "object-paths",
+    "actor-rig",
+    "scene-template",
+    "ui-preferences",
+    "electron-ipc",
+    "build-provenance",
+    "local-install",
+    "qa-metadata",
+    "i18n-resources"
+  ],
+  "conflictLevels": {
+    "hard": [
+      "module-overlap",
+      "ui-surface-overlap",
+      "data-area-overlap",
+      "write-capacity-exceeded"
+    ],
+    "soft": [
+      "file-only-overlap"
+    ]
+  }
+}

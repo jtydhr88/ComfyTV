@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#170d08">
+  <title data-i18n="landing.documentTitle"></title>
+  <link rel="preload" href="home-assets/intro-poster.jpg" as="image" fetchpriority="high">
+  <link rel="stylesheet" href="home.css">
+</head>
+<body>
+  <main class="intro" data-state="idle" aria-labelledby="landingTitle">
+    <video class="intro__video" id="introVideo" preload="metadata" playsinline poster="home-assets/intro-poster.jpg" aria-hidden="true">
+      <source src="home-assets/intro.mp4?v=20260715-2" type="video/mp4">
+    </video>
+    <div class="intro__grade" aria-hidden="true"></div>
+    <canvas class="intro__particles" id="particleCanvas" aria-hidden="true"></canvas>
+
+    <section class="intro__overlay" aria-live="polite">
+      <img class="piece piece--tagline" src="home-assets/1.svg" alt="" draggable="false">
+      <a class="piece piece--social" href="https://www.xiaohongshu.com/user/profile/66fc7a4e000000001d0229a0" target="_blank" rel="noopener noreferrer" data-i18n-aria-label="landing.contactDeveloperAria">
+        <img src="home-assets/5.svg" alt="" draggable="false">
+      </a>
+      <img class="piece piece--brand" id="landingTitle" src="home-assets/3.svg" data-i18n-alt="landing.brandAlt" draggable="false">
+      <img class="piece piece--features" src="home-assets/2.svg" data-i18n-alt="landing.featuresAlt" draggable="false">
+      <button class="piece piece--action" id="actionButton" type="button" data-i18n-aria-label="landing.actionAria">
+        <img src="home-assets/4.svg" alt="" draggable="false">
+      </button>
+      <img class="piece piece--version" src="home-assets/6.svg" data-i18n-alt="landing.versionAlt" draggable="false">
+      <p class="intro__status" id="introStatus" role="status"></p>
+    </section>
+  </main>
+
+  <script src="/i18n/locales/zh-CN.js"></script>
+  <script src="/i18n/locales/en-US.js"></script>
+  <script src="/i18n/runtime.js"></script>
+  <script src="home.js"></script>
+</body>
+</html>

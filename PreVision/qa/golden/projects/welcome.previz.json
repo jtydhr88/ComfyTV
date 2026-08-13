@@ -1,0 +1,295 @@
+{
+  "app": "PreVision",
+  "version": 5,
+  "name": "未命名短剧",
+  "aspect": "16:9",
+  "assets": {},
+  "settings": {
+    "collision": true,
+    "labels": true
+  },
+  "scenes": [
+    {
+      "name": "一个小彩蛋",
+      "desc": "白马骑手 / 侧向阳光 / 复古机位",
+      "script": "",
+      "bg": null,
+      "ground": {
+        "style": "checker"
+      },
+      "sun": {
+        "enabled": true,
+        "pos": [
+          -12.3,
+          14,
+          -7.3
+        ],
+        "intensity": 0.9,
+        "temp": 5600,
+        "ambient": 0.28,
+        "softness": 2,
+        "quality": "standard"
+      },
+      "actors": [
+        {
+          "kind": "horse",
+          "label": "马1",
+          "pose": "stand",
+          "pos": [
+            1.5,
+            2.5
+          ],
+          "rotY": 0,
+          "height": 0,
+          "pathMode": "curve",
+          "scale": 1,
+          "pathTimes": [
+            0,
+            9.055,
+            16.5
+          ],
+          "pathEase": [
+            {
+              "type": "linear"
+            },
+            {
+              "type": "linear"
+            }
+          ],
+          "timeLink": "independent",
+          "timeOffset": 0,
+          "timeLinkShot": 0,
+          "path": [
+            [
+              1.5,
+              2.5
+            ],
+            [
+              2.5,
+              0.5
+            ],
+            [
+              3.2,
+              -1.2
+            ]
+          ]
+        },
+        {
+          "kind": "char",
+          "label": "A·主体",
+          "pose": "ride",
+          "mount": "马1",
+          "joints": {
+            "bodyY": -0.82,
+            "spineX": 6,
+            "shLX": -32,
+            "shRX": -32,
+            "elL": -55,
+            "elR": -55,
+            "hipLX": -55,
+            "hipLZ": -46,
+            "hipRX": -55,
+            "hipRZ": 46,
+            "kneeL": 72,
+            "kneeR": 72
+          },
+          "pos": [
+            1.48,
+            2.54
+          ],
+          "rotY": 0,
+          "height": 0,
+          "pathMode": "curve",
+          "scale": 1,
+          "pathTimes": [],
+          "pathEase": [],
+          "timeLink": "independent",
+          "timeOffset": 0,
+          "timeLinkShot": 0,
+          "path": []
+        }
+      ],
+      "shots": [
+        {
+          "name": "01 全身建立",
+          "desc": "全景 / 交代动作范围",
+          "dur": 5,
+          "lock": "A·主体",
+          "fov": 38,
+          "camMode": "curve",
+          "timingMode": "pointSync",
+          "syncActor": "",
+          "yaw": 0,
+          "pitch": 0,
+          "camTimes": [
+            0,
+            5
+          ],
+          "camEase": [
+            {
+              "type": "linear"
+            }
+          ],
+          "camAimTimes": [
+            0,
+            5
+          ],
+          "camAimEase": [
+            {
+              "type": "linear"
+            }
+          ],
+          "camFovTimes": [
+            0,
+            5
+          ],
+          "camFovEase": [
+            {
+              "type": "linear"
+            }
+          ],
+          "camAim": [
+            [
+              0,
+              0,
+              38
+            ],
+            [
+              0,
+              0,
+              38
+            ]
+          ],
+          "cam": [
+            [
+              -6,
+              2.4,
+              8
+            ],
+            [
+              -4.8,
+              2.2,
+              6.8
+            ]
+          ]
+        },
+        {
+          "name": "02 中景推进",
+          "desc": "中景 / 缓推跟随表演",
+          "dur": 4,
+          "lock": "A·主体",
+          "fov": 42,
+          "camMode": "curve",
+          "timingMode": "pointSync",
+          "syncActor": "",
+          "yaw": 0,
+          "pitch": 0,
+          "camTimes": [
+            0
+          ],
+          "camEase": [],
+          "camAimTimes": [
+            0
+          ],
+          "camAimEase": [],
+          "camFovTimes": [
+            0
+          ],
+          "camFovEase": [],
+          "camAim": [
+            [
+              0,
+              0,
+              42
+            ]
+          ],
+          "cam": [
+            [
+              0.2,
+              1.75,
+              3.2
+            ]
+          ]
+        },
+        {
+          "name": "03 面部近景",
+          "desc": "近景 / 捕捉表情",
+          "dur": 4,
+          "lock": "A·主体",
+          "fov": 42,
+          "camMode": "curve",
+          "timingMode": "pointSync",
+          "syncActor": "",
+          "yaw": 0,
+          "pitch": 0,
+          "camTimes": [
+            0
+          ],
+          "camEase": [],
+          "camAimTimes": [
+            0
+          ],
+          "camAimEase": [],
+          "camFovTimes": [
+            0
+          ],
+          "camFovEase": [],
+          "camAim": [
+            [
+              0,
+              0,
+              42
+            ]
+          ],
+          "cam": [
+            [
+              4.8,
+              1.75,
+              -0.8
+            ]
+          ]
+        },
+        {
+          "name": "04 侧面细节",
+          "desc": "侧面构图 / 动作细节",
+          "dur": 3.5,
+          "lock": "A·主体",
+          "fov": 30,
+          "camMode": "curve",
+          "timingMode": "pointSync",
+          "syncActor": "",
+          "yaw": 0,
+          "pitch": 0,
+          "camTimes": [
+            0
+          ],
+          "camEase": [],
+          "camAimTimes": [
+            0
+          ],
+          "camAimEase": [],
+          "camFovTimes": [
+            0
+          ],
+          "camFovEase": [],
+          "camAim": [
+            [
+              0,
+              0,
+              30
+            ]
+          ],
+          "cam": [
+            [
+              5.5,
+              1.65,
+              0.4
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "created": "2026-01-01T00:00:00.000Z",
+  "modified": "2026-01-01T00:00:00.000Z"
+}

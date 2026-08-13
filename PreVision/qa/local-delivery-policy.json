@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "product": "PreVision",
+  "fixedAppPath": "~/Applications/PreVision.app",
+  "buildInfoName": "prevision-build.json",
+  "bootstrapSourceCommit": "96050d15e4be1056c1b2b205fe9257fa2361e824",
+  "bootstrapInstalledAsarSha256": "7bdda3bf84a05c56ab501daa4ceced3896bdac3b0020dc5b83228785976ca4b2"
+}

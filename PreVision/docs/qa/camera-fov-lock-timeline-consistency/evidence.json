@@ -1,0 +1,187 @@
+{
+  "schemaVersion": 1,
+  "task": "01.17-camera-fov-lock-timeline-consistency",
+  "date": "2026-08-03",
+  "branch": "fix/01.17-camera-fov-lock-timeline-consistency",
+  "baseline": "37c8cd8d81626b81232a2ab5f774326811602532",
+  "status": "R2_REWORK_EVIDENCE_LIMITED",
+  "node": "v24.18.0",
+  "model": {
+    "requested": "Sol/High",
+    "actual": "未验证",
+    "acceptanceEvidence": false
+  },
+  "productBinding": {
+    "frozenProductCommit": "9663ee982524973d2c6b39912e43800b22241e63",
+    "gitTree": "66f7b06ab59046dbae305b71bd7c5014164d6823",
+    "webEntry": "预见PreVision.html",
+    "webEntryGitBlob": "191a9acbf0d1a06f2df50fe7edccc0856c8a09da",
+    "webEntrySha256": "60c4b3d213b162593fc4a9bea50b0b4ce579a6cb1117cb612d933e2bfd0a3cd9",
+    "bindingLimit": "The screenshot does not embed the commit or hash; this binds the recorded manual session to the frozen worktree build bytes, not a self-authenticating screenshot proof."
+  },
+  "red": {
+    "case": "actor lock + custom + t=0 native input/change",
+    "expected": {
+      "ui": 79,
+      "shot": 79,
+      "camKey": 79,
+      "shotCam": 79,
+      "monitor": "15mm"
+    },
+    "baselineActual": {
+      "inputResult": true,
+      "uiValue": 79,
+      "label": "79°(约15mm)",
+      "shotFov": 79,
+      "camKeyFov": 40,
+      "shotCamFov": 40,
+      "monitor": "33mm · 高2.0m"
+    },
+    "chromeRuntimeRefreshActual": {
+      "shotFov": 79,
+      "camKeyFov": 79,
+      "shotCamFov": 79,
+      "monitor": "33mm · 高2.0m"
+    }
+  },
+  "chromeLan": {
+    "result": "PARTIAL_EVIDENCE",
+    "browser": "Google Chrome 150.0.7871.187",
+    "electron": false,
+    "url": "http://192.168.1.122:4187/director/?qa=0117-green",
+    "port": 4187,
+    "cssViewport": {
+      "width": 2560,
+      "height": 1288
+    },
+    "source": {
+      "kind": "isolated-worktree-web-build",
+      "frozenProductCommit": "9663ee982524973d2c6b39912e43800b22241e63",
+      "webEntryGitBlob": "191a9acbf0d1a06f2df50fe7edccc0856c8a09da",
+      "webEntrySha256": "60c4b3d213b162593fc4a9bea50b0b4ce579a6cb1117cb612d933e2bfd0a3cd9",
+      "stablePort4174Updated": false
+    },
+    "auditableFromCurrentPacket": {
+      "screenshot": {
+        "file": "chrome-lan-actor-lock-fov.png",
+        "sha256": "7509fd2936b0533fd28e60901309e549dcdf8c500ac30d033f69bd52377e9394"
+      },
+      "visibleState": {
+        "lock": "男人1",
+        "timing": "custom/t=0",
+        "fov": 79,
+        "label": "79°(约15mm)",
+        "monitor": "15mm · 高2.4m",
+        "composition": "post-change frame only"
+      }
+    },
+    "recordedManualObservationsNotIndependentlyDemonstrated": {
+      "actorCustomTransition": {
+        "fromFov": 39,
+        "toFov": 79,
+        "compositionBeforeSha256": "ec7b118b2dba2e4bc51842209c97917014341727b545510508508cbabc18cbf7",
+        "compositionAfterSha256": "dc9dd708658de1e7afba582a7c3e88dcf0a79948941e08b8d4d715c2405a5bb8",
+        "evidenceLimit": "No paired before/after images remain in this packet."
+      },
+      "playback": "Previously observed 0.9s monitor 17mm without reverting to old 39 degrees; not independently shown by current evidence.",
+      "pointPreview": "Previously observed on/off behavior; not independently shown by current evidence.",
+      "saveReopen": "Previously observed reopened t=0 at 男人1/custom/79°/15mm; not independently shown by current evidence.",
+      "secondaryMatrix": "Previously observed global/manual and pointSync/arcLength at t=0; not independently shown by current evidence."
+    },
+    "console": {
+      "recordedWarningsOrErrors": [],
+      "recordedStatus": "0 warnings/errors in the earlier manual session",
+      "shownInScreenshot": false,
+      "independentlyRechecked": false,
+      "evidenceLimit": "The 4187 session had ended before R2 rework, so the earlier console result cannot be independently rechecked."
+    },
+    "r2ReworkSessionCheck": {
+      "isolated4187Present": false,
+      "onlyExistingPreVisionChromeTab": "http://192.168.1.200:4174/director/",
+      "stable4174ClaimedOrOperated": false
+    }
+  },
+  "domProbeTimelineFixture": {
+    "relationshipToFov": "No product-semantic dependency; it is a pre-existing hit-test probe in the same test:project-input process.",
+    "removalTrial": {
+      "fovNativeRangeBeforeFailure": "web and electron both PASS",
+      "failure": "timeline fixture did not create every target",
+      "exitCode": 1
+    },
+    "retainedReason": [
+      "Explicit actor path/time and actor time scope deterministically create legacy key and clip targets.",
+      ":not(.foundation) excludes the 0-second foundation key.",
+      "The unique actor label scopes the clip selector to the intended row.",
+      "Drag directions keep targets away from timeline boundaries."
+    ],
+    "productSemanticsChanged": false
+  },
+  "tests": {
+    "build": "PASS",
+    "camera": "111/0",
+    "timeline": "209/0",
+    "playback": "42/0",
+    "history": "29/0",
+    "project": "121/0",
+    "capture": "163/0",
+    "projectInput": "PASS",
+    "i18n": "217/0",
+    "foundation": "151/0 (C8 11/0, coordination 553/0, i18n 217/0, project-input wrapper 11/0)",
+    "impact": "EXIT 1 after camera 111/0, playback 42/0, timeline 209/0; test:app branch 1187/2 equals baseline failure set at 1186/2",
+    "web": "25/0 (run separately because impact stopped at historical test:app failures)",
+    "diffCheck": "PASS",
+    "r2Rework": {
+      "allowed": [
+        "build",
+        "camera",
+        "project-input",
+        "foundation",
+        "diff-check"
+      ],
+      "impactOrFullRun": false,
+      "result": {
+        "build": "PASS; web entry SHA-256 unchanged at 60c4b3d213b162593fc4a9bea50b0b4ce579a6cb1117cb612d933e2bfd0a3cd9",
+        "camera": "111/0",
+        "projectInput": "PASS after restoring the necessary timeline fixture",
+        "foundation": "PASS; repository foundation 151/0, C8 11/0 and subsequent gates exited 0",
+        "diffCheck": "PASS",
+        "impactOrFullRun": false
+      }
+    }
+  },
+  "historicalBaselineFailures": {
+    "baseline": "37c8cd8d81626b81232a2ab5f774326811602532",
+    "baselineResult": "1186/2",
+    "taskBranchResult": "1187/2",
+    "sameFailureSet": true,
+    "failures": [
+      "提示词含树木指代",
+      "无 modal 时既有 Space、方向键、G/R/C/F 与 Delete 工作区命令全部恢复"
+    ],
+    "acceptedAsPass": false
+  },
+  "review": {
+    "status": "BLOCK",
+    "p0": [],
+    "p1": [],
+    "p2": [
+      "Chrome/LAN evidence was insufficient for the originally claimed full matrix."
+    ],
+    "p3": [
+      "Timeline fixture changes in the project-input DOM probe lacked a necessity explanation."
+    ]
+  },
+  "delivery": {
+    "fixedAppUpdated": false,
+    "stableLanPointerUpdated": false,
+    "githubUpdated": false,
+    "pagesUpdated": false,
+    "appDeliverRun": false
+  },
+  "missingEvidence": [
+    "Independent display of the Chrome 39→79 interaction and paired composition change",
+    "Independent Chrome display of global/manual, pointSync/arcLength, playback, point preview, save/reopen and console status",
+    "Independent R2 re-review after this minimal repair",
+    "Central integration and final regression"
+  ]
+}

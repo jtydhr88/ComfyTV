@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "updated": "2026-08-03",
+  "appModules": {
+    "display":{"command":"npm run test:module -- display","covers":["远景地面可读性"]},
+    "capture":{"command":"npm run test:module -- capture","covers":["截图","录屏 UI 与浏览器边界","电影控制台截图/录屏入口","顶部四入口系统保存位置、取消语义、一次性目标授权与完整路径显示"]},
+    "lighting":{"command":"npm run test:module -- lighting","covers":["太阳","阴影","渲染器一致性"]},
+    "history":{"command":"npm run test:module -- history","covers":["多步撤销","Cmd+Z"]},
+    "camera":{"command":"npm run test:module -- camera","covers":["机位路径","逐点朝向与 FOV","独立点预览","对象路径复制","48px 专业摄影机 overlay、透明命中代理、动态裁剪与 monitor/导出隐藏"]},
+    "timeline":{"command":"npm run test:module -- timeline","covers":["关键帧时间","缓动","联动","摄影机子轨道","完整/收起两态与旧 filmstrip 偏好迁移","轨道高度拖拽与 renderer 同帧重绘"]},
+    "playback":{"command":"npm run test:module -- playback","covers":["渲染循环","红色预演与前后镜头控制","播放"]},
+    "actor":{"command":"npm run test:module -- actor","covers":["细化人物/道具/车辆/白马","语义代理模型库、类型/尺寸分离与 Seedance 多镜头参考目录","头/躯干/肩肘腕/髋膝踝关节与姿态","骑乘","调度路径","高度","碰撞","连续沙漠地形支撑"]},
+    "storyboard":{"command":"npm run test:module -- storyboard","covers":["四种常用场景/构图模板","新建场景模板弹窗","中英文对白/动作/环境节拍分析","与 UI locale 分离的确定性规则","临时 StoryboardPlan 与分析/取消零写入","动态 4–8 镜、节拍覆盖/合并理由","手动模板覆盖与角色映射","基础 180° 轴线、视线、主体入画和数值约束","规划器连续二维缩放、应用内全屏/还原、Esc 与视口夹取"]},
+    "project":{"command":"npm run test:module -- project","covers":["自动保存、800ms pending 与 pagehide/beforeunload 末次结算","项目往返","无效文件拒绝","项目→场景→镜头层级选择","场景 templateId 往返与缺字段兼容","本机 UI 偏好环境下的项目往返","场景地面外观向后兼容","首次启动欢迎项目、missing/restored/invalid/unavailable 分类、启动 autosave 零写入与 New Project 隔离"]},
+    "viewport":{"command":"npm run test:module -- viewport","covers":["环绕","俯仰","平移","快捷键"]},
+    "background":{"command":"npm run test:module -- background","covers":["全景天空球","地面投影","棋盘格/纯色/自定义图片地面","场景图板"]},
+    "layout":{"command":"npm run test:module -- layout","covers":["B 电影控制台","C 导演专注","四主题","菜单互斥与可访问性","左栏项目场景→当前场景镜头钻取及返回","镜头缩略图/新增/选择/删除/重命名迁入左栏","底栏无重复镜头条且保留预演与监视器","左右栏状态 API","右栏直接固定展开与分隔条","即时模式提示","时间轴完整/收起两态 API","旧 filmstrip 偏好迁移","renderer 尺寸联动","UI 偏好与项目/撤销隔离","分镜规划器固定标题/角色/footer 与独立列表滚动","监视器","确认框"]},
+    "robustness":{"command":"npm run test:module -- robustness","covers":["全按键扫描","动态 ID 校验"]}
+  },
+  "modules": [
+    {
+      "id":"i18n-test",
+      "patterns":["^测试/国际化测试\\.mjs$","^qa/i18n-policy\\.json$"],
+      "commands":["npm run test:foundation"]
+    },
+    {
+      "id":"i18n-browser",
+      "patterns":["^i18n/runtime\\.js$","^i18n/locales/"],
+      "commands":["npm run test:app","npm run test:web","npm run test:foundation"]
+    },
+    {
+      "id":"i18n-node",
+      "patterns":["^i18n/node\\.cjs$"],
+      "commands":["npm run test:desktop","npm run test:foundation"]
+    },
+    {
+      "id":"foundation-test",
+      "patterns":["^AGENTS\\.md$","^测试/仓库基础测试\\.mjs$","^测试/影响范围测试\\.mjs$","^测试/并行任务协调测试\\.mjs$","^scripts/task-coordination\\.mjs$","^qa/(?:task-scope-taxonomy\\.json|test-impact-map\\.yaml)$","^docs/(?:CODEX_MODEL_ROUTING|DEVELOPMENT_WORKFLOW|CODE_REVIEW|TASK_TEMPLATE|CURRENT_STATE|INDEX)\\.md$","^docs/decisions/0005-department-autonomous-dispatch-and-atomic-write-reservations\\.md$","^docs/plans/(?:active/2026-07-16-autonomous-dispatch-model-routing\\.md|completed/README\\.md)$"],
+      "commands":["npm run test:foundation"]
+    },
+    {
+      "id":"desktop-test",
+      "patterns":["^测试/桌面壳测试\\.mjs$"],
+      "commands":["npm run test:desktop","npm run test:foundation"]
+    },
+    {
+      "id":"local-install",
+      "patterns":["^scripts/(?:update-local-app|deliver-local-app|local-app-status)\\.mjs$","^scripts/build-provenance\\.cjs$","^测试/(?:本地应用安装测试|本地交付门禁测试)\\.mjs$","^qa/local-delivery-policy\\.json$","^forge\\.config\\.cjs$"],
+      "commands":["npm run test:local-install","npm run test:foundation"],
+      "buildRequired":true
+    },
+    {
+      "id":"app-test",
+      "patterns":["^测试/(?:冒烟测试\\.mjs|项目输入DOM探针\\.cjs|项目输入探针启动测试\\.mjs)$","^scripts/run-project-input-probe\\.mjs$","^qa/storyboard-corpus\\.json$","^qa/semantic-proxy-catalog\\.json$"],
+      "commands":["npm run test:app","npm run test:project-input","npm run test:foundation"]
+    },
+    {
+      "id":"main-app",
+      "patterns":["^预见PreVision\\.html$","^src/(?:main|ui/|persist/)","^vendor/"],
+      "commands":["npm run test:app","npm run test:project-input","npm run test:web","npm run test:foundation"]
+    },
+    {
+      "id":"camera-timeline-playback-coupling",
+      "patterns":["^src/(?:ui/(?:inspector|timeline)|playback/engine)\\.js$"],
+      "commands":[],
+      "appModules":["camera","timeline","playback"]
+    },
+    {
+      "id":"electron",
+      "patterns":["^electron/"],
+      "commands":["npm run test:desktop","npm run test:foundation"]
+    },
+    {
+      "id":"build-config",
+      "patterns":["^package(-lock)?\\.json$","^forge\\.config\\.cjs$","^assets/","^\\.nvmrc$"],
+      "commands":["npm run test:web","npm run test:desktop","npm run test:foundation"],
+      "buildRequired":true
+    },
+    {
+      "id":"web-runtime",
+      "patterns":["^scripts/(?:web-runtime-lib|build-web|preview-web)\\.mjs$","^web/","^测试/Web运行底座测试\\.mjs$"],
+      "commands":["npm run test:web","npm run test:foundation"]
+    },
+    {
+      "id":"latest-preview-lan",
+      "patterns":["^scripts/(?:latest-preview-lan-runtime|latest-preview-lan-service|install-latest-preview-lan-service)\\.mjs$","^测试/局域网最新预览测试\\.mjs$","^qa/latest-preview-lan-policy\\.json$","^docs/qa/latest-preview-lan/"],
+      "commands":["npm run test:latest-preview-lan","npm run test:web","npm run test:foundation"],
+      "buildRequired":true
+    },
+    {
+      "id":"web-stress",
+      "patterns":["^scripts/(?:web-stress-lib|run-web-stress)\\.mjs$","^测试/Web压力测试工装测试\\.mjs$","^qa/web-stress-(?:matrix|evidence-schema)\\.json$","^docs/WEB_PERFORMANCE\\.md$","^docs/qa/web-cross-platform-stress/"],
+      "commands":["npm run test:web","npm run test:foundation"]
+    },
+    {
+      "id":"foundation",
+      "patterns":["^AGENTS\\.md$","^README\\.md$","^CONTRIBUTING\\.md$","^CODE_OF_CONDUCT\\.md$","^SECURITY\\.md$","^LICENSE","^docs/","^qa/","^\\.github/","^\\.gitignore$"],
+      "commands":["npm run test:foundation"]
+    }
+  ],
+  "fallback":{
+    "commands":["npm run test:full"],
+    "reason":"无法识别的文件变化按全量回归处理"
+  }
+}

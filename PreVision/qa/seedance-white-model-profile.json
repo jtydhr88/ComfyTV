@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "profile": "seedance-2.5-white-model-v1",
+  "label": "Seedance 2.5 白模参考包",
+  "saveMethod": "browser-download-explicit-user-gesture",
+  "capture": {
+    "fps": 24,
+    "audio": false,
+    "codec": "H264",
+    "manualFrameControl": "captureStream(0)-requestFrame",
+    "startup": "wait-for-start-event-after-uncounted-primer",
+    "cadence": "pre-render-before-absolute-request-slot",
+    "tailDrain": "max(first-request-plus-plan,last-request-plus-one-frame)",
+    "defaultResolutionByAspect": {
+      "16:9": [1920, 1080],
+      "9:16": [1080, 1920],
+      "1:1": [1440, 1440],
+      "4:3": [1664, 1248]
+    },
+    "maxShotDurationSeconds": 29.5,
+    "overLimitPolicy": "reject-before-first-encoded-frame",
+    "scenePackaging": "one-clip-per-shot",
+    "continuationGroupLimitSeconds": 30
+  },
+  "whiteModel": {
+    "lifetime": "one-synchronous-render",
+    "material": "neutral-light-gray-clay",
+    "keeps": ["silhouette", "blocking", "camera", "contact-shadow", "timing"],
+    "hides": ["grid", "labels", "controllers", "gizmos", "selection-outlines", "ui"],
+    "restoration": "lifo-exactly-once"
+  },
+  "truthSource": "planner-plus-actual-encoded-media",
+  "package": {
+    "required": ["white-model-clips", "timestamps", "prompt", "manifest"],
+    "manifestVerifies": ["filename", "mime", "bytes", "sha256", "planned-segment", "actual-frame-count-duration-fps", "timestamp-media-binding", "upload-order"],
+    "appearanceReferences": "user-provided-separately"
+  },
+  "download": {
+    "generationDoesNotClaimSaved": true,
+    "requiresExplicitSecondClick": true,
+    "retainsVerifiedPackageForRetry": true,
+    "pendingPackageIdentity": "sha256-of-project-scene-scope-aspect-and-frozen-authoring-content; current-shot-index-for-shot-scope; no-project-scene-shot-object-references",
+    "selectionMismatchPolicy": "regenerate-current-selection-before-download"
+  },
+  "diagnostics": {
+    "persistentInUi": true,
+    "records": ["expected-media", "recorder-media", "normalized-media", "capture-ledger", "mediarecorder-events", "browser-user-agent"]
+  },
+  "encodedMedia": {
+    "inspect": "iso-bmff-mdhd-stts-or-moof-tfdt-trun",
+    "requiredCodec": "H264/avc1",
+    "strictTolerance": {"frameCount": "exact", "durationSeconds": "at-most-one-frame", "fps": "exact", "decodeTimelineGapTicks": 0, "decodeTimelineOverlapTicks": 0},
+    "timelineNormalization": "exact-H264-sample-count-only; rewrite sample durations plus fragmented tfdt/tfra; reject sidx/edit-lists",
+    "droppedFramePolicy": "reject-before-normalization",
+    "mismatchPolicy": "reject-before-zip-and-download"
+  },
+  "persistence": {
+    "projectWrites": 0,
+    "historyWrites": 0,
+    "autosaveWrites": 0
+  },
+  "excluded": [
+    "seedance-api",
+    "paid-generation",
+    "3d-source-export",
+    "electron-save-dialog",
+    "electron-ipc",
+    "fixed-app-delivery"
+  ]
+}

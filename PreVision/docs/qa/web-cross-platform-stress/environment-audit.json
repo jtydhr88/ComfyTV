@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "taskId": "04.web-cross-platform-stress",
+  "observedAt": "2026-07-15",
+  "applicationSourceCommit": "d0c7815d64a7b3458809ff9ccfe6f6b1f76042d8",
+  "host": {
+    "operatingSystem": "macOS 26.6",
+    "kernel": "Darwin 25.6.0",
+    "architecture": "arm64",
+    "logicalCpuCount": 11,
+    "totalMemoryGiBRounded": 18,
+    "node": "v24.14.0",
+    "executionEnvironment": "local-physical-machine",
+    "operatorAttestation": "physical-machine",
+    "attestationBasis": "Local Apple hardware was observed; no VM, CI, remote-host, or cloud execution path was used.",
+    "ci": false
+  },
+  "platforms": [
+    {
+      "os": "macOS",
+      "browser": "chrome",
+      "version": "150.0.7871.124",
+      "installed": true,
+      "automation": "private-cdp-pipe",
+      "status": "measured",
+      "matrixEvidenceEligible": true,
+      "evidenceEligibilityBasis": "operator-attested-physical-machine",
+      "renderSchedulingControl": "headful-background-throttling-disabled-visibility-still-observed",
+      "result": "completed_9_of_9_cleanup_passed",
+      "evidence": "docs/qa/web-cross-platform-stress/evidence/macos-chrome-standard.json"
+    },
+    {
+      "os": "macOS",
+      "browser": "safari",
+      "version": "26.6 (21624.4.1.11.1)",
+      "installed": true,
+      "driverServerReady": true,
+      "automationAuthorized": false,
+      "status": "blocked",
+      "reasonCode": "safari_remote_automation_not_enabled",
+      "automaticEnableAttempted": false,
+      "minimumUserAction": "The user enables Safari Remote Automation once, then reruns the standard Safari matrix. No password is shared with Codex."
+    },
+    {
+      "os": "Windows",
+      "browser": "chrome",
+      "version": null,
+      "installed": null,
+      "status": "not_run",
+      "reasonCode": "no_real_windows_host"
+    },
+    {
+      "os": "Windows",
+      "browser": "edge",
+      "version": null,
+      "installed": null,
+      "status": "not_run",
+      "reasonCode": "no_real_windows_host"
+    }
+  ],
+  "windowsEnvironmentAudit": {
+    "approvedRemoteHostFound": false,
+    "localWindowsVmFound": false,
+    "approvedPaidCloudEnvironmentFound": false,
+    "vmOrRemoteToolsFound": false,
+    "credentialsRead": false,
+    "connectionAttempted": false,
+    "minimumUserAction": "Provide a real Windows 10/11 host or a 3D-accelerated Windows 11 ARM VM, install Node 20-24 and Chrome, and run both Chrome and Edge matrices locally inside Windows."
+  },
+  "evidenceRules": {
+    "ciCountsAsRealMachine": false,
+    "emulationCountsAsRealMachine": false,
+    "approved3dGpuVmCountsOnlyForWindows": true,
+    "macBrowserCountsAsWindows": false,
+    "unsupportedMetricUsesNullAndReason": true,
+    "hostnameExcluded": true,
+    "usernameExcluded": true,
+    "absolutePathsExcluded": true,
+    "projectContentExcluded": true,
+    "generatedMediaPersisted": false,
+    "systemPacketCapturePerformed": false
+  },
+  "finalHarnessSha256": {
+    "scripts/web-stress-lib.mjs": "0ee9d284702d2c8730970a0b95f988759fd275f34c2642ebe5650b38c1a2acd0",
+    "scripts/run-web-stress.mjs": "e6509d31b5460012584358caf83eae4f3c782f53e6758c73f8450a309a2b905a",
+    "qa/web-stress-matrix.json": "a86d090bfdf950e62d066f6be976b4df43d8ae75039d7b4c4565a77cb959e4ea",
+    "qa/web-stress-evidence-schema.json": "8b6bc6b9e74cb6cb6cb218d4620c15b171ef852e0dbdda9a6da15a2d3481f1c4"
+  }
+}

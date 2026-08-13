@@ -1,0 +1,24 @@
+{
+  "app": "PreVision",
+  "version": 6,
+  "name": "来自未来",
+  "scenes": [
+    {
+      "name": "S",
+      "actors": [],
+      "shots": [
+        {
+          "name": "C",
+          "dur": 5,
+          "cam": [
+            [
+              0,
+              2,
+              6
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}

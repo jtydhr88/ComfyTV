@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "task": "02.11-director-proxy-characters",
+  "capturedAt": "2026-07-29T04:44:28Z",
+  "baseline": "f0cfdf9191a495c83510116ee483137ef7ce1557",
+  "branch": "feat/02.11-director-proxy-characters",
+  "stage": "NOT_INTEGRATED",
+  "windowTitle": "PreVision 02.11 Preview — NOT INTEGRATED",
+  "environment": {
+    "node": "v24.18.0",
+    "electron": "v43.1.0",
+    "devicePixelRatio": 2,
+    "userData": "isolated-temporary-profile"
+  },
+  "fixture": {
+    "creation": "Clicked the Man, Woman and Child buttons through the real Electron accessibility UI.",
+    "arrangement": "Deterministic renderer QA arrangement after creation.",
+    "characters": [
+      { "semanticType": "adult_male", "directionDegrees": 0, "pose": "stand" },
+      { "semanticType": "adult_female", "directionDegrees": 90, "pose": "crouch" },
+      { "semanticType": "child", "directionDegrees": -45, "pose": "sit" }
+    ]
+  },
+  "screenshots": [
+    {
+      "file": "electron-1440x900.png",
+      "windowOuterCss": [1440, 900],
+      "rendererInnerCss": [1440, 868],
+      "storedPixels": [1229, 768],
+      "sha256": "5ee7d295e8705958e8e7cf229c8014a57c8e2f2bdf0f62fa35f6256e1d9d6735",
+      "transportLimitation": "Computer Use constrained the transmitted image height to 768px; no interpolation was applied."
+    },
+    {
+      "file": "electron-1316x768.png",
+      "windowOuterCss": [1316, 768],
+      "rendererInnerCss": [1316, 736],
+      "storedPixels": [1316, 768],
+      "sha256": "aff350d3f4ec08a600224974c3c14523940d8e6c8796765ec11a45727ff089f5"
+    }
+  ],
+  "layout1316": {
+    "buttons": [
+      { "id": "addAdultMale", "text": "+ 男人", "rectCss": [999, 370.328125, 139, 34] },
+      { "id": "addAdultFemale", "text": "+ 女人", "rectCss": [1144, 370.328125, 139, 34] },
+      { "id": "addChild", "text": "+ 小朋友", "rectCss": [999, 410.328125, 139, 34] }
+    ],
+    "rightScroll": {
+      "clientWidth": 302,
+      "scrollWidth": 302,
+      "scrollLeft": 0
+    },
+    "horizontalOverflow": false,
+    "monitorCss": [315, 177]
+  },
+  "layout1440": {
+    "buttons": [
+      { "id": "addAdultMale", "text": "+ 男人", "sizeCss": [139, 34] },
+      { "id": "addAdultFemale", "text": "+ 女人", "sizeCss": [139, 34] },
+      { "id": "addChild", "text": "+ 小朋友", "sizeCss": [139, 34] }
+    ],
+    "rightScroll": {
+      "clientWidth": 302,
+      "scrollWidth": 302
+    },
+    "horizontalOverflow": false
+  },
+  "visualObservations": [
+    "The director viewport and monitor both show the same three stage actors.",
+    "Blue, red and yellow class colors remain immediately distinguishable in both surfaces.",
+    "Front, profile and three-quarter facing directions remain distinguishable.",
+    "The crouched and seated poses expose the major elbow, knee and ankle bends."
+  ],
+  "automation": {
+    "actor": { "passed": 177, "failed": 0 },
+    "project": { "passed": 121, "failed": 0 },
+    "history": { "passed": 29, "failed": 0 },
+    "layout": { "passed": 160, "failed": 0 },
+    "i18n": { "passed": 217, "failed": 0 },
+    "c1RoundTrip": { "passed": 52, "failed": 0 },
+    "u4": {
+      "passed": 112,
+      "failed": 2,
+      "taskCasesPassed": true,
+      "baselineReproduced": true,
+      "baselineFailures": [
+        "26: 0.1s atomic duration apply only changes duration",
+        "26: shortening rejects before truncating keyframes"
+      ]
+    }
+  },
+  "fixedAppChanged": false,
+  "latestPreviewPointerChanged": false,
+  "remoteChanged": false
+}

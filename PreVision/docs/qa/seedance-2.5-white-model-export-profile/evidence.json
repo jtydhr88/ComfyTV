@@ -1,0 +1,98 @@
+{
+  "task": "02.13-seedance-2.5-white-model-export-profile",
+  "title": "02.13｜Seedance 2.5 白模导出适配",
+  "baseline": "17a70c379db4c0d6a37fb51ef5ba7ee496c85bc4",
+  "branch": "feat/02.13-seedance-2.5-white-model-export-profile",
+  "status": "AWAITING_FOCUSED_ROUND2_REVIEW",
+  "preview": {
+    "title": "PreVision 02.13 Preview — NOT INTEGRATED",
+    "isolatedProfile": true,
+    "sourceIsTaskWorktree": true,
+    "electronSourcesModified": false,
+    "fixedAppUpdated": false,
+    "rendererRestored": true,
+    "viewports": {
+      "1440x861_actual": {"documentClientWidth": 1440, "documentClientHeight": 861, "seedanceClientWidth": 302, "seedanceScrollWidth": 302},
+      "1316x768": {"documentClientWidth": 1316, "documentScrollWidth": 1316, "seedanceClientWidth": 302, "seedanceScrollWidth": 302},
+      "390x844": {"documentClientWidth": 390, "documentScrollWidth": 390, "seedanceClientWidth": 359, "seedanceScrollWidth": 359}
+    }
+  },
+  "files": [
+    {"name": "electron-1440x900.png", "filenameRetained": true, "cssViewportActual": [1440, 861], "devicePixelRatio": 2, "pixels": [2880, 1722], "bytes": 748811, "sha256": "ff6f2b14dd5d5d2722387da0728aa17a483e0782538bc7a88377717bd91c7389"},
+    {"name": "white-model-16x9.png", "pixels": [1920, 1080], "bytes": 160290, "sha256": "dc0b8fdd8f0f9488d75e88417adcfd90d8c6020426c525c354b7f1fb53a2080a"},
+    {"name": "white-model-9x16.png", "pixels": [1080, 1920], "bytes": 296539, "sha256": "98a21ce210710fd388357f76818d4e6c2987ae27313872eb7970d3c3cc822a60"}
+  ],
+  "automated": {
+    "C7_seedance_white_model_profile": "87/87",
+    "C5_seedance_package": "41/41",
+    "U6_reframe_math": "17/17",
+    "capture": "155/155",
+    "C1_previz_roundtrip": "52/52",
+    "P8_module_boundaries": "41/41",
+    "actor": "177/177",
+    "project": "121/121",
+    "history": "29/29",
+    "camera": "106/106",
+    "playback": "42/42",
+    "timeline": "209/209",
+    "layout": "160/160",
+    "i18n": "217/217",
+    "foundationBasic": "151/151",
+    "build": "passed (1368637 bytes)",
+    "diffCheck": "passed"
+  },
+  "round2Gate": {
+    "C7_seedance_white_model_profile": "87/87",
+    "capture": "155/155",
+    "C5_seedance_package": "41/41",
+    "i18n": "217/217",
+    "build": "passed (1368637 bytes)",
+    "diffCheck": "passed"
+  },
+  "knownBaselineFailure": {
+    "U4_normalize_malformed": "112/114",
+    "count": 2,
+    "scope": "pre-existing 02.7 shot-duration expectations"
+  },
+  "notRunByContract": ["npm run test:impact", "npm run test:full"],
+  "legacyDownloadPreMediaGate": {
+    "method": "browser-download-explicit-user-gesture",
+    "electronSavePanel": "default Downloads location confirmed by user action",
+    "state": "invalidated-media-mismatch-counterexample",
+    "filename": "Seedance25_WhiteModel_S1_scene_1920x1080.zip",
+    "bytes": 3039069,
+    "sha256": "d7bdccb2cb708f09cb22c00a6c791ad71c2c7a0e8261dfda16bbceb5c5b58b3a",
+    "entryNames": ["01_white_model_S1C1.mp4", "01_white_model_S1C2.mp4", "01_white_model_S1C3.mp4", "01_white_model_S1C4.mp4", "02_timestamps.json", "03_prompt.txt", "04_manifest.json"],
+    "legacyManifestVerification": "byte/hash/order only; invalidated by actual encoded-media mismatch; not post-fix success evidence",
+    "previewPidAliveAtVerification": 37552
+  },
+  "actualMediaGate": {"oldZipFrameCounts": [148,120,119,104], "plannerFrameCounts": [151,121,121,106], "result": "SEEDANCE_MEDIA_MISMATCH for every clip; ZIP/download blocked"},
+  "postFixRealDesktopGeneration": {
+    "state": "ready-for-download",
+    "realDesktopUi": true,
+    "plannedFrames": 150,
+    "renderedFrames": 150,
+    "requestedFrames": 150,
+    "actualEncodedFrames": 150,
+    "strictPlannedActualGate": "passed",
+    "diagnosticBytes": 61643,
+    "diagnosticSha256": "1be1afb8f4534c4cb276d7bfd547b5d59e46f601bda05fd9df25564d81be4437",
+    "zeroWrite": {
+      "project": true,
+      "stage": true,
+      "history": true,
+      "dirty": true,
+      "localStorage": true,
+      "materials": true,
+      "pendingTransaction": true,
+      "autosaveWrites": 0,
+      "localStorageWrites": 0,
+      "pass": true
+    },
+    "downloadClicked": false,
+    "willDownloadObserved": false,
+    "downloadDoneObserved": false,
+    "zipPersisted": false
+  },
+  "missingEvidence": ["post-fix second-click download-done and persisted ZIP verification", "focused round2 review by the original two independent reviewers", "central integration and final regression"]
+}

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "policyStartCommit": "02cf401cf8f59daf49ee79a7cebd7ca6821af075",
+  "defaultLocale": "zh-CN",
+  "supportedLocales": ["zh-CN", "en-US"],
+  "localePathPattern": "^i18n/locales/",
+  "runtimePathPatterns": [
+    "^预见PreVision\\.html$",
+    "^electron/.*\\.(?:js|cjs|mjs)$",
+    "^i18n/(?!locales/).*\\.(?:js|cjs|mjs)$",
+    "^src/(?!app\\.js$).*\\.(?:html|js|cjs|mjs)$"
+  ],
+  "languageKeyPattern": "^[a-z][a-zA-Z0-9]*(?:\\.[a-z][a-zA-Z0-9]*)+$"
+}

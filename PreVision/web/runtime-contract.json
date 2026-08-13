@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "product": "PreVision Web",
+  "mode": "static-web-runtime",
+  "outputDirectory": "dist/web",
+  "manifest": "prevision-web-manifest.json",
+  "deployedContract": "prevision-web-contract.json",
+  "home": {
+    "sourceDirectory": "web/home",
+    "entry": "index.html",
+    "optional": true,
+    "fallback": "director",
+    "reservedTopLevel": [
+      "assets",
+      "director",
+      "i18n",
+      "vendor",
+      "prevision-web-contract.json",
+      "prevision-web-manifest.json"
+    ]
+  },
+  "director": {
+    "source": "预见PreVision.html",
+    "entry": "director/index.html",
+    "rootAssetPrefixes": [
+      "assets/",
+      "i18n/",
+      "vendor/"
+    ]
+  },
+  "requiredFiles": [
+    {
+      "source": "assets/PreVisionIcon-128.png",
+      "output": "assets/PreVisionIcon-128.png"
+    },
+    {
+      "source": "i18n/locales/en-US.js",
+      "output": "i18n/locales/en-US.js"
+    },
+    {
+      "source": "i18n/locales/zh-CN.js",
+      "output": "i18n/locales/zh-CN.js"
+    },
+    {
+      "source": "i18n/runtime.js",
+      "output": "i18n/runtime.js"
+    },
+    {
+      "source": "vendor/html2canvas.LICENSE.txt",
+      "output": "vendor/html2canvas.LICENSE.txt"
+    },
+    {
+      "source": "vendor/html2canvas.min.js",
+      "output": "vendor/html2canvas.min.js"
+    }
+  ],
+  "routes": [
+    {
+      "path": "/",
+      "entry": "index.html"
+    },
+    {
+      "path": "/director/",
+      "entry": "director/index.html",
+      "fallback": "director/index.html"
+    }
+  ],
+  "securityHeaders": {
+    "Content-Security-Policy": "default-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; media-src 'self' data: blob:; connect-src 'self' data: blob:; frame-src 'self'",
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Referrer-Policy": "no-referrer",
+    "Cross-Origin-Opener-Policy": "same-origin",
+    "Cross-Origin-Resource-Policy": "same-origin",
+    "Permissions-Policy": "display-capture=(self), clipboard-write=(self), fullscreen=(self), camera=(), microphone=(), geolocation=(), payment=(), usb=(), serial=()"
+  },
+  "cacheControl": {
+    "html": "no-store",
+    "manifest": "no-store",
+    "asset": "no-store",
+    "error": "no-store"
+  },
+  "mimeTypes": {
+    ".avif": "image/avif",
+    ".bin": "application/octet-stream",
+    ".css": "text/css; charset=utf-8",
+    ".gif": "image/gif",
+    ".glb": "model/gltf-binary",
+    ".gltf": "model/gltf+json; charset=utf-8",
+    ".hdr": "image/vnd.radiance",
+    ".html": "text/html; charset=utf-8",
+    ".ico": "image/x-icon",
+    ".jpeg": "image/jpeg",
+    ".jpg": "image/jpeg",
+    ".js": "text/javascript; charset=utf-8",
+    ".json": "application/json; charset=utf-8",
+    ".ktx2": "image/ktx2",
+    ".map": "application/json; charset=utf-8",
+    ".mjs": "text/javascript; charset=utf-8",
+    ".mp4": "video/mp4",
+    ".mp3": "audio/mpeg",
+    ".ogg": "audio/ogg",
+    ".png": "image/png",
+    ".svg": "image/svg+xml; charset=utf-8",
+    ".txt": "text/plain; charset=utf-8",
+    ".wasm": "application/wasm",
+    ".webm": "video/webm",
+    ".webp": "image/webp",
+    ".webmanifest": "application/manifest+json; charset=utf-8",
+    ".woff": "font/woff",
+    ".woff2": "font/woff2",
+    ".xml": "application/xml; charset=utf-8"
+  }
+}

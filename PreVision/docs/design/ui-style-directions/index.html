@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PreVision UI Style Directions</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --app-bg: #101216;
+      --panel: #181b21;
+      --raised: #20242b;
+      --raised-2: #282d36;
+      --overlay: rgba(20, 23, 29, .96);
+      --line: #303641;
+      --line-soft: #242932;
+      --text: #e7eaf0;
+      --muted: #98a0ae;
+      --faint: #69717f;
+      --brand: #f05261;
+      --brand-soft: rgba(240, 82, 97, .14);
+      --focus: #5794f7;
+      --path: #f2c94c;
+      --success: #52c990;
+      --warning: #e9a83e;
+      --danger: #ef5965;
+      --left: 252px;
+      --right: 320px;
+      --timeline: 168px;
+      --top: 66px;
+      --radius: 6px;
+      --control: 30px;
+      --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    body {
+      background: var(--app-bg);
+      color: var(--text);
+      font: 12px/1.35 var(--font);
+      letter-spacing: .01em;
+      user-select: none;
+    }
+    button, input { font: inherit; color: inherit; }
+    button { border: 0; }
+
+    body[data-style="cinema"] {
+      --app-bg: #0c1016;
+      --panel: #141a22;
+      --raised: #1d2530;
+      --raised-2: #25303d;
+      --overlay: rgba(14, 19, 27, .97);
+      --line: #2b3542;
+      --line-soft: #202a35;
+      --text: #edf2f7;
+      --muted: #91a0b2;
+      --faint: #667488;
+      --brand: #e95764;
+      --brand-soft: rgba(233, 87, 100, .14);
+      --focus: #43a1ff;
+      --path: #f3b849;
+      --left: 276px;
+      --right: 336px;
+      --timeline: 176px;
+      --top: 84px;
+      --radius: 5px;
+      --control: 32px;
+    }
+
+    body[data-style="focus"] {
+      --app-bg: #080a0d;
+      --panel: rgba(20, 23, 29, .96);
+      --raised: #242932;
+      --raised-2: #2c323d;
+      --overlay: rgba(15, 18, 23, .98);
+      --line: #353b47;
+      --line-soft: #262b34;
+      --text: #f2f3f5;
+      --muted: #9ca2ad;
+      --faint: #686f7b;
+      --brand: #ff5365;
+      --brand-soft: rgba(255, 83, 101, .14);
+      --focus: #71a7ff;
+      --path: #ffd04a;
+      --left: 48px;
+      --right: 48px;
+      --timeline: 108px;
+      --top: 48px;
+      --radius: 10px;
+      --control: 34px;
+    }
+
+    body[data-style="atelier"] {
+      color-scheme: light;
+      --app-bg: #e8ebef;
+      --panel: #f4f6f8;
+      --raised: #ffffff;
+      --raised-2: #e9edf2;
+      --overlay: rgba(255, 255, 255, .97);
+      --line: #ced3da;
+      --line-soft: #dde1e6;
+      --text: #20242a;
+      --muted: #68717e;
+      --faint: #929aa5;
+      --brand: #d94e5b;
+      --brand-soft: rgba(217, 78, 91, .11);
+      --focus: #2f6fed;
+      --path: #b77a00;
+      --success: #19875b;
+      --warning: #a56800;
+      --danger: #c63e4a;
+      --left: 276px;
+      --right: 312px;
+      --timeline: 208px;
+      --top: 72px;
+      --radius: 8px;
+      --control: 32px;
+    }
+
+    .icon { width: 15px; height: 15px; display: block; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .icon.sm { width: 13px; height: 13px; }
+    .icon.lg { width: 18px; height: 18px; }
+    .icon.xl { width: 20px; height: 20px; }
+
+    .app-shell { width: 100vw; height: 100vh; display: grid; grid-template-rows: var(--top) 1fr 22px; background: var(--app-bg); }
+    .chrome { position: relative; z-index: 20; border-bottom: 1px solid var(--line); background: var(--panel); }
+    .global-bar { height: 36px; display: flex; align-items: center; gap: 6px; padding: 0 10px; border-bottom: 1px solid var(--line-soft); }
+    .context-bar { height: calc(var(--top) - 36px); min-height: 30px; display: flex; align-items: center; gap: 6px; padding: 0 10px; }
+
+    .brand { display: flex; align-items: center; gap: 8px; margin-right: 4px; }
+    .brand-mark { width: 24px; height: 24px; display: grid; place-items: center; border: 1px solid color-mix(in srgb, var(--brand) 65%, var(--line)); border-radius: 7px; color: var(--brand); background: color-mix(in srgb, var(--brand-soft) 65%, var(--raised)); box-shadow: inset 0 1px 0 rgba(255,255,255,.08); font-weight: 800; }
+    .brand-name { font-size: 12px; font-weight: 650; white-space: nowrap; }
+    .brand-name small { display: block; margin-top: -2px; color: var(--muted); font-size: 8px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; }
+
+    .menu-link { height: 26px; padding: 0 8px; display: inline-flex; align-items: center; border-radius: 4px; color: var(--muted); }
+    .menu-link.active, .menu-link:hover { background: var(--raised); color: var(--text); }
+    .project-chip { height: 26px; min-width: 148px; max-width: 210px; padding: 0 10px; display: flex; align-items: center; gap: 6px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--app-bg); color: var(--text); }
+    .project-chip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
+    .grow { flex: 1; }
+    .divider { width: 1px; height: 18px; background: var(--line); margin: 0 3px; }
+
+    .tool, .tool-text, .select-like, .pill {
+      height: var(--control); min-width: var(--control); display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 0 8px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--raised); color: var(--muted); box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
+    }
+    .tool:hover, .tool-text:hover, .select-like:hover { border-color: color-mix(in srgb, var(--focus) 40%, var(--line)); color: var(--text); }
+    .tool.active, .tool-text.active { color: var(--text); border-color: color-mix(in srgb, var(--focus) 60%, var(--line)); background: color-mix(in srgb, var(--focus) 15%, var(--raised)); }
+    .tool.primary { color: white; border-color: var(--brand); background: var(--brand); }
+    .tool.record { color: var(--brand); }
+    .tool .kbd { margin-left: 2px; color: var(--faint); font-size: 10px; }
+    .select-like { min-width: 110px; justify-content: space-between; color: var(--text); }
+    .pill { border-color: transparent; background: transparent; }
+    .pill .state-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 3px color-mix(in srgb, var(--success) 14%, transparent); }
+
+    .workspace { position: relative; min-height: 0; display: grid; grid-template-columns: var(--left) minmax(420px, 1fr) var(--right); grid-template-rows: minmax(0, 1fr) var(--timeline); background: var(--app-bg); }
+    .left-panel, .right-panel, .timeline, .viewport-stack { min-width: 0; min-height: 0; }
+    .left-panel { grid-row: 1 / 3; border-right: 1px solid var(--line); background: var(--panel); position: relative; z-index: 5; }
+    .right-panel { grid-column: 3; grid-row: 1 / 3; border-left: 1px solid var(--line); background: var(--panel); position: relative; z-index: 5; overflow: hidden; }
+    .viewport-stack { grid-column: 2; grid-row: 1; display: flex; flex-direction: column; background: #090b0f; overflow: hidden; }
+    .timeline { grid-column: 2; grid-row: 2; border-top: 1px solid var(--line); background: var(--panel); position: relative; z-index: 4; overflow: hidden; }
+    .resize-v { position: absolute; top: 0; bottom: 0; width: 7px; z-index: 10; cursor: ew-resize; }
+    .left-panel .resize-v { right: -4px; }
+    .right-panel .resize-v { left: -4px; }
+    .resize-v::after { content: ""; position: absolute; top: 42%; bottom: 42%; left: 2px; width: 2px; border-radius: 2px; background: transparent; }
+    .resize-v:hover::after { background: var(--focus); }
+    .timeline .resize-h { position: absolute; top: -4px; left: 0; right: 0; height: 8px; cursor: ns-resize; z-index: 8; }
+    .timeline .resize-h::after { content: ""; position: absolute; left: 46%; right: 46%; top: 2px; height: 2px; border-radius: 2px; background: var(--line); }
+
+    .panel-head { height: 38px; padding: 0 10px; display: flex; align-items: center; gap: 7px; border-bottom: 1px solid var(--line-soft); }
+    .panel-head strong { font-size: 12px; font-weight: 650; }
+    .count { min-width: 18px; height: 18px; display: grid; place-items: center; border-radius: 9px; background: var(--raised); color: var(--muted); font-size: 10px; }
+    .collapse { margin-left: auto; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 4px; color: var(--muted); background: transparent; }
+    .collapse:hover { color: var(--text); background: var(--raised); }
+    .panel-tools { display: flex; gap: 6px; padding: 8px 10px; }
+    .search { height: 30px; min-width: 0; flex: 1; display: flex; align-items: center; gap: 6px; padding: 0 8px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--app-bg); color: var(--faint); }
+    .add-square { width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: var(--radius); background: var(--raised); color: var(--text); }
+    .tabs { display: flex; gap: 3px; padding: 0 10px 8px; }
+    .tab { height: 27px; flex: 1; display: grid; place-items: center; border-radius: 5px; color: var(--muted); }
+    .tab.active { color: var(--text); background: var(--raised); box-shadow: inset 0 -2px var(--focus); }
+
+    .scene-list { display: grid; gap: 5px; padding: 0 8px 12px; }
+    .scene-row { position: relative; min-height: 64px; padding: 9px 10px 8px 34px; border: 1px solid transparent; border-radius: var(--radius); color: var(--muted); }
+    .scene-row:hover { background: var(--raised); }
+    .scene-row.active { color: var(--text); border-color: color-mix(in srgb, var(--focus) 52%, var(--line)); background: color-mix(in srgb, var(--focus) 9%, var(--raised)); }
+    .scene-index { position: absolute; left: 9px; top: 10px; width: 17px; height: 17px; display: grid; place-items: center; border-radius: 5px; background: var(--raised-2); color: var(--muted); font-size: 9px; font-weight: 700; }
+    .scene-row.active .scene-index { background: var(--focus); color: white; }
+    .scene-title { display: flex; align-items: center; gap: 6px; font-weight: 620; color: inherit; }
+    .scene-meta { margin-top: 5px; display: flex; align-items: center; gap: 7px; color: var(--faint); font-size: 10px; }
+    .beats { margin-top: 7px; display: flex; gap: 2px; }
+    .beats span { height: 2px; flex: 1; border-radius: 2px; background: var(--line); }
+    .scene-row.active .beats span:nth-child(-n+3) { background: var(--brand); }
+    .scene-section { margin: 10px 10px 6px; color: var(--faint); font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+
+    .viewport-localbar { height: 38px; flex: 0 0 38px; padding: 0 9px; display: flex; align-items: center; gap: 5px; border-bottom: 1px solid var(--line); background: var(--panel); }
+    .viewport-localbar .tool, .viewport-localbar .tool-text { --control: 28px; }
+    .viewport { position: relative; min-height: 0; flex: 1; overflow: hidden; background: #0a0b0f; }
+    .viewport svg.scene-source { position: absolute; inset: 0; width: 100%; height: 100%; display: block; filter: saturate(.86) contrast(1.04) brightness(.92); }
+    body[data-style="cinema"] .viewport svg.scene-source { filter: saturate(.78) contrast(1.08) brightness(.86) hue-rotate(-4deg); }
+    body[data-style="focus"] .viewport svg.scene-source { filter: saturate(.72) contrast(1.14) brightness(.76); transform: scale(1.025); }
+    body[data-style="atelier"] .viewport svg.scene-source { filter: saturate(.72) contrast(.96) brightness(1.06); }
+    .viewport-tint { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(5,8,12,.12), transparent 38%, rgba(5,8,12,.12)); }
+    body[data-style="atelier"] .viewport-tint { background: linear-gradient(180deg, rgba(235,240,246,.08), transparent 38%, rgba(255,255,255,.08)); }
+    .hud { position: absolute; z-index: 3; display: flex; align-items: center; gap: 5px; color: rgba(244,247,251,.9); }
+    .hud.top-left { top: 12px; left: 12px; }
+    .hud.top-right { top: 12px; right: 12px; }
+    .hud.bottom-left { left: 12px; bottom: 12px; }
+    .hud-chip { min-height: 26px; padding: 0 8px; display: inline-flex; align-items: center; gap: 6px; border: 1px solid rgba(255,255,255,.13); border-radius: 5px; background: rgba(13,16,21,.72); color: rgba(255,255,255,.86); backdrop-filter: blur(8px); }
+    .axis { position: absolute; right: 14px; bottom: 14px; width: 42px; height: 42px; border: 1px solid rgba(255,255,255,.13); border-radius: 50%; background: rgba(13,16,21,.58); }
+    .axis::before, .axis::after { content: ""; position: absolute; left: 20px; top: 6px; width: 1px; height: 29px; background: linear-gradient(#eb5967 0 50%, #66b47d 50%); transform: rotate(42deg); }
+    .axis::after { transform: rotate(-42deg); background: linear-gradient(#5f9ff0 0 50%, #d6aa49 50%); }
+
+    .monitor { margin: 9px; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--app-bg); box-shadow: 0 5px 18px rgba(0,0,0,.15); }
+    .monitor-head { height: 28px; padding: 0 8px; display: flex; align-items: center; color: var(--muted); border-bottom: 1px solid var(--line-soft); }
+    .monitor-head strong { color: var(--text); font-size: 10px; }
+    .monitor-view { position: relative; aspect-ratio: 16 / 7; overflow: hidden; background: #0a0b0f; }
+    .monitor-view svg { width: 100%; height: 100%; }
+    .safe-frame { position: absolute; inset: 11%; border: 1px solid rgba(255,255,255,.25); }
+    .safe-frame::before, .safe-frame::after { content: ""; position: absolute; background: rgba(255,255,255,.12); }
+    .safe-frame::before { left: 33.3%; top: 0; bottom: 0; width: 1px; box-shadow: calc(100% + 33.3%) 0 rgba(255,255,255,.12); }
+    .safe-frame::after { top: 33.3%; left: 0; right: 0; height: 1px; box-shadow: 0 calc(100% + 33.3%) rgba(255,255,255,.12); }
+    .monitor-foot { height: 28px; padding: 0 8px; display: flex; align-items: center; gap: 8px; color: var(--faint); font: 9px/1 ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .monitor-foot .progress { flex: 1; height: 2px; background: var(--line); }
+    .monitor-foot .progress i { display: block; width: 38%; height: 100%; background: var(--brand); }
+    .transport { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 0 9px 9px; }
+    .transport .tool-text { justify-content: center; }
+
+    .inspector-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; padding: 0 9px 8px; border-bottom: 1px solid var(--line-soft); }
+    .inspector-tab { height: 30px; display: grid; place-items: center; color: var(--muted); border-radius: 5px; }
+    .inspector-tab.active { color: var(--focus); background: color-mix(in srgb, var(--focus) 9%, var(--raised)); }
+    .inspector-scroll { height: calc(100% - 260px); overflow: hidden; }
+    .prop-group { border-bottom: 1px solid var(--line-soft); }
+    .prop-head { height: 34px; padding: 0 10px; display: flex; align-items: center; gap: 7px; color: var(--text); font-weight: 620; }
+    .prop-head .chev { color: var(--faint); }
+    .prop-body { display: grid; gap: 8px; padding: 5px 10px 11px; }
+    .field { display: grid; grid-template-columns: 88px 1fr; gap: 7px; align-items: center; color: var(--muted); }
+    .field-value { height: 28px; padding: 0 8px; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--line); border-radius: 5px; background: var(--app-bg); color: var(--text); }
+    .xyz { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
+    .xyz span { height: 27px; padding: 0 5px; display: flex; align-items: center; gap: 3px; border: 1px solid var(--line); border-radius: 4px; background: var(--app-bg); color: var(--text); font-size: 10px; }
+    .xyz b { font-size: 8px; }
+    .xyz span:nth-child(1) b { color: #ef6470; }
+    .xyz span:nth-child(2) b { color: #62bd7b; }
+    .xyz span:nth-child(3) b { color: #66a3f3; }
+    .slider { height: 3px; border-radius: 2px; background: var(--line); position: relative; }
+    .slider::before { content: ""; position: absolute; left: 0; top: 0; width: 44%; height: 100%; background: var(--focus); }
+    .slider::after { content: ""; position: absolute; left: 44%; top: 50%; width: 9px; height: 9px; transform: translate(-50%,-50%); border-radius: 50%; background: var(--text); box-shadow: 0 0 0 2px var(--panel); }
+
+    .timeline-head { height: 38px; display: flex; align-items: center; gap: 6px; padding: 0 9px; border-bottom: 1px solid var(--line-soft); }
+    .timeline-head strong { margin-right: 4px; font-size: 11px; }
+    .timecode { margin-left: 4px; font: 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--text); }
+    .timeline-body { position: relative; height: calc(100% - 38px); display: grid; grid-template-columns: 110px 1fr; overflow: hidden; }
+    .track-labels { border-right: 1px solid var(--line); background: var(--panel); }
+    .track-label { height: 32px; padding: 0 9px; display: flex; align-items: center; gap: 6px; color: var(--muted); border-bottom: 1px solid var(--line-soft); }
+    .tracks { position: relative; background: var(--app-bg); overflow: hidden; }
+    .ruler { height: 24px; padding: 0 8px; display: flex; justify-content: space-between; align-items: center; color: var(--faint); border-bottom: 1px solid var(--line-soft); font: 8px/1 ui-monospace, SFMono-Regular, Menlo, monospace; background: repeating-linear-gradient(90deg, transparent 0 49px, color-mix(in srgb, var(--line) 45%, transparent) 49px 50px); }
+    .shot-track { height: 42px; display: grid; grid-template-columns: 3fr 2fr 1.2fr 1fr; gap: 3px; padding: 4px 5px; border-bottom: 1px solid var(--line-soft); }
+    .shot { position: relative; min-width: 0; padding: 4px 7px; border: 1px solid var(--line); border-radius: 4px; background: var(--raised); overflow: hidden; color: var(--muted); }
+    .shot.active { border-color: var(--brand); background: var(--brand-soft); color: var(--text); }
+    .shot b { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 9px; font-weight: 620; }
+    .shot small { color: var(--faint); font-size: 8px; }
+    .key-track { position: relative; height: 32px; border-bottom: 1px solid var(--line-soft); background: repeating-linear-gradient(90deg, transparent 0 49px, color-mix(in srgb, var(--line) 36%, transparent) 49px 50px); }
+    .key-track i { position: absolute; top: 12px; width: 8px; height: 8px; border: 1px solid var(--warning); background: var(--app-bg); transform: rotate(45deg); }
+    .key-track i:nth-child(1) { left: 8%; }
+    .key-track i:nth-child(2) { left: 28%; }
+    .key-track i:nth-child(3) { left: 52%; }
+    .key-track i:nth-child(4) { left: 79%; }
+    .playhead { position: absolute; left: 34%; top: 0; bottom: 0; width: 1px; background: var(--brand); z-index: 5; box-shadow: 0 0 0 1px rgba(240,82,97,.12); }
+    .playhead::before { content: ""; position: absolute; top: 0; left: -4px; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 6px solid var(--brand); }
+
+    .statusbar { height: 22px; display: flex; align-items: center; gap: 12px; padding: 0 9px; border-top: 1px solid var(--line); background: var(--panel); color: var(--faint); font-size: 9px; }
+    .statusbar .right-status { margin-left: auto; display: flex; gap: 12px; }
+
+    .menu-popover { display: none; position: absolute; z-index: 80; top: 32px; right: 152px; width: 230px; padding: 6px; border: 1px solid var(--line); border-radius: 7px; background: var(--overlay); box-shadow: 0 16px 46px rgba(0,0,0,.38); backdrop-filter: blur(18px); }
+    body.menu-open .menu-popover { display: block; }
+    .menu-title { padding: 6px 8px 5px; color: var(--faint); font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+    .menu-item { height: 31px; padding: 0 8px; display: flex; align-items: center; gap: 8px; border-radius: 5px; color: var(--muted); }
+    .menu-item:hover, .menu-item.active { color: var(--text); background: var(--raised); }
+    .menu-item .shortcut { margin-left: auto; color: var(--faint); font-size: 10px; }
+    .menu-sep { height: 1px; margin: 5px 7px; background: var(--line); }
+
+    .mode-rail { display: none; }
+    body[data-style="cinema"] .global-bar { height: 46px; padding: 0 12px; }
+    body[data-style="cinema"] .context-bar { height: 38px; }
+    body[data-style="cinema"] .brand-name small { display: none; }
+    body[data-style="cinema"] .left-panel { padding-left: 48px; }
+    body[data-style="cinema"] .mode-rail { display: flex; position: absolute; z-index: 8; left: 0; top: 0; bottom: 0; width: 48px; flex-direction: column; align-items: center; gap: 5px; padding-top: 8px; border-right: 1px solid var(--line); background: var(--app-bg); }
+    .mode-button { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 6px; color: var(--muted); }
+    .mode-button.active { color: var(--focus); background: color-mix(in srgb, var(--focus) 12%, var(--raised)); box-shadow: inset 2px 0 var(--focus); }
+    body[data-style="cinema"] .scene-row { min-height: 58px; }
+    body[data-style="cinema"] .timeline-body { grid-template-columns: 126px 1fr; }
+    body[data-style="cinema"] .menu-popover { right: 202px; top: 42px; }
+
+    body[data-style="focus"] .chrome { margin: 6px 8px 0; border: 1px solid var(--line); border-radius: 9px; background: rgba(17,20,25,.88); backdrop-filter: blur(16px); }
+    body[data-style="focus"] .global-bar { height: 46px; border-bottom: 0; }
+    body[data-style="focus"] .context-bar { display: none; }
+    body[data-style="focus"] .workspace { margin-top: -48px; padding-top: 48px; grid-template-columns: 48px minmax(420px, 1fr) 48px; grid-template-rows: minmax(0,1fr) 108px; }
+    body[data-style="focus"] .left-panel, body[data-style="focus"] .right-panel { border: 0; background: rgba(12,14,18,.92); backdrop-filter: blur(14px); }
+    body[data-style="focus"] .left-panel { padding-top: 42px; }
+    body[data-style="focus"] .left-panel > :not(.mode-rail):not(.resize-v) { display: none; }
+    body[data-style="focus"] .right-panel > :not(.resize-v) { display: none; }
+    body[data-style="focus"] .mode-rail { display: flex; position: absolute; inset: 48px 0 0; flex-direction: column; align-items: center; gap: 6px; padding-top: 9px; }
+    body[data-style="focus"] .viewport-stack { border-radius: 8px 8px 0 0; overflow: hidden; margin: 6px 0 0; }
+    body[data-style="focus"] .viewport-localbar { position: absolute; z-index: 8; top: 60px; left: 62px; right: 62px; width: auto; max-width: 660px; border: 1px solid rgba(255,255,255,.12); border-radius: 9px; background: rgba(18,21,27,.84); backdrop-filter: blur(14px); }
+    body[data-style="focus"] .viewport { height: 100%; }
+    body[data-style="focus"] .timeline { margin: 0; border-radius: 0; }
+    body[data-style="focus"] .timeline-body { grid-template-columns: 0 1fr; }
+    body[data-style="focus"] .track-labels, body[data-style="focus"] .key-track { display: none; }
+    body[data-style="focus"] .tracks { grid-column: 2; }
+    body[data-style="focus"] .ruler { height: 18px; }
+    body[data-style="focus"] .shot-track { height: 48px; padding: 5px 10px; gap: 6px; }
+    body[data-style="focus"] .timeline-head { height: 40px; }
+    body[data-style="focus"] .drawer-preview { display: block; }
+    .drawer-preview { display: none; position: absolute; z-index: 14; right: 59px; top: 63px; width: 314px; max-height: calc(100% - 178px); overflow: hidden; border: 1px solid var(--line); border-radius: 10px; background: var(--overlay); box-shadow: 0 20px 60px rgba(0,0,0,.45); backdrop-filter: blur(18px); }
+    .drawer-preview .inspector-tabs { padding-top: 8px; }
+    .drawer-preview .prop-group:last-child { border-bottom: 0; }
+    body[data-style="focus"] .brand-name small { display: none; }
+    body[data-style="focus"] .menu-link:nth-of-type(n+3) { display: none; }
+
+    body[data-style="atelier"] .global-bar { height: 40px; }
+    body[data-style="atelier"] .context-bar { height: 32px; }
+    body[data-style="atelier"] .brand-mark { background: var(--brand); color: white; }
+    body[data-style="atelier"] .scene-row { min-height: 60px; border-radius: 7px; }
+    body[data-style="atelier"] .scene-row.active { border-color: transparent; box-shadow: inset 3px 0 var(--focus); }
+    body[data-style="atelier"] .monitor { box-shadow: 0 4px 16px rgba(45,55,68,.09); }
+    body[data-style="atelier"] .viewport-localbar { background: #f7f8fa; }
+    body[data-style="atelier"] .timeline-body { grid-template-columns: 132px 1fr; }
+    body[data-style="atelier"] .tab.active { box-shadow: inset 0 -2px var(--brand); }
+    body[data-style="atelier"] .viewport { border: 5px solid #d7dbe0; }
+
+    body.theme-mist {
+      color-scheme: light;
+      --app-bg: #e8ebef;
+      --panel: #f7f8fa;
+      --raised: #ffffff;
+      --raised-2: #e8ecf1;
+      --overlay: rgba(255,255,255,.98);
+      --line: #cdd3da;
+      --line-soft: #dde2e8;
+      --text: #20242a;
+      --muted: #68717e;
+      --faint: #929aa5;
+      --brand: #d94e5b;
+      --brand-soft: rgba(217,78,91,.11);
+      --focus: #2f6fed;
+      --path: #b77a00;
+    }
+    body.theme-indigo {
+      color-scheme: dark;
+      --app-bg: #101426;
+      --panel: #191e35;
+      --raised: #242a45;
+      --raised-2: #2e3554;
+      --overlay: rgba(22,27,48,.98);
+      --line: #343c5c;
+      --line-soft: #282f4b;
+      --text: #f0f1ff;
+      --muted: #a7adc9;
+      --faint: #767e9e;
+      --brand: #f26178;
+      --brand-soft: rgba(242,97,120,.14);
+      --focus: #8b78ff;
+      --path: #f4c95d;
+    }
+    body.theme-indigo .viewport svg.scene-source,
+    body.theme-indigo .monitor-view svg.scene-source { filter: none; }
+    body.theme-amber {
+      color-scheme: dark;
+      --app-bg: #16130f;
+      --panel: #211c16;
+      --raised: #2c251c;
+      --raised-2: #382f23;
+      --overlay: rgba(30,25,19,.98);
+      --line: #45392a;
+      --line-soft: #332a20;
+      --text: #f5eee3;
+      --muted: #b7a995;
+      --faint: #847764;
+      --brand: #ef5b66;
+      --brand-soft: rgba(239,91,102,.14);
+      --focus: #e7a640;
+      --path: #f4c95d;
+    }
+
+    .direction-label { position: fixed; z-index: 100; left: 50%; bottom: 30px; transform: translateX(-50%); padding: 5px 10px; border: 1px solid rgba(255,255,255,.12); border-radius: 999px; background: rgba(8,10,14,.72); color: rgba(255,255,255,.72); backdrop-filter: blur(10px); font-size: 9px; letter-spacing: .08em; text-transform: uppercase; pointer-events: none; }
+    body[data-style="atelier"] .direction-label { border-color: rgba(0,0,0,.1); background: rgba(255,255,255,.82); color: rgba(27,32,38,.68); }
+  </style>
+</head>
+<body data-style="forge">
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute">
+    <defs>
+      <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+      <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="i-save" viewBox="0 0 24 24"><path d="M5 4h12l2 2v14H5z"/><path d="M8 4v6h8V4M8 20v-6h8v6"/></symbol>
+      <symbol id="i-undo" viewBox="0 0 24 24"><path d="M8 8H4V4"/><path d="M4 8c2.2-3 5-4.5 8.2-4 4.3.5 7.3 4.4 6.8 8.7-.5 4.1-4 7.3-8.2 7.3-2.6 0-4.8-1-6.3-2.7"/></symbol>
+      <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 7h11v10H4zM15 10l5-3v10l-5-3z"/></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7z"/></symbol>
+      <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+      <symbol id="i-move" viewBox="0 0 24 24"><path d="M12 3v18M3 12h18M12 3 9 6m3-3 3 3M21 12l-3-3m3 3-3 3M12 21l-3-3m3 3 3-3M3 12l3-3m-3 3 3 3"/></symbol>
+      <symbol id="i-rotate" viewBox="0 0 24 24"><path d="M18.5 8A7 7 0 1 0 19 15"/><path d="m17 4 2 4-4 1"/></symbol>
+      <symbol id="i-frame" viewBox="0 0 24 24"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></symbol>
+      <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h1M4 12h1M4 18h1"/></symbol>
+      <symbol id="i-timeline" viewBox="0 0 24 24"><path d="M4 6h16v12H4zM8 6v12M14 6v12M4 11h16"/></symbol>
+      <symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="7" r="3"/><path d="M6 21c.6-5 2.6-8 6-8s5.4 3 6 8"/></symbol>
+      <symbol id="i-path" viewBox="0 0 24 24"><circle cx="5" cy="17" r="2"/><circle cx="19" cy="7" r="2"/><path d="M7 17c5 0 2-10 10-10"/></symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></symbol>
+      <symbol id="i-eye" viewBox="0 0 24 24"><path d="M3 12s3-5 9-5 9 5 9 5-3 5-9 5-9-5-9-5Z"/><circle cx="12" cy="12" r="2.5"/></symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24"><path d="m9 4 6 6M8 9l7-5 5 5-5 7M11 13l-7 7"/></symbol>
+      <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+      <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="8" cy="18" r="2"/></symbol>
+      <symbol id="i-film" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M7 5v14M17 5v14M3 9h4M17 9h4M3 15h4M17 15h4"/></symbol>
+    </defs>
+  </svg>
+
+  <div class="app-shell">
+    <header class="chrome">
+      <div class="global-bar">
+        <div class="brand">
+          <div class="brand-mark">P</div>
+          <div class="brand-name">预见 PreVision<small>3D Director</small></div>
+        </div>
+        <span class="menu-link active">项目</span>
+        <span class="menu-link">编辑</span>
+        <span class="menu-link">视图</span>
+        <span class="menu-link">窗口</span>
+        <div class="divider"></div>
+        <div class="project-chip"><span class="dot"></span><span>关系断裂 · 分镜预演</span></div>
+        <div class="grow"></div>
+        <span class="pill"><span class="state-dot"></span>已保存</span>
+        <button class="tool" title="撤销"><svg class="icon"><use href="#i-undo"/></svg></button>
+        <button class="tool" title="保存"><svg class="icon"><use href="#i-save"/></svg></button>
+        <button class="tool-text capture-trigger"><svg class="icon"><use href="#i-camera"/></svg><span>捕获</span><svg class="icon sm"><use href="#i-down"/></svg></button>
+        <button class="tool-text primary"><svg class="icon"><use href="#i-play"/></svg><span>预演</span></button>
+        <button class="tool-text"><span id="themeName">石墨夜间</span><svg class="icon sm"><use href="#i-down"/></svg></button>
+
+        <div class="menu-popover">
+          <div class="menu-title">捕获与输出</div>
+          <div class="menu-item active"><svg class="icon"><use href="#i-camera"/></svg>当前摄影机画面<span class="shortcut">⇧⌘2</span></div>
+          <div class="menu-item"><svg class="icon"><use href="#i-frame"/></svg>预见工作区截图<span class="shortcut">⇧⌘3</span></div>
+          <div class="menu-sep"></div>
+          <div class="menu-item"><svg class="icon"><use href="#i-film"/></svg>录制当前镜头<span class="shortcut">⌘R</span></div>
+          <div class="menu-item"><svg class="icon"><use href="#i-grid"/></svg>录制整个工作区</div>
+        </div>
+      </div>
+      <div class="context-bar">
+        <div class="select-like"><span>导演台 · 透视</span><svg class="icon sm"><use href="#i-down"/></svg></div>
+        <button class="tool active"><svg class="icon"><use href="#i-move"/></svg></button>
+        <button class="tool"><svg class="icon"><use href="#i-rotate"/></svg></button>
+        <div class="divider"></div>
+        <button class="tool-text"><svg class="icon"><use href="#i-camera"/></svg><span>驾驶摄影机</span></button>
+        <button class="tool-text"><svg class="icon"><use href="#i-frame"/></svg><span>全局取景</span></button>
+        <div class="grow"></div>
+        <button class="tool-text active"><span style="color:var(--path)">●</span><span>调度线</span></button>
+        <button class="tool-text active"><span style="color:var(--brand)">●</span><span>运镜线</span></button>
+        <button class="tool"><svg class="icon"><use href="#i-eye"/></svg></button>
+        <button class="tool"><svg class="icon"><use href="#i-dots"/></svg></button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="left-panel">
+        <nav class="mode-rail">
+          <button class="mode-button active" title="场景"><svg class="icon lg"><use href="#i-list"/></svg></button>
+          <button class="mode-button" title="角色"><svg class="icon lg"><use href="#i-person"/></svg></button>
+          <button class="mode-button" title="镜头"><svg class="icon lg"><use href="#i-camera"/></svg></button>
+          <button class="mode-button" title="路径"><svg class="icon lg"><use href="#i-path"/></svg></button>
+          <button class="mode-button" title="光影"><svg class="icon lg"><use href="#i-sun"/></svg></button>
+        </nav>
+        <div class="panel-head"><svg class="icon"><use href="#i-list"/></svg><strong>场景与镜头</strong><span class="count">3</span><button class="collapse"><svg class="icon sm"><use href="#i-chevron"/></svg></button></div>
+        <div class="panel-tools"><div class="search"><svg class="icon sm"><use href="#i-search"/></svg><span>搜索场景或镜头</span></div><button class="add-square"><svg class="icon"><use href="#i-plus"/></svg></button></div>
+        <div class="tabs"><div class="tab active">场景</div><div class="tab">镜头</div><div class="tab">素材</div></div>
+        <div class="scene-section">第一幕 · 冲突</div>
+        <div class="scene-list">
+          <div class="scene-row active"><span class="scene-index">01</span><div class="scene-title">骤雨 · 关系断裂</div><div class="scene-meta"><span>4 镜头</span><span>15.0s</span><span>广角内景</span></div><div class="beats"><span></span><span></span><span></span><span></span></div></div>
+          <div class="scene-row"><span class="scene-index">02</span><div class="scene-title">对峙 · 逼近</div><div class="scene-meta"><span>3 镜头</span><span>12.5s</span><span>中焦</span></div><div class="beats"><span></span><span></span><span></span></div></div>
+        </div>
+        <div class="scene-section">第二幕 · 转折</div>
+        <div class="scene-list">
+          <div class="scene-row"><span class="scene-index">03</span><div class="scene-title">空白 · 离场</div><div class="scene-meta"><span>2 镜头</span><span>9.0s</span><span>长焦</span></div><div class="beats"><span></span><span></span></div></div>
+        </div>
+        <div class="resize-v"></div>
+      </aside>
+
+      <section class="viewport-stack">
+        <div class="viewport-localbar">
+          <button class="tool active"><svg class="icon"><use href="#i-move"/></svg></button>
+          <button class="tool"><svg class="icon"><use href="#i-rotate"/></svg></button>
+          <div class="divider"></div>
+          <button class="tool-text"><span>局部</span></button>
+          <button class="tool-text"><span>吸附 1.0m</span><svg class="icon sm"><use href="#i-down"/></svg></button>
+          <button class="tool-text"><span>透视</span><svg class="icon sm"><use href="#i-down"/></svg></button>
+          <div class="grow"></div>
+          <button class="tool"><svg class="icon"><use href="#i-sliders"/></svg></button>
+          <button class="tool"><svg class="icon"><use href="#i-grid"/></svg></button>
+          <button class="tool"><svg class="icon"><use href="#i-frame"/></svg></button>
+        </div>
+        <div class="viewport">
+          <svg class="scene-source" viewBox="215 91 985 690" preserveAspectRatio="xMidYMid slice" aria-label="当前 PreVision 三维场景参考"><image href="current-reference.png" x="0" y="0" width="1440" height="900"/></svg>
+          <div class="viewport-tint"></div>
+          <div class="hud top-left"><span class="hud-chip">导演台 · 透视</span><span class="hud-chip"><svg class="icon sm"><use href="#i-camera"/></svg>镜头 1/4</span></div>
+          <div class="hud top-right"><span class="hud-chip">45 mm</span><span class="hud-chip"><svg class="icon sm"><use href="#i-eye"/></svg>辅助线</span></div>
+          <div class="hud bottom-left"><span class="hud-chip">对象 A · 主体</span><span class="hud-chip">位置 -12.0, 6.0, 12.0</span></div>
+          <div class="axis"></div>
+        </div>
+      </section>
+
+      <aside class="right-panel">
+        <div class="monitor">
+          <div class="monitor-head"><strong>S1 · C1 开场 · 远景</strong><span class="grow"></span><span>45mm · 高 6.0m</span></div>
+          <div class="monitor-view"><svg class="scene-source" viewBox="215 120 985 520" preserveAspectRatio="xMidYMid slice"><image href="current-reference.png" x="0" y="0" width="1440" height="900"/></svg><div class="safe-frame"></div></div>
+          <div class="monitor-foot"><span>00:02.8 / 00:07.5</span><div class="progress"><i></i></div><span>24fps</span></div>
+        </div>
+        <div class="transport"><button class="tool-text"><svg class="icon"><use href="#i-play"/></svg>播放镜头</button><button class="tool-text">播放本场景</button></div>
+        <div class="inspector-tabs"><div class="inspector-tab active"><svg class="icon lg"><use href="#i-camera"/></svg></div><div class="inspector-tab"><svg class="icon lg"><use href="#i-person"/></svg></div><div class="inspector-tab"><svg class="icon lg"><use href="#i-path"/></svg></div><div class="inspector-tab"><svg class="icon lg"><use href="#i-sun"/></svg></div></div>
+        <div class="inspector-scroll">
+          <div class="prop-group"><div class="prop-head"><span class="chev">⌄</span>摄影机<span class="grow"></span><svg class="icon sm"><use href="#i-pin"/></svg></div><div class="prop-body"><div class="field"><span>跟拍锁定</span><div class="field-value"><span>全局</span><svg class="icon sm"><use href="#i-down"/></svg></div></div><div class="field"><span>焦距 FOV</span><div class="field-value"><span>30°</span><span>45 mm</span></div></div><div class="field"><span>机位位置</span><div class="xyz"><span><b>X</b>-12.0</span><span><b>Y</b>6.0</span><span><b>Z</b>12.0</span></div></div><div class="field"><span>机位高度</span><div class="slider"></div></div></div></div>
+          <div class="prop-group"><div class="prop-head"><span class="chev">⌄</span>路径与朝向<span class="grow"></span><span class="count">5</span></div><div class="prop-body"><div class="field"><span>插值方式</span><div class="field-value"><span>曲线 · 平滑</span><svg class="icon sm"><use href="#i-down"/></svg></div></div><div class="field"><span>时间同步</span><div class="field-value"><span>节点同步</span><svg class="icon sm"><use href="#i-down"/></svg></div></div></div></div>
+          <div class="prop-group"><div class="prop-head"><span class="chev">›</span>太阳与光影<span class="grow"></span></div></div>
+          <div class="prop-group"><div class="prop-head"><span class="chev">›</span>本镜头<span class="grow"></span></div></div>
+        </div>
+        <div class="resize-v"></div>
+      </aside>
+
+      <section class="timeline">
+        <div class="resize-h"></div>
+        <div class="timeline-head"><strong>时间轴</strong><button class="tool"><svg class="icon sm"><use href="#i-pause"/></svg></button><button class="tool"><svg class="icon sm"><use href="#i-play"/></svg></button><span class="timecode">00:02.8 / 00:15.0</span><button class="tool-text">调度轨道</button><div class="grow"></div><span class="pill">24 fps</span><button class="tool-text">1.0x <svg class="icon sm"><use href="#i-down"/></svg></button><button class="tool"><svg class="icon sm"><use href="#i-chevron"/></svg></button></div>
+        <div class="timeline-body"><div class="track-labels"><div class="track-label"><svg class="icon sm"><use href="#i-film"/></svg>镜头</div><div class="track-label"><svg class="icon sm"><use href="#i-camera"/></svg>摄影机位置</div><div class="track-label"><svg class="icon sm"><use href="#i-path"/></svg>对象 A · 主体</div></div><div class="tracks"><div class="ruler"><span>00:00</span><span>00:03</span><span>00:06</span><span>00:09</span><span>00:12</span><span>00:15</span></div><div class="shot-track"><div class="shot active"><b>01 开场 · 远景</b><small>7.5s · 45mm</small></div><div class="shot"><b>02 对峙 · 逼近</b><small>5.0s · 29mm</small></div><div class="shot"><b>03 断裂 · 切割</b><small>1.5s</small></div><div class="shot"><b>04 空白</b><small>1.0s</small></div></div><div class="key-track"><i></i><i></i><i></i><i></i></div><div class="key-track"><i></i><i></i><i></i><i></i></div><div class="playhead"></div></div></div>
+      </section>
+
+      <aside class="drawer-preview">
+        <div class="panel-head"><svg class="icon"><use href="#i-camera"/></svg><strong>摄影机设置</strong><span class="grow"></span><svg class="icon"><use href="#i-pin"/></svg><button class="collapse">×</button></div>
+        <div class="inspector-tabs"><div class="inspector-tab active">镜头</div><div class="inspector-tab">运动</div><div class="inspector-tab">构图</div><div class="inspector-tab">输出</div></div>
+        <div class="prop-group"><div class="prop-head"><span class="chev">⌄</span>镜头参数</div><div class="prop-body"><div class="field"><span>焦距</span><div class="field-value"><span>45 mm</span><span>30°</span></div></div><div class="field"><span>机位位置</span><div class="xyz"><span><b>X</b>-12.0</span><span><b>Y</b>6.0</span><span><b>Z</b>12.0</span></div></div><div class="field"><span>机位高度</span><div class="slider"></div></div></div></div>
+        <div class="prop-group"><div class="prop-head"><span class="chev">⌄</span>路径与朝向<span class="grow"></span><span class="count">5</span></div><div class="prop-body"><div class="field"><span>插值</span><div class="field-value"><span>曲线 · 平滑</span><svg class="icon sm"><use href="#i-down"/></svg></div></div><div class="field"><span>时间同步</span><div class="field-value"><span>节点同步</span><svg class="icon sm"><use href="#i-down"/></svg></div></div></div></div>
+      </aside>
+    </main>
+
+    <footer class="statusbar"><span>左拖环绕 · 右拖平移 · G 移动 · R 旋转 · C 驾驶摄影机</span><span class="right-status"><span>自动保存 · 刚刚</span><span>项目 v5</span><span>WebGL · 60 fps</span></span></footer>
+  </div>
+  <div class="direction-label" id="directionLabel">A · FORGE / 石墨夜间</div>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const style = params.get('style') || 'forge';
+    const state = params.get('state') || '';
+    const theme = params.get('theme') || '';
+    const directions = {
+      forge: { label: 'A · FORGE / 石墨夜间', theme: '石墨夜间' },
+      cinema: { label: 'B · CINEMA CONSOLE / 深海夜间', theme: '深海夜间' },
+      focus: { label: 'C · DIRECTOR FOCUS / 剧场黑', theme: '剧场黑' },
+      atelier: { label: 'D · STORYBOARD ATELIER / 雾白日间', theme: '雾白日间' }
+    };
+    const selected = directions[style] || directions.forge;
+    document.body.dataset.style = style;
+    document.getElementById('directionLabel').textContent = selected.label;
+    document.getElementById('themeName').textContent = selected.theme;
+    const themes = {
+      mist: { label: 'THEME · MIST DAY / 雾白日间', name: '雾白日间' },
+      twilight: { label: 'THEME · TWILIGHT INDIGO / 暮光靛蓝', name: '暮光靛蓝' },
+      amber: { label: 'THEME · FILM AMBER / 胶片琥珀', name: '胶片琥珀' }
+    };
+    if (themes[theme]) {
+      document.body.classList.add(theme === 'twilight' ? 'theme-indigo' : `theme-${theme}`);
+      document.getElementById('directionLabel').textContent = themes[theme].label;
+      document.getElementById('themeName').textContent = themes[theme].name;
+    }
+    if (state === 'menu') document.body.classList.add('menu-open');
+  </script>
+</body>
+</html>

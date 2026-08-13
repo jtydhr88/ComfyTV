@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-07-16",
+  "baseline": "a706161afd10daf3b090bf67c7b656599d344414",
+  "node": "24.18.0",
+  "fixedAppUpdated": false,
+  "formalUserDataAccessed": false,
+  "stablePreviewPortUsed": false,
+  "isolatedChromium": {
+    "web": ["reload", "force-reload", "close-relaunch"],
+    "electron": ["reload", "force-reload", "close-relaunch"],
+    "storage": "random temporary partition and temporary Electron userData"
+  },
+  "standaloneChromeApp": "not_run_browser_control_runtime_unavailable"
+}

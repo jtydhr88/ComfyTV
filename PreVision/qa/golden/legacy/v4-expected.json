@@ -1,0 +1,179 @@
+{
+  "app": "PreVision",
+  "version": 5,
+  "name": "老项目v4",
+  "aspect": "4:3",
+  "assets": {
+    "sky": {
+      "d": "data:image/png;base64,iVBORw0KGgoAAAABAAAAAQCAYAAAAf8/9hAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+      "w": 2048,
+      "h": 1024
+    }
+  },
+  "settings": {
+    "collision": false,
+    "labels": true
+  },
+  "scenes": [
+    {
+      "name": "旧场景v4",
+      "desc": "带全景与相机朝向",
+      "script": "",
+      "actors": [
+        {
+          "kind": "car",
+          "label": "汽车",
+          "pose": "stand",
+          "pos": [
+            -8,
+            0
+          ],
+          "rotY": 1.57,
+          "height": 0,
+          "scale": 1,
+          "pathMode": "curve",
+          "timeLink": "independent",
+          "timeOffset": 0,
+          "path": [
+            [
+              -8,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          "pathTimes": [
+            0,
+            3,
+            6
+          ],
+          "pathEase": [
+            {
+              "type": "linear"
+            },
+            {
+              "type": "linear"
+            }
+          ]
+        }
+      ],
+      "shots": [
+        {
+          "name": "车头跟拍",
+          "desc": "",
+          "dur": 6,
+          "lock": "汽车",
+          "fov": 45,
+          "camMode": "curve",
+          "timingMode": "pointSync",
+          "syncActor": "",
+          "yaw": 0,
+          "pitch": 0,
+          "cam": [
+            [
+              -10,
+              2,
+              5
+            ],
+            [
+              0,
+              2,
+              5
+            ],
+            [
+              10,
+              2,
+              5
+            ]
+          ],
+          "camAim": [
+            [
+              -20,
+              0,
+              45
+            ],
+            [
+              0,
+              0,
+              45
+            ],
+            [
+              20,
+              0,
+              45
+            ]
+          ],
+          "camTimes": [
+            0,
+            3,
+            6
+          ],
+          "camAimTimes": [
+            0,
+            3,
+            6
+          ],
+          "camFovTimes": [
+            0,
+            3,
+            6
+          ],
+          "camEase": [
+            {
+              "type": "linear"
+            },
+            {
+              "type": "linear"
+            }
+          ],
+          "camAimEase": [
+            {
+              "type": "linear"
+            },
+            {
+              "type": "linear"
+            }
+          ],
+          "camFovEase": [
+            {
+              "type": "linear"
+            },
+            {
+              "type": "linear"
+            }
+          ]
+        }
+      ],
+      "ground": {
+        "style": "checker"
+      },
+      "sun": {
+        "enabled": true,
+        "pos": [
+          8,
+          14,
+          6
+        ],
+        "intensity": 0.9,
+        "temp": 5600,
+        "ambient": 0.28,
+        "softness": 2,
+        "quality": "standard"
+      },
+      "bg": {
+        "asset": "sky",
+        "yaw": 1.2,
+        "radius": 60,
+        "y": 1.6,
+        "gp": true
+      }
+    }
+  ],
+  "created": "2025-06-15T08:00:00.000Z"
+}

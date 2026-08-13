@@ -1,0 +1,484 @@
+{
+  "app": "PreVision",
+  "version": 5,
+  "name": "骑乘全景",
+  "aspect": "16:9",
+  "assets": {
+    "pano": {
+      "d": "data:image/png;base64,iVBORw0KGgoAAAABAAAAAQCAYAAAAf8/9hAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+      "w": 4096,
+      "h": 2048
+    },
+    "groundimg": {
+      "d": "data:image/png;base64,iVBORw0KGgoAAAABAAAAAQCAYAAAAf8/9hAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+      "w": 1024,
+      "h": 1024
+    },
+    "boardimg": {
+      "d": "data:image/png;base64,iVBORw0KGgoAAAABAAAAAQCAYAAAAf8/9hAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+      "w": 1024,
+      "h": 512
+    }
+  },
+  "settings": {
+    "collision": true,
+    "labels": true
+  },
+  "scenes": [
+    {
+      "name": "沙漠驰骋",
+      "desc": "骑手穿越沙漠全景",
+      "script": "黄昏, 骑手策马穿过沙丘。",
+      "bg": {
+        "asset": "pano",
+        "yaw": 0.35,
+        "radius": 60,
+        "y": 1.6,
+        "gp": true
+      },
+      "ground": {
+        "style": "image",
+        "asset": "groundimg"
+      },
+      "sun": {
+        "enabled": true,
+        "pos": [
+          8,
+          14,
+          6
+        ],
+        "intensity": 0.9,
+        "temp": 5600,
+        "ambient": 0.28,
+        "softness": 2,
+        "quality": "standard"
+      },
+      "actors": [
+        {
+          "kind": "horse",
+          "label": "白马",
+          "pose": "stand",
+          "pos": [
+            1.5,
+            2.5
+          ],
+          "rotY": 0.2,
+          "height": 0,
+          "pathMode": "curve",
+          "scale": 1,
+          "pathTimes": [
+            0,
+            5.266,
+            10.532,
+            15
+          ],
+          "pathEase": [
+            {
+              "type": "linear"
+            },
+            {
+              "type": "linear"
+            },
+            {
+              "type": "linear"
+            }
+          ],
+          "timeLink": "independent",
+          "timeOffset": 0,
+          "timeLinkShot": 0,
+          "path": [
+            [
+              1.5,
+              2.5
+            ],
+            [
+              3,
+              0.5
+            ],
+            [
+              4.5,
+              -1.5
+            ],
+            [
+              6,
+              -3
+            ]
+          ]
+        },
+        {
+          "kind": "char",
+          "label": "骑手",
+          "pose": "ride",
+          "mount": "白马",
+          "joints": {
+            "neckX": 8,
+            "spineX": -4
+          },
+          "pos": [
+            2.29,
+            1.54
+          ],
+          "rotY": 0,
+          "height": 0,
+          "pathMode": "curve",
+          "scale": 1,
+          "pathTimes": [],
+          "pathEase": [],
+          "timeLink": "independent",
+          "timeOffset": 0,
+          "timeLinkShot": 0,
+          "path": []
+        },
+        {
+          "kind": "dog",
+          "label": "猎犬",
+          "pose": "stand",
+          "pos": [
+            -2,
+            3
+          ],
+          "rotY": 0.5,
+          "height": 0,
+          "pathMode": "line",
+          "scale": 1,
+          "pathTimes": [
+            0,
+            4,
+            9
+          ],
+          "pathEase": [
+            {
+              "type": "easeIn"
+            },
+            {
+              "type": "custom",
+              "x1": 0.4,
+              "y1": 0,
+              "x2": 0.6,
+              "y2": 1
+            }
+          ],
+          "timeLink": "independent",
+          "timeOffset": 0,
+          "timeLinkShot": 0,
+          "path": [
+            [
+              -2,
+              3
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              -1
+            ]
+          ]
+        },
+        {
+          "kind": "prop",
+          "label": "行李箱",
+          "pose": "stand",
+          "semanticType": "crate",
+          "dimensions": {
+            "width": 0.8,
+            "height": 1.1,
+            "depth": 0.5
+          },
+          "pos": [
+            -4,
+            -2
+          ],
+          "rotY": 1.1,
+          "height": 0,
+          "pathMode": "curve",
+          "scale": 1.2,
+          "pathTimes": [],
+          "pathEase": [],
+          "timeLink": "independent",
+          "timeOffset": 0,
+          "timeLinkShot": 0,
+          "path": []
+        },
+        {
+          "kind": "desert",
+          "label": "沙丘地形",
+          "pose": "stand",
+          "pos": [
+            18,
+            18
+          ],
+          "rotY": 0,
+          "height": 0,
+          "pathMode": "curve",
+          "terrainVersion": 1,
+          "scale": 1,
+          "pathTimes": [],
+          "pathEase": [],
+          "timeLink": "independent",
+          "timeOffset": 0,
+          "timeLinkShot": 0,
+          "path": []
+        },
+        {
+          "kind": "board",
+          "label": "远景图板",
+          "pose": "stand",
+          "asset": "boardimg",
+          "pos": [
+            0,
+            -20
+          ],
+          "rotY": 0,
+          "height": 2,
+          "pathMode": "curve",
+          "scale": 2,
+          "pathTimes": [],
+          "pathEase": [],
+          "timeLink": "independent",
+          "timeOffset": 0,
+          "timeLinkShot": 0,
+          "path": []
+        }
+      ],
+      "shots": [
+        {
+          "name": "跟拍",
+          "desc": "侧面跟拍骑手",
+          "dur": 6,
+          "lock": "骑手",
+          "fov": 42,
+          "camMode": "curve",
+          "timingMode": "pointSync",
+          "syncActor": "白马",
+          "yaw": 0,
+          "pitch": 0,
+          "camTimes": [
+            0,
+            2.002,
+            4.001,
+            6
+          ],
+          "camEase": [
+            {
+              "type": "linear"
+            },
+            {
+              "type": "linear"
+            },
+            {
+              "type": "linear"
+            }
+          ],
+          "camAimTimes": [
+            0,
+            2.002,
+            4.001,
+            6
+          ],
+          "camAimEase": [
+            {
+              "type": "linear"
+            },
+            {
+              "type": "linear"
+            },
+            {
+              "type": "linear"
+            }
+          ],
+          "camFovTimes": [
+            0,
+            2.002,
+            4.001,
+            6
+          ],
+          "camFovEase": [
+            {
+              "type": "linear"
+            },
+            {
+              "type": "linear"
+            },
+            {
+              "type": "linear"
+            }
+          ],
+          "camAim": [
+            [
+              0,
+              0,
+              42
+            ],
+            [
+              0,
+              0,
+              42
+            ],
+            [
+              0,
+              0,
+              42
+            ],
+            [
+              0,
+              0,
+              42
+            ]
+          ],
+          "cam": [
+            [
+              -4,
+              2.2,
+              6
+            ],
+            [
+              -2,
+              2,
+              4
+            ],
+            [
+              0,
+              1.9,
+              2
+            ],
+            [
+              2,
+              1.8,
+              0
+            ]
+          ]
+        },
+        {
+          "name": "大全景",
+          "desc": "广角环境交代",
+          "dur": 5,
+          "lock": "全局",
+          "fov": 24,
+          "camMode": "line",
+          "timingMode": "arcLength",
+          "syncActor": "",
+          "yaw": 15,
+          "pitch": -5,
+          "camTimes": [
+            0,
+            5
+          ],
+          "camEase": [
+            {
+              "type": "linear"
+            }
+          ],
+          "camAimTimes": [
+            0,
+            5
+          ],
+          "camAimEase": [
+            {
+              "type": "linear"
+            }
+          ],
+          "camFovTimes": [
+            0,
+            5
+          ],
+          "camFovEase": [
+            {
+              "type": "linear"
+            }
+          ],
+          "camAim": [
+            [
+              15,
+              -5,
+              24
+            ],
+            [
+              15,
+              -5,
+              24
+            ]
+          ],
+          "cam": [
+            [
+              -10,
+              6,
+              12
+            ],
+            [
+              -6,
+              5,
+              10
+            ]
+          ]
+        },
+        {
+          "name": "低机位冲刺",
+          "desc": "低机位仰拍马蹄",
+          "dur": 4,
+          "lock": "白马",
+          "fov": 32,
+          "camMode": "curve",
+          "timingMode": "arcLength",
+          "syncActor": "",
+          "yaw": 0,
+          "pitch": 0,
+          "camTimes": [
+            0,
+            4
+          ],
+          "camEase": [
+            {
+              "type": "linear"
+            }
+          ],
+          "camAimTimes": [
+            0,
+            4
+          ],
+          "camAimEase": [
+            {
+              "type": "linear"
+            }
+          ],
+          "camFovTimes": [
+            0,
+            4
+          ],
+          "camFovEase": [
+            {
+              "type": "linear"
+            }
+          ],
+          "camAim": [
+            [
+              0,
+              0,
+              32
+            ],
+            [
+              0,
+              0,
+              32
+            ]
+          ],
+          "cam": [
+            [
+              3,
+              0.6,
+              -4
+            ],
+            [
+              5,
+              0.7,
+              -5
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "created": "2026-01-01T00:00:00.000Z",
+  "modified": "2026-01-01T00:00:00.000Z"
+}

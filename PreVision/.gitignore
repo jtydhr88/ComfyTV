@@ -1,0 +1,25 @@
+node_modules/
+out/
+dist/
+.DS_Store
+npm-debug.log*
+
+# 本机开发助手配置与内部开发记录
+.claude/
+CLAUDE.md
+日志/
+
+# 本地环境、证书与签名材料
+.env
+.env.*
+!.env.example
+*.p12
+*.pfx
+*.cer
+*.key
+*.pem
+
+# 临时文件与日志
+*.log
+*.tmp
+*.swp

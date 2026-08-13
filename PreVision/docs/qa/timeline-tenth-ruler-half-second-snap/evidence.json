@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "taskId": "02.12-timeline-tenth-ruler-half-second-snap",
+  "date": "2026-07-28",
+  "baseline": "c99968d0c547392fa046b5e1a5ac0ca9f5b7d2e5",
+  "implementationCommit": "9ba9934ca93f4ae24eac1a77b51b27179f19f82e",
+  "claimRevision": "86ce9511-2452-4bc3-bcc9-c17c71fa272b",
+  "runtime": {
+    "node": "v24.18.0",
+    "electron": "43.1.0",
+    "title": "PreVision 02.12 Preview — NOT INTEGRATED",
+    "profile": "ephemeral isolated user-data",
+    "fixedAppChanged": false,
+    "stablePreviewPointerChanged": false
+  },
+  "automated": {
+    "timeline": "187 passed, 0 failed",
+    "layout": "160 passed, 0 failed",
+    "i18n": "217 passed, 0 failed",
+    "build": "passed",
+    "diffCheck": "passed",
+    "forbiddenCommandsRun": []
+  },
+  "manual": {
+    "rulerLabels": ["0.0s", "0.5s", "1.0s", "1.5s", "2.0s"],
+    "snapButton": {
+      "visible": true,
+      "defaultPressed": true,
+      "title": "吸附到整秒/半秒，按住 Option 临时关闭",
+      "narrowToolbarOverflow": false
+    },
+    "cameraKeyDrag": {
+      "snappedTargets": [2.0, 1.5, 1.0],
+      "feedback": ["2.0s / 已吸附", "1.5s / 已吸附", "1.0s / 已吸附"],
+      "manualOffLanding": 1.4,
+      "manualOffSnappedFeedback": false
+    },
+    "optionBypass": {
+      "result": "automated_only",
+      "reason": "Computer Use atomic drag cannot hold Option/Alt during pointer movement"
+    },
+    "snapGuideDuringPointerMove": {
+      "result": "automated_only",
+      "reason": "Computer Use atomic drag cannot pause before pointerup for a screenshot"
+    }
+  },
+  "screenshots": [
+    {
+      "requestedWindow": [1316, 768],
+      "capturePixels": [1316, 768],
+      "file": "electron-1316x768.png",
+      "sha256": "5494fbe434780523c53a5cb6576efcf47ee513b3ec0105cd53beb84387b7c944"
+    },
+    {
+      "requestedWindow": [1440, 900],
+      "verifiedOuterWindow": [1440, 900],
+      "capturePixels": [1229, 768],
+      "captureTransport": "Computer Use downscaled to 768px height",
+      "file": "electron-1440x900.png",
+      "sha256": "4e6fc7377f87138ab7421cdabe524fd5acad2536f8fc7dbc4b229aa98e321c5d"
+    }
+  ],
+  "privacy": {
+    "realProjectData": false,
+    "credentials": false,
+    "absolutePathsInCommittedEvidence": false
+  }
+}

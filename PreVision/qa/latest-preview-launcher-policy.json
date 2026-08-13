@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "launcher": {
+    "applicationBundleName": "PreVision 最新预览.app",
+    "bundleIdentifier": "com.prevision.latest-preview-launcher",
+    "displayName": "PreVision 最新预览",
+    "executableName": "PreVision Latest Preview",
+    "iconFileName": "PreVisionIcon.icns",
+    "supportDirectoryName": "PreVision Latest Preview",
+    "pointerFileName": "current.json",
+    "profileDirectoryName": "Profile",
+    "bootstrapDirectoryName": "Bootstrap",
+    "launchStateFileName": "last-launch.json",
+    "publishLockName": ".publish.lock"
+  },
+  "pointer": {
+    "schemaVersion": 2,
+    "requiredTitleToken": "NOT INTEGRATED",
+    "maximumBytes": 65536,
+    "fileMode": "0600"
+  },
+  "source": {
+    "generatedHtmlRelativePath": "预见PreVision.html",
+    "buildScriptRelativePath": "scripts/build-app.mjs",
+    "mainRelativePath": "electron/main.cjs",
+    "packageJsonRelativePath": "package.json",
+    "packageLockRelativePath": "package-lock.json",
+    "electronPackageRelativePath": "node_modules/electron/package.json",
+    "electronVersionRelativePath": "node_modules/electron/dist/version",
+    "electronBinaryRelativePath": "node_modules/electron/dist/Electron.app/Contents/MacOS/Electron"
+  },
+  "runtime": {
+    "minimumNodeMajor": 20,
+    "maximumNodeMajor": 24,
+    "maximumGitOutputBytes": 67108864
+  },
+  "i18n": {
+    "defaultLocale": "zh-CN",
+    "supportedLocales": [
+      "zh-CN",
+      "en-US"
+    ],
+    "messageKeys": {
+      "title": "app.brand",
+      "preview": "runtime.monitor.independentSuffix",
+      "errorPrefix": "error.runtimePrefix"
+    }
+  }
+}

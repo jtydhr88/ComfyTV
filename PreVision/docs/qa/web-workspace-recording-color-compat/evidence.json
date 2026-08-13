@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "task": "01.4-web-workspace-recording-color-compat",
+  "date": "2026-07-16",
+  "baselineCommit": "42b2952fcafdf31f5d3a2dbcc79a0cc4f596d777",
+  "node": "24.14.0",
+  "chrome": {
+    "version": "150.0.7871.124",
+    "runtime": "real Chrome with local loopback production preview",
+    "previewPort": 4184,
+    "themes": [
+      {
+        "theme": "graphite",
+        "interaction": "workspace recording entered REC state and stopped from the top recording button",
+        "media": {
+          "extension": "mp4",
+          "container": "mov,mp4,m4a,3gp,3g2,mj2",
+          "codec": "h264",
+          "bytes": 806052,
+          "durationSeconds": 7.9212,
+          "width": 2560,
+          "height": 1288,
+          "pixelFormat": "yuv420p",
+          "sampleFrame": { "yMin": 13, "yAverage": 46.9805, "yMax": 241, "nonBlack": true, "opaqueVideo": true }
+        }
+      },
+      {
+        "theme": "fog-white",
+        "interaction": "workspace recording entered REC state, ran for a bounded 3.7 second UI fixture, and stopped",
+        "media": {
+          "extension": "mp4",
+          "container": "mov,mp4,m4a,3gp,3g2,mj2",
+          "codec": "h264",
+          "bytes": 322249,
+          "durationSeconds": 2.878,
+          "width": 2560,
+          "height": 1288,
+          "pixelFormat": "yuv420p",
+          "sampleFrame": { "yMin": 12, "yAverage": 129.876, "yMax": 255, "nonBlack": true, "opaqueVideo": true }
+        }
+      }
+    ],
+    "cameraRecordingRegression": {
+      "status": "passed",
+      "extension": "mp4",
+      "codec": "h264",
+      "bytes": 528519,
+      "uiReturnedToIdle": true
+    },
+    "cleanup": {
+      "uiReturnedToIdle": true,
+      "recIndicatorCleared": true,
+      "moreRecordingMenuReenabled": true,
+      "automatedStreamAndTimerAssertions": "passed",
+      "persistentWorkspaceRaf": false
+    },
+    "console": {
+      "warnings": 0,
+      "errors": 0,
+      "colorParsingExceptions": 0,
+      "unhandledRejections": 0,
+      "mediaRecorderErrors": 0,
+      "webglContextLost": 0
+    },
+    "notes": [
+      "Chrome selected the existing MP4/H.264 preference; the task did not change encoding priority.",
+      "Recorded files were inspected outside the repository with ffprobe and an ffmpeg signalstats sample; no media bytes are tracked."
+    ]
+  },
+  "electronDevelopment": {
+    "status": "passed",
+    "saveDialog": "native save dialog opened and a dedicated test target was accepted",
+    "cancelDialog": "native save dialog cancellation returned without starting recording",
+    "media": {
+      "extension": "mp4",
+      "container": "mov,mp4,m4a,3gp,3g2,mj2",
+      "codec": "h264",
+      "bytes": 513435,
+      "durationSeconds": 9.9653,
+      "width": 1680,
+      "height": 1018,
+      "pixelFormat": "yuv420p",
+      "sampleFrame": { "yMin": 15, "yAverage": 52.987, "yMax": 242, "nonBlack": true, "opaqueVideo": true }
+    },
+    "uiReturnedToIdle": true
+  },
+  "packagedElectron": {
+    "status": "not_run",
+    "reason": "The delegated scope requires Electron development verification and explicitly forbids app:deliver or changing the fixed App; packaging was not substituted with browser evidence."
+  },
+  "privacy": {
+    "containsMedia": false,
+    "containsAbsolutePaths": false,
+    "containsProjectBytes": false,
+    "containsSecrets": false
+  }
+}
