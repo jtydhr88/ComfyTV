@@ -1,0 +1,210 @@
+<template>
+  <div class="ctv:flex ctv:flex-col ctv:size-full ctv:overflow-hidden ctv:text-base-foreground">
+    <div
+      v-if="!store.availableProviders.length"
+      class="ctv:flex ctv:flex-1 ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-3 ctv:px-6 ctv:text-center"
+    >
+      <i class="pi pi-sparkles ctv:text-2xl ctv:text-muted-foreground" />
+      <div class="ctv:text-sm ctv:font-semibold">{{ $t('bot.noProviderTitle') }}</div>
+      <div class="ctv:text-xs ctv:text-muted-foreground ctv:leading-relaxed">
+        {{ $t('bot.noProviderBody') }}
+      </div>
+      <code class="ctv:rounded ctv:bg-secondary-background ctv:px-2 ctv:py-1 ctv:text-xs">npm install -g {{ '@' }}anthropic-ai/claude-code</code>
+      <button
+        class="ctv:mt-1 ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-transparent ctv:px-3 ctv:py-1.5 ctv:text-xs ctv:text-base-foreground ctv:cursor-pointer"
+        @click="store.refreshStatus()"
+      >
+        {{ $t('bot.recheck') }}
+      </button>
+    </div>
+
+    <template v-else-if="store.activeChatId">
+      <div class="ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1.5 ctv:border-b ctv:border-border-subtle ctv:px-2 ctv:py-1.5">
+        <button
+          class="ctv-bot-iconbtn"
+          :title="$t('bot.backToList')"
+          @click="store.closeChat()"
+        >
+          <i class="pi pi-arrow-left ctv:text-xs" />
+        </button>
+        <span class="ctv:flex-1 ctv:truncate ctv:text-sm ctv:font-semibold">
+          {{ store.activeChat?.title || $t('bot.untitled') }}
+        </span>
+        <button
+          class="ctv-bot-iconbtn"
+          :title="$t('bot.newChat')"
+          @click="openNew()"
+        >
+          <i class="pi pi-plus ctv:text-xs" />
+        </button>
+      </div>
+      <BotChatView />
+    </template>
+
+    <template v-else>
+      <div class="ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1.5 ctv:border-b ctv:border-border-subtle ctv:px-3 ctv:py-2">
+        <span class="ctv:flex-1 ctv:text-sm ctv:font-semibold">{{ $t('bot.title') }}</span>
+        <button
+          class="ctv-bot-iconbtn"
+          :title="$t('bot.newChat')"
+          @click="openNew()"
+        >
+          <i class="pi pi-plus ctv:text-xs" />
+        </button>
+      </div>
+      <div class="ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto">
+        <div
+          v-if="!store.chats.length"
+          class="ctv:flex ctv:h-full ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-2 ctv:px-6 ctv:text-center"
+        >
+          <div class="ctv:text-xs ctv:text-muted-foreground">{{ $t('bot.noChats') }}</div>
+          <button
+            class="ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-transparent ctv:px-3 ctv:py-1.5 ctv:text-xs ctv:text-base-foreground ctv:cursor-pointer"
+            @click="openNew()"
+          >
+            {{ $t('bot.startFirst') }}
+          </button>
+        </div>
+        <div
+          v-for="chat in store.chats"
+          :key="chat.id"
+          class="ctv-bot-row ctv:group ctv:flex ctv:cursor-pointer ctv:items-center ctv:gap-2 ctv:border-b ctv:border-border-subtle ctv:px-3 ctv:py-2"
+          @click="store.openChat(chat.id)"
+        >
+          <i
+            class="pi ctv:text-xs"
+            :class="chat.busy ? 'pi-spin pi-spinner' : (chat.pinned ? 'pi-star-fill ctv:text-amber-400' : 'pi-comment ctv:text-muted-foreground')"
+          />
+          <div class="ctv:flex ctv:min-w-0 ctv:flex-1 ctv:flex-col">
+            <template v-if="renamingId === chat.id">
+              <input
+                :ref="el => renameInput = (el as HTMLInputElement | null)"
+                v-model="renameDraft"
+                class="ctv:w-full ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:px-1.5 ctv:py-0.5 ctv:text-sm ctv:text-base-foreground ctv:outline-none"
+                @click.stop
+                @keydown.enter.prevent="commitRename(chat.id)"
+                @keydown.esc.prevent="renamingId = null"
+                @blur="commitRename(chat.id)"
+              />
+            </template>
+            <span v-else class="ctv:truncate ctv:text-sm">
+              {{ chat.title || $t('bot.untitled') }}
+            </span>
+            <span class="ctv:truncate ctv:text-[11px] ctv:text-muted-foreground">
+              {{ formatTime(chat.updated_at) }}
+            </span>
+          </div>
+          <div class="ctv-bot-row-actions ctv:flex ctv:shrink-0 ctv:gap-0.5">
+            <button
+              class="ctv-bot-iconbtn"
+              :title="$t('bot.rename')"
+              @click.stop="startRename(chat)"
+            >
+              <i class="pi pi-pencil ctv:text-[11px]" />
+            </button>
+            <button
+              class="ctv-bot-iconbtn"
+              :title="chat.pinned ? $t('bot.unpin') : $t('bot.pin')"
+              @click.stop="store.togglePinned(chat)"
+            >
+              <i class="pi ctv:text-[11px]" :class="chat.pinned ? 'pi-star-fill' : 'pi-star'" />
+            </button>
+            <button
+              class="ctv-bot-iconbtn"
+              :title="$t('bot.delete')"
+              @click.stop="confirmDelete(chat)"
+            >
+              <i class="pi pi-trash ctv:text-[11px]" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { nextTick, onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+import BotChatView from '@/components/bot/BotChatView.vue'
+import { type BotChat } from '@/api/schemas'
+import { useBotStore } from '@/stores/botStore'
+
+const store = useBotStore()
+const { t } = useI18n()
+
+const renamingId = ref<string | null>(null)
+const renameDraft = ref('')
+const renameInput = ref<HTMLInputElement | null>(null)
+
+onMounted(() => {
+  void store.ensureHydrated()
+})
+
+async function openNew() {
+  await store.newChat()
+}
+
+function startRename(chat: BotChat) {
+  renamingId.value = chat.id
+  renameDraft.value = chat.title
+  void nextTick(() => renameInput.value?.focus())
+}
+
+function commitRename(chatId: string) {
+  if (renamingId.value !== chatId) return
+  const title = renameDraft.value.trim()
+  renamingId.value = null
+  if (title) void store.renameChat(chatId, title)
+}
+
+function confirmDelete(chat: BotChat) {
+  if (window.confirm(t('bot.deleteConfirm', { title: chat.title || t('bot.untitled') }))) {
+    void store.deleteChat(chat.id)
+  }
+}
+
+function formatTime(iso: string | null): string {
+  if (!iso) return ''
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return ''
+  return d.toLocaleString(undefined, {
+    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
+  })
+}
+</script>
+
+<style scoped>
+.ctv-bot-iconbtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--p-text-muted-color, #9ca3af);
+  cursor: pointer;
+}
+.ctv-bot-row-actions {
+  opacity: 0;
+}
+@media (hover: hover) {
+  .ctv-bot-iconbtn:hover {
+    background: color-mix(in srgb, currentColor 12%, transparent);
+  }
+  .ctv-bot-row:hover {
+    background: color-mix(in srgb, currentColor 4%, transparent);
+  }
+  .ctv-bot-row:hover .ctv-bot-row-actions {
+    opacity: 1;
+  }
+}
+@media (hover: none) {
+  .ctv-bot-row-actions {
+    opacity: 1;
+  }
+}
+</style>

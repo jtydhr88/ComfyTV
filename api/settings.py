@@ -20,6 +20,18 @@ async def update_settings(request: web.Request) -> web.Response:
     values = body.get("values")
     if not isinstance(values, dict) or not values:
         return web.json_response({"error": "values must be a non-empty object"}, status=400)
+    if values.get("enable-mcp") is False:
+        values = {**values, "enable-bot": False}
+    if values.get("enable-bot") is True:
+        mcp_on = values.get("enable-mcp")
+        if mcp_on is None:
+            try:
+                mcp_on = storage.get_setting("enable-mcp")
+            except KeyError:
+                mcp_on = False
+        if not mcp_on:
+            return web.json_response(
+                {"error": "enable-bot requires enable-mcp"}, status=400)
     try:
         rows = storage.set_settings(values)
     except KeyError as e:

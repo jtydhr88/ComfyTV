@@ -25,5 +25,6 @@ from . import exec_errors   # noqa: F401
 from . import mcp        # noqa: F401
 from . import mcp_commands  # noqa: F401
 from . import prompt_lint   # noqa: F401
+from . import bot        # noqa: F401
 
 from .stages import _compute_input_usage  # noqa: F401

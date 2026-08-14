@@ -424,3 +424,75 @@ describe('useDirectorTimeline resize drag', () => {
     expect(() => root.dispatchEvent(pe('pointermove', 200))).not.toThrow()
   })
 })
+
+describe('mcp director sub-api', () => {
+  function directorOf(node: any, state: any = {}) {
+    make(node, state)
+    return node.__comfytvStageApi.director
+  }
+
+  it('attaches getState with clips, statuses and vocabularies', () => {
+    const node = twoClipNode()
+    const state = {
+      directorClips: JSON.stringify([{ id: 'a', url: '/view?a', cached: true }]),
+    }
+    const api = directorOf(node, state)
+    const out = api.getState()
+    expect(out.clips.map((c: any) => c.id)).toEqual(['a', 'b'])
+    expect(out.clips[0].status).toEqual({ url: '/view?a', cached: true })
+    expect(out.clips[1].status).toBeNull()
+    expect(out.total_seconds).toBe(10)
+    expect(out.default_workflow).toBe('WF A')
+    expect(out.workflow_options).toEqual(['WF A', 'WF B'])
+    expect(out.transitions).toContain('dissolve')
+    expect(out.chain_modes).toEqual(['off', 'prepend', 'replace'])
+  })
+
+  it('add/update/move/remove clips through applyOps', async () => {
+    const node = twoClipNode()
+    const api = directorOf(node)
+    const { results } = await api.applyOps([
+      { op: 'add_clip', prompt: 'new scene', duration_s: 7, index: 1 },
+      { op: 'update_clip', id: 'a', prompt: 'edited', transition: 'fade' },
+      { op: 'move_clip', id: 'b', index: 0 },
+    ])
+    expect(results[0].op).toBe('add_clip')
+    const parsed = parseTimeline(widgetValue(node))
+    expect(parsed.clips.map(c => c.prompt)).toEqual(['', 'edited', 'new scene'])
+    expect(parsed.clips.find(c => c.id === 'a')?.transition).toBe('fade')
+    await api.applyOps([{ op: 'remove_clip', id: 'a' }])
+    expect(parseTimeline(widgetValue(node)).clips.some(c => c.id === 'a')).toBe(false)
+  })
+
+  it('reroll changes seeds and set_chain persists', async () => {
+    const node = twoClipNode()
+    const api = directorOf(node)
+    const before = parseTimeline(widgetValue(node)).clips.map(c => c.seed)
+    await api.applyOps([{ op: 'reroll' }, { op: 'set_chain', chain: 'prepend' }])
+    const parsed = parseTimeline(widgetValue(node))
+    expect(parsed.clips.map(c => c.seed)).not.toEqual(before)
+    expect(parsed.settings.chain).toBe('prepend')
+  })
+
+  it('validates transition, chain, refs and unknown ops', async () => {
+    const api = directorOf(twoClipNode())
+    await expect(api.applyOps([
+      { op: 'update_clip', id: 'a', transition: 'explode' },
+    ])).rejects.toThrow(/unknown transition/)
+    await expect(api.applyOps([
+      { op: 'set_chain', chain: 'always' },
+    ])).rejects.toThrow(/unknown chain/)
+    await expect(api.applyOps([
+      { op: 'update_clip', id: 'a', images: 'not-a-list' },
+    ])).rejects.toThrow(/array/)
+    await expect(api.applyOps([{ op: 'explode' }])).rejects.toThrow(/unknown op/)
+    await expect(api.applyOps([
+      { op: 'update_clip', id: 'zz' },
+    ])).rejects.toThrow(/not found/)
+  })
+
+  it('rejects edits while running', async () => {
+    const api = directorOf(twoClipNode(), { running: true })
+    await expect(api.applyOps([{ op: 'reroll' }])).rejects.toThrow(/running/)
+  })
+})

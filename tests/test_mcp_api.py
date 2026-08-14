@@ -23,6 +23,8 @@ def clean_buffers():
 
 @pytest.fixture()
 async def client(reset_db, clean_buffers):
+    from ComfyTV import storage
+    storage.set_settings({"enable-mcp": True})
     from ComfyTV import api  # noqa: F401 — registers routes on the stub PromptServer
     import server
     app = web.Application()
@@ -116,7 +118,11 @@ class TestProtocol:
             "server_info", "projects", "stage_catalog", "list_workflows",
             "get_canvas", "outputs", "assets", "jobs", "exec_errors",
             "add_stage", "set_stage", "connect_stages", "run_stage", "servers",
-            "remove_stage",
+            "remove_stage", "wait_stage",
+            "workflow_get", "workflow_edit", "asset_edit", "entries",
+            "resources", "stage_params", "media_probe", "media_frame",
+            "media_waveform", "pick_output", "cancel_stage", "get_stage",
+            "director_get", "director_edit", "view_image",
             "scene_get", "scene_edit", "scene_capture", "scene_record",
             "previz_get", "previz_edit", "previz_capture", "previz_record",
         }

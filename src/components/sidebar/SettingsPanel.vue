@@ -34,7 +34,7 @@
         </div>
 
         <div
-          v-for="row in rows"
+          v-for="row in backupRows"
           :key="row.key"
           class="ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1.5 ctv:px-2 ctv:rounded-lg
                  ctv:bg-secondary-background ctv:border ctv:border-border-subtle"
@@ -73,6 +73,31 @@
             {{ backingUp ? $t('settings.backup.running') : $t('settings.backup.now') }}
           </button>
         </div>
+
+        <div class="ctv:mt-2 ctv:px-1 ctv:font-semibold ctv:text-muted-foreground ctv:uppercase ctv:text-2xs ctv:tracking-wide">
+          {{ $t('settings.agent.section') }}
+        </div>
+
+        <div
+          v-for="row in agentRows"
+          :key="row.key"
+          class="ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1.5 ctv:px-2 ctv:rounded-lg
+                 ctv:bg-secondary-background ctv:border ctv:border-border-subtle"
+        >
+          <div class="ctv:flex ctv:items-center ctv:gap-2">
+            <div class="ctv:flex-1 ctv:min-w-0">
+              <div class="ctv:font-semibold">{{ $t(`settings.fields.${row.key}.label`) }}</div>
+              <div class="ctv:text-muted-foreground ctv:leading-relaxed">
+                {{ $t(`settings.fields.${row.key}.desc`) }}
+              </div>
+            </div>
+            <ComfyTVToggle
+              :model-value="values[row.key] === true"
+              :disabled="row.key === 'enable-bot' && botToggleLocked"
+              @update:model-value="(v: boolean) => setValue(row.key, v)"
+            />
+          </div>
+        </div>
         <div
           v-if="backupResult"
           class="ctv:py-1 ctv:px-1.5 ctv:rounded ctv:break-all"
@@ -106,6 +131,9 @@ const { t, te } = useI18n()
 
 const {
   rows,
+  backupRows,
+  agentRows,
+  botToggleLocked,
   values,
   loading,
   saving,

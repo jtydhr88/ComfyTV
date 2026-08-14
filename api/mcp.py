@@ -92,6 +92,23 @@ def _tools_list() -> dict:
     }
 
 
+def _payload_to_content(payload) -> list[dict]:
+    images = None
+    if isinstance(payload, dict):
+        images = payload.pop("_images", None)
+    blocks = [{
+        "type": "text",
+        "text": json.dumps(payload, ensure_ascii=False, default=str),
+    }]
+    for img in images or []:
+        blocks.append({
+            "type": "image",
+            "data": img["data"],
+            "mimeType": img.get("mime", "image/jpeg"),
+        })
+    return blocks
+
+
 async def _tools_call(params: dict) -> dict | None:
     name = params.get("name")
     spec = TOOLS.get(name)
@@ -102,8 +119,7 @@ async def _tools_call(params: dict) -> dict | None:
         arguments = {}
     try:
         payload = await spec["handler"](arguments)
-        text = json.dumps(payload, ensure_ascii=False, default=str)
-        return {"content": [{"type": "text", "text": text}], "isError": False}
+        return {"content": _payload_to_content(payload), "isError": False}
     except (ValueError, TypeError, KeyError) as e:
         return {"content": [{"type": "text", "text": f"{type(e).__name__}: {e}"}],
                 "isError": True}
@@ -143,8 +159,24 @@ async def mcp_activity(_request: web.Request) -> web.Response:
     })
 
 
+def _mcp_enabled() -> bool:
+    from .. import storage
+    try:
+        return bool(storage.get_setting("enable-mcp"))
+    except Exception:
+        _log.exception("[ComfyTV/mcp] enable-mcp lookup failed")
+        return False
+
+
 @routes.post("/comfytv/mcp")
 async def mcp_post(request: web.Request) -> web.Response:
+    if not _mcp_enabled():
+        return web.json_response(
+            _error(None, -32000,
+                   "ComfyTV MCP is disabled — enable it in the ComfyTV "
+                   "sidebar under Settings"),
+            status=403,
+        )
     _mark_activity()
     try:
         msg = await request.json()

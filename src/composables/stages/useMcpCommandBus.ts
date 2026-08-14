@@ -7,6 +7,7 @@ import {
   findNamedSlot,
 } from '@/composables/stages/spawnFollowUp'
 import { writeImageRefs, type ImageRef } from '@/composables/stages/imageRefs'
+import { mentionSendOrders } from '@/composables/stages/imageSlotMentions'
 import { claimStageUid, getStageUid } from '@/composables/stages/stageIdentity'
 import { useAssetStore } from '@/stores/assetStore'
 import { useStageStore } from '@/stores/stageStore'
@@ -109,6 +110,36 @@ function applyStageFields(node: any, cmd: any): string[] {
   return updated
 }
 
+const MENTION_TOKEN_RE = /@(image|video|audio)_(\d+)(?![0-9a-zA-Z_-])/g
+
+export function danglingMentionWarnings(node: any): string[] {
+  const prompt = String(getWidget(node, 'main_prompt')?.value ?? '')
+  if (!prompt.includes('@')) return []
+  const orders = mentionSendOrders(node)
+  const warnings: string[] = []
+  const seen = new Set<string>()
+  for (const m of prompt.matchAll(MENTION_TOKEN_RE)) {
+    const type = m[1] as 'image' | 'video' | 'audio'
+    const slot = Number(m[2])
+    const key = `${type}_${slot}`
+    if (seen.has(key)) continue
+    seen.add(key)
+    if (!orders[type].includes(slot)) {
+      warnings.push(
+        `@${key} won't resolve and will expand to nothing — sendable ${type} `
+        + `slots on this stage are [${orders[type].join(', ')}] (zero-based; `
+        + 'wired inputs and asset_refs occupy slots in order)',
+      )
+    }
+  }
+  return warnings
+}
+
+function withMentionWarnings(node: any, result: CommandResult): CommandResult {
+  const warnings = danglingMentionWarnings(node)
+  return warnings.length ? { ...result, warnings } : result
+}
+
 function handleAddStage(app: any, cmd: any): CommandResult {
   const graph = app?.graph
   const pos: [number, number] =
@@ -120,7 +151,9 @@ function handleAddStage(app: any, cmd: any): CommandResult {
   claimStageUid(node)
   applyStageFields(node, cmd)
   graph?.setDirtyCanvas?.(true, true)
-  return { graph_node_id: String(node.id), uid: getStageUid(node) }
+  return withMentionWarnings(node, {
+    graph_node_id: String(node.id), uid: getStageUid(node),
+  })
 }
 
 function handleSetStage(app: any, cmd: any): CommandResult {
@@ -128,7 +161,9 @@ function handleSetStage(app: any, cmd: any): CommandResult {
   if (!node) throw new Error(`stage ${cmd.node} not found on the canvas`)
   const updated = applyStageFields(node, cmd)
   app?.graph?.setDirtyCanvas?.(true, true)
-  return { graph_node_id: String(node.id), uid: getStageUid(node), updated }
+  return withMentionWarnings(node, {
+    graph_node_id: String(node.id), uid: getStageUid(node), updated,
+  })
 }
 
 function inputNames(node: any): string {
@@ -174,11 +209,11 @@ function handleConnectStages(app: any, cmd: any): CommandResult {
   const link = src.connect(fromSlot, dst, toSlot)
   if (!link) throw new Error('the graph rejected the connection (type mismatch?)')
   graph?.setDirtyCanvas?.(true, true)
-  return {
+  return withMentionWarnings(dst, {
     from: String(src.id),
     to: String(dst.id),
     input: String(dst.inputs?.[toSlot]?.name ?? toSlot),
-  }
+  })
 }
 
 async function handleRunStage(app: any, cmd: any): Promise<CommandResult> {
@@ -191,7 +226,9 @@ async function handleRunStage(app: any, cmd: any): Promise<CommandResult> {
   if (stageApi.state?.running) throw new Error('stage is already running')
   await stageApi.onRunRequest()
   if (stageApi.state?.running) {
-    return { started: true, graph_node_id: String(node.id), uid: getStageUid(node) }
+    return withMentionWarnings(node, {
+      started: true, graph_node_id: String(node.id), uid: getStageUid(node),
+    })
   }
   throw new Error(
     stageApi.state?.error?.message
@@ -257,6 +294,19 @@ async function handlePrevizRecord(app: any, cmd: any): Promise<CommandResult> {
   return await api.record()
 }
 
+function directorApi(app: any, cmd: any) {
+  return stageSubApi(app, cmd, 'director', 'Director')
+}
+
+async function handleDirectorGet(app: any, cmd: any): Promise<CommandResult> {
+  return directorApi(app, cmd).getState()
+}
+
+async function handleDirectorEdit(app: any, cmd: any): Promise<CommandResult> {
+  const out = await directorApi(app, cmd).applyOps(cmd.ops)
+  return { applied: out.results }
+}
+
 async function handleSceneGet(app: any, cmd: any): Promise<CommandResult> {
   const api = sceneApi(app, cmd)
   const scene = api.getState()
@@ -312,6 +362,74 @@ function handleRemoveStage(app: any, cmd: any): CommandResult {
   return { removed: true, ...removed }
 }
 
+async function handleCancelStage(app: any, cmd: any): Promise<CommandResult> {
+  const node = findStageNode(app?.graph, String(cmd.node))
+  if (!node) throw new Error(`stage ${cmd.node} not found on the canvas`)
+  const stageApi = (node as any).__comfytvStageApi
+  if (!stageApi?.onCancelRequest) {
+    throw new Error('stage card is not mounted yet — cannot cancel')
+  }
+  if (!stageApi.state?.running) throw new Error('stage is not running')
+  await stageApi.onCancelRequest()
+  return { cancelled: true, graph_node_id: String(node.id), uid: getStageUid(node) }
+}
+
+const _WIDGET_VALUE_CAP = 4000
+
+function handleGetStage(app: any, cmd: any): CommandResult {
+  const node = findStageNode(app?.graph, String(cmd.node))
+  if (!node) throw new Error(`stage ${cmd.node} not found on the canvas`)
+  const links = app?.graph?.links ?? {}
+
+  const widgets: Record<string, unknown> = {}
+  for (const w of node.widgets ?? []) {
+    const name = String(w?.name ?? '')
+    if (!name) continue
+    let v = (w as any).value
+    if (typeof v === 'function' || v === undefined) continue
+    if (typeof v === 'string' && v.length > _WIDGET_VALUE_CAP) {
+      v = v.slice(0, _WIDGET_VALUE_CAP) + '…'
+    }
+    widgets[name] = v
+  }
+
+  const inputs = (node.inputs ?? []).map((inp: any) => {
+    const link = inp?.link != null ? links[inp.link] : null
+    return {
+      name: String(inp?.name ?? ''),
+      type: String(inp?.type ?? ''),
+      connected: inp?.link != null,
+      ...(link?.origin_id != null ? { from_node: String(link.origin_id) } : {}),
+    }
+  })
+  const outputs = (node.outputs ?? []).map((out: any) => {
+    const targets = (out?.links ?? [])
+      .map((id: any) => links[id]?.target_id)
+      .filter((t: any) => t != null)
+      .map((t: any) => String(t))
+    return {
+      name: String(out?.name ?? ''),
+      type: String(out?.type ?? ''),
+      to_nodes: targets,
+    }
+  })
+
+  const stageApi = (node as any).__comfytvStageApi
+  const result: CommandResult = {
+    graph_node_id: String(node.id),
+    uid: getStageUid(node),
+    node_class: String(node.comfyClass ?? ''),
+    title: String(node.title ?? ''),
+    widgets,
+    inputs,
+    outputs,
+    asset_refs: node.properties?.comfytv_image_refs ?? [],
+    running: stageApi?.state?.running === true,
+    pos: Array.isArray(node.pos) ? [Number(node.pos[0]), Number(node.pos[1])] : null,
+  }
+  return withMentionWarnings(node, result)
+}
+
 async function executeCommand(app: any, cmd: any): Promise<CommandResult> {
   switch (cmd.action) {
     case 'add_stage': return handleAddStage(app, cmd)
@@ -321,12 +439,16 @@ async function executeCommand(app: any, cmd: any): Promise<CommandResult> {
     case 'scene_edit': return handleSceneEdit(app, cmd)
     case 'scene_capture': return handleSceneCapture(app, cmd)
     case 'scene_record': return handleSceneRecord(app, cmd)
+    case 'director_get': return handleDirectorGet(app, cmd)
+    case 'director_edit': return handleDirectorEdit(app, cmd)
     case 'previz_get': return handlePrevizGet(app, cmd)
     case 'previz_edit': return handlePrevizEdit(app, cmd)
     case 'previz_capture': return handlePrevizCapture(app, cmd)
     case 'previz_record': return handlePrevizRecord(app, cmd)
     case 'connect_stages': return handleConnectStages(app, cmd)
     case 'run_stage': return handleRunStage(app, cmd)
+    case 'cancel_stage': return handleCancelStage(app, cmd)
+    case 'get_stage': return handleGetStage(app, cmd)
     default: throw new Error(`unknown command action ${String(cmd.action)}`)
   }
 }

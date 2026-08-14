@@ -115,7 +115,18 @@
         "label": "Backup location",
         "desc": "Leave empty to use the db-backup folder inside the ComfyTV directory. Snapshots are timestamped folders like 20260805-093000/comfytv.",
         "placeholder": "e.g. D:\\backups\\comfytv"
+      },
+      "enable-mcp": {
+        "label": "Enable MCP server",
+        "desc": "Expose the ComfyTV MCP endpoint (/comfytv/mcp) so agents can read and drive the canvas. Off by default."
+      },
+      "enable-bot": {
+        "label": "Enable ComfyTV Bot",
+        "desc": "Show the embedded bot sidebar and its chat API. Requires the MCP server to be enabled."
       }
+    },
+    "agent": {
+      "section": "Agent & MCP"
     }
   },
   "servers": {
@@ -1225,7 +1236,11 @@
     "clipPrompt": "Clip prompt",
     "workflow": "Workflow",
     "sharedRefsHint": "The reference pool for the whole piece. In each clip's prompt, {'@'} the ones that clip should use; a clip with no {'@'} mentions sends the whole pool automatically.",
-    "kind": { "image": "image", "video": "video", "audio": "audio" },
+    "kind": {
+      "image": "image",
+      "video": "video",
+      "audio": "audio"
+    },
     "refNotConsumed": "\"{workflow}\" doesn't consume {kind} references — they will be ignored at run time",
     "refOverLimit": "This workflow consumes at most {n} of these — extra ones will be ignored",
     "transition": "Transition in",
@@ -1503,7 +1518,8 @@
     "openEntryManager": "ComfyTV — open entry manager",
     "entriesTitle": "ComfyTV Entries",
     "entriesButtonTooltip": "ComfyTV — entries (fragments / characters / …)",
-    "configSidebarTooltip": "ComfyTV — workflow config & asset library"
+    "configSidebarTooltip": "ComfyTV — workflow config & asset library",
+    "botSidebarTooltip": "ComfyTV Bot - chat with an agent that drives the canvas"
   },
   "valuePreview": {
     "moreShots": "+ {n} more",
@@ -2305,5 +2321,29 @@
     "capture": "Capture",
     "captureHint": "Upload composite + one image per visible layer",
     "saveToLibraryHint": "Save layered PSD into the asset library"
+  },
+  "bot": {
+    "title": "ComfyTV Bot",
+    "newChat": "New chat",
+    "backToList": "All chats",
+    "untitled": "New chat",
+    "noChats": "No conversations yet. The bot can drive the canvas through the ComfyTV tools.",
+    "startFirst": "Start a conversation",
+    "emptyChat": "Ask anything - the bot can read and edit the canvas.",
+    "inputPlaceholder": "Message the bot... (Enter to send, Shift+Enter for newline)",
+    "send": "Send",
+    "stop": "Stop",
+    "thinking": "Working...",
+    "aborted": "Stopped.",
+    "turnError": "The turn failed. Check the server log for details.",
+    "toolResult": "Tool result",
+    "rename": "Rename",
+    "pin": "Pin",
+    "unpin": "Unpin",
+    "delete": "Delete",
+    "deleteConfirm": "Delete chat \"{title}\"? This cannot be undone.",
+    "noProviderTitle": "No local agent CLI found",
+    "noProviderBody": "The ComfyTV bot drives your canvas through a locally installed agent CLI (Claude Code). Install it, sign in once, then come back - no API key is ever stored.",
+    "recheck": "Check again"
   }
 }

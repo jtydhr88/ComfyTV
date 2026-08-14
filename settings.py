@@ -12,6 +12,8 @@ SETTINGS_SPEC: dict[str, dict[str, Any]] = {
     "enable-db-backup": {"type": "boolean", "default": True},
     "db-backup-max-count": {"type": "int", "default": 10, "min": 1},
     "db-backup-path": {"type": "string", "default": ""},
+    "enable-mcp": {"type": "boolean", "default": False},
+    "enable-bot": {"type": "boolean", "default": False},
 }
 
 

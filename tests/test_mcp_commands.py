@@ -24,6 +24,8 @@ def clean_state():
 
 @pytest.fixture()
 async def client(reset_db, clean_state):
+    from ComfyTV import storage
+    storage.set_settings({"enable-mcp": True})
     from ComfyTV import api  # noqa: F401
     import server
     app = web.Application()

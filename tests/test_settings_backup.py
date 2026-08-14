@@ -256,6 +256,7 @@ class TestSettingsApi:
         rows = (await resp.json())["settings"]
         assert {r["key"] for r in rows} == {
             "enable-db-backup", "db-backup-max-count", "db-backup-path",
+            "enable-mcp", "enable-bot",
         }
         for r in rows:
             assert set(r) == {"key", "type", "value", "default"}

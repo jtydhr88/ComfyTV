@@ -1,7 +1,12 @@
+import asyncio
+import re
+import time
+
 from .. import storage
 from ..nodes.stages import STAGE_META
-from ..runners import WORKFLOW_KINDS, workflow_db
+from ..runners import WORKFLOW_KINDS, refresh_registry, workflow_db
 from ..runners.exec_errors import list_exec_errors
+from ._common import broadcast_asset_event, broadcast_entry_event
 from .assets import _with_file_missing
 from .canvas_state import get_canvas_state, mirror_summary
 from .capabilities import VERSION
@@ -283,6 +288,589 @@ async def _run_stage(args: dict) -> dict:
     return await submit_command("run_stage", payload, timeout=60.0)
 
 
+_FROM_RE = re.compile(
+    r"^(main_prompt"
+    r"|literal:.*"
+    r"|option:[A-Za-z0-9_]+"
+    r"|computed:(width|height|length)"
+    r"|upstream_(image|video|audio|text|model):(annotated|value|masked)(\[\d+\])?)$",
+    re.DOTALL,
+)
+_BIND_CASTS = ("int", "float", "str")
+_META_KEYS = ("description", "result_type", "result_node", "sizing",
+              "prune_when_missing", "meta")
+_RESOURCE_KINDS = ("lut", "font", "soundfont")
+_VALUE_CAP = 200
+
+
+def _slim_api_nodes(api_obj) -> list[dict]:
+    nodes: list[dict] = []
+    if not isinstance(api_obj, dict):
+        return nodes
+    for nid, node in sorted(api_obj.items(), key=lambda kv: str(kv[0])):
+        if not isinstance(node, dict):
+            continue
+        inputs = {}
+        for name, val in (node.get("inputs") or {}).items():
+            if isinstance(val, list) and len(val) == 2:
+                inputs[name] = f"«linked from node {val[0]}»"
+            elif isinstance(val, str) and len(val) > _VALUE_CAP:
+                inputs[name] = val[:_VALUE_CAP] + "…"
+            else:
+                inputs[name] = val
+        nodes.append({
+            "node_id": str(nid),
+            "class_type": node.get("class_type"),
+            "title": (node.get("_meta") or {}).get("title") or "",
+            "inputs": inputs,
+        })
+    return nodes
+
+
+def _workflow_config(kind, label) -> dict:
+    kind = str(kind or "")
+    label = str(label or "")
+    if kind not in WORKFLOW_KINDS:
+        raise ValueError(
+            f"unknown workflow kind {kind!r} — valid kinds: {', '.join(WORKFLOW_KINDS)}")
+    if not label:
+        raise ValueError("label is required")
+    cfg = workflow_db.get_workflow_config(kind, label)
+    if cfg is None:
+        labels = [w["label"] for w in workflow_db.list_workflows_overview(kind)]
+        raise ValueError(
+            f"workflow {label!r} not found for kind {kind!r}; "
+            f"available: {labels}")
+    return cfg
+
+
+async def _workflow_get(args: dict) -> dict:
+    cfg = _workflow_config(args.get("kind"), args.get("label"))
+    return {
+        "id": cfg["id"],
+        "kind": cfg["kind"],
+        "label": cfg["label"],
+        "description": cfg["description"],
+        "link_type": cfg["link_type"],
+        "file_exists": cfg["file_exists"],
+        "has_api": cfg["has_api"],
+        "result_type": cfg["result_type"],
+        "result_node": cfg["result_node"],
+        "sizing": cfg["sizing"],
+        "meta": cfg["meta"],
+        "bindings": cfg["bindings"],
+        "exposed_widgets": cfg.get("exposed_widgets") or [],
+        "nodes": _slim_api_nodes(cfg.get("api_json")),
+    }
+
+
+def _validate_bind_op(i: int, op: dict, api_nodes: dict | None) -> None:
+    node_id = str(op.get("node_id") or "")
+    input_name = str(op.get("input_name") or "")
+    src = str(op.get("from") or "")
+    if not node_id or not input_name:
+        raise ValueError(f"ops[{i}]: bind needs node_id and input_name")
+    if not _FROM_RE.match(src):
+        raise ValueError(
+            f"ops[{i}]: invalid from {src!r} — valid sources: main_prompt, "
+            "option:<key>, computed:width|height|length, literal:<value>, "
+            "upstream_image:value[N] (or :annotated / :masked), "
+            "upstream_video|audio|text|model:value[N]")
+    cast = op.get("cast")
+    if cast is not None and cast not in _BIND_CASTS:
+        raise ValueError(
+            f"ops[{i}]: invalid cast {cast!r} — valid: {', '.join(_BIND_CASTS)}")
+    if api_nodes is not None:
+        node = api_nodes.get(node_id)
+        if not isinstance(node, dict):
+            raise ValueError(
+                f"ops[{i}]: node {node_id!r} not in this workflow's API graph "
+                f"(nodes: {sorted(api_nodes)})")
+        inputs = node.get("inputs") or {}
+        if input_name not in inputs:
+            raise ValueError(
+                f"ops[{i}]: node {node_id} has no input {input_name!r} "
+                f"(inputs: {sorted(inputs)})")
+
+
+async def _workflow_edit(args: dict) -> dict:
+    cfg = _workflow_config(args.get("kind"), args.get("label"))
+    ops = args.get("ops")
+    if not isinstance(ops, list) or not ops:
+        raise ValueError("ops must be a non-empty array of {op, ...} objects")
+    api_obj = cfg.get("api_json")
+    api_nodes = api_obj if isinstance(api_obj, dict) else None
+
+    for i, op in enumerate(ops):
+        if not isinstance(op, dict) or not op.get("op"):
+            raise ValueError(f"ops[{i}] must be an object with an 'op' field")
+        name = str(op["op"])
+        if name == "bind":
+            _validate_bind_op(i, op, api_nodes)
+        elif name == "unbind":
+            if not op.get("node_id") or not op.get("input_name"):
+                raise ValueError(f"ops[{i}]: unbind needs node_id and input_name")
+        elif name == "set_meta":
+            if not any(k in op for k in _META_KEYS):
+                raise ValueError(
+                    f"ops[{i}]: set_meta needs at least one of {_META_KEYS}")
+        elif name in ("set_default", "reset_to_preset"):
+            pass
+        else:
+            raise ValueError(
+                f"ops[{i}]: unknown op {name!r} — valid: bind, unbind, "
+                "set_meta, set_default, reset_to_preset")
+
+    wid = int(cfg["id"])
+    results = []
+    for op in ops:
+        name = str(op["op"])
+        if name == "bind":
+            workflow_db.upsert_input_binding(
+                workflow_id=wid,
+                node_id=str(op["node_id"]),
+                input_name=str(op["input_name"]),
+                from_=str(op["from"]),
+                default=op.get("default"),
+                prefix=op.get("prefix"),
+                suffix=op.get("suffix"),
+                required=bool(op.get("required") or False),
+                error_msg=op.get("error_msg"),
+                cast=op.get("cast"),
+            )
+            results.append({"op": name, "ok": True,
+                            "node_id": str(op["node_id"]),
+                            "input_name": str(op["input_name"])})
+        elif name == "unbind":
+            ok = workflow_db.delete_input_binding(
+                workflow_id=wid,
+                node_id=str(op["node_id"]),
+                input_name=str(op["input_name"]),
+            )
+            results.append({"op": name, "ok": bool(ok)})
+        elif name == "set_meta":
+            kwargs = {k: op[k] for k in _META_KEYS if k in op}
+            ok = workflow_db.update_workflow_meta(wid, **kwargs)
+            results.append({"op": name, "ok": bool(ok),
+                            "fields": sorted(kwargs)})
+        elif name == "set_default":
+            out = workflow_db.set_default_workflow(
+                wid, bool(op.get("default", True)))
+            results.append({"op": name, "ok": out is not None})
+        elif name == "reset_to_preset":
+            out = workflow_db.reset_workflow_to_preset(wid)
+            if out is not None:
+                refresh_registry()
+            results.append({"op": name, "ok": out is not None})
+    fresh = workflow_db.get_workflow_config(cfg["kind"], cfg["label"])
+    return {"results": results,
+            "bindings": (fresh or {}).get("bindings", [])}
+
+
+async def _asset_edit(args: dict) -> dict:
+    action = str(args.get("action") or "")
+    if action == "create_category":
+        name = str(args.get("name") or "").strip()
+        if not name:
+            raise ValueError("name is required")
+        row = storage.create_asset_category(name)
+        if row is None:
+            raise ValueError(f"category {name!r} already exists")
+        return {"category": row}
+    if action == "create":
+        payload_url = str(args.get("payload_url") or "").strip()
+        if not payload_url:
+            raise ValueError("payload_url is required (e.g. an output's "
+                             "payload_url from the outputs tool)")
+        media_type = str(args.get("media_type") or "image")
+        if media_type not in storage.ASSET_MEDIA_TYPES:
+            raise ValueError(
+                f"unknown media_type {media_type!r}; "
+                f"valid: {list(storage.ASSET_MEDIA_TYPES)}")
+        row = storage.create_asset(
+            name=str(args.get("name") or ""),
+            payload_url=payload_url,
+            media_type=media_type,
+            category_ids=_category_ids(args.get("categories")),
+            source="mcp",
+        )
+        if row is None:
+            raise ValueError("invalid asset (bad category or payload)")
+        row = _with_file_missing(row)
+        broadcast_asset_event("create", {"asset": row})
+        return {"asset": row}
+    if action == "update":
+        aid = args.get("asset_id")
+        if not isinstance(aid, int):
+            raise ValueError("asset_id (integer) is required")
+        cats = args.get("categories")
+        row = storage.update_asset(
+            aid,
+            name=str(args["name"]) if args.get("name") is not None else None,
+            category_ids=_category_ids(cats) if cats is not None else None,
+        )
+        if row is None:
+            raise ValueError(f"asset {aid} not found (or bad category)")
+        row = _with_file_missing(row)
+        broadcast_asset_event("update", {"asset": row})
+        return {"asset": row}
+    if action == "delete":
+        aid = args.get("asset_id")
+        if not isinstance(aid, int):
+            raise ValueError("asset_id (integer) is required")
+        if not storage.delete_asset(aid):
+            raise ValueError(f"asset {aid} not found")
+        broadcast_asset_event("delete", {"id": aid})
+        return {"ok": True}
+    raise ValueError(f"unknown action {action!r} — valid: create, update, "
+                     "delete, create_category")
+
+
+def _category_ids(raw) -> list[int]:
+    if raw is None:
+        return []
+    if not isinstance(raw, list):
+        raise ValueError("categories must be an array of names or ids")
+    existing = {c["name"]: c["id"] for c in storage.list_asset_categories()}
+    ids: list[int] = []
+    for item in raw:
+        if isinstance(item, int):
+            ids.append(item)
+            continue
+        name = str(item).strip()
+        if not name:
+            continue
+        cid = existing.get(name)
+        if cid is None:
+            row = storage.create_asset_category(name)
+            cid = row["id"] if row else None
+        if cid is not None:
+            ids.append(cid)
+            existing[name] = cid
+    return ids
+
+
+async def _entries(args: dict) -> dict:
+    action = str(args.get("action") or "list")
+    pid = str(args.get("project_id") or "default")
+    if not storage.project_exists(pid):
+        raise ValueError(f"project {pid!r} not found")
+    if action == "list":
+        rows = storage.list_entries(pid)
+        kind = args.get("kind")
+        if kind:
+            rows = [r for r in rows if r["kind"] == kind]
+        return {"entries": rows}
+    if action == "upsert":
+        kind = str(args.get("kind") or "")
+        label = str(args.get("label") or "").strip()
+        if kind not in storage.ENTRY_KINDS:
+            raise ValueError(
+                f"unknown kind {kind!r}; valid: {list(storage.ENTRY_KINDS)}")
+        if not label:
+            raise ValueError("label is required")
+        entry_id = args.get("id")
+        row = storage.upsert_entry(
+            pid, kind=kind, label=label,
+            content=str(args.get("content") or ""),
+            metadata=args.get("metadata")
+            if isinstance(args.get("metadata"), dict) else None,
+            entry_id=int(entry_id) if entry_id is not None else None,
+        )
+        if row is None:
+            raise ValueError(
+                "invalid label — must start with a letter/underscore (CJK ok), "
+                "then letters/digits/_/-")
+        broadcast_entry_event("upsert", pid, {"entry": row})
+        return {"entry": row}
+    if action == "delete":
+        eid = args.get("id")
+        if not isinstance(eid, int):
+            raise ValueError("id (integer) is required")
+        if not storage.delete_entry(pid, eid):
+            raise ValueError(f"entry {eid} not found")
+        broadcast_entry_event("delete", pid, {"id": eid})
+        return {"ok": True}
+    raise ValueError(f"unknown action {action!r} — valid: list, upsert, delete")
+
+
+async def _resources(args: dict) -> dict:
+    kind = args.get("kind")
+    if kind is not None and kind not in _RESOURCE_KINDS:
+        raise ValueError(
+            f"unknown kind {kind!r}; valid: {', '.join(_RESOURCE_KINDS)}")
+    return {"resources": storage.list_resources(kind),
+            "kinds": list(_RESOURCE_KINDS)}
+
+
+async def _stage_params_tool(args: dict) -> dict:
+    action = str(args.get("action") or "list")
+    if action == "list":
+        return {"params": storage.list_stage_params(args.get("kind"))}
+    if action == "create":
+        kind = str(args.get("kind") or "").strip()
+        label = str(args.get("label") or "").strip()
+        type_ = str(args.get("type") or "").strip()
+        if not kind:
+            raise ValueError("kind is required (a stage kind like 'video')")
+        if not label:
+            raise ValueError("label is required")
+        if type_ not in storage.STAGE_PARAM_TYPES:
+            raise ValueError(
+                f"unknown type {type_!r}; valid: {list(storage.STAGE_PARAM_TYPES)}")
+        config = args.get("config")
+        row = storage.create_stage_param(
+            kind=kind, label=label, type=type_,
+            default=args.get("default"),
+            config=config if isinstance(config, dict) else None,
+        )
+        if row is None:
+            raise ValueError("could not create stage param")
+        from ._common import broadcast_stage_param_event
+        broadcast_stage_param_event("create", {"param": row})
+        return {"param": row}
+    if action == "update":
+        pid = args.get("id")
+        if not isinstance(pid, int):
+            raise ValueError("id (integer) is required")
+        type_ = args.get("type")
+        if type_ is not None and type_ not in storage.STAGE_PARAM_TYPES:
+            raise ValueError(f"unknown type {type_!r}")
+        kwargs: dict = {}
+        if args.get("label") is not None:
+            kwargs["label"] = str(args["label"])
+        if type_ is not None:
+            kwargs["type"] = type_
+        if "default" in args:
+            kwargs["default"] = args["default"]
+        if "config" in args:
+            cfg = args.get("config")
+            kwargs["config"] = cfg if isinstance(cfg, dict) else None
+        row = storage.update_stage_param(pid, **kwargs)
+        if row is None:
+            raise ValueError(f"param {pid} not found or read-only (system param)")
+        from ._common import broadcast_stage_param_event
+        broadcast_stage_param_event("update", {"param": row})
+        return {"param": row}
+    if action == "delete":
+        pid = args.get("id")
+        if not isinstance(pid, int):
+            raise ValueError("id (integer) is required")
+        if not storage.delete_stage_param(pid):
+            raise ValueError(f"param {pid} not found or read-only (system param)")
+        from ._common import broadcast_stage_param_event
+        broadcast_stage_param_event("delete", {"id": pid})
+        return {"ok": True}
+    raise ValueError(
+        f"unknown action {action!r} — valid: list, create, update, delete")
+
+
+async def _media_probe(args: dict) -> dict:
+    url = str(args.get("url") or "")
+    if not url:
+        raise ValueError("url is required (a /view?… payload_url)")
+    from ..runners import media
+    return await asyncio.to_thread(media.get_video_info, url)
+
+
+async def _media_frame(args: dict) -> dict:
+    url = str(args.get("url") or "")
+    if not url:
+        raise ValueError("url is required (a /view?… payload_url)")
+    position = args.get("position", "middle")
+    from ..runners import media
+    image = await asyncio.to_thread(media.extract_frame, url, position)
+    return {"image": image}
+
+
+async def _media_waveform(args: dict) -> dict:
+    url = str(args.get("url") or "")
+    if not url:
+        raise ValueError("url is required (a /view?… payload_url)")
+    width = max(200, min(int(args.get("width", 1200)), 4000))
+    height = max(100, min(int(args.get("height", 480)), 2000))
+    from ..runners import audio_render
+    image = await asyncio.to_thread(
+        audio_render.render_waveform_image, url, width, height)
+    return {"image": image}
+
+
+_VIEW_MAX_PX_DEFAULT = 768
+_VIEW_MAX_PX_CAP = 1200
+_VIEW_JPEG_QUALITY = 80
+
+
+def _render_view_image(url: str, max_px: int) -> dict:
+    import base64
+    import io
+
+    from PIL import Image
+
+    from ..runners.media import localize
+
+    src = localize(url)
+    with Image.open(str(src)) as im:
+        source_w, source_h = im.size
+        im = im.convert("RGB")
+        im.thumbnail((max_px, max_px))
+        buf = io.BytesIO()
+        im.save(buf, "JPEG", quality=_VIEW_JPEG_QUALITY)
+        return {
+            "url": url,
+            "source_width": source_w,
+            "source_height": source_h,
+            "width": im.width,
+            "height": im.height,
+            "_images": [{
+                "data": base64.b64encode(buf.getvalue()).decode("ascii"),
+                "mime": "image/jpeg",
+            }],
+        }
+
+
+async def _view_image(args: dict) -> dict:
+    url = str(args.get("url") or "")
+    if not url:
+        raise ValueError("url is required (a /view?… image URL)")
+    try:
+        max_px = int(args.get("max_px", _VIEW_MAX_PX_DEFAULT))
+    except (TypeError, ValueError):
+        raise ValueError("max_px must be an integer")
+    max_px = max(256, min(max_px, _VIEW_MAX_PX_CAP))
+    try:
+        return await asyncio.to_thread(_render_view_image, url, max_px)
+    except Exception as e:
+        raise ValueError(
+            f"could not open {url!r} as an image ({e}) — for videos, "
+            "extract a frame with media_frame first")
+
+
+async def _pick_output(args: dict) -> dict:
+    oid = args.get("output_id")
+    idx = args.get("picked_index")
+    if not isinstance(oid, int):
+        raise ValueError("output_id (integer) is required")
+    if not isinstance(idx, int) or idx < 0:
+        raise ValueError("picked_index (non-negative integer) is required")
+    row = storage.update_output_picked_index(oid, idx)
+    if row is None:
+        raise ValueError(f"output {oid} not found")
+    return {"output": row}
+
+
+async def _director_get(args: dict) -> dict:
+    node = args.get("node")
+    if not node:
+        raise ValueError("node is required (DirectorStage uid or graph node id)")
+    payload = _command_payload(args, ("project_id",))
+    payload["node"] = str(node)
+    return await submit_command("director_get", payload)
+
+
+async def _director_edit(args: dict) -> dict:
+    node = args.get("node")
+    if not node:
+        raise ValueError("node is required (DirectorStage uid or graph node id)")
+    ops = args.get("ops")
+    if not isinstance(ops, list) or not ops:
+        raise ValueError("ops must be a non-empty array of {op, ...} objects")
+    for i, op in enumerate(ops):
+        if not isinstance(op, dict) or not op.get("op"):
+            raise ValueError(f"ops[{i}] must be an object with an 'op' field")
+    payload = _command_payload(args, ("project_id",))
+    payload["node"] = str(node)
+    payload["ops"] = ops
+    return await submit_command("director_edit", payload, timeout=30.0)
+
+
+async def _cancel_stage(args: dict) -> dict:
+    node = args.get("node")
+    if not node:
+        raise ValueError("node is required (stage uid or graph node id)")
+    payload = _command_payload(args, ("project_id",))
+    payload["node"] = str(node)
+    return await submit_command("cancel_stage", payload, timeout=30.0)
+
+
+async def _get_stage(args: dict) -> dict:
+    node = args.get("node")
+    if not node:
+        raise ValueError("node is required (stage uid or graph node id)")
+    payload = _command_payload(args, ("project_id",))
+    payload["node"] = str(node)
+    return await submit_command("get_stage", payload)
+
+
+_WAIT_POLL_S = 1.0
+_WAIT_DEFAULT_S = 25.0
+_WAIT_MAX_S = 170.0
+
+
+def _mirror_stage(project_id, node_ref: str):
+    snap = get_canvas_state(project_id)
+    if not snap.get("available"):
+        raise ValueError(str(snap.get("reason") or "canvas mirror unavailable"))
+    for s in snap.get("stages", []):
+        uid = str(s.get("uid") or "")
+        if str(s.get("graph_node_id")) == node_ref or uid == node_ref \
+                or (len(node_ref) >= 8 and uid.startswith(node_ref)):
+            return snap["project_id"], s
+    raise ValueError(f"stage {node_ref!r} not found on the mirrored canvas")
+
+
+async def _wait_stage(args: dict) -> dict:
+    node = args.get("node")
+    if not node:
+        raise ValueError("node is required (stage uid or graph node id)")
+    try:
+        timeout_s = float(args.get("timeout_s", _WAIT_DEFAULT_S))
+    except (TypeError, ValueError):
+        raise ValueError("timeout_s must be a number")
+    timeout_s = max(2.0, min(timeout_s, _WAIT_MAX_S))
+
+    pid, stage = _mirror_stage(args.get("project_id"), str(node))
+    uid = str(stage.get("uid") or "")
+    initial_run = dict(stage.get("last_run") or {})
+
+    after = args.get("after_output_id")
+    if after is not None:
+        baseline = int(after)
+    else:
+        row = storage.latest_output_by_uid(pid, uid)
+        baseline = int(row["id"]) if row else 0
+
+    t0 = time.monotonic()
+    while True:
+        row = storage.latest_output_by_uid(pid, uid)
+        if row and int(row["id"]) > baseline:
+            return {
+                "status": "done",
+                "output": row,
+                "waited_s": round(time.monotonic() - t0, 1),
+            }
+        try:
+            _, fresh = _mirror_stage(pid, uid)
+        except ValueError:
+            fresh = None
+        if fresh is not None:
+            run = dict(fresh.get("last_run") or {})
+            if run.get("status") == "error" and run != initial_run:
+                return {
+                    "status": "error",
+                    "error": run.get("error") or "stage run failed",
+                    "waited_s": round(time.monotonic() - t0, 1),
+                }
+        if time.monotonic() - t0 >= timeout_s:
+            return {
+                "status": "running",
+                "after_output_id": baseline,
+                "waited_s": round(time.monotonic() - t0, 1),
+                "hint": "still running — call wait_stage again with the same "
+                        "node and after_output_id to keep waiting",
+            }
+        await asyncio.sleep(_WAIT_POLL_S)
+
+
 async def _remove_stage(args: dict) -> dict:
     node = args.get("node")
     if not node:
@@ -517,8 +1105,12 @@ TOOLS: dict[str, dict] = {
             "references: [{asset_id, slot?, type?}] with ids from the assets "
             "tool; they are sent as the stage's reference media at run time "
             "and addressable as @image_N / @video_N / @audio_N in the prompt) "
-            "in the same call. Returns the new node's graph_node_id and uid. "
-            "Placement is automatic unless pos [x, y] is given."
+            "in the same call. Mention ordinals are ZERO-BASED per media type: "
+            "the first sendable image is @image_0 (wired stage inputs and "
+            "asset_refs occupy slots in order; a token past the sendable range "
+            "expands to nothing and the result carries a warning). Returns the "
+            "new node's graph_node_id and uid. Placement is automatic unless "
+            "pos [x, y] is given."
         ),
         "inputSchema": {
             "type": "object",
@@ -548,7 +1140,10 @@ TOOLS: dict[str, dict] = {
             "'local') and/or asset_refs (asset-library references replacing "
             "the stage's current set: [{asset_id, slot?, type?}] with ids "
             "from the assets tool, addressable as @image_N / @video_N / "
-            "@audio_N in the prompt; pass [] to clear). node is a stage uid "
+            "@audio_N in the prompt; pass [] to clear). Mention ordinals are "
+            "ZERO-BASED per media type (first image = @image_0; wired inputs "
+            "and asset_refs occupy slots in order; out-of-range tokens expand "
+            "to nothing and the result carries a warning). node is a stage uid "
             "or graph_node_id from get_canvas. Requires an open ComfyTV tab."
         ),
         "inputSchema": {
@@ -844,9 +1439,9 @@ TOOLS: dict[str, dict] = {
         "description": (
             "Queue a run of a stage on the live canvas, exactly like clicking its "
             "Run button (upstream snapshots, @mentions and asset refs all apply). "
-            "Returns as soon as the run is queued — poll get_canvas (status "
-            "'running') and outputs/exec_errors for completion. node is a stage "
-            "uid or graph_node_id. Requires an open ComfyTV tab."
+            "Returns as soon as the run is queued — then call wait_stage on the "
+            "same node to block until it finishes instead of polling. node is a "
+            "stage uid or graph_node_id. Requires an open ComfyTV tab."
         ),
         "inputSchema": {
             "type": "object",
@@ -858,5 +1453,384 @@ TOOLS: dict[str, dict] = {
             "additionalProperties": False,
         },
         "handler": _run_stage,
+    },
+    "director_get": {
+        "description": (
+            "Read a Director stage's full timeline: settings (chain mode "
+            "off/prepend/replace — how each clip receives the previous "
+            "clip's last frame), total seconds, default workflow, and every "
+            "clip in order with id/enabled/workflow/prompt/duration_s/seed/"
+            "transition(+_s)/per-clip images/videos/audio reference URLs and "
+            "render status ({url, cached} — cached means an unchanged clip "
+            "reuses its render on the next run). Also lists valid "
+            "workflow_options, transitions and chain_modes. ALWAYS call "
+            "before director_edit to get clip ids. node is the "
+            "DirectorStage uid or graph node id; its card must be open in "
+            "the tab."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "node": {"type": "string"},
+                "project_id": {"type": "string"},
+            },
+            "required": ["node"],
+            "additionalProperties": False,
+        },
+        "handler": _director_get,
+    },
+    "director_edit": {
+        "description": (
+            "Edit a Director stage's clip timeline with an ops array, then "
+            "run_stage the director node to render (unchanged clips reuse "
+            "cached renders — only edited clips re-generate). Ops: "
+            "{op:'add_clip', prompt?, workflow?, duration_s? (1-120s), "
+            "transition?, transition_s?, enabled?, images?/videos?/audio? "
+            "(arrays of /view?… URLs from assets/outputs), index?} → "
+            "returns the new clip id; {op:'update_clip', id, ...same "
+            "fields}; {op:'remove_clip', id}; {op:'duplicate_clip', id}; "
+            "{op:'move_clip', id, index}; {op:'reroll', id?} re-seeds one "
+            "clip (or all without id) to force a fresh take; "
+            "{op:'set_chain', chain: off/prepend/replace}. Clip prompts may "
+            "@-mention media: ordinals are ZERO-BASED per type over the "
+            "MERGED pool — the director node's shared asset_refs (set via "
+            "set_stage, the whole-film cast) come first, then the clip's "
+            "own refs; @image_0 is the first shared image. No mentions = "
+            "send all refs; mentioning = only the mentioned ones are sent. "
+            "Rejected while the director is running."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "node": {"type": "string"},
+                "ops": {"type": "array", "items": {"type": "object"},
+                        "minItems": 1},
+                "project_id": {"type": "string"},
+            },
+            "required": ["node", "ops"],
+            "additionalProperties": False,
+        },
+        "handler": _director_edit,
+    },
+    "stage_params": {
+        "description": (
+            "Manage custom stage parameters — extra widgets users define on a "
+            "stage kind so workflows can bind values ComfyTV has no built-in "
+            "key for. action 'list' (optional kind filter), 'create' (kind = "
+            "a stage kind like 'video'/'image', label, type "
+            "boolean/int/float/string/combo, optional default and config "
+            "like {min,max,step} or {choices}), 'update' (id + fields), "
+            "'delete' (id; system params are read-only). The returned "
+            "param's 'key' is what you bind in workflow_edit as "
+            "'option:<key>' — typical flow: stage_params create → "
+            "workflow_edit bind {from: 'option:<key>'}."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "action": {"type": "string",
+                           "enum": ["list", "create", "update", "delete"]},
+                "kind": {"type": "string"},
+                "label": {"type": "string"},
+                "type": {"type": "string"},
+                "default": {},
+                "config": {"type": "object"},
+                "id": {"type": "integer"},
+            },
+            "required": ["action"],
+            "additionalProperties": False,
+        },
+        "handler": _stage_params_tool,
+    },
+    "media_probe": {
+        "description": (
+            "Probe a video file's metadata: duration (seconds), fps, width, "
+            "height, has_audio. url is a /view?… payload_url from outputs, "
+            "assets or wait_stage results. Use to verify a render's length "
+            "and resolution before wiring it downstream."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {"url": {"type": "string"}},
+            "required": ["url"],
+            "additionalProperties": False,
+        },
+        "handler": _media_probe,
+    },
+    "media_frame": {
+        "description": (
+            "Extract a single frame from a video as a PNG and return its "
+            "/view URL. Pair with view_image to actually look at the frame "
+            "(media_frame alone only returns a URL). position: 'first', "
+            "'middle', 'last', a percentage like '25%', or seconds. url is a "
+            "/view?… payload_url."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "url": {"type": "string"},
+                "position": {},
+            },
+            "required": ["url"],
+            "additionalProperties": False,
+        },
+        "handler": _media_frame,
+    },
+    "media_waveform": {
+        "description": (
+            "Render an audio file's waveform to a PNG (RMS overlay + "
+            "clipping markers) and return its /view URL — quick visual QC "
+            "for generated audio: silence, clipping, envelope shape. url is "
+            "a /view?… payload_url; optional width/height."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "url": {"type": "string"},
+                "width": {"type": "integer"},
+                "height": {"type": "integer"},
+            },
+            "required": ["url"],
+            "additionalProperties": False,
+        },
+        "handler": _media_waveform,
+    },
+    "view_image": {
+        "description": (
+            "Actually SEE an image: returns the image itself (downscaled "
+            "JPEG, default max 768px, cap 1200) so you can inspect "
+            "composition, identity and quality with your own eyes — the "
+            "only tool that returns visual content rather than a URL. url "
+            "is any /view?… image URL (asset payload_url, an output's "
+            "image, a media_frame result). For video QC: media_frame to "
+            "pull a frame, then view_image on it. Use this before judging "
+            "or picking outputs — never guess what an image looks like "
+            "from its filename."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "url": {"type": "string"},
+                "max_px": {"type": "integer"},
+            },
+            "required": ["url"],
+            "additionalProperties": False,
+        },
+        "handler": _view_image,
+    },
+    "pick_output": {
+        "description": (
+            "Choose which candidate of a multi-image output downstream "
+            "stages consume (sets picked_index on an output row from the "
+            "outputs tool; 0-based index into its payload images). Use "
+            "after inspecting candidates with media_frame or the output's "
+            "payload_json image URLs."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "output_id": {"type": "integer"},
+                "picked_index": {"type": "integer"},
+            },
+            "required": ["output_id", "picked_index"],
+            "additionalProperties": False,
+        },
+        "handler": _pick_output,
+    },
+    "cancel_stage": {
+        "description": (
+            "Stop a stage's in-flight run (local runs interrupt the ComfyUI "
+            "queue; remote runs cancel the remote job) — use when a render "
+            "is clearly wrong or stuck instead of waiting it out. node is a "
+            "stage uid or graph node id; errors if the stage is not "
+            "running. Requires an open ComfyTV tab."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "node": {"type": "string"},
+                "project_id": {"type": "string"},
+            },
+            "required": ["node"],
+            "additionalProperties": False,
+        },
+        "handler": _cancel_stage,
+    },
+    "get_stage": {
+        "description": (
+            "Read one stage in full detail from the live canvas: every "
+            "widget value (get_canvas only mirrors prompt/workflow), input "
+            "connections with source nodes, output connections with target "
+            "nodes, asset_refs, running state, position and any dangling "
+            "@mention warnings. Call before set_stage widgets so you edit "
+            "from actual values instead of guessing. node is a stage uid or "
+            "graph node id. Requires an open ComfyTV tab."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "node": {"type": "string"},
+                "project_id": {"type": "string"},
+            },
+            "required": ["node"],
+            "additionalProperties": False,
+        },
+        "handler": _get_stage,
+    },
+    "workflow_get": {
+        "description": (
+            "Read a workflow's full ComfyTV configuration: input bindings, "
+            "the API graph's node inventory (node_id, class_type, title, "
+            "current input values — linked inputs shown as «linked»), exposed "
+            "widgets, sizing and meta. Use this before workflow_edit to see "
+            "which node inputs exist and what is already bound. kind + label "
+            "come from list_workflows. Server-side — no open tab needed."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "kind": {"type": "string"},
+                "label": {"type": "string"},
+            },
+            "required": ["kind", "label"],
+            "additionalProperties": False,
+        },
+        "handler": _workflow_get,
+    },
+    "workflow_edit": {
+        "description": (
+            "Edit a workflow's ComfyTV configuration with an ops array "
+            "(validated up front, then applied in order). Ops: {op:'bind', "
+            "node_id, input_name, from, default?, prefix?, suffix?, "
+            "required?, error_msg?, cast?} wires a stage value into a "
+            "workflow node input — from sources: 'main_prompt' (stage "
+            "prompt), 'option:<key>' (a stage widget, e.g. option:seed), "
+            "'computed:width'/'computed:height'/'computed:length' (sizing "
+            "engine — use these for width/height so aspect settings apply), "
+            "'literal:<value>', 'upstream_image:value[N]' (also :annotated / "
+            ":masked) and upstream_video/audio/text/model:value[N]; cast is "
+            "int/float/str. {op:'unbind', node_id, input_name} removes a "
+            "binding. {op:'set_meta', description?/result_type?/result_node?/"
+            "sizing?/prune_when_missing?/meta?} updates workflow meta. "
+            "{op:'set_default', default?} stars it for its kind. "
+            "{op:'reset_to_preset'} restores the shipped preset (undo "
+            "button). bind ops are checked against the API graph — unknown "
+            "node_id/input_name is rejected with the valid list. Returns "
+            "per-op results plus the workflow's bindings after the edit. "
+            "Server-side — no open tab needed."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "kind": {"type": "string"},
+                "label": {"type": "string"},
+                "ops": {"type": "array", "items": {"type": "object"},
+                        "minItems": 1},
+            },
+            "required": ["kind", "label", "ops"],
+            "additionalProperties": False,
+        },
+        "handler": _workflow_edit,
+    },
+    "asset_edit": {
+        "description": (
+            "Write to the asset library. action 'create' saves media as an "
+            "asset: payload_url (e.g. an output's payload_url from the "
+            "outputs tool), media_type image/video/audio/model, optional "
+            "name and categories (array of category names — created on the "
+            "fly — or ids). action 'update' renames an asset (name) and/or "
+            "replaces its categories. action 'delete' removes the DB entry "
+            "(the underlying file is never deleted). action 'create_category' "
+            "adds an empty category. Typical flow: run_stage → wait_stage → "
+            "asset_edit create with the output's payload_url so the result "
+            "is reusable as @image_N references elsewhere."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "action": {"type": "string",
+                           "enum": ["create", "update", "delete",
+                                    "create_category"]},
+                "asset_id": {"type": "integer"},
+                "name": {"type": "string"},
+                "payload_url": {"type": "string"},
+                "media_type": {"type": "string"},
+                "categories": {"type": "array"},
+            },
+            "required": ["action"],
+            "additionalProperties": False,
+        },
+        "handler": _asset_edit,
+    },
+    "entries": {
+        "description": (
+            "Read/write the project's entry library (reusable prompt "
+            "snippets). Kinds: 'fragment' (plain text fragments) and "
+            "'prompt' (full prompt templates; when inserted they expand, and "
+            "should only @-mention media slots like @image_0 — not other "
+            "entries). action 'list' (optional kind filter), 'upsert' (kind, "
+            "label, content, optional metadata and id for updates — labels "
+            "start with a letter/underscore, CJK fine), 'delete' (id). "
+            "Entries are per-project (project_id, default 'default')."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "action": {"type": "string",
+                           "enum": ["list", "upsert", "delete"]},
+                "project_id": {"type": "string"},
+                "kind": {"type": "string"},
+                "label": {"type": "string"},
+                "content": {"type": "string"},
+                "metadata": {"type": "object"},
+                "id": {"type": "integer"},
+            },
+            "required": ["action"],
+            "additionalProperties": False,
+        },
+        "handler": _entries,
+    },
+    "resources": {
+        "description": (
+            "List resource files available to workflows: LUTs (kind 'lut'), "
+            "fonts ('font') and soundfonts ('soundfont'). Read-only — "
+            "resources are files on disk that users add via the Resources "
+            "panel. Useful to pick a LUT name for color workflows or a font "
+            "for title/poster stages."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "kind": {"type": "string"},
+            },
+            "additionalProperties": False,
+        },
+        "handler": _resources,
+    },
+    "wait_stage": {
+        "description": (
+            "Block until a stage produces a new output or its run errors — the "
+            "efficient way to wait after run_stage (no polling). Waits up to "
+            "timeout_s (default 25, max 170) and returns {status: 'done', "
+            "output} on success, {status: 'error', error} on failure, or "
+            "{status: 'running', after_output_id} on timeout — in that case "
+            "just call wait_stage again with the returned after_output_id to "
+            "keep waiting (long renders can take many minutes; keep re-calling "
+            "until done). If your MCP client enforces its own per-call tool "
+            "timeout, pass a timeout_s safely below it (e.g. 20) and re-call "
+            "instead of one long wait. node is a stage uid or graph_node_id."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "node": {"type": "string"},
+                "timeout_s": {"type": "number"},
+                "after_output_id": {"type": "integer"},
+                "project_id": {"type": "string"},
+            },
+            "required": ["node"],
+            "additionalProperties": False,
+        },
+        "handler": _wait_stage,
     },
 }

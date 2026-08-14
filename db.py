@@ -244,6 +244,34 @@ class RemoteJob(Base):
     updated_at:       Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
 
 
+class BotChat(Base):
+    __tablename__ = "comfytv_bot_chats"
+
+    id:           Mapped[str] = mapped_column(String, primary_key=True)
+    title:        Mapped[str] = mapped_column(String, default="")
+    provider:     Mapped[str] = mapped_column(String, default="claude-code")
+    resume_token: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    pinned:       Mapped[bool] = mapped_column(Boolean, default=False)
+    archived:     Mapped[bool] = mapped_column(Boolean, default=False)
+    created_at:   Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+    updated_at:   Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
+
+
+class BotMessage(Base):
+    __tablename__ = "comfytv_bot_messages"
+
+    id:                 Mapped[str] = mapped_column(String, primary_key=True)
+    chat_id:            Mapped[str] = mapped_column(
+        String, ForeignKey("comfytv_bot_chats.id", ondelete="CASCADE"), index=True
+    )
+    parent_id:          Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    role:               Mapped[str] = mapped_column(String, default="user")
+    content:            Mapped[str] = mapped_column(Text, default="[]")
+    status:             Mapped[str] = mapped_column(String, default="done")
+    resume_token_after: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    created_at:         Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+
+
 class Setting(Base):
     __tablename__ = "comfytv_settings"
 

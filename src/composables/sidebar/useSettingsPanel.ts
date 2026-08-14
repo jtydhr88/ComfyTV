@@ -2,6 +2,11 @@ import { computed, ref, watch } from 'vue'
 
 import { fetchSettings, runDbBackup, saveSettings } from '@/api'
 import type { BackupResult, SettingRow, SettingValue } from '@/api'
+import { syncBotTab } from '@/composables/sidebar/botTab'
+import { app } from '@/lib/comfyApp'
+import { useBotStore } from '@/stores/botStore'
+
+const AGENT_KEYS = new Set(['enable-mcp', 'enable-bot'])
 
 function message(e: unknown): string {
   return e instanceof Error ? e.message : String(e)
@@ -18,6 +23,11 @@ export function useSettingsPanel(isActive: () => boolean | undefined) {
 
   const dirty = computed(() =>
     rows.value.some((r) => values.value[r.key] !== r.value))
+  const backupRows = computed(() =>
+    rows.value.filter((r) => !AGENT_KEYS.has(r.key)))
+  const agentRows = computed(() =>
+    rows.value.filter((r) => AGENT_KEYS.has(r.key)))
+  const botToggleLocked = computed(() => values.value['enable-mcp'] !== true)
 
   function syncValues(): void {
     values.value = Object.fromEntries(rows.value.map((r) => [r.key, r.value]))
@@ -39,7 +49,9 @@ export function useSettingsPanel(isActive: () => boolean | undefined) {
   }
 
   function setValue(key: string, v: SettingValue): void {
-    values.value = { ...values.value, [key]: v }
+    const next = { ...values.value, [key]: v }
+    if (key === 'enable-mcp' && v === false) next['enable-bot'] = false
+    values.value = next
   }
 
   async function save(): Promise<void> {
@@ -54,6 +66,11 @@ export function useSettingsPanel(isActive: () => boolean | undefined) {
     try {
       rows.value = (await saveSettings(changed)).settings
       syncValues()
+      if (Object.keys(changed).some((k) => AGENT_KEYS.has(k))) {
+        const bot = useBotStore()
+        await bot.refreshStatus()
+        syncBotTab(app, bot.enabled)
+      }
     } catch (e) {
       error.value = message(e)
     } finally {
@@ -80,6 +97,9 @@ export function useSettingsPanel(isActive: () => boolean | undefined) {
 
   return {
     rows,
+    backupRows,
+    agentRows,
+    botToggleLocked,
     values,
     loading,
     saving,

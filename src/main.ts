@@ -2,6 +2,8 @@
 import { createPinia, getActivePinia, setActivePinia } from 'pinia'
 
 import ComfyTVSidebar from '@/components/sidebar/ComfyTVSidebar.vue'
+import { syncBotTab } from '@/composables/sidebar/botTab'
+import { useBotStore } from '@/stores/botStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import {
   RICH_STAGE_CARDS,
@@ -304,6 +306,12 @@ const extension: ComfyExtension = {
         sidebarApp?.unmount()
         sidebarApp = null
       },
+    })
+
+    const botStore = useBotStore(pinia)
+    botStore.installWebSocketSync()
+    void botStore.refreshStatus().then(() => {
+      syncBotTab(a, botStore.enabled)
     })
   },
 

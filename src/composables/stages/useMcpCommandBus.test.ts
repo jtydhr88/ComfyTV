@@ -219,6 +219,57 @@ describe('installMcpCommandBus', () => {
     ])
   })
 
+  it('set_stage warns on dangling prompt mentions', async () => {
+    const node = makeNode()
+    const { host, deps } = makeHost([node])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, {
+      id: 'c1', action: 'set_stage', node: 'u1',
+      prompt: 'Animate @image_1 gently, keep @image_1 style',
+      asset_refs: [{ asset_id: 5 }],
+    })
+    const [result] = postedResults()
+    expect(result.ok).toBe(true)
+    expect(result.result.warnings).toHaveLength(1)
+    expect(result.result.warnings[0]).toContain('@image_1')
+    expect(result.result.warnings[0]).toContain('[0]')
+  })
+
+  it('set_stage stays silent when mentions resolve', async () => {
+    const node = makeNode()
+    const { host, deps } = makeHost([node])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, {
+      id: 'c1', action: 'set_stage', node: 'u1',
+      prompt: 'Use @image_0 with @video_0 as motion',
+      asset_refs: [{ asset_id: 5 }, { asset_id: 9, type: 'video' }],
+    })
+    const [result] = postedResults()
+    expect(result.ok).toBe(true)
+    expect(result.result.warnings).toBeUndefined()
+  })
+
+  it('connect_stages reports dangling mentions on the destination', async () => {
+    const dst = makeNode({
+      id: 4,
+      properties: { comfytv_stage_uid: 'u2' },
+      widgets: [{ name: 'main_prompt', value: 'animate @image_1 softly' }],
+      inputs: [{ name: 'images.image0', type: 'COMFYTV_IMAGE', link: null }],
+    })
+    const src = makeNode({
+      connect: vi.fn(() => { dst.inputs[0].link = 9; return { id: 9 } }),
+    })
+    const { host, deps } = makeHost([src, dst])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, {
+      id: 'c1', action: 'connect_stages', from_node: '3', to_node: 'u2',
+    })
+    const [result] = postedResults()
+    expect(result.ok).toBe(true)
+    expect(result.result.warnings).toHaveLength(1)
+    expect(result.result.warnings[0]).toContain('@image_1')
+  })
+
   it('set_stage clears asset refs with an empty array', async () => {
     const node = makeNode({
       properties: { comfytv_stage_uid: 'u1', comfytv_image_refs: [{ asset_id: 1, slot: 0 }] },
@@ -356,6 +407,111 @@ describe('installMcpCommandBus', () => {
     const [result] = postedResults()
     expect(result.ok).toBe(false)
     expect(result.error).toBe('upstream not ready')
+  })
+
+  it('director_get and director_edit route to the mounted director api', async () => {
+    const director = {
+      getState: vi.fn(() => ({ clips: [], total_seconds: 0 })),
+      applyOps: vi.fn(async (ops: any[]) => ({ results: ops.map(o => ({ op: o.op })) })),
+    }
+    const node = makeNode({ __comfytvStageApi: { director } })
+    const { host, deps } = makeHost([node])
+    uninstall = installMcpCommandBus(host, deps)
+
+    await dispatch(host, { id: 'c1', action: 'director_get', node: 'u1' })
+    await dispatch(host, {
+      id: 'c2', action: 'director_edit', node: 'u1',
+      ops: [{ op: 'add_clip' }],
+    })
+    const results = postedResults()
+    expect(results[0].ok).toBe(true)
+    expect(results[0].result.clips).toEqual([])
+    expect(results[1].ok).toBe(true)
+    expect(results[1].result.applied).toEqual([{ op: 'add_clip' }])
+    expect(director.applyOps).toHaveBeenCalledWith([{ op: 'add_clip' }])
+  })
+
+  it('director tools reject a non-director stage', async () => {
+    const node = makeNode()
+    const { host, deps } = makeHost([node])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, { id: 'c1', action: 'director_get', node: 'u1' })
+    const [result] = postedResults()
+    expect(result.ok).toBe(false)
+    expect(result.error).toContain('Director')
+  })
+
+  it('cancel_stage calls onCancelRequest on a running stage', async () => {
+    const state = { running: true, error: null }
+    const node = makeNode({
+      __comfytvStageApi: {
+        state,
+        onCancelRequest: vi.fn(async () => { state.running = false }),
+      },
+    })
+    const { host, deps } = makeHost([node])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, { id: 'c1', action: 'cancel_stage', node: 'u1' })
+    const [result] = postedResults()
+    expect(result.ok).toBe(true)
+    expect(result.result.cancelled).toBe(true)
+    expect(node.__comfytvStageApi.onCancelRequest).toHaveBeenCalled()
+  })
+
+  it('cancel_stage rejects when the stage is not running', async () => {
+    const node = makeNode({
+      __comfytvStageApi: { state: { running: false },
+                           onCancelRequest: vi.fn() },
+    })
+    const { host, deps } = makeHost([node])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, { id: 'c1', action: 'cancel_stage', node: 'u1' })
+    const [result] = postedResults()
+    expect(result.ok).toBe(false)
+    expect(result.error).toContain('not running')
+  })
+
+  it('get_stage returns widgets, edges, refs and warnings', async () => {
+    const src = makeNode()
+    const node = makeNode({
+      id: 4,
+      properties: {
+        comfytv_stage_uid: 'u2',
+        comfytv_image_refs: [{ asset_id: 9, slot: 0 }],
+      },
+      widgets: [
+        { name: 'main_prompt', value: 'use @image_2' },
+        { name: 'duration_s', value: 4 },
+        { name: 'long', value: 'y'.repeat(5000) },
+        { name: 'fn', value: () => {} },
+      ],
+      inputs: [{ name: 'images.image0', type: 'COMFYTV_IMAGE', link: 11 }],
+      outputs: [{ name: 'video', type: 'COMFYTV_VIDEO', links: [12] }],
+      pos: [100, 200],
+      __comfytvStageApi: { state: { running: false } },
+    })
+    const { host, deps, graph } = makeHost([src, node])
+    ;(graph as any).links = {
+      11: { origin_id: 3, target_id: 4 },
+      12: { origin_id: 4, target_id: 8 },
+    }
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, { id: 'c1', action: 'get_stage', node: 'u2' })
+    const [result] = postedResults()
+    expect(result.ok).toBe(true)
+    const detail = result.result
+    expect(detail.widgets.duration_s).toBe(4)
+    expect(detail.widgets.long.length).toBe(4001)
+    expect(detail.widgets.fn).toBeUndefined()
+    expect(detail.inputs[0]).toEqual({
+      name: 'images.image0', type: 'COMFYTV_IMAGE',
+      connected: true, from_node: '3',
+    })
+    expect(detail.outputs[0].to_nodes).toEqual(['8'])
+    expect(detail.asset_refs).toEqual([{ asset_id: 9, slot: 0 }])
+    expect(detail.running).toBe(false)
+    expect(detail.pos).toEqual([100, 200])
+    expect(detail.warnings?.[0]).toContain('@image_2')
   })
 
   it('remove_stage removes the node from the graph', async () => {
