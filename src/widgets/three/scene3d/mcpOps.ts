@@ -12,8 +12,10 @@ import {
   createDefaultCharacter,
   createDefaultLight,
   createDefaultModel,
-  createDefaultPrimitive
+  createDefaultPrimitive,
+  createDefaultShot
 } from './types'
+import { buildPathActionJson } from './pathStrip'
 
 export interface SceneOpsContext {
   resolveModel: (assetId?: number, url?: string) =>
@@ -42,6 +44,8 @@ const OPS = [
   'rename', 'set_hidden', 'remove',
   'set_environment', 'set_output',
   'bind_camera_preset', 'set_camera_tuning', 'set_camera_fov',
+  'add_shot', 'patch_shot', 'move_shot', 'add_prompt', 'patch_prompt',
+  'set_path',
 ] as const
 
 type Vec3Like = { x: number; y: number; z: number } | [number, number, number]
@@ -87,17 +91,56 @@ function quatFrom(op: any, current: { x: number; y: number; z: number; w: number
 function allIds(scene: Scene3DState): string[] {
   return [
     ...scene.characters, ...scene.primitives, ...scene.models,
-    ...scene.lights, ...scene.cameras,
+    ...scene.lights, ...scene.cameras, ...scene.shots, ...scene.promptTrack,
   ].map((entry) => entry.id)
 }
 
 function findEntry(scene: Scene3DState, id: string) {
-  for (const key of ['characters', 'primitives', 'models', 'lights', 'cameras'] as const) {
+  const keys = [
+    'characters', 'primitives', 'models', 'lights', 'cameras',
+    'shots', 'promptTrack',
+  ] as const
+  for (const key of keys) {
     const list = scene[key] as Array<{ id: string }>
     const index = list.findIndex((entry) => entry.id === id)
     if (index >= 0) return { key, list, index, entry: list[index] as any }
   }
   return null
+}
+
+function requireShot(scene: Scene3DState, id: unknown, where: string) {
+  const shotId = String(id ?? '')
+  const index = scene.shots.findIndex((shot) => shot.id === shotId)
+  if (index < 0) {
+    throw new Error(
+      `${where}: no shot '${id}'; shots: ${scene.shots.map((s) => s.id).join(', ') || '(none)'}`)
+  }
+  return { index, shot: scene.shots[index] }
+}
+
+function requireShotCamera(scene: Scene3DState, cameraId: unknown, where: string): string {
+  const id = String(cameraId ?? '')
+  if (!id || !scene.cameras.some((camera) => camera.id === id)) {
+    throw new Error(`${where}: no camera '${cameraId}'; `
+      + `cameras: ${scene.cameras.map((c) => c.id).join(', ') || '(none)'}`)
+  }
+  return id
+}
+
+function shotLockFrom(scene: Scene3DState, lock: unknown, where: string): string {
+  const id = String(lock ?? '')
+  if (!id) return ''
+  if (!scene.characters.some((character) => character.id === id)) {
+    throw new Error(`${where}: lock must be a character id; `
+      + `characters: ${scene.characters.map((c) => c.id).join(', ') || '(none)'}`)
+  }
+  return id
+}
+
+function clampFrames(value: unknown, fallback: number): number {
+  const num = Number(value)
+  if (!Number.isFinite(num)) return fallback
+  return Math.min(10000, Math.max(1, Math.round(num)))
 }
 
 function requireEntry(scene: Scene3DState, id: unknown, where: string) {
@@ -218,14 +261,27 @@ export function applySceneOps(
       }
       case 'set_transform': {
         const found = requireEntry(next, op.id, where)
+        if (!found.entry.transform) {
+          throw new Error(`${where}: '${op.id}' has no transform`)
+        }
         applyTransformOp(found.entry, op)
         results.push({ op: op.op, id: found.entry.id })
         break
       }
       case 'set_color': {
         const found = requireEntry(next, op.id, where)
-        if (!('color' in found.entry) || found.key === 'lights') {
-          throw new Error(`${where}: '${op.id}' has no primitive color (use patch_light for lights)`)
+        if (found.key === 'lights') {
+          throw new Error(`${where}: use patch_light for lights`)
+        }
+        if (found.key === 'characters') {
+          const color = String(op.color ?? '')
+          if (color) found.entry.color = color
+          else delete found.entry.color
+          results.push({ op: op.op, id: found.entry.id })
+          break
+        }
+        if (!('color' in found.entry)) {
+          throw new Error(`${where}: '${op.id}' has no color`)
         }
         found.entry.color = String(op.color ?? found.entry.color)
         results.push({ op: op.op, id: found.entry.id })
@@ -273,6 +329,9 @@ export function applySceneOps(
       }
       case 'set_hidden': {
         const found = requireEntry(next, op.id, where)
+        if (found.key === 'shots' || found.key === 'promptTrack') {
+          throw new Error(`${where}: '${op.id}' cannot be hidden`)
+        }
         found.entry.hidden = op.hidden !== false
         results.push({ op: op.op, id: found.entry.id })
         break
@@ -280,16 +339,155 @@ export function applySceneOps(
       case 'remove': {
         const found = requireEntry(next, op.id, where)
         found.list.splice(found.index, 1)
-        if (found.key === 'cameras' && next.output.cameraId === op.id) {
-          next.output.cameraId = next.cameras[0]?.id ?? ''
+        if (found.key === 'cameras') {
+          if (next.output.cameraId === op.id) {
+            next.output.cameraId = next.cameras[0]?.id ?? ''
+          }
+          for (const shot of next.shots) {
+            if (shot.cameraId === op.id) shot.cameraId = ''
+          }
+        }
+        if (found.key === 'characters') {
+          for (const shot of next.shots) {
+            if (shot.lock === op.id) delete shot.lock
+          }
         }
         results.push({ op: op.op, id: String(op.id) })
+        break
+      }
+      case 'add_shot': {
+        const cameraId = requireShotCamera(next, op.camera_id, where)
+        const entry = createDefaultShot(cameraId, allIds(next))
+        entry.durFrames = clampFrames(op.dur_frames, entry.durFrames)
+        if (typeof op.name === 'string') entry.name = op.name
+        const lock = shotLockFrom(next, op.lock, where)
+        if (lock) entry.lock = lock
+        const index = Number.isFinite(op.index)
+          ? Math.min(next.shots.length, Math.max(0, Math.round(Number(op.index))))
+          : next.shots.length
+        next.shots.splice(index, 0, entry)
+        results.push({ op: op.op, id: entry.id, index })
+        break
+      }
+      case 'patch_shot': {
+        const { shot } = requireShot(next, op.id, where)
+        if (op.camera_id != null) {
+          shot.cameraId = requireShotCamera(next, op.camera_id, where)
+        }
+        if (op.dur_frames != null) {
+          shot.durFrames = clampFrames(op.dur_frames, shot.durFrames)
+        }
+        if (typeof op.name === 'string') shot.name = op.name
+        if (op.lock != null) {
+          const lock = shotLockFrom(next, op.lock, where)
+          if (lock) shot.lock = lock
+          else delete shot.lock
+        }
+        results.push({ op: op.op, id: shot.id })
+        break
+      }
+      case 'move_shot': {
+        const { index, shot } = requireShot(next, op.id, where)
+        if (!Number.isFinite(op.index)) {
+          throw new Error(`${where}: index is required`)
+        }
+        const target = Math.min(
+          next.shots.length - 1,
+          Math.max(0, Math.round(Number(op.index)))
+        )
+        next.shots.splice(index, 1)
+        next.shots.splice(target, 0, shot)
+        results.push({ op: op.op, id: shot.id, index: target })
+        break
+      }
+      case 'add_prompt': {
+        const start = Math.max(0, Math.round(Number(op.start ?? 0)))
+        const end = Math.round(Number(op.end ?? 0))
+        if (!Number.isFinite(end) || end <= start) {
+          throw new Error(`${where}: end must be a frame greater than start`)
+        }
+        const taken = new Set(allIds(next))
+        let suffix = 1
+        while (taken.has(`prompt_${suffix}`)) suffix += 1
+        const entry = {
+          id: `prompt_${suffix}`,
+          range: { start, end: Math.min(10000, end) },
+          text: String(op.text ?? '')
+        }
+        next.promptTrack.push(entry)
+        results.push({ op: op.op, id: entry.id })
+        break
+      }
+      case 'patch_prompt': {
+        const strip = next.promptTrack.find((entry) => entry.id === String(op.id ?? ''))
+        if (!strip) {
+          throw new Error(`${where}: no prompt strip '${op.id}'; `
+            + `strips: ${next.promptTrack.map((s) => s.id).join(', ') || '(none)'}`)
+        }
+        if (op.start != null) strip.range.start = Math.max(0, Math.round(Number(op.start)))
+        if (op.end != null) strip.range.end = Math.min(10000, Math.round(Number(op.end)))
+        if (strip.range.end <= strip.range.start) {
+          throw new Error(`${where}: range end must be greater than start`)
+        }
+        if (typeof op.text === 'string') strip.text = op.text
+        results.push({ op: op.op, id: strip.id })
+        break
+      }
+      case 'set_path': {
+        const found = requireEntry(next, op.id, where)
+        if (found.key !== 'characters') {
+          throw new Error(`${where}: '${op.id}' is not a character`)
+        }
+        if (op.clear === true) {
+          delete found.entry.path
+          results.push({ op: op.op, id: found.entry.id, path: null })
+          break
+        }
+        if (!Array.isArray(op.points) || op.points.length < 2) {
+          throw new Error(`${where}: points must be >= 2 waypoints, each [x,z] or [x,y,z]`)
+        }
+        const points = op.points.map((p: unknown, pi: number): [number, number, number] => {
+          if (!Array.isArray(p) || p.length < 2 || p.length > 3) {
+            throw new Error(`${where}: points[${pi}] must be [x,z] or [x,y,z]`)
+          }
+          const nums = p.map(Number)
+          if (nums.some((n: number) => !Number.isFinite(n))) {
+            throw new Error(`${where}: points[${pi}] has a non-finite coordinate`)
+          }
+          return p.length === 2 ? [nums[0], 0, nums[1]] : [nums[0], nums[1], nums[2]]
+        })
+        const times = Array.isArray(op.times_sec)
+          ? op.times_sec.map(Number)
+          : undefined
+        if (times && (times.length !== points.length || times.some((t: number) => !Number.isFinite(t)))) {
+          throw new Error(`${where}: times_sec must match points length with finite seconds`)
+        }
+        const path: Record<string, unknown> = {
+          action: buildPathActionJson(points, times, op.straight === true)
+        }
+        if (op.range && typeof op.range === 'object') {
+          const start = Math.max(0, Math.round(Number(op.range.start ?? 0)))
+          const end = Math.round(Number(op.range.end ?? 0))
+          if (Number.isFinite(end) && end > start) {
+            path.range = { start, end: Math.min(10000, end) }
+          }
+        }
+        const sync = Number(op.sync_speed)
+        if (Number.isFinite(sync) && sync > 0) {
+          path.syncSpeed = Math.min(10, Math.max(0.1, sync))
+        }
+        found.entry.path = path
+        results.push({ op: op.op, id: found.entry.id })
         break
       }
       case 'set_environment': {
         if (typeof op.show_grid === 'boolean') next.environment.showGrid = op.show_grid
         if (typeof op.background === 'string') next.environment.background = op.background
         if (typeof op.show_room === 'boolean') next.environment.showRoom = op.show_room
+        if (typeof op.floor_only === 'boolean') {
+          if (op.floor_only) next.environment.floorOnly = true
+          else delete next.environment.floorOnly
+        }
         results.push({ op: op.op })
         break
       }

@@ -59,6 +59,8 @@ describe('fetchScene3dManifest', () => {
       jsonResponse({
         characters: [
           { id: 'ok', name: 'Ok', animations: ['a.glb'] },
+          { id: 'body', name: 'Body', animations: ['a.glb'], model: 'models/b.glb' },
+          { id: 'evilmodel', name: 'EvilModel', animations: ['a.glb'], model: '../key' },
           { id: 'evil', name: 'Evil', animations: ['../../etc/passwd'] },
           { id: 'empty', name: 'Empty', animations: [] },
           { name: 'NoId', animations: ['b.glb'] }
@@ -67,7 +69,7 @@ describe('fetchScene3dManifest', () => {
     )
     const { fetchScene3dManifest } = await importModule()
     const entries = await fetchScene3dManifest()
-    expect(entries.map((entry) => entry.id)).toEqual(['ok'])
+    expect(entries.map((entry) => entry.id)).toEqual(['ok', 'body'])
   })
 
   it('resolves to an empty list when the pack is not installed (404)', async () => {
@@ -98,5 +100,26 @@ describe('loadCharacterAssets', () => {
     await expect(loadCharacterAssets('dragon')).rejects.toThrow(
       'Unknown scene3d character model: dragon'
     )
+  })
+})
+
+describe('stripNonPelvisTranslations', () => {
+  it('keeps quaternion tracks and pelvis translation only', async () => {
+    const THREE = await import('three')
+    const { stripNonPelvisTranslations } = await importModule()
+    const clip = new THREE.AnimationClip('Walk', 1, [
+      new THREE.VectorKeyframeTrack('pelvis.position', [0, 1], [0, 0, 0, 0, 1, 0]),
+      new THREE.VectorKeyframeTrack('clavicle_l.position', [0, 1], [0, 0, 0, 1, 0, 0]),
+      new THREE.QuaternionKeyframeTrack('clavicle_l.quaternion', [0, 1], [0, 0, 0, 1, 0, 0, 0, 1]),
+      new THREE.VectorKeyframeTrack('spine_01.scale', [0, 1], [1, 1, 1, 1, 1, 1])
+    ])
+    const [stripped] = stripNonPelvisTranslations([clip])
+    expect(stripped.tracks.map((track) => track.name)).toEqual([
+      'pelvis.position',
+      'clavicle_l.quaternion',
+      'spine_01.scale'
+    ])
+    expect(stripped.name).toBe('Walk')
+    expect(stripped.duration).toBe(1)
   })
 })

@@ -67,6 +67,94 @@ describe('normalizeSceneValue', () => {
     })
   })
 
+  it('normalizes shots against known cameras and characters', () => {
+    const scene = normalizeSceneValue({
+      characters: [characterInput()],
+      cameras: [
+        {
+          id: 'cam_a',
+          fov: 50,
+          transform: { position: {}, quaternion: {} },
+          preset: null
+        }
+      ],
+      shots: [
+        { id: 'shot_1', durFrames: 72.6, cameraId: 'cam_a', lock: 'char_1' },
+        { durFrames: 0, cameraId: 'ghost_cam', lock: 'ghost_char' },
+        'garbage',
+        { id: 'shot_1', durFrames: 24, cameraId: 'cam_a' }
+      ]
+    })
+    expect(scene.shots).toHaveLength(3)
+    expect(scene.shots[0]).toEqual({
+      id: 'shot_1',
+      durFrames: 73,
+      cameraId: 'cam_a',
+      lock: 'char_1'
+    })
+    expect(scene.shots[1]).toEqual({ id: 'shot_2', durFrames: 1, cameraId: '' })
+    expect(scene.shots[2].id).not.toBe('shot_1')
+  })
+
+  it('normalizes prompt strips and drops empty ranges', () => {
+    const scene = normalizeSceneValue({
+      promptTrack: [
+        { id: 'prompt_1', range: { start: 0, end: 48 }, text: 'a chase' },
+        { range: { start: 10, end: 10 }, text: 'dropped' },
+        { range: { start: 4.7, end: 9.2 } }
+      ]
+    })
+    expect(scene.promptTrack).toEqual([
+      { id: 'prompt_1', range: { start: 0, end: 48 }, text: 'a chase' },
+      { id: 'prompt_3', range: { start: 5, end: 9 }, text: '' }
+    ])
+  })
+
+  it('keeps character tint colors and floor-only rooms', () => {
+    const scene = normalizeSceneValue({
+      characters: [
+        characterInput({ color: '#ff8800' }),
+        characterInput({ id: 'char_2', color: 'not-a-color' })
+      ],
+      environment: { showRoom: true, floorOnly: true }
+    })
+    expect(scene.characters[0].color).toBe('#ff8800')
+    expect(scene.characters[1].color).toBeUndefined()
+    expect(scene.environment.showRoom).toBe(true)
+    expect(scene.environment.floorOnly).toBe(true)
+    expect(
+      normalizeSceneValue({ environment: { showRoom: true } }).environment
+        .floorOnly
+    ).toBeUndefined()
+  })
+
+  it('keeps character path strips and animation ranges', () => {
+    const scene = normalizeSceneValue({
+      characters: [
+        characterInput({
+          path: {
+            action: { fcurves: [], pathFollow: {} },
+            range: { start: 0, end: 30 }
+          },
+          animation: {
+            clip: 'Walk_Loop',
+            speed: 1,
+            loop: true,
+            startOffset: 0,
+            range: { start: 0, end: 30 }
+          }
+        }),
+        characterInput({ id: 'char_2', path: { action: 'not-an-object' } })
+      ]
+    })
+    expect(scene.characters[0].path).toEqual({
+      action: { fcurves: [], pathFollow: {} },
+      range: { start: 0, end: 30 }
+    })
+    expect(scene.characters[0].animation.range).toEqual({ start: 0, end: 30 })
+    expect(scene.characters[1].path).toBeUndefined()
+  })
+
   it('normalizes camera entries and validates the output camera id', () => {
     const scene = normalizeSceneValue({
       cameras: [

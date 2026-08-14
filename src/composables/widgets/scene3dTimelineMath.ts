@@ -2,6 +2,9 @@ import type { TimelineTracksData } from '@/widgets/three/scene3d/timelineTracks'
 
 export function computeTotalFrames(data: TimelineTracksData | null): number {
   if (!data) return 0
+  if (data.shots?.length) {
+    return Math.round(Math.max(...data.shots.map((s) => s.endFrame)))
+  }
   const camEnd = Math.max(
     0,
     ...data.cameras.map((c) => c.sourceFrames / Math.max(0.1, c.speed))

@@ -43,6 +43,146 @@ describe('applySceneOps', () => {
     expect(next.environment.background).toBe('#101014')
   })
 
+  it('authors a shot cut track with validation', () => {
+    const { next, results } = applySceneOps(createEmptyScene(), [
+      { op: 'add_character', model: 'human' },
+      { op: 'add_camera', position: [4, 2, 4] },
+      { op: 'add_camera', position: [-4, 2, 4] },
+      { op: 'add_shot', camera_id: 'cam_1', dur_frames: 48, name: 'Wide' },
+      { op: 'add_shot', camera_id: 'cam_2', dur_frames: 24, lock: 'char_1' },
+      { op: 'add_shot', camera_id: 'cam_1', index: 0, dur_frames: 12 },
+    ], ctx)
+    expect(next.shots.map((s) => [s.id, s.durFrames, s.cameraId])).toEqual([
+      ['shot_3', 12, 'cam_1'],
+      ['shot_1', 48, 'cam_1'],
+      ['shot_2', 24, 'cam_2'],
+    ])
+    expect(next.shots[2].lock).toBe('char_1')
+    expect(results.at(-1)).toEqual({ op: 'add_shot', id: 'shot_3', index: 0 })
+  })
+
+  it('rejects shots referencing unknown cameras or characters', () => {
+    expect(() =>
+      applySceneOps(createEmptyScene(), [
+        { op: 'add_shot', camera_id: 'ghost' },
+      ], ctx)
+    ).toThrow(/no camera 'ghost'/)
+    expect(() =>
+      applySceneOps(createEmptyScene(), [
+        { op: 'add_camera' },
+        { op: 'add_shot', camera_id: 'cam_1', lock: 'ghost' },
+      ], ctx)
+    ).toThrow(/lock must be a character id/)
+  })
+
+  it('patches, reorders and removes shots with reference cleanup', () => {
+    const base = applySceneOps(createEmptyScene(), [
+      { op: 'add_character', model: 'human' },
+      { op: 'add_camera' },
+      { op: 'add_camera' },
+      { op: 'add_shot', camera_id: 'cam_1', dur_frames: 48 },
+      { op: 'add_shot', camera_id: 'cam_2', dur_frames: 24, lock: 'char_1' },
+    ], ctx).next
+
+    const patched = applySceneOps(base, [
+      { op: 'patch_shot', id: 'shot_1', dur_frames: 96, camera_id: 'cam_2' },
+      { op: 'patch_shot', id: 'shot_2', lock: '' },
+      { op: 'move_shot', id: 'shot_2', index: 0 },
+    ], ctx).next
+    expect(patched.shots[1]).toEqual({
+      id: 'shot_1', durFrames: 96, cameraId: 'cam_2'
+    })
+    expect(patched.shots[0].lock).toBeUndefined()
+
+    const cleaned = applySceneOps(base, [
+      { op: 'remove', id: 'cam_2' },
+      { op: 'remove', id: 'char_1' },
+    ], ctx).next
+    expect(cleaned.shots[1].cameraId).toBe('')
+    expect(cleaned.shots[1].lock).toBeUndefined()
+
+    const removed = applySceneOps(base, [{ op: 'remove', id: 'shot_1' }], ctx).next
+    expect(removed.shots.map((s) => s.id)).toEqual(['shot_2'])
+  })
+
+  it('lays a character path with set_path', () => {
+    const { next } = applySceneOps(createEmptyScene(), [
+      { op: 'add_character', model: 'human' },
+      { op: 'set_path', id: 'char_1', points: [[0, 0], [4, 0], [4, 6]],
+        times_sec: [0, 2, 5], range: { start: 0, end: 120 }, sync_speed: 1.4 },
+    ], ctx)
+    const path = next.characters[0].path
+    expect(path).toBeDefined()
+    expect(path!.range).toEqual({ start: 0, end: 120 })
+    expect(path!.syncSpeed).toBeCloseTo(1.4)
+    expect(path!.action).toHaveProperty('pathFollow')
+
+    const cleared = applySceneOps(next, [
+      { op: 'set_path', id: 'char_1', clear: true },
+    ], ctx).next
+    expect(cleared.characters[0].path).toBeUndefined()
+  })
+
+  it('validates set_path input', () => {
+    const base = applySceneOps(createEmptyScene(), [
+      { op: 'add_character', model: 'human' },
+      { op: 'add_primitive', shape: 'cube' },
+    ], ctx).next
+    expect(() =>
+      applySceneOps(base, [
+        { op: 'set_path', id: 'prim_1', points: [[0, 0], [1, 1]] },
+      ], ctx)
+    ).toThrow(/not a character/)
+    expect(() =>
+      applySceneOps(base, [{ op: 'set_path', id: 'char_1', points: [[0, 0]] }], ctx)
+    ).toThrow(/>= 2 waypoints/)
+    expect(() =>
+      applySceneOps(base, [
+        { op: 'set_path', id: 'char_1', points: [[0, 0], [1, 1]], times_sec: [0] },
+      ], ctx)
+    ).toThrow(/times_sec/)
+  })
+
+  it('manages prompt strips', () => {
+    const { next } = applySceneOps(createEmptyScene(), [
+      { op: 'add_prompt', start: 0, end: 48, text: 'a chase at dusk' },
+      { op: 'add_prompt', start: 48, end: 72 },
+      { op: 'patch_prompt', id: 'prompt_2', text: 'the getaway', end: 96 },
+    ], ctx)
+    expect(next.promptTrack).toEqual([
+      { id: 'prompt_1', range: { start: 0, end: 48 }, text: 'a chase at dusk' },
+      { id: 'prompt_2', range: { start: 48, end: 96 }, text: 'the getaway' },
+    ])
+    expect(() =>
+      applySceneOps(next, [
+        { op: 'patch_prompt', id: 'prompt_1', end: 0 },
+      ], ctx)
+    ).toThrow(/greater than start/)
+    expect(() =>
+      applySceneOps(next, [{ op: 'add_prompt', start: 5, end: 5 }], ctx)
+    ).toThrow(/greater than start/)
+  })
+
+  it('guards structural ops against shot and prompt entries', () => {
+    const base = applySceneOps(createEmptyScene(), [
+      { op: 'add_camera' },
+      { op: 'add_shot', camera_id: 'cam_1' },
+      { op: 'add_prompt', start: 0, end: 10 },
+    ], ctx).next
+    expect(() =>
+      applySceneOps(base, [
+        { op: 'set_transform', id: 'shot_1', position: [1, 0, 0] },
+      ], ctx)
+    ).toThrow(/has no transform/)
+    expect(() =>
+      applySceneOps(base, [{ op: 'set_hidden', id: 'prompt_1' }], ctx)
+    ).toThrow(/cannot be hidden/)
+    const renamed = applySceneOps(base, [
+      { op: 'rename', id: 'shot_1', name: 'Opening' },
+    ], ctx).next
+    expect(renamed.shots[0].name).toBe('Opening')
+  })
+
   it('look_at orients the camera toward the target', () => {
     const { next } = applySceneOps(createEmptyScene(), [
       { op: 'add_camera', position: [0, 0, 5], look_at: [0, 0, 0] },

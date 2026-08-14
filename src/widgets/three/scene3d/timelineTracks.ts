@@ -48,10 +48,35 @@ export interface TimelineCharacterTrack {
   loop: boolean
 }
 
+export interface TimelineShotSegmentTrack {
+  id: string
+  color: string
+  startFrame: number
+  endFrame: number
+}
+
+export function shotReorderIndex(
+  segments: ReadonlyArray<{ id: string; startFrame: number; endFrame: number }>,
+  draggedId: string,
+  draggedCenter: number
+): number {
+  const order = segments
+    .map((segment) => ({
+      id: segment.id,
+      center:
+        segment.id === draggedId
+          ? draggedCenter
+          : (segment.startFrame + segment.endFrame) / 2
+    }))
+    .sort((a, b) => a.center - b.center)
+  return order.findIndex((entry) => entry.id === draggedId)
+}
+
 export interface TimelineTracksData {
   fps: number
   cameras: TimelineCameraTrack[]
   characters: TimelineCharacterTrack[]
+  shots?: TimelineShotSegmentTrack[]
 }
 
 export interface TimelineTracksCallbacks {
@@ -62,6 +87,8 @@ export interface TimelineTracksCallbacks {
     patch: { startOffset?: number; speed?: number }
   ): void
   onTrackSelect(id: string): void
+  onShotDuration?(id: string, durFrames: number): void
+  onShotMove?(id: string, index: number): void
 }
 
 interface CameraRowRefs {
@@ -72,6 +99,13 @@ interface CameraRowRefs {
 
 interface CharacterRowRefs {
   track: TimelineCharacterTrack
+  group: TimelineGroup
+  startKf: { val: number }
+  endKf: { val: number }
+}
+
+interface ShotRowRefs {
+  track: TimelineShotSegmentTrack
   group: TimelineGroup
   startKf: { val: number }
   endKf: { val: number }
@@ -95,6 +129,7 @@ export class Scene3dTimelineTracks {
   }
   private cameraRows = new Map<string, CameraRowRefs>()
   private characterRows = new Map<string, CharacterRowRefs>()
+  private shotRows = new Map<string, ShotRowRefs>()
   private isSyncing = false
   private zoom = 1
   private maxLifted = false
@@ -201,6 +236,9 @@ export class Scene3dTimelineTracks {
   }
 
   private totalFrames(): number {
+    if (this.data.shots?.length) {
+      return Math.max(...this.data.shots.map((s) => s.endFrame))
+    }
     const camEnd = Math.max(
       0,
       ...this.data.cameras.map((c) => c.sourceFrames / Math.max(0.1, c.speed))
@@ -215,7 +253,7 @@ export class Scene3dTimelineTracks {
   private rebuildModel(): void {
     if (!this.timeline) return
     this.maxLifted = false
-    const { cameras, characters } = this.data
+    const { cameras, characters, shots } = this.data
     const contentFrames = this.totalFrames()
 
     this.timeline.setOptions({
@@ -225,7 +263,34 @@ export class Scene3dTimelineTracks {
 
     this.cameraRows.clear()
     this.characterRows.clear()
+    this.shotRows.clear()
     const rows: TimelineRow[] = []
+
+    if (shots?.length) {
+      const keyframes: MutableKeyframe[] = []
+      for (const track of shots) {
+        const group: TimelineGroup = {
+          style: { fillColor: track.color, height: 18, radii: 4 },
+          keyframesStyle: { shape: TimelineKeyframeShape.Rect },
+          draggable: true
+        }
+        const startKf: MutableKeyframe = {
+          val: track.startFrame,
+          group,
+          draggable: false,
+          style: { fillColor: dimColor(track.color) }
+        }
+        const endKf: MutableKeyframe = {
+          val: track.endFrame,
+          group,
+          draggable: true,
+          style: { fillColor: track.color }
+        }
+        keyframes.push(startKf, endKf)
+        this.shotRows.set(track.id, { track, group, startKf, endKf })
+      }
+      rows.push({ keyframes })
+    }
 
     for (const track of cameras) {
       const displayFrames = track.sourceFrames / Math.max(0.1, track.speed)
@@ -325,6 +390,9 @@ export class Scene3dTimelineTracks {
         ) ||
         [...this.characterRows.values()].some((refs) =>
           selected.includes(refs.endKf)
+        ) ||
+        [...this.shotRows.values()].some((refs) =>
+          selected.includes(refs.endKf)
         )
       if (!isEndKeyframe) {
         if (this.maxLifted) this.rebuildModel()
@@ -362,6 +430,28 @@ export class Scene3dTimelineTracks {
         | { keyframe?: { val: number }; group?: TimelineGroup }
         | undefined
       if (!target) return
+
+      for (const refs of this.shotRows.values()) {
+        if (target.keyframe === refs.endKf) {
+          const durFrames = Math.max(
+            1,
+            Math.round(refs.endKf.val - refs.track.startFrame)
+          )
+          this.callbacks.onShotDuration?.(refs.track.id, durFrames)
+          return
+        }
+        if (!target.keyframe && target.group === refs.group) {
+          const center = (refs.startKf.val + refs.endKf.val) / 2
+          const index = shotReorderIndex(
+            [...this.shotRows.values()].map((row) => row.track),
+            refs.track.id,
+            center
+          )
+          this.callbacks.onShotMove?.(refs.track.id, index)
+          this.rebuildModel()
+          return
+        }
+      }
 
       for (const refs of this.cameraRows.values()) {
         if (target.keyframe !== refs.endKf) continue

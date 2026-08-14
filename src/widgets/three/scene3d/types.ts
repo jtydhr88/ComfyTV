@@ -13,11 +13,23 @@ export interface Quat {
   w: number
 }
 
+export interface FrameRange {
+  start: number
+  end: number
+}
+
 export interface CharacterAnimationConfig {
   clip: string
   speed: number
   loop: boolean
   startOffset: number
+  range?: FrameRange
+}
+
+export interface CharacterPathStrip {
+  action: Record<string, unknown>
+  range?: FrameRange
+  syncSpeed?: number
 }
 
 export interface CharacterTransform {
@@ -31,7 +43,9 @@ export interface SceneCharacterEntry {
   model: string
   name?: string
   hidden?: boolean
+  color?: string
   animation: CharacterAnimationConfig
+  path?: CharacterPathStrip
   transform: CharacterTransform
 }
 
@@ -98,10 +112,26 @@ interface Scene3DOutputConfig {
   cameraId: string
 }
 
+export interface SceneShotEntry {
+  id: string
+  name?: string
+  durFrames: number
+  cameraId: string
+  lock?: string
+  fcurves?: Record<string, unknown>
+}
+
+export interface ScenePromptStrip {
+  id: string
+  range: FrameRange
+  text: string
+}
+
 export interface SceneEnvironmentConfig {
   showGrid: boolean
   background: string
   showRoom: boolean
+  floorOnly?: boolean
 }
 
 export function createDefaultEnvironment(): SceneEnvironmentConfig {
@@ -109,27 +139,41 @@ export function createDefaultEnvironment(): SceneEnvironmentConfig {
 }
 
 export interface Scene3DState {
-  version: 1
+  version: 2
   characters: SceneCharacterEntry[]
   primitives: ScenePrimitiveEntry[]
   models: SceneModelEntry[]
   lights: SceneLightEntry[]
   cameras: SceneCameraEntry[]
+  shots: SceneShotEntry[]
+  promptTrack: ScenePromptStrip[]
   environment: SceneEnvironmentConfig
   output: Scene3DOutputConfig
 }
 
 export function createEmptyScene(): Scene3DState {
   return {
-    version: 1,
+    version: 2,
     characters: [],
     primitives: [],
     models: [],
     lights: [],
     cameras: [],
+    shots: [],
+    promptTrack: [],
     environment: createDefaultEnvironment(),
     output: { fps: 24, frameCount: 0, cameraId: '' }
   }
+}
+
+export function createDefaultShot(
+  cameraId: string,
+  existingIds: readonly string[]
+): SceneShotEntry {
+  const taken = new Set(existingIds)
+  let index = 1
+  while (taken.has(`shot_${index}`)) index += 1
+  return { id: `shot_${index}`, durFrames: 48, cameraId }
 }
 
 const LIGHT_DEFAULTS: Record<SceneLightType, Omit<SceneLightEntry, 'id'>> = {
@@ -292,14 +336,37 @@ function labelFields(entry: {
   }
 }
 
+function cloneRange(range: FrameRange | undefined): { range?: FrameRange } {
+  return range ? { range: { ...range } } : {}
+}
+
+function cloneJson<T>(value: T): T {
+  return JSON.parse(JSON.stringify(value)) as T
+}
+
 export function cloneScene(state: Scene3DState): Scene3DState {
   return {
-    version: 1,
+    version: 2,
     characters: state.characters.map((character) => ({
       id: character.id,
       model: character.model,
       ...labelFields(character),
-      animation: { ...character.animation },
+      ...(character.color ? { color: character.color } : {}),
+      animation: {
+        ...character.animation,
+        ...cloneRange(character.animation.range)
+      },
+      ...(character.path
+        ? {
+            path: {
+              action: cloneJson(character.path.action),
+              ...cloneRange(character.path.range),
+              ...(character.path.syncSpeed
+                ? { syncSpeed: character.path.syncSpeed }
+                : {})
+            }
+          }
+        : {}),
       transform: cloneTransform(character.transform)
     })),
     primitives: state.primitives.map((primitive) => ({
@@ -330,6 +397,19 @@ export function cloneScene(state: Scene3DState): Scene3DState {
         quaternion: { ...camera.transform.quaternion }
       },
       preset: camera.preset ? cloneCameraConfig(camera.preset) : null
+    })),
+    shots: state.shots.map((shot) => ({
+      id: shot.id,
+      ...(shot.name ? { name: shot.name } : {}),
+      durFrames: shot.durFrames,
+      cameraId: shot.cameraId,
+      ...(shot.lock ? { lock: shot.lock } : {}),
+      ...(shot.fcurves ? { fcurves: cloneJson(shot.fcurves) } : {})
+    })),
+    promptTrack: state.promptTrack.map((strip) => ({
+      id: strip.id,
+      range: { ...strip.range },
+      text: strip.text
     })),
     environment: { ...state.environment },
     output: { ...state.output }

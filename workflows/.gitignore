@@ -1,6 +1,6 @@
 # Ignore every *.json under workflows/ by default so users can drop
 # their own workflows here without git noticing them. Each shipped
-# workflow is opted back in below with an explicit `!` line — keep
+# workflow is opted back in below with an explicit `!` line 閳?keep
 # this list in sync when you add new shipped workflows.
 
 *.json

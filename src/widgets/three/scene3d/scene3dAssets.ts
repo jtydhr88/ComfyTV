@@ -12,6 +12,7 @@ export interface Scene3dCharacterManifestEntry {
   name: string
   animations: string[]
   preview_model?: string
+  model?: string
 }
 
 export interface CharacterAssets {
@@ -39,8 +40,24 @@ function isValidEntry(entry: unknown): entry is Scene3dCharacterManifestEntry {
     candidate.animations.length > 0 &&
     candidate.animations.every(
       (file) => typeof file === 'string' && !file.includes('..')
-    )
+    ) &&
+    (candidate.model === undefined ||
+      (typeof candidate.model === 'string' && !candidate.model.includes('..')))
   )
+}
+
+export function stripNonPelvisTranslations(
+  clips: THREE.AnimationClip[]
+): THREE.AnimationClip[] {
+  return clips.map((clip) => {
+    const tracks = clip.tracks.filter((track) => {
+      if (!track.name.endsWith('.position')) return true
+      const node = track.name.slice(0, -'.position'.length)
+      return node === 'pelvis' || node.endsWith('/pelvis')
+    })
+    const copy = new THREE.AnimationClip(clip.name, clip.duration, tracks)
+    return copy
+  })
 }
 
 async function fetchRawManifest(): Promise<unknown> {
@@ -85,7 +102,7 @@ async function loadPacks(
       loadEncryptedGltf(assetUrl(`${ASSETS_ROOT}/${file}`))
     )
   )
-  const clips: THREE.AnimationClip[] = []
+  let clips: THREE.AnimationClip[] = []
   const seen = new Set<string>()
   for (const pack of packs) {
     for (const clip of pack.animations) {
@@ -94,7 +111,15 @@ async function loadPacks(
       clips.push(clip)
     }
   }
-  return { template: packs[0].scene, clips }
+  let template = packs[0].scene
+  if (entry.model) {
+    const body = await loadEncryptedGltf(
+      assetUrl(`${ASSETS_ROOT}/${entry.model}`)
+    )
+    template = body.scene
+    clips = stripNonPelvisTranslations(clips)
+  }
+  return { template, clips }
 }
 
 export async function loadCharacterAssets(

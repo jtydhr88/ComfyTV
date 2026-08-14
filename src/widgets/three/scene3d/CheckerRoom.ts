@@ -1,7 +1,10 @@
 import * as THREE from 'three'
 
+export type CheckerRoomMode = 'off' | 'full' | 'floor'
+
 export class CheckerRoom {
   private group: THREE.Group | null = null
+  private floorMesh: THREE.Mesh | null = null
   private scene: THREE.Scene | null = null
   private lastKey = ''
 
@@ -9,9 +12,11 @@ export class CheckerRoom {
     this.scene = scene
   }
 
-  update(enabled: boolean, bounds: THREE.Box3): void {
-    const key = enabled
-      ? [
+  update(mode: CheckerRoomMode | boolean, bounds: THREE.Box3): void {
+    const resolved: CheckerRoomMode =
+      typeof mode === 'boolean' ? (mode ? 'full' : 'off') : mode
+    const key = resolved !== 'off'
+      ? resolved + '|' + [
           bounds.min.x,
           bounds.min.y,
           bounds.min.z,
@@ -25,7 +30,18 @@ export class CheckerRoom {
     if (key === this.lastKey) return
     this.lastKey = key
     this.remove()
-    if (enabled) this.build(bounds)
+    if (resolved !== 'off') this.build(bounds, resolved)
+  }
+
+  setLayerVisibility(walls: boolean, floor: boolean): void {
+    if (!this.group) return
+    for (const child of this.group.children) {
+      child.visible = child === this.floorMesh ? floor : walls
+    }
+  }
+
+  resetLayerVisibility(): void {
+    this.setLayerVisibility(true, true)
   }
 
   isRoomObject(object: THREE.Object3D): boolean {
@@ -56,6 +72,7 @@ export class CheckerRoom {
       }
     })
     this.group = null
+    this.floorMesh = null
   }
 
   private createCheckerTexture(): THREE.CanvasTexture {
@@ -78,7 +95,7 @@ export class CheckerRoom {
     return tex
   }
 
-  private build(bounds: THREE.Box3): void {
+  private build(bounds: THREE.Box3, mode: CheckerRoomMode): void {
     if (!this.scene) return
     const { min, max } = bounds
     const roomW = max.x - min.x
@@ -109,30 +126,33 @@ export class CheckerRoom {
     floor.rotation.x = -Math.PI / 2
     floor.position.set(cx, min.y, cz)
     group.add(floor)
+    this.floorMesh = floor
 
-    const ceiling = makePlane(roomW, roomD)
-    ceiling.rotation.x = Math.PI / 2
-    ceiling.position.set(cx, max.y, cz)
-    group.add(ceiling)
+    if (mode === 'full') {
+      const ceiling = makePlane(roomW, roomD)
+      ceiling.rotation.x = Math.PI / 2
+      ceiling.position.set(cx, max.y, cz)
+      group.add(ceiling)
 
-    const back = makePlane(roomW, roomH)
-    back.position.set(cx, cy, min.z)
-    group.add(back)
+      const back = makePlane(roomW, roomH)
+      back.position.set(cx, cy, min.z)
+      group.add(back)
 
-    const front = makePlane(roomW, roomH)
-    front.rotation.y = Math.PI
-    front.position.set(cx, cy, max.z)
-    group.add(front)
+      const front = makePlane(roomW, roomH)
+      front.rotation.y = Math.PI
+      front.position.set(cx, cy, max.z)
+      group.add(front)
 
-    const left = makePlane(roomD, roomH)
-    left.rotation.y = Math.PI / 2
-    left.position.set(min.x, cy, cz)
-    group.add(left)
+      const left = makePlane(roomD, roomH)
+      left.rotation.y = Math.PI / 2
+      left.position.set(min.x, cy, cz)
+      group.add(left)
 
-    const right = makePlane(roomD, roomH)
-    right.rotation.y = -Math.PI / 2
-    right.position.set(max.x, cy, cz)
-    group.add(right)
+      const right = makePlane(roomD, roomH)
+      right.rotation.y = -Math.PI / 2
+      right.position.set(max.x, cy, cz)
+      group.add(right)
+    }
 
     this.scene.add(group)
     this.group = group

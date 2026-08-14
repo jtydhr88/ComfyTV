@@ -166,7 +166,6 @@
                 "group": "3D",
                 "pages": [
                   "node-reference/scene3-d",
-                  "node-reference/previz",
                   "node-reference/material",
                   "node-reference/mesh-primitive",
                   "node-reference/mesh-op",
@@ -520,7 +519,6 @@
                 "group": "3D",
                 "pages": [
                   "zh/node-reference/scene3-d",
-                  "zh/node-reference/previz",
                   "zh/node-reference/material",
                   "zh/node-reference/mesh-primitive",
                   "zh/node-reference/mesh-op",

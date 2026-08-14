@@ -74,7 +74,6 @@ Any other MCP client: point it at the same URL with the streamable HTTP transpor
 | Tool | What it does |
 |---|---|
 | `scene_get/edit/capture/record` | Drive a Scene 3D stage: characters, lights, cameras, animation clips |
-| `previz_get/edit/capture/record` | Drive the 3D Director: actors, paths, shots, with overlap sanity warnings |
 | `director_get/director_edit` | Read and edit the Director clip timeline |
 
 ## Patterns that matter

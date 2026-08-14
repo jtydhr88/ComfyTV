@@ -21,7 +21,7 @@ const CATEGORY_GROUPS = [
   ['Image · Transform', ['CropStage', 'RotateStage', 'MirrorStage', 'GridSplitStage', 'ColorGradeStage']],
   ['2D Editors', ['LayerEditorStage', 'PosterStage', 'StoryboardEditorStage']],
   ['Panorama', ['PanoramaStage', 'PanoramaCurrentViewStage', 'PanoramaMultiViewStage']],
-  ['3D', ['Scene3DStage', 'PrevizStage', 'MaterialStage', 'MeshPrimitiveStage', 'MeshOpStage', 'MeshBooleanStage', 'MeshBakeMapsStage', 'LineArtStage']],
+  ['3D', ['Scene3DStage', 'MaterialStage', 'MeshPrimitiveStage', 'MeshOpStage', 'MeshBooleanStage', 'MeshBakeMapsStage', 'LineArtStage']],
   ['Video · Edit', ['VideoClipStage', 'VideoCropStage', 'VideoResizeStage', 'VideoConcatStage', 'VideoSpeedStage', 'VideoRotateStage', 'VideoSplitStage', 'VideoVolumeStage', 'VideoMuxAudioStage', 'VideoExtractFrameStage', 'VideoFramesStage', 'VideoUpscaleStage', 'MakeProxyStage']],
   ['Video · Color', ['VideoColorStage', 'VideoCurvesStage', 'VideoLUTStage', 'HueCorrectStage', 'SelectiveColorStage', 'GrayWorldStage', 'CDLStage', 'HistogramEqStage']],
   ['Video · Keying & Matte', ['VideoChromaKeyStage', 'PIKStage', 'KeyerStage', 'DespillStage', 'ColorSuppressStage', 'KeyMixStage', 'MatteMonitorStage', 'MatteMorphStage', 'Select0rStage', 'RotoMaskStage', 'ShapeMaskStage', 'MaskPropagateStage', 'MotionTrackStage', 'MaskCleanup']],

@@ -880,7 +880,18 @@ async def _remove_stage(args: dict) -> dict:
     return await submit_command("remove_stage", payload)
 
 
-_SCENE_CHANNELS = ("color", "depth", "normal", "openpose")
+_SCENE_CHANNELS = ("color", "depth", "normal", "openpose", "id")
+
+_SCENE_LAYERS_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "characters": {"type": "boolean"},
+        "props": {"type": "boolean"},
+        "room": {"type": "boolean"},
+        "floor": {"type": "boolean"},
+    },
+    "additionalProperties": False,
+}
 
 
 def _scene_target(args: dict) -> dict:
@@ -917,42 +928,15 @@ async def _scene_edit(args: dict) -> dict:
 async def _scene_capture(args: dict) -> dict:
     _validate_channel(args)
     payload = _scene_target(args)
-    payload.update(_command_payload(args, ("channel", "width", "height")))
+    payload.update(_command_payload(args, ("channel", "width", "height", "layers")))
     return await submit_command("scene_capture", payload, timeout=120.0)
 
 
 async def _scene_record(args: dict) -> dict:
     _validate_channel(args)
     payload = _scene_target(args)
-    payload.update(_command_payload(args, ("channel", "width", "height")))
+    payload.update(_command_payload(args, ("channel", "width", "height", "layers")))
     return await submit_command("scene_record", payload, timeout=300.0)
-
-
-async def _previz_get(args: dict) -> dict:
-    return await submit_command("previz_get", _scene_target(args))
-
-
-async def _previz_edit(args: dict) -> dict:
-    ops = args.get("ops")
-    if not isinstance(ops, list) or not ops:
-        raise ValueError("ops must be a non-empty array of operation objects")
-    if not all(isinstance(op, dict) and op.get("op") for op in ops):
-        raise ValueError("every op must be an object with an 'op' field")
-    payload = _scene_target(args)
-    payload["ops"] = ops
-    return await submit_command("previz_edit", payload, timeout=30.0)
-
-
-async def _previz_capture(args: dict) -> dict:
-    payload = _scene_target(args)
-    payload.update(_command_payload(args, ("width", "height")))
-    return await submit_command("previz_capture", payload, timeout=120.0)
-
-
-async def _previz_record(args: dict) -> dict:
-    payload = _scene_target(args)
-    payload.update(_command_payload(args, ("width", "height")))
-    return await submit_command("previz_record", payload, timeout=300.0)
 
 
 TOOLS: dict[str, dict] = {
@@ -1212,16 +1196,37 @@ TOOLS: dict[str, dict] = {
             "add_character {model (from resources)}, add_light {type: "
             "directional|point|spot, color?, intensity?, position?, target?}, "
             "add_camera {fov?, output?}, set_transform {id, position?, "
-            "rotation_deg?|quaternion?|look_at?, scale?}, set_color, "
+            "rotation_deg?|quaternion?|look_at?, scale?}, set_color (on a "
+            "character it tints the mannequin — use distinct colors in "
+            "multi-character scenes so prompts can bind identity, e.g. "
+            "'@image_0 is the red figure'; '' clears), "
             "patch_light, set_animation {id, clip (an available_clips name "
             "from scene_get — required for a character/model to actually "
             "move), speed?, loop?}, rename, "
             "set_hidden, remove, set_environment {show_grid?, background?, "
-            "show_room?}, set_output {fps?, frame_count?, camera_id?}, "
+            "show_room?, floor_only? (ground plane without walls — an "
+            "outdoor-friendly parallax anchor for control renders)}, "
+            "set_output {fps?, frame_count?, camera_id?}, "
             "bind_camera_preset {id, preset_id (from resources — this is how "
             "you get dolly/orbit/push camera moves), speed?}, "
             "set_camera_tuning {id, reverse?, path_scale?, yaw_degrees?, ...}, "
-            "set_camera_fov. All add_* ops accept position/rotation_deg/"
+            "set_camera_fov. Director cut track: add_shot {camera_id, "
+            "dur_frames?, name?, lock? (character id the camera aims at), "
+            "index?} — ordered shots pack gaplessly on the global clock and "
+            "playback/recording switches to each shot's camera in turn "
+            "(camera presets restart per shot; the world runs continuously); "
+            "patch_shot {id, camera_id?, dur_frames?, lock? ('' clears), "
+            "name?}, move_shot {id, index}, remove also deletes shots. "
+            "Prompt strips (frame-range prompts for downstream generation): "
+            "add_prompt {start, end, text?}, patch_prompt {id, start?, end?, "
+            "text?}. Character paths: set_path {id (character), points "
+            "([[x,z]|[x,y,z], ...] ground waypoints, >=2), times_sec? (per-"
+            "waypoint arrival seconds -> non-linear speed), straight?, "
+            "range? {start, end frames — when the walk happens}, sync_speed? "
+            "(m/s: drives the clip by distance so feet don't slide; ~1.4 "
+            "for Walk_Loop), clear?} — the character travels the spline "
+            "facing its tangent (pair with set_animation Walk_Loop). "
+            "All add_* ops accept position/rotation_deg/"
             "look_at/scale; positions are [x,y,z] with y up, units≈meters. "
             "After editing, verify visually with scene_capture. An unknown op "
             "or id errors with the full valid list and applies nothing."
@@ -1243,7 +1248,14 @@ TOOLS: dict[str, dict] = {
         "description": (
             "Render the Scene3D scene to still image(s) — every camera plus "
             "the free view when no output camera is set — and return their "
-            "URLs. channel: color (default), depth, normal or openpose. Use "
+            "URLs. channel: color (default), depth, normal, openpose or id "
+            "(flat unique color per entity + an id_legend mapping id/name/"
+            "color in the response — key masks for downstream regional "
+            "control). layers {characters?, props?, room?, floor?: bool} "
+            "hides scene layers for THIS capture only — e.g. {characters: "
+            "false} renders environment-only depth so the control signal "
+            "does not lock the character silhouette; {room: false, floor: "
+            "true} keeps just the ground plane as a parallax anchor. Use "
             "after every scene_edit to visually verify the scene (fetch the "
             "returned URL and look at it) before recording. Also writes the "
             "capture into the stage so run_stage persists it to history."
@@ -1256,6 +1268,7 @@ TOOLS: dict[str, dict] = {
                             "enum": list(_SCENE_CHANNELS)},
                 "width": {"type": "integer", "minimum": 64, "maximum": 4096},
                 "height": {"type": "integer", "minimum": 64, "maximum": 4096},
+                "layers": _SCENE_LAYERS_SCHEMA,
                 "project_id": {"type": "string"},
             },
             "required": ["node"],
@@ -1266,13 +1279,20 @@ TOOLS: dict[str, dict] = {
     "scene_record": {
         "description": (
             "Record the Scene3D scene along its timeline into a webm video "
-            "and return its URL — the reference-video output. Duration comes "
-            "from bound camera motion presets / character animations, or an "
-            "explicit set_output frame_count; fps from set_output. Requires "
-            "something recordable (bind_camera_preset, an animated character, "
-            "or frame_count > 0). channel works like scene_capture (e.g. "
-            "depth/openpose sequences for ControlNet-style guidance). The "
-            "webm can feed VideoStage workflows (e.g. MiniMax H3 R2V) as a "
+            "and return its URL — the reference-video output. With a shot "
+            "cut track (add_shot) the recording follows the cut: total "
+            "duration is the summed shot dur_frames and the camera switches "
+            "per shot. Otherwise duration comes from bound camera motion "
+            "presets / character animations, or an explicit set_output "
+            "frame_count; fps from set_output. Requires "
+            "something recordable (a shot cut track, bind_camera_preset, an "
+            "animated character, or frame_count > 0). channel and layers "
+            "work like scene_capture: depth/openpose sequences feed "
+            "control-video workflows (e.g. 'Local LTX 2.3 Control V2V'); "
+            "channel 'id' returns an id_legend for per-entity masking; "
+            "layers {characters: false} makes environment-only control, "
+            "{room: false, floor: true} keeps just a ground-plane parallax "
+            "anchor. The color webm can feed MiniMax H3 R2V as a loose "
             "reference."
         ),
         "inputSchema": {
@@ -1283,120 +1303,13 @@ TOOLS: dict[str, dict] = {
                             "enum": list(_SCENE_CHANNELS)},
                 "width": {"type": "integer", "minimum": 64, "maximum": 4096},
                 "height": {"type": "integer", "minimum": 64, "maximum": 4096},
+                "layers": _SCENE_LAYERS_SCHEMA,
                 "project_id": {"type": "string"},
             },
             "required": ["node"],
             "additionalProperties": False,
         },
         "handler": _scene_record,
-    },
-    "previz_get": {
-        "description": (
-            "Read a 3D Director (Previz) stage: the project (actors with "
-            "kinds/poses/paths, shots with camera dolly tracks and timing, "
-            "sun/ground/aspect), plus resources (actor kinds, poses, "
-            "time_links, timing_modes, ground styles, aspects, joint keys, "
-            "stage_limit) and busy state. The project includes per-actor "
-            "world bounding boxes (actor_bounds) and overlap_warnings — use "
-            "them to reason about spatial placement and fix clipping. NOTE: "
-            "a fresh PrevizStage ships with demo actors (A, B, Prop) and 3 "
-            "demo shots — remove what you don't need before building. "
-            "Previz is a multi-SHOT blocking tool: actors move along paths "
-            "synced to shot cameras — use it to author blocking+camera "
-            "reference videos. ALWAYS call before previz_edit. node is the "
-            "PrevizStage uid or graph_node_id."
-        ),
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "node": {"type": "string"},
-                "project_id": {"type": "string"},
-            },
-            "required": ["node"],
-            "additionalProperties": False,
-        },
-        "handler": _previz_get,
-    },
-    "previz_edit": {
-        "description": (
-            "Edit a 3D Director (Previz) stage with sequential structured "
-            "ops. Actors: add_actor {kind (char|horse|car|dog|tree|house|"
-            "rock|bush|road|wall|pillar|prop|mount), pos [x,z], rot_y?, "
-            "scale?, pose?, time_link?, mount?} -> returns its label; "
-            "update_actor/remove_actor {label}; set_actor_track {label, "
-            "points [[x,z],...], straight?} lays an explicit movement path "
-            "(actor walks/drives along it over the scene); set_actor_joint "
-            "{label, key, value} poses char joints; clear_actor_track, "
-            "set_actor_straight, set_actor_path_time. Shots: add_shot "
-            "{name?, dur?, fov?} -> index; update_shot {index, dur?, fov?, "
-            "lock (actor label to aim at, or ''), timing_mode?, "
-            "sync_actor?, yaw?, pitch?}; set_shot_track {index, points "
-            "[[x,y,z],...], straight?} lays the camera dolly path (y = "
-            "camera height 0.2-30); set_cam_point_y, set_cam_key {shot, "
-            "index, yaw?, pitch?, fov?}, set_cam_time, set_shot_straight, "
-            "select_shot, remove_shot. Environment: set_sun {pos [x,y,z]?, "
-            "intensity?, temp?, ambient?}, set_ground {style, color?}, "
-            "set_aspect, set_collision, set_labels. Positions are meters, "
-            "stage is ±29.5. Ops apply sequentially (an error stops the "
-            "batch; earlier ops stay). The result includes warnings when "
-            "actor bounding boxes overlap significantly — resolve them by "
-            "moving actors before capturing. Verify with previz_capture "
-            "after editing. Set shot lock to an actor label to keep the "
-            "camera aimed at it while it moves."
-        ),
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "node": {"type": "string"},
-                "ops": {"type": "array", "items": {"type": "object"},
-                        "minItems": 1},
-                "project_id": {"type": "string"},
-            },
-            "required": ["node", "ops"],
-            "additionalProperties": False,
-        },
-        "handler": _previz_edit,
-    },
-    "previz_capture": {
-        "description": (
-            "Render the Previz stage to still image(s): the current time "
-            "plus, with multiple shots, the first frame of every shot — "
-            "returned as URLs. Use after every previz_edit to visually "
-            "verify blocking and framing before recording."
-        ),
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "node": {"type": "string"},
-                "width": {"type": "integer", "minimum": 64, "maximum": 4096},
-                "height": {"type": "integer", "minimum": 64, "maximum": 4096},
-                "project_id": {"type": "string"},
-            },
-            "required": ["node"],
-            "additionalProperties": False,
-        },
-        "handler": _previz_capture,
-    },
-    "previz_record": {
-        "description": (
-            "Record the whole Previz timeline (all shots back-to-back, "
-            "actors moving along their paths, cameras riding their dolly "
-            "tracks) into a webm and return its URL — a blocking+camera "
-            "reference video for driving video models (e.g. MiniMax H3 R2V "
-            "via a video asset ref). Duration = sum of shot durations."
-        ),
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "node": {"type": "string"},
-                "width": {"type": "integer", "minimum": 64, "maximum": 4096},
-                "height": {"type": "integer", "minimum": 64, "maximum": 4096},
-                "project_id": {"type": "string"},
-            },
-            "required": ["node"],
-            "additionalProperties": False,
-        },
-        "handler": _previz_record,
     },
     "servers": {
         "description": (

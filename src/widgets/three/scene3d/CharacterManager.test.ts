@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { Scene3dCharacterManager } from './CharacterManager'
+import { buildPathActionJson } from './pathStrip'
 import { createDefaultCharacter } from './types'
 import type { SceneCharacterEntry } from './types'
 
@@ -54,6 +55,74 @@ describe('Scene3dCharacterManager', () => {
     expect(root).not.toBeNull()
     expect(root!.position.x).toBe(3)
     expect(root!.userData.sceneObjectId).toBe('a')
+  })
+
+  it('drives a pathed character along its spline and draws the path line', async () => {
+    const entry = makeEntry('a')
+    entry.path = {
+      action: buildPathActionJson(
+        [
+          [0, 0, 0],
+          [10, 0, 0]
+        ],
+        undefined,
+        true
+      ),
+      syncSpeed: 2
+    }
+    manager.setSceneFps(24)
+    await manager.applyCharacters([entry])
+
+    const line = scene.children.find((child) => (child as THREE.Line).isLine)
+    expect(line).toBeDefined()
+
+    const root = manager.getObject('a')!
+    manager.setTimelineTime(2.5)
+    expect(root.position.x).toBeCloseTo(5, 0)
+    expect(root.position.x).toBeGreaterThan(0.5)
+
+    manager.setTimelineTime(0)
+    expect(root.position.x).toBeCloseTo(0, 1)
+
+    manager.setHelpersVisible(false)
+    expect((line as THREE.Line).visible).toBe(false)
+
+    delete entry.path
+    await manager.applyCharacters([entry])
+    expect(scene.children.some((child) => (child as THREE.Line).isLine)).toBe(
+      false
+    )
+  })
+
+  it('tints and untints per-instance materials without cross-talk', async () => {
+    const template = makeAssets()
+    const mesh = new THREE.Mesh(
+      new THREE.BoxGeometry(),
+      new THREE.MeshStandardMaterial({ color: 0x2266aa })
+    )
+    template.template.add(mesh)
+    loadCharacterAssets.mockImplementation(async () => template)
+
+    const tinted = makeEntry('a')
+    tinted.color = '#ff0000'
+    const plain = makeEntry('b')
+    await manager.applyCharacters([tinted, plain])
+
+    const materialOf = (id: string): THREE.MeshStandardMaterial => {
+      let found: THREE.MeshStandardMaterial | null = null
+      manager.getObject(id)!.traverse((child) => {
+        if (child instanceof THREE.Mesh && !found) {
+          found = child.material as THREE.MeshStandardMaterial
+        }
+      })
+      return found!
+    }
+    expect(materialOf('a').color.getHexString()).toBe('ff0000')
+    expect(materialOf('b').color.getHexString()).toBe('2266aa')
+
+    delete tinted.color
+    await manager.applyCharacters([tinted, plain])
+    expect(materialOf('a').color.getHexString()).toBe('2266aa')
   })
 
   it('reuses the instance for an unchanged id+model and rebuilds on model change', async () => {

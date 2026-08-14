@@ -2,7 +2,9 @@ import type { CameraPresetTuning } from '@/widgets/three/load3d/interfaces'
 
 import type {
   CharacterAnimationConfig,
+  CharacterPathStrip,
   CharacterTransform,
+  FrameRange,
   PrimitiveShape,
   Quat,
   Scene3DCameraConfig,
@@ -13,7 +15,9 @@ import type {
   SceneLightEntry,
   SceneModelEntry,
   SceneLightType,
+  ScenePromptStrip,
   ScenePrimitiveEntry,
+  SceneShotEntry,
   Vec3
 } from './types'
 import { LIGHT_TYPES, PRIMITIVE_SHAPES, createEmptyScene } from './types'
@@ -49,13 +53,42 @@ function toUnitQuat(value: unknown): Quat {
   return { x: q.x / norm, y: q.y / norm, z: q.z / norm, w: q.w / norm }
 }
 
+const MAX_FRAME = 10000
+
+function toFrameRange(value: unknown): FrameRange | undefined {
+  if (typeof value !== 'object' || value === null) return undefined
+  const source = value as Record<string, unknown>
+  const start = clamp(Math.round(toFinite(source.start, 0)), 0, MAX_FRAME)
+  const end = clamp(Math.round(toFinite(source.end, 0)), 0, MAX_FRAME)
+  if (end <= start) return undefined
+  return { start, end }
+}
+
 function toAnimation(value: unknown): CharacterAnimationConfig {
   const source = (value ?? {}) as Record<string, unknown>
+  const range = toFrameRange(source.range)
   return {
     clip: typeof source.clip === 'string' ? source.clip : '',
     speed: clamp(toFinite(source.speed, 1), 0.01, 100),
     loop: source.loop === undefined ? true : Boolean(source.loop),
-    startOffset: toFinite(source.startOffset, 0)
+    startOffset: toFinite(source.startOffset, 0),
+    ...(range ? { range } : {})
+  }
+}
+
+function toPathStrip(value: unknown): CharacterPathStrip | undefined {
+  if (typeof value !== 'object' || value === null) return undefined
+  const source = value as Record<string, unknown>
+  if (typeof source.action !== 'object' || source.action === null) {
+    return undefined
+  }
+  const range = toFrameRange(source.range)
+  const syncSpeedRaw = toFinite(source.syncSpeed, 0)
+  const syncSpeed = syncSpeedRaw > 0 ? clamp(syncSpeedRaw, 0.1, 10) : 0
+  return {
+    action: source.action as Record<string, unknown>,
+    ...(range ? { range } : {}),
+    ...(syncSpeed ? { syncSpeed } : {})
   }
 }
 
@@ -111,11 +144,18 @@ function toCharacter(
   if (typeof value !== 'object' || value === null) return null
   const source = value as Record<string, unknown>
   if (typeof source.model !== 'string' || source.model === '') return null
+  const path = toPathStrip(source.path)
+  const color =
+    typeof source.color === 'string' && COLOR_PATTERN.test(source.color)
+      ? source.color
+      : ''
   return {
     id: claimId(source, 'char', index, takenIds),
     model: source.model,
     ...labelFields(source),
+    ...(color ? { color } : {}),
     animation: toAnimation(source.animation),
+    ...(path ? { path } : {}),
     transform: toTransform(source.transform)
   }
 }
@@ -230,7 +270,8 @@ function toEnvironment(value: unknown): SceneEnvironmentConfig {
       COLOR_PATTERN.test(source.background)
         ? source.background
         : '',
-    showRoom: Boolean(source.showRoom)
+    showRoom: Boolean(source.showRoom),
+    ...(source.floorOnly ? { floorOnly: true } : {})
   }
 }
 
@@ -244,6 +285,53 @@ function toCameraConfig(value: unknown): Scene3DCameraConfig | null {
     file,
     tuning: toTuning(source.tuning),
     speed: clamp(toFinite(source.speed, 1), 0.1, 10)
+  }
+}
+
+function toShot(
+  value: unknown,
+  index: number,
+  takenIds: Set<string>,
+  cameraIds: ReadonlySet<string>,
+  characterIds: ReadonlySet<string>
+): SceneShotEntry | null {
+  if (typeof value !== 'object' || value === null) return null
+  const source = value as Record<string, unknown>
+  const cameraId =
+    typeof source.cameraId === 'string' && cameraIds.has(source.cameraId)
+      ? source.cameraId
+      : ''
+  const lock =
+    typeof source.lock === 'string' && characterIds.has(source.lock)
+      ? source.lock
+      : ''
+  const fcurves =
+    typeof source.fcurves === 'object' && source.fcurves !== null
+      ? (source.fcurves as Record<string, unknown>)
+      : undefined
+  return {
+    id: claimId(source, 'shot', index, takenIds),
+    ...labelFields(source),
+    durFrames: clamp(Math.round(toFinite(source.durFrames, 48)), 1, MAX_FRAME),
+    cameraId,
+    ...(lock ? { lock } : {}),
+    ...(fcurves ? { fcurves } : {})
+  }
+}
+
+function toPromptStrip(
+  value: unknown,
+  index: number,
+  takenIds: Set<string>
+): ScenePromptStrip | null {
+  if (typeof value !== 'object' || value === null) return null
+  const source = value as Record<string, unknown>
+  const range = toFrameRange(source.range)
+  if (!range) return null
+  return {
+    id: claimId(source, 'prompt', index, takenIds),
+    range,
+    text: typeof source.text === 'string' ? source.text : ''
   }
 }
 
@@ -333,17 +421,34 @@ export function normalizeSceneValue(value: unknown): Scene3DState {
     ? cameraIdRaw
     : legacyCameraId
 
+  const cameraIds = new Set(cameras.map((camera) => camera.id))
+  const characterIds = new Set(characters.map((character) => character.id))
+  const shots = (Array.isArray(record.shots) ? record.shots : []).flatMap(
+    (entry, index) => {
+      const shot = toShot(entry, index, takenIds, cameraIds, characterIds)
+      return shot ? [shot] : []
+    }
+  )
+  const promptTrack = (
+    Array.isArray(record.promptTrack) ? record.promptTrack : []
+  ).flatMap((entry, index) => {
+    const strip = toPromptStrip(entry, index, takenIds)
+    return strip ? [strip] : []
+  })
+
   return {
-    version: 1,
+    version: 2,
     characters,
     primitives,
     models,
     lights,
     cameras,
+    shots,
+    promptTrack,
     environment: toEnvironment(record.environment),
     output: {
       fps: clamp(toFinite(output.fps, 24), 1, 120),
-      frameCount: clamp(Math.round(toFinite(output.frameCount, 0)), 0, 10000),
+      frameCount: clamp(Math.round(toFinite(output.frameCount, 0)), 0, MAX_FRAME),
       cameraId
     }
   }

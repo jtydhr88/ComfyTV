@@ -1970,23 +1970,6 @@
       }
     }
   },
-  "ComfyTV_PrevizStage": {
-    "display_name": "3D 导演台",
-    "outputs": {
-      "0": {
-        "name": "图像",
-        "tooltip": "最近一次截取的镜头画面。"
-      },
-      "1": {
-        "name": "视频",
-        "tooltip": "最近一次录制的预演片段（webm）。"
-      },
-      "2": {
-        "name": "图像组",
-        "tooltip": "最近一次截取的分镜画面——每个镜头一张。"
-      }
-    }
-  },
   "ComfyTV_LayerEditorStage": {
     "display_name": "图层编辑器",
     "outputs": {

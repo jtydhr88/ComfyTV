@@ -38,6 +38,10 @@ import {
   type TimelineTracksData
 } from '@/widgets/three/scene3d/timelineTracks'
 import { SCENE_CHANNELS } from '@/widgets/three/scene3d/capture/channelRender'
+import { describeShotPose } from '@/widgets/three/scene3d/filmVocab'
+import { idMatteOrder } from '@/widgets/three/scene3d/idMatte'
+import { buildPathActionJson } from '@/widgets/three/scene3d/pathStrip'
+import { shotAtFrame, shotSegments } from '@/widgets/three/scene3d/shotTiming'
 import type { LightPresetName } from '@/widgets/three/scene3d/lightPresets'
 import { createLightPreset } from '@/widgets/three/scene3d/lightPresets'
 import { useAssetStore } from '@/stores/assetStore'
@@ -75,7 +79,8 @@ import {
   createDefaultCharacter,
   createDefaultLight,
   createDefaultModel,
-  createDefaultPrimitive
+  createDefaultPrimitive,
+  createDefaultShot
 } from '@/widgets/three/scene3d/types'
 import {
   applySceneOps,
@@ -197,9 +202,20 @@ export function useScene3dStage(
       state.value.cameras.find((camera) => camera.id === selectedId.value) ??
       null
   )
+  const selectedShot = computed(
+    () =>
+      state.value.shots.find((shot) => shot.id === selectedId.value) ?? null
+  )
+  const selectedPrompt = computed(
+    () =>
+      state.value.promptTrack.find(
+        (strip) => strip.id === selectedId.value
+      ) ?? null
+  )
   const outputCameraId = computed(() => state.value.output.cameraId)
   const hasRecordableDuration = computed(
     () =>
+      state.value.shots.length > 0 ||
       state.value.output.frameCount > 0 ||
       state.value.cameras.some((camera) => camera.preset !== null) ||
       state.value.characters.length > 0 ||
@@ -286,7 +302,8 @@ export function useScene3dStage(
           onSelectCharacter: (id) => selectObject(id),
           onLightChange: (id, patch) => patchLightById(id, patch),
           onCameraOffsetCommit: (id, offset) =>
-            updateCameraTuning(id, { positionOffset: { ...offset } })
+            updateCameraTuning(id, { positionOffset: { ...offset } }),
+          onPathCommit: (id, label) => commitPathEdit(id, label)
         },
         {
           getDimensions: () => ({
@@ -579,10 +596,174 @@ export function useScene3dStage(
     next.models = next.models.filter((entry) => entry.id !== id)
     next.lights = next.lights.filter((entry) => entry.id !== id)
     next.cameras = next.cameras.filter((entry) => entry.id !== id)
+    next.shots = next.shots.filter((entry) => entry.id !== id)
+    next.promptTrack = next.promptTrack.filter((entry) => entry.id !== id)
+    for (const shot of next.shots) {
+      if (shot.cameraId === id) shot.cameraId = ''
+      if (shot.lock === id) delete shot.lock
+    }
     if (next.output.cameraId === id) {
       next.output.cameraId = next.cameras[0]?.id ?? ''
     }
     selectedId.value = firstSceneId(next)
+    commit(next)
+  }
+
+  function addShot(): void {
+    const next = cloneScene(state.value)
+    const cameraId =
+      next.output.cameraId || next.cameras[0]?.id || ''
+    const shot = createDefaultShot(cameraId, allIds())
+    next.shots.push(shot)
+    selectedId.value = shot.id
+    writeEditorProps({ selectedId: shot.id })
+    commit(next)
+  }
+
+  function patchShotById(
+    id: string,
+    patch: { cameraId?: string; lock?: string; durFrames?: number | null }
+  ): void {
+    const next = cloneScene(state.value)
+    const shot = next.shots.find((entry) => entry.id === id)
+    if (!shot) return
+    if (patch.cameraId !== undefined) shot.cameraId = patch.cameraId
+    if (patch.lock !== undefined) {
+      if (patch.lock) shot.lock = patch.lock
+      else delete shot.lock
+    }
+    if (patch.durFrames !== undefined && patch.durFrames !== null) {
+      shot.durFrames = Math.max(1, Math.min(10000, Math.round(patch.durFrames)))
+    }
+    commit(next, `shot:${id}:${patchMergeKey(patch)}`)
+  }
+
+  function addPromptStrip(): void {
+    const next = cloneScene(state.value)
+    const frame = Math.round(
+      (viewport?.timelineController.getCurrentTime() ?? 0) * next.output.fps
+    )
+    const segment = next.shots.length ? shotAtFrame(next.shots, frame) : null
+    const range = segment
+      ? { start: segment.startFrame, end: segment.endFrame }
+      : { start: 0, end: Math.max(1, Math.round(next.output.fps * 2)) }
+    const taken = new Set(allIds())
+    let suffix = 1
+    while (taken.has(`prompt_${suffix}`)) suffix += 1
+    const strip = { id: `prompt_${suffix}`, range, text: '' }
+    next.promptTrack.push(strip)
+    selectedId.value = strip.id
+    writeEditorProps({ selectedId: strip.id })
+    commit(next)
+  }
+
+  function patchPromptById(
+    id: string,
+    patch: { start?: number | null; end?: number | null; text?: string }
+  ): void {
+    const next = cloneScene(state.value)
+    const strip = next.promptTrack.find((entry) => entry.id === id)
+    if (!strip) return
+    if (patch.start !== undefined && patch.start !== null) {
+      strip.range.start = Math.max(0, Math.round(patch.start))
+    }
+    if (patch.end !== undefined && patch.end !== null) {
+      strip.range.end = Math.min(10000, Math.round(patch.end))
+    }
+    if (strip.range.end <= strip.range.start) {
+      strip.range.end = strip.range.start + 1
+    }
+    if (patch.text !== undefined) strip.text = patch.text
+    commit(next, `prompt:${id}:${patchMergeKey(patch)}`)
+  }
+
+  const planView = ref(false)
+
+  function togglePlanView(): void {
+    planView.value = !planView.value
+    viewport?.setPlanView(planView.value)
+  }
+
+  function autoFillShotPrompts(): void {
+    if (!viewport || !state.value.shots.length) return
+    const next = cloneScene(state.value)
+    const fps = next.output.fps
+    const taken = new Set([...allIds()])
+    for (const segment of shotSegments(next.shots)) {
+      const cameraId = segment.shot.cameraId || next.output.cameraId
+      const cameraEntry = next.cameras.find((entry) => entry.id === cameraId)
+      if (!cameraEntry) continue
+      const midSeconds = (segment.startFrame + segment.endFrame) / 2 / fps
+      viewport.applyCaptureTime(midSeconds)
+      const runtimeCamera = viewport.sceneCameraManager.getCamera(cameraId)
+      const pose = runtimeCamera
+        ? {
+            x: runtimeCamera.position.x,
+            y: runtimeCamera.position.y,
+            z: runtimeCamera.position.z,
+            fovDeg: runtimeCamera.fov
+          }
+        : { ...cameraEntry.transform.position, fovDeg: cameraEntry.fov }
+      const lockId = segment.shot.lock ?? ''
+      const subjectId = lockId || next.characters[0]?.id || ''
+      const subjectPose = subjectId
+        ? viewport.characterManager.sampleWorldPose(subjectId, midSeconds)
+        : null
+      const subject = subjectPose
+        ? {
+            x: subjectPose.x,
+            y: subjectPose.y,
+            z: subjectPose.z,
+            heightM: 1.7 * subjectPose.scaleY,
+            facingYaw: subjectPose.yaw
+          }
+        : { x: 0, y: 0, z: 0, heightM: 1.7, facingYaw: null }
+      const description = describeShotPose(
+        pose,
+        subject,
+        cameraEntry.preset?.presetId ?? null,
+        Boolean(lockId)
+      )
+      const existing = next.promptTrack.find(
+        (strip) =>
+          strip.range.start === segment.startFrame &&
+          strip.range.end === segment.endFrame
+      )
+      if (existing) {
+        existing.text = description.text
+      } else {
+        let suffix = 1
+        while (taken.has(`prompt_${suffix}`)) suffix += 1
+        const id = `prompt_${suffix}`
+        taken.add(id)
+        next.promptTrack.push({
+          id,
+          range: { start: segment.startFrame, end: segment.endFrame },
+          text: description.text
+        })
+      }
+    }
+    viewport.syncSceneToTimeline()
+    commit(next)
+  }
+
+  function moveShotBy(id: string, delta: number): void {
+    const index = state.value.shots.findIndex((entry) => entry.id === id)
+    if (index < 0) return
+    moveShotToIndex(id, index + delta)
+  }
+
+  function moveShotToIndex(id: string, targetIndex: number): void {
+    const next = cloneScene(state.value)
+    const index = next.shots.findIndex((entry) => entry.id === id)
+    if (index < 0) return
+    const target = Math.min(
+      next.shots.length - 1,
+      Math.max(0, Math.round(targetIndex))
+    )
+    if (target === index) return
+    const [shot] = next.shots.splice(index, 1)
+    next.shots.splice(target, 0, shot)
     commit(next)
   }
 
@@ -595,7 +776,8 @@ export function useScene3dStage(
       scene.primitives.find((entry) => entry.id === id) ??
       scene.models.find((entry) => entry.id === id) ??
       scene.lights.find((entry) => entry.id === id) ??
-      scene.cameras.find((entry) => entry.id === id)
+      scene.cameras.find((entry) => entry.id === id) ??
+      scene.shots.find((entry) => entry.id === id)
     )
   }
 
@@ -625,7 +807,9 @@ export function useScene3dStage(
       ...state.value.primitives.map((entry) => entry.id),
       ...state.value.models.map((entry) => entry.id),
       ...state.value.lights.map((entry) => entry.id),
-      ...state.value.cameras.map((entry) => entry.id)
+      ...state.value.cameras.map((entry) => entry.id),
+      ...state.value.shots.map((entry) => entry.id),
+      ...state.value.promptTrack.map((entry) => entry.id)
     ]
   }
 
@@ -772,7 +956,84 @@ export function useScene3dStage(
           characters.length + index
         )
       )
-    return { fps, cameras, characters: [...characters, ...models] }
+    const shots = state.value.shots?.length
+      ? shotSegments(state.value.shots).map((segment) => {
+          const cameraIndex = state.value.cameras.findIndex(
+            (camera) => camera.id === segment.shot.cameraId
+          )
+          return {
+            id: segment.shot.id,
+            color:
+              cameraIndex >= 0
+                ? CAMERA_COLORS[cameraIndex % CAMERA_COLORS.length]
+                : '#8a8a9a',
+            startFrame: segment.startFrame,
+            endFrame: segment.endFrame
+          }
+        })
+      : undefined
+    return {
+      fps,
+      cameras,
+      characters: [...characters, ...models],
+      ...(shots ? { shots } : {})
+    }
+  }
+
+  function commitPathEdit(id: string, label: string): void {
+    const exported = viewport?.characterManager.exportPathAction(id)
+    if (!exported) return
+    const next = cloneScene(state.value)
+    const target = next.characters.find((entry) => entry.id === id)
+    if (!target?.path) return
+    target.path = { ...target.path, action: exported }
+    commit(next, `path:${id}:${label}`)
+  }
+
+  function addCharacterPathById(id: string): void {
+    const next = cloneScene(state.value)
+    const target = next.characters.find((entry) => entry.id === id)
+    if (!target || target.path) return
+    const { position, quaternion: q } = target.transform
+    const yaw = Math.atan2(
+      2 * (q.w * q.y + q.x * q.z),
+      1 - 2 * (q.y * q.y + q.x * q.x)
+    )
+    const dx = Math.sin(yaw)
+    const dz = Math.cos(yaw)
+    target.path = {
+      action: buildPathActionJson([
+        [position.x, 0, position.z],
+        [position.x + dx * 3, 0, position.z + dz * 3]
+      ]),
+      syncSpeed: 1.4
+    }
+    commit(next)
+  }
+
+  function removeCharacterPathById(id: string): void {
+    const next = cloneScene(state.value)
+    const target = next.characters.find((entry) => entry.id === id)
+    if (!target?.path) return
+    delete target.path
+    commit(next)
+  }
+
+  function setCharacterColorById(id: string, color: string): void {
+    const next = cloneScene(state.value)
+    const target = next.characters.find((entry) => entry.id === id)
+    if (!target) return
+    if (color) target.color = color
+    else delete target.color
+    commit(next, `charcolor:${id}`)
+  }
+
+  function setShotDurationById(id: string, durFrames: number): void {
+    const next = cloneScene(state.value)
+    const shot = next.shots.find((entry) => entry.id === id)
+    if (!shot) return
+    shot.durFrames = Math.max(1, Math.min(10000, Math.round(durFrames)))
+    commit(next, `shot:${id}:dur`)
   }
 
   function setCameraSpeedById(id: string, speed: number): void {
@@ -1067,6 +1328,12 @@ export function useScene3dStage(
     channel?: string
     width?: number
     height?: number
+    layers?: {
+      characters?: boolean
+      props?: boolean
+      room?: boolean
+      floor?: boolean
+    }
   }): void {
     if (patch.channel && (SCENE_CHANNELS as readonly string[]).includes(patch.channel)) {
       channel.value = patch.channel as SceneChannel
@@ -1080,6 +1347,16 @@ export function useScene3dStage(
     if (Number.isFinite(patch.height)) {
       outputHeight.value = Number(patch.height)
       writeWidget(node, HEIGHT_WIDGET, outputHeight.value, { fireCallback: false })
+    }
+    if (patch.layers && typeof patch.layers === 'object') {
+      viewport?.setCaptureLayers({
+        ...(patch.layers.characters === false ? { characters: false } : {}),
+        ...(patch.layers.props === false ? { props: false } : {}),
+        ...(patch.layers.room === false ? { room: false } : {}),
+        ...(patch.layers.floor === false ? { floor: false } : {})
+      })
+    } else {
+      viewport?.setCaptureLayers(null)
     }
   }
 
@@ -1110,13 +1387,20 @@ export function useScene3dStage(
       hasRecordableDuration: () => hasRecordableDuration.value,
       capture: async () => {
         const before = capturedImageUrl.value
-        await capture()
+        try {
+          await capture()
+        } finally {
+          viewport?.setCaptureLayers(null)
+        }
         if (capturedImageUrl.value === before) {
           throw new Error('capture produced no output — see the ComfyTV tab for details')
         }
         return {
           image: capturedImageUrl.value,
           images: readWidgetStr(node, IMAGES_WIDGET, ''),
+          ...(channel.value === 'id'
+            ? { id_legend: idMatteOrder(state.value) }
+            : {}),
         }
       },
       record: async () => {
@@ -1129,11 +1413,20 @@ export function useScene3dStage(
             + 'character/model, or set a frame_count via scene_edit set_output')
         }
         const before = capturedVideoUrl.value
-        await record()
+        try {
+          await record()
+        } finally {
+          viewport?.setCaptureLayers(null)
+        }
         if (capturedVideoUrl.value === before) {
           throw new Error('record produced no output — see the ComfyTV tab for details')
         }
-        return { video: capturedVideoUrl.value }
+        return {
+          video: capturedVideoUrl.value,
+          ...(channel.value === 'id'
+            ? { id_legend: idMatteOrder(state.value) }
+            : {}),
+        }
       },
     }
   }
@@ -1183,6 +1476,21 @@ export function useScene3dStage(
     updateCameraTuning,
     setCameraFov,
     setCameraSpeedById,
+    setShotDurationById,
+    selectedShot,
+    addShot,
+    patchShotById,
+    moveShotBy,
+    moveShotToIndex,
+    addCharacterPathById,
+    removeCharacterPathById,
+    setCharacterColorById,
+    selectedPrompt,
+    addPromptStrip,
+    patchPromptById,
+    autoFillShotPrompts,
+    planView,
+    togglePlanView,
     outputCameraId,
     setOutputCamera,
     lookThroughId,

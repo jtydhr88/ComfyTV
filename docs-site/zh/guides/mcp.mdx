@@ -74,7 +74,6 @@ claude mcp add --transport http comfytv http://127.0.0.1:8188/comfytv/mcp
 | 工具 | 作用 |
 |---|---|
 | `scene_get/edit/capture/record` | 驱动 Scene 3D:角色、灯光、相机、动画 clip |
-| `previz_get/edit/capture/record` | 驱动 3D 导演台:演员、路径、镜头,带穿插警告 |
 | `director_get/director_edit` | 读写导演台 clip 时间线 |
 
 ## 关键套路

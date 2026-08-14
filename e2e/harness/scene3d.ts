@@ -6,10 +6,37 @@ import { createApp, h } from 'vue'
 
 import Scene3DStageCard from '@/components/stages/Scene3DStageCard.vue'
 import { i18n } from '@/i18n'
+import { buildPathActionJson } from '@/widgets/three/scene3d/pathStrip'
 
 const SCENE = JSON.stringify({
-  version: 1,
-  characters: [],
+  version: 2,
+  characters: [
+    {
+      id: 'char_1',
+      model: 'regular_f',
+      name: 'Walker',
+      color: '#e84a6f',
+      animation: { clip: 'Walk_Loop', speed: 1, loop: true, startOffset: 0 },
+      path: {
+        action: buildPathActionJson(
+          [
+            [-3, 0, 2.5],
+            [1.5, 0, 2.2],
+            [2.6, 0, -1.8],
+            [-2.2, 0, -2.4],
+          ],
+          [0, 4, 9, 15]
+        ),
+        range: { start: 0, end: 480 },
+        syncSpeed: 1.4,
+      },
+      transform: {
+        position: { x: 0, y: 0, z: 0 },
+        quaternion: { x: 0, y: 0, z: 0, w: 1 },
+        scale: { x: 1, y: 1, z: 1 },
+      },
+    },
+  ],
   primitives: [
     {
       id: 'prim_1',
@@ -77,6 +104,33 @@ const SCENE = JSON.stringify({
       },
       preset: null,
     },
+    {
+      id: 'cam_2',
+      name: 'High Cam',
+      fov: 40,
+      transform: {
+        position: { x: -3, y: 5, z: -3 },
+        quaternion: { x: 0, y: 0, z: 0, w: 1 },
+      },
+      preset: null,
+    },
+  ],
+  shots: [
+    { id: 'shot_1', name: 'Wide', durFrames: 48, cameraId: 'cam_1' },
+    {
+      id: 'shot_2',
+      name: 'High Lock',
+      durFrames: 480,
+      cameraId: 'cam_2',
+      lock: 'char_1',
+    },
+  ],
+  promptTrack: [
+    {
+      id: 'prompt_1',
+      range: { start: 0, end: 48 },
+      text: 'a lone figure crosses a quiet plaza at dusk',
+    },
   ],
   environment: { showGrid: true, background: '#1b1f2a', showRoom: false },
   output: { fps: 24, frameCount: 0, cameraId: 'cam_1' },
@@ -89,8 +143,8 @@ function makeNode(): any {
     widgets: [
       { name: 'scene_state', value: SCENE, callback: undefined },
       { name: 'channel', value: 'color', callback: undefined },
-      { name: 'width', value: 1024, callback: undefined },
-      { name: 'height', value: 1024, callback: undefined },
+      { name: 'width', value: 768, callback: undefined },
+      { name: 'height', value: 432, callback: undefined },
       { name: 'captured_image', value: '', callback: undefined },
       { name: 'captured_images', value: '', callback: undefined },
       { name: 'captured_video', value: '', callback: undefined },

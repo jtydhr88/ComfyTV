@@ -93,15 +93,28 @@ export class SceneCameraManager {
     this.lastTime = seconds
     for (const [id, runtime] of this.runtimes) {
       if (id === excludeId) continue
-      const { driver, entry } = runtime
-      if (!driver?.isLoaded || !entry.preset) continue
-      const duration =
-        driver.fps > 0 ? driver.frameCount / driver.fps / entry.preset.speed : 0
-      const progress =
-        duration > 0 ? Math.min(1, Math.max(0, seconds / duration)) : 0
-      driver.applyProgress(progress)
-      this.syncHelper(runtime)
+      this.applyRuntimeTime(runtime, seconds)
     }
+  }
+
+  setCameraLocalTime(id: string, seconds: number): void {
+    const runtime = this.runtimes.get(id)
+    if (runtime) this.applyRuntimeTime(runtime, seconds)
+  }
+
+  allCameras(): THREE.PerspectiveCamera[] {
+    return [...this.runtimes.values()].map((runtime) => runtime.camera)
+  }
+
+  private applyRuntimeTime(runtime: CameraRuntime, seconds: number): void {
+    const { driver, entry } = runtime
+    if (!driver?.isLoaded || !entry.preset) return
+    const duration =
+      driver.fps > 0 ? driver.frameCount / driver.fps / entry.preset.speed : 0
+    const progress =
+      duration > 0 ? Math.min(1, Math.max(0, seconds / duration)) : 0
+    driver.applyProgress(progress)
+    this.syncHelper(runtime)
   }
 
   getCamera(id: string): THREE.PerspectiveCamera | null {
