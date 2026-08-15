@@ -1,7 +1,7 @@
 ---
 title: "Agent 接入(MCP)"
-description: "ComfyTV 内置 MCP 服务,让 AI agent 读取并驱动你的画布:搭建节点图、跑渲染、阻塞等待、用真视觉检查结果、管理工作流配置 — 共 39 个工具。"
-translationSourceHash: "71cf6da6a58e8658"
+description: "ComfyTV 内置 MCP 服务,让 AI agent 读取并驱动你的画布:搭建节点图、跑渲染、阻塞等待、用真视觉检查结果、管理工作流配置 — 共 35 个工具。"
+translationSourceHash: "d9c7b5ba1e3affdd"
 ---
 
 ## 是什么
@@ -73,7 +73,7 @@ claude mcp add --transport http comfytv http://127.0.0.1:8188/comfytv/mcp
 
 | 工具 | 作用 |
 |---|---|
-| `scene_get/edit/capture/record` | 驱动 Scene 3D:角色、灯光、相机、动画 clip |
+| `scene_get/edit/capture/record` | 驱动 Scene 3D:角色、灯光、相机、动画 clip、相机路径与多镜导演时间轴(add_shot/patch_shot/set_path) |
 | `director_get/director_edit` | 读写导演台 clip 时间线 |
 
 ## 关键套路
