@@ -22,7 +22,27 @@ Claude Code:
 claude mcp add --transport http comfytv http://127.0.0.1:8188/comfytv/mcp
 ```
 
-其他 MCP 客户端:用 streamable HTTP 指向同一 URL。服务无状态,不在 ComfyUI 之上附加鉴权 — 8188 端口的网络暴露请自行斟酌。
+Codex:把服务器加到 `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.comfytv]
+url = "http://127.0.0.1:8188/comfytv/mcp"
+```
+
+其他 MCP 客户端:用 streamable HTTP 指向同一 URL。处理器本身仍是无状态的,但服务器会在 `initialize` 时签发一个 `Mcp-Session-Id`,以兼容期望 streamable-HTTP 会话管理的客户端。不在 ComfyUI 之上附加鉴权 — 8188 端口的网络暴露请自行斟酌。
+
+## 资源桥
+
+有些 MCP 客户端(例如当前版本的 Codex CLI)只会把服务器的 MCP *资源(resources)* 暴露给模型,而不会暴露它的 *工具(tools)*。为了让这类客户端也能驱动画布,ComfyTV 把每个工具也发布成一个资源,通过 `read_mcp_resource` 即可触达:
+
+| URI | 作用 |
+|---|---|
+| `comfytv://help` | 完整工具目录:名称、描述与入参 schema。 |
+| `comfytv://tool/<name>` | 单个工具的描述与入参 schema。 |
+| `comfytv://call/<name>` | 无参调用一个工具。 |
+| `comfytv://call/<name>?<url-encoded-json>` | 带 JSON 参数调用一个工具。 |
+
+示例:`read_mcp_resource(server="comfytv", uri="comfytv://call/server_info")` 会返回 ComfyTV 版本与项目数。[ComfyTV Bot](bot.zh.md) 由 Codex provider 驱动时,走的就是这套资源桥。
 
 ## 工具目录
 

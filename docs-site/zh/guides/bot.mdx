@@ -19,12 +19,13 @@ translationSourceHash: "1f17809ecf0b1bac"
 
 ## 不碰 API key,这是设计
 
-Bot 不直接调用任何模型 API,ComfyTV 也永远不存 key。它驱动的是**你机器上已经装好的 agent CLI** — 目前是 [Claude Code](https://claude.com/claude-code) — 用那个 CLI 自己的登录态(比如你的订阅)。Provider 层是可插拔的,以后可以接入其他本地 agent CLI。
+Bot 不直接调用任何模型 API,ComfyTV 也永远不存 key。它驱动的是**你机器上已经装好的 agent CLI** — [Claude Code](https://claude.com/claude-code) 或 [Codex](https://developers.openai.com/codex) — 用那个 CLI 自己的登录态(比如你的订阅)。Provider 层是可插拔的,以后可以接入其他本地 agent CLI。
 
 前置条件:
 
 1. 装好 Claude Code 并登录一次(`npm install -g @anthropic-ai/claude-code`,然后运行 `claude` 登录)。
-2. 在 ComfyTV **设置 → Agent 与 MCP** 里,先开 **MCP 服务**,再开 **ComfyTV Bot**(Bot 依赖 MCP — 那是 agent 触达画布的通道)。
+2. 或者装好 Codex CLI 并登录一次(`codex login`)。两个 CLI 都在时,优先用 Codex。
+3. 在 ComfyTV **设置 → Agent 与 MCP** 里,先开 **MCP 服务**,再开 **ComfyTV Bot**(Bot 依赖 MCP — 那是 agent 触达画布的通道)。
 
 检测不到 agent CLI 时,面板会显示安装引导而不是聊天框。
 
@@ -44,7 +45,7 @@ Bot 不直接调用任何模型 API,ComfyTV 也永远不存 key。它驱动的�
 | 现象 | 原因 / 处理 |
 |---|---|
 | 侧边栏没有 ✨ 图标 | **启用 ComfyTV Bot** 没开(设置 → Agent 与 MCP),它又依赖**启用 MCP 服务** |
-| 面板显示安装引导 | 没检测到 agent CLI — 装 Claude Code 并登录,然后点*重新检测* |
+| 面板显示安装引导 | 没检测到 agent CLI — 装 Claude Code 或 Codex 并登录,然后点*重新检测* |
 | Bot 说够不到画布 | 没有打开的 ComfyTV tab(或服务器重启后 tab 的 websocket 断了 — 硬刷新) |
 | 长渲染时 Bot 好像没动 | 它在 `wait_stage` 里阻塞等待 — 工具条目能看到;正常且省钱 |
 
