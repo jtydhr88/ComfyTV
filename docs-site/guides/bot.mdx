@@ -17,12 +17,13 @@ Typical asks:
 
 ## No API keys, by design
 
-The bot does not talk to any model API directly and ComfyTV never stores a key. Instead it drives the **agent CLI already installed on your machine** — currently [Claude Code](https://claude.com/claude-code) — using whatever login that CLI has (e.g. your subscription). The provider layer is pluggable, so other local agent CLIs can be added later.
+The bot does not talk to any model API directly and ComfyTV never stores a key. Instead it drives the **agent CLI already installed on your machine** — [Claude Code](https://claude.com/claude-code) or [Codex](https://developers.openai.com/codex) — using whatever login that CLI has (e.g. your subscription). The provider layer is pluggable, so other local agent CLIs can be added later.
 
 Prerequisites:
 
 1. Install Claude Code and sign in once (`npm install -g @anthropic-ai/claude-code`, then `claude` → login).
-2. In ComfyTV **Settings → Agent & MCP**, enable **MCP server** and then **ComfyTV Bot** (the bot requires MCP — it's how the agent reaches your canvas).
+2. Or install the Codex CLI and sign in once (`codex login`). When both CLIs are present, Codex is used first.
+3. In ComfyTV **Settings → Agent & MCP**, enable **MCP server** and then **ComfyTV Bot** (the bot requires MCP — it's how the agent reaches your canvas).
 
 If no agent CLI is found, the panel shows an install guide instead of a chat box.
 
@@ -42,7 +43,7 @@ Each turn spawns a fresh CLI process in headless mode, locked down to the ComfyT
 | Symptom | Cause / fix |
 |---|---|
 | No ✨ icon in the sidebar | **Enable ComfyTV Bot** is off (Settings → Agent & MCP), which itself requires **Enable MCP server** |
-| Panel shows an install guide | No agent CLI found — install Claude Code and sign in, then *Check again* |
+| Panel shows an install guide | No agent CLI found — install Claude Code or Codex and sign in, then *Check again* |
 | Bot says it can't reach the canvas | No ComfyTV tab open (or tab websocket dropped after a server restart — hard-refresh) |
 | Long renders: bot seems idle | It's inside a blocking `wait_stage` — the tool chip shows it; this is normal and cheap |
 
