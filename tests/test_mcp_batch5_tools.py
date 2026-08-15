@@ -102,9 +102,9 @@ class TestPickOutput:
         with pytest.raises(ValueError, match="output_id"):
             await _pick_output({"picked_index": 0})
         with pytest.raises(ValueError, match="picked_index"):
-            await _pick_output({"output_id": 1, "picked_index": -1})
+            await _pick_output({"output_id": 1, "picked_index": 0})
         with pytest.raises(ValueError, match="not found"):
-            await _pick_output({"output_id": 99999, "picked_index": 0})
+            await _pick_output({"output_id": 99999, "picked_index": 1})
 
 
 class TestCommandPassthrough:
@@ -260,3 +260,35 @@ class TestImageContentBlocks:
         })
         out = await mcp._tools_call({"name": "fake_plain_tool", "arguments": {}})
         assert [b["type"] for b in out["content"]] == ["text"]
+
+
+class TestArrangeCanvas:
+    @pytest.fixture()
+    def fake_submit(self, monkeypatch):
+        from ComfyTV.api import mcp_tools
+        calls = {}
+
+        async def submit(action, payload, timeout=15.0):
+            calls["action"] = action
+            calls["payload"] = payload
+            return {"arranged": 5}
+
+        monkeypatch.setattr(mcp_tools, "submit_command", submit)
+        return calls
+
+    async def test_passthrough_with_options(self, reset_db, fake_submit):
+        from ComfyTV.api.mcp_tools import _arrange_canvas
+        out = await _arrange_canvas({"margin": 120, "layout": "vertical"})
+        assert out == {"arranged": 5}
+        assert fake_submit["action"] == "arrange_canvas"
+        assert fake_submit["payload"]["margin"] == 120.0
+        assert fake_submit["payload"]["layout"] == "vertical"
+
+    async def test_defaults_and_validation(self, reset_db, fake_submit):
+        from ComfyTV.api.mcp_tools import _arrange_canvas
+        await _arrange_canvas({})
+        assert "margin" not in fake_submit["payload"]
+        with pytest.raises(ValueError, match="layout"):
+            await _arrange_canvas({"layout": "circle"})
+        with pytest.raises(ValueError, match="margin"):
+            await _arrange_canvas({"margin": "wide"})

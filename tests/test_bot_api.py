@@ -414,14 +414,112 @@ class TestAttachments:
         assert resp.status == 400
         assert "not found" in (await resp.json())["error"]
 
-        vid = storage.create_asset(name="v", payload_url="/view?v.mp4",
-                                   media_type="video")
+        mesh = storage.create_asset(name="m", payload_url="/view?m.glb",
+                                    media_type="model")
         resp = await client.post(f"/comfytv/bot/chats/{chat['id']}/send",
                                  json={"text": "x",
-                                       "attachments": [{"asset_id": vid["id"]}]})
+                                       "attachments": [{"asset_id": mesh["id"]}]})
         assert resp.status == 400
-        assert "only images" in (await resp.json())["error"]
+        assert "attachable types" in (await resp.json())["error"]
 
         resp = await client.post(f"/comfytv/bot/chats/{chat['id']}/send",
                                  json={"attachments": []})
         assert resp.status == 400
+
+
+class TestAVAttachments:
+    def _make_asset(self, media_type, name="clip"):
+        from ComfyTV import storage
+        return storage.create_asset(
+            name=name, payload_url=f"/view?filename={name}",
+            media_type=media_type)
+
+    async def test_video_attachment_frame_and_facts(self, client, fake_provider,
+                                                    tmp_path, monkeypatch):
+        from PIL import Image
+        from ComfyTV.runners import media
+        frame = tmp_path / "frame.png"
+        Image.new("RGB", (640, 360), (5, 5, 5)).save(frame)
+        monkeypatch.setattr(media, "get_video_info", lambda url: {
+            "duration": 12.5, "fps": 24.0, "width": 1280, "height": 720,
+            "has_audio": True})
+        monkeypatch.setattr(media, "extract_frame",
+                            lambda url, pos: "/view?frame.png")
+        monkeypatch.setattr(media, "localize", lambda url: frame)
+
+        asset = self._make_asset("video", "mv-take")
+        resp = await client.post("/comfytv/bot/chats",
+                                 json={"provider": "fake-test"})
+        chat = (await resp.json())["chat"]
+        resp = await client.post(f"/comfytv/bot/chats/{chat['id']}/send",
+                                 json={"text": "看看这条",
+                                       "attachments": [{"asset_id": asset["id"]}]})
+        assert resp.status == 200
+        blocks = json.loads((await resp.json())["user_message"]["content"])
+        assert blocks[0]["type"] == "video"
+        await _wait_done(client, chat["id"])
+        turn = fake_provider.last_turn
+        assert len(turn.attachments) == 1
+        assert "12.50s 1280x720 @24fps with audio" in turn.user_text
+        assert "middle frame" in turn.user_text
+        assert f"asset #{asset['id']}" in turn.user_text
+
+    async def test_audio_attachment_waveform_and_duration(
+            self, client, fake_provider, tmp_path, monkeypatch):
+        from PIL import Image
+        from ComfyTV.api import bot as bot_api
+        from ComfyTV.runners import audio_render, media
+        wave = tmp_path / "wave.png"
+        Image.new("RGB", (1200, 320), (0, 0, 0)).save(wave)
+        monkeypatch.setattr(bot_api, "_audio_duration_s", lambda url: 187.4)
+        monkeypatch.setattr(audio_render, "render_waveform_image",
+                            lambda url, w, h: "/view?wave.png")
+        monkeypatch.setattr(media, "localize", lambda url: wave)
+
+        asset = self._make_asset("audio", "my-song")
+        resp = await client.post("/comfytv/bot/chats",
+                                 json={"provider": "fake-test"})
+        chat = (await resp.json())["chat"]
+        resp = await client.post(f"/comfytv/bot/chats/{chat['id']}/send",
+                                 json={"attachments": [{"asset_id": asset["id"]}]})
+        assert resp.status == 200
+        blocks = json.loads((await resp.json())["user_message"]["content"])
+        assert blocks[0]["type"] == "audio"
+        await _wait_done(client, chat["id"])
+        turn = fake_provider.last_turn
+        assert len(turn.attachments) == 1
+        assert "187.40s" in turn.user_text
+        assert "waveform" in turn.user_text
+
+    async def test_audio_degrades_without_waveform(self, client, fake_provider,
+                                                   monkeypatch):
+        from ComfyTV.api import bot as bot_api
+        from ComfyTV.runners import audio_render
+
+        def boom(url, w, h):
+            raise RuntimeError("no decoder")
+
+        monkeypatch.setattr(bot_api, "_audio_duration_s", lambda url: None)
+        monkeypatch.setattr(audio_render, "render_waveform_image", boom)
+        asset = self._make_asset("audio", "raw")
+        resp = await client.post("/comfytv/bot/chats",
+                                 json={"provider": "fake-test"})
+        chat = (await resp.json())["chat"]
+        resp = await client.post(f"/comfytv/bot/chats/{chat['id']}/send",
+                                 json={"attachments": [{"asset_id": asset["id"]}]})
+        assert resp.status == 200
+        await _wait_done(client, chat["id"])
+        turn = fake_provider.last_turn
+        assert turn.attachments == []
+        assert f"asset #{asset['id']}" in turn.user_text
+
+    async def test_model_asset_rejected(self, client, fake_provider):
+        asset = self._make_asset("model", "mesh")
+        resp = await client.post("/comfytv/bot/chats",
+                                 json={"provider": "fake-test"})
+        chat = (await resp.json())["chat"]
+        resp = await client.post(f"/comfytv/bot/chats/{chat['id']}/send",
+                                 json={"text": "x",
+                                       "attachments": [{"asset_id": asset["id"]}]})
+        assert resp.status == 400
+        assert "attachable types" in (await resp.json())["error"]

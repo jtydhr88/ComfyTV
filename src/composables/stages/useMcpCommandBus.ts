@@ -324,6 +324,19 @@ function handleRemoveStage(app: any, cmd: any): CommandResult {
   return { removed: true, ...removed }
 }
 
+function handleArrangeCanvas(app: any, cmd: any): CommandResult {
+  const graph = app?.graph
+  if (typeof graph?.arrange !== 'function') {
+    throw new Error('the graph does not support arrange')
+  }
+  const margin = Math.max(20, Math.min(400, Number(cmd.margin) || 100))
+  const vertical = cmd.layout === 'vertical'
+  const lg = (window as any).LiteGraph
+  graph.arrange(margin, vertical ? lg?.VERTICAL_LAYOUT : undefined)
+  const count = Array.isArray(graph._nodes) ? graph._nodes.length : 0
+  return { arranged: count, margin, layout: vertical ? 'vertical' : 'horizontal' }
+}
+
 async function handleCancelStage(app: any, cmd: any): Promise<CommandResult> {
   const node = findStageNode(app?.graph, String(cmd.node))
   if (!node) throw new Error(`stage ${cmd.node} not found on the canvas`)
@@ -407,6 +420,7 @@ async function executeCommand(app: any, cmd: any): Promise<CommandResult> {
     case 'run_stage': return handleRunStage(app, cmd)
     case 'cancel_stage': return handleCancelStage(app, cmd)
     case 'get_stage': return handleGetStage(app, cmd)
+    case 'arrange_canvas': return handleArrangeCanvas(app, cmd)
     default: throw new Error(`unknown command action ${String(cmd.action)}`)
   }
 }

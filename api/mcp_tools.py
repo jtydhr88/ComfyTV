@@ -762,8 +762,8 @@ async def _pick_output(args: dict) -> dict:
     idx = args.get("picked_index")
     if not isinstance(oid, int):
         raise ValueError("output_id (integer) is required")
-    if not isinstance(idx, int) or idx < 0:
-        raise ValueError("picked_index (non-negative integer) is required")
+    if not isinstance(idx, int) or idx < 1:
+        raise ValueError("picked_index (1-based integer, >= 1) is required")
     row = storage.update_output_picked_index(oid, idx)
     if row is None:
         raise ValueError(f"output {oid} not found")
@@ -793,6 +793,22 @@ async def _director_edit(args: dict) -> dict:
     payload["node"] = str(node)
     payload["ops"] = ops
     return await submit_command("director_edit", payload, timeout=30.0)
+
+
+async def _arrange_canvas(args: dict) -> dict:
+    payload = _command_payload(args, ("project_id",))
+    margin = args.get("margin")
+    if margin is not None:
+        try:
+            payload["margin"] = float(margin)
+        except (TypeError, ValueError):
+            raise ValueError("margin must be a number")
+    layout = args.get("layout")
+    if layout is not None:
+        if layout not in ("horizontal", "vertical"):
+            raise ValueError("layout must be 'horizontal' or 'vertical'")
+        payload["layout"] = layout
+    return await submit_command("arrange_canvas", payload, timeout=30.0)
 
 
 async def _cancel_stage(args: dict) -> dict:
@@ -1164,8 +1180,18 @@ TOOLS: dict[str, dict] = {
             "@audio_N in the prompt; pass [] to clear). Mention ordinals are "
             "ZERO-BASED per media type (first image = @image_0; wired inputs "
             "and asset_refs occupy slots in order; out-of-range tokens expand "
-            "to nothing and the result carries a warning). node is a stage uid "
-            "or graph_node_id from get_canvas. Requires an open ComfyTV tab."
+            "to nothing and the result carries a warning). Asset loader "
+            "stages (AssetImageLoaderStage / AssetVideoLoaderStage / "
+            "AssetAudioLoaderStage / AssetModelLoaderStage) are selection "
+            "nodes, not runnable: set widgets {\"asset_id\": <id>} and the "
+            "loader selects that library asset and emits its output "
+            "immediately — do NOT run_stage them, just run the downstream "
+            "stage. Multi-candidate stages (Image/Audio/Video Picker pools "
+            "and image-batch generators like ImageStage) select the same "
+            "way: widgets {\"selected_index\": N} (1-BASED) picks that "
+            "candidate on the live card and updates the downstream output. "
+            "node is a stage uid or graph_node_id from get_canvas. "
+            "Requires an open ComfyTV tab."
         ),
         "inputSchema": {
             "type": "object",
@@ -1570,11 +1596,15 @@ TOOLS: dict[str, dict] = {
     },
     "pick_output": {
         "description": (
-            "Choose which candidate of a multi-image output downstream "
-            "stages consume (sets picked_index on an output row from the "
-            "outputs tool; 0-based index into its payload images). Use "
-            "after inspecting candidates with media_frame or the output's "
-            "payload_json image URLs."
+            "Record which candidate of a stored multi-image output is the "
+            "chosen one (sets picked_index on an output row from the outputs "
+            "tool; 1-BASED index into its payload images, matching the "
+            "cards' selected_index). NOTE: for a stage that is live on the "
+            "canvas, prefer set_stage widgets {\"selected_index\": N} — "
+            "that drives the card itself (picker pools and image-batch "
+            "generators) and updates downstream immediately; pick_output "
+            "alone does not refresh an open card. Inspect candidates first "
+            "via view_image on the output's payload_json image URLs."
         ),
         "inputSchema": {
             "type": "object",
@@ -1586,6 +1616,29 @@ TOOLS: dict[str, dict] = {
             "additionalProperties": False,
         },
         "handler": _pick_output,
+    },
+    "arrange_canvas": {
+        "description": (
+            "Tidy the whole canvas using litegraph's native arrange: nodes "
+            "are laid out in dependency order, column by column, sized to "
+            "their cards. Use after building a pipeline so nodes don't "
+            "overlap. CAUTION: repositions EVERY node on the canvas and "
+            "discards the user's manual layout — ask before arranging a "
+            "canvas the user laid out by hand. margin is the spacing in "
+            "pixels (default 100, 20-400); layout 'horizontal' (default) "
+            "or 'vertical'. Requires an open ComfyTV tab."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "margin": {"type": "number"},
+                "layout": {"type": "string",
+                           "enum": ["horizontal", "vertical"]},
+                "project_id": {"type": "string"},
+            },
+            "additionalProperties": False,
+        },
+        "handler": _arrange_canvas,
     },
     "cancel_stage": {
         "description": (

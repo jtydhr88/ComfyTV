@@ -6,7 +6,7 @@ import { importAssetFiles } from '@/composables/sidebar/assetImport'
 import { toastLoaderUploadFailed, useLoaderFileDrop } from '@/composables/stages/useLoaderFileDrop'
 import { type AssetCategoryFilter, useAssetStore } from '@/stores/assetStore'
 import { useStageStore, type StageState } from '@/stores/stageStore'
-import { getWidget, readWidgetStr, writeWidget } from '@/utils/widget'
+import { bindWidgetCallback, getWidget, readWidgetStr, writeWidget } from '@/utils/widget'
 
 export type LoaderMediaType = 'image' | 'video' | 'audio' | 'model'
 
@@ -58,6 +58,22 @@ export function useAssetLoaderCard(node: LGraphNode, getState: () => StageState)
     writeWidget(node, 'asset_id', asset.id)
     stageStore.setOutputSlot(getState(), 0, asset.payload_url)
   }
+
+  async function selectAssetId(id: number): Promise<boolean> {
+    if (!Number.isFinite(id) || id <= 0) return false
+    if (id === selectedId.value) return true
+    await store.hydrate()
+    const match = store.byId(id)
+    if (!match || match.media_type !== mediaType.value) return false
+    selectAsset(match)
+    return true
+  }
+
+  bindWidgetCallback(node, 'asset_id', (v) => {
+    const id = Number(v)
+    if (!Number.isFinite(id) || id <= 0 || id === selectedId.value) return
+    void selectAssetId(id)
+  })
 
   function selectRelative(dir: -1 | 1): Asset | null {
     const list = visibleAssets.value
@@ -120,6 +136,7 @@ export function useAssetLoaderCard(node: LGraphNode, getState: () => StageState)
     selectedAsset,
     setFilter,
     selectAsset,
+    selectAssetId,
     selectRelative,
     importFiles,
     fileDrop,

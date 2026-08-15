@@ -2282,9 +2282,9 @@
     "noProviderTitle": "未检测到本地 agent CLI",
     "noProviderBody": "ComfyTV Bot 通过本机安装的 agent CLI(Claude Code)驱动画布。安装并登录一次即可,全程不存任何 API key。",
     "recheck": "重新检测",
-    "attachImage": "添加图片",
+    "attachImage": "添加媒体文件",
     "removeAttachment": "移除",
-    "dropHint": "拖入图片作为附件",
+    "dropHint": "拖入图片 / 视频 / 音频作为附件",
     "attachFromLibrary": "从资产库选择"
   }
 }

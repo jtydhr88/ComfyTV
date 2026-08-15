@@ -100,6 +100,17 @@ export function useStageNode(
   variant: StageVariant = 'generator',
 ): UseStageNodeResult {
   const store = useStageStore()
+
+  const applyPickedIndex = (idx: number) => {
+    state.pickedIndex = idx
+    if (kind === 'image-batch') {
+      const picked = computePickedFromBatch(state.output, idx)
+      store.setOutputSlot(state, 1, picked)
+      if (state.outputId != null && state.outputId > 0) {
+        void postPickedIndex(state.outputId, idx)
+      }
+    }
+  }
   const executionStore = useExecutionStore()
   const state = store.registerStage(node, kind, variant)
 
@@ -128,7 +139,9 @@ export function useStageNode(
         if (idxWidget.value !== safe) idxWidget.value = safe
         state.pickedIndex = safe
         idxWidget.callback = useChainCallback(idxWidget.callback, () => {
-          state.pickedIndex = Number(idxWidget.value) || 1
+          const idx = Number(idxWidget.value) || 1
+          if (idx === state.pickedIndex) return
+          applyPickedIndex(idx)
         })
       }
     }
@@ -624,15 +637,8 @@ export function useStageNode(
     }
     if (actionId === 'pick-item' && context && (isPoolPickerKind(kind) || kind === 'image-batch')) {
       const newIdx = Number(context.index) || 1
-      state.pickedIndex = newIdx
+      applyPickedIndex(newIdx)
       setWidget(node, 'selected_index', newIdx)
-      if (kind === 'image-batch') {
-        const picked = computePickedFromBatch(state.output, newIdx)
-        store.setOutputSlot(state, 1, picked)
-        if (state.outputId != null && state.outputId > 0) {
-          void postPickedIndex(state.outputId, newIdx)
-        }
-      }
       return
     }
     spawnFollowUpStage(node, kind, actionId, context)

@@ -32,15 +32,30 @@
         >
           <template v-if="msg.role === 'user'">
             <div
-              v-if="userImages(msg).length"
+              v-if="userMedia(msg).length"
               class="ctv:flex ctv:max-w-[85%] ctv:flex-wrap ctv:justify-end ctv:gap-1"
             >
-              <img
-                v-for="(img, i) in userImages(msg)"
-                :key="i"
-                :src="img"
-                class="ctv:h-20 ctv:max-w-40 ctv:rounded-lg ctv:border ctv:border-border-subtle ctv:object-cover"
-              >
+              <template v-for="(m, i) in userMedia(msg)" :key="i">
+                <img
+                  v-if="m.type === 'image'"
+                  :src="m.url"
+                  class="ctv:h-20 ctv:max-w-40 ctv:rounded-lg ctv:border ctv:border-border-subtle ctv:object-cover"
+                >
+                <video
+                  v-else-if="m.type === 'video'"
+                  :src="m.url"
+                  controls
+                  preload="metadata"
+                  class="ctv:h-28 ctv:max-w-full ctv:rounded-lg ctv:border ctv:border-border-subtle"
+                />
+                <audio
+                  v-else
+                  :src="m.url"
+                  controls
+                  preload="metadata"
+                  class="ctv:h-9 ctv:w-60 ctv:max-w-full"
+                />
+              </template>
             </div>
             <div
               v-if="userText(msg)"
@@ -78,7 +93,7 @@
         v-if="pickerOpen"
         class="ctv:mb-1.5"
         :added-ids="pending.map(a => a.asset_id)"
-        :media-types="['image']"
+        :media-types="['image', 'video', 'audio']"
         @select="addAsset"
         @close="pickerOpen = false"
       />
@@ -89,13 +104,26 @@
           <div
             v-for="att in pending"
             :key="att.asset_id"
-            class="ctv:group ctv:relative ctv:h-14 ctv:w-14"
+            class="ctv:group ctv:relative"
+            :class="att.media_type === 'image' ? 'ctv:h-14 ctv:w-14' : ''"
           >
             <img
+              v-if="att.media_type === 'image'"
               :src="att.url"
               :title="att.name"
               class="ctv:h-14 ctv:w-14 ctv:rounded-md ctv:border ctv:border-border-subtle ctv:object-cover"
             >
+            <div
+              v-else
+              :title="att.name"
+              class="ctv:flex ctv:h-14 ctv:max-w-36 ctv:items-center ctv:gap-1.5 ctv:rounded-md ctv:border ctv:border-border-subtle ctv:px-2"
+            >
+              <i
+                class="pi ctv:shrink-0 ctv:text-sm ctv:text-muted-foreground"
+                :class="att.media_type === 'video' ? 'pi-video' : 'pi-volume-up'"
+              />
+              <span class="ctv:truncate ctv:text-[11px]">{{ att.name }}</span>
+            </div>
             <button
               class="ctv-bot-chip-x"
               :title="$t('bot.removeAttachment')"
@@ -143,7 +171,7 @@
           <input
             ref="filePicker"
             type="file"
-            accept="image/*"
+            accept="image/*,video/*,audio/*"
             multiple
             class="ctv:hidden"
             @change="onPick"
@@ -202,17 +230,20 @@ function userText(msg: BotChatMessage): string {
     .join('')
 }
 
-function userImages(msg: BotChatMessage): string[] {
+const ATTACHABLE = ['image', 'video', 'audio'] as const
+
+function userMedia(msg: BotChatMessage): Array<{ type: string; url: string }> {
   return msg.blocks
-    .filter(b => b.type === 'image' && b.url)
-    .map(b => b.url!)
+    .filter(b => (ATTACHABLE as readonly string[]).includes(b.type) && b.url)
+    .map(b => ({ type: b.type, url: b.url! }))
 }
 
 function addAsset(asset: Asset): void {
-  if (asset.media_type !== 'image') return
+  if (!(ATTACHABLE as readonly string[]).includes(asset.media_type)) return
   if (pending.value.some(a => a.asset_id === asset.id)) return
   pending.value = [...pending.value, {
     asset_id: asset.id, url: asset.payload_url, name: asset.name,
+    media_type: asset.media_type as BotAttachment['media_type'],
   }]
 }
 
@@ -243,7 +274,7 @@ async function importFiles(files: File[]): Promise<void> {
 }
 
 const fileDrop = useLoaderFileDrop({
-  kind: () => 'image',
+  kind: () => ['image', 'video', 'audio'],
   onAsset: addAsset,
   onFiles: importFiles,
 })
@@ -257,7 +288,7 @@ function onPick(e: Event): void {
 
 function onPaste(e: ClipboardEvent): void {
   const files = Array.from(e.clipboardData?.files ?? [])
-    .filter(f => f.type.startsWith('image/'))
+    .filter(f => ['image/', 'video/', 'audio/'].some(p => f.type.startsWith(p)))
   if (!files.length) return
   e.preventDefault()
   void importFiles(files)

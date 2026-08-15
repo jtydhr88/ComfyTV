@@ -23,7 +23,8 @@ from .providers import (
 _log = logging.getLogger(__name__)
 
 _STREAM_LIMIT = 10 * 1024 * 1024
-_TURN_TIMEOUT_S = 1800
+_TURN_IDLE_TIMEOUT_S = 600
+_TURN_MAX_S = 4 * 3600
 _TOOL_RESULT_CAP = 4000
 _PROBE_CACHE_S = 60
 _MCP_TOOL_TIMEOUT_MS = 180_000
@@ -287,26 +288,42 @@ class ClaudeCodeProvider(AgentProvider):
                     stderr_buf.append(chunk)
 
         stderr_task = asyncio.create_task(_drain_stderr())
+        timeout_reason = ""
         try:
-            deadline = time.monotonic() + _TURN_TIMEOUT_S
+            started = time.monotonic()
+            last_activity = started
             while True:
-                remaining = deadline - time.monotonic()
-                if remaining <= 0:
+                now = time.monotonic()
+                if now - started >= _TURN_MAX_S:
+                    timeout_reason = (
+                        f"turn exceeded the {_TURN_MAX_S // 3600}h hard cap")
                     raise asyncio.TimeoutError()
+                if now - last_activity >= _TURN_IDLE_TIMEOUT_S:
+                    timeout_reason = (
+                        f"no activity for {_TURN_IDLE_TIMEOUT_S // 60} minutes")
+                    raise asyncio.TimeoutError()
+                wait = min(_TURN_MAX_S - (now - started),
+                           _TURN_IDLE_TIMEOUT_S - (now - last_activity))
                 try:
-                    line = await asyncio.wait_for(proc.stdout.readline(), timeout=remaining)
+                    line = await asyncio.wait_for(proc.stdout.readline(),
+                                                  timeout=wait)
+                except asyncio.TimeoutError:
+                    continue
                 except ValueError:
                     _log.warning("[ComfyTV/bot] oversized stream line skipped")
+                    last_activity = time.monotonic()
                     continue
                 if not line:
                     break
+                last_activity = time.monotonic()
                 for ev in parser.parse_line(line.decode("utf-8", "replace")):
                     await emit(ev)
             await proc.wait()
         except asyncio.TimeoutError:
             await self.stop(handle)
             return TurnResult(resume_token=parser.session_id,
-                             error="turn timed out", aborted=True)
+                             error=f"turn timed out ({timeout_reason})",
+                             aborted=True)
         finally:
             stderr_task.cancel()
 

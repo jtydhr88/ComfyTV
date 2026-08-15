@@ -2282,9 +2282,9 @@
     "noProviderTitle": "No local agent CLI found",
     "noProviderBody": "The ComfyTV bot drives your canvas through a locally installed agent CLI (Claude Code). Install it, sign in once, then come back - no API key is ever stored.",
     "recheck": "Check again",
-    "attachImage": "Attach image",
+    "attachImage": "Attach media file",
     "removeAttachment": "Remove",
-    "dropHint": "Drop images to attach",
+    "dropHint": "Drop images, videos or audio to attach",
     "attachFromLibrary": "Attach from asset library"
   }
 }

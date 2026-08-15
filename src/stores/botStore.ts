@@ -16,7 +16,7 @@ import {
 import { app } from '@/lib/comfyApp'
 
 export interface BotBlock {
-  type: 'text' | 'tool_use' | 'tool_result' | 'image'
+  type: 'text' | 'tool_use' | 'tool_result' | 'image' | 'video' | 'audio'
   text?: string
   name?: string
   input?: Record<string, unknown>
@@ -28,6 +28,7 @@ export interface BotAttachment {
   asset_id: number
   url: string
   name: string
+  media_type: 'image' | 'video' | 'audio'
 }
 
 export interface BotChatMessage {

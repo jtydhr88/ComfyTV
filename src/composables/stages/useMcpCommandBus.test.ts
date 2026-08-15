@@ -635,3 +635,54 @@ describe('findStageNode', () => {
     expect(findStageNode(graph, 'missing')).toBeNull()
   })
 })
+
+describe('arrange_canvas', () => {
+  let fetchApi: ReturnType<typeof vi.fn>
+  let uninstall: (() => void) | false = false
+
+  beforeEach(() => {
+    setActivePinia(createPinia())
+    fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    fetchApi.mockClear()
+    fetchApi.mockImplementation(async () =>
+      new Response(JSON.stringify({ ok: true }), {
+        status: 200, headers: { 'content-type': 'application/json' },
+      }))
+  })
+
+  afterEach(() => {
+    if (uninstall) uninstall()
+    uninstall = false
+  })
+
+  function results(): any[] {
+    return fetchApi.mock.calls
+      .filter(([path]) => String(path).includes('/comfytv/mcp_command_result'))
+      .map(([, init]) => JSON.parse((init as RequestInit).body as string))
+  }
+
+  it('calls the native graph.arrange with clamped margin', async () => {
+    const node = makeNode()
+    const { host, deps, graph } = makeHost([node])
+    ;(graph as any).arrange = vi.fn()
+    uninstall = installMcpCommandBus(host, deps)
+    const handler = host.api.addEventListener.mock.calls.find(
+      ([event]: [string]) => event === 'comfytv-mcp-command')?.[1]
+    await handler({ detail: { id: 'c1', action: 'arrange_canvas', margin: 9999 } })
+    expect((graph as any).arrange).toHaveBeenCalledWith(400, undefined)
+    const [r] = results()
+    expect(r.ok).toBe(true)
+    expect(r.result.arranged).toBe(1)
+  })
+
+  it('rejects graphs without native arrange', async () => {
+    const { host, deps } = makeHost([makeNode()])
+    uninstall = installMcpCommandBus(host, deps)
+    const handler = host.api.addEventListener.mock.calls.find(
+      ([event]: [string]) => event === 'comfytv-mcp-command')?.[1]
+    await handler({ detail: { id: 'c1', action: 'arrange_canvas' } })
+    const [r] = results()
+    expect(r.ok).toBe(false)
+    expect(r.error).toContain('arrange')
+  })
+})

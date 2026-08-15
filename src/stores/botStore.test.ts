@@ -181,7 +181,7 @@ describe('botStore events', () => {
       assistant_message: message({ id: 'a2' }),
     }))
     const ok = await store.send('look', [
-      { asset_id: 7, url: '/view?a', name: 'ref' },
+      { asset_id: 7, url: '/view?a', name: 'ref', media_type: 'image' },
     ])
     expect(ok).toBe(true)
     const body = JSON.parse(fetchApi.mock.calls[0][1].body)
@@ -196,7 +196,7 @@ describe('botStore events', () => {
       user_message: message({ id: 'u3', role: 'user', status: 'done' }),
       assistant_message: message({ id: 'a3' }),
     }))
-    expect(await store.send('', [{ asset_id: 1, url: '/x', name: 'n' }])).toBe(true)
+    expect(await store.send('', [{ asset_id: 1, url: '/x', name: 'n', media_type: 'image' }])).toBe(true)
     expect(await store.send('', [])).toBe(false)
   })
 

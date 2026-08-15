@@ -8,7 +8,7 @@ import { useAssetStore } from '@/stores/assetStore'
 import { type AssetMediaType, dragMayMatchKind, mediaTypeOf } from '@/utils/mediaFileTypes'
 
 export interface LoaderFileDropOptions {
-  kind: () => AssetMediaType
+  kind: () => AssetMediaType | AssetMediaType[]
   onFiles: (files: File[]) => void | Promise<void>
   onAsset?: (asset: Asset) => void
 }
@@ -27,6 +27,14 @@ export function useLoaderFileDrop(opts: LoaderFileDropOptions) {
   const dragDepth = ref(0)
   const dragActive = ref(false)
 
+  const kinds = (): AssetMediaType[] => {
+    const k = opts.kind()
+    return Array.isArray(k) ? k : [k]
+  }
+
+  const kindLabel = (): string =>
+    kinds().map((k) => t(`assets.media.${k}`)).join(' / ')
+
   const isAssetDrag = (e: DragEvent): boolean =>
     !!opts.onAsset && Array.from(e.dataTransfer?.types ?? []).includes(ASSET_DRAG_MIME)
 
@@ -35,7 +43,8 @@ export function useLoaderFileDrop(opts: LoaderFileDropOptions) {
     && !Array.from(e.dataTransfer?.types ?? []).includes(ASSET_DRAG_MIME)
 
   const claims = (e: DragEvent): boolean =>
-    isAssetDrag(e) || (isFileDrag(e) && dragMayMatchKind(e, opts.kind()))
+    isAssetDrag(e)
+    || (isFileDrag(e) && kinds().some((k) => dragMayMatchKind(e, k)))
 
   function accept(e: DragEvent): void {
     e.preventDefault()
@@ -68,7 +77,7 @@ export function useLoaderFileDrop(opts: LoaderFileDropOptions) {
   }
 
   function onDrop(e: DragEvent): void {
-    const kind = opts.kind()
+    const accepted = kinds()
 
     if (isAssetDrag(e)) {
       accept(e)
@@ -77,9 +86,9 @@ export function useLoaderFileDrop(opts: LoaderFileDropOptions) {
       const id = Number(raw)
       const asset = Number.isFinite(id) ? useAssetStore().byId(id) : undefined
       if (!asset) return
-      if (asset.media_type !== kind) {
+      if (!accepted.includes(asset.media_type as AssetMediaType)) {
         toast('warn', t('loaderDrop.mismatchTitle'), t('loaderDrop.assetTypeMismatch', {
-          expected: t(`assets.media.${kind}`),
+          expected: kindLabel(),
           actual: t(`assets.media.${asset.media_type}`),
         }))
         return
@@ -88,14 +97,17 @@ export function useLoaderFileDrop(opts: LoaderFileDropOptions) {
       return
     }
 
-    if (!isFileDrag(e) || !dragMayMatchKind(e, kind)) return
+    if (!isFileDrag(e) || !accepted.some((k) => dragMayMatchKind(e, k))) return
     accept(e)
     reset()
     const matched = Array.from(e.dataTransfer?.files ?? [])
-      .filter((f) => mediaTypeOf(f) === kind)
+      .filter((f) => {
+        const kind = mediaTypeOf(f)
+        return kind !== null && accepted.includes(kind)
+      })
     if (matched.length === 0) {
       toast('warn', t('loaderDrop.mismatchTitle'), t('loaderDrop.typeMismatch', {
-        kind: t(`assets.media.${kind}`),
+        kind: kindLabel(),
       }))
       return
     }

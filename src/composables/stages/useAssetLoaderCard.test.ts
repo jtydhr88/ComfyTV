@@ -260,3 +260,41 @@ describe('useAssetLoaderCard — file drop import', () => {
     expect(api.selectedId.value).toBe(12)
   })
 })
+
+describe('external asset_id selection (MCP path)', () => {
+  beforeEach(() => {
+    fakeAssetStore.byId.mockImplementation((id: number) =>
+      id === 1 ? IMG_ASSET : id === 2 ? VID_ASSET : undefined)
+  })
+
+  it('widget write triggers full selection with output slot', async () => {
+    const node = makeNode()
+    const { api } = await setup(node)
+    const w = node.widgets.find((x: any) => x.name === 'asset_id')
+    w.value = 1
+    w.callback?.(1)
+    await Promise.resolve()
+    await Promise.resolve()
+    expect(api.selectedId.value).toBe(1)
+    expect(widgetValue(node, 'asset_url')).toBe('/a/pic.png')
+    expect(fakeStageStore.setOutputSlot).toHaveBeenCalledWith(
+      expect.anything(), 0, '/a/pic.png')
+  })
+
+  it('selectAssetId rejects wrong media type and unknown ids', async () => {
+    const { api } = await setup(makeNode(), 'image')
+    expect(await api.selectAssetId(2)).toBe(false)
+    expect(await api.selectAssetId(999)).toBe(false)
+    expect(api.selectedId.value).toBeNull()
+    expect(await api.selectAssetId(1)).toBe(true)
+    expect(api.selectedId.value).toBe(1)
+  })
+
+  it('re-selecting the same id is a no-op success', async () => {
+    const { api } = await setup(makeNode(), 'image')
+    await api.selectAssetId(1)
+    fakeStageStore.setOutputSlot.mockClear()
+    expect(await api.selectAssetId(1)).toBe(true)
+    expect(fakeStageStore.setOutputSlot).not.toHaveBeenCalled()
+  })
+})

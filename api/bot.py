@@ -288,6 +288,9 @@ def _render_attachment(url: str) -> dict:
     }
 
 
+_ATTACHABLE_TYPES = ("image", "video", "audio")
+
+
 def _resolve_attachment_assets(raw) -> list[dict]:
     if raw is None:
         return []
@@ -303,23 +306,81 @@ def _resolve_attachment_assets(raw) -> list[dict]:
         asset = storage.get_asset(aid)
         if asset is None:
             raise ValueError(f"attachments[{i}]: asset {aid} not found")
-        if asset.get("media_type") != "image":
+        if asset.get("media_type") not in _ATTACHABLE_TYPES:
             raise ValueError(
-                f"attachments[{i}]: asset {aid} is {asset.get('media_type')!r}, "
-                "only images can be attached")
+                f"attachments[{i}]: asset {aid} is {asset.get('media_type')!r}; "
+                f"attachable types: {', '.join(_ATTACHABLE_TYPES)}")
         rows.append(asset)
     return rows
 
 
-def _attachment_manifest(assets: list[dict]) -> str:
-    lines = []
-    for a in assets:
-        lines.append(
-            f"[Attached image: asset #{a['id']} ({a.get('name') or 'unnamed'}) "
-            f"— {a['payload_url']} — already in the asset library; to use it "
-            f"as a generation reference pass asset_refs "
-            f"[{{\"asset_id\": {a['id']}}}] on a stage]")
-    return "\n".join(lines)
+def _audio_duration_s(url: str) -> float | None:
+    import av
+
+    from ..runners.media import localize
+    try:
+        with av.open(str(localize(url))) as c:
+            if c.duration:
+                return round(c.duration / 1_000_000, 2)
+            stream = c.streams.audio[0] if c.streams.audio else None
+            if stream is not None and stream.duration and stream.time_base:
+                return round(float(stream.duration * stream.time_base), 2)
+    except Exception:
+        return None
+    return None
+
+
+def _prepare_attachment(asset: dict) -> tuple[dict | None, str]:
+    from ..runners import audio_render, media
+
+    aid = asset["id"]
+    url = asset["payload_url"]
+    name = asset.get("name") or "unnamed"
+    tail = (f"already in the asset library; to use it on a stage pass "
+            f"asset_refs [{{\"asset_id\": {aid}}}] or select it in an asset "
+            f"loader]")
+    media_type = asset.get("media_type")
+
+    if media_type == "image":
+        return (_render_attachment(url),
+                f"[Attached image: asset #{aid} ({name}) — {url} — {tail}")
+
+    if media_type == "video":
+        facts = ""
+        block = None
+        try:
+            info = media.get_video_info(url)
+            facts = (f" {info['duration']:.2f}s {info['width']}x"
+                     f"{info['height']} @{info['fps']:.0f}fps"
+                     f"{' with audio' if info.get('has_audio') else ''} —")
+        except Exception:
+            pass
+        try:
+            frame_url = media.extract_frame(url, "middle")
+            block = _render_attachment(frame_url)
+        except Exception:
+            pass
+        seen = (" The image below is its middle frame."
+                if block else "")
+        return (block,
+                f"[Attached video: asset #{aid} ({name}) —{facts} {url} — "
+                f"{tail}{seen}")
+
+    facts = ""
+    dur = _audio_duration_s(url)
+    if dur is not None:
+        facts = f" {dur:.2f}s —"
+    block = None
+    try:
+        wave_url = audio_render.render_waveform_image(url, 1200, 320)
+        block = _render_attachment(wave_url)
+    except Exception:
+        pass
+    seen = (" The image below is its waveform (RMS + clipping markers) — "
+            "use it to see the track's structure." if block else "")
+    return (block,
+            f"[Attached audio: asset #{aid} ({name}) —{facts} {url} — "
+            f"{tail}{seen}")
 
 
 @routes.post("/comfytv/bot/chats/{cid}/send")
@@ -349,25 +410,30 @@ async def bot_send(request: web.Request) -> web.Response:
             {"error": f"unknown provider {chat['provider']!r}"}, status=400)
 
     attachments = []
+    manifest_lines = []
     for a in attachment_assets:
         try:
-            attachments.append(
-                await asyncio.to_thread(_render_attachment, a["payload_url"]))
+            block, line = await asyncio.to_thread(_prepare_attachment, a)
         except Exception as e:
             return web.json_response(
-                {"error": f"could not read asset {a['id']} as an image ({e})"},
+                {"error": f"could not read asset {a['id']} ({e})"},
                 status=400)
+        if block is not None:
+            attachments.append(block)
+        manifest_lines.append(line)
 
     display_blocks = [
-        {"type": "image", "url": a["payload_url"], "asset_id": a["id"]}
+        {"type": a["media_type"], "url": a["payload_url"], "asset_id": a["id"]}
         for a in attachment_assets
     ]
     if text:
         display_blocks.append({"type": "text", "text": text})
 
-    provider_text = text or "Look at the attached image(s) and describe what you see."
-    if attachment_assets:
-        provider_text += "\n\n" + _attachment_manifest(attachment_assets)
+    provider_text = text or (
+        "Look at the attached media and report what you can determine about "
+        "it (for audio/video use media_probe and the manifest facts).")
+    if manifest_lines:
+        provider_text += "\n\n" + "\n".join(manifest_lines)
 
     user_msg = storage.create_bot_message(
         chat_id=chat["id"], role="user",

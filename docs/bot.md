@@ -12,6 +12,7 @@ Typical asks:
 
 - *"Add an image stage with Z-Image Turbo, prompt a neon cat at night, 16:9, and run it."*
 - *"Use that image as the reference for a 5-second image-to-video, wait for it, and QC the first frame."*
+- *"Here's my song and its timed lyrics — trim it into sections and build an audio-driven MV section by section."*
 - *"Look at my canvas and tell me why the video stage failed."*
 - *"Open the Director timeline and re-take clip 3 with a slower camera."*
 - *"I just linked a new workflow — bind seed, width and height for me."*
