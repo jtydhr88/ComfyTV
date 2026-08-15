@@ -2,7 +2,6 @@ import json
 import logging
 import time
 import uuid
-from urllib.parse import unquote
 
 from aiohttp import web
 from server import PromptServer
@@ -17,17 +16,6 @@ _BROADCAST_THROTTLE_S = 60.0
 
 _last_activity: float | None = None
 _last_broadcast = 0.0
-
-# ComfyTV's handlers are stateless, but streamable-HTTP MCP clients (Codex
-# included) expect the server to manage sessions. We hand back a session id so
-# clients treat the endpoint as a sessionful streamable-HTTP server.
-_sessions: set[str] = set()
-
-
-def _new_session_id() -> str:
-    sid = uuid.uuid4().hex
-    _sessions.add(sid)
-    return sid
 
 
 def _mark_activity() -> None:
@@ -142,100 +130,6 @@ async def _tools_call(params: dict) -> dict | None:
                 "isError": True}
 
 
-def _resource_help() -> dict:
-    catalog = {
-        name: {
-            "description": spec["description"],
-            "inputSchema": spec["inputSchema"],
-        }
-        for name, spec in TOOLS.items()
-    }
-    return {"contents": [{
-        "uri": "comfytv://help",
-        "mimeType": "application/json",
-        "text": json.dumps(catalog, ensure_ascii=False),
-    }]}
-
-
-def _resource_list() -> dict:
-    resources = [{
-        "uri": "comfytv://help",
-        "name": "help",
-        "description": "Full ComfyTV tool catalog: names, descriptions and input schemas.",
-        "mimeType": "application/json",
-    }]
-    for name, spec in TOOLS.items():
-        resources.append({
-            "uri": f"comfytv://tool/{name}",
-            "name": name,
-            "description": spec["description"],
-            "mimeType": "application/json",
-        })
-    return {"resources": resources}
-
-
-def _resource_templates() -> dict:
-    return {"resourceTemplates": [{
-        "uriTemplate": "comfytv://call/{name}",
-        "name": "comfytv-tool-call",
-        "description": (
-            "Call a ComfyTV tool. Replace {name} with the tool name. Append "
-            "?<url-encoded-json-arguments> to pass arguments."
-        ),
-        "mimeType": "application/json",
-    }]}
-
-
-async def _resource_read(params: dict) -> dict:
-    uri = str(params.get("uri") or "")
-
-    if uri == "comfytv://help":
-        return _resource_help()
-
-    if uri.startswith("comfytv://tool/"):
-        name = uri[len("comfytv://tool/"):]
-        spec = TOOLS.get(name)
-        if spec is None:
-            raise ValueError(f"unknown tool {name!r}")
-        text = json.dumps({
-            "name": name,
-            "description": spec["description"],
-            "inputSchema": spec["inputSchema"],
-        }, ensure_ascii=False)
-        return {"contents": [{
-            "uri": uri, "mimeType": "application/json", "text": text,
-        }]}
-
-    if uri.startswith("comfytv://call/"):
-        rest = uri[len("comfytv://call/"):]
-        name = rest
-        args: dict = {}
-        if "?" in rest:
-            name, query = rest.split("?", 1)
-            if query:
-                args = json.loads(unquote(query))
-        spec = TOOLS.get(name)
-        if spec is None:
-            raise ValueError(f"unknown tool {name!r}")
-        try:
-            payload = await spec["handler"](args)
-        except (ValueError, TypeError, KeyError) as e:
-            payload = {"error": f"{type(e).__name__}: {e}"}
-        except Exception as e:
-            _log.exception("[ComfyTV/mcp] resource tool %s failed", name)
-            payload = {"error": f"{type(e).__name__}: {e}"}
-        if isinstance(payload, dict):
-            images = payload.pop("_images", None)
-            if images:
-                payload["_images_count"] = len(images)
-        text = json.dumps(payload, ensure_ascii=False, default=str)
-        return {"contents": [{
-            "uri": uri, "mimeType": "application/json", "text": text,
-        }]}
-
-    raise ValueError(f"unknown resource {uri!r}")
-
-
 async def _dispatch(msg: dict) -> dict | None:
     method = msg.get("method")
     msg_id = msg.get("id")
@@ -256,14 +150,9 @@ async def _dispatch(msg: dict) -> dict | None:
             return _error(msg_id, -32602, f"unknown tool {params.get('name')!r}")
         return _result(msg_id, outcome)
     if method == "resources/list":
-        return _result(msg_id, _resource_list())
+        return _result(msg_id, {"resources": []})
     if method == "resources/templates/list":
-        return _result(msg_id, _resource_templates())
-    if method == "resources/read":
-        try:
-            return _result(msg_id, await _resource_read(params))
-        except (ValueError, TypeError, KeyError) as e:
-            return _error(msg_id, -32602, str(e))
+        return _result(msg_id, {"resourceTemplates": []})
     if method == "prompts/list":
         return _result(msg_id, {"prompts": []})
     return _error(msg_id, -32601, f"method not found: {method}")
@@ -313,7 +202,7 @@ async def mcp_post(request: web.Request) -> web.Response:
         return web.Response(status=202)
     http_response = web.json_response(response)
     if msg.get("method") == "initialize" and "result" in response:
-        http_response.headers["Mcp-Session-Id"] = _new_session_id()
+        http_response.headers["Mcp-Session-Id"] = uuid.uuid4().hex
     return http_response
 
 
@@ -326,8 +215,5 @@ async def mcp_get(_request: web.Request) -> web.Response:
 
 
 @routes.delete("/comfytv/mcp")
-async def mcp_delete(request: web.Request) -> web.Response:
-    session_id = request.headers.get("Mcp-Session-Id")
-    if session_id:
-        _sessions.discard(session_id)
+async def mcp_delete(_request: web.Request) -> web.Response:
     return web.Response(status=200)

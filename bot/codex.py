@@ -1,16 +1,20 @@
 import asyncio
 import base64
 import json
-import logging
 import os
 import shutil
-import signal
-import subprocess
 import sys
 import time
 from pathlib import Path
 from typing import Optional
 
+from ._cli_common import (
+    PROBE_CACHE_S,
+    TOOL_RESULT_CAP,
+    base_spawn_env,
+    kill_process_tree,
+    run_cli_turn,
+)
 from .providers import (
     AgentProvider,
     BotEvent,
@@ -22,13 +26,7 @@ from .providers import (
     TurnResult,
 )
 
-_log = logging.getLogger(__name__)
-
-_STREAM_LIMIT = 10 * 1024 * 1024
-_TURN_TIMEOUT_S = 1800
-_TOOL_RESULT_CAP = 4000
-_PROBE_CACHE_S = 60
-_MCP_TOOL_TIMEOUT_MS = 180_000
+_MCP_TOOL_TIMEOUT_SEC = 180
 
 _MEDIA_EXT = {
     "image/jpeg": ".jpg",
@@ -39,14 +37,7 @@ _MEDIA_EXT = {
 }
 
 
-def spawn_env() -> dict:
-    env = dict(os.environ)
-    env.setdefault("MCP_TOOL_TIMEOUT", str(_MCP_TOOL_TIMEOUT_MS))
-    return env
-
-
 def resolve_codex_command() -> Optional[list[str]]:
-    """Locate the Codex CLI, mirroring how the Claude provider finds ``claude``."""
     if sys.platform == "win32":
         exe = shutil.which("codex.exe")
         if exe:
@@ -54,8 +45,6 @@ def resolve_codex_command() -> Optional[list[str]]:
     found = shutil.which("codex")
     if found:
         return [found]
-
-    # Known install locations, including the bundled CLI inside the desktop app.
     candidates = [
         "/Applications/ChatGPT.app/Contents/Resources/codex",
         str(Path.home() / ".local" / "bin" / "codex"),
@@ -64,7 +53,6 @@ def resolve_codex_command() -> Optional[list[str]]:
     for candidate in candidates:
         if os.path.isfile(candidate) and os.access(candidate, os.X_OK):
             return [candidate]
-
     if sys.platform == "win32":
         for candidate in candidates:
             if os.path.isfile(candidate + ".exe"):
@@ -72,8 +60,7 @@ def resolve_codex_command() -> Optional[list[str]]:
     return None
 
 
-def _mcp_result_text(content) -> str:
-    """Flatten MCP ``content`` blocks into a single text string."""
+def _flatten_mcp_content(content) -> str:
     if content is None:
         return ""
     if isinstance(content, str):
@@ -94,9 +81,7 @@ def _mcp_result_text(content) -> str:
     return json.dumps(content, ensure_ascii=False)
 
 
-class _StreamParser:
-    """Parse Codex ``codex exec --json`` JSONL into ComfyTV BotEvents."""
-
+class _CodexStreamParser:
     def __init__(self) -> None:
         self.session_id: Optional[str] = None
         self.result_error: str = ""
@@ -115,7 +100,6 @@ class _StreamParser:
             return []
         if not isinstance(data, dict):
             return []
-
         event_type = data.get("type")
         if event_type == "thread.started":
             self.session_id = str(data.get("thread_id") or self.session_id or "")
@@ -132,10 +116,10 @@ class _StreamParser:
             self.result_error = str(data.get("message") or "error")
             return []
         if event_type in ("item.started", "item.updated", "item.completed"):
-            return self._parse_item(data.get("item") or {}, event_type)
+            return self._parse_item(data.get("item") or {})
         return []
 
-    def _parse_item(self, item: dict, event_type: str) -> list[BotEvent]:
+    def _parse_item(self, item: dict) -> list[BotEvent]:
         item_type = item.get("type")
         item_id = str(item.get("id") or "")
 
@@ -150,10 +134,6 @@ class _StreamParser:
             name = str(item.get("tool") or "")
             arguments = item.get("arguments") or {}
             status = item.get("status")
-
-            # A tool call is surfaced once when we first observe it (normally on
-            # item.started), and its result is surfaced when it reaches a terminal
-            # state (item.completed / item.updated with a result or error).
             is_terminal = status in ("completed", "failed") or bool(
                 item.get("result") or item.get("error"))
             if not is_terminal:
@@ -165,23 +145,21 @@ class _StreamParser:
                 if not isinstance(arguments, dict):
                     arguments = {}
                 return [BotEvent(t="tool_use", name=name, input=arguments)]
-
             if item.get("error") or status == "failed":
                 message = (item.get("error") or {}).get("message") or "tool failed"
                 return [BotEvent(
                     t="tool_result",
                     name=name or self._tool_names.get(item_id, ""),
-                    text=str(message)[:_TOOL_RESULT_CAP],
+                    text=str(message)[:TOOL_RESULT_CAP],
                 )]
-
             result = item.get("result") or {}
-            text = _mcp_result_text(result.get("content"))
+            text = _flatten_mcp_content(result.get("content"))
             if not text and result.get("structured_content") is not None:
                 text = json.dumps(result["structured_content"], ensure_ascii=False)
             return [BotEvent(
                 t="tool_result",
                 name=name or self._tool_names.get(item_id, ""),
-                text=text[:_TOOL_RESULT_CAP],
+                text=text[:TOOL_RESULT_CAP],
             )]
 
         return []
@@ -196,57 +174,21 @@ class CodexCodeProvider(AgentProvider):
         self._probe_cache: Optional[tuple[float, ProviderStatus]] = None
 
     def capabilities(self) -> ProviderCaps:
-        return ProviderCaps(stateful=True, tools="mcp")
+        return ProviderCaps(stateful=True, tools="mcp", attachments=True)
 
     def _resolve_home(self) -> str:
         if self._home_dir:
             os.makedirs(self._home_dir, exist_ok=True)
-            home = self._home_dir
-        else:
-            try:
-                import folder_paths
-                user = folder_paths.get_user_directory()
-            except Exception:
-                user = os.path.expanduser("~")
-            home = os.path.join(user, "comfytv", "bot-home")
-            os.makedirs(home, exist_ok=True)
-            self._home_dir = home
-        self._ensure_bot_instructions(home)
-        return home
-
-    def _ensure_bot_instructions(self, home: str) -> None:
-        """Write an AGENTS.md so Codex always has the ComfyTV tool guidance."""
-        path = os.path.join(home, "AGENTS.md")
-        content = (
-            "# ComfyTV Bot (Codex provider)\n\n"
-            "You are the ComfyTV canvas bot. In this Codex session ComfyTV is "
-            "exposed through MCP RESOURCES, not callable tools. Drive the "
-            "canvas with read_mcp_resource against the `comfytv` server:\n\n"
-            "- Read `comfytv://help` to get the full tool catalog (names, "
-            "descriptions, input schemas).\n"
-            "- Read `comfytv://tool/<name>` to see one tool's schema.\n"
-            "- Read `comfytv://call/<name>` to call a tool with no arguments.\n"
-            "- Read `comfytv://call/<name>?<url-encoded-json-object>` to call "
-            "a tool with arguments.\n\n"
-            "Example: read_mcp_resource(server=\"comfytv\", "
-            "uri=\"comfytv://call/server_info\") returns the ComfyTV version "
-            "and project count. Common tools: server_info, projects, "
-            "get_canvas, outputs, add_stage, set_stage, connect_stages, "
-            "run_stage, wait_stage, view_image.\n\n"
-            "Do not use shell, file, or web tools. Canvas writes require an "
-            "open ComfyTV browser tab; if a write fails with a tab/timeout "
-            "error, report it clearly instead of retrying endlessly.\n"
-        )
+            return self._home_dir
         try:
-            existing = ""
-            if os.path.exists(path):
-                with open(path, encoding="utf-8") as fh:
-                    existing = fh.read()
-            if existing != content:
-                with open(path, "w", encoding="utf-8") as fh:
-                    fh.write(content)
-        except OSError:
-            _log.warning("[ComfyTV/bot] could not write AGENTS.md in %s", home)
+            import folder_paths
+            user = folder_paths.get_user_directory()
+        except Exception:
+            user = os.path.expanduser("~")
+        d = os.path.join(user, "comfytv", "bot-home-codex")
+        os.makedirs(d, exist_ok=True)
+        self._home_dir = d
+        return d
 
     def _detect_logged_in(self) -> bool:
         try:
@@ -277,7 +219,7 @@ class CodexCodeProvider(AgentProvider):
 
     async def probe(self) -> ProviderStatus:
         now = time.monotonic()
-        if self._probe_cache and now - self._probe_cache[0] < _PROBE_CACHE_S:
+        if self._probe_cache and now - self._probe_cache[0] < PROBE_CACHE_S:
             return self._probe_cache[1]
         argv = resolve_codex_command()
         if not argv:
@@ -289,6 +231,7 @@ class CodexCodeProvider(AgentProvider):
                 *argv, "--version",
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
+                env=base_spawn_env(),
             )
             out, _ = await asyncio.wait_for(proc.communicate(), timeout=15)
             version = (out or b"").decode("utf-8", "replace").strip()
@@ -305,7 +248,6 @@ class CodexCodeProvider(AgentProvider):
         return status
 
     def _mcp_lockdown_args(self) -> list[str]:
-        """Disable every user-configured MCP server except ``comfytv``."""
         args: list[str] = []
         try:
             import tomllib
@@ -326,7 +268,8 @@ class CodexCodeProvider(AgentProvider):
                 args += ["-c", f"mcp_servers.{server_id}.enabled=false"]
         return args
 
-    def _write_attachment(self, home: str, data: str, media_type: str) -> Optional[str]:
+    def _write_attachment(self, home: str, data: str, media_type: str,
+                          index: int) -> Optional[str]:
         try:
             raw = base64.b64decode(data)
         except Exception:
@@ -336,7 +279,8 @@ class CodexCodeProvider(AgentProvider):
         out_dir = os.path.join(home, "attachments")
         os.makedirs(out_dir, exist_ok=True)
         ext = _MEDIA_EXT.get(media_type, ".bin")
-        path = os.path.join(out_dir, f"att-{int(time.time() * 1000)}{ext}")
+        path = os.path.join(
+            out_dir, f"att-{int(time.time() * 1000)}-{index}{ext}")
         with open(path, "wb") as fh:
             fh.write(raw)
         return path
@@ -346,31 +290,26 @@ class CodexCodeProvider(AgentProvider):
         if not argv:
             raise RuntimeError("codex executable not found")
 
-        # Note: sessions must be persisted (no --ephemeral) so that the
-        # thread_id returned by `thread.started` can be resumed on the next turn.
         flags = ["--json", "--skip-git-repo-check"]
-
         if turn.mcp_endpoint:
             flags += [
                 "-c", 'mcp_servers.comfytv.url="%s"' % turn.mcp_endpoint,
                 "-c", "mcp_servers.comfytv.required=true",
+                "-c", f"mcp_servers.comfytv.tool_timeout_sec={_MCP_TOOL_TIMEOUT_SEC}",
             ]
         flags += self._mcp_lockdown_args()
-        # The ComfyTV bot is only meant to drive the canvas: no local shell, no web.
         flags += ["-c", "features.shell_tool=false"]
         flags += ["-c", 'web_search="disabled"']
         if not turn.resume_token:
-            # `codex exec resume` does not accept --sandbox; apply it only on the
-            # first turn and let subsequent resumed turns inherit the session.
             flags += ["--sandbox", "read-only"]
 
         temp_files: list[str] = []
-        for att in turn.attachments:
+        for i, att in enumerate(turn.attachments):
             data = att.get("data")
             if not data:
                 continue
             path = self._write_attachment(
-                home, data, str(att.get("media_type") or "image/jpeg"))
+                home, data, str(att.get("media_type") or "image/jpeg"), i)
             if path:
                 temp_files.append(path)
                 flags += ["-i", path]
@@ -388,96 +327,22 @@ class CodexCodeProvider(AgentProvider):
                    handle: TurnHandle) -> TurnResult:
         home = self._resolve_home()
         argv, temp_files = self._build_argv(turn, home)
-
-        kwargs: dict = {
-            "stdout": asyncio.subprocess.PIPE,
-            "stderr": asyncio.subprocess.PIPE,
-            "stdin": asyncio.subprocess.DEVNULL,
-            "cwd": home,
-            "limit": _STREAM_LIMIT,
-            "env": spawn_env(),
-        }
-        if sys.platform == "win32":
-            kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
-        else:
-            kwargs["start_new_session"] = True
-
-        proc = await asyncio.create_subprocess_exec(*argv, **kwargs)
-        handle.process = proc
-        parser = _StreamParser()
-        stderr_buf: list[bytes] = []
-
-        async def _drain_stderr() -> None:
-            while True:
-                chunk = await proc.stderr.read(65536)
-                if not chunk:
-                    return
-                if sum(len(c) for c in stderr_buf) < 65536:
-                    stderr_buf.append(chunk)
-
-        stderr_task = asyncio.create_task(_drain_stderr())
         try:
-            deadline = time.monotonic() + _TURN_TIMEOUT_S
-            while True:
-                remaining = deadline - time.monotonic()
-                if remaining <= 0:
-                    raise asyncio.TimeoutError()
-                try:
-                    line = await asyncio.wait_for(
-                        proc.stdout.readline(), timeout=remaining)
-                except ValueError:
-                    _log.warning("[ComfyTV/bot] oversized stream line skipped")
-                    continue
-                if not line:
-                    break
-                for ev in parser.parse_line(line.decode("utf-8", "replace")):
-                    await emit(ev)
-            await proc.wait()
-        except asyncio.TimeoutError:
-            await self.stop(handle)
-            return TurnResult(
-                resume_token=parser.session_id, error="turn timed out", aborted=True)
+            return await run_cli_turn(
+                argv,
+                cwd=home,
+                env=base_spawn_env(),
+                emit=emit,
+                handle=handle,
+                parser=_CodexStreamParser(),
+                exe_label="codex",
+            )
         finally:
-            stderr_task.cancel()
             for path in temp_files:
                 try:
                     os.remove(path)
                 except OSError:
                     pass
 
-        if handle.stop_requested:
-            return TurnResult(resume_token=parser.session_id, aborted=True)
-        if parser.result_error:
-            return TurnResult(
-                resume_token=parser.session_id, error=parser.result_error)
-        if proc.returncode not in (0, None) or not parser.result_seen:
-            err = b"".join(stderr_buf).decode("utf-8", "replace").strip()
-            return TurnResult(
-                resume_token=parser.session_id,
-                error=err[-800:] or f"codex exited with code {proc.returncode}",
-            )
-        return TurnResult(resume_token=parser.session_id)
-
     async def stop(self, handle: TurnHandle) -> None:
-        handle.stop_requested = True
-        proc = handle.process
-        if proc is None or proc.returncode is not None:
-            return
-        try:
-            if sys.platform == "win32":
-                await asyncio.create_subprocess_exec(
-                    "taskkill", "/F", "/T", "/PID", str(proc.pid),
-                    stdout=asyncio.subprocess.DEVNULL,
-                    stderr=asyncio.subprocess.DEVNULL,
-                )
-            else:
-                os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
-        except (OSError, ProcessLookupError):
-            pass
-        try:
-            await asyncio.wait_for(proc.wait(), timeout=10)
-        except asyncio.TimeoutError:
-            try:
-                proc.kill()
-            except (OSError, ProcessLookupError):
-                pass
+        await kill_process_tree(handle)

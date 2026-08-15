@@ -104,12 +104,34 @@ class TestProtocol:
         assert (await resp.json())["error"]["code"] == -32600
 
     async def test_unknown_method(self, client):
-        data = await _rpc(client, "resources/list")
+        data = await _rpc(client, "frobnicate/list")
         assert data["error"]["code"] == -32601
 
-    async def test_get_and_delete_are_405(self, client):
+    async def test_get_is_405_delete_is_200(self, client):
         assert (await client.get("/comfytv/mcp")).status == 405
-        assert (await client.delete("/comfytv/mcp")).status == 405
+        assert (await client.delete("/comfytv/mcp")).status == 200
+
+    async def test_initialize_issues_session_id(self, client):
+        body = {"jsonrpc": "2.0", "id": 1, "method": "initialize",
+                "params": {"protocolVersion": "2025-06-18"}}
+        first = await client.post("/comfytv/mcp", json=body)
+        second = await client.post("/comfytv/mcp", json=body)
+        sid1 = first.headers.get("Mcp-Session-Id")
+        sid2 = second.headers.get("Mcp-Session-Id")
+        assert sid1 and sid2 and sid1 != sid2
+        ping = await client.post("/comfytv/mcp", json={
+            "jsonrpc": "2.0", "id": 2, "method": "ping"})
+        assert "Mcp-Session-Id" not in ping.headers
+
+    async def test_resources_and_prompts_are_empty(self, client):
+        assert (await _rpc(client, "resources/list"))["result"] == {
+            "resources": []}
+        assert (await _rpc(client, "resources/templates/list"))["result"] == {
+            "resourceTemplates": []}
+        assert (await _rpc(client, "prompts/list"))["result"] == {"prompts": []}
+        data = await _rpc(client, "resources/read",
+                          {"uri": "comfytv://call/server_info"})
+        assert data["error"]["code"] == -32601
 
     async def test_tools_list(self, client):
         data = await _rpc(client, "tools/list")

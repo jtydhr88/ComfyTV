@@ -35,24 +35,6 @@ The handlers are stateless, but the server issues an `Mcp-Session-Id` on
 is added on top of your ComfyUI instance, so treat network exposure of port 8188
 accordingly.
 
-## Resource bridge
-
-Some MCP clients (for example, the current Codex CLI) surface a server's MCP
-*resources* to the model but not its *tools*. For those clients ComfyTV also
-publishes every tool as a resource, so the same canvas-driving capabilities stay
-reachable through `read_mcp_resource`:
-
-| URI | What it does |
-|---|---|
-| `comfytv://help` | Full tool catalog: names, descriptions and input schemas. |
-| `comfytv://tool/<name>` | One tool's description and input schema. |
-| `comfytv://call/<name>` | Call a tool with no arguments. |
-| `comfytv://call/<name>?<url-encoded-json>` | Call a tool with JSON arguments. |
-
-Example: `read_mcp_resource(server="comfytv", uri="comfytv://call/server_info")`
-returns the ComfyTV version and project count. The [ComfyTV Bot](bot.md) uses this
-same bridge when it is driven by the Codex provider.
-
 ## The tool catalog
 
 **Read & discover**
