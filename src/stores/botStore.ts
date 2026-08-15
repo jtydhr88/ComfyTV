@@ -73,6 +73,10 @@ export const useBotStore = defineStore('bot', () => {
   const availableProviders = computed(() =>
     providers.value.filter(p => p.available))
   const busy = computed(() => activeChat.value?.busy === true)
+  const activeProviderCaps = computed(() =>
+    providers.value.find(p => p.id === activeChat.value?.provider) ?? null)
+  const canAttach = computed(() =>
+    activeProviderCaps.value?.attachments !== false)
 
   async function refreshStatus(): Promise<void> {
     try {
@@ -122,8 +126,10 @@ export const useBotStore = defineStore('bot', () => {
     messages.value = []
   }
 
-  async function newChat(): Promise<BotChat | null> {
-    const provider = availableProviders.value[0]
+  async function newChat(providerId?: string): Promise<BotChat | null> {
+    const provider = providerId
+      ? availableProviders.value.find(p => p.id === providerId)
+      : availableProviders.value[0]
     if (!provider) return null
     try {
       const data = await apiSend('/comfytv/bot/chats', 'POST',
@@ -312,6 +318,7 @@ export const useBotStore = defineStore('bot', () => {
     activeChatId,
     activeChat,
     availableProviders,
+    canAttach,
     messages,
     loading,
     busy,

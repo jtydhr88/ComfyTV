@@ -1,13 +1,14 @@
 import { z } from 'zod'
 
 export const BotProviderStatusSchema = z.object({
-  id:        z.string(),
-  label:     z.string(),
-  available: z.boolean(),
-  version:   z.string(),
-  logged_in: z.boolean().nullable(),
-  detail:    z.string(),
-  stateful:  z.boolean(),
+  id:          z.string(),
+  label:       z.string(),
+  available:   z.boolean(),
+  version:     z.string(),
+  logged_in:   z.boolean().nullable(),
+  detail:      z.string(),
+  stateful:    z.boolean(),
+  attachments: z.boolean().optional(),
 })
 export type BotProviderStatus = z.infer<typeof BotProviderStatusSchema>
 

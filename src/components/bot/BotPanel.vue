@@ -38,6 +38,21 @@
           <i class="pi pi-plus ctv:text-xs" />
         </button>
       </div>
+      <div
+        v-if="providerMenuOpen"
+        class="ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1.5 ctv:border-b ctv:border-border-subtle ctv:px-3 ctv:py-1.5"
+      >
+        <span class="ctv:text-xs ctv:text-muted-foreground">{{ $t('bot.newChatWith') }}</span>
+        <button
+          v-for="p in store.availableProviders"
+          :key="p.id"
+          class="ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-transparent ctv:px-2 ctv:py-0.5 ctv:text-xs ctv:text-base-foreground ctv:cursor-pointer"
+          @click="openNew(p.id)"
+        >{{ p.label }}</button>
+        <button class="ctv-bot-iconbtn ctv:ml-auto" @click="providerMenuOpen = false">
+          <i class="pi pi-times ctv:text-[10px]" />
+        </button>
+      </div>
       <BotChatView />
     </template>
 
@@ -50,6 +65,21 @@
           @click="openNew()"
         >
           <i class="pi pi-plus ctv:text-xs" />
+        </button>
+      </div>
+      <div
+        v-if="providerMenuOpen"
+        class="ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1.5 ctv:border-b ctv:border-border-subtle ctv:px-3 ctv:py-1.5"
+      >
+        <span class="ctv:text-xs ctv:text-muted-foreground">{{ $t('bot.newChatWith') }}</span>
+        <button
+          v-for="p in store.availableProviders"
+          :key="p.id"
+          class="ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-transparent ctv:px-2 ctv:py-0.5 ctv:text-xs ctv:text-base-foreground ctv:cursor-pointer"
+          @click="openNew(p.id)"
+        >{{ p.label }}</button>
+        <button class="ctv-bot-iconbtn ctv:ml-auto" @click="providerMenuOpen = false">
+          <i class="pi pi-times ctv:text-[10px]" />
         </button>
       </div>
       <div class="ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto">
@@ -142,8 +172,15 @@ onMounted(() => {
   void store.ensureHydrated()
 })
 
-async function openNew() {
-  await store.newChat()
+const providerMenuOpen = ref(false)
+
+async function openNew(providerId?: string) {
+  providerMenuOpen.value = false
+  if (providerId === undefined && store.availableProviders.length > 1) {
+    providerMenuOpen.value = true
+    return
+  }
+  await store.newChat(providerId)
 }
 
 function startRename(chat: BotChat) {

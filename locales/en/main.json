@@ -2286,6 +2286,7 @@
     "attachImage": "Attach media file",
     "removeAttachment": "Remove",
     "dropHint": "Drop images, videos or audio to attach",
-    "attachFromLibrary": "Attach from asset library"
+    "attachFromLibrary": "Attach from asset library",
+    "newChatWith": "New chat with:"
   }
 }

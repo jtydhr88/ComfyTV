@@ -2286,6 +2286,7 @@
     "attachImage": "添加媒体文件",
     "removeAttachment": "移除",
     "dropHint": "拖入图片 / 视频 / 音频作为附件",
-    "attachFromLibrary": "从资产库选择"
+    "attachFromLibrary": "从资产库选择",
+    "newChatWith": "选择对话引擎:"
   }
 }

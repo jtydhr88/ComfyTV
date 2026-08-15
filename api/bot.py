@@ -167,6 +167,7 @@ async def bot_status(request: web.Request) -> web.Response:
             "logged_in": st.logged_in,
             "detail": st.detail,
             "stateful": caps.stateful,
+            "attachments": caps.attachments,
         })
     return web.json_response({"enabled": True, "providers": out})
 
@@ -408,6 +409,10 @@ async def bot_send(request: web.Request) -> web.Response:
     if provider is None:
         return web.json_response(
             {"error": f"unknown provider {chat['provider']!r}"}, status=400)
+    if attachment_assets and not provider.capabilities().attachments:
+        return web.json_response(
+            {"error": f"provider {chat['provider']!r} does not support "
+                      "attachments"}, status=400)
 
     attachments = []
     manifest_lines = []

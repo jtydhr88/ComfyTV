@@ -1,0 +1,124 @@
+from __future__ import annotations
+
+import json
+
+import pytest
+
+from ComfyTV.bot.qwen_code import (
+    _EXCLUDED_CORE_TOOLS,
+    QwenCodeProvider,
+    _QwenStreamParser,
+    write_project_settings,
+)
+from ComfyTV.bot.providers import TurnRequest
+
+
+def _line(obj) -> str:
+    return json.dumps(obj)
+
+
+class TestQwenParser:
+    def test_assistant_text_blocks_stream_as_deltas(self):
+        p = _QwenStreamParser()
+        events = p.parse_line(_line({"type": "assistant", "message": {
+            "content": [{"type": "text", "text": "hello there"}]}}))
+        assert [(e.t, e.text) for e in events] == [("delta", "hello there")]
+
+    def test_assistant_text_suppressed_after_stream_deltas(self):
+        p = _QwenStreamParser()
+        p.parse_line(_line({
+            "type": "stream_event",
+            "event": {"type": "content_block_delta",
+                      "delta": {"type": "text_delta", "text": "hel"}},
+        }))
+        events = p.parse_line(_line({"type": "assistant", "message": {
+            "content": [{"type": "text", "text": "hello"}]}}))
+        assert events == []
+
+    def test_tool_use_and_result_flow(self):
+        p = _QwenStreamParser()
+        first = p.parse_line(_line({"type": "assistant", "message": {"content": [
+            {"type": "tool_use", "id": "t1",
+             "name": "mcp__comfytv__get_canvas", "input": {}},
+        ]}}))
+        assert [(e.t, e.name) for e in first] == [
+            ("tool_use", "mcp__comfytv__get_canvas")]
+        results = p.parse_line(_line({"type": "user", "message": {"content": [
+            {"type": "tool_result", "tool_use_id": "t1", "content": "ok"},
+        ]}}))
+        assert [(e.t, e.name, e.text) for e in results] == [
+            ("tool_result", "mcp__comfytv__get_canvas", "ok")]
+
+    def test_result_and_session(self):
+        p = _QwenStreamParser()
+        p.parse_line(_line({"type": "system", "subtype": "init",
+                            "session_id": "q-1"}))
+        p.parse_line(_line({"type": "result", "subtype": "success",
+                            "is_error": False}))
+        assert p.result_seen
+        assert p.session_id == "q-1"
+
+
+class TestProjectSettings:
+    def test_writes_isolated_config(self, tmp_path):
+        path = write_project_settings(str(tmp_path),
+                                      "http://127.0.0.1:8188/comfytv/mcp")
+        assert path == tmp_path / ".qwen" / "settings.json"
+        data = json.loads(path.read_text(encoding="utf-8"))
+        server = data["mcpServers"]["comfytv"]
+        assert server["httpUrl"] == "http://127.0.0.1:8188/comfytv/mcp"
+        assert server["trust"] is True
+        assert data["allowMCPServers"] == ["comfytv"]
+        assert "run_shell_command" in data["excludeTools"]
+        assert "write_file" in data["excludeTools"]
+        assert set(data["excludeTools"]) == set(_EXCLUDED_CORE_TOOLS)
+
+    def test_merges_existing_settings(self, tmp_path):
+        target = tmp_path / ".qwen" / "settings.json"
+        target.parent.mkdir(parents=True)
+        target.write_text(json.dumps({
+            "theme": "dark",
+            "mcpServers": {"other": {"command": "x"}},
+        }), encoding="utf-8")
+        write_project_settings(str(tmp_path), "http://127.0.0.1:9/mcp")
+        data = json.loads(target.read_text(encoding="utf-8"))
+        assert data["theme"] == "dark"
+        assert "other" in data["mcpServers"]
+        assert "comfytv" in data["mcpServers"]
+
+    def test_recovers_from_corrupt_file(self, tmp_path):
+        target = tmp_path / ".qwen" / "settings.json"
+        target.parent.mkdir(parents=True)
+        target.write_text("{broken", encoding="utf-8")
+        write_project_settings(str(tmp_path), "http://x/mcp")
+        data = json.loads(target.read_text(encoding="utf-8"))
+        assert "comfytv" in data["mcpServers"]
+
+
+class TestQwenArgv:
+    def _argv(self, turn, monkeypatch):
+        from ComfyTV.bot import qwen_code
+        monkeypatch.setattr(qwen_code, "resolve_qwen_command",
+                            lambda: ["qwen"])
+        provider = QwenCodeProvider(home_dir=".")
+        return provider._build_argv(turn)
+
+    def test_basic_shape(self, monkeypatch):
+        argv = self._argv(TurnRequest(chat_id="c", user_text="hi"), monkeypatch)
+        assert argv[:2] == ["qwen", "-p"]
+        assert "hi" in argv
+        assert "--output-format" in argv
+        assert "-y" in argv
+        assert "--verbose" not in argv
+        assert "--resume" not in argv
+
+    def test_resume(self, monkeypatch):
+        argv = self._argv(TurnRequest(chat_id="c", user_text="hi",
+                                      resume_token="q-9"), monkeypatch)
+        i = argv.index("--resume")
+        assert argv[i + 1] == "q-9"
+
+    def test_no_attachments_capability(self):
+        caps = QwenCodeProvider(home_dir=".").capabilities()
+        assert caps.attachments is False
+        assert caps.stateful is True

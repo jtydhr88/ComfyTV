@@ -93,7 +93,7 @@
 
     <div class="ctv:shrink-0 ctv:border-t ctv:border-border-subtle ctv:p-2">
       <AssetPickerPopup
-        v-if="pickerOpen"
+        v-if="pickerOpen && store.canAttach"
         class="ctv:mb-1.5"
         :added-ids="pending.map(a => a.asset_id)"
         :media-types="['image', 'video', 'audio']"
@@ -154,23 +154,25 @@
           @keydown.enter.exact.prevent="submit"
         />
         <div class="ctv:flex ctv:items-center ctv:gap-1.5">
-          <button
-            class="ctv-bot-attach"
-            :title="$t('bot.attachImage')"
-            :disabled="store.busy || uploading"
-            @click="filePicker?.click()"
-          >
-            <i class="pi pi-image ctv:text-xs" />
-          </button>
-          <button
-            class="ctv-bot-attach"
-            :class="pickerOpen ? 'ctv-bot-attach-active' : ''"
-            :title="$t('bot.attachFromLibrary')"
-            :disabled="store.busy"
-            @click="togglePicker"
-          >
-            <i class="pi ctv:text-xs" :class="pickerOpen ? 'pi-times' : 'pi-images'" />
-          </button>
+          <template v-if="store.canAttach">
+            <button
+              class="ctv-bot-attach"
+              :title="$t('bot.attachImage')"
+              :disabled="store.busy || uploading"
+              @click="filePicker?.click()"
+            >
+              <i class="pi pi-image ctv:text-xs" />
+            </button>
+            <button
+              class="ctv-bot-attach"
+              :class="pickerOpen ? 'ctv-bot-attach-active' : ''"
+              :title="$t('bot.attachFromLibrary')"
+              :disabled="store.busy"
+              @click="togglePicker"
+            >
+              <i class="pi ctv:text-xs" :class="pickerOpen ? 'pi-times' : 'pi-images'" />
+            </button>
+          </template>
           <input
             ref="filePicker"
             type="file"
@@ -242,6 +244,7 @@ function userMedia(msg: BotChatMessage): Array<{ type: string; url: string }> {
 }
 
 function addAsset(asset: Asset): void {
+  if (!store.canAttach) return
   if (!(ATTACHABLE as readonly string[]).includes(asset.media_type)) return
   if (pending.value.some(a => a.asset_id === asset.id)) return
   pending.value = [...pending.value, {
@@ -290,6 +293,7 @@ function onPick(e: Event): void {
 }
 
 function onPaste(e: ClipboardEvent): void {
+  if (!store.canAttach) return
   const files = Array.from(e.clipboardData?.files ?? [])
     .filter(f => ['image/', 'video/', 'audio/'].some(p => f.type.startsWith(p)))
   if (!files.length) return

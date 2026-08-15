@@ -15,6 +15,7 @@ class ProviderStatus:
 class ProviderCaps:
     stateful: bool = True
     tools: str = "mcp"
+    attachments: bool = True
 
 
 @dataclass

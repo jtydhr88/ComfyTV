@@ -523,3 +523,35 @@ class TestAVAttachments:
                                        "attachments": [{"asset_id": asset["id"]}]})
         assert resp.status == 400
         assert "attachable types" in (await resp.json())["error"]
+
+
+class NoAttachProvider(FakeProvider):
+    id = "fake-noattach"
+    label = "FakeNoAttach"
+
+    def capabilities(self):
+        return ProviderCaps(stateful=True, tools="mcp", attachments=False)
+
+
+class TestAttachmentCapability:
+    async def test_status_exposes_attachments_cap(self, client, fake_provider):
+        register_provider(NoAttachProvider())
+        resp = await client.get("/comfytv/bot/status")
+        entries = {p["id"]: p for p in (await resp.json())["providers"]}
+        assert entries["fake-test"]["attachments"] is True
+        assert entries["fake-noattach"]["attachments"] is False
+
+    async def test_send_rejects_attachments_for_incapable_provider(
+            self, client, fake_provider):
+        from ComfyTV import storage
+        register_provider(NoAttachProvider())
+        asset = storage.create_asset(name="i", payload_url="/view?i.png",
+                                     media_type="image")
+        resp = await client.post("/comfytv/bot/chats",
+                                 json={"provider": "fake-noattach"})
+        chat = (await resp.json())["chat"]
+        resp = await client.post(f"/comfytv/bot/chats/{chat['id']}/send",
+                                 json={"text": "look",
+                                       "attachments": [{"asset_id": asset["id"]}]})
+        assert resp.status == 400
+        assert "does not support attachments" in (await resp.json())["error"]

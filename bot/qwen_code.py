@@ -1,17 +1,22 @@
 import asyncio
 import json
-import logging
 import os
 import shutil
-import subprocess
 import sys
 import time
 from pathlib import Path
 from typing import Optional
 
+from ._cli_common import (
+    CliStreamParser,
+    MCP_TOOL_TIMEOUT_MS,
+    PROBE_CACHE_S,
+    base_spawn_env,
+    kill_process_tree,
+    run_cli_turn,
+)
 from .providers import (
     AgentProvider,
-    BotEvent,
     EmitFn,
     ProviderCaps,
     ProviderStatus,
@@ -20,31 +25,41 @@ from .providers import (
     TurnResult,
 )
 
-_log = logging.getLogger(__name__)
+_EXCLUDED_CORE_TOOLS = [
+    "run_shell_command",
+    "write_file",
+    "replace",
+    "edit",
+    "read_file",
+    "read_many_files",
+    "list_directory",
+    "glob",
+    "search_file_content",
+    "grep",
+    "web_fetch",
+    "google_web_search",
+    "web_search",
+    "save_memory",
+    "write_todos",
+]
 
-_STREAM_LIMIT = 10 * 1024 * 1024
-_TURN_TIMEOUT_S = 1800
-_TOOL_RESULT_CAP = 4000
-_PROBE_CACHE_S = 60
-_MCP_TOOL_TIMEOUT_MS = 180_000
+
+class _QwenStreamParser(CliStreamParser):
+    def __init__(self) -> None:
+        super().__init__(text_from_assistant=True)
 
 
 def spawn_env() -> dict:
-    env = dict(os.environ)
-    env.setdefault("MCP_TOOL_TIMEOUT", str(_MCP_TOOL_TIMEOUT_MS))
-    
-    # Add nvm/node paths to PATH if not already present
-    home = Path.home()
-    nvm_bin = home / ".nvm" / "versions" / "node"
-    if nvm_bin.exists():
-        # Find the latest node version
-        node_bins = sorted(nvm_bin.glob("*/bin"))
-        if node_bins:
-            latest_bin = str(node_bins[-1])
-            current_path = env.get("PATH", "")
-            if latest_bin not in current_path:
-                env["PATH"] = f"{latest_bin}:{current_path}"
-    
+    env = base_spawn_env()
+    if sys.platform != "win32":
+        nvm_bin = Path.home() / ".nvm" / "versions" / "node"
+        if nvm_bin.exists():
+            node_bins = sorted(nvm_bin.glob("*/bin"))
+            if node_bins:
+                latest_bin = str(node_bins[-1])
+                current_path = env.get("PATH", "")
+                if latest_bin not in current_path:
+                    env["PATH"] = f"{latest_bin}{os.pathsep}{current_path}"
     return env
 
 
@@ -57,132 +72,52 @@ def resolve_qwen_command() -> Optional[list[str]]:
         p = Path(found)
         if p.suffix.lower() == ".exe" or sys.platform != "win32":
             return [str(p)]
-        # Windows: try .cmd wrapper
+        cli_js = p.parent / "node_modules" / "@qwen-code" / "qwen-code" / "dist" / "index.js"
+        node = shutil.which("node")
+        if cli_js.exists() and node:
+            return [node, str(cli_js)]
         cmd = p.with_suffix(".cmd")
         if cmd.exists():
             return ["cmd.exe", "/d", "/s", "/c", str(cmd)]
         return [str(p)]
-    
-    # Fallback: search common nvm/node installation paths
     home = Path.home()
-    candidates = []
-    
-    # nvm paths
     nvm_dir = home / ".nvm"
     if nvm_dir.exists():
         for node_ver in sorted(nvm_dir.glob("versions/node/v*"), reverse=True):
             qwen_path = node_ver / "bin" / "qwen"
             if qwen_path.exists():
-                candidates.append(str(qwen_path))
-    
-    # npm global paths
+                return [str(qwen_path)]
     for npm_prefix in ("/usr/local", str(home / ".npm-global")):
         qwen_path = Path(npm_prefix) / "bin" / "qwen"
         if qwen_path.exists():
-            candidates.append(str(qwen_path))
-    
-    # Return first valid candidate
-    for candidate in candidates:
-        return [candidate]
-    
+            return [str(qwen_path)]
     return None
 
 
-class _StreamParser:
-    def __init__(self) -> None:
-        self.session_id: Optional[str] = None
-        self.result_error: str = ""
-        self.result_seen = False
-        self._tool_names: dict[str, str] = {}
-        self._emitted_tools: set[str] = set()
-
-    def parse_line(self, line: str) -> list[BotEvent]:
-        line = line.strip()
-        if not line:
-            return []
+def write_project_settings(home_dir: str, mcp_endpoint: str) -> Path:
+    path = Path(home_dir) / ".qwen" / "settings.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    data: dict = {}
+    if path.exists():
         try:
-            data = json.loads(line)
-        except ValueError:
-            return []
-        if not isinstance(data, dict):
-            return []
-        t = data.get("type")
-        if t == "system" and data.get("subtype") == "init":
-            self.session_id = data.get("session_id") or self.session_id
-            return []
-        if t == "stream_event":
-            return self._parse_stream_event(data.get("event") or {})
-        if t == "assistant":
-            return self._parse_assistant(data.get("message") or {})
-        if t == "user":
-            return self._parse_user(data.get("message") or {})
-        if t == "result":
-            self.result_seen = True
-            self.session_id = data.get("session_id") or self.session_id
-            if data.get("is_error"):
-                self.result_error = str(data.get("result") or data.get("subtype") or "error")
-            return []
-        return []
-
-    def _parse_stream_event(self, ev: dict) -> list[BotEvent]:
-        if ev.get("type") != "content_block_delta":
-            return []
-        delta = ev.get("delta") or {}
-        if delta.get("type") == "text_delta" and delta.get("text"):
-            return [BotEvent(t="delta", text=str(delta["text"]))]
-        return []
-
-    def _parse_assistant(self, msg: dict) -> list[BotEvent]:
-        events: list[BotEvent] = []
-        for block in msg.get("content") or []:
-            if not isinstance(block, dict):
-                continue
-            btype = block.get("type")
-            if btype == "text" and block.get("text"):
-                events.append(BotEvent(t="delta", text=str(block["text"])))
-            elif btype == "tool_use":
-                block_id = str(block.get("id") or "")
-                if block_id and block_id in self._emitted_tools:
-                    continue
-                name = str(block.get("name") or "")
-                if block_id:
-                    self._emitted_tools.add(block_id)
-                    self._tool_names[block_id] = name
-                raw_input = block.get("input")
-                events.append(BotEvent(
-                    t="tool_use",
-                    name=name,
-                    input=raw_input if isinstance(raw_input, dict) else {},
-                ))
-        return events
-
-    def _parse_user(self, msg: dict) -> list[BotEvent]:
-        events: list[BotEvent] = []
-        content = msg.get("content")
-        if not isinstance(content, list):
-            return []
-        for block in content:
-            if not isinstance(block, dict) or block.get("type") != "tool_result":
-                continue
-            name = self._tool_names.get(str(block.get("tool_use_id") or ""), "")
-            events.append(BotEvent(
-                t="tool_result",
-                name=name,
-                text=_tool_result_text(block.get("content"))[:_TOOL_RESULT_CAP],
-            ))
-        return events
-
-
-def _tool_result_text(content) -> str:
-    if isinstance(content, str):
-        return content
-    if isinstance(content, list):
-        parts = []
-        for item in content:
-            if isinstance(item, dict) and item.get("type") == "text":
-                parts.append(str(item.get("text") or ""))
-        return "\n".join(parts)
-    return ""
+            loaded = json.loads(path.read_text(encoding="utf-8"))
+            if isinstance(loaded, dict):
+                data = loaded
+        except (OSError, ValueError):
+            data = {}
+    servers = data.get("mcpServers")
+    if not isinstance(servers, dict):
+        servers = {}
+    servers["comfytv"] = {
+        "httpUrl": mcp_endpoint,
+        "trust": True,
+        "timeout": MCP_TOOL_TIMEOUT_MS,
+    }
+    data["mcpServers"] = servers
+    data["allowMCPServers"] = ["comfytv"]
+    data["excludeTools"] = list(_EXCLUDED_CORE_TOOLS)
+    path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    return path
 
 
 class QwenCodeProvider(AgentProvider):
@@ -194,7 +129,7 @@ class QwenCodeProvider(AgentProvider):
         self._probe_cache: Optional[tuple[float, ProviderStatus]] = None
 
     def capabilities(self) -> ProviderCaps:
-        return ProviderCaps(stateful=True, tools="mcp")
+        return ProviderCaps(stateful=True, tools="mcp", attachments=False)
 
     def _resolve_home(self) -> str:
         if self._home_dir:
@@ -212,7 +147,7 @@ class QwenCodeProvider(AgentProvider):
 
     async def probe(self) -> ProviderStatus:
         now = time.monotonic()
-        if self._probe_cache and now - self._probe_cache[0] < _PROBE_CACHE_S:
+        if self._probe_cache and now - self._probe_cache[0] < PROBE_CACHE_S:
             return self._probe_cache[1]
         argv = resolve_qwen_command()
         if not argv:
@@ -224,6 +159,7 @@ class QwenCodeProvider(AgentProvider):
                 *argv, "--version",
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
+                env=spawn_env(),
             )
             out, _ = await asyncio.wait_for(proc.communicate(), timeout=15)
             version = (out or b"").decode("utf-8", "replace").strip()
@@ -231,44 +167,11 @@ class QwenCodeProvider(AgentProvider):
             status = ProviderStatus(available=False, detail=f"version check failed: {e}")
             self._probe_cache = (now, status)
             return status
-        # Qwen Code auth is managed via ~/.qwen/ directory
         creds_dir = Path.home() / ".qwen"
         logged_in = True if creds_dir.exists() else None
         status = ProviderStatus(available=True, version=version, logged_in=logged_in)
         self._probe_cache = (now, status)
         return status
-
-    def _ensure_mcp_configured(self, mcp_endpoint: str) -> None:
-        """Ensure the MCP server is configured for Qwen Code.
-
-        Qwen Code uses `qwen mcp add` to configure MCP servers.
-        We check if 'comfytv' is already configured, and if not, add it.
-        """
-        argv = resolve_qwen_command()
-        if not argv:
-            _log.warning("[ComfyTV/bot] Cannot configure MCP: qwen executable not found")
-            return
-        try:
-            # Check if comfytv MCP server is already configured
-            result = subprocess.run(
-                [*argv, "mcp", "list"],
-                capture_output=True,
-                text=True,
-                timeout=10,
-            )
-            if "comfytv" in result.stdout:
-                return  # Already configured
-
-            # Add the MCP server
-            subprocess.run(
-                [*argv, "mcp", "add", "comfytv", mcp_endpoint],
-                capture_output=True,
-                text=True,
-                timeout=10,
-            )
-            _log.info("[ComfyTV/bot] Added comfytv MCP server: %s", mcp_endpoint)
-        except Exception as e:
-            _log.warning("[ComfyTV/bot] Failed to configure MCP server: %s", e)
 
     def _build_argv(self, turn: TurnRequest) -> list[str]:
         argv = resolve_qwen_command()
@@ -277,100 +180,26 @@ class QwenCodeProvider(AgentProvider):
         argv = argv + [
             "-p", turn.user_text,
             "--output-format", "stream-json",
+            "-y",
         ]
-        # Ensure MCP server is configured
-        if turn.mcp_endpoint:
-            self._ensure_mcp_configured(turn.mcp_endpoint)
         if turn.resume_token:
             argv += ["--resume", turn.resume_token]
         return argv
 
     async def send(self, turn: TurnRequest, emit: EmitFn,
                    handle: TurnHandle) -> TurnResult:
-        argv = self._build_argv(turn)
-        kwargs: dict = {
-            "stdout": asyncio.subprocess.PIPE,
-            "stderr": asyncio.subprocess.PIPE,
-            "stdin": asyncio.subprocess.DEVNULL,
-            "cwd": self._resolve_home(),
-            "limit": _STREAM_LIMIT,
-            "env": spawn_env(),
-        }
-        if sys.platform == "win32":
-            kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
-        else:
-            kwargs["start_new_session"] = True
-        proc = await asyncio.create_subprocess_exec(*argv, **kwargs)
-        handle.process = proc
-
-        parser = _StreamParser()
-        stderr_buf: list[bytes] = []
-
-        async def _drain_stderr() -> None:
-            while True:
-                chunk = await proc.stderr.read(65536)
-                if not chunk:
-                    return
-                if sum(len(c) for c in stderr_buf) < 65536:
-                    stderr_buf.append(chunk)
-
-        stderr_task = asyncio.create_task(_drain_stderr())
-        try:
-            deadline = time.monotonic() + _TURN_TIMEOUT_S
-            while True:
-                remaining = deadline - time.monotonic()
-                if remaining <= 0:
-                    raise asyncio.TimeoutError()
-                try:
-                    line = await asyncio.wait_for(proc.stdout.readline(), timeout=remaining)
-                except ValueError:
-                    _log.warning("[ComfyTV/bot] oversized stream line skipped")
-                    continue
-                if not line:
-                    break
-                for ev in parser.parse_line(line.decode("utf-8", "replace")):
-                    await emit(ev)
-            await proc.wait()
-        except asyncio.TimeoutError:
-            await self.stop(handle)
-            return TurnResult(resume_token=parser.session_id,
-                             error="turn timed out", aborted=True)
-        finally:
-            stderr_task.cancel()
-
-        if handle.stop_requested:
-            return TurnResult(resume_token=parser.session_id, aborted=True)
-        if parser.result_error:
-            return TurnResult(resume_token=parser.session_id, error=parser.result_error)
-        if proc.returncode not in (0, None) or not parser.result_seen:
-            err = b"".join(stderr_buf).decode("utf-8", "replace").strip()
-            return TurnResult(
-                resume_token=parser.session_id,
-                error=err[-800:] or f"qwen exited with code {proc.returncode}",
-            )
-        return TurnResult(resume_token=parser.session_id)
+        home = self._resolve_home()
+        if turn.mcp_endpoint:
+            await asyncio.to_thread(write_project_settings, home, turn.mcp_endpoint)
+        return await run_cli_turn(
+            self._build_argv(turn),
+            cwd=home,
+            env=spawn_env(),
+            emit=emit,
+            handle=handle,
+            parser=_QwenStreamParser(),
+            exe_label="qwen",
+        )
 
     async def stop(self, handle: TurnHandle) -> None:
-        handle.stop_requested = True
-        proc = handle.process
-        if proc is None or proc.returncode is not None:
-            return
-        try:
-            if sys.platform == "win32":
-                await asyncio.create_subprocess_exec(
-                    "taskkill", "/F", "/T", "/PID", str(proc.pid),
-                    stdout=asyncio.subprocess.DEVNULL,
-                    stderr=asyncio.subprocess.DEVNULL,
-                )
-            else:
-                import signal
-                os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
-        except (OSError, ProcessLookupError):
-            pass
-        try:
-            await asyncio.wait_for(proc.wait(), timeout=10)
-        except asyncio.TimeoutError:
-            try:
-                proc.kill()
-            except (OSError, ProcessLookupError):
-                pass
+        await kill_process_tree(handle)

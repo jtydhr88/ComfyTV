@@ -1,7 +1,7 @@
 ---
 title: "ComfyTV Bot"
 description: "内嵌在侧边栏的聊天代理,直接驱动你的画布:说出想要什么,它就搭节点、跑工作流、等渲染、亲眼看结果、继续迭代 — 由你本机已装的 agent CLI 驱动,任何地方都不存 API key。"
-translationSourceHash: "1f17809ecf0b1bac"
+translationSourceHash: "db613e6d7dc1c5a8"
 ---
 
 ## 是什么
@@ -19,14 +19,21 @@ translationSourceHash: "1f17809ecf0b1bac"
 
 ## 不碰 API key,这是设计
 
-Bot 不直接调用任何模型 API,ComfyTV 也永远不存 key。它驱动的是**你机器上已经装好的 agent CLI** — 目前是 [Claude Code](https://claude.com/claude-code) — 用那个 CLI 自己的登录态(比如你的订阅)。Provider 层是可插拔的,以后可以接入其他本地 agent CLI。
+Bot 不直接调用任何模型 API,ComfyTV 也永远不存 key。它驱动的是**你机器上已经装好的 agent CLI**,用 CLI 自己的登录态。Provider 层可插拔,当前内置两个:
+
+| Provider | 安装 | 登录 | 附件 |
+| --- | --- | --- | --- |
+| [Claude Code](https://claude.com/claude-code) | `npm install -g @anthropic-ai/claude-code` | 运行 `claude` 登录一次 | 图片/视频/音频 |
+| [Qwen Code](https://qwenlm.github.io/qwen-code-docs/zh/) | 官方安装脚本(见其文档) | 运行 `qwen` 后 `/auth` | 暂不支持 |
 
 前置条件:
 
-1. 装好 Claude Code 并登录一次(`npm install -g @anthropic-ai/claude-code`,然后运行 `claude` 登录)。
+1. 至少装好一个 agent CLI 并登录。
 2. 在 ComfyTV **设置 → Agent 与 MCP** 里,先开 **MCP 服务**,再开 **ComfyTV Bot**(Bot 依赖 MCP — 那是 agent 触达画布的通道)。
 
-检测不到 agent CLI 时,面板会显示安装引导而不是聊天框。
+装了多个 CLI 时,➕ 按钮会让你选新对话用哪个引擎;每个对话记住自己的 provider。检测不到任何 agent CLI 时,面板显示安装引导而不是聊天框。
+
+隔离策略按引擎各自落实:Claude Code 走每轮独立的严格 MCP 配置+工具白名单;Qwen Code 走 bot 工作目录内的项目级 `.qwen/settings.json`(只挂 ComfyTV MCP,内置 shell/文件工具全部排除)— 你的全局 CLI 配置永远不被碰。
 
 ## 面板用法
 
