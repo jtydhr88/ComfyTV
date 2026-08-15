@@ -1,3 +1,4 @@
+import { findSuggestionMatch, type Trigger } from '@tiptap/suggestion'
 import { VueRenderer } from '@tiptap/vue-3'
 import tippy, { type Instance as TippyInstance } from 'tippy.js'
 import { type Component, type Ref } from 'vue'
@@ -56,6 +57,10 @@ export function nodeMentionSource(getNode: () => LGraphNode | undefined): Mentio
   }
 }
 
+export function mentionPrefixAllowed(before: string): boolean {
+  return !/[A-Za-z0-9]/.test(before)
+}
+
 export function useMentionSuggestionFromSource(
   projectId: Ref<string>,
   getSource: () => MentionSource,
@@ -94,6 +99,18 @@ export function useMentionSuggestionFromSource(
 
   return {
     char: '@',
+    allowedPrefixes: null,
+    findSuggestionMatch: (config: Trigger) => {
+      const match = findSuggestionMatch(config)
+      if (!match) return null
+      const before = config.$position.doc.textBetween(
+        Math.max(0, match.range.from - 1),
+        match.range.from,
+        '\n',
+        '￼',
+      )
+      return mentionPrefixAllowed(before) ? match : null
+    },
     items: ({ query }: { query: string }): MentionSuggestionItem[] => {
       const q = query.toLowerCase()
 

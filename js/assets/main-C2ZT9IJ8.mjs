@@ -56739,7 +56739,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-ClxyxHPJ.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-BI6b883S.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -101492,6 +101492,9 @@ function nodeMentionSource(getNode) {
     }
   };
 }
+function mentionPrefixAllowed(before) {
+  return !/[A-Za-z0-9]/.test(before);
+}
 function useMentionSuggestionFromSource(projectId, getSource, MentionList) {
   const entryStore = useEntryStore();
   function slotItems(q2) {
@@ -101520,6 +101523,18 @@ function useMentionSuggestionFromSource(projectId, getSource, MentionList) {
   }
   return {
     char: "@",
+    allowedPrefixes: null,
+    findSuggestionMatch: (config2) => {
+      const match = findSuggestionMatch(config2);
+      if (!match) return null;
+      const before = config2.$position.doc.textBetween(
+        Math.max(0, match.range.from - 1),
+        match.range.from,
+        "\n",
+        "￼"
+      );
+      return mentionPrefixAllowed(before) ? match : null;
+    },
     items: ({ query }) => {
       const q2 = query.toLowerCase();
       let mods = modulesForSurface("mention", entryStore.list(projectId.value));
@@ -134426,7 +134441,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-aMJhunqn.mjs");
+    const { STLLoader } = await import("./STLLoader-D1ZvemKH.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -134434,7 +134449,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-BEnMpQSs.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-DD7s3hMW.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -213447,4 +213462,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-BSKVvz8q.mjs.map
+//# sourceMappingURL=main-C2ZT9IJ8.mjs.map
