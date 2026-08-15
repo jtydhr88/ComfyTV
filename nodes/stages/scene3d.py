@@ -14,7 +14,7 @@ class Scene3DStage(io.ComfyNode):
                 io.String.Input("scene_state", default="{}",
                                 socketless=True, extra_dict={"hidden": True},
                                 tooltip="Internal — Scene3D editor state JSON (characters/primitives/lights/camera/output)."),
-                io.Combo.Input("channel", options=["color", "depth", "normal", "openpose"],
+                io.Combo.Input("channel", options=["color", "depth", "normal", "openpose", "id"],
                                default="color", socketless=True, extra_dict={"hidden": True},
                                tooltip="Internal — render channel used by capture/record; driven by the node body."),
                 io.Int.Input("width", default=1024, min=64, max=4096, step=8,

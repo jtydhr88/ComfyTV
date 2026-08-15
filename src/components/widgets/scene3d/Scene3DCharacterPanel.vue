@@ -41,13 +41,47 @@
           @update:model-value="(v) => emit('updateAnimation', { loop: v })"
         />
       </label>
+      <label v-if="tintable" class="ctv:flex ctv:items-center ctv:gap-1.5">
+        <span class="ctv:text-muted-foreground">{{ $t('scene3d.tintColor') }}</span>
+        <ComfyTVToggle
+          :model-value="!!tint"
+          @update:model-value="(v) => emit('updateTint', v ? '#e8483a' : '')"
+        />
+        <input
+          v-if="tint"
+          type="color"
+          :value="tint"
+          class="ctv:h-6 ctv:w-8 ctv:cursor-pointer ctv:rounded-md ctv:border-0 ctv:bg-transparent ctv:p-0"
+          @input="onTintInput"
+        />
+      </label>
     </div>
     <Scene3DTransformFields
       :transform="character.transform"
       @update-transform="emit('updateTransform', $event)"
     />
-    <div v-if="fittable" class="ctv:flex ctv:justify-end">
+    <div v-if="fittable || pathable" class="ctv:flex ctv:justify-end ctv:gap-1.5">
       <button
+        v-if="pathable && !hasPath"
+        type="button"
+        :class="chipBtnClass"
+        :title="$t('scene3d.addPathHint')"
+        @click="emit('addPath')"
+      >
+        <IconRoute class="ctv:mr-1 ctv:size-3" />
+        {{ $t('scene3d.addPath') }}
+      </button>
+      <button
+        v-if="pathable && hasPath"
+        type="button"
+        :class="chipBtnClass"
+        @click="emit('removePath')"
+      >
+        <IconRoute class="ctv:mr-1 ctv:size-3" />
+        {{ $t('scene3d.removePath') }}
+      </button>
+      <button
+        v-if="fittable"
         type="button"
         :class="chipBtnClass"
         :title="$t('scene3d.fitToSceneHint')"
@@ -62,6 +96,7 @@
 
 <script setup lang="ts">
 
+import IconRoute from '~icons/lucide/route'
 import IconScaling from '~icons/lucide/scaling'
 
 import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
@@ -82,20 +117,32 @@ const chipBtnClass =
   'ctv:text-2xs ctv:text-muted-foreground ctv:transition-colors ' +
   'ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground'
 
-const { character, clipNames, fittable } = defineProps<{
-  character: {
-    animation: CharacterAnimationConfig
-    transform: CharacterTransform
-  }
-  clipNames: string[]
-  fittable?: boolean
-}>()
+const { character, clipNames, fittable, pathable, hasPath, tintable, tint } =
+  defineProps<{
+    character: {
+      animation: CharacterAnimationConfig
+      transform: CharacterTransform
+    }
+    clipNames: string[]
+    fittable?: boolean
+    pathable?: boolean
+    hasPath?: boolean
+    tintable?: boolean
+    tint?: string
+  }>()
 
 const emit = defineEmits<{
   updateAnimation: [patch: Partial<CharacterAnimationConfig>]
   updateTransform: [transform: CharacterTransform]
   fit: []
+  addPath: []
+  removePath: []
+  updateTint: [color: string]
 }>()
+
+function onTintInput(event: Event): void {
+  emit('updateTint', (event.target as HTMLInputElement).value)
+}
 
 function onAnimationNumber(field: 'speed' | 'startOffset', event: Event) {
   const value = Number((event.target as HTMLInputElement).value)

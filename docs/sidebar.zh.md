@@ -2,7 +2,9 @@
 
 # ComfyTV 侧边栏
 
-ComfyTV 在 ComfyUI 左侧边栏注册一个 **ComfyTV** 页签，里面又分**七个 tab**——所有不在画布节点上的东西都在这里：工作流配置、媒体库、提示词片段、按 kind 的工作流/参数管理、预设、资源、远程服务器。上次用的 tab 会被记住，刷新后自动回到原位。
+ComfyTV 在 ComfyUI 左侧边栏注册一个 **ComfyTV** 页签，里面又分**八个 tab**——所有不在画布节点上的东西都在这里：工作流配置、媒体库、提示词片段、按 kind 的工作流/参数管理、预设、资源、远程服务器、设置。上次用的 tab 会被记住，刷新后自动回到原位。
+
+（启用 [ComfyTV Bot](bot.zh.md) 后，侧边栏还会出现第二个 ✨ 图标——那是内嵌聊天代理，另有专页介绍。）
 
 <!-- TODO(screenshot): 侧边栏七 tab 条（工作流 / 资产库 / 条目 / Stage 管理 / 预设 / 资源 / 服务器） -->
 ![ComfyTV 侧边栏页签](images/sidebar-tabs.png)
@@ -111,6 +113,15 @@ ComfyTV 在 ComfyUI 左侧边栏注册一个 **ComfyTV** 页签，里面又分**
 - **Test connection** 显示在线/离线和队列状态（运行中/排队中、其中多少是 ComfyTV 发的）。
 - **能力探测**报告远端的 ComfyTV 版本——或警告那边根本没装 ComfyTV——并列出缺失的节点。预检会硬拦注定失败的运行（没装 ComfyTV、缺节点），资源缺失则只警告。
 - 服务器可随时禁用或删除；指向它的 stage 自动回退到本机运行。
+
+---
+
+## 设置 —— 备份、MCP 与 Bot
+
+两组全局开关，存入 ComfyTV 数据库：
+
+- **备份**：服务器启动时自动快照 ComfyTV 数据（开关、保留份数、自定义路径），外加*立即备份*按钮。
+- **Agent 与 MCP**：**启用 MCP 服务**开放 [Agent 接入(MCP)](mcp.zh.md) 里介绍的 agent 端点；**启用 ComfyTV Bot** 显示 [ComfyTV Bot](bot.zh.md) 内嵌聊天代理。两者**默认关闭**；Bot 开关依赖 MCP，MCP 打开后才可用。关掉 MCP 会连带关掉 Bot，保存后 ✨ 图标即时出现或消失。
 
 ---
 

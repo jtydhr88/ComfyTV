@@ -37,4 +37,4 @@
   ![故事板编辑器](images/storyboard-editor.png)
 
 - **Sequence**（Video）—— 轻量的轨道式拼装器，见 [video-and-audio.zh.md](video-and-audio.zh.md)。
-- **Director Timeline + Timeline Render** —— 完整的素材时间线 + 一键渲染在 [roadmap](roadmap.zh.md) 上。
+- **Director Timeline + Timeline Render** —— 完整的素材时间线 + 一键渲染在 [roadmap](https://github.com/jtydhr88/ComfyTV/blob/main/docs/roadmap.zh.md) 上。

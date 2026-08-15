@@ -5,7 +5,7 @@ translationSourceHash: "de47f785972b7713"
 
 每个 ComfyTV stage 都跑在它下拉框选中的 **workflow** 上。**ComfyTV** 侧边栏标签让你查看和编辑「stage 输入怎么映射到工作流节点」,不用碰任何磁盘文件,改完即生效。
 
-> 这里编辑的是和 `_preset.json` 同一套绑定接口（见 [custom-workflows.zh.md](/zh/guides/custom-workflows) 里的「完整路径」）。侧边栏面向终端用户调整内置默认。
+> 这里编辑的是和 `_preset.json` 同一套绑定接口（见 [custom-workflows.zh.md](/guides/custom-workflows) 里的「完整路径」）。侧边栏面向终端用户调整内置默认。
 
 ---
 
@@ -72,9 +72,9 @@ translationSourceHash: "de47f785972b7713"
 
 侧边栏底部有一个 **⇩ 导出 preset.json** 按钮。点它把当前的绑定 + 元数据下载为一个 JSON 文件，文件名是 `<工作流-slug>_preset.json`。
 
-下载下来的文件就是标准 `_preset.json` 格式(详见 [custom-workflows.zh.md](custom-workflows.zh.md#配置-stage-输入怎么接))。典型流程:
+下载下来的文件就是标准 `_preset.json` 格式(详见 [custom-workflows.zh.md](/guides/custom-workflows#配置-stage-输入怎么接))。典型流程:
 
-1. 加一个工作流——🔗 链接、⬆ 上传,或把 JSON 放进库目录(见 [custom-workflows.zh.md](/zh/guides/custom-workflows))。
+1. 加一个工作流——🔗 链接、⬆ 上传,或把 JSON 放进库目录(见 [custom-workflows.zh.md](/guides/custom-workflows))。
 2. 在某个 stage 上选中它、准备完成,在侧边栏里调整绑定到你满意。
 3. 点 **导出 preset.json**。
 4. 把下载到的文件存到工作流 JSON 同目录,命名为 `<name>_preset.json`。
@@ -94,5 +94,5 @@ translationSourceHash: "de47f785972b7713"
 
 ## 相关文档
 
-- [custom-workflows.zh.md](/zh/guides/custom-workflows) , 怎么打包自己的工作流 + `_preset.json`
+- [custom-workflows.zh.md](/guides/custom-workflows) , 怎么打包自己的工作流 + `_preset.json`
 - 各 kind 的 `workflows/<kind>/README.md` , 每种 stage 的运行时约定(stage 输入有哪些、工作流需要哪些节点)

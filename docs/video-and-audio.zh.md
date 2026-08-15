@@ -20,7 +20,7 @@
 - **Volume / Mux Audio / Demux** —— 淡入淡出、替换或叠加音轨、把视频拆成音轨 + 无声视频（🔀 **Demux** 工具栏动作会同时生成两个节点）。
 - **↪ Extend**（工具栏动作）—— 一键成链：抽出源视频最后一帧，spawn 新 Video Stage 并把这帧接成 I2V 起始图。
 
-后端还没接上的：**Video Upscale**、**Subtitle Erase（Smart / Region）**——见 [roadmap.zh.md](roadmap.zh.md)。
+后端还没接上的：**Video Upscale**、**Subtitle Erase（Smart / Region）**——见 [roadmap.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/roadmap.zh.md)。
 
 ## 调色（ComfyTV / VideoFX）
 

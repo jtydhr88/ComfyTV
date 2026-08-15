@@ -1,0 +1,103 @@
+[English](mcp.md) | **简体中文**
+
+# Agent 接入(MCP)
+
+> ComfyTV 内置 MCP 服务,让 AI agent 读取并驱动你的画布:搭建节点图、跑渲染、阻塞等待、用真视觉检查结果、管理工作流配置 — 共 35 个工具。
+
+## 是什么
+
+ComfyTV 在你的 ComfyUI 服务器上开放 [Model Context Protocol](https://modelcontextprotocol.io) 端点 `POST /comfytv/mcp`。任何支持 MCP 的 agent(Claude Code,或任何会说 streamable HTTP JSON-RPC 的客户端)都能连上来,把 ComfyTV 当成一套工具使用。
+
+设计上有个关键点:**画布的真相在浏览器 tab 里**。读工具由服务器直接回答,写工具(加节点、设 prompt、跑渲染)则由*打开着的 ComfyTV tab* 执行 — 服务器通过 websocket 把命令转给它。没有开着的 tab → 写工具会以明确的超时信息失败。
+
+## 启用
+
+MCP **默认关闭**。在 ComfyTV 侧边栏打开 **设置 → Agent 与 MCP**,开启**启用 MCP 服务**。(内嵌 [Bot](bot.zh.md) 还需要它自己的开关。)
+
+## 连接客户端
+
+Claude Code:
+
+```bash
+claude mcp add --transport http comfytv http://127.0.0.1:8188/comfytv/mcp
+```
+
+其他 MCP 客户端:用 streamable HTTP 指向同一 URL。服务无状态,不在 ComfyUI 之上附加鉴权 — 8188 端口的网络暴露请自行斟酌。
+
+## 工具目录
+
+**读取与发现**
+
+| 工具 | 作用 |
+|---|---|
+| `server_info` | 版本、stage 数、镜像状态、近期错误 |
+| `projects` | 项目列表/详情 |
+| `stage_catalog` | 全部 stage 类型与工作流 kind |
+| `list_workflows` | 各 kind 的工作流库 |
+| `get_canvas` | 画布实时快照(节点、prompt、运行状态) |
+| `get_stage` | 单节点全量详情:所有 widget 值、双向连线、参考、警告 |
+| `outputs` | 各 stage 的渲染历史 |
+| `assets` / `resources` / `entries` | 资产库、LUT/字体/音色文件、提示词条目 |
+| `jobs` / `exec_errors` / `servers` | 远程任务、近期错误、机器列表 |
+
+**搭建与运行**
+
+| 工具 | 作用 |
+|---|---|
+| `add_stage` / `set_stage` | 建节点、配节点:prompt、工作流、widget、资产参考、目标机器 |
+| `connect_stages` | 连线(类型自动匹配) |
+| `run_stage` | 排队运行,等同点 Run 按钮 |
+| `wait_stage` | 阻塞等待出结果或报错 — 不用轮询 |
+| `cancel_stage` | 停止进行中的运行 |
+| `remove_stage` | 删节点 |
+
+**看见与评判**
+
+| 工具 | 作用 |
+|---|---|
+| `view_image` | 返回图像本体(缩放后),agent 能亲眼看 |
+| `media_probe` | 视频时长/帧率/分辨率/有无音轨 |
+| `media_frame` | 从视频抽一帧,返回 PNG URL |
+| `media_waveform` | 渲染音频波形图 |
+| `pick_output` | 从多候选出图里选定一张 |
+
+**配置**
+
+| 工具 | 作用 |
+|---|---|
+| `workflow_get` / `workflow_edit` | 读工作流的输入绑定与节点清单;绑定/解绑 stage 值到工作流输入,按真实图校验 |
+| `stage_params` | 定义自定义参数,再以 `option:<key>` 绑定 |
+| `asset_edit` | 把产出存入资产库、改名、归类 |
+
+**富编辑器**
+
+| 工具 | 作用 |
+|---|---|
+| `scene_get/edit/capture/record` | 驱动 Scene 3D:角色、灯光、相机、动画 clip、相机路径与多镜导演时间轴(add_shot/patch_shot/set_path) |
+| `director_get/director_edit` | 读写导演台 clip 时间线 |
+
+## 关键套路
+
+**生产循环。**`stage_catalog` → `add_stage`(prompt、工作流、`asset_refs`)→ `connect_stages` → `run_stage` → `wait_stage` → `outputs` → `view_image` 质检 → 迭代。
+
+**不轮询的等待。**`wait_stage` 在服务器侧阻塞(单次默认 25 秒,上限 170 秒),结果一落地立即返回。超时返回 `after_output_id` — 带着它再调就继续等。总时长无上限,长渲染多续调几次而已。
+
+**@ 序数从 0 起。**`@image_0` / `@video_0` 这类 token 按*类型*寻址节点的可发送媒体,从 0 开始,槽位序(连线输入在前,`asset_refs` 在后)。越界 token 展开为空 — 工具结果会带警告提醒。
+
+**真视觉。**`view_image` 是唯一返回像素的工具。视频质检:先 `media_frame` 抽帧,再 `view_image` 亲眼看。别靠文件名猜图。
+
+**给新 link 的工作流配绑定。**`workflow_get` 看 API 图节点清单;`workflow_edit` 用 `option:seed`、`computed:width` / `computed:height`(尺寸引擎)、`main_prompt`、`upstream_image:value[0]`、`literal:...` 这些来源绑定。工作流需要 ComfyTV 没有默认键的参数时,先用 `stage_params` 建一个,再绑 `option:<它的 key>`。`reset_to_preset` 是后悔药。
+
+**多机。**`servers` 列出配置的机器和实时负载;`set_stage {server: <id>}` 把某节点的运行路由过去,结果落回本机。
+
+## 前置条件与行为说明
+
+- 写工具需要开着的 ComfyTV tab;画布镜像在首次 MCP 调用后懒激活(刚连上时 `get_canvas` 等 ~10 秒重试)。
+- MCP 客户端会按会话缓存 `tools/list` — 服务器加了新工具后需重连。
+- 客户端若有单次工具调用超时,给 `wait_stage` 传更小的 `timeout_s` 分片续调。
+
+## 另见
+
+- [ComfyTV Bot](bot.zh.md) — 基于同一套工具的内嵌聊天代理
+- [自定义工作流](custom-workflows.zh.md) — 绑定是什么、手工怎么配
+- [侧边栏](sidebar.zh.md) — 带 MCP 开关的设置面板

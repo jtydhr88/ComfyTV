@@ -132,6 +132,15 @@ export function useScene3dPanels(stage: Scene3dStage) {
   })
 
   const timelineLegend = computed(() => [
+    ...(state.value.shots?.length
+      ? [
+          {
+            id: '__shots__',
+            label: t('scene3d.shotsTrack'),
+            color: '#e8b84a'
+          }
+        ]
+      : []),
     ...state.value.cameras.flatMap((camera, index) =>
       camera.preset
         ? [

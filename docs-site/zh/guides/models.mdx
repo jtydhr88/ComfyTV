@@ -5,7 +5,7 @@ translationSourceHash: "5cfe45381ccecb80"
 
 ComfyTV 在 `workflows/<kind>/` 下面预置了一套精选的 ComfyUI 工作流。每个工作流都引用了若干模型文件,**这些文件 ComfyUI 自己必须能在`ComfyUI/models/` 树下找到**。本页按工作流列出每个所需的文件和它们应该放在哪个子目录。
 
-> 如果你想用**自己的** ComfyUI 工作流(换模型、换 sampler、换 LoRA),上面这些都不需要下 , 见 [custom-workflows.zh.md](/zh/guides/custom-workflows),里面说明了怎么把自定义工作流 JSON + `_preset.json` 绑定接进来。
+> 如果你想用**自己的** ComfyUI 工作流(换模型、换 sampler、换 LoRA),上面这些都不需要下 , 见 [custom-workflows.zh.md](/guides/custom-workflows),里面说明了怎么把自定义工作流 JSON + `_preset.json` 绑定接进来。
 
 ComfyUI 通常会在首次启动时自动建好所有子目录;缺哪个手动建一下即可。下面所有目录都是相对于 `ComfyUI/models/` 的相对路径。
 
@@ -136,4 +136,4 @@ ACE-Step v1 是 ComfyUI 核心原生支持,不需要装额外的 custom node。
 
 不必下上面任何东西。ComfyTV 能跑任意 ComfyUI GUI 工作流 JSON,只要放进 `workflows/<kind>/` 下面,再写一份 `_preset.json` 把 stage 的输入映射到工作流节点上即可。在常规 ComfyUI 里搭好工作流、保存、放进来、重启 ComfyUI,对应 stage 的工作流下拉里就会出现这个新选项。
 
-`_preset.json` 的格式和实例见 [custom-workflows.zh.md](/zh/guides/custom-workflows)。
+`_preset.json` 的格式和实例见 [custom-workflows.zh.md](/guides/custom-workflows)。

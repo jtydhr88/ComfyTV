@@ -124,7 +124,6 @@ class TestProtocol:
             "media_waveform", "pick_output", "cancel_stage", "get_stage",
             "director_get", "director_edit", "view_image",
             "scene_get", "scene_edit", "scene_capture", "scene_record",
-            "previz_get", "previz_edit", "previz_capture", "previz_record",
         }
         for t in tools.values():
             assert t["description"]

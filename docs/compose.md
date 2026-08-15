@@ -37,4 +37,4 @@ When one picker isn't enough, ComfyTV has larger arranging surfaces:
   ![Storyboard Editor](images/storyboard-editor.png)
 
 - **Sequence** (Video) — a lightweight track-style clip assembler; see [video-and-audio.md](video-and-audio.md).
-- **Director Timeline + Timeline Render** — a full clip timeline with a one-click render is on the [roadmap](roadmap.md).
+- **Director Timeline + Timeline Render** — a full clip timeline with a one-click render is on the [roadmap](https://github.com/jtydhr88/ComfyTV/blob/main/docs/roadmap.md).

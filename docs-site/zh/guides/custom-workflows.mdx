@@ -1,6 +1,6 @@
 ---
 title: "自定义工作流"
-translationSourceHash: "a3f58096e7789ba3"
+translationSourceHash: "a019d3ee71210859"
 ---
 
 ComfyTV 每个 stage 的 **workflow** 下拉框，背后都是一个普通的 ComfyUI 工作流（GUI 格式）。接入自己的工作流有三条路——都**不用改 Python 代码**。
@@ -45,23 +45,23 @@ kind 全集：`text, image, shot-images, video, audio, speech, storyboard, panor
 
 每个自带 kind 的 JSON 旁都有一个 `README.md`，写明运行时输入和工作流通常需要的节点。先读对应 kind 的 README：
 
-- [`workflows/audio/README.md`](../workflows/audio/README.zh.md)
-- [`workflows/image/README.md`](../workflows/image/README.zh.md)
-- [`workflows/image-edit/README.md`](../workflows/image-edit/README.zh.md)
-- [`workflows/inpaint/README.md`](../workflows/inpaint/README.zh.md)
-- [`workflows/outpaint/README.md`](../workflows/outpaint/README.zh.md)
-- [`workflows/upscale/README.md`](../workflows/upscale/README.zh.md)
-- [`workflows/cutout/README.md`](../workflows/cutout/README.zh.md)
-- [`workflows/erase/README.md`](../workflows/erase/README.zh.md)
-- [`workflows/multiangle/README.md`](../workflows/multiangle/README.zh.md)
-- [`workflows/multiview/README.md`](../workflows/multiview/README.zh.md)
-- [`workflows/sequence/README.md`](../workflows/sequence/README.zh.md)
-- [`workflows/panorama/README.md`](../workflows/panorama/README.zh.md)
-- [`workflows/speech/README.md`](../workflows/speech/README.zh.md)
-- [`workflows/text/README.md`](../workflows/text/README.zh.md)
-- [`workflows/video/README.md`](../workflows/video/README.zh.md)
-- [`workflows/shot-images/README.md`](../workflows/shot-images/README.zh.md)
-- [`workflows/storyboard/README.md`](../workflows/storyboard/README.zh.md)
+- [`workflows/audio/README.md`](https://github.com/jtydhr88/ComfyTV/tree/main/workflows/audio)
+- [`workflows/image/README.md`](https://github.com/jtydhr88/ComfyTV/tree/main/workflows/image)
+- [`workflows/image-edit/README.md`](https://github.com/jtydhr88/ComfyTV/tree/main/workflows/image-edit)
+- [`workflows/inpaint/README.md`](https://github.com/jtydhr88/ComfyTV/tree/main/workflows/inpaint)
+- [`workflows/outpaint/README.md`](https://github.com/jtydhr88/ComfyTV/tree/main/workflows/outpaint)
+- [`workflows/upscale/README.md`](https://github.com/jtydhr88/ComfyTV/tree/main/workflows/upscale)
+- [`workflows/cutout/README.md`](https://github.com/jtydhr88/ComfyTV/tree/main/workflows/cutout)
+- [`workflows/erase/README.md`](https://github.com/jtydhr88/ComfyTV/tree/main/workflows/erase)
+- [`workflows/multiangle/README.md`](https://github.com/jtydhr88/ComfyTV/tree/main/workflows/multiangle)
+- [`workflows/multiview/README.md`](https://github.com/jtydhr88/ComfyTV/tree/main/workflows/multiview)
+- [`workflows/sequence/README.md`](https://github.com/jtydhr88/ComfyTV/tree/main/workflows/sequence)
+- [`workflows/panorama/README.md`](https://github.com/jtydhr88/ComfyTV/tree/main/workflows/panorama)
+- [`workflows/speech/README.md`](https://github.com/jtydhr88/ComfyTV/tree/main/workflows/speech)
+- [`workflows/text/README.md`](https://github.com/jtydhr88/ComfyTV/tree/main/workflows/text)
+- [`workflows/video/README.md`](https://github.com/jtydhr88/ComfyTV/tree/main/workflows/video)
+- [`workflows/shot-images/README.md`](https://github.com/jtydhr88/ComfyTV/tree/main/workflows/shot-images)
+- [`workflows/storyboard/README.md`](https://github.com/jtydhr88/ComfyTV/tree/main/workflows/storyboard)
 
 ---
 
@@ -69,7 +69,7 @@ kind 全集：`text, image, shot-images, video, audio, speech, storyboard, panor
 
 工作流进来之后（Link、Upload 或手动拷贝），通常还要告诉 ComfyTV：哪个节点收 stage 的提示词、哪个 `LoadImage` 吃上游图片、种子从哪来，等等。
 
-**用侧边栏**：点画布上的 stage，在左侧 **ComfyTV** 侧边栏里逐项填。改动即时生效，不用重启。编辑器界面见 [sidebar-config-editor.zh.md](/zh/guides/sidebar-config-editor)。
+**用侧边栏**：点画布上的 stage，在左侧 **ComfyTV** 侧边栏里逐项填。改动即时生效，不用重启。编辑器界面见 [sidebar-config-editor.zh.md](/guides/sidebar-config-editor)。
 
 **要分享给别人**：侧边栏底部有 **⇩ Export preset.json** 按钮，把当前绑定打包成 `<name>_preset.json`。连同工作流 JSON 一起发出去；对方第一次加载时绑定自动生效。
 

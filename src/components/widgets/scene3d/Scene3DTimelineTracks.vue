@@ -116,6 +116,8 @@ const emit = defineEmits<{
   cameraSpeed: [id: string, speed: number]
   characterPatch: [id: string, patch: { startOffset?: number; speed?: number }]
   trackSelect: [id: string]
+  shotDuration: [id: string, durFrames: number]
+  shotMove: [id: string, index: number]
 }>()
 
 function labelClass(active: boolean): string {
@@ -155,7 +157,9 @@ onMounted(() => {
     onSeek: (frame) => emit('seek', frame),
     onCameraSpeed: (id, speed) => emit('cameraSpeed', id, speed),
     onCharacterPatch: (id, patch) => emit('characterPatch', id, patch),
-    onTrackSelect: (id) => emit('trackSelect', id)
+    onTrackSelect: (id) => emit('trackSelect', id),
+    onShotDuration: (id, durFrames) => emit('shotDuration', id, durFrames),
+    onShotMove: (id, index) => emit('shotMove', id, index)
   })
   if (props.data) widget.setData(props.data)
   widget.setTime(props.frame)

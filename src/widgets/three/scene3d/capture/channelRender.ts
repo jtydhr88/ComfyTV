@@ -13,14 +13,22 @@ import {
   projectKeypoints
 } from './openposeSkeleton'
 
-export type SceneChannel = 'color' | 'depth' | 'normal' | 'openpose'
+export type SceneChannel = 'color' | 'depth' | 'normal' | 'openpose' | 'id'
 
 export const SCENE_CHANNELS: readonly SceneChannel[] = [
   'color',
   'depth',
   'normal',
-  'openpose'
+  'openpose',
+  'id'
 ]
+
+export interface CaptureLayers {
+  characters?: boolean
+  props?: boolean
+  room?: boolean
+  floor?: boolean
+}
 
 const DEPTH_SCALE = 1000
 
@@ -72,19 +80,105 @@ export class ChannelRenderer {
   render(channel: SceneChannel, target: HTMLCanvasElement): void {
     const ctx = target.getContext('2d')
     if (!ctx) throw new Error('2D canvas context unavailable')
-    switch (channel) {
-      case 'color':
-        this.renderColor(target, ctx)
-        break
-      case 'normal':
-        this.renderNormal(target, ctx)
-        break
-      case 'depth':
-        this.renderDepth(target, ctx)
-        break
-      case 'openpose':
-        this.renderOpenpose(target, ctx)
-        break
+    this.withCaptureLayers(() => {
+      switch (channel) {
+        case 'color':
+          this.renderColor(target, ctx)
+          break
+        case 'normal':
+          this.renderNormal(target, ctx)
+          break
+        case 'depth':
+          this.renderDepth(target, ctx)
+          break
+        case 'openpose':
+          this.renderOpenpose(target, ctx)
+          break
+        case 'id':
+          this.renderId(target, ctx)
+          break
+      }
+    })
+  }
+
+  private withCaptureLayers(fn: () => void): void {
+    const layers = this.viewport.getCaptureLayers()
+    if (!layers) {
+      fn()
+      return
+    }
+    const hidden: Array<{ object: THREE.Object3D; visible: boolean }> = []
+    const hideAll = (objects: THREE.Object3D[]): void => {
+      for (const object of objects) {
+        hidden.push({ object, visible: object.visible })
+        object.visible = false
+      }
+    }
+    try {
+      if (layers.characters === false) {
+        hideAll(this.viewport.characterManager.pickables())
+      }
+      if (layers.props === false) {
+        hideAll([
+          ...this.viewport.primitiveManager.pickables(),
+          ...this.viewport.customModelManager.pickables()
+        ])
+      }
+      this.viewport.setRoomLayerVisibility(
+        layers.room !== false,
+        layers.floor !== false
+      )
+      fn()
+    } finally {
+      for (const entry of hidden) entry.object.visible = entry.visible
+      this.viewport.resetRoomLayerVisibility()
+    }
+  }
+
+  private renderId(
+    target: HTMLCanvasElement,
+    ctx: CanvasRenderingContext2D
+  ): void {
+    const swapped: Array<{
+      mesh: THREE.Mesh
+      material: THREE.Material | THREE.Material[]
+    }> = []
+    const flats: THREE.MeshBasicMaterial[] = []
+    const roots = [
+      ...this.viewport.characterManager.pickables(),
+      ...this.viewport.customModelManager.pickables(),
+      ...this.viewport.primitiveManager.pickables()
+    ]
+    const previousBackground = this.scene.background
+    const previousClearColor = this.renderer.getClearColor(new THREE.Color())
+    const previousClearAlpha = this.renderer.getClearAlpha()
+    try {
+      for (const root of roots) {
+        const id = root.userData.sceneObjectId as string | undefined
+        const color = id ? this.viewport.getIdMatteColor(id) : undefined
+        if (!color) continue
+        const flat = new THREE.MeshBasicMaterial({ color })
+        flats.push(flat)
+        root.traverse((child) => {
+          if (child instanceof THREE.Mesh) {
+            swapped.push({ mesh: child, material: child.material })
+            child.material = flat
+          }
+        })
+      }
+      this.viewport.setRoomLayerVisibility(false, false)
+      this.scene.background = null
+      this.prepareViewport(target.width, target.height)
+      this.renderer.setClearColor(0x000000, 1)
+      this.renderer.clear()
+      this.renderer.render(this.scene, this.camera)
+      copyRendererRegion(this.renderer, ctx, target.width, target.height)
+    } finally {
+      for (const entry of swapped) entry.mesh.material = entry.material
+      for (const flat of flats) flat.dispose()
+      this.scene.background = previousBackground
+      this.renderer.setClearColor(previousClearColor, previousClearAlpha)
+      this.viewport.resetRoomLayerVisibility()
     }
   }
 

@@ -1,0 +1,79 @@
+# 音频剪辑
+
+> 在波形时间线上把音频裁到 [start_s, end_s]。接受音频或视频输入,输出单条裁剪后的音频快照。
+
+## 这个节点做什么
+
+**音频剪辑**从音频源里裁出 **[start_s, end_s]**,其余丢弃。卡片上是带入点/出点手柄的波形和试听播放器,靠眼睛和耳朵定范围,不用手敲数字。**end_s** 为 0 或 ≤ **start_s** 时,范围延伸到源结尾。
+
+输入接 `COMFYTV_AUDIO` 或 `COMFYTV_VIDEO` 都行 — 连视频就直接裁它的音轨,不用先分离。
+
+## 什么时候用
+
+- 把生成的配乐裁到成片长度
+- 从长段语音/人声生成里抠出能用的那截
+- 取视频音轨的某一段,免去先 Demux
+
+## ComfyTV 的设计
+
+- **Stage** + **▶ Run**:只对上游快照重新裁剪;下游读裁剪结果。
+- **波形编辑**:入/出点手柄用共享的媒体裁剪时间线(和视频剪辑同一套交互),点击定位试听。
+- **零 GPU**:PyAV 在磁盘上处理;输出为 `/view?` URL 快照。
+
+## 类型(COMFYTV_* vs 原生 ComfyUI)
+
+| ComfyTV 类型 | 是什么 | vs ComfyUI |
+|---|---|---|
+| `COMFYTV_AUDIO` | 音频 URL 快照 | 经 Bridge 与 `AUDIO` 互转 |
+| `COMFYTV_VIDEO` | 视频 URL 快照(取音轨) | 经 Bridge 与 `VIDEO` 互转 |
+
+## 参数
+
+### audio(输入,可选)
+源 `COMFYTV_AUDIO`。和 **video** 二选一。
+
+### video(输入,可选)
+源 `COMFYTV_VIDEO`,裁其音轨。
+
+### start_s / end_s
+保留范围(秒),拖波形手柄设置。`end_s` 为 0 → 到源结尾;否则必须 > `start_s`。
+
+## 输出
+
+| 输出 | 类型 | 含义 | 下游 |
+|---|---|---|---|
+| **audio** | `COMFYTV_AUDIO` | 裁剪后音频 | Mux · Audio、Audio Mix、各类音频 FX |
+
+## 一步步来
+
+1. 跑一个上游 **Audio Stage**(或连视频)。
+2. 添加**音频剪辑**,接上源。
+3. 拖波形入/出点,试听。
+4. **▶ Run**;把 **audio** 接下游(如 **Mux · Audio**)。
+
+## 完整指南(推荐阅读)
+
+| 指南 | 内容 |
+| --- | --- |
+| [视频与音频](https://github.com/jtydhr88/ComfyTV/blob/main/docs/video-and-audio.zh.md) | 剪辑、分离、混流、音频工具 |
+
+## 仓库与工作流
+
+| 资源 | 链接 |
+| --- | --- |
+| **GitHub 仓库** | https://github.com/jtydhr88/ComfyTV |
+| **用户指南索引** | https://github.com/jtydhr88/ComfyTV/tree/main/docs |
+
+## FAQ
+
+**Q:音频和视频都连了?**  
+A:音频输入优先;建议只连一个。
+
+**Q:会重编码吗?**  
+A:输出写成干净的音频文件;采样率跟随源。
+
+## 相关节点
+
+- **音频分割(Audio Split)** — 在一点把源切成两段
+- **Demux · Audio Track** — 只分离不裁剪
+- **Mux · Audio** — 把裁好的音频合到视频上

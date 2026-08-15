@@ -2,7 +2,9 @@
 title: "The ComfyTV sidebar"
 ---
 
-ComfyTV registers a single **ComfyTV** tab in ComfyUI's left sidebar rail. Inside it are **seven tabs** — everything that isn't a node on the canvas lives here: workflow configuration, the media library, prompt fragments, workflow/parameter management per stage kind, presets, resources, and remote servers. The last tab you used is remembered across reloads.
+ComfyTV registers a single **ComfyTV** tab in ComfyUI's left sidebar rail. Inside it are **eight tabs** — everything that isn't a node on the canvas lives here: workflow configuration, the media library, prompt fragments, workflow/parameter management per stage kind, presets, resources, remote servers, and settings. The last tab you used is remembered across reloads.
+
+(When the [ComfyTV Bot](/guides/bot) is enabled, a second ✨ icon appears in the sidebar rail — that one is the embedded chat agent, documented separately.)
 
 ![ComfyTV sidebar tabs](/images/sidebar-tabs.png)
 
@@ -104,6 +106,15 @@ Register other ComfyUI instances on your network (name / host / port) and stages
 - **Test connection** shows online/offline plus queue status (running / pending, and how many jobs are from ComfyTV).
 - A **capability probe** reports the remote's ComfyTV version — or warns that ComfyTV isn't installed there — and lists any nodes it's missing. Preflight blocks a run that can't work (no ComfyTV, missing node) and warns on missing resources.
 - Disable or delete a server anytime; stages pointed at it fall back to running locally.
+
+---
+
+## Settings — backups, MCP and the Bot
+
+Two sections of global switches, saved to the ComfyTV database:
+
+- **Backup**: automatic snapshots of ComfyTV's data on server start (toggle, retention count, custom path) plus a *Back up now* button.
+- **Agent & MCP**: **Enable MCP server** opens the agent endpoint documented in [Agent access (MCP)](/guides/mcp); **Enable ComfyTV Bot** shows the embedded chat agent from [ComfyTV Bot](/guides/bot). Both default to **off**; the Bot switch requires MCP and unlocks only when it's on. Turning MCP off also turns the Bot off, and the ✨ icon appears or disappears immediately when you save.
 
 ---
 

@@ -13,7 +13,7 @@ const DOCS_JSON = path.join(SITE, 'docs.json');
 const DRY = process.argv.includes('--dry-run');
 
 const CATEGORY_GROUPS = [
-  ['Project & Timeline', ['ProjectStage', 'DirectorTimelineStage', 'TimelineVideoStage', 'SequenceStage']],
+  ['Project & Timeline', ['ProjectStage', 'DirectorStage', 'DirectorTimelineStage', 'TimelineVideoStage', 'SequenceStage']],
   ['Input & Loaders', ['ImageLoaderStage', 'VideoLoaderStage', 'AudioLoaderStage', 'TextLoaderStage', 'ModelLoaderStage', 'AssetImageLoaderStage', 'AssetVideoLoaderStage', 'AssetAudioLoaderStage', 'AssetModelLoaderStage']],
   ['Generate', ['TextStage', 'ImageStage', 'VideoStage', 'AudioStage', 'SpeechStage', 'Model3DStage', 'ShotImagesStage', 'StoryboardStage']],
   ['Pick & Compare', ['ImagePickerStage', 'AudioPickerStage', 'VideoPickerStage', 'CompareStage', 'ContactSheetStage']],
@@ -33,7 +33,7 @@ const CATEGORY_GROUPS = [
   ['Video · Transitions', ['VideoTransitionStage', 'VideoLumaWipeStage', 'TimeRemapStage', 'KenBurnsStage']],
   ['Video · Text & Annotate', ['TitleStage', 'SubtitleStage', 'SubtitleGenStage', 'VideoSubtitleSmartEraseStage', 'VideoSubtitleSelectEraseStage', 'AnnotateStage', 'PaintStrokeStage']],
   ['Video · Analysis & Chain', ['SceneDetectStage', 'VideoScopesStage', 'FXChainStage', 'ExpressionStage']],
-  ['Audio · Edit & Mix', ['AudioExtractVocalStage', 'AudioExtractBgStage', 'AudioCrossfadeStage', 'AudioMixStage', 'AudioDuckStage', 'AudioSegmentExportStage', 'AudioVideoDemuxAudioStage', 'AudioVideoDemuxVideoStage']],
+  ['Audio · Edit & Mix', ['AudioClipStage', 'AudioSplitStage', 'AudioExtractVocalStage', 'AudioExtractBgStage', 'AudioCrossfadeStage', 'AudioMixStage', 'AudioDuckStage', 'AudioSegmentExportStage', 'AudioVideoDemuxAudioStage', 'AudioVideoDemuxVideoStage']],
   ['Audio · Process & FX', ['AudioDynamicsStage', 'AudioEQStage', 'AudioLoudnessStage', 'AudioDenoiseStage', 'AudioRepairStage', 'AudioEchoStage', 'AudioModulationStage', 'AudioStereoStage', 'AudioTimePitchStage', 'AudioSaturateStage', 'AudioConvolveStage', 'MuseReverbStage']],
   ['Audio · Analyze & React', ['AudioAnalyzeStage', 'AudioVisualizeStage', 'AudioSweepStage', 'AudioDeconvolveStage', 'AudioMIRStage', 'AudioNoiseReductionStage', 'AudioStemSplitStage', 'AudioReactiveStage', 'AudioMeterStage']],
   ['Music (Symbolic)', ['ScoreStage', 'ScoreEditorStage', 'MidiEditorStage', 'ScoreToMidiStage', 'SF2SynthStage', 'ClickTrackStage', 'ChordAccompStage']],
@@ -140,17 +140,16 @@ for (const [label, ids] of CATEGORY_GROUPS) {
   if (zhPages.length) zhNodeGroups.push({ group: label, pages: zhPages });
 }
 
-const GUIDE_ORDER = ['getting-started', 'sidebar', 'generate', 'image-tools', 'panorama', 'video-and-audio', 'making-music', 'compose', 'models', 'bridges', 'custom-workflows', 'sidebar-config-editor'];
+const GUIDE_ORDER = ['getting-started', 'sidebar', 'generate', 'image-tools', 'panorama', 'video-and-audio', 'making-music', 'compose', 'models', 'bridges', 'custom-workflows', 'sidebar-config-editor', 'mcp', 'bot'];
 
 function cleanGuide(md, locale) {
   let text = md.replace(/\r\n/g, '\n');
   text = text.replace(/<!--[\s\S]*?-->[ \t]*\n?/g, '');
   text = text.replace(/^\*\*[^\n]*\|[^\n]*\n/, '').replace(/^\s+/, '');
   const { title, desc, body } = parseDoc(text);
-  const base = locale === 'zh' ? '/zh/guides/' : '/guides/';
   let out = body
-    .replace(/\]\(([a-z0-9-]+)\.zh\.md\)/g, (_m, n) => `](/zh/guides/${n})`)
-    .replace(/\]\(([a-z0-9-]+)\.md\)/g, (_m, n) => `](${base}${n})`)
+    .replace(/\]\(([a-z0-9-]+)\.zh\.md(#[^)]*)?\)/g, (_m, n, a) => `](/guides/${n}${a ?? ''})`)
+    .replace(/\]\(([a-z0-9-]+)\.md(#[^)]*)?\)/g, (_m, n, a) => `](/guides/${n}${a ?? ''})`)
     .replace(/\]\(images\//g, '](/images/');
   return { title, desc, body: out };
 }

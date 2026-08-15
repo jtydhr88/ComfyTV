@@ -1,9 +1,11 @@
 ---
 title: "ComfyTV 侧边栏"
-translationSourceHash: "01bbbd226592649d"
+translationSourceHash: "b2c32148766d990e"
 ---
 
-ComfyTV 在 ComfyUI 左侧边栏注册一个 **ComfyTV** 页签，里面又分**七个 tab**——所有不在画布节点上的东西都在这里：工作流配置、媒体库、提示词片段、按 kind 的工作流/参数管理、预设、资源、远程服务器。上次用的 tab 会被记住，刷新后自动回到原位。
+ComfyTV 在 ComfyUI 左侧边栏注册一个 **ComfyTV** 页签，里面又分**八个 tab**——所有不在画布节点上的东西都在这里：工作流配置、媒体库、提示词片段、按 kind 的工作流/参数管理、预设、资源、远程服务器、设置。上次用的 tab 会被记住，刷新后自动回到原位。
+
+（启用 [ComfyTV Bot](/guides/bot) 后，侧边栏还会出现第二个 ✨ 图标——那是内嵌聊天代理，另有专页介绍。）
 
 ![ComfyTV 侧边栏页签](/images/sidebar-tabs.png)
 
@@ -18,12 +20,12 @@ ComfyTV 在 ComfyUI 左侧边栏注册一个 **ComfyTV** 页签，里面又分**
 从上到下会看到：
 
 - stage 的 **kind** 和它当前选中的**工作流**。如果节点的 workflow 下拉框还是空的，或者工作流还没完成一次性准备（新导入的工作流第一次运行时自动完成，属正常），编辑器会直接提示，而不是显示表单。
-- 工作流是 🔗 [链接来的](/zh/guides/custom-workflows)时会有一条**链接来源**横幅：它存在 ComfyUI 自己的库里，在那边保存即实时生效。可以在这里 **Unlink**；如果底层文件被移动或删除，横幅会变成断链警告。
+- 工作流是 🔗 [链接来的](/guides/custom-workflows)时会有一条**链接来源**横幅：它存在 ComfyUI 自己的库里，在那边保存即实时生效。可以在这里 **Unlink**；如果底层文件被移动或删除，横幅会变成断链警告。
 - **Notes** —— 随工作流预设携带的自由文本备注（坑点、模型要求）。
 - **暴露的 widget 与绑定** —— 工作流的节点列表，可搜索、可按分组 chip 过滤，逐项编辑绑定。改动即时生效，不用重启。
 - **⇩ Export preset.json** —— 把当前绑定打包，与工作流文件一起分享。
 
-编辑器的完整攻略见 [sidebar-config-editor.zh.md](/zh/guides/sidebar-config-editor)。
+编辑器的完整攻略见 [sidebar-config-editor.zh.md](/guides/sidebar-config-editor)。
 
 ---
 
@@ -105,6 +107,15 @@ ComfyTV 在 ComfyUI 左侧边栏注册一个 **ComfyTV** 页签，里面又分**
 - **Test connection** 显示在线/离线和队列状态（运行中/排队中、其中多少是 ComfyTV 发的）。
 - **能力探测**报告远端的 ComfyTV 版本——或警告那边根本没装 ComfyTV——并列出缺失的节点。预检会硬拦注定失败的运行（没装 ComfyTV、缺节点），资源缺失则只警告。
 - 服务器可随时禁用或删除；指向它的 stage 自动回退到本机运行。
+
+---
+
+## 设置 —— 备份、MCP 与 Bot
+
+两组全局开关，存入 ComfyTV 数据库：
+
+- **备份**：服务器启动时自动快照 ComfyTV 数据（开关、保留份数、自定义路径），外加*立即备份*按钮。
+- **Agent 与 MCP**：**启用 MCP 服务**开放 [Agent 接入(MCP)](/guides/mcp) 里介绍的 agent 端点；**启用 ComfyTV Bot** 显示 [ComfyTV Bot](/guides/bot) 内嵌聊天代理。两者**默认关闭**；Bot 开关依赖 MCP，MCP 打开后才可用。关掉 MCP 会连带关掉 Bot，保存后 ✨ 图标即时出现或消失。
 
 ---
 

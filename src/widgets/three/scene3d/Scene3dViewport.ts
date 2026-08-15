@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { ScenePathEditor } from 'dollycurve'
 
 import { exceedsClickThreshold } from '@/composables/useClickDragGuard'
 import type { GizmoManager } from '@/widgets/three/load3d/GizmoManager'
@@ -37,19 +38,31 @@ import type { Scene3dCustomModelManager } from './CustomModelManager'
 import type { Scene3dLightManager } from './LightManager'
 import type { SceneCameraManager } from './SceneCameraManager'
 import type { Scene3dPrimitiveManager } from './PrimitiveManager'
-import type { SceneChannel } from './capture/channelRender'
+import type { CaptureLayers, SceneChannel } from './capture/channelRender'
+import { idMatteColorById } from './idMatte'
 import { sceneFallbackDuration } from './characterTime'
 import {
   PosePreview,
   createDepthPreviewMaterial,
   updateDepthPreviewRange
 } from './livePreview'
+import {
+  advanceAimSpring,
+  initAimSpring,
+  type AimSpringState
+} from './aimSpring'
+import {
+  shotAtFrame,
+  shotLocalSeconds,
+  totalShotFrames
+} from './shotTiming'
 import type {
   CharacterTransform,
   Quat,
   Scene3DState,
   SceneEnvironmentConfig,
   SceneLightEntry,
+  SceneShotEntry,
   Vec3
 } from './types'
 import { createDefaultEnvironment } from './types'
@@ -58,6 +71,7 @@ export type Scene3dGizmoMode = GizmoMode | 'none'
 
 const CLICK_DRAG_THRESHOLD = 5
 const HOVER_COLOR = 0x4a9eff
+const LOCK_AIM_HEIGHT = 1.3
 
 export type Scene3dViewportDeps = Viewport3dDeps & {
   timelineController: TimelineController
@@ -74,6 +88,7 @@ export interface Scene3dViewportEvents {
   onSelectCharacter(id: string | null): void
   onLightChange(id: string, patch: Partial<SceneLightEntry>): void
   onCameraOffsetCommit(id: string, offset: Vec3): void
+  onPathCommit?(id: string, label: string): void
 }
 
 export class Scene3dViewport extends Viewport3d {
@@ -114,6 +129,24 @@ export class Scene3dViewport extends Viewport3d {
   private readonly checkerRoom = new CheckerRoom()
   private gridFloor!: ReflectiveGridFloor
   private outputCameraId = ''
+  private shots: SceneShotEntry[] = []
+  private sceneFps = 24
+  private lastEvalSeconds = 0
+  private pathEditor: ScenePathEditor | null = null
+  private pathEditorCharacterId: string | null = null
+  private pathEditorPath: unknown = null
+  private pathEditorDragging = false
+  private aimSpringKey = ''
+  private aimSpring: AimSpringState | null = null
+  private readonly aimTmp = new THREE.Vector3()
+  private planView = false
+  private planRestore: {
+    position: THREE.Vector3
+    target: THREE.Vector3
+    type: 'perspective' | 'orthographic'
+  } | null = null
+  private captureLayers: CaptureLayers | null = null
+  private idColors = new Map<string, string>()
   private captureCameraOverride: THREE.PerspectiveCamera | null = null
   private lookThroughCameraId: string | null = null
   private animationDuration = 0
@@ -134,6 +167,14 @@ export class Scene3dViewport extends Viewport3d {
     if (event.button !== 0) return
     if (this.capturing) return
 
+    if (this.pathEditor?.pick(event.clientX, event.clientY)) {
+      this.pathEditorDragging = true
+      this.controlsManager.controls.enabled = false
+      this.pointerDownAt = null
+      this.pointerDownOnGizmo = true
+      return
+    }
+
     const ring = this.pickRingHandle(event)
     if (ring) {
       this.ringDrag = { type: ring, pointerId: event.pointerId }
@@ -153,6 +194,12 @@ export class Scene3dViewport extends Viewport3d {
   private readonly handlePointerUp = (event: PointerEvent): void => {
     if (event.button !== 0) return
     if (this.capturing) return
+
+    if (this.pathEditorDragging) {
+      this.pathEditorDragging = false
+      this.controlsManager.controls.enabled = true
+      return
+    }
 
     if (this.ringDrag && event.pointerId === this.ringDrag.pointerId) {
       const canvas = this.domElement
@@ -191,6 +238,7 @@ export class Scene3dViewport extends Viewport3d {
 
   private readonly handlePointerMove = (event: PointerEvent): void => {
     if (this.capturing) return
+    this.gizmoManager.setSnapping(event.ctrlKey || event.metaKey)
     if (this.ringDrag && event.pointerId === this.ringDrag.pointerId) {
       this.updateRingDrag(event)
       return
@@ -361,6 +409,75 @@ export class Scene3dViewport extends Viewport3d {
     this.sceneCameraManager.setTimelineTime(time, this.gizmoFrozenCameraId())
     this.characterManager.setTimelineTime(time)
     this.customModelManager.setTimelineTime(time)
+    this.applyDirectorTime(time, this.gizmoFrozenCameraId())
+  }
+
+  private applyDirectorTime(
+    seconds: number,
+    excludeCameraId: string | null
+  ): void {
+    this.lastEvalSeconds = seconds
+    const segment = this.activeShotSegment(seconds)
+    if (!segment) return
+    const cameraId = segment.shot.cameraId || this.outputCameraId
+    if (!cameraId || cameraId === excludeCameraId) return
+    this.sceneCameraManager.setCameraLocalTime(
+      cameraId,
+      shotLocalSeconds(segment, seconds, this.sceneFps)
+    )
+    const lockId = segment.shot.lock
+    if (!lockId) return
+    const camera = this.sceneCameraManager.getCamera(cameraId)
+    const target = this.characterManager.getObject(lockId)
+    if (!camera || !target) return
+    const aimHeight = LOCK_AIM_HEIGHT * target.scale.y
+    const shotStartSeconds = segment.startFrame / this.sceneFps
+    const targetAt = (localSeconds: number) => {
+      const found = this.characterManager.sampleWorldPosition(
+        lockId,
+        shotStartSeconds + Math.max(0, localSeconds),
+        this.aimTmp
+      )
+      if (!found) this.aimTmp.copy(target.position)
+      return {
+        x: this.aimTmp.x,
+        y: this.aimTmp.y + aimHeight,
+        z: this.aimTmp.z
+      }
+    }
+    const key = `${segment.shot.id}|${cameraId}|${lockId}|${this.sceneFps}`
+    const toStep = Math.max(
+      0,
+      Math.floor((seconds - shotStartSeconds) * this.sceneFps + 1e-6)
+    )
+    if (
+      this.aimSpringKey !== key ||
+      !this.aimSpring ||
+      this.aimSpring.steps > toStep
+    ) {
+      this.aimSpringKey = key
+      this.aimSpring = initAimSpring(targetAt(0))
+    }
+    advanceAimSpring(this.aimSpring, targetAt, toStep, this.sceneFps)
+    camera.lookAt(this.aimSpring.aim.x, this.aimSpring.aim.y, this.aimSpring.aim.z)
+  }
+
+  private activeShotSegment(seconds: number) {
+    if (!this.shots.length) return null
+    return shotAtFrame(
+      this.shots,
+      Math.floor(seconds * this.sceneFps + 1e-6)
+    )
+  }
+
+  activeShotCameraId(): string {
+    const segment = this.activeShotSegment(this.lastEvalSeconds)
+    if (!segment) return ''
+    return segment.shot.cameraId || this.outputCameraId
+  }
+
+  hasShots(): boolean {
+    return this.shots.length > 0
   }
 
   private gizmoFrozenCameraId(): string | null {
@@ -377,6 +494,7 @@ export class Scene3dViewport extends Viewport3d {
     this.sceneCameraManager.setTimelineTime(seconds)
     this.characterManager.setTimelineTime(seconds)
     this.customModelManager.setTimelineTime(seconds)
+    this.applyDirectorTime(seconds, null)
   }
 
   override isActive(): boolean {
@@ -400,6 +518,10 @@ export class Scene3dViewport extends Viewport3d {
     this.primitiveManager.applyPrimitives(state.primitives)
     this.lightManager.applyLights(state.lights)
     this.outputCameraId = state.output.cameraId
+    this.shots = state.shots
+    this.sceneFps = state.output.fps
+    this.characterManager.setSceneFps(state.output.fps)
+    this.idColors = idMatteColorById(state)
     await Promise.all([
       this.characterManager.applyCharacters(state.characters),
       this.customModelManager.applyModels(state.models),
@@ -444,11 +566,13 @@ export class Scene3dViewport extends Viewport3d {
                 animation: model.animation
               })),
               this.customModelManager.clipDurations()
-            )
+            ),
+            this.characterManager.pathEndSeconds()
           )
         : 0
     this.refreshTimelineDuration()
     this.attachGizmo()
+    this.syncPathEditor()
     this.syncSceneToTimeline()
     this.forceRender()
   }
@@ -458,13 +582,132 @@ export class Scene3dViewport extends Viewport3d {
     this.selectedId = id
     this.sceneCameraManager.setSelected(id)
     this.attachGizmo()
+    this.syncPathEditor()
     this.forceRender()
+  }
+
+  private syncPathEditor(): void {
+    const id = this.selectedId
+    const parsed = id ? this.characterManager.getParsedPath(id) : null
+    if (!parsed || !id) {
+      this.destroyPathEditor()
+      return
+    }
+    if (this.pathEditorCharacterId === id && this.pathEditorPath === parsed.path) {
+      this.pathEditor?.refresh()
+      return
+    }
+    this.destroyPathEditor()
+    this.pathEditorCharacterId = id
+    this.pathEditorPath = parsed.path
+    this.characterManager.setPathLineSuppressed(id, true)
+    this.pathEditor = new ScenePathEditor(parsed.path, {
+      path: parsed.path,
+      scene: this.sceneManager.scene,
+      camera: this.getRenderCamera(),
+      dom: this.domElement,
+      anchorRadius: 0.11,
+      onChanged: () => {
+        this.characterManager.invalidatePath(id)
+        this.syncSceneToTimeline()
+        this.forceRender()
+      },
+      onCommit: (label) => {
+        this.events.onPathCommit?.(id, label)
+      }
+    })
+  }
+
+  isPlanView(): boolean {
+    return this.planView
+  }
+
+  setCaptureLayers(layers: CaptureLayers | null): void {
+    this.captureLayers = layers
+  }
+
+  getCaptureLayers(): CaptureLayers | null {
+    return this.captureLayers
+  }
+
+  setRoomLayerVisibility(walls: boolean, floor: boolean): void {
+    this.checkerRoom.setLayerVisibility(walls, floor)
+  }
+
+  resetRoomLayerVisibility(): void {
+    this.checkerRoom.resetLayerVisibility()
+  }
+
+  getIdMatteColor(id: string): string | undefined {
+    return this.idColors.get(id)
+  }
+
+  setPlanView(enabled: boolean): void {
+    if (this.planView === enabled) return
+    this.planView = enabled
+    const controls = this.controlsManager.controls
+    if (enabled) {
+      if (this.lookThroughCameraId) this.setLookThroughCamera(null)
+      this.planRestore = {
+        position: this.cameraManager.activeCamera.position.clone(),
+        target: controls.target.clone(),
+        type: this.getCurrentCameraType() as 'perspective' | 'orthographic'
+      }
+      this.toggleCamera('orthographic')
+      const camera = this.cameraManager.activeCamera
+      camera.up.set(0, 0, -1)
+      camera.position.set(0, 40, 0)
+      controls.target.set(0, 0, 0)
+      controls.enableRotate = false
+      controls.update()
+    } else {
+      const restore = this.planRestore
+      this.planRestore = null
+      this.cameraManager.orthographicCamera.up.set(0, 1, 0)
+      this.toggleCamera(restore?.type ?? 'perspective')
+      const camera = this.cameraManager.activeCamera
+      camera.up.set(0, 1, 0)
+      if (restore) {
+        camera.position.copy(restore.position)
+        controls.target.copy(restore.target)
+      }
+      controls.enableRotate = true
+      controls.update()
+    }
+    this.destroyPathEditor()
+    this.syncPathEditor()
+    this.handleResize()
+    this.forceRender()
+  }
+
+  suspendPathEditor(): void {
+    this.destroyPathEditor()
+  }
+
+  resumePathEditor(): void {
+    this.syncPathEditor()
+  }
+
+  private destroyPathEditor(): void {
+    if (this.pathEditorCharacterId) {
+      this.characterManager.setPathLineSuppressed(this.pathEditorCharacterId, false)
+    }
+    this.pathEditor?.destroy()
+    this.pathEditor = null
+    this.pathEditorCharacterId = null
+    this.pathEditorPath = null
+    this.pathEditorDragging = false
   }
 
 
   refreshTimelineDuration(): void {
     this.timelineController.setTimelineDuration(
-      Math.max(this.animationDuration, this.sceneCameraManager.maxPresetDuration())
+      this.shots.length
+        ? totalShotFrames(this.shots) / this.sceneFps
+        : Math.max(
+            this.animationDuration,
+            this.sceneCameraManager.maxPresetDuration()
+          )
     )
     const hasContent = this.timelineController.hasContent()
     if (
@@ -513,8 +756,9 @@ export class Scene3dViewport extends Viewport3d {
 
   getCaptureCamera(): THREE.Camera {
     if (this.captureCameraOverride) return this.captureCameraOverride
-    const camera = this.outputCameraId
-      ? this.sceneCameraManager.getCamera(this.outputCameraId)
+    const cameraId = this.activeShotCameraId() || this.outputCameraId
+    const camera = cameraId
+      ? this.sceneCameraManager.getCamera(cameraId)
       : null
     return camera ?? this.getRenderCamera()
   }
@@ -562,7 +806,11 @@ export class Scene3dViewport extends Viewport3d {
 
   private refreshCheckerRoom(): void {
     this.checkerRoom.update(
-      this.environment.showRoom,
+      this.environment.showRoom
+        ? this.environment.floorOnly
+          ? 'floor'
+          : 'full'
+        : 'off',
       this.computeRoomBounds()
     )
   }
@@ -634,6 +882,12 @@ export class Scene3dViewport extends Viewport3d {
     const mode = this.gizmoMode
     if (!id || mode === 'none') return 'none'
     if (this.lightManager.isLight(id)) return 'none'
+    if (
+      this.characterManager.getParsedPath(id) &&
+      (mode === 'translate' || mode === 'rotate')
+    ) {
+      return 'none'
+    }
     if (this.sceneCameraManager.isCamera(id)) {
       if (this.lookThroughCameraId === id) return 'none'
       if (mode === 'scale') return 'none'
@@ -843,6 +1097,7 @@ export class Scene3dViewport extends Viewport3d {
     this.gridFloor.setVisible(visible && this.environment.showGrid)
     this.lightManager.setMarkersVisible(visible)
     this.sceneCameraManager.setHelpersVisible(visible)
+    this.characterManager.setHelpersVisible(visible)
     this.gizmoManager.setHelperVisible(visible)
     this.hoverBox.visible = visible && this.hoveredId !== null
     if (visible) {
@@ -913,7 +1168,7 @@ export class Scene3dViewport extends Viewport3d {
 
 
   private renderCameraPip(): void {
-    const id = this.pipCameraId
+    const id = this.pipCameraId ?? (this.activeShotCameraId() || null)
     if (!id) return
     const camera = this.sceneCameraManager.getCamera(id)
     if (!camera) return
@@ -978,6 +1233,7 @@ export class Scene3dViewport extends Viewport3d {
   }
 
   protected override disposeManagers(): void {
+    this.destroyPathEditor()
     super.disposeManagers()
     this.customModelManager.dispose()
     this.checkerRoom.dispose()

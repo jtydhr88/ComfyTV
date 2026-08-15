@@ -20,7 +20,17 @@ export async function withCaptureEnvironment<T>(
   const previousCameraType = viewport.getCurrentCameraType()
   const previousControlsEnabled = viewport.controlsManager.controls.enabled
 
-  let previousAspect: number | null = null
+  const restoreAspects: Array<{
+    camera: THREE.PerspectiveCamera
+    aspect: number
+  }> = []
+  const applyAspect = (target: THREE.Camera): void => {
+    if (!(target instanceof THREE.PerspectiveCamera)) return
+    if (restoreAspects.some((entry) => entry.camera === target)) return
+    restoreAspects.push({ camera: target, aspect: target.aspect })
+    target.aspect = width / height
+    target.updateProjectionMatrix()
+  }
   let camera: THREE.Camera | null = null
   try {
     viewport.capturing = true
@@ -28,28 +38,27 @@ export async function withCaptureEnvironment<T>(
       viewport.toggleCamera('perspective')
     }
     camera = viewport.getCaptureCamera()
-    previousAspect =
-      camera instanceof THREE.PerspectiveCamera ? camera.aspect : null
 
     viewport.setEditorHelpersVisible(false)
+    viewport.suspendPathEditor()
     viewport.gizmoManager.detach()
     viewport.controlsManager.controls.enabled = false
 
-    if (camera instanceof THREE.PerspectiveCamera) {
-      camera.aspect = width / height
-      camera.updateProjectionMatrix()
+    applyAspect(camera)
+    if (viewport.hasShots()) {
+      for (const shotCamera of viewport.sceneCameraManager.allCameras()) {
+        applyAspect(shotCamera)
+      }
     }
     return await fn({ renderer, scene: sceneManager.scene, camera })
   } finally {
     viewport.controlsManager.controls.enabled = previousControlsEnabled
     viewport.setEditorHelpersVisible(true)
+    viewport.resumePathEditor()
     viewport.refreshGizmo()
-    if (
-      camera instanceof THREE.PerspectiveCamera &&
-      previousAspect !== null
-    ) {
-      camera.aspect = previousAspect
-      camera.updateProjectionMatrix()
+    for (const entry of restoreAspects) {
+      entry.camera.aspect = entry.aspect
+      entry.camera.updateProjectionMatrix()
     }
     if (viewport.getCurrentCameraType() !== previousCameraType) {
       viewport.toggleCamera(previousCameraType)

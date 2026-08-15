@@ -254,46 +254,6 @@ function sceneApi(app: any, cmd: any) {
   return stageSubApi(app, cmd, 'scene3d', 'Scene3D')
 }
 
-function previzApi(app: any, cmd: any) {
-  return stageSubApi(app, cmd, 'previz', 'Previz')
-}
-
-async function handlePrevizGet(app: any, cmd: any): Promise<CommandResult> {
-  const api = previzApi(app, cmd)
-  return {
-    project: api.getState(),
-    resources: api.resources(),
-    busy: api.isBusy(),
-    has_recordable_duration: api.hasRecordableDuration(),
-  }
-}
-
-async function handlePrevizEdit(app: any, cmd: any): Promise<CommandResult> {
-  const api = previzApi(app, cmd)
-  if (api.isBusy()) throw new Error('previz is busy capturing/recording — retry after it finishes')
-  const out = await api.applyOps(cmd.ops)
-  const applied = Array.isArray(out) ? out : out.results
-  const warnings = Array.isArray(out) ? [] : (out.warnings ?? [])
-  return {
-    applied,
-    ...(warnings.length ? { warnings } : {}),
-  }
-}
-
-async function handlePrevizCapture(app: any, cmd: any): Promise<CommandResult> {
-  const api = previzApi(app, cmd)
-  if (api.isBusy()) throw new Error('previz is busy capturing/recording — retry after it finishes')
-  api.configureOutput({ width: cmd.width, height: cmd.height })
-  return await api.capture()
-}
-
-async function handlePrevizRecord(app: any, cmd: any): Promise<CommandResult> {
-  const api = previzApi(app, cmd)
-  if (api.isBusy()) throw new Error('previz is busy capturing/recording — retry after it finishes')
-  api.configureOutput({ width: cmd.width, height: cmd.height })
-  return await api.record()
-}
-
 function directorApi(app: any, cmd: any) {
   return stageSubApi(app, cmd, 'director', 'Director')
 }
@@ -340,6 +300,7 @@ async function handleSceneCapture(app: any, cmd: any): Promise<CommandResult> {
   if (api.isBusy()) throw new Error('scene is busy capturing/recording — retry after it finishes')
   api.configureOutput({
     channel: cmd.channel, width: cmd.width, height: cmd.height,
+    layers: cmd.layers,
   })
   return await api.capture()
 }
@@ -349,6 +310,7 @@ async function handleSceneRecord(app: any, cmd: any): Promise<CommandResult> {
   if (api.isBusy()) throw new Error('scene is busy capturing/recording — retry after it finishes')
   api.configureOutput({
     channel: cmd.channel, width: cmd.width, height: cmd.height,
+    layers: cmd.layers,
   })
   return await api.record()
 }
@@ -441,10 +403,6 @@ async function executeCommand(app: any, cmd: any): Promise<CommandResult> {
     case 'scene_record': return handleSceneRecord(app, cmd)
     case 'director_get': return handleDirectorGet(app, cmd)
     case 'director_edit': return handleDirectorEdit(app, cmd)
-    case 'previz_get': return handlePrevizGet(app, cmd)
-    case 'previz_edit': return handlePrevizEdit(app, cmd)
-    case 'previz_capture': return handlePrevizCapture(app, cmd)
-    case 'previz_record': return handlePrevizRecord(app, cmd)
     case 'connect_stages': return handleConnectStages(app, cmd)
     case 'run_stage': return handleRunStage(app, cmd)
     case 'cancel_stage': return handleCancelStage(app, cmd)

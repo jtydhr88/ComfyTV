@@ -206,6 +206,13 @@ export class GizmoManager {
     return this.enabled
   }
 
+  setSnapping(enabled: boolean): void {
+    if (!this.transformControls) return
+    this.transformControls.translationSnap = enabled ? 0.1 : null
+    this.transformControls.rotationSnap = enabled ? (5 * Math.PI) / 180 : null
+    this.transformControls.scaleSnap = enabled ? 0.1 : null
+  }
+
   isInteracting(): boolean {
     const controls = this.transformControls as unknown as {
       axis?: string | null

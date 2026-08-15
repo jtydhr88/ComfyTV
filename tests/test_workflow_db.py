@@ -1667,3 +1667,171 @@ class TestLegacyMigration:
         rows = wdb.list_workflows_overview("image")
         under_new = [r for r in rows if str(user_root) in r["file_path"]]
         assert len(under_new) == 1
+
+
+class TestShippedPresetRefresh:
+    PRESET_V1 = {
+        "label": "H3",
+        "description": "v1",
+        "prune_when_missing": [
+            {"when": "upstream_image:value[0]",
+             "drop_upstream_of": [{"node": "136", "input": "ref_images.ref_image_0"}]},
+        ],
+        "inputs": {"138": {"value": {"from": "main_prompt"}}},
+    }
+    PRESET_V2 = {
+        "label": "H3",
+        "description": "v2",
+        "prune_when_missing": [
+            {"when": "upstream_image:value[0]",
+             "drop_upstream_of": [{"node": "136", "input": "ref_images.ref_image_0"}]},
+            {"when": "upstream_audio:value[0]",
+             "drop_upstream_of": [{"node": "136", "input": "ref_audios.ref_audio_0"}]},
+        ],
+        "inputs": {
+            "138": {"value": {"from": "main_prompt"}},
+            "401": {"audio": {"from": "upstream_audio:annotated[0]"}},
+        },
+    }
+
+    def _setup_dirs(self, tmp_path, monkeypatch):
+        from pathlib import Path
+        legacy = tmp_path / "legacy"
+        (legacy / "video").mkdir(parents=True)
+        user_root = tmp_path / "user-workflows"
+        monkeypatch.setattr(wdb.seed, "_LEGACY_WORKFLOWS_DIR", Path(legacy))
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(user_root))
+        return legacy, user_root
+
+    def _ship(self, legacy, graph: dict, preset: dict) -> None:
+        (legacy / "video" / "wf.json").write_text(json.dumps(graph))
+        (legacy / "video" / "wf_preset.json").write_text(json.dumps(preset))
+
+    def _seed_v1(self, legacy):
+        self._ship(legacy, {"nodes": []}, self.PRESET_V1)
+        wdb.seed_workflows_from_disk(("video",))
+        cfg = wdb.get_workflow_config("video", "H3")
+        assert cfg["description"] == "v1"
+        assert len(cfg["bindings"]) == 1
+        return cfg
+
+    def _prune_rules(self, workflow_id: int) -> list:
+        from ComfyTV import db
+        with db.get_session() as s:
+            row = s.get(db.Workflow, workflow_id)
+            return json.loads(row.prune_when_missing_json or "[]")
+
+    def test_preset_update_reapplies_to_untouched_row(
+            self, reset_db, tmp_path, monkeypatch):
+        legacy, user_root = self._setup_dirs(tmp_path, monkeypatch)
+        cfg1 = self._seed_v1(legacy)
+
+        self._ship(legacy, {"nodes": [{"id": 401, "type": "LoadAudio"}]},
+                   self.PRESET_V2)
+        wdb.seed_workflows_from_disk(("video",))
+
+        cfg2 = wdb.get_workflow_config("video", "H3")
+        assert cfg2["id"] == cfg1["id"]
+        assert cfg2["description"] == "v2"
+        keys = {(b["node_id"], b["input_name"]) for b in cfg2["bindings"]}
+        assert keys == {("138", "value"), ("401", "audio")}
+        assert len(self._prune_rules(cfg2["id"])) == 2
+
+    def test_preset_update_keeps_label_order_default(
+            self, reset_db, tmp_path, monkeypatch):
+        from ComfyTV import db
+        legacy, user_root = self._setup_dirs(tmp_path, monkeypatch)
+        cfg1 = self._seed_v1(legacy)
+        wdb.set_default_workflow(cfg1["id"], True)
+        with db.get_session() as s:
+            s.get(db.Workflow, cfg1["id"]).label = "My H3"
+            s.commit()
+
+        self._ship(legacy, {"nodes": [{"id": 401, "type": "LoadAudio"}]},
+                   self.PRESET_V2)
+        wdb.seed_workflows_from_disk(("video",))
+
+        rows = wdb.list_workflows_overview("video")
+        assert len(rows) == 1
+        assert rows[0]["label"] == "My H3"
+        assert rows[0]["is_default"] is True
+        cfg2 = wdb.get_workflow_config("video", "My H3")
+        assert cfg2["description"] == "v2"
+
+    def test_preset_update_skips_row_with_gui_edits(
+            self, reset_db, tmp_path, monkeypatch):
+        legacy, user_root = self._setup_dirs(tmp_path, monkeypatch)
+        cfg1 = self._seed_v1(legacy)
+        wdb.upsert_input_binding(
+            workflow_id=cfg1["id"], node_id="138", input_name="value",
+            from_="option:seed")
+
+        self._ship(legacy, {"nodes": [{"id": 401, "type": "LoadAudio"}]},
+                   self.PRESET_V2)
+        wdb.seed_workflows_from_disk(("video",))
+
+        cfg2 = wdb.get_workflow_config("video", "H3")
+        assert cfg2["description"] == "v1"
+        assert len(cfg2["bindings"]) == 1
+        assert cfg2["bindings"][0]["from"] == "option:seed"
+
+    def test_preset_update_skips_forked_graph_file(
+            self, reset_db, tmp_path, monkeypatch):
+        legacy, user_root = self._setup_dirs(tmp_path, monkeypatch)
+        self._seed_v1(legacy)
+        (user_root / "video" / "wf.json").write_text(
+            json.dumps({"nodes": [{"id": 9, "type": "UserEdit"}]}))
+
+        self._ship(legacy, {"nodes": [{"id": 401, "type": "LoadAudio"}]},
+                   self.PRESET_V2)
+        wdb.seed_workflows_from_disk(("video",))
+
+        cfg2 = wdb.get_workflow_config("video", "H3")
+        assert cfg2["description"] == "v1"
+        assert len(cfg2["bindings"]) == 1
+
+    def test_bootstrap_without_ledger_reapplies_pristine_row(
+            self, reset_db, tmp_path, monkeypatch):
+        """Pre-fix DBs have no ledger — issue #310's population. A pristine
+        builtin copy still adopts the shipped update once."""
+        legacy, user_root = self._setup_dirs(tmp_path, monkeypatch)
+        self._seed_v1(legacy)
+        wdb.seed._preset_ledger_path(user_root).unlink()
+
+        self._ship(legacy, {"nodes": [{"id": 401, "type": "LoadAudio"}]},
+                   self.PRESET_V2)
+        wdb.seed_workflows_from_disk(("video",))
+
+        cfg2 = wdb.get_workflow_config("video", "H3")
+        assert cfg2["description"] == "v2"
+        keys = {(b["node_id"], b["input_name"]) for b in cfg2["bindings"]}
+        assert keys == {("138", "value"), ("401", "audio")}
+
+    def test_manual_reset_rejoins_auto_refresh(
+            self, reset_db, tmp_path, monkeypatch):
+        legacy, user_root = self._setup_dirs(tmp_path, monkeypatch)
+        cfg1 = self._seed_v1(legacy)
+        wdb.upsert_input_binding(
+            workflow_id=cfg1["id"], node_id="138", input_name="value",
+            from_="option:seed")
+        wdb.reset_workflow_to_preset(cfg1["id"])
+
+        self._ship(legacy, {"nodes": [{"id": 401, "type": "LoadAudio"}]},
+                   self.PRESET_V2)
+        wdb.seed_workflows_from_disk(("video",))
+
+        cfg2 = wdb.get_workflow_config("video", "H3")
+        assert cfg2["description"] == "v2"
+        assert len(cfg2["bindings"]) == 2
+
+    def test_unchanged_preset_never_touches_row(
+            self, reset_db, tmp_path, monkeypatch):
+        legacy, user_root = self._setup_dirs(tmp_path, monkeypatch)
+        cfg1 = self._seed_v1(legacy)
+        wdb.upsert_input_binding(
+            workflow_id=cfg1["id"], node_id="138", input_name="value",
+            from_="option:seed")
+        wdb.seed_workflows_from_disk(("video",))
+
+        cfg2 = wdb.get_workflow_config("video", "H3")
+        assert cfg2["bindings"][0]["from"] == "option:seed"

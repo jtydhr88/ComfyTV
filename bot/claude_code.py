@@ -35,6 +35,28 @@ def spawn_env() -> dict:
     return env
 
 
+def build_stream_input(turn: TurnRequest) -> str:
+    content: list[dict] = []
+    for att in turn.attachments:
+        data = att.get("data")
+        if not data:
+            continue
+        content.append({
+            "type": "image",
+            "source": {
+                "type": "base64",
+                "media_type": att.get("media_type") or "image/jpeg",
+                "data": data,
+            },
+        })
+    content.append({"type": "text", "text": turn.user_text})
+    envelope = {
+        "type": "user",
+        "message": {"role": "user", "content": content},
+    }
+    return json.dumps(envelope) + "\n"
+
+
 def resolve_claude_command() -> Optional[list[str]]:
     exe = shutil.which("claude.exe") if sys.platform == "win32" else None
     if exe:
@@ -208,8 +230,11 @@ class ClaudeCodeProvider(AgentProvider):
         argv = resolve_claude_command()
         if not argv:
             raise RuntimeError("claude executable not found")
-        argv = argv + [
-            "-p", turn.user_text,
+        if turn.attachments:
+            argv = argv + ["-p", "--input-format", "stream-json"]
+        else:
+            argv = argv + ["-p", turn.user_text]
+        argv += [
             "--output-format", "stream-json",
             "--include-partial-messages",
             "--verbose",
@@ -230,7 +255,8 @@ class ClaudeCodeProvider(AgentProvider):
         kwargs: dict = {
             "stdout": asyncio.subprocess.PIPE,
             "stderr": asyncio.subprocess.PIPE,
-            "stdin": asyncio.subprocess.DEVNULL,
+            "stdin": asyncio.subprocess.PIPE if turn.attachments
+                     else asyncio.subprocess.DEVNULL,
             "cwd": self._resolve_home(),
             "limit": _STREAM_LIMIT,
             "env": spawn_env(),
@@ -241,6 +267,13 @@ class ClaudeCodeProvider(AgentProvider):
             kwargs["start_new_session"] = True
         proc = await asyncio.create_subprocess_exec(*argv, **kwargs)
         handle.process = proc
+        if turn.attachments:
+            try:
+                proc.stdin.write(build_stream_input(turn).encode("utf-8"))
+                await proc.stdin.drain()
+                proc.stdin.close()
+            except (OSError, ConnectionError) as e:
+                _log.warning("[ComfyTV/bot] stdin write failed: %s", e)
 
         parser = _StreamParser()
         stderr_buf: list[bytes] = []
