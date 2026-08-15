@@ -19,16 +19,17 @@
 
 ## 不碰 API key,这是设计
 
-Bot 不直接调用任何模型 API,ComfyTV 也永远不存 key。它驱动的是**你机器上已经装好的 agent CLI**,用 CLI 自己的登录态。Provider 层可插拔,当前内置两个:
+Bot 不直接调用任何模型 API,ComfyTV 也永远不存 key。它驱动的是**你机器上已经装好的 agent CLI**,用 CLI 自己的登录态。Provider 层可插拔,当前内置三个:
 
 | Provider | 安装 | 登录 | 附件 |
 | --- | --- | --- | --- |
 | [Claude Code](https://claude.com/claude-code) | `npm install -g @anthropic-ai/claude-code` | 运行 `claude` 登录一次 | 图片/视频/音频 |
+| [Codex](https://developers.openai.com/codex) | `npm install -g @openai/codex` | `codex login` | 暂不支持 |
 | [Qwen Code](https://qwenlm.github.io/qwen-code-docs/zh/) | 官方安装脚本(见其文档) | 运行 `qwen` 后 `/auth` | 暂不支持 |
 
 前置条件:
 
-1. 至少装好一个 agent CLI 并登录。
+1. 至少装好一个 agent CLI 并登录。Claude Code 和 Codex 都在时,优先用 Codex。
 2. 在 ComfyTV **设置 → Agent 与 MCP** 里,先开 **MCP 服务**,再开 **ComfyTV Bot**(Bot 依赖 MCP — 那是 agent 触达画布的通道)。
 
 装了多个 CLI 时,➕ 按钮会让你选新对话用哪个引擎;每个对话记住自己的 provider。检测不到任何 agent CLI 时,面板显示安装引导而不是聊天框。
@@ -51,7 +52,7 @@ Bot 不直接调用任何模型 API,ComfyTV 也永远不存 key。它驱动的�
 | 现象 | 原因 / 处理 |
 |---|---|
 | 侧边栏没有 ✨ 图标 | **启用 ComfyTV Bot** 没开(设置 → Agent 与 MCP),它又依赖**启用 MCP 服务** |
-| 面板显示安装引导 | 没检测到 agent CLI — 装 Claude Code 并登录,然后点*重新检测* |
+| 面板显示安装引导 | 没检测到 agent CLI — 装 Claude Code 或 Codex 并登录,然后点*重新检测* |
 | Bot 说够不到画布 | 没有打开的 ComfyTV tab(或服务器重启后 tab 的 websocket 断了 — 硬刷新) |
 | 长渲染时 Bot 好像没动 | 它在 `wait_stage` 里阻塞等待 — 工具条目能看到;正常且省钱 |
 
