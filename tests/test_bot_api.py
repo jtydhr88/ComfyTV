@@ -314,3 +314,114 @@ class TestSpawnEnv:
         from ComfyTV.bot.claude_code import spawn_env
         monkeypatch.setenv("MCP_TOOL_TIMEOUT", "5000")
         assert spawn_env()["MCP_TOOL_TIMEOUT"] == "5000"
+
+
+class TestStreamInput:
+    def test_envelope_shape(self):
+        from ComfyTV.bot.claude_code import build_stream_input
+        from ComfyTV.bot.providers import TurnRequest
+        turn = TurnRequest(chat_id="c", user_text="what is this?", attachments=[
+            {"data": "QUJD", "media_type": "image/jpeg"},
+            {"data": "REVG", "media_type": "image/png"},
+            {"data": ""},
+        ])
+        line = build_stream_input(turn)
+        assert line.endswith("\n")
+        env = json.loads(line)
+        assert env["type"] == "user"
+        content = env["message"]["content"]
+        assert [b["type"] for b in content] == ["image", "image", "text"]
+        assert content[0]["source"] == {"type": "base64",
+                                        "media_type": "image/jpeg",
+                                        "data": "QUJD"}
+        assert content[1]["source"]["media_type"] == "image/png"
+        assert content[2]["text"] == "what is this?"
+
+    def test_argv_switches_to_stream_input(self):
+        from ComfyTV.bot.claude_code import ClaudeCodeProvider
+        from ComfyTV.bot.providers import TurnRequest
+        provider = ClaudeCodeProvider(home_dir=".")
+        plain = provider._build_argv(TurnRequest(chat_id="c", user_text="hi"))
+        assert "hi" in plain
+        assert "--input-format" not in plain
+        withatt = provider._build_argv(TurnRequest(
+            chat_id="c", user_text="hi",
+            attachments=[{"data": "QUJD"}]))
+        assert "hi" not in withatt
+        i = withatt.index("--input-format")
+        assert withatt[i + 1] == "stream-json"
+
+
+class TestAttachments:
+    def _make_image_asset(self, tmp_path, monkeypatch, name="ref"):
+        from PIL import Image
+        from ComfyTV import storage
+        from ComfyTV.runners import media
+        src = tmp_path / f"{name}.png"
+        Image.new("RGB", (2400, 1200), (10, 200, 60)).save(src)
+        monkeypatch.setattr(media, "localize", lambda url: src)
+        return storage.create_asset(
+            name=name, payload_url=f"/view?filename={name}.png",
+            media_type="image")
+
+    async def test_send_with_attachment(self, client, fake_provider,
+                                        tmp_path, monkeypatch):
+        import base64
+        asset = self._make_image_asset(tmp_path, monkeypatch)
+        resp = await client.post("/comfytv/bot/chats",
+                                 json={"provider": "fake-test"})
+        chat = (await resp.json())["chat"]
+        resp = await client.post(f"/comfytv/bot/chats/{chat['id']}/send",
+                                 json={"text": "what colour?",
+                                       "attachments": [{"asset_id": asset["id"]}]})
+        assert resp.status == 200
+        user_msg = (await resp.json())["user_message"]
+        blocks = json.loads(user_msg["content"])
+        assert blocks[0]["type"] == "image"
+        assert blocks[0]["asset_id"] == asset["id"]
+        assert blocks[1] == {"type": "text", "text": "what colour?"}
+
+        await _wait_done(client, chat["id"])
+        turn = fake_provider.last_turn
+        assert len(turn.attachments) == 1
+        att = turn.attachments[0]
+        assert att["media_type"] == "image/jpeg"
+        raw = base64.b64decode(att["data"])
+        assert raw[:2] == b"\xff\xd8"
+        assert "asset_refs" in turn.user_text
+        assert f"asset #{asset['id']}" in turn.user_text
+
+    async def test_attachment_only_no_text(self, client, fake_provider,
+                                           tmp_path, monkeypatch):
+        asset = self._make_image_asset(tmp_path, monkeypatch, "solo")
+        resp = await client.post("/comfytv/bot/chats",
+                                 json={"provider": "fake-test"})
+        chat = (await resp.json())["chat"]
+        resp = await client.post(f"/comfytv/bot/chats/{chat['id']}/send",
+                                 json={"attachments": [{"asset_id": asset["id"]}]})
+        assert resp.status == 200
+        await _wait_done(client, chat["id"])
+        assert "attached image" in fake_provider.last_turn.user_text.lower()
+
+    async def test_attachment_validation(self, client, fake_provider):
+        from ComfyTV import storage
+        resp = await client.post("/comfytv/bot/chats",
+                                 json={"provider": "fake-test"})
+        chat = (await resp.json())["chat"]
+        resp = await client.post(f"/comfytv/bot/chats/{chat['id']}/send",
+                                 json={"text": "x",
+                                       "attachments": [{"asset_id": 99999}]})
+        assert resp.status == 400
+        assert "not found" in (await resp.json())["error"]
+
+        vid = storage.create_asset(name="v", payload_url="/view?v.mp4",
+                                   media_type="video")
+        resp = await client.post(f"/comfytv/bot/chats/{chat['id']}/send",
+                                 json={"text": "x",
+                                       "attachments": [{"asset_id": vid["id"]}]})
+        assert resp.status == 400
+        assert "only images" in (await resp.json())["error"]
+
+        resp = await client.post(f"/comfytv/bot/chats/{chat['id']}/send",
+                                 json={"attachments": []})
+        assert resp.status == 400

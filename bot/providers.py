@@ -25,6 +25,7 @@ class TurnRequest:
     history: Optional[list[dict]] = None
     mcp_endpoint: str = ""
     allowed_tools: list[str] = field(default_factory=list)
+    attachments: list[dict] = field(default_factory=list)
 
 
 @dataclass

@@ -16,10 +16,18 @@ import {
 import { app } from '@/lib/comfyApp'
 
 export interface BotBlock {
-  type: 'text' | 'tool_use' | 'tool_result'
+  type: 'text' | 'tool_use' | 'tool_result' | 'image'
   text?: string
   name?: string
   input?: Record<string, unknown>
+  url?: string
+  asset_id?: number
+}
+
+export interface BotAttachment {
+  asset_id: number
+  url: string
+  name: string
 }
 
 export interface BotChatMessage {
@@ -129,12 +137,17 @@ export const useBotStore = defineStore('bot', () => {
     }
   }
 
-  async function send(text: string): Promise<boolean> {
+  async function send(text: string, attachments: BotAttachment[] = []): Promise<boolean> {
     const chatId = activeChatId.value
-    if (!chatId || !text.trim()) return false
+    if (!chatId || (!text.trim() && attachments.length === 0)) return false
     try {
       const data = await apiSend(`/comfytv/bot/chats/${chatId}/send`, 'POST',
-        BotSendSchema, { text })
+        BotSendSchema, {
+          text,
+          ...(attachments.length
+            ? { attachments: attachments.map(a => ({ asset_id: a.asset_id })) }
+            : {}),
+        })
       if (activeChatId.value === chatId) {
         messages.value = [
           ...messages.value,

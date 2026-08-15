@@ -110,3 +110,62 @@ class TestWaitStage:
         assert out["status"] == "running"
         assert out["after_output_id"] == 0
         assert "wait_stage again" in out["hint"]
+
+
+class TestFastCompletionRace:
+    @pytest.fixture(autouse=True)
+    def clean_run_registry(self):
+        from ComfyTV.api import mcp_tools
+        mcp_tools._RUN_STARTED.clear()
+        yield
+        mcp_tools._RUN_STARTED.clear()
+
+    async def test_done_when_output_born_after_run_start(self, wait_tool):
+        import time as _time
+        from ComfyTV import storage
+        from ComfyTV.api import mcp_tools
+        storage.ensure_default_project()
+        mcp_tools._RUN_STARTED[STAGE["uid"]] = _time.time() - 5
+        row = storage.persist_output(
+            project_id="default", stage_class="VideoStage",
+            stage_node_id="7", output_type="video", payload_url="/view?fast",
+        )
+        storage.set_output_stage_uid(row["id"], STAGE["uid"])
+        out = await wait_tool({"node": "7", "timeout_s": 5})
+        assert out["status"] == "done"
+        assert out["output"]["payload_url"] == "/view?fast"
+        assert out["waited_s"] < 2
+
+    async def test_stale_output_before_run_start_still_waits(self, wait_tool):
+        import time as _time
+        from ComfyTV import storage
+        from ComfyTV.api import mcp_tools
+        storage.ensure_default_project()
+        row = storage.persist_output(
+            project_id="default", stage_class="VideoStage",
+            stage_node_id="7", output_type="video", payload_url="/view?old",
+        )
+        storage.set_output_stage_uid(row["id"], STAGE["uid"])
+        mcp_tools._RUN_STARTED[STAGE["uid"]] = _time.time() + 60
+        out = await wait_tool({"node": "7", "timeout_s": 2})
+        assert out["status"] == "running"
+
+    async def test_run_stage_records_start(self, mirror, monkeypatch):
+        from ComfyTV.api import mcp_tools
+
+        async def submit(action, payload, timeout=15.0):
+            return {"started": True, "uid": "uid-recorded"}
+
+        monkeypatch.setattr(mcp_tools, "submit_command", submit)
+        await mcp_tools._run_stage({"node": "7"})
+        assert "uid-recorded" in mcp_tools._RUN_STARTED
+
+    async def test_not_started_not_recorded(self, mirror, monkeypatch):
+        from ComfyTV.api import mcp_tools
+
+        async def submit(action, payload, timeout=15.0):
+            return {"ok": True}
+
+        monkeypatch.setattr(mcp_tools, "submit_command", submit)
+        await mcp_tools._run_stage({"node": "7"})
+        assert mcp_tools._RUN_STARTED == {}

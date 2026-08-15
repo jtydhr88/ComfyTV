@@ -171,6 +171,35 @@ describe('botStore events', () => {
     expect(store.chats[0].busy).toBe(true)
   })
 
+  it('send includes attachment asset ids', async () => {
+    const store = seeded()
+    fetchApi.mockResolvedValue(jsonResp({
+      user_message: message({
+        id: 'u2', role: 'user', status: 'done',
+        content: '[{"type":"image","url":"/view?a","asset_id":7},{"type":"text","text":"look"}]',
+      }),
+      assistant_message: message({ id: 'a2' }),
+    }))
+    const ok = await store.send('look', [
+      { asset_id: 7, url: '/view?a', name: 'ref' },
+    ])
+    expect(ok).toBe(true)
+    const body = JSON.parse(fetchApi.mock.calls[0][1].body)
+    expect(body).toEqual({ text: 'look', attachments: [{ asset_id: 7 }] })
+    expect(store.messages.at(-2)?.blocks[0]).toEqual(
+      { type: 'image', url: '/view?a', asset_id: 7 })
+  })
+
+  it('send allows attachments without text', async () => {
+    const store = seeded()
+    fetchApi.mockResolvedValue(jsonResp({
+      user_message: message({ id: 'u3', role: 'user', status: 'done' }),
+      assistant_message: message({ id: 'a3' }),
+    }))
+    expect(await store.send('', [{ asset_id: 1, url: '/x', name: 'n' }])).toBe(true)
+    expect(await store.send('', [])).toBe(false)
+  })
+
   it('newChat requires an available provider', async () => {
     const store = useBotStore()
     store.providers = []

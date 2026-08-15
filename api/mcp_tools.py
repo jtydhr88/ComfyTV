@@ -279,13 +279,25 @@ async def _connect_stages(args: dict) -> dict:
     return await submit_command("connect_stages", payload)
 
 
+_RUN_STARTED: dict[str, float] = {}
+_RUN_STARTED_MAX = 500
+
+
 async def _run_stage(args: dict) -> dict:
     node = args.get("node")
     if not node:
         raise ValueError("node is required (stage uid or graph node id)")
     payload = _command_payload(args, ("project_id",))
     payload["node"] = str(node)
-    return await submit_command("run_stage", payload, timeout=60.0)
+    started_at = time.time()
+    result = await submit_command("run_stage", payload, timeout=60.0)
+    if isinstance(result, dict) and result.get("started"):
+        uid = str(result.get("uid") or "")
+        if uid:
+            _RUN_STARTED[uid] = started_at
+            while len(_RUN_STARTED) > _RUN_STARTED_MAX:
+                _RUN_STARTED.pop(next(iter(_RUN_STARTED)))
+    return result
 
 
 _FROM_RE = re.compile(
@@ -818,6 +830,20 @@ def _mirror_stage(project_id, node_ref: str):
     raise ValueError(f"stage {node_ref!r} not found on the mirrored canvas")
 
 
+def _output_created_ts(row) -> float | None:
+    from datetime import datetime, timezone
+    raw = (row or {}).get("created_at")
+    if not raw:
+        return None
+    try:
+        dt = datetime.fromisoformat(str(raw))
+    except ValueError:
+        return None
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.timestamp()
+
+
 async def _wait_stage(args: dict) -> dict:
     node = args.get("node")
     if not node:
@@ -831,6 +857,7 @@ async def _wait_stage(args: dict) -> dict:
     pid, stage = _mirror_stage(args.get("project_id"), str(node))
     uid = str(stage.get("uid") or "")
     initial_run = dict(stage.get("last_run") or {})
+    run_started = _RUN_STARTED.get(uid)
 
     after = args.get("after_output_id")
     if after is not None:
@@ -839,10 +866,20 @@ async def _wait_stage(args: dict) -> dict:
         row = storage.latest_output_by_uid(pid, uid)
         baseline = int(row["id"]) if row else 0
 
+    def _is_fresh(row) -> bool:
+        if not row:
+            return False
+        if int(row["id"]) > baseline:
+            return True
+        if run_started is None:
+            return False
+        created = _output_created_ts(row)
+        return created is not None and created >= run_started
+
     t0 = time.monotonic()
     while True:
         row = storage.latest_output_by_uid(pid, uid)
-        if row and int(row["id"]) > baseline:
+        if _is_fresh(row):
             return {
                 "status": "done",
                 "output": row,

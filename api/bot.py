@@ -88,7 +88,9 @@ def _apply_event(state: _TurnState, ev: BotEvent) -> Optional[dict]:
     return None
 
 
-async def _run_turn(chat: dict, text: str, state: _TurnState) -> None:
+async def _run_turn(chat: dict, text: str, state: _TurnState, *,
+                    provider_text: str | None = None,
+                    attachments: list[dict] | None = None) -> None:
     chat_id = chat["id"]
     provider = get_provider(chat["provider"])
 
@@ -108,10 +110,11 @@ async def _run_turn(chat: dict, text: str, state: _TurnState) -> None:
         result = await provider.send(
             TurnRequest(
                 chat_id=chat_id,
-                user_text=text,
+                user_text=provider_text if provider_text is not None else text,
                 resume_token=chat.get("resume_token"),
                 mcp_endpoint=_mcp_endpoint(),
                 allowed_tools=list(_ALLOWED_TOOLS),
+                attachments=attachments or [],
             ),
             emit,
             state.handle,
@@ -260,6 +263,65 @@ async def bot_delete_chat(request: web.Request) -> web.Response:
     return web.json_response({"ok": True})
 
 
+_ATTACH_MAX_PX = 1024
+_ATTACH_JPEG_QUALITY = 85
+_ATTACH_MAX_COUNT = 6
+
+
+def _render_attachment(url: str) -> dict:
+    import base64
+    import io
+
+    from PIL import Image
+
+    from ..runners.media import localize
+
+    src = localize(url)
+    with Image.open(str(src)) as im:
+        im = im.convert("RGB")
+        im.thumbnail((_ATTACH_MAX_PX, _ATTACH_MAX_PX))
+        buf = io.BytesIO()
+        im.save(buf, "JPEG", quality=_ATTACH_JPEG_QUALITY)
+    return {
+        "data": base64.b64encode(buf.getvalue()).decode("ascii"),
+        "media_type": "image/jpeg",
+    }
+
+
+def _resolve_attachment_assets(raw) -> list[dict]:
+    if raw is None:
+        return []
+    if not isinstance(raw, list):
+        raise ValueError("attachments must be an array of {asset_id} objects")
+    if len(raw) > _ATTACH_MAX_COUNT:
+        raise ValueError(f"at most {_ATTACH_MAX_COUNT} attachments per message")
+    rows = []
+    for i, item in enumerate(raw):
+        aid = item.get("asset_id") if isinstance(item, dict) else None
+        if not isinstance(aid, int):
+            raise ValueError(f"attachments[{i}] needs a numeric asset_id")
+        asset = storage.get_asset(aid)
+        if asset is None:
+            raise ValueError(f"attachments[{i}]: asset {aid} not found")
+        if asset.get("media_type") != "image":
+            raise ValueError(
+                f"attachments[{i}]: asset {aid} is {asset.get('media_type')!r}, "
+                "only images can be attached")
+        rows.append(asset)
+    return rows
+
+
+def _attachment_manifest(assets: list[dict]) -> str:
+    lines = []
+    for a in assets:
+        lines.append(
+            f"[Attached image: asset #{a['id']} ({a.get('name') or 'unnamed'}) "
+            f"— {a['payload_url']} — already in the asset library; to use it "
+            f"as a generation reference pass asset_refs "
+            f"[{{\"asset_id\": {a['id']}}}] on a stage]")
+    return "\n".join(lines)
+
+
 @routes.post("/comfytv/bot/chats/{cid}/send")
 async def bot_send(request: web.Request) -> web.Response:
     if not bot_enabled():
@@ -272,8 +334,13 @@ async def bot_send(request: web.Request) -> web.Response:
     except Exception:
         return web.json_response({"error": "invalid JSON body"}, status=400)
     text = str(body.get("text") or "").strip()
-    if not text:
-        return web.json_response({"error": "text is required"}, status=400)
+    try:
+        attachment_assets = _resolve_attachment_assets(body.get("attachments"))
+    except ValueError as e:
+        return web.json_response({"error": str(e)}, status=400)
+    if not text and not attachment_assets:
+        return web.json_response(
+            {"error": "text or attachments required"}, status=400)
     if chat["id"] in ACTIVE_TURNS:
         return web.json_response({"error": "chat is busy"}, status=409)
     provider = get_provider(chat["provider"])
@@ -281,9 +348,30 @@ async def bot_send(request: web.Request) -> web.Response:
         return web.json_response(
             {"error": f"unknown provider {chat['provider']!r}"}, status=400)
 
+    attachments = []
+    for a in attachment_assets:
+        try:
+            attachments.append(
+                await asyncio.to_thread(_render_attachment, a["payload_url"]))
+        except Exception as e:
+            return web.json_response(
+                {"error": f"could not read asset {a['id']} as an image ({e})"},
+                status=400)
+
+    display_blocks = [
+        {"type": "image", "url": a["payload_url"], "asset_id": a["id"]}
+        for a in attachment_assets
+    ]
+    if text:
+        display_blocks.append({"type": "text", "text": text})
+
+    provider_text = text or "Look at the attached image(s) and describe what you see."
+    if attachment_assets:
+        provider_text += "\n\n" + _attachment_manifest(attachment_assets)
+
     user_msg = storage.create_bot_message(
         chat_id=chat["id"], role="user",
-        content=json.dumps([{"type": "text", "text": text}]),
+        content=json.dumps(display_blocks),
     )
     assistant_msg = storage.create_bot_message(
         chat_id=chat["id"], role="assistant",
@@ -297,7 +385,8 @@ async def bot_send(request: web.Request) -> web.Response:
         "assistant_message": assistant_msg,
     })
     asyncio.create_task(
-        _run_turn(chat, text, state),
+        _run_turn(chat, text, state, provider_text=provider_text,
+                  attachments=attachments),
         name=f"comfytv-bot-{chat['id'][:8]}",
     )
     return web.json_response({

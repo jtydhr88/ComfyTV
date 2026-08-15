@@ -19,16 +19,45 @@ _WINDOWS_FONTS = [
 ]
 
 
+_PIL_FONT_SUFFIXES = {'.ttf', '.otf', '.ttc'}
+
+
+def _resource_fonts() -> dict:
+    try:
+        import folder_paths
+
+        from .. import storage
+        base = Path(folder_paths.get_input_directory())
+        out = {}
+        for row in storage.list_resources('font'):
+            filename = str(row.get('filename') or '')
+            if Path(filename).suffix.lower() not in _PIL_FONT_SUFFIXES:
+                continue
+            path = base / str(row.get('subfolder') or '') / filename
+            if not path.exists():
+                continue
+            name = str(row.get('name') or '') or Path(filename).stem
+            out.setdefault(name, str(path))
+        return out
+    except Exception:
+        return {}
+
+
 def list_fonts() -> list:
-    out = []
+    out = sorted(_resource_fonts())
     if _ASSET_FONTS.exists():
         out += sorted(p.stem for p in _ASSET_FONTS.glob('*.ttf'))
     out += [name for name, path in _WINDOWS_FONTS if os.path.exists(path)]
-    return out or ['default']
+    seen = set()
+    deduped = [n for n in out if not (n in seen or seen.add(n))]
+    return deduped or ['default']
 
 
 def _font_path(name: str):
     if name:
+        from_resources = _resource_fonts().get(name)
+        if from_resources:
+            return from_resources
         p = _ASSET_FONTS / f'{name}.ttf'
         if p.exists():
             return str(p)
