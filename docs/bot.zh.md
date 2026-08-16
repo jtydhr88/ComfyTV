@@ -19,19 +19,21 @@
 
 ## 不碰 API key,这是设计
 
-Bot 不直接调用任何模型 API,ComfyTV 也永远不存 key。它驱动的是**你机器上已经装好的 agent CLI** — [Claude Code](https://claude.com/claude-code) 或 [Codex](https://developers.openai.com/codex) — 用那个 CLI 自己的登录态(比如你的订阅)。Provider 层是可插拔的,以后可以接入其他本地 agent CLI。
+Bot 不直接调用任何模型 API,ComfyTV 也永远不存 key。它驱动的是**你机器上已经装好的 agent** — [Claude Code](https://claude.com/claude-code)、[Codex](https://developers.openai.com/codex),或由 [LM Studio](https://lmstudio.ai/) 服务的本地模型 — 用那个后端自己的登录态或模型。Provider 层是可插拔的,以后可以接入其他本地 agent。
 
 前置条件:
 
 1. 装好 Claude Code 并登录一次(`npm install -g @anthropic-ai/claude-code`,然后运行 `claude` 登录)。
 2. 或者装好 Codex CLI 并登录一次(`codex login`)。两个 CLI 都在时,优先用 Codex。
-3. 在 ComfyTV **设置 → Agent 与 MCP** 里,先开 **MCP 服务**,再开 **ComfyTV Bot**(Bot 依赖 MCP — 那是 agent 触达画布的通道)。
+3. 或者启动 LM Studio 并加载一个本地模型。LM Studio provider 会连到它 `http://127.0.0.1:1234/v1` 的 OpenAI 兼容接口,可用下面的环境变量配置。
+4. 在 ComfyTV **设置 → Agent 与 MCP** 里,先开 **MCP 服务**,再开 **ComfyTV Bot**(Bot 依赖 MCP — 那是 agent 触达画布的通道)。
 
 检测不到 agent CLI 时,面板会显示安装引导而不是聊天框。
 
 ## 面板用法
 
 - **对话持久化**:列表支持置顶、改名、删除;每个对话跨回合保持完整上下文(CLI 恢复同一会话)。
+- **提供方选择器**:当有多个可用提供方时,「新建对话」按钮旁边会出现下拉框,可为每个对话选择 Codex、Claude Code 或 LM Studio。
 - **流式**:回复实时流出;工具调用显示为可折叠条目(如 `add_stage`、`wait_stage`),你能实时看它操作画布 — 节点在画布上边长边跑。
 - **停止**按钮中断当前回合,已有的部分输出保留。
 - 切走侧边栏(或收起面板)不会打断进行中的回合 — 回合在服务器侧继续,回来时记录自动补齐。
@@ -45,9 +47,21 @@ Bot 不直接调用任何模型 API,ComfyTV 也永远不存 key。它驱动的�
 | 现象 | 原因 / 处理 |
 |---|---|
 | 侧边栏没有 ✨ 图标 | **启用 ComfyTV Bot** 没开(设置 → Agent 与 MCP),它又依赖**启用 MCP 服务** |
-| 面板显示安装引导 | 没检测到 agent CLI — 装 Claude Code 或 Codex 并登录,然后点*重新检测* |
+| 面板显示安装引导 | 没检测到 agent — 装 Claude Code、Codex,或在 LM Studio 里加载模型,然后点*重新检测* |
 | Bot 说够不到画布 | 没有打开的 ComfyTV tab(或服务器重启后 tab 的 websocket 断了 — 硬刷新) |
 | 长渲染时 Bot 好像没动 | 它在 `wait_stage` 里阻塞等待 — 工具条目能看到;正常且省钱 |
+
+## LM Studio 提供方配置
+
+LM Studio 提供方通过 LM Studio 本地的 OpenAI 兼容 API 驱动画布,用环境变量配置:
+
+- `LMSTUDIO_BASE_URL` — API 基础地址(默认 `http://127.0.0.1:1234/v1`)。
+- `LMSTUDIO_API_KEY` — 可选 bearer token。
+- `LMSTUDIO_MODEL` — 执行器模型 id(例如 `minicpm5-1b-...`)。
+- `LMSTUDIO_PLANNER_MODEL` — 可选的大规划模型 id(例如 `qwen/qwen3.8-27b`)。
+- `LMSTUDIO_HIGH_LEVEL=1` — 使用少量高层工具(`generate_image`、`list_image_workflows`)代替原始 35 个 ComfyTV 工具;小驱动模型推荐开启。
+- `LMSTUDIO_DEFAULT_WORKFLOW` — 模型没给工作流时使用的默认工作流标签(默认 `ComfyUI_Krea2 多LoRA 3.0`)。
+- `LMSTUDIO_UNLOAD_ON_WAIT=1` — 长时间 ComfyUI 渲染期间卸载 LM Studio 模型,把 GPU 让出来,渲染完再重新加载。
 
 ## 另见
 

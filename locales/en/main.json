@@ -2261,6 +2261,7 @@
   },
   "bot": {
     "title": "ComfyTV Bot",
+    "provider": "Agent provider",
     "newChat": "New chat",
     "backToList": "All chats",
     "untitled": "New chat",

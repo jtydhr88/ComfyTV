@@ -44,6 +44,20 @@
     <template v-else>
       <div class="ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1.5 ctv:border-b ctv:border-border-subtle ctv:px-3 ctv:py-2">
         <span class="ctv:flex-1 ctv:text-sm ctv:font-semibold">{{ $t('bot.title') }}</span>
+        <select
+          v-if="store.availableProviders.length > 1"
+          v-model="store.selectedProviderId"
+          class="ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-transparent ctv:px-1.5 ctv:py-0.5 ctv:text-xs ctv:text-base-foreground ctv:outline-none"
+          :title="$t('bot.provider')"
+        >
+          <option
+            v-for="p in store.availableProviders"
+            :key="p.id"
+            :value="p.id"
+          >
+            {{ p.label }}
+          </option>
+        </select>
         <button
           class="ctv-bot-iconbtn"
           :title="$t('bot.newChat')"

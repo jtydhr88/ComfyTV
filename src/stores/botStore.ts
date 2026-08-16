@@ -16,7 +16,7 @@ import {
 import { app } from '@/lib/comfyApp'
 
 export interface BotBlock {
-  type: 'text' | 'tool_use' | 'tool_result' | 'image' | 'video' | 'audio'
+  type: 'text' | 'tool_use' | 'tool_result' | 'image'
   text?: string
   name?: string
   input?: Record<string, unknown>
@@ -28,7 +28,6 @@ export interface BotAttachment {
   asset_id: number
   url: string
   name: string
-  media_type: 'image' | 'video' | 'audio'
 }
 
 export interface BotChatMessage {
@@ -64,6 +63,7 @@ export const useBotStore = defineStore('bot', () => {
   const activeChatId = ref<string | null>(null)
   const messages = ref<BotChatMessage[]>([])
   const loading = ref(false)
+  const selectedProviderId = ref<string | null>(null)
 
   let hydrated = false
   let wsInstalled = false
@@ -72,6 +72,8 @@ export const useBotStore = defineStore('bot', () => {
     chats.value.find(c => c.id === activeChatId.value) ?? null)
   const availableProviders = computed(() =>
     providers.value.filter(p => p.available))
+  const selectedProvider = computed(() =>
+    providers.value.find(p => p.id === selectedProviderId.value) ?? null)
   const busy = computed(() => activeChat.value?.busy === true)
 
   async function refreshStatus(): Promise<void> {
@@ -79,6 +81,11 @@ export const useBotStore = defineStore('bot', () => {
       const data = await apiFetch('/comfytv/bot/status', BotStatusSchema)
       providers.value = data.providers
       enabled.value = data.enabled !== false
+      if (!selectedProviderId.value
+          || !availableProviders.value.some(
+            p => p.id === selectedProviderId.value)) {
+        selectedProviderId.value = availableProviders.value[0]?.id ?? null
+      }
     } catch (e) {
       console.warn('[ComfyTV/bot] status failed', e)
       providers.value = []
@@ -122,8 +129,10 @@ export const useBotStore = defineStore('bot', () => {
     messages.value = []
   }
 
-  async function newChat(): Promise<BotChat | null> {
-    const provider = availableProviders.value[0]
+  async function newChat(providerId?: string): Promise<BotChat | null> {
+    const provider = providers.value.find(
+      p => p.id === (providerId ?? selectedProviderId.value))
+      ?? availableProviders.value[0]
     if (!provider) return null
     try {
       const data = await apiSend('/comfytv/bot/chats', 'POST',
@@ -312,6 +321,8 @@ export const useBotStore = defineStore('bot', () => {
     activeChatId,
     activeChat,
     availableProviders,
+    selectedProviderId,
+    selectedProvider,
     messages,
     loading,
     busy,

@@ -2261,6 +2261,7 @@
   },
   "bot": {
     "title": "ComfyTV Bot",
+    "provider": "Agent 提供方",
     "newChat": "新对话",
     "backToList": "全部对话",
     "untitled": "新对话",
