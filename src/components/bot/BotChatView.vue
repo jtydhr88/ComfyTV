@@ -63,7 +63,10 @@
             >{{ userText(msg) }}</div>
           </template>
           <template v-else>
-            <BotMessageBlocks :blocks="msg.blocks" />
+            <BotMessageBlocks
+              :blocks="msg.blocks"
+              :streaming="msg.status === 'streaming'"
+            />
             <div
               v-if="msg.status === 'streaming'"
               class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-xs ctv:text-muted-foreground"

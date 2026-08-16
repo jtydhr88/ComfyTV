@@ -2274,6 +2274,7 @@
     "aborted": "Stopped.",
     "turnError": "The turn failed. Check the server log for details.",
     "toolResult": "Tool result",
+    "activitySteps": "Process · {n} tool calls",
     "rename": "Rename",
     "pin": "Pin",
     "unpin": "Unpin",

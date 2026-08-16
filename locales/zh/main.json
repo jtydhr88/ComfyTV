@@ -2274,6 +2274,7 @@
     "aborted": "已停止。",
     "turnError": "本轮出错了,详情见服务器日志。",
     "toolResult": "工具结果",
+    "activitySteps": "过程 · {n} 次工具调用",
     "rename": "重命名",
     "pin": "置顶",
     "unpin": "取消置顶",

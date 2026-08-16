@@ -222,39 +222,39 @@
   background-color: rgba(255, 255, 255, 0.55);
 }\r
 
-.ctv-bot-md[data-v-cb6d943e] p {\r
+.ctv-bot-md[data-v-0c55f75b] p {
   margin: 0 0 0.5em;
 }
-.ctv-bot-md[data-v-cb6d943e] p:last-child {\r
+.ctv-bot-md[data-v-0c55f75b] p:last-child {
   margin-bottom: 0;
 }
-.ctv-bot-md[data-v-cb6d943e] pre {\r
-  overflow-x: auto;\r
-  border-radius: 6px;\r
-  padding: 6px 8px;\r
+.ctv-bot-md[data-v-0c55f75b] pre {
+  overflow-x: auto;
+  border-radius: 6px;
+  padding: 6px 8px;
   background: color-mix(in srgb, currentColor 8%, transparent);
 }
-.ctv-bot-md[data-v-cb6d943e] code {\r
+.ctv-bot-md[data-v-0c55f75b] code {
   font-size: 11px;
 }
-.ctv-bot-md[data-v-cb6d943e] ul,\r
-.ctv-bot-md[data-v-cb6d943e] ol {\r
-  margin: 0 0 0.5em;\r
+.ctv-bot-md[data-v-0c55f75b] ul,
+.ctv-bot-md[data-v-0c55f75b] ol {
+  margin: 0 0 0.5em;
   padding-left: 1.2em;
-}\r
+}
 
 @media (hover: hover) {
-.ctv-bot-send[data-v-d6eeb741]:hover:not(:disabled) {\r
+.ctv-bot-send[data-v-1b0614d8]:hover:not(:disabled) {\r
     filter: brightness(1.15);
 }
-.ctv-bot-attach[data-v-d6eeb741]:hover:not(:disabled) {\r
+.ctv-bot-attach[data-v-1b0614d8]:hover:not(:disabled) {\r
     background: color-mix(in srgb, currentColor 12%, transparent);
 }
-.ctv-bot-chip-x[data-v-d6eeb741]:hover {\r
+.ctv-bot-chip-x[data-v-1b0614d8]:hover {\r
     filter: brightness(1.4);
 }
 }
-.ctv-bot-attach[data-v-d6eeb741] {\r
+.ctv-bot-attach[data-v-1b0614d8] {\r
   display: flex;\r
   align-items: center;\r
   justify-content: center;\r
@@ -266,15 +266,15 @@
   color: var(--p-text-muted-color, #9ca3af);\r
   cursor: pointer;
 }
-.ctv-bot-attach[data-v-d6eeb741]:disabled {\r
+.ctv-bot-attach[data-v-1b0614d8]:disabled {\r
   opacity: 0.4;\r
   cursor: default;
 }
-.ctv-bot-attach-active[data-v-d6eeb741] {\r
+.ctv-bot-attach-active[data-v-1b0614d8] {\r
   background: color-mix(in srgb, currentColor 14%, transparent);\r
   color: var(--input-text, #e0e0e0);
 }
-.ctv-bot-chip-x[data-v-d6eeb741] {\r
+.ctv-bot-chip-x[data-v-1b0614d8] {\r
   position: absolute;\r
   top: -5px;\r
   right: -5px;\r
@@ -6115,5 +6115,5 @@ body > .p-overlay-mask.p-blockui-mask-document.p-overlay-mask-leave:empty {\r
     console.error("vite-plugin-css-injected-by-js", e);
   }
 })();
-import "./assets/main-V4ZBmn1P.mjs";
+import "./assets/main-BInUtNZC.mjs";
 //# sourceMappingURL=main.js.map

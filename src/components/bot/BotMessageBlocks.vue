@@ -1,64 +1,112 @@
 <template>
   <div class="ctv:flex ctv:flex-col ctv:gap-1.5">
+    <div
+      v-if="activity.length"
+      class="ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:text-xs"
+    >
+      <button
+        class="ctv:flex ctv:w-full ctv:items-center ctv:gap-1.5 ctv:border-none ctv:bg-transparent ctv:px-2 ctv:py-1.5 ctv:text-left ctv:text-muted-foreground ctv:cursor-pointer"
+        @click="drawerOpen = !drawerOpen"
+      >
+        <i
+          v-if="streaming && !drawerOpen"
+          class="pi pi-spin pi-spinner ctv:text-[10px]"
+        />
+        <i v-else class="pi pi-wrench ctv:text-[10px]" />
+        <span class="ctv:truncate ctv:font-mono">{{ drawerLabel }}</span>
+        <i
+          class="pi ctv:ml-auto ctv:text-[10px]"
+          :class="drawerOpen ? 'pi-chevron-up' : 'pi-chevron-down'"
+        />
+      </button>
+      <div
+        v-if="drawerOpen"
+        class="ctv:flex ctv:flex-col ctv:gap-1 ctv:border-t ctv:border-border-subtle ctv:p-1.5"
+      >
+        <template v-for="entry in activity" :key="entry.index">
+          <div
+            v-if="entry.block.type === 'tool_use'"
+            class="ctv:rounded-md ctv:border ctv:border-border-subtle ctv:text-xs"
+          >
+            <button
+              class="ctv:flex ctv:w-full ctv:items-center ctv:gap-1.5 ctv:border-none ctv:bg-transparent ctv:px-2 ctv:py-1.5 ctv:text-left ctv:text-muted-foreground ctv:cursor-pointer"
+              @click="toggle(entry.index)"
+            >
+              <i class="pi pi-wrench ctv:text-[10px]" />
+              <span class="ctv:truncate ctv:font-mono">{{ toolLabel(entry.block) }}</span>
+              <i
+                class="pi ctv:ml-auto ctv:text-[10px]"
+                :class="expanded.has(entry.index) ? 'pi-chevron-up' : 'pi-chevron-down'"
+              />
+            </button>
+            <pre
+              v-if="expanded.has(entry.index)"
+              class="ctv:m-0 ctv:max-h-40 ctv:overflow-auto ctv:border-t ctv:border-border-subtle ctv:px-2 ctv:py-1.5 ctv:font-mono ctv:text-[11px] ctv:whitespace-pre-wrap ctv:break-all"
+            >{{ formatInput(entry.block) }}</pre>
+          </div>
+          <div
+            v-else
+            class="ctv:rounded-md ctv:border ctv:border-border-subtle ctv:text-xs"
+          >
+            <button
+              class="ctv:flex ctv:w-full ctv:items-center ctv:gap-1.5 ctv:border-none ctv:bg-transparent ctv:px-2 ctv:py-1.5 ctv:text-left ctv:text-muted-foreground ctv:cursor-pointer"
+              @click="toggle(entry.index)"
+            >
+              <i class="pi pi-reply ctv:text-[10px]" />
+              <span class="ctv:truncate">{{ $t('bot.toolResult') }}</span>
+              <i
+                class="pi ctv:ml-auto ctv:text-[10px]"
+                :class="expanded.has(entry.index) ? 'pi-chevron-up' : 'pi-chevron-down'"
+              />
+            </button>
+            <pre
+              v-if="expanded.has(entry.index)"
+              class="ctv:m-0 ctv:max-h-40 ctv:overflow-auto ctv:border-t ctv:border-border-subtle ctv:px-2 ctv:py-1.5 ctv:font-mono ctv:text-[11px] ctv:whitespace-pre-wrap ctv:break-all"
+            >{{ entry.block.text }}</pre>
+          </div>
+        </template>
+      </div>
+    </div>
     <template v-for="(block, i) in blocks" :key="i">
       <div
         v-if="block.type === 'text' && (block.text ?? '').trim()"
         class="ctv-bot-md ctv:text-sm ctv:leading-relaxed ctv:break-words"
         v-html="renderMarkdownToHtml(block.text ?? '')"
       />
-      <div
-        v-else-if="block.type === 'tool_use'"
-        class="ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:text-xs"
-      >
-        <button
-          class="ctv:flex ctv:w-full ctv:items-center ctv:gap-1.5 ctv:border-none ctv:bg-transparent ctv:px-2 ctv:py-1.5 ctv:text-left ctv:text-muted-foreground ctv:cursor-pointer"
-          @click="toggle(i)"
-        >
-          <i class="pi pi-wrench ctv:text-[10px]" />
-          <span class="ctv:truncate ctv:font-mono">{{ toolLabel(block) }}</span>
-          <i
-            class="pi ctv:ml-auto ctv:text-[10px]"
-            :class="expanded.has(i) ? 'pi-chevron-up' : 'pi-chevron-down'"
-          />
-        </button>
-        <pre
-          v-if="expanded.has(i)"
-          class="ctv:m-0 ctv:max-h-40 ctv:overflow-auto ctv:border-t ctv:border-border-subtle ctv:px-2 ctv:py-1.5 ctv:font-mono ctv:text-[11px] ctv:whitespace-pre-wrap ctv:break-all"
-        >{{ formatInput(block) }}</pre>
-      </div>
-      <div
-        v-else-if="block.type === 'tool_result'"
-        class="ctv:rounded-md ctv:border ctv:border-border-subtle ctv:text-xs"
-      >
-        <button
-          class="ctv:flex ctv:w-full ctv:items-center ctv:gap-1.5 ctv:border-none ctv:bg-transparent ctv:px-2 ctv:py-1.5 ctv:text-left ctv:text-muted-foreground ctv:cursor-pointer"
-          @click="toggle(i)"
-        >
-          <i class="pi pi-reply ctv:text-[10px]" />
-          <span class="ctv:truncate">{{ $t('bot.toolResult') }}</span>
-          <i
-            class="pi ctv:ml-auto ctv:text-[10px]"
-            :class="expanded.has(i) ? 'pi-chevron-up' : 'pi-chevron-down'"
-          />
-        </button>
-        <pre
-          v-if="expanded.has(i)"
-          class="ctv:m-0 ctv:max-h-40 ctv:overflow-auto ctv:border-t ctv:border-border-subtle ctv:px-2 ctv:py-1.5 ctv:font-mono ctv:text-[11px] ctv:whitespace-pre-wrap ctv:break-all"
-        >{{ block.text }}</pre>
-      </div>
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import type { BotBlock } from '@/stores/botStore'
 import { renderMarkdownToHtml } from '@/utils/markdown'
 
-defineProps<{ blocks: BotBlock[] }>()
+const props = defineProps<{ blocks: BotBlock[]; streaming?: boolean }>()
 
+const { t } = useI18n()
+
+const drawerOpen = ref(false)
 const expanded = ref<Set<number>>(new Set())
+
+const activity = computed(() =>
+  props.blocks
+    .map((block, index) => ({ block, index }))
+    .filter(({ block }) => block.type === 'tool_use' || block.type === 'tool_result'),
+)
+
+const drawerLabel = computed(() => {
+  const steps = activity.value
+  if (props.streaming && !drawerOpen.value) {
+    const last = steps[steps.length - 1]
+    const name = toolLabel(last.block) || t('bot.toolResult')
+    const suffix = last.block.type === 'tool_use' ? '…' : ' ✓'
+    return `${steps.length} · ${name}${suffix}`
+  }
+  return t('bot.activitySteps', { n: steps.length })
+})
 
 function toggle(i: number) {
   const next = new Set(expanded.value)
