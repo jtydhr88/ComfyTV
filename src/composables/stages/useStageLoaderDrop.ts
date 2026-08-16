@@ -28,13 +28,17 @@ export async function uploadLoaderFiles(
 ): Promise<void> {
   let last = ''
   for (const f of files) {
-    const uploaded = await uploadBlobNamed(f, { subfolder: 'comfytv/uploads', filename: f.name })
+    const uploaded = await uploadBlobNamed(f, { subfolder: '', filename: f.name })
     last = uploaded.name
     const w = getWidget(node, widgetName) as any
     const values = w?.options?.values
     if (Array.isArray(values) && !values.includes(last)) values.push(last)
   }
-  if (last) writeWidget(node, widgetName, last)
+  if (last) {
+    const w = getWidget(node, widgetName)
+    if (w?.value === last) w.callback?.(last)
+    else writeWidget(node, widgetName, last)
+  }
 }
 
 export function useStageLoaderDrop(getNode: () => LGraphNode | undefined) {

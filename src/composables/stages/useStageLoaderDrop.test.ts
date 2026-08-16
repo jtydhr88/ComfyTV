@@ -1,6 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const uploadBlobNamed = vi.hoisted(() => vi.fn(async (f: File, ..._a: unknown[]) => ({ name: f.name })))
+const uploadBlobNamed = vi.hoisted(() => vi.fn(async (f: File, opts: { subfolder: string }) => ({
+  name: f.name,
+  subfolder: opts.subfolder,
+  type: 'input',
+  url: `/view?filename=${encodeURIComponent(f.name)}&type=input`,
+})))
 vi.mock('@/utils/uploadCanvas', () => ({ uploadBlobNamed }))
 
 import {
@@ -61,9 +66,21 @@ describe('uploadLoaderFiles', () => {
     ]
     await uploadLoaderFiles(node, 'image', files)
     expect(uploadBlobNamed).toHaveBeenCalledTimes(2)
-    expect(uploadBlobNamed.mock.calls[0][1]).toEqual({ subfolder: 'comfytv/uploads', filename: 'a.png' })
+    expect(uploadBlobNamed.mock.calls[0][1]).toEqual({ subfolder: '', filename: 'a.png' })
     expect(node.widgets[0].options.values).toEqual(['existing.png', 'a.png'])
     expect(node.widgets[0].value).toBe('existing.png')
+  })
+
+  it('refreshes the loader when an upload returns the currently selected name', async () => {
+    const node = makeLoaderNode('ComfyTV.ImageLoaderStage', ['same.png'])
+    node.widgets[0].value = 'same.png'
+    node.widgets[0].callback = vi.fn()
+
+    await uploadLoaderFiles(node, 'image', [
+      new File(['new bytes'], 'same.png', { type: 'image/png' }),
+    ])
+
+    expect(node.widgets[0].callback).toHaveBeenCalledWith('same.png')
   })
 
   it('writes nothing when no files were uploaded', async () => {
