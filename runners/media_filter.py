@@ -468,11 +468,17 @@ def xfade_videos(url_a: str, url_b: str, transition: str = 'fade',
 
         graph = av.filter.Graph()
 
+        out_matrix = _CS_FILTER_NAMES.get(
+            getattr(va.codec_context, 'colorspace', None), 'bt709')
+
         def _norm_chain(stream):
+            in_matrix = _CS_FILTER_NAMES.get(
+                getattr(stream.codec_context, 'colorspace', None), out_matrix)
             buf = graph.add_buffer(template=stream)
             chain = buf
             for name, args in (
-                ('scale', f'{w}:{h}:flags=bicubic'),
+                ('scale', f'{w}:{h}:flags=bicubic:'
+                          f'in_color_matrix={in_matrix}:out_color_matrix={out_matrix}'),
                 ('fps', f'{fps}'),
                 ('format', 'yuv420p'),
                 ('settb', 'AVTB'),

@@ -757,6 +757,59 @@ async def _view_image(args: dict) -> dict:
             "extract a frame with media_frame first")
 
 
+_FX_PREVIEW_WINDOW_DEFAULT = 1.2
+_FX_PREVIEW_WINDOW_MIN = 0.4
+_FX_PREVIEW_WINDOW_MAX = 3.0
+
+
+async def _fx_preview(args: dict) -> dict:
+    node_class = _normalize_stage_class(str(args.get("node_class") or ""))
+    if node_class.removeprefix("ComfyTV.") == "FXChainStage":
+        raise ValueError(
+            "FXChainStage renders the whole chain — preview individual FX "
+            "stages here, then run the chain node for the final output")
+    url = str(args.get("video") or "")
+    if not url:
+        raise ValueError("video is required (a /view?… video payload_url)")
+    params = args.get("params") or {}
+    if not isinstance(params, dict):
+        raise ValueError("params must be an object of widget values")
+    try:
+        t = float(args.get("t", 0.0) or 0.0)
+    except (TypeError, ValueError):
+        raise ValueError("t must be a number (seconds into the video)")
+    try:
+        window = float(args.get("window") or _FX_PREVIEW_WINDOW_DEFAULT)
+    except (TypeError, ValueError):
+        raise ValueError("window must be a number (seconds)")
+    window = max(_FX_PREVIEW_WINDOW_MIN,
+                 min(_FX_PREVIEW_WINDOW_MAX, window))
+
+    from .fx_preview import _render_preview, _spec_from_stage
+    from .presets import _stage_class_map
+    stage_cls = (await _stage_class_map()).get(node_class)
+    if stage_cls is None:
+        raise ValueError(f"unknown node_class {node_class!r}")
+    try:
+        data = _spec_from_stage(node_class, stage_cls, params, url)
+    except Exception as e:
+        raise ValueError(f"{node_class} does not support fx preview: {e}")
+    result = await asyncio.to_thread(_render_preview, url, data, t, window)
+
+    from ..runners import media
+    frame_url = await asyncio.to_thread(
+        media.extract_frame, result["url"], "middle")
+    frame = await asyncio.to_thread(
+        _render_view_image, frame_url, _VIEW_MAX_PX_DEFAULT)
+    return {
+        "url": result["url"],
+        "t0": result["t0"],
+        "t1": result["t1"],
+        "frame_url": frame_url,
+        "_images": frame["_images"],
+    }
+
+
 async def _pick_output(args: dict) -> dict:
     oid = args.get("output_id")
     idx = args.get("picked_index")
@@ -1593,6 +1646,37 @@ TOOLS: dict[str, dict] = {
             "additionalProperties": False,
         },
         "handler": _view_image,
+    },
+    "fx_preview": {
+        "description": (
+            "Cheap look at what ONE FX stage would do to a video before "
+            "running anything: renders a short window (default 1.2s, max "
+            "3s, downscaled to 640px) of the video through that stage's "
+            "real filter chain and returns the preview clip URL plus its "
+            "middle frame as an actual image you can see. node_class is an "
+            "FX stage from stage_catalog (VideoColorStage, "
+            "VideoCurvesStage, CDLStage…), params are its widget values "
+            "(same names as set_stage widgets — read current ones with "
+            "get_stage), video is the source /view?… payload_url, t is "
+            "where in the video to look. Iterate params here until the "
+            "frame looks right, THEN set_stage + run the FXChainStage for "
+            "the full render — two orders of magnitude cheaper than "
+            "re-rendering the whole video per attempt. Not for "
+            "FXChainStage itself."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "node_class": {"type": "string"},
+                "video": {"type": "string"},
+                "params": {"type": "object"},
+                "t": {"type": "number"},
+                "window": {"type": "number"},
+            },
+            "required": ["node_class", "video"],
+            "additionalProperties": False,
+        },
+        "handler": _fx_preview,
     },
     "pick_output": {
         "description": (

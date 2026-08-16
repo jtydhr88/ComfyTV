@@ -2,7 +2,7 @@
 
 # Agent access (MCP)
 
-> ComfyTV ships an MCP server so AI agents can read and drive your canvas: build node graphs, run stages, wait for renders, inspect results with real vision, and manage your workflow configuration — all through 35 tools.
+> ComfyTV ships an MCP server so AI agents can read and drive your canvas: build node graphs, run stages, wait for renders, inspect results with real vision, and manage your workflow configuration — all through 36 tools.
 
 ## What it is
 
@@ -56,6 +56,7 @@ Any other MCP client: point it at the same URL with the streamable HTTP transpor
 | Tool | What it does |
 |---|---|
 | `view_image` | Returns the actual image (downscaled) so the agent can look at it |
+| `fx_preview` | Render a ~1.2s window of a video through one FX stage's real filter chain and see its middle frame — iterate look params cheaply before a full render |
 | `media_probe` | Video duration/fps/resolution/audio |
 | `media_frame` | Extract a frame from a video as a PNG URL |
 | `media_waveform` | Render an audio waveform image |

@@ -122,7 +122,8 @@ class TestProtocol:
             "workflow_get", "workflow_edit", "asset_edit", "entries",
             "resources", "stage_params", "media_probe", "media_frame",
             "media_waveform", "pick_output", "cancel_stage", "get_stage",
-            "director_get", "director_edit", "view_image", "arrange_canvas",
+            "director_get", "director_edit", "view_image", "fx_preview",
+            "arrange_canvas",
             "scene_get", "scene_edit", "scene_capture", "scene_record",
         }
         for t in tools.values():

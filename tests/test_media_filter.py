@@ -111,6 +111,55 @@ class TestXfade:
             mf.xfade_videos(clip_av, clip_b, transition='sparkle')
 
 
+class TestXfadeColorFidelity:
+    @staticmethod
+    def _write_tagged_clip(path):
+        from fractions import Fraction
+        with av.open(str(path), 'w') as out:
+            v = out.add_stream('libx264', rate=24)
+            v.width, v.height = 160, 120
+            v.pix_fmt = 'yuv420p'
+            v.codec_context.colorspace = 1
+            v.codec_context.color_primaries = 1
+            v.codec_context.color_trc = 1
+            arr = np.full((120, 160, 3), (200, 140, 60), dtype=np.uint8)
+            for i in range(36):
+                f = av.VideoFrame.from_ndarray(arr, format='rgb24') \
+                    .reformat(format='yuv420p')
+                f.pts = i
+                f.time_base = Fraction(1, 24)
+                for pkt in v.encode(f):
+                    out.mux(pkt)
+            for pkt in v.encode():
+                out.mux(pkt)
+
+    @staticmethod
+    def _head_chroma(view_url):
+        from ComfyTV.runners.media import localize
+        with av.open(str(localize(view_url))) as c:
+            frame = next(c.decode(c.streams.video[0]))
+            yuv = frame.to_ndarray(format='yuv420p').reshape(-1)
+            n = frame.width * frame.height
+            return (yuv[n:n + n // 4].astype(np.float64).mean(),
+                    yuv[n + n // 4:].astype(np.float64).mean())
+
+    def test_chroma_survives_repeated_transitions(self):
+        from ComfyTV.runners import media, media_filter as mf
+        import folder_paths
+        src_dir = Path(folder_paths.get_output_directory()) / 'filter-src'
+        src_dir.mkdir(parents=True, exist_ok=True)
+        p = src_dir / 'tagged709.mp4'
+        if not p.exists():
+            self._write_tagged_clip(p)
+        src = media.path_to_view_url(p)
+        u0, v0 = self._head_chroma(src)
+        gen1 = mf.xfade_videos(src, src, transition='fade', duration=0.3)
+        gen2 = mf.xfade_videos(gen1, gen1, transition='fade', duration=0.3)
+        u2, v2 = self._head_chroma(gen2)
+        assert abs(u2 - u0) < 1.0, (u0, u2)
+        assert abs(v2 - v0) < 1.0, (v0, v2)
+
+
 class TestSceneDetect:
     def test_hard_cut_found(self):
         """Two visually distinct halves welded packet-wise → one cut ≈ 1.0s."""

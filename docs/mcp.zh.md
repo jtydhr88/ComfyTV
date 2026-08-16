@@ -2,7 +2,7 @@
 
 # Agent 接入(MCP)
 
-> ComfyTV 内置 MCP 服务,让 AI agent 读取并驱动你的画布:搭建节点图、跑渲染、阻塞等待、用真视觉检查结果、管理工作流配置 — 共 35 个工具。
+> ComfyTV 内置 MCP 服务,让 AI agent 读取并驱动你的画布:搭建节点图、跑渲染、阻塞等待、用真视觉检查结果、管理工作流配置 — 共 36 个工具。
 
 ## 是什么
 
@@ -56,6 +56,7 @@ claude mcp add --transport http comfytv http://127.0.0.1:8188/comfytv/mcp
 | 工具 | 作用 |
 |---|---|
 | `view_image` | 返回图像本体(缩放后),agent 能亲眼看 |
+| `fx_preview` | 把视频 ~1.2 秒窗口过一遍单个 FX 节点的真滤镜链并直接看中间帧 — 全片渲染前廉价迭代调参 |
 | `media_probe` | 视频时长/帧率/分辨率/有无音轨 |
 | `media_frame` | 从视频抽一帧,返回 PNG URL |
 | `media_waveform` | 渲染音频波形图 |

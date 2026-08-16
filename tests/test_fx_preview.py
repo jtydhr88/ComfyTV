@@ -169,6 +169,59 @@ class TestFxPreviewEndpoint:
         assert diff > 1.0
 
 
+class TestMcpFxPreviewTool:
+    async def test_renders_window_and_returns_frame(self, reset_db, noise_clip):
+        from ComfyTV.api import mcp_tools
+        out = await mcp_tools._fx_preview({
+            'node_class': 'VideoDenoiseStage',
+            'video': noise_clip,
+            'params': {'method': 'atadenoise', 'strength': 0.5},
+            't': 1.5,
+        })
+        assert out['url'].startswith('/view?')
+        assert out['t1'] - out['t0'] == pytest.approx(1.2, abs=0.01)
+        assert out['frame_url'].startswith('/view?')
+        images = out['_images']
+        assert images and images[0]['mime'] == 'image/jpeg'
+        assert images[0]['data']
+
+    async def test_window_clamped(self, reset_db, noise_clip):
+        from ComfyTV.api import mcp_tools
+        out = await mcp_tools._fx_preview({
+            'node_class': 'VideoDenoiseStage',
+            'video': noise_clip,
+            'params': {'method': 'atadenoise', 'strength': 0.5},
+            'window': 99,
+        })
+        assert out['t1'] - out['t0'] == pytest.approx(3.0, abs=0.1)
+
+    async def test_unknown_class_rejected(self, reset_db):
+        from ComfyTV.api import mcp_tools
+        with pytest.raises(ValueError, match='unknown stage class'):
+            await mcp_tools._fx_preview({'node_class': 'NopeStage',
+                                         'video': '/view?x'})
+
+    async def test_chain_stage_rejected(self, reset_db):
+        from ComfyTV.api import mcp_tools
+        with pytest.raises(ValueError, match='FXChainStage'):
+            await mcp_tools._fx_preview({'node_class': 'FXChainStage',
+                                         'video': '/view?x'})
+
+    async def test_video_required(self, reset_db):
+        from ComfyTV.api import mcp_tools
+        with pytest.raises(ValueError, match='video is required'):
+            await mcp_tools._fx_preview({'node_class': 'VideoDenoiseStage'})
+
+    async def test_bad_params_surface_as_value_error(self, reset_db, noise_clip):
+        from ComfyTV.api import mcp_tools
+        with pytest.raises(ValueError, match='does not support fx preview'):
+            await mcp_tools._fx_preview({
+                'node_class': 'VideoDenoiseStage',
+                'video': noise_clip,
+                'params': {'method': 'atadenoise', 'strength': 0},
+            })
+
+
 class TestColorspaceFilter:
     def test_scale_then_colorspace_renders(self, clip_av):
         from ComfyTV.runners import media, media_filter as mf
