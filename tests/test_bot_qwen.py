@@ -111,6 +111,32 @@ class TestProjectSettings:
         assert "comfytv" in data["mcpServers"]
 
 
+class TestListModels:
+    async def test_reads_model_providers(self, tmp_path, monkeypatch):
+        from pathlib import Path
+        home = tmp_path / "home"
+        (home / ".qwen").mkdir(parents=True)
+        (home / ".qwen" / "settings.json").write_text(json.dumps({
+            "modelProviders": {"openai": [
+                {"id": "local-27b"}, {"id": "cloud-x"}, {"id": "local-27b"},
+            ]},
+        }), encoding="utf-8")
+        monkeypatch.setattr(Path, "home", lambda: home)
+        models = await QwenCodeProvider(home_dir=".").list_models()
+        assert models == ["local-27b", "cloud-x"]
+
+    async def test_missing_or_corrupt_settings(self, tmp_path, monkeypatch):
+        from pathlib import Path
+        monkeypatch.setattr(Path, "home", lambda: tmp_path / "nope")
+        assert await QwenCodeProvider(home_dir=".").list_models() == []
+        home = tmp_path / "home"
+        (home / ".qwen").mkdir(parents=True)
+        (home / ".qwen" / "settings.json").write_text("{broken",
+                                                      encoding="utf-8")
+        monkeypatch.setattr(Path, "home", lambda: home)
+        assert await QwenCodeProvider(home_dir=".").list_models() == []
+
+
 class TestQwenArgv:
     def _argv(self, turn, monkeypatch):
         from ComfyTV.bot import qwen_code
@@ -133,6 +159,16 @@ class TestQwenArgv:
                                       resume_token="q-9"), monkeypatch)
         i = argv.index("--resume")
         assert argv[i + 1] == "q-9"
+
+    def test_model_override(self, monkeypatch):
+        argv = self._argv(TurnRequest(chat_id="c", user_text="hi",
+                                      model="qwen3.8-27b-uncensored"),
+                          monkeypatch)
+        i = argv.index("-m")
+        assert argv[i + 1] == "qwen3.8-27b-uncensored"
+        plain = self._argv(TurnRequest(chat_id="c", user_text="hi"),
+                           monkeypatch)
+        assert "-m" not in plain
 
     def test_no_attachments_capability(self):
         caps = QwenCodeProvider(home_dir=".").capabilities()

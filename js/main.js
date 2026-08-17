@@ -2883,6 +2883,10 @@
     border-color: var(--interface-menu-stroke, #ffffff1a);
   }
 
+  .ctv\\:border-node-component-border {
+    border-color: var(--node-component-border, #fff3);
+  }
+
   .ctv\\:border-primary-background, .ctv\\:border-primary-background\\/25 {
     border-color: var(--primary-background, #4ea8ff99);
   }
@@ -6115,5 +6119,5 @@ body > .p-overlay-mask.p-blockui-mask-document.p-overlay-mask-leave:empty {\r
     console.error("vite-plugin-css-injected-by-js", e);
   }
 })();
-import "./assets/main-9f93xgob.mjs";
+import "./assets/main-DHCw6eUd.mjs";
 //# sourceMappingURL=main.js.map

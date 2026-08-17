@@ -257,6 +257,7 @@ class TestSettingsApi:
         assert {r["key"] for r in rows} == {
             "enable-db-backup", "db-backup-max-count", "db-backup-path",
             "enable-mcp", "enable-bot",
+            "bot-model-claude-code", "bot-model-codex", "bot-model-qwen-code",
         }
         for r in rows:
             assert set(r) == {"key", "type", "value", "default"}

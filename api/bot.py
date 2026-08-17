@@ -65,6 +65,18 @@ def _mcp_endpoint() -> str:
     return f"http://127.0.0.1:{port}/comfytv/mcp"
 
 
+def _provider_model(provider_id: str) -> str:
+    from ..settings import SETTINGS_SPEC
+    key = f"bot-model-{provider_id}"
+    if key not in SETTINGS_SPEC:
+        return ""
+    try:
+        return str(storage.get_setting(key) or "").strip()
+    except Exception:
+        _log.exception("[ComfyTV/bot] model setting lookup failed")
+        return ""
+
+
 def _derive_title(text: str) -> str:
     line = " ".join(text.split())
     return line[:_TITLE_MAX] if line else "New chat"
@@ -115,6 +127,7 @@ async def _run_turn(chat: dict, text: str, state: _TurnState, *,
                 mcp_endpoint=_mcp_endpoint(),
                 allowed_tools=list(_ALLOWED_TOOLS),
                 attachments=attachments or [],
+                model=_provider_model(chat["provider"]),
             ),
             emit,
             state.handle,
@@ -159,6 +172,12 @@ async def bot_status(request: web.Request) -> web.Response:
     for provider in list_providers():
         st = await provider.probe()
         caps = provider.capabilities()
+        try:
+            models = await provider.list_models()
+        except Exception:
+            _log.exception("[ComfyTV/bot] list_models failed for %s",
+                           provider.id)
+            models = []
         out.append({
             "id": provider.id,
             "label": provider.label,
@@ -168,6 +187,7 @@ async def bot_status(request: web.Request) -> web.Response:
             "detail": st.detail,
             "stateful": caps.stateful,
             "attachments": caps.attachments,
+            "models": models,
         })
     return web.json_response({"enabled": True, "providers": out})
 

@@ -352,6 +352,55 @@ class TestStreamInput:
         assert withatt[i + 1] == "stream-json"
 
 
+class TestModelOverride:
+    def test_claude_argv_model(self):
+        from ComfyTV.bot.claude_code import ClaudeCodeProvider
+        from ComfyTV.bot.providers import TurnRequest
+        provider = ClaudeCodeProvider(home_dir=".")
+        plain = provider._build_argv(TurnRequest(chat_id="c", user_text="hi"))
+        assert "--model" not in plain
+        argv = provider._build_argv(TurnRequest(
+            chat_id="c", user_text="hi", model="sonnet"))
+        i = argv.index("--model")
+        assert argv[i + 1] == "sonnet"
+
+    async def test_claude_model_aliases(self):
+        from ComfyTV.bot.claude_code import ClaudeCodeProvider
+        models = await ClaudeCodeProvider(home_dir=".").list_models()
+        assert models == ["sonnet", "opus", "haiku"]
+
+    async def test_status_reports_models(self, client, fake_provider):
+        resp = await client.get("/comfytv/bot/status")
+        data = await resp.json()
+        entry = next(p for p in data["providers"] if p["id"] == "fake-test")
+        assert entry["models"] == []
+
+    async def test_setting_reaches_provider(self, client, fake_provider,
+                                            monkeypatch):
+        from ComfyTV import settings, storage
+        monkeypatch.setitem(settings.SETTINGS_SPEC, "bot-model-fake-test",
+                            {"type": "string", "default": ""})
+        storage.set_settings({"bot-model-fake-test": "shiny-model"})
+        resp = await client.post("/comfytv/bot/chats",
+                                 json={"provider": "fake-test"})
+        chat = (await resp.json())["chat"]
+        resp = await client.post(f"/comfytv/bot/chats/{chat['id']}/send",
+                                 json={"text": "hello"})
+        assert resp.status == 200
+        await _wait_done(client, chat["id"])
+        assert fake_provider.last_turn.model == "shiny-model"
+
+    async def test_blank_setting_means_default(self, client, fake_provider):
+        resp = await client.post("/comfytv/bot/chats",
+                                 json={"provider": "fake-test"})
+        chat = (await resp.json())["chat"]
+        resp = await client.post(f"/comfytv/bot/chats/{chat['id']}/send",
+                                 json={"text": "hello"})
+        assert resp.status == 200
+        await _wait_done(client, chat["id"])
+        assert fake_provider.last_turn.model == ""
+
+
 class TestAttachments:
     def _make_image_asset(self, tmp_path, monkeypatch, name="ref"):
         from PIL import Image

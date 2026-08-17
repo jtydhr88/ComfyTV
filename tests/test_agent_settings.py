@@ -29,6 +29,21 @@ class TestDefaults:
         assert storage.get_setting("enable-mcp") is False
         assert storage.get_setting("enable-bot") is False
 
+    def test_model_overrides_default_blank(self, reset_db):
+        from ComfyTV import storage
+        for key in ("bot-model-claude-code", "bot-model-codex",
+                    "bot-model-qwen-code"):
+            assert storage.get_setting(key) == ""
+
+
+class TestBotModelSetting:
+    async def test_save_and_readback(self, client):
+        resp = await client.put("/comfytv/settings", json={
+            "values": {"bot-model-claude-code": "sonnet"}})
+        assert resp.status == 200
+        rows = {r["key"]: r["value"] for r in (await resp.json())["settings"]}
+        assert rows["bot-model-claude-code"] == "sonnet"
+
 
 class TestMcpGate:
     async def test_disabled_by_default(self, client):

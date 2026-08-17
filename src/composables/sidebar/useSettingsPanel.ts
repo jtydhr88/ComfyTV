@@ -6,10 +6,23 @@ import { syncBotTab } from '@/composables/sidebar/botTab'
 import { app } from '@/lib/comfyApp'
 import { useBotStore } from '@/stores/botStore'
 
-const AGENT_KEYS = new Set(['enable-mcp', 'enable-bot'])
+const AGENT_TOGGLE_KEYS = new Set(['enable-mcp', 'enable-bot'])
+const MODEL_KEY_PREFIX = 'bot-model-'
+
+function isAgentKey(key: string): boolean {
+  return AGENT_TOGGLE_KEYS.has(key) || key.startsWith(MODEL_KEY_PREFIX)
+}
 
 function message(e: unknown): string {
   return e instanceof Error ? e.message : String(e)
+}
+
+function tryBotStore(): ReturnType<typeof useBotStore> | null {
+  try {
+    return useBotStore()
+  } catch {
+    return null
+  }
 }
 
 export function useSettingsPanel(isActive: () => boolean | undefined) {
@@ -21,12 +34,20 @@ export function useSettingsPanel(isActive: () => boolean | undefined) {
   const error = ref('')
   const backupResult = ref<BackupResult | null>(null)
 
+  function modelSuggestions(key: string): string[] {
+    if (!key.startsWith(MODEL_KEY_PREFIX)) return []
+    const providerId = key.slice(MODEL_KEY_PREFIX.length)
+    return tryBotStore()?.providers.find((p) => p.id === providerId)?.models
+      ?? []
+  }
+
   const dirty = computed(() =>
     rows.value.some((r) => values.value[r.key] !== r.value))
   const backupRows = computed(() =>
-    rows.value.filter((r) => !AGENT_KEYS.has(r.key)))
+    rows.value.filter((r) => !isAgentKey(r.key)))
   const agentRows = computed(() =>
-    rows.value.filter((r) => AGENT_KEYS.has(r.key)))
+    rows.value.filter((r) => isAgentKey(r.key)
+      && (AGENT_TOGGLE_KEYS.has(r.key) || values.value['enable-bot'] === true)))
   const botToggleLocked = computed(() => values.value['enable-mcp'] !== true)
 
   function syncValues(): void {
@@ -66,7 +87,7 @@ export function useSettingsPanel(isActive: () => boolean | undefined) {
     try {
       rows.value = (await saveSettings(changed)).settings
       syncValues()
-      if (Object.keys(changed).some((k) => AGENT_KEYS.has(k))) {
+      if (Object.keys(changed).some((k) => AGENT_TOGGLE_KEYS.has(k))) {
         const bot = useBotStore()
         await bot.refreshStatus()
         syncBotTab(app, bot.enabled)
@@ -92,7 +113,10 @@ export function useSettingsPanel(isActive: () => boolean | undefined) {
   }
 
   watch(isActive, (active) => {
-    if (active) void load()
+    if (active) {
+      void load()
+      void tryBotStore()?.refreshStatus()
+    }
   }, { immediate: true })
 
   return {
@@ -111,5 +135,6 @@ export function useSettingsPanel(isActive: () => boolean | undefined) {
     setValue,
     save,
     backupNow,
+    modelSuggestions,
   }
 }

@@ -123,6 +123,21 @@
       "enable-bot": {
         "label": "Enable ComfyTV Bot",
         "desc": "Show the embedded bot sidebar and its chat API. Requires the MCP server to be enabled."
+      },
+      "bot-model-claude-code": {
+        "label": "Claude Code model",
+        "desc": "Model passed to claude --model for bot turns. Accepts an alias (sonnet, opus, haiku) or a full model id. Blank = the CLI's own default.",
+        "placeholder": "CLI default"
+      },
+      "bot-model-codex": {
+        "label": "Codex model",
+        "desc": "Model passed to codex -m for bot turns. Blank = the CLI's own default.",
+        "placeholder": "CLI default"
+      },
+      "bot-model-qwen-code": {
+        "label": "Qwen Code model",
+        "desc": "Model passed to qwen -m for bot turns. Blank = the model selected in qwen's own settings.",
+        "placeholder": "CLI default"
       }
     },
     "agent": {

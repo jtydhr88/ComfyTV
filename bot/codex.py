@@ -280,6 +280,24 @@ class CodexCodeProvider(AgentProvider):
         self._probe_cache = (now, status)
         return status
 
+    async def list_models(self) -> list[str]:
+        def read() -> list[str]:
+            try:
+                import tomllib
+            except Exception:
+                return []
+            cfg = Path.home() / ".codex" / "config.toml"
+            if not cfg.exists():
+                return []
+            try:
+                data = tomllib.loads(
+                    cfg.read_text(encoding="utf-8", errors="ignore"))
+            except Exception:
+                return []
+            model = data.get("model")
+            return [str(model)] if model else []
+        return await asyncio.to_thread(read)
+
     def _mcp_lockdown_args(self) -> list[str]:
         args: list[str] = []
         try:
@@ -334,6 +352,8 @@ class CodexCodeProvider(AgentProvider):
         flags += ["-c", "features.shell_tool=false"]
         flags += ["-c", 'web_search="disabled"']
         flags += ["-c", 'approvals_reviewer="auto_review"']
+        if turn.model:
+            flags += ["-m", turn.model]
         if not turn.resume_token:
             flags += ["--sandbox", "workspace-write"]
 

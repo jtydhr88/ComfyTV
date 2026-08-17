@@ -27,6 +27,7 @@ class TurnRequest:
     mcp_endpoint: str = ""
     allowed_tools: list[str] = field(default_factory=list)
     attachments: list[dict] = field(default_factory=list)
+    model: str = ""
 
 
 @dataclass
@@ -63,6 +64,9 @@ class AgentProvider(ABC):
 
     @abstractmethod
     def capabilities(self) -> ProviderCaps: ...
+
+    async def list_models(self) -> list[str]:
+        return []
 
     @abstractmethod
     async def send(self, turn: TurnRequest, emit: EmitFn,

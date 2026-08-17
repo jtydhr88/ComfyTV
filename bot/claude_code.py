@@ -135,6 +135,9 @@ class ClaudeCodeProvider(AgentProvider):
         self._probe_cache = (now, status)
         return status
 
+    async def list_models(self) -> list[str]:
+        return ["sonnet", "opus", "haiku"]
+
     def _build_argv(self, turn: TurnRequest) -> list[str]:
         argv = resolve_claude_command()
         if not argv:
@@ -149,6 +152,8 @@ class ClaudeCodeProvider(AgentProvider):
             "--verbose",
             "--strict-mcp-config",
         ]
+        if turn.model:
+            argv += ["--model", turn.model]
         if turn.mcp_endpoint:
             mcp = {"mcpServers": {"comfytv": {"type": "http", "url": turn.mcp_endpoint}}}
             argv += ["--mcp-config", json.dumps(mcp)]

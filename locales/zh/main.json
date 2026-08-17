@@ -123,6 +123,21 @@
       "enable-bot": {
         "label": "启用 ComfyTV Bot",
         "desc": "显示内嵌 Bot 侧边栏及其聊天接口。前置条件:先启用 MCP 服务。"
+      },
+      "bot-model-claude-code": {
+        "label": "Claude Code 模型",
+        "desc": "Bot 回合传给 claude --model 的模型,支持别名(sonnet、opus、haiku)或完整模型 id。留空 = CLI 自己的默认。",
+        "placeholder": "CLI 默认"
+      },
+      "bot-model-codex": {
+        "label": "Codex 模型",
+        "desc": "Bot 回合传给 codex -m 的模型。留空 = CLI 自己的默认。",
+        "placeholder": "CLI 默认"
+      },
+      "bot-model-qwen-code": {
+        "label": "Qwen Code 模型",
+        "desc": "Bot 回合传给 qwen -m 的模型。留空 = 用 qwen 自己设置里选的模型。",
+        "placeholder": "CLI 默认"
       }
     },
     "agent": {

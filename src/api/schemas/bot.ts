@@ -9,6 +9,7 @@ export const BotProviderStatusSchema = z.object({
   detail:      z.string(),
   stateful:    z.boolean(),
   attachments: z.boolean().optional(),
+  models:      z.array(z.string()).optional(),
 })
 export type BotProviderStatus = z.infer<typeof BotProviderStatusSchema>
 

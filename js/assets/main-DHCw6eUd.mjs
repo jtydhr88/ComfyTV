@@ -15064,7 +15064,8 @@ const BotProviderStatusSchema = object({
   logged_in: boolean().nullable(),
   detail: string(),
   stateful: boolean(),
-  attachments: boolean().optional()
+  attachments: boolean().optional(),
+  models: array(string()).optional()
 });
 const BotStatusSchema = object({
   enabled: boolean().optional(),
@@ -56740,7 +56741,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-Be8IMDxt.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-Bbjbb4Dm.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -57507,11 +57508,11 @@ const _hoisted_20$A = {
   key: 2,
   class: "ctv:flex ctv:flex-col ctv:gap-1"
 };
-const _hoisted_21$w = {
+const _hoisted_21$x = {
   key: 1,
   class: "ctv:absolute ctv:inset-0 ctv:z-10 ctv:flex ctv:items-center ctv:justify-center ctv:pointer-events-none ctv:bg-primary-background/15 ctv:border-2 ctv:border-dashed ctv:border-primary-background ctv:rounded-lg"
 };
-const _hoisted_22$u = { class: "ctv:py-1 ctv:px-2.5 ctv:rounded ctv:text-xs ctv:font-semibold ctv:bg-interface-panel-surface ctv:text-base-foreground" };
+const _hoisted_22$v = { class: "ctv:py-1 ctv:px-2.5 ctv:rounded ctv:text-xs ctv:font-semibold ctv:bg-interface-panel-surface ctv:text-base-foreground" };
 const _hoisted_23$t = { class: "ctv:flex-1 ctv:truncate" };
 const _hoisted_24$r = { class: "ctv:flex-1 ctv:truncate" };
 const _hoisted_25$p = ["disabled", "title"];
@@ -57790,8 +57791,8 @@ const _sfc_main$3L = /* @__PURE__ */ defineComponent({
             }), 128))
           ]))
         ]),
-        unref(fileDragDepth) > 0 ? (openBlock(), createElementBlock("div", _hoisted_21$w, [
-          createBaseVNode("span", _hoisted_22$u, toDisplayString$1(_ctx.$t("assets.dropHint")), 1)
+        unref(fileDragDepth) > 0 ? (openBlock(), createElementBlock("div", _hoisted_21$x, [
+          createBaseVNode("span", _hoisted_22$v, toDisplayString$1(_ctx.$t("assets.dropHint")), 1)
         ])) : createCommentVNode("", true),
         unref(settingsMenu) ? (openBlock(), createElementBlock("div", {
           key: 2,
@@ -59638,7 +59639,7 @@ const workflow$1 = { "uploadButton": "⬆ Upload workflow", "imported": 'Importe
 const stage$1 = { "run": "Run", "rerun": "Re-run", "running": "Running…", "cancel": "Cancel", "preparingWorkflow": "Preparing workflow…", "outputDurationHint": "Generation time", "section": { "context": "Context", "pool": "Pool", "output": "Output ({type})", "actions": "Actions" }, "pool": { "clear": "Clear", "clearHint": "Empty the picker pool and reset the selection", "confirmClear": "Clear pool?", "confirm": "Yes", "cancel": "No" }, "empty": { "no_output": "no output yet", "generating": "generating…", "pending_upstream": "upstream pending", "unsupported_type": "unsupported type {type}" }, "source": { "upstream": "← upstream", "pending": "… waiting" }, "disconnect": "Disconnect", "starting": "starting…", "runByKind": { "text": "Generate Text", "image": "Generate Image", "image-batch": "Generate Images", "video": "Generate Video", "audio": "Generate Audio", "panorama": "Generate Panorama", "storyboard": "Generate Storyboard", "model": "Generate 3D Model", "material": "Generate Material" }, "action": { "viewFull": "View full size", "download": "Download", "copyText": "Copy text", "renderMarkdown": "Render as Markdown", "showRawText": "Show raw text", "addTag": "Save to library / tag", "removeFromPicker": "Remove from picker", "close": "Close", "loadAsset": "Load as asset node", "prev": "Previous", "next": "Next", "pick": "Select this track" }, "preparingWorkflowDetail": "Hang on — converting workflow to api JSON. Try Run again in a moment." };
 const error$1 = { "dismiss": "Dismiss", "cancelled": "Cancelled", "upstreamNotReady": "Upstream not ready", "upstreamNotReadyDetail": "Upstream not ready: {list}. Run those stage(s) first so they produce a snapshot, then Run this stage again.", "workerDied": "Backend stopped without sending a result. The prompt worker likely died (CUDA OOM during cleanup is the usual cause). Restart ComfyUI to recover." };
 const sidebar$1 = { "tab": { "workflow": "Workflow", "assets": "Assets", "entries": "Entries", "params": "Stages", "presets": "Presets", "resources": "Resources", "servers": "Servers", "settings": "Settings" } };
-const settings$1 = { "title": "Settings", "hint": "Defaults come from comfytv.properties in the ComfyTV directory. Values saved here are stored in the database and take precedence.", "loading": "Loading…", "save": "Save", "saving": "Saving…", "backup": { "section": "Database backup", "now": "Back up now", "running": "Backing up…", "ok": "Backup written to {path}", "failed": "Backup failed: {error}" }, "fields": { "enable-db-backup": { "label": "Automatic backup on startup", "desc": "Back up the ComfyTV data directory (database + workflows) every time the server starts, before any migration runs." }, "db-backup-max-count": { "label": "Max backups to keep", "desc": "When the number of snapshots exceeds this, the oldest ones are deleted." }, "db-backup-path": { "label": "Backup location", "desc": "Leave empty to use the db-backup folder inside the ComfyTV directory. Snapshots are timestamped folders like 20260805-093000/comfytv.", "placeholder": "e.g. D:\\backups\\comfytv" }, "enable-mcp": { "label": "Enable MCP server", "desc": "Expose the ComfyTV MCP endpoint (/comfytv/mcp) so agents can read and drive the canvas. Off by default." }, "enable-bot": { "label": "Enable ComfyTV Bot", "desc": "Show the embedded bot sidebar and its chat API. Requires the MCP server to be enabled." } }, "agent": { "section": "Agent & MCP" } };
+const settings$1 = { "title": "Settings", "hint": "Defaults come from comfytv.properties in the ComfyTV directory. Values saved here are stored in the database and take precedence.", "loading": "Loading…", "save": "Save", "saving": "Saving…", "backup": { "section": "Database backup", "now": "Back up now", "running": "Backing up…", "ok": "Backup written to {path}", "failed": "Backup failed: {error}" }, "fields": { "enable-db-backup": { "label": "Automatic backup on startup", "desc": "Back up the ComfyTV data directory (database + workflows) every time the server starts, before any migration runs." }, "db-backup-max-count": { "label": "Max backups to keep", "desc": "When the number of snapshots exceeds this, the oldest ones are deleted." }, "db-backup-path": { "label": "Backup location", "desc": "Leave empty to use the db-backup folder inside the ComfyTV directory. Snapshots are timestamped folders like 20260805-093000/comfytv.", "placeholder": "e.g. D:\\backups\\comfytv" }, "enable-mcp": { "label": "Enable MCP server", "desc": "Expose the ComfyTV MCP endpoint (/comfytv/mcp) so agents can read and drive the canvas. Off by default." }, "enable-bot": { "label": "Enable ComfyTV Bot", "desc": "Show the embedded bot sidebar and its chat API. Requires the MCP server to be enabled." }, "bot-model-claude-code": { "label": "Claude Code model", "desc": "Model passed to claude --model for bot turns. Accepts an alias (sonnet, opus, haiku) or a full model id. Blank = the CLI's own default.", "placeholder": "CLI default" }, "bot-model-codex": { "label": "Codex model", "desc": "Model passed to codex -m for bot turns. Blank = the CLI's own default.", "placeholder": "CLI default" }, "bot-model-qwen-code": { "label": "Qwen Code model", "desc": "Model passed to qwen -m for bot turns. Blank = the model selected in qwen's own settings.", "placeholder": "CLI default" } }, "agent": { "section": "Agent & MCP" } };
 const servers$1 = { "title": "ComfyUI Servers", "add": "Add", "addTooltip": "Register another ComfyUI instance on your network so stages can run on it", "empty": "No remote servers configured. Stages run on this machine. Add a server to unlock the per-stage server dropdown and run stages on several machines in parallel.", "edit": "Edit", "delete": "Delete", "deleteConfirm": 'Delete server "{label}"? Stages currently pointed at it will fall back to running locally.', "enable": "Enable", "disable": "Disable", "local": "Local (this machine)", "runOn": "Run on", "form": { "label": "Name", "labelPlaceholder": "e.g. GPU rig upstairs", "host": "Host / IP", "port": "Port", "create": "Add server", "save": "Save", "cancel": "Cancel", "saveFailed": "Save failed — is the name already in use?" }, "test": { "action": "Test connection", "testing": "Testing…", "ok": "Connected", "failed": "Connection failed" }, "job": { "started": "Running on {label}", "failed": "Remote run failed", "cancelled": "Remote run cancelled", "fallbackLocal": "Selected server is gone or disabled — this stage will run locally." }, "status": { "online": "Online", "offline": "Offline", "unknown": "Checking…", "idle": "Idle", "queueShort": "Q {n}", "queueDetail": "{running} running, {pending} pending", "fromComfyTV": "{n} from ComfyTV" }, "caps": { "badge": "ComfyTV v{version}", "comfyOnly": "ComfyUI only — ComfyTV not installed", "missingNodes": "{n} nodes missing", "missingTitle": "Nodes missing on this remote — upgrade its ComfyTV:" }, "preflight": { "blockedTitle": "Remote run blocked", "warnTitle": "Remote resource check", "runAnyway": "Run anyway", "noComfyTV": `Remote "{label}" doesn't have ComfyTV installed — install ComfyTV there or run locally.`, "missingNode": 'Remote "{label}" is missing node {node} — upgrade its ComfyTV.', "missingResource": 'Remote "{label}" is missing resource {file} — run anyway?', "resourceMismatch": 'Resource {file} has different content on remote "{label}" — run anyway?' } };
 const stageManager$1 = { "title": "Stage Manager", "refresh": "Refresh list", "import": "Import", "rescan": "Rescan", "rescanTooltip": "Scan the workflow library on disk (comfytv/workflows/ in the ComfyUI user directory) for new, changed, or removed files — no backend restart needed", "rescanFound": "Found {n} new workflow(s)", "rescanNone": "No new workflows found", "rescanNoneDetail": "Make sure the file is a .json inside comfytv/workflows/<kind>/ in the ComfyUI user directory (preset and .api.json sidecars don't count).", "rescanFailed": "Rescan failed", "setDefault": "Set as default", "unsetDefault": "Unset default", "defaultSet": "{label} is now the default workflow for this stage", "defaultCleared": "{label} is no longer the default — the first listed workflow is used", "defaultFailed": "Could not change the default workflow", "section": { "workflows": "Workflows", "params": "Parameters" }, "emptyWorkflows": "No workflows registered for this stage yet — import one here, or drop a .json into comfytv/workflows/<kind>/ in the ComfyUI user directory and hit Rescan.", "hint": "Workflows listed here are picked from the workflow dropdown on the matching stage node on the canvas.", "badge": { "linked": "linked", "linkedHint": "Linked from ComfyUI's native workflow folder (not managed by ComfyTV)", "fileMissing": "file missing", "notGui": "not GUI format", "notGuiHint": "Missing a top-level nodes array — open it in ComfyUI and re-save normally, not with Save (API Format)", "noApi": "API not generated", "noApiHint": "The API prompt is generated automatically the first time this workflow runs — normal for a freshly imported workflow.", "new": "new", "newHint": "Discovered in the most recent scan (startup or rescan)", "builtin": "built-in", "builtinHint": "Ships with ComfyTV (tracked in git). Workflows without this badge were imported or dropped in by a user.", "default": "default", "defaultHint": "Newly added stage nodes of this kind start with this workflow selected. If it is deleted or unlinked, the first listed workflow is used instead." } };
 const assets$1 = { "title": "Asset Library", "empty": "No assets yet — add images, video, or audio to reuse them across projects.", "emptyCategory": "No assets in this category yet.", "add": "Add media", "addTooltip": "Upload images, video, or audio into the library (or drag & drop them onto this panel)", "uploading": "Uploading {done}/{total}…", "uploadFailed": "Upload failed: {detail}", "dropHint": "Drop files to add them to the library", "search": "Search assets", "noResults": "No assets match your search.", "scanFolder": "Scan media folder", "scanFolderHint": "Drop large files into this folder — they are adopted on scan without uploading", "view": { "settings": "Display settings", "list": "List view", "grid": "Grid view" }, "media": { "all": "All types", "image": "Images", "video": "Video", "audio": "Audio", "model": "3D models" }, "category": { "all": "All", "none": "Uncategorized", "new": "New category", "newPrompt": "New category name:", "rename": "Rename category", "renamePrompt": "Category name:", "delete": "Delete category", "deleteConfirm": "Delete this category? It is removed from all assets; the assets and files on disk stay." }, "card": { "rename": "Rename", "renamePrompt": "Asset name:", "delete": "Remove from library", "deleteConfirm": "Remove this asset from the library? The file on disk stays.", "tags": "Edit tags", "loadNode": "Add as node to canvas", "makeProxy": "Generate preview proxy", "more": "More options", "playPreview": "Play", "pausePreview": "Pause", "fileMissing": "File missing", "fileMissingHint": "The file on disk was deleted; the library entry remains — re-import it or remove the asset" }, "tagPopover": { "empty": "No categories yet.", "create": "New category" } };
@@ -59806,7 +59807,7 @@ const workflow = { "uploadButton": "⬆ 上传工作流", "imported": "已导入
 const stage = { "run": "运行", "rerun": "重新运行", "running": "运行中…", "cancel": "取消", "preparingWorkflow": "准备工作流中…", "outputDurationHint": "生成耗时", "section": { "context": "上游输入", "pool": "图片池", "output": "输出 ({type})", "actions": "动作" }, "pool": { "clear": "清除", "clearHint": "清空图片池并重置选择", "confirmClear": "确认清空？", "confirm": "是", "cancel": "否" }, "empty": { "no_output": "暂无输出", "generating": "生成中…", "pending_upstream": "上游待运行", "unsupported_type": "不支持的类型 {type}" }, "source": { "upstream": "← 上游", "pending": "… 等待中" }, "disconnect": "断开此连接", "starting": "启动中…", "runByKind": { "text": "生成文本", "image": "生成图片", "image-batch": "生成图片", "video": "生成视频", "audio": "生成音频", "panorama": "生成全景图", "storyboard": "生成分镜", "model": "生成3D模型", "material": "生成材质" }, "action": { "viewFull": "查看大图", "download": "下载", "copyText": "复制文本", "renderMarkdown": "渲染 Markdown", "showRawText": "显示原文", "addTag": "存入资产库 / 打标签", "removeFromPicker": "从选择器移除", "close": "关闭", "loadAsset": "作为资产节点加载", "prev": "上一张", "next": "下一张", "pick": "选用这条" }, "preparingWorkflowDetail": "稍等 — 正在把工作流转换成 api JSON。稍后再点运行。" };
 const error = { "dismiss": "清除", "cancelled": "已取消", "upstreamNotReady": "上游未就绪", "upstreamNotReadyDetail": "上游未就绪:{list}。请先运行这些 stage 生成快照,然后再运行此 stage。", "workerDied": "后端未返回结果就停止了。prompt worker 可能已崩溃(通常是清理阶段 CUDA OOM)。重启 ComfyUI 后恢复。" };
 const sidebar = { "tab": { "workflow": "工作流", "assets": "资产库", "entries": "条目", "params": "Stage 管理", "presets": "预设", "resources": "资源", "servers": "服务器", "settings": "设置" } };
-const settings = { "title": "设置", "hint": "默认值来自 ComfyTV 目录下的 comfytv.properties。此处保存的值写入数据库,并优先生效。", "loading": "加载中…", "save": "保存", "saving": "保存中…", "backup": { "section": "数据库备份", "now": "立即备份", "running": "备份中…", "ok": "备份已写入 {path}", "failed": "备份失败:{error}" }, "fields": { "enable-db-backup": { "label": "启动时自动备份", "desc": "每次服务器启动时(在任何迁移执行之前)备份 ComfyTV 数据目录(数据库 + 工作流)。" }, "db-backup-max-count": { "label": "最大备份数量", "desc": "快照数量超过该值时,自动删除最旧的备份。" }, "db-backup-path": { "label": "备份位置", "desc": "留空则使用 ComfyTV 目录下的 db-backup 文件夹。快照以时间戳命名,如 20260805-093000/comfytv。", "placeholder": "如 D:\\backups\\comfytv" }, "enable-mcp": { "label": "启用 MCP 服务", "desc": "开放 ComfyTV 的 MCP 端点(/comfytv/mcp),允许 agent 读取并操作画布。默认关闭。" }, "enable-bot": { "label": "启用 ComfyTV Bot", "desc": "显示内嵌 Bot 侧边栏及其聊天接口。前置条件:先启用 MCP 服务。" } }, "agent": { "section": "Agent 与 MCP" } };
+const settings = { "title": "设置", "hint": "默认值来自 ComfyTV 目录下的 comfytv.properties。此处保存的值写入数据库,并优先生效。", "loading": "加载中…", "save": "保存", "saving": "保存中…", "backup": { "section": "数据库备份", "now": "立即备份", "running": "备份中…", "ok": "备份已写入 {path}", "failed": "备份失败:{error}" }, "fields": { "enable-db-backup": { "label": "启动时自动备份", "desc": "每次服务器启动时(在任何迁移执行之前)备份 ComfyTV 数据目录(数据库 + 工作流)。" }, "db-backup-max-count": { "label": "最大备份数量", "desc": "快照数量超过该值时,自动删除最旧的备份。" }, "db-backup-path": { "label": "备份位置", "desc": "留空则使用 ComfyTV 目录下的 db-backup 文件夹。快照以时间戳命名,如 20260805-093000/comfytv。", "placeholder": "如 D:\\backups\\comfytv" }, "enable-mcp": { "label": "启用 MCP 服务", "desc": "开放 ComfyTV 的 MCP 端点(/comfytv/mcp),允许 agent 读取并操作画布。默认关闭。" }, "enable-bot": { "label": "启用 ComfyTV Bot", "desc": "显示内嵌 Bot 侧边栏及其聊天接口。前置条件:先启用 MCP 服务。" }, "bot-model-claude-code": { "label": "Claude Code 模型", "desc": "Bot 回合传给 claude --model 的模型,支持别名(sonnet、opus、haiku)或完整模型 id。留空 = CLI 自己的默认。", "placeholder": "CLI 默认" }, "bot-model-codex": { "label": "Codex 模型", "desc": "Bot 回合传给 codex -m 的模型。留空 = CLI 自己的默认。", "placeholder": "CLI 默认" }, "bot-model-qwen-code": { "label": "Qwen Code 模型", "desc": "Bot 回合传给 qwen -m 的模型。留空 = 用 qwen 自己设置里选的模型。", "placeholder": "CLI 默认" } }, "agent": { "section": "Agent 与 MCP" } };
 const servers = { "title": "ComfyUI 服务器", "add": "添加", "addTooltip": "登记局域网内的其他 ComfyUI 实例,让 stage 可以在它上面运行", "empty": "还没有配置远程服务器,所有 stage 都在本机运行。添加服务器后,每个 stage 会出现服务器下拉框,可多机并行运行。", "edit": "编辑", "delete": "删除", "deleteConfirm": "删除服务器「{label}」?指向它的 stage 会回退到本机运行。", "enable": "启用", "disable": "停用", "local": "本机 (Local)", "runOn": "运行于", "form": { "label": "名称", "labelPlaceholder": "例如:楼上那台 4090", "host": "主机 / IP", "port": "端口", "create": "添加服务器", "save": "保存", "cancel": "取消", "saveFailed": "保存失败——名称是不是重复了?" }, "test": { "action": "测试连接", "testing": "测试中…", "ok": "连接成功", "failed": "连接失败" }, "job": { "started": "正在 {label} 上运行", "failed": "远程运行失败", "cancelled": "远程运行已取消", "fallbackLocal": "所选服务器已删除或停用——这个 stage 将在本机运行。" }, "status": { "online": "在线", "offline": "离线", "unknown": "检测中…", "idle": "空闲", "queueShort": "队列 {n}", "queueDetail": "{running} 运行中,{pending} 排队", "fromComfyTV": "其中 {n} 来自 ComfyTV" }, "caps": { "badge": "ComfyTV v{version}", "comfyOnly": "仅 ComfyUI（未装 ComfyTV）", "missingNodes": "缺 {n} 个节点", "missingTitle": "远端缺少的节点——请升级远端 ComfyTV：" }, "preflight": { "blockedTitle": "远程运行被拦截", "warnTitle": "远端资源检查", "runAnyway": "仍要运行", "noComfyTV": "远端「{label}」未安装 ComfyTV——请先在远端安装，或改为本机运行。", "missingNode": "远端「{label}」缺少节点 {node}——请升级远端 ComfyTV。", "missingResource": "远端「{label}」缺少资源 {file}，仍要运行吗？", "resourceMismatch": "资源 {file} 在远端「{label}」上内容不一致，仍要运行吗？" } };
 const stageManager = { "title": "Stage 管理", "refresh": "刷新列表", "import": "导入", "rescan": "重新扫描", "rescanTooltip": "扫描磁盘上的工作流库（ComfyUI user 目录下的 comfytv/workflows/），发现新增、变更或删除的文件 —— 无需重启后端", "rescanFound": "发现 {n} 个新工作流", "rescanNone": "没有发现新工作流", "rescanNoneDetail": "请确认文件是 .json 且放在 ComfyUI user 目录下的 comfytv/workflows/对应类别目录中（preset 和 .api.json 附属文件不算）。", "rescanFailed": "重新扫描失败", "setDefault": "设为默认", "unsetDefault": "取消默认", "defaultSet": "{label} 已设为该 Stage 的默认工作流", "defaultCleared": "{label} 已取消默认 —— 将使用列表中的第一个工作流", "defaultFailed": "修改默认工作流失败", "section": { "workflows": "工作流", "params": "参数" }, "emptyWorkflows": "该 Stage 下还没有已注册的工作流 —— 点「导入」上传，或把 .json 放入 ComfyUI user 目录下的 comfytv/workflows/对应类别目录后点「重新扫描」。", "hint": "这里列出的工作流，在画布上对应 Stage 节点的 workflow 下拉框中选用。", "badge": { "linked": "外链", "linkedHint": "链接自 ComfyUI 原生工作流目录（不由 ComfyTV 管理）", "fileMissing": "文件丢失", "notGui": "非 GUI 格式", "notGuiHint": "缺少顶层 nodes 数组 —— 在 ComfyUI 中打开后用普通「保存」重新导出，不要用「保存（API 格式）」", "noApi": "API 未生成", "noApiHint": "首次运行该工作流时会自动生成 API prompt，新导入的工作流出现此标记属于正常。", "new": "新", "newHint": "最近一次扫描（启动或重新扫描）新发现的工作流", "builtin": "内置", "builtinHint": "ComfyTV 自带的工作流（git 跟踪）。没有此标记的是用户导入或手动放入的。", "default": "默认", "defaultHint": "新添加的该类 Stage 节点会预选此工作流。若它被删除或取消链接，则回退到列表中的第一个。" } };
 const assets = { "title": "资产库", "empty": "还没有资产 —— 添加图片、视频或音频后可跨项目复用。", "emptyCategory": "这个分类下还没有资产。", "add": "添加素材", "addTooltip": "上传图片、视频或音频到资产库（也可以直接拖拽文件到这个面板）", "uploading": "上传中 {done}/{total}…", "uploadFailed": "上传失败: {detail}", "dropHint": "松开把文件添加到资产库", "search": "搜索资产", "noResults": "没有匹配的资产。", "scanFolder": "扫描素材文件夹", "scanFolderHint": "大文件直接放进这个文件夹,扫描时自动收录,无需上传", "view": { "settings": "显示设置", "list": "列表视图", "grid": "网格视图" }, "media": { "all": "全部类型", "image": "图片", "video": "视频", "audio": "音频", "model": "3D 模型" }, "category": { "all": "全部", "none": "未分类", "new": "新建分类", "newPrompt": "新分类名称：", "rename": "重命名分类", "renamePrompt": "分类名称：", "delete": "删除分类", "deleteConfirm": "删除这个分类？它会从所有资产上移除；资产和磁盘上的文件保留。" }, "card": { "rename": "重命名", "renamePrompt": "资产名称：", "delete": "从资产库移除", "deleteConfirm": "把这个资产从资产库移除？磁盘上的文件保留。", "tags": "编辑标签", "loadNode": "作为节点添加到画布", "makeProxy": "生成预览代理", "more": "更多操作", "playPreview": "试听", "pausePreview": "暂停", "fileMissing": "文件缺失", "fileMissingHint": "本地文件已被删除，资产条目仍保留；可重新导入或从资产库移除" }, "tagPopover": { "empty": "还没有分类。", "create": "新建分类" } };
@@ -60365,8 +60366,8 @@ const _hoisted_18$G = {
 };
 const _hoisted_19$D = { class: "ctv:text-2xs ctv:text-muted-foreground" };
 const _hoisted_20$z = ["onUpdate:modelValue", "placeholder", "onBlur"];
-const _hoisted_21$v = ["onUpdate:modelValue", "placeholder", "onBlur"];
-const _hoisted_22$t = {
+const _hoisted_21$w = ["onUpdate:modelValue", "placeholder", "onBlur"];
+const _hoisted_22$u = {
   key: 0,
   class: "ctv:m-0 ctv:p-4 ctv:text-center ctv:italic ctv:text-muted-foreground"
 };
@@ -60577,14 +60578,14 @@ const _sfc_main$3K = /* @__PURE__ */ defineComponent({
                     class: normalizeClass(inputClass2()),
                     placeholder: f2.placeholder ?? "",
                     onBlur: ($event) => unref(saveIfDirty)(entry)
-                  }, null, 42, _hoisted_21$v)), [
+                  }, null, 42, _hoisted_21$w)), [
                     [vModelText, unref(drafts)[entry.id].metadata[f2.name]]
                   ])
                 ]);
               }), 128))
             ]);
           }), 128)),
-          unref(activeRows).length === 0 && !unref(creating) ? (openBlock(), createElementBlock("p", _hoisted_22$t, toDisplayString$1(_ctx.$t("entries.emptyKind", { kind: unref(KIND_LABELS)[activeKind.value].toLowerCase() })), 1)) : createCommentVNode("", true),
+          unref(activeRows).length === 0 && !unref(creating) ? (openBlock(), createElementBlock("p", _hoisted_22$u, toDisplayString$1(_ctx.$t("entries.emptyKind", { kind: unref(KIND_LABELS)[activeKind.value].toLowerCase() })), 1)) : createCommentVNode("", true),
           unref(creating) ? (openBlock(), createElementBlock("div", {
             key: 1,
             class: normalizeClass(["create-row", cardClass])
@@ -62537,8 +62538,8 @@ const _hoisted_19$C = {
   class: "ctv:py-5 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60"
 };
 const _hoisted_20$y = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_21$u = { class: "ctv:flex-1 ctv:min-w-0" };
-const _hoisted_22$s = { class: "ctv:font-semibold ctv:truncate" };
+const _hoisted_21$v = { class: "ctv:flex-1 ctv:min-w-0" };
+const _hoisted_22$t = { class: "ctv:font-semibold ctv:truncate" };
 const _hoisted_23$r = { class: "ctv:text-muted-foreground ctv:truncate" };
 const _hoisted_24$p = ["title"];
 const _hoisted_25$n = {
@@ -62683,8 +62684,8 @@ const _sfc_main$3G = /* @__PURE__ */ defineComponent({
               class: normalizeClass(["ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1.5 ctv:px-2 ctv:rounded-lg ctv:bg-secondary-background ctv:border ctv:border-border-subtle", { "ctv:opacity-50": !server.enabled }])
             }, [
               createBaseVNode("div", _hoisted_20$y, [
-                createBaseVNode("div", _hoisted_21$u, [
-                  createBaseVNode("div", _hoisted_22$s, toDisplayString$1(server.label), 1),
+                createBaseVNode("div", _hoisted_21$v, [
+                  createBaseVNode("div", _hoisted_22$t, toDisplayString$1(server.label), 1),
                   createBaseVNode("div", _hoisted_23$r, [
                     createTextVNode(toDisplayString$1(server.host) + ":" + toDisplayString$1(server.port) + " ", 1),
                     unref(rowTests)[server.id] ? (openBlock(), createElementBlock("span", {
@@ -70440,11 +70441,11 @@ const _hoisted_17$I = { class: "ctv:w-24 ctv:shrink-0" };
 const _hoisted_18$E = ["disabled", "title"];
 const _hoisted_19$B = ["accept"];
 const _hoisted_20$x = { class: "comfytv-asset-scroll ctv:h-[224px] ctv:shrink-0 ctv:overflow-y-scroll" };
-const _hoisted_21$t = {
+const _hoisted_21$u = {
   key: 0,
   class: "ctv:py-4 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60"
 };
-const _hoisted_22$r = {
+const _hoisted_22$s = {
   key: 1,
   class: "ctv:grid ctv:grid-cols-[repeat(auto-fill,minmax(64px,1fr))] ctv:gap-1"
 };
@@ -70693,7 +70694,7 @@ const _sfc_main$3B = /* @__PURE__ */ defineComponent({
           [vShow, !hasBatch.value || tab.value === "library"]
         ]),
         withDirectives(createBaseVNode("div", _hoisted_20$x, [
-          unref(filtered).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_21$t, toDisplayString$1(_ctx.$t("promptAssets.empty")), 1)) : (openBlock(), createElementBlock("div", _hoisted_22$r, [
+          unref(filtered).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_21$u, toDisplayString$1(_ctx.$t("promptAssets.empty")), 1)) : (openBlock(), createElementBlock("div", _hoisted_22$s, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(filtered), (asset) => {
               return openBlock(), createElementBlock("button", {
                 key: asset.id,
@@ -73931,8 +73932,8 @@ const _hoisted_19$A = {
   class: "ctv:flex ctv:h-14 ctv:w-14 ctv:items-center ctv:justify-center ctv:rounded-md ctv:border ctv:border-dashed ctv:border-border-subtle"
 };
 const _hoisted_20$w = ["placeholder", "disabled", "onKeydown"];
-const _hoisted_21$s = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_22$q = ["title", "disabled"];
+const _hoisted_21$t = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_22$r = ["title", "disabled"];
 const _hoisted_23$p = ["title", "disabled"];
 const _hoisted_24$n = ["disabled"];
 const _sfc_main$3z = /* @__PURE__ */ defineComponent({
@@ -74165,7 +74166,7 @@ const _sfc_main$3z = /* @__PURE__ */ defineComponent({
             }, null, 40, _hoisted_20$w), [
               [vModelText, draft.value]
             ]),
-            createBaseVNode("div", _hoisted_21$s, [
+            createBaseVNode("div", _hoisted_21$t, [
               unref(store2).canAttach ? (openBlock(), createElementBlock(Fragment$1, { key: 0 }, [
                 createBaseVNode("button", {
                   class: "ctv-bot-attach",
@@ -74177,7 +74178,7 @@ const _sfc_main$3z = /* @__PURE__ */ defineComponent({
                   })
                 }, [..._cache2[11] || (_cache2[11] = [
                   createBaseVNode("i", { class: "pi pi-image ctv:text-xs" }, null, -1)
-                ])], 8, _hoisted_22$q),
+                ])], 8, _hoisted_22$r),
                 createBaseVNode("button", {
                   class: normalizeClass(["ctv-bot-attach", pickerOpen.value ? "ctv-bot-attach-active" : ""]),
                   title: _ctx.$t("bot.attachFromLibrary"),
@@ -74255,8 +74256,8 @@ const _hoisted_19$z = {
   class: "ctv:flex ctv:h-full ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-2 ctv:px-6 ctv:text-center"
 };
 const _hoisted_20$v = { class: "ctv:text-xs ctv:text-muted-foreground" };
-const _hoisted_21$r = ["onClick"];
-const _hoisted_22$p = { class: "ctv:flex ctv:min-w-0 ctv:flex-1 ctv:flex-col" };
+const _hoisted_21$s = ["onClick"];
+const _hoisted_22$q = { class: "ctv:flex ctv:min-w-0 ctv:flex-1 ctv:flex-col" };
 const _hoisted_23$o = ["onKeydown", "onBlur"];
 const _hoisted_24$m = {
   key: 1,
@@ -74408,7 +74409,7 @@ const _sfc_main$3y = /* @__PURE__ */ defineComponent({
                 createBaseVNode("i", {
                   class: normalizeClass(["pi ctv:text-xs", chat.busy ? "pi-spin pi-spinner" : chat.pinned ? "pi-star-fill ctv:text-amber-400" : "pi-comment ctv:text-muted-foreground"])
                 }, null, 2),
-                createBaseVNode("div", _hoisted_22$p, [
+                createBaseVNode("div", _hoisted_22$q, [
                   renamingId.value === chat.id ? withDirectives((openBlock(), createElementBlock("input", {
                     key: 0,
                     ref_for: true,
@@ -74452,7 +74453,7 @@ const _sfc_main$3y = /* @__PURE__ */ defineComponent({
                     createBaseVNode("i", { class: "pi pi-trash ctv:text-[11px]" }, null, -1)
                   ])], 8, _hoisted_29$e)
                 ])
-              ], 8, _hoisted_21$r);
+              ], 8, _hoisted_21$s);
             }), 128))
           ])
         ], 64))
@@ -74505,9 +74506,20 @@ function syncBotTab(a2, enabled) {
     registered$4 = false;
   }
 }
-const AGENT_KEYS = /* @__PURE__ */ new Set(["enable-mcp", "enable-bot"]);
+const AGENT_TOGGLE_KEYS = /* @__PURE__ */ new Set(["enable-mcp", "enable-bot"]);
+const MODEL_KEY_PREFIX = "bot-model-";
+function isAgentKey(key) {
+  return AGENT_TOGGLE_KEYS.has(key) || key.startsWith(MODEL_KEY_PREFIX);
+}
 function message(e) {
   return e instanceof Error ? e.message : String(e);
+}
+function tryBotStore() {
+  try {
+    return useBotStore();
+  } catch {
+    return null;
+  }
 }
 function useSettingsPanel(isActive2) {
   const rows = /* @__PURE__ */ ref([]);
@@ -74517,9 +74529,15 @@ function useSettingsPanel(isActive2) {
   const backingUp = /* @__PURE__ */ ref(false);
   const error2 = /* @__PURE__ */ ref("");
   const backupResult = /* @__PURE__ */ ref(null);
+  function modelSuggestions(key) {
+    var _a3, _b2;
+    if (!key.startsWith(MODEL_KEY_PREFIX)) return [];
+    const providerId = key.slice(MODEL_KEY_PREFIX.length);
+    return ((_b2 = (_a3 = tryBotStore()) == null ? void 0 : _a3.providers.find((p2) => p2.id === providerId)) == null ? void 0 : _b2.models) ?? [];
+  }
   const dirty = computed(() => rows.value.some((r) => values.value[r.key] !== r.value));
-  const backupRows = computed(() => rows.value.filter((r) => !AGENT_KEYS.has(r.key)));
-  const agentRows = computed(() => rows.value.filter((r) => AGENT_KEYS.has(r.key)));
+  const backupRows = computed(() => rows.value.filter((r) => !isAgentKey(r.key)));
+  const agentRows = computed(() => rows.value.filter((r) => isAgentKey(r.key) && (AGENT_TOGGLE_KEYS.has(r.key) || values.value["enable-bot"] === true)));
   const botToggleLocked = computed(() => values.value["enable-mcp"] !== true);
   function syncValues() {
     values.value = Object.fromEntries(rows.value.map((r) => [r.key, r.value]));
@@ -74553,7 +74571,7 @@ function useSettingsPanel(isActive2) {
     try {
       rows.value = (await saveSettings(changed)).settings;
       syncValues();
-      if (Object.keys(changed).some((k2) => AGENT_KEYS.has(k2))) {
+      if (Object.keys(changed).some((k2) => AGENT_TOGGLE_KEYS.has(k2))) {
         const bot2 = useBotStore();
         await bot2.refreshStatus();
         syncBotTab(app, bot2.enabled);
@@ -74577,7 +74595,11 @@ function useSettingsPanel(isActive2) {
     }
   }
   watch(isActive2, (active) => {
-    if (active) void load();
+    var _a3;
+    if (active) {
+      void load();
+      void ((_a3 = tryBotStore()) == null ? void 0 : _a3.refreshStatus());
+    }
   }, { immediate: true });
   return {
     rows,
@@ -74594,7 +74616,8 @@ function useSettingsPanel(isActive2) {
     load,
     setValue,
     save,
-    backupNow
+    backupNow,
+    modelSuggestions
   };
 }
 const _hoisted_1$5r = { class: "ctv:relative ctv:flex ctv:flex-col ctv:size-full ctv:box-border ctv:overflow-hidden ctv:text-xs ctv:text-base-foreground" };
@@ -74623,8 +74646,14 @@ const _hoisted_17$F = { class: "ctv:flex ctv:items-center ctv:gap-2" };
 const _hoisted_18$B = { class: "ctv:flex-1 ctv:min-w-0" };
 const _hoisted_19$y = { class: "ctv:font-semibold" };
 const _hoisted_20$u = { class: "ctv:text-muted-foreground ctv:leading-relaxed" };
+const _hoisted_21$r = {
+  key: 1,
+  class: "ctv:flex ctv:flex-wrap ctv:gap-1"
+};
+const _hoisted_22$p = ["onClick"];
 const primaryBtnClass = "ctv:shrink-0 ctv:inline-flex ctv:items-center ctv:gap-1 ctv:cursor-pointer ctv:[font-family:inherit] ctv:rounded-lg ctv:border-none ctv:px-2 ctv:py-1 ctv:text-xs ctv:bg-interface-menu-component-surface-hovered ctv:text-base-foreground ctv:hover:brightness-110 ctv:disabled:opacity-50 ctv:disabled:pointer-events-none";
 const chipBtnClass$2 = "ctv:inline-flex ctv:items-center ctv:cursor-pointer ctv:[font-family:inherit] ctv:rounded-lg ctv:border ctv:border-border-subtle ctv:bg-transparent ctv:px-2 ctv:py-1 ctv:text-xs ctv:text-base-foreground ctv:hover:bg-secondary-background-hover ctv:disabled:opacity-50 ctv:disabled:pointer-events-none";
+const suggestionBtnClass = "ctv:inline-flex ctv:items-center ctv:cursor-pointer ctv:[font-family:inherit] ctv:rounded-full ctv:border ctv:border-solid ctv:border-border-subtle ctv:bg-transparent ctv:px-2 ctv:py-0.5 ctv:text-2xs ctv:font-mono ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground";
 const _sfc_main$3x = /* @__PURE__ */ defineComponent({
   __name: "SettingsPanel",
   props: {
@@ -74647,7 +74676,8 @@ const _sfc_main$3x = /* @__PURE__ */ defineComponent({
       backupResult,
       setValue,
       save,
-      backupNow
+      backupNow,
+      modelSuggestions
     } = useSettingsPanel(() => props.active);
     function placeholderFor(key) {
       const k2 = `settings.fields.${key}.placeholder`;
@@ -74720,12 +74750,31 @@ const _sfc_main$3x = /* @__PURE__ */ defineComponent({
                     createBaseVNode("div", _hoisted_19$y, toDisplayString$1(_ctx.$t(`settings.fields.${row.key}.label`)), 1),
                     createBaseVNode("div", _hoisted_20$u, toDisplayString$1(_ctx.$t(`settings.fields.${row.key}.desc`)), 1)
                   ]),
-                  createVNode(_sfc_main$3E, {
+                  row.type === "boolean" ? (openBlock(), createBlock(_sfc_main$3E, {
+                    key: 0,
                     "model-value": unref(values)[row.key] === true,
                     disabled: row.key === "enable-bot" && unref(botToggleLocked),
                     "onUpdate:modelValue": (v2) => unref(setValue)(row.key, v2)
-                  }, null, 8, ["model-value", "disabled", "onUpdate:modelValue"])
-                ])
+                  }, null, 8, ["model-value", "disabled", "onUpdate:modelValue"])) : createCommentVNode("", true)
+                ]),
+                row.type === "string" ? (openBlock(), createBlock(_sfc_main$3H, {
+                  key: 0,
+                  "model-value": String(unref(values)[row.key] ?? ""),
+                  placeholder: placeholderFor(row.key),
+                  "onUpdate:modelValue": (v2) => unref(setValue)(row.key, v2)
+                }, null, 8, ["model-value", "placeholder", "onUpdate:modelValue"])) : createCommentVNode("", true),
+                unref(modelSuggestions)(row.key).length ? (openBlock(), createElementBlock("div", _hoisted_21$r, [
+                  (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(modelSuggestions)(row.key), (m2) => {
+                    return openBlock(), createElementBlock("button", {
+                      key: m2,
+                      class: normalizeClass([
+                        suggestionBtnClass,
+                        unref(values)[row.key] === m2 ? "ctv:border-node-component-border" : ""
+                      ]),
+                      onClick: ($event) => unref(setValue)(row.key, m2)
+                    }, toDisplayString$1(m2), 11, _hoisted_22$p);
+                  }), 128))
+                ])) : createCommentVNode("", true)
               ]);
             }), 128)),
             unref(backupResult) ? (openBlock(), createElementBlock("div", {
@@ -134783,7 +134832,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-C-FsKIxV.mjs");
+    const { STLLoader } = await import("./STLLoader-DJvuLzJf.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -134791,7 +134840,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-B1jZZPRm.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-BQHr9MOB.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -213823,4 +213872,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-9f93xgob.mjs.map
+//# sourceMappingURL=main-DHCw6eUd.mjs.map

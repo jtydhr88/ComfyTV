@@ -92,10 +92,29 @@
               </div>
             </div>
             <ComfyTVToggle
+              v-if="row.type === 'boolean'"
               :model-value="values[row.key] === true"
               :disabled="row.key === 'enable-bot' && botToggleLocked"
               @update:model-value="(v: boolean) => setValue(row.key, v)"
             />
+          </div>
+          <ComfyTVText
+            v-if="row.type === 'string'"
+            :model-value="String(values[row.key] ?? '')"
+            :placeholder="placeholderFor(row.key)"
+            @update:model-value="(v: string) => setValue(row.key, v)"
+          />
+          <div
+            v-if="modelSuggestions(row.key).length"
+            class="ctv:flex ctv:flex-wrap ctv:gap-1"
+          >
+            <button
+              v-for="m in modelSuggestions(row.key)"
+              :key="m"
+              :class="[suggestionBtnClass,
+                       values[row.key] === m ? 'ctv:border-node-component-border' : '']"
+              @click="setValue(row.key, m)"
+            >{{ m }}</button>
           </div>
         </div>
         <div
@@ -144,6 +163,7 @@ const {
   setValue,
   save,
   backupNow,
+  modelSuggestions,
 } = useSettingsPanel(() => props.active)
 
 function placeholderFor(key: string): string {
@@ -159,4 +179,8 @@ const chipBtnClass = 'ctv:inline-flex ctv:items-center ctv:cursor-pointer ctv:[f
   + 'ctv:rounded-lg ctv:border ctv:border-border-subtle ctv:bg-transparent ctv:px-2 ctv:py-1 ctv:text-xs '
   + 'ctv:text-base-foreground ctv:hover:bg-secondary-background-hover '
   + 'ctv:disabled:opacity-50 ctv:disabled:pointer-events-none'
+const suggestionBtnClass = 'ctv:inline-flex ctv:items-center ctv:cursor-pointer ctv:[font-family:inherit] '
+  + 'ctv:rounded-full ctv:border ctv:border-solid ctv:border-border-subtle ctv:bg-transparent '
+  + 'ctv:px-2 ctv:py-0.5 ctv:text-2xs ctv:font-mono ctv:text-muted-foreground '
+  + 'ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground'
 </script>

@@ -201,6 +201,29 @@ class QwenCodeProvider(AgentProvider):
         self._probe_cache = (now, status)
         return status
 
+    async def list_models(self) -> list[str]:
+        def read() -> list[str]:
+            path = Path.home() / ".qwen" / "settings.json"
+            if not path.exists():
+                return []
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                return []
+            providers = data.get("modelProviders")
+            if not isinstance(providers, dict):
+                return []
+            models: list[str] = []
+            for entries in providers.values():
+                if not isinstance(entries, list):
+                    continue
+                for entry in entries:
+                    mid = entry.get("id") if isinstance(entry, dict) else None
+                    if mid and mid not in models:
+                        models.append(str(mid))
+            return models
+        return await asyncio.to_thread(read)
+
     def _build_argv(self, turn: TurnRequest) -> list[str]:
         argv = resolve_qwen_command()
         if not argv:
@@ -210,6 +233,8 @@ class QwenCodeProvider(AgentProvider):
             "--output-format", "stream-json",
             "-y",
         ]
+        if turn.model:
+            argv += ["-m", turn.model]
         if turn.resume_token:
             argv += ["--resume", turn.resume_token]
         return argv
