@@ -19,22 +19,34 @@ Typical asks:
 
 ## No API keys, by design
 
-The bot does not talk to any model API directly and ComfyTV never stores a key. Instead it drives an **agent CLI already installed on your machine**, using whatever login that CLI has. The provider layer is pluggable; three providers ship today:
+The bot does not talk to any cloud model API directly and ComfyTV never stores a key. Instead it drives an **agent CLI already installed on your machine** using that CLI's own login — or, with the Local LLM provider, a **model server running on your own hardware**. Four providers ship today:
 
 | Provider | Install | Sign in | Attachments |
 | --- | --- | --- | --- |
 | [Claude Code](https://claude.com/claude-code) | `npm install -g @anthropic-ai/claude-code` | run `claude`, log in once | images / video / audio |
 | [Codex](https://developers.openai.com/codex) | `npm install -g @openai/codex` | `codex login` | images / video / audio |
 | [Qwen Code](https://qwenlm.github.io/qwen-code-docs/) | official install script (see its docs) | run `qwen`, then `/auth` | not yet |
+| Local LLM | any OpenAI-compatible local server | none — set the endpoint URL in Settings | not yet |
 
 Prerequisites:
 
-1. Install at least one agent CLI and sign in once.
+1. Install at least one agent CLI and sign in once — or run a local model server and set its URL in Settings.
 2. In ComfyTV **Settings → Agent & MCP**, enable **MCP server** and then **ComfyTV Bot** (the bot requires MCP — it's how the agent reaches your canvas).
 
-With more than one CLI available, the ➕ button asks which engine a new chat should use; each chat remembers its provider. If no agent CLI is found, the panel shows an install guide instead of a chat box.
+With more than one provider available, the ➕ button asks which engine a new chat should use; each chat remembers its provider. If no provider is found, the panel shows an install guide instead of a chat box.
 
 Provider isolation is per-engine: Claude Code runs with a strict per-turn MCP config and a tool whitelist; Codex runs `codex exec` sandboxed to the bot's working directory with shell and web search disabled, every MCP server except ComfyTV's turned off, and approval requests routed through Codex's automatic reviewer (headless runs cannot prompt); Qwen Code runs against a project-scoped `.qwen/settings.json` inside the bot's working directory (ComfyTV MCP server only, built-in shell/file tools excluded) — your global CLI configuration is never touched.
+
+## Local LLM provider
+
+The Local LLM provider needs no agent CLI at all: ComfyTV runs the agent loop itself against any OpenAI-compatible endpoint — LM Studio, llama.cpp's `llama-server`, vLLM, Ollama and friends. Point **Settings → Agent & MCP → Local LLM endpoint** at the server's base URL (e.g. `http://127.0.0.1:1234/v1`); the model dropdown suggestions come straight from the endpoint's `/models` list. Keyless local endpoints only — consistent with the no-stored-keys rule (a `COMFYTV_LOCAL_LLM_API_KEY` environment variable is honoured for LAN servers that insist on a token, but nothing is ever stored).
+
+Details worth knowing:
+
+- Conversations replay from ComfyTV's own transcript (the endpoint holds no session), so history survives server restarts.
+- The bot exposes the core canvas toolset (build / run / wait / look) rather than all tools — small local models drown in the full catalog.
+- `wait_stage` is looped provider-side, so the model is only consulted when the render actually finishes.
+- If the [LM Studio](https://lmstudio.ai) `lms` CLI is present, the driver model is unloaded from VRAM while a render runs and reloaded afterwards — on a single-GPU machine the canvas gets the whole card during generation.
 
 ## Using the panel
 

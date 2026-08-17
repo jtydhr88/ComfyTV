@@ -18,6 +18,26 @@ TOOL_RESULT_CAP = 4000
 PROBE_CACHE_S = 60
 MCP_TOOL_TIMEOUT_MS = 180_000
 
+CORE_MCP_TOOLS = [
+    "server_info",
+    "stage_catalog",
+    "list_workflows",
+    "get_canvas",
+    "get_stage",
+    "outputs",
+    "assets",
+    "add_stage",
+    "set_stage",
+    "connect_stages",
+    "run_stage",
+    "wait_stage",
+    "cancel_stage",
+    "remove_stage",
+    "view_image",
+    "media_frame",
+    "pick_output",
+]
+
 
 def base_spawn_env() -> dict:
     env = dict(os.environ)

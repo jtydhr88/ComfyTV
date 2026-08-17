@@ -19,22 +19,34 @@ translationSourceHash: "db613e6d7dc1c5a8"
 
 ## 不碰 API key,这是设计
 
-Bot 不直接调用任何模型 API,ComfyTV 也永远不存 key。它驱动的是**你机器上已经装好的 agent CLI**,用 CLI 自己的登录态。Provider 层可插拔,当前内置三个:
+Bot 不直接调用任何云端模型 API,ComfyTV 也永远不存 key。它驱动的是**你机器上已经装好的 agent CLI**(用 CLI 自己的登录态),或者通过 Local LLM provider 驱动**你自己硬件上跑的模型服务**。当前内置四个:
 
 | Provider | 安装 | 登录 | 附件 |
 | --- | --- | --- | --- |
 | [Claude Code](https://claude.com/claude-code) | `npm install -g @anthropic-ai/claude-code` | 运行 `claude` 登录一次 | 图片/视频/音频 |
 | [Codex](https://developers.openai.com/codex) | `npm install -g @openai/codex` | `codex login` | 图片/视频/音频 |
 | [Qwen Code](https://qwenlm.github.io/qwen-code-docs/zh/) | 官方安装脚本(见其文档) | 运行 `qwen` 后 `/auth` | 暂不支持 |
+| Local LLM | 任意 OpenAI 兼容的本地模型服务 | 无 — 在设置里填端点 URL 即可 | 暂不支持 |
 
 前置条件:
 
-1. 至少装好一个 agent CLI 并登录。
+1. 至少装好一个 agent CLI 并登录 — 或者跑一个本地模型服务并在设置里填上它的 URL。
 2. 在 ComfyTV **设置 → Agent 与 MCP** 里,先开 **MCP 服务**,再开 **ComfyTV Bot**(Bot 依赖 MCP — 那是 agent 触达画布的通道)。
 
-装了多个 CLI 时,➕ 按钮会让你选新对话用哪个引擎;每个对话记住自己的 provider。检测不到任何 agent CLI 时,面板显示安装引导而不是聊天框。
+有多个 provider 可用时,➕ 按钮会让你选新对话用哪个引擎;每个对话记住自己的 provider。一个都检测不到时,面板显示安装引导而不是聊天框。
 
 隔离策略按引擎各自落实:Claude Code 走每轮独立的严格 MCP 配置+工具白名单;Codex 的 `codex exec` 沙箱限定在 bot 工作目录,shell 和联网搜索关闭,该回合只保留 ComfyTV 一个 MCP 服务,审批请求交给 Codex 自带的自动审察(headless 无法弹批准框);Qwen Code 走 bot 工作目录内的项目级 `.qwen/settings.json`(只挂 ComfyTV MCP,内置 shell/文件工具全部排除)— 你的全局 CLI 配置永远不被碰。
+
+## Local LLM provider
+
+Local LLM 完全不需要 agent CLI:ComfyTV 自己跑 agent 循环,对接任何 OpenAI 兼容端点 — LM Studio、llama.cpp 的 `llama-server`、vLLM、Ollama 都行。把 **设置 → Agent 与 MCP → Local LLM 端点** 指向服务的 base URL(如 `http://127.0.0.1:1234/v1`),模型建议直接来自端点的 `/models` 真实列表。仅限免 key 的本地端点 — 与"不存 key"的铁律一致(局域网服务非要 token 的话,认 `COMFYTV_LOCAL_LLM_API_KEY` 环境变量,但永远不落库)。
+
+几个值得知道的细节:
+
+- 对话历史由 ComfyTV 自己的记录重放(端点不持有会话),重启服务器也不丢上下文。
+- 只暴露核心画布工具集(搭建/运行/等待/看图),不给全量目录 — 小模型会被塞爆。
+- `wait_stage` 由 provider 侧循环续片,渲染真正结束才回到模型。
+- 如果装了 [LM Studio](https://lmstudio.ai) 的 `lms` CLI,渲染期间会自动把驱动模型从显存卸掉、渲完再装回 — 单卡机器上出图时画布独占整张卡。
 
 ## 面板用法
 

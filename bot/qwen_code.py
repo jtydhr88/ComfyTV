@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Optional
 
 from ._cli_common import (
+    CORE_MCP_TOOLS,
     CliStreamParser,
     MCP_TOOL_TIMEOUT_MS,
     PROBE_CACHE_S,
@@ -41,26 +42,6 @@ _EXCLUDED_CORE_TOOLS = [
     "web_search",
     "save_memory",
     "write_todos",
-]
-
-_CORE_MCP_TOOLS = [
-    "server_info",
-    "stage_catalog",
-    "list_workflows",
-    "get_canvas",
-    "get_stage",
-    "outputs",
-    "assets",
-    "add_stage",
-    "set_stage",
-    "connect_stages",
-    "run_stage",
-    "wait_stage",
-    "cancel_stage",
-    "remove_stage",
-    "view_image",
-    "media_frame",
-    "pick_output",
 ]
 
 _LLM_REQUEST_TIMEOUT_MS = 180_000
@@ -134,7 +115,7 @@ def write_project_settings(home_dir: str, mcp_endpoint: str) -> Path:
         "httpUrl": mcp_endpoint,
         "trust": True,
         "timeout": MCP_TOOL_TIMEOUT_MS,
-        "includeTools": list(_CORE_MCP_TOOLS),
+        "includeTools": list(CORE_MCP_TOOLS),
     }
     data["mcpServers"] = servers
     data["allowMCPServers"] = ["comfytv"]

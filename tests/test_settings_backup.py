@@ -258,6 +258,7 @@ class TestSettingsApi:
             "enable-db-backup", "db-backup-max-count", "db-backup-path",
             "enable-mcp", "enable-bot",
             "bot-model-claude-code", "bot-model-codex", "bot-model-qwen-code",
+            "bot-model-local-llm", "bot-local-llm-url",
         }
         for r in rows:
             assert set(r) == {"key", "type", "value", "default"}

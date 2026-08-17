@@ -77,6 +77,34 @@ def _provider_model(provider_id: str) -> str:
         return ""
 
 
+def _blocks_text(content: str) -> str:
+    try:
+        blocks = json.loads(content or "[]")
+    except Exception:
+        return ""
+    if not isinstance(blocks, list):
+        return ""
+    parts = [str(b.get("text") or "") for b in blocks
+             if isinstance(b, dict) and b.get("type") == "text"]
+    return "\n".join(p for p in parts if p.strip()).strip()
+
+
+def _replay_history(chat_id: str, current_message_id: str) -> list[dict]:
+    rows = storage.list_bot_messages(chat_id)
+    current = next((r for r in rows if r["id"] == current_message_id), None)
+    skip = {current_message_id}
+    if current and current.get("parent_id"):
+        skip.add(current["parent_id"])
+    history = []
+    for row in rows:
+        if row["id"] in skip or row["role"] not in ("user", "assistant"):
+            continue
+        text = _blocks_text(row.get("content") or "")
+        if text:
+            history.append({"role": row["role"], "text": text})
+    return history
+
+
 def _derive_title(text: str) -> str:
     line = " ".join(text.split())
     return line[:_TITLE_MAX] if line else "New chat"
@@ -118,12 +146,20 @@ async def _run_turn(chat: dict, text: str, state: _TurnState, *,
             storage.update_bot_message(
                 state.message_id, content=json.dumps(state.blocks))
 
+    history = None
+    if not provider.capabilities().stateful:
+        try:
+            history = _replay_history(chat_id, state.message_id)
+        except Exception:
+            _log.exception("[ComfyTV/bot] history replay failed for %s", chat_id)
+
     try:
         result = await provider.send(
             TurnRequest(
                 chat_id=chat_id,
                 user_text=provider_text if provider_text is not None else text,
                 resume_token=chat.get("resume_token"),
+                history=history,
                 mcp_endpoint=_mcp_endpoint(),
                 allowed_tools=list(_ALLOWED_TOOLS),
                 attachments=attachments or [],

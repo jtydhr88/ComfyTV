@@ -17,6 +17,8 @@ SETTINGS_SPEC: dict[str, dict[str, Any]] = {
     "bot-model-claude-code": {"type": "string", "default": ""},
     "bot-model-codex": {"type": "string", "default": ""},
     "bot-model-qwen-code": {"type": "string", "default": ""},
+    "bot-model-local-llm": {"type": "string", "default": ""},
+    "bot-local-llm-url": {"type": "string", "default": ""},
 }
 
 

@@ -138,6 +138,16 @@
         "label": "Qwen Code 模型",
         "desc": "Bot 回合传给 qwen -m 的模型。留空 = 用 qwen 自己设置里选的模型。",
         "placeholder": "CLI 默认"
+      },
+      "bot-model-local-llm": {
+        "label": "Local LLM 模型",
+        "desc": "本地端点上的模型 id。留空 = 用端点报告的第一个模型。",
+        "placeholder": "自动取第一个"
+      },
+      "bot-local-llm-url": {
+        "label": "Local LLM 端点",
+        "desc": "本地模型服务的 OpenAI 兼容 base URL(LM Studio、llama.cpp 的 llama-server、vLLM、Ollama 等)。不填时 Local LLM provider 不可用。仅限免 key 的本地端点 — 永远不存 API key。",
+        "placeholder": "http://127.0.0.1:1234/v1"
       }
     },
     "agent": {

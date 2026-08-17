@@ -126,9 +126,23 @@ class FakeProvider(AgentProvider):
             self.gate.set()
 
 
+class FakeStatelessProvider(FakeProvider):
+    id = "fake-stateless"
+
+    def capabilities(self):
+        return ProviderCaps(stateful=False, tools="mcp")
+
+
 @pytest.fixture()
 def fake_provider():
     provider = FakeProvider()
+    register_provider(provider)
+    return provider
+
+
+@pytest.fixture()
+def fake_stateless():
+    provider = FakeStatelessProvider()
     register_provider(provider)
     return provider
 
@@ -389,6 +403,33 @@ class TestModelOverride:
         assert resp.status == 200
         await _wait_done(client, chat["id"])
         assert fake_provider.last_turn.model == "shiny-model"
+
+    async def test_stateless_provider_gets_history(self, client, fake_stateless):
+        fake_stateless.script = [BotEvent(t="delta", text="first answer")]
+        resp = await client.post("/comfytv/bot/chats",
+                                 json={"provider": "fake-stateless"})
+        chat = (await resp.json())["chat"]
+        await client.post(f"/comfytv/bot/chats/{chat['id']}/send",
+                          json={"text": "first question"})
+        await _wait_done(client, chat["id"])
+        assert fake_stateless.last_turn.history == []
+        fake_stateless.script = [BotEvent(t="delta", text="second answer")]
+        await client.post(f"/comfytv/bot/chats/{chat['id']}/send",
+                          json={"text": "second question"})
+        await _wait_done(client, chat["id"])
+        assert fake_stateless.last_turn.history == [
+            {"role": "user", "text": "first question"},
+            {"role": "assistant", "text": "first answer"},
+        ]
+
+    async def test_stateful_provider_gets_no_history(self, client, fake_provider):
+        resp = await client.post("/comfytv/bot/chats",
+                                 json={"provider": "fake-test"})
+        chat = (await resp.json())["chat"]
+        await client.post(f"/comfytv/bot/chats/{chat['id']}/send",
+                          json={"text": "one"})
+        await _wait_done(client, chat["id"])
+        assert fake_provider.last_turn.history is None
 
     async def test_blank_setting_means_default(self, client, fake_provider):
         resp = await client.post("/comfytv/bot/chats",

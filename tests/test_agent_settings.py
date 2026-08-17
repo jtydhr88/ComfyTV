@@ -32,7 +32,8 @@ class TestDefaults:
     def test_model_overrides_default_blank(self, reset_db):
         from ComfyTV import storage
         for key in ("bot-model-claude-code", "bot-model-codex",
-                    "bot-model-qwen-code"):
+                    "bot-model-qwen-code", "bot-model-local-llm",
+                    "bot-local-llm-url"):
             assert storage.get_setting(key) == ""
 
 

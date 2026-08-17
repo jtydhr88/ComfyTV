@@ -10,7 +10,7 @@ const AGENT_TOGGLE_KEYS = new Set(['enable-mcp', 'enable-bot'])
 const MODEL_KEY_PREFIX = 'bot-model-'
 
 function isAgentKey(key: string): boolean {
-  return AGENT_TOGGLE_KEYS.has(key) || key.startsWith(MODEL_KEY_PREFIX)
+  return AGENT_TOGGLE_KEYS.has(key) || key.startsWith('bot-')
 }
 
 function message(e: unknown): string {
