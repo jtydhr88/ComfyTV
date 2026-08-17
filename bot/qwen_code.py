@@ -43,6 +43,28 @@ _EXCLUDED_CORE_TOOLS = [
     "write_todos",
 ]
 
+_CORE_MCP_TOOLS = [
+    "server_info",
+    "stage_catalog",
+    "list_workflows",
+    "get_canvas",
+    "get_stage",
+    "outputs",
+    "assets",
+    "add_stage",
+    "set_stage",
+    "connect_stages",
+    "run_stage",
+    "wait_stage",
+    "cancel_stage",
+    "remove_stage",
+    "view_image",
+    "media_frame",
+    "pick_output",
+]
+
+_LLM_REQUEST_TIMEOUT_MS = 180_000
+
 
 class _QwenStreamParser(CliStreamParser):
     def __init__(self) -> None:
@@ -112,10 +134,16 @@ def write_project_settings(home_dir: str, mcp_endpoint: str) -> Path:
         "httpUrl": mcp_endpoint,
         "trust": True,
         "timeout": MCP_TOOL_TIMEOUT_MS,
+        "includeTools": list(_CORE_MCP_TOOLS),
     }
     data["mcpServers"] = servers
     data["allowMCPServers"] = ["comfytv"]
     data["excludeTools"] = list(_EXCLUDED_CORE_TOOLS)
+    generator = data.get("contentGenerator")
+    if not isinstance(generator, dict):
+        generator = {}
+    generator.setdefault("timeout", _LLM_REQUEST_TIMEOUT_MS)
+    data["contentGenerator"] = generator
     path.write_text(json.dumps(data, indent=2), encoding="utf-8")
     return path
 

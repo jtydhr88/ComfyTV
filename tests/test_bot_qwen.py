@@ -72,6 +72,22 @@ class TestProjectSettings:
         assert "run_shell_command" in data["excludeTools"]
         assert "write_file" in data["excludeTools"]
         assert set(data["excludeTools"]) == set(_EXCLUDED_CORE_TOOLS)
+        include = server["includeTools"]
+        for name in ("get_canvas", "add_stage", "run_stage", "wait_stage",
+                     "view_image"):
+            assert name in include
+        assert "scene_edit" not in include
+        assert data["contentGenerator"]["timeout"] == 180_000
+
+    def test_preserves_user_content_generator_timeout(self, tmp_path):
+        target = tmp_path / ".qwen" / "settings.json"
+        target.parent.mkdir(parents=True)
+        target.write_text(json.dumps({
+            "contentGenerator": {"timeout": 300000},
+        }), encoding="utf-8")
+        write_project_settings(str(tmp_path), "http://x/mcp")
+        data = json.loads(target.read_text(encoding="utf-8"))
+        assert data["contentGenerator"]["timeout"] == 300000
 
     def test_merges_existing_settings(self, tmp_path):
         target = tmp_path / ".qwen" / "settings.json"
