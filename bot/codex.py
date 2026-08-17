@@ -60,6 +60,37 @@ def resolve_codex_command() -> Optional[list[str]]:
     return None
 
 
+_AGENT_INSTRUCTIONS = (
+    "# ComfyTV Bot\n\n"
+    "You are the ComfyTV canvas bot. The `comfytv` MCP server is mounted in "
+    "this session and its tools are directly callable — they are your eyes "
+    "and hands on the user's live ComfyTV canvas.\n\n"
+    "- Start with the `server_info` tool, then `get_canvas` to see the "
+    "current nodes, prompts and run states.\n"
+    "- Build and run: `add_stage`, `set_stage`, `connect_stages`, "
+    "`run_stage`, then block on `wait_stage` for the result.\n"
+    "- Look at results with `view_image` (returns real pixels), "
+    "`media_frame`, `fx_preview`.\n"
+    "- Canvas writes are executed by the user's open ComfyTV browser tab; "
+    "if they fail with a tab/timeout error, ask the user to open the "
+    "ComfyTV page instead of retrying endlessly.\n\n"
+    "Never claim you cannot see the canvas — call `get_canvas`. Do not use "
+    "shell, file or web tools; everything goes through the comfytv MCP "
+    "tools.\n"
+)
+
+
+def write_agent_instructions(home: str) -> Path:
+    path = Path(home) / "AGENTS.md"
+    try:
+        existing = path.read_text(encoding="utf-8") if path.exists() else ""
+    except OSError:
+        existing = ""
+    if existing != _AGENT_INSTRUCTIONS:
+        path.write_text(_AGENT_INSTRUCTIONS, encoding="utf-8")
+    return path
+
+
 def _flatten_mcp_content(content) -> str:
     if content is None:
         return ""
@@ -179,16 +210,18 @@ class CodexCodeProvider(AgentProvider):
     def _resolve_home(self) -> str:
         if self._home_dir:
             os.makedirs(self._home_dir, exist_ok=True)
-            return self._home_dir
-        try:
-            import folder_paths
-            user = folder_paths.get_user_directory()
-        except Exception:
-            user = os.path.expanduser("~")
-        d = os.path.join(user, "comfytv", "bot-home-codex")
-        os.makedirs(d, exist_ok=True)
-        self._home_dir = d
-        return d
+            home = self._home_dir
+        else:
+            try:
+                import folder_paths
+                user = folder_paths.get_user_directory()
+            except Exception:
+                user = os.path.expanduser("~")
+            home = os.path.join(user, "comfytv", "bot-home-codex")
+            os.makedirs(home, exist_ok=True)
+            self._home_dir = home
+        write_agent_instructions(home)
+        return home
 
     def _detect_logged_in(self) -> bool:
         try:
@@ -300,8 +333,9 @@ class CodexCodeProvider(AgentProvider):
         flags += self._mcp_lockdown_args()
         flags += ["-c", "features.shell_tool=false"]
         flags += ["-c", 'web_search="disabled"']
+        flags += ["-c", 'approvals_reviewer="auto_review"']
         if not turn.resume_token:
-            flags += ["--sandbox", "read-only"]
+            flags += ["--sandbox", "workspace-write"]
 
         temp_files: list[str] = []
         for i, att in enumerate(turn.attachments):

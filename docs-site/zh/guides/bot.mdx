@@ -34,7 +34,7 @@ Bot 不直接调用任何模型 API,ComfyTV 也永远不存 key。它驱动的�
 
 装了多个 CLI 时,➕ 按钮会让你选新对话用哪个引擎;每个对话记住自己的 provider。检测不到任何 agent CLI 时,面板显示安装引导而不是聊天框。
 
-隔离策略按引擎各自落实:Claude Code 走每轮独立的严格 MCP 配置+工具白名单;Codex 以只读沙箱跑 `codex exec`,shell 和联网搜索关闭,该回合只保留 ComfyTV 一个 MCP 服务;Qwen Code 走 bot 工作目录内的项目级 `.qwen/settings.json`(只挂 ComfyTV MCP,内置 shell/文件工具全部排除)— 你的全局 CLI 配置永远不被碰。
+隔离策略按引擎各自落实:Claude Code 走每轮独立的严格 MCP 配置+工具白名单;Codex 的 `codex exec` 沙箱限定在 bot 工作目录,shell 和联网搜索关闭,该回合只保留 ComfyTV 一个 MCP 服务,审批请求交给 Codex 自带的自动审察(headless 无法弹批准框);Qwen Code 走 bot 工作目录内的项目级 `.qwen/settings.json`(只挂 ComfyTV MCP,内置 shell/文件工具全部排除)— 你的全局 CLI 配置永远不被碰。
 
 ## 面板用法
 

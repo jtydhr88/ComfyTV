@@ -107,11 +107,12 @@ class TestCodexArgv:
         assert "--json" in argv
         assert "--skip-git-repo-check" in argv
         assert "--sandbox" in argv
-        assert argv[argv.index("--sandbox") + 1] == "read-only"
+        assert argv[argv.index("--sandbox") + 1] == "workspace-write"
         assert 'mcp_servers.comfytv.url="http://127.0.0.1:8188/comfytv/mcp"' in argv
         assert "mcp_servers.comfytv.tool_timeout_sec=180" in argv
         assert "features.shell_tool=false" in argv
         assert 'web_search="disabled"' in argv
+        assert 'approvals_reviewer="auto_review"' in argv
         assert argv[-1] == "hi"
         assert temp == []
 
@@ -122,6 +123,7 @@ class TestCodexArgv:
             str(tmp_path))
         assert argv[:3] == ["codex", "exec", "resume"]
         assert "--sandbox" not in argv
+        assert 'approvals_reviewer="auto_review"' in argv
         assert argv[-2] == "th-9"
         assert argv[-1] == "hi"
 
@@ -159,10 +161,24 @@ class TestCodexCaps:
         assert caps.stateful is True
         assert caps.attachments is True
 
-    def test_home_is_codex_specific(self, tmp_path, monkeypatch):
+    def test_home_writes_agent_instructions(self, tmp_path, monkeypatch):
         provider = CodexCodeProvider(home_dir=str(tmp_path / "h"))
         home = provider._resolve_home()
         assert home.endswith("h")
         import os
         assert os.path.isdir(home)
-        assert not os.path.exists(os.path.join(home, "AGENTS.md"))
+        path = os.path.join(home, "AGENTS.md")
+        with open(path, encoding="utf-8") as fh:
+            text = fh.read()
+        assert "get_canvas" in text
+        assert "MCP" in text
+        assert "resource" not in text.lower()
+
+    def test_agent_instructions_rewritten_when_stale(self, tmp_path):
+        from ComfyTV.bot.codex import write_agent_instructions
+        (tmp_path / "AGENTS.md").write_text("old resource bridge text",
+                                            encoding="utf-8")
+        path = write_agent_instructions(str(tmp_path))
+        text = path.read_text(encoding="utf-8")
+        assert "old resource" not in text
+        assert "get_canvas" in text

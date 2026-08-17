@@ -34,7 +34,7 @@ Prerequisites:
 
 With more than one CLI available, the ➕ button asks which engine a new chat should use; each chat remembers its provider. If no agent CLI is found, the panel shows an install guide instead of a chat box.
 
-Provider isolation is per-engine: Claude Code runs with a strict per-turn MCP config and a tool whitelist; Codex runs `codex exec` with a read-only sandbox, shell and web search disabled, and every MCP server except ComfyTV's turned off for the turn; Qwen Code runs against a project-scoped `.qwen/settings.json` inside the bot's working directory (ComfyTV MCP server only, built-in shell/file tools excluded) — your global CLI configuration is never touched.
+Provider isolation is per-engine: Claude Code runs with a strict per-turn MCP config and a tool whitelist; Codex runs `codex exec` sandboxed to the bot's working directory with shell and web search disabled, every MCP server except ComfyTV's turned off, and approval requests routed through Codex's automatic reviewer (headless runs cannot prompt); Qwen Code runs against a project-scoped `.qwen/settings.json` inside the bot's working directory (ComfyTV MCP server only, built-in shell/file tools excluded) — your global CLI configuration is never touched.
 
 ## Using the panel
 
