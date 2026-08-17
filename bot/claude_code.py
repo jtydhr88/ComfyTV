@@ -65,7 +65,22 @@ def resolve_claude_command() -> Optional[list[str]]:
         return [exe]
     found = shutil.which("claude")
     if not found:
-        return None
+        candidates = [
+            Path.home() / ".local" / "bin" / "claude",
+            Path.home() / ".npm-global" / "bin" / "claude",
+            Path("/usr/local/bin/claude"),
+            Path("/opt/homebrew/bin/claude"),
+        ]
+        nvm_versions = Path.home() / ".nvm" / "versions" / "node"
+        if nvm_versions.is_dir():
+            for node_dir in sorted(nvm_versions.iterdir(), reverse=True):
+                candidates.append(node_dir / "bin" / "claude")
+        for candidate in candidates:
+            if candidate.is_file() and os.access(candidate, os.X_OK):
+                found = str(candidate)
+                break
+        if not found:
+            return None
     p = Path(found)
     if p.suffix.lower() == ".exe" or sys.platform != "win32":
         return [str(p)]
