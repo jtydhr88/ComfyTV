@@ -156,11 +156,11 @@ export const useBotStore = defineStore('bot', () => {
             : {}),
         })
       if (activeChatId.value === chatId) {
-        messages.value = [
-          ...messages.value,
-          toChatMessage(data.user_message),
-          toChatMessage(data.assistant_message),
-        ]
+        const ids = new Set(messages.value.map(m => m.id))
+        const additions = [data.user_message, data.assistant_message]
+          .filter(m => !ids.has(m.id))
+          .map(toChatMessage)
+        if (additions.length) messages.value = [...messages.value, ...additions]
       }
       setChatBusy(chatId, true)
       return true

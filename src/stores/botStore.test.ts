@@ -171,6 +171,25 @@ describe('botStore events', () => {
     expect(store.chats[0].busy).toBe(true)
   })
 
+  it('send skips messages the turn_start broadcast already appended', async () => {
+    const store = seeded()
+    fetchApi.mockImplementation(async () => {
+      store.handleBotEvent({
+        event: 'turn_start', chat_id: 'c1',
+        user_message: message({ id: 'u9', role: 'user', status: 'done',
+                                content: '[{"type":"text","text":"hey"}]' }),
+        assistant_message: message({ id: 'a9' }),
+      })
+      return jsonResp({
+        user_message: message({ id: 'u9', role: 'user', status: 'done',
+                                content: '[{"type":"text","text":"hey"}]' }),
+        assistant_message: message({ id: 'a9' }),
+      })
+    })
+    await store.send('hey')
+    expect(store.messages.map(m => m.id)).toEqual(['m1', 'u9', 'a9'])
+  })
+
   it('send includes attachment asset ids', async () => {
     const store = seeded()
     fetchApi.mockResolvedValue(jsonResp({

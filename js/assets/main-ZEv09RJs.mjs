@@ -56741,7 +56741,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-ByxPZ2Xm.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-Bp0SmXiW.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -73702,11 +73702,9 @@ const useBotStore = /* @__PURE__ */ defineStore("bot", () => {
         }
       );
       if (activeChatId.value === chatId) {
-        messages2.value = [
-          ...messages2.value,
-          toChatMessage(data.user_message),
-          toChatMessage(data.assistant_message)
-        ];
+        const ids = new Set(messages2.value.map((m2) => m2.id));
+        const additions = [data.user_message, data.assistant_message].filter((m2) => !ids.has(m2.id)).map(toChatMessage);
+        if (additions.length) messages2.value = [...messages2.value, ...additions];
       }
       setChatBusy(chatId, true);
       return true;
@@ -134832,7 +134830,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-CnZn8QcK.mjs");
+    const { STLLoader } = await import("./STLLoader-DgXjUyl7.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -134840,7 +134838,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-C8ZGH5xa.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-mlh8rsa1.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -213872,4 +213870,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-LaytzcAZ.mjs.map
+//# sourceMappingURL=main-ZEv09RJs.mjs.map
