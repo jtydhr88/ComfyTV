@@ -23,7 +23,7 @@
           class="ctv:shrink-0 ctv:size-6 ctv:rounded-sm ctv:overflow-hidden ctv:bg-black/30 ctv:border ctv:flex ctv:items-center ctv:justify-center"
           :style="{ borderColor: item.color }"
         >
-          <img v-if="item.url" :src="item.url" class="ctv:block ctv:size-full ctv:object-cover" draggable="false" />
+          <ThumbImg v-if="item.url" :src="item.url" :thumb-max="THUMB_TILE" class="ctv:block ctv:size-full ctv:object-cover" draggable="false" />
           <i v-else-if="item.slotType === 'video'" class="pi pi-video ctv:text-2xs" :style="{ color: item.color }" />
           <i v-else-if="item.slotType === 'audio'" class="pi pi-volume-up ctv:text-2xs" :style="{ color: item.color }" />
         </span>
@@ -103,9 +103,11 @@
 import { nextTick, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import ThumbImg from '@/components/widgets/ThumbImg.vue'
 import type { MentionSuggestionItem } from '@/composables/stages/useMentionSuggestion'
 import { normalizeMentionText } from '@/composables/stages/imageSlotMentions'
 import { inlineContentFromText } from '@/composables/stages/useMainPromptInput'
+import { THUMB_TILE } from '@/utils/thumbUrl'
 import {
   mentionItemKey as itemKey,
   useMentionList,

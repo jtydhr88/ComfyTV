@@ -34,7 +34,10 @@ describe('ValuePreview — type-driven branches', () => {
       props: { type: 'COMFYTV_IMAGE', content: '/view?filename=a.png' },
     })
     const img = screen.getByRole('img')
-    expect(img).toHaveAttribute('src', '/view?filename=a.png')
+    expect(img).toHaveAttribute(
+      'src',
+      `/comfytv/thumb?url=${encodeURIComponent('/view?filename=a.png')}&max=1024`,
+    )
     expect(img).toHaveAttribute('alt', '/view?filename=a.png')
   })
 

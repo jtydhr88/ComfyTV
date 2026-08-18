@@ -66,8 +66,9 @@
             :title="$t('imageRefs.batchItem', { n: i + 1 })"
             @click="$emit('select-batch', group.id, i)"
           >
-            <img
+            <ThumbImg
               :src="url"
+              :thumb-max="THUMB_TILE"
               loading="lazy"
               :class="['ctv:block ctv:w-full ctv:aspect-square ctv:object-cover',
                        isBatchAdded(group.id, i) ? 'ctv:opacity-55' : '']"
@@ -172,9 +173,10 @@
             :class="['ctv:flex ctv:items-center ctv:justify-center ctv:w-full ctv:aspect-square ctv:text-muted-foreground',
                      isAdded(asset.id) ? 'ctv:opacity-55' : '']"
           ><i class="pi pi-volume-up ctv:text-lg" /></div>
-          <img
+          <ThumbImg
             v-else
             :src="assetPreviewUrl(asset)"
+            :thumb-max="THUMB_TILE"
             :alt="asset.name"
             loading="lazy"
             :class="['ctv:block ctv:w-full ctv:aspect-square ctv:object-cover',
@@ -207,10 +209,12 @@ import { computed, onMounted, ref } from 'vue'
 
 import type { Asset } from '@/api/schemas'
 import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
+import ThumbImg from '@/components/widgets/ThumbImg.vue'
 import ViewFullButton from '@/components/ViewFullButton.vue'
 import { importAssetFiles } from '@/composables/sidebar/assetImport'
 import { toastLoaderUploadFailed, useLoaderFileDrop } from '@/composables/stages/useLoaderFileDrop'
 import { assetPreviewUrl } from '@/utils/assetMedia'
+import { THUMB_TILE } from '@/utils/thumbUrl'
 import { useAssetPicker } from '@/composables/stages/useAssetPicker'
 
 const props = defineProps<{

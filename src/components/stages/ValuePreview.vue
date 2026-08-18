@@ -30,10 +30,11 @@
     >
       <img
         ref="zoomImg"
-        :src="String(content)"
+        :src="mainImgSrc"
         class="ctv:block ctv:size-full ctv:object-contain ctv:select-none"
         :alt="String(content)"
         draggable="false"
+        @error="onMainImgError"
       />
       <div :class="imgActionsClass">
         <MediaActionBar
@@ -49,9 +50,10 @@
         />
       </div>
     </div>
-    <img
+    <ThumbImg
       v-else-if="type === 'COMFYTV_IMAGE' || type === 'COMFYTV_PANORAMA'"
       :src="String(content)"
+      :thumb-max="THUMB_CELL"
       :class="imgClass"
       :alt="String(content)"
     />
@@ -219,9 +221,10 @@
 
     <template v-else-if="type === 'COMFYTV_IMAGES'">
       <template v-if="compact">
-        <img
+        <ThumbImg
           v-if="batchImages[0]"
           :src="batchImages[0].image_url"
+          :thumb-max="THUMB_CELL"
           :class="imgClass"
           :alt="`${batchImages.length} items`"
         />
@@ -244,8 +247,9 @@
           @click="clickMode === 'pick' ? onItemClick(img, i) : undefined"
           @keydown="clickMode === 'pick' ? onCellKey(img, i, $event) : undefined"
         >
-          <img :src="img.image_url" :alt="img.label || img.prompt || `item ${i + 1}`"
-               class="ctv:block ctv:size-full ctv:object-cover ctv:pointer-events-none" />
+          <ThumbImg :src="img.image_url" :thumb-max="THUMB_CELL"
+                    :alt="img.label || img.prompt || `item ${i + 1}`"
+                    class="ctv:block ctv:size-full ctv:object-cover ctv:pointer-events-none" />
           <span class="ctv:absolute ctv:bottom-0.5 ctv:left-0.5 ctv:py-px ctv:px-1 ctv:text-3xs ctv:font-bold ctv:rounded-sm
                        ctv:bg-black/70 ctv:text-[#ffb0d8]">
             {{ img.label ?? `#${img.index ?? i + 1}` }}
@@ -443,12 +447,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, toRef } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, toRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import ModelPreview from './ModelPreview.vue'
 import MediaActionBar from './MediaActionBar.vue'
 import ModelThumb from '@/components/widgets/ModelThumb.vue'
 import ProxiedVideo from '@/components/widgets/ProxiedVideo.vue'
+import ThumbImg from '@/components/widgets/ThumbImg.vue'
 import { askText } from '@/composables/dialog/useTextInputDialog'
 import { useImagePanZoom } from '@/composables/widgets/useImagePanZoom'
 import { openLightbox } from '@/composables/useLightbox'
@@ -475,6 +480,7 @@ import type {
   ItemClickPayload,
 } from '@/types/payloads'
 import { downloadFile } from '@/utils/download'
+import { THUMB_CELL, THUMB_PREVIEW, thumbUrl } from '@/utils/thumbUrl'
 
 const { t } = useI18n()
 
@@ -564,6 +570,18 @@ const props = defineProps<{
 }>()
 
 useImagePanZoom(zoomContainer, zoomImg, { resetKey: toRef(props, 'content') })
+
+const mainThumbFailed = ref(false)
+watch(() => props.content, () => { mainThumbFailed.value = false })
+const mainImgSrc = computed(() => {
+  const src = String(props.content ?? '')
+  return mainThumbFailed.value ? src : thumbUrl(src, THUMB_PREVIEW)
+})
+function onMainImgError() {
+  if (!mainThumbFailed.value && mainImgSrc.value !== String(props.content ?? '')) {
+    mainThumbFailed.value = true
+  }
+}
 
 const {
   hasContent,

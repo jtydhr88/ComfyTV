@@ -36,9 +36,10 @@
       >
         <IconBox class="ctv:size-4" />
       </ModelThumb>
-      <img
+      <ThumbImg
         v-else
         :src="assetPreviewUrl(asset)"
+        :thumb-max="THUMB_TILE"
         :alt="asset.name"
         loading="lazy"
         class="ctv:size-full ctv:object-cover"
@@ -94,6 +95,7 @@ import { computed } from 'vue'
 
 import IconBox from '~icons/lucide/box'
 import { assetPreviewUrl } from '@/utils/assetMedia'
+import { THUMB_TILE } from '@/utils/thumbUrl'
 import ProxiedVideo from '@/components/widgets/ProxiedVideo.vue'
 import IconEllipsis from '~icons/lucide/ellipsis'
 import IconMaximize from '~icons/lucide/maximize-2'
@@ -102,6 +104,7 @@ import IconPlay from '~icons/lucide/play'
 
 import type { Asset } from '@/api/schemas'
 import ModelThumb from '@/components/widgets/ModelThumb.vue'
+import ThumbImg from '@/components/widgets/ThumbImg.vue'
 import { useAudioPreview } from '@/composables/sidebar/useAudioPreview'
 
 const props = defineProps<{

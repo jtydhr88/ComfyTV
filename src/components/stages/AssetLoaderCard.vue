@@ -91,9 +91,10 @@
               <i class="pi pi-box ctv:text-2xl" />
             </ModelThumb>
           </div>
-          <img
+          <ThumbImg
             v-else
             :src="assetPreviewUrl(asset)"
+            :thumb-max="THUMB_CELL"
             :alt="asset.name"
             loading="lazy"
             class="ctv:block ctv:w-full ctv:aspect-square ctv:object-cover"
@@ -171,10 +172,12 @@ import type { LGraphNode } from '@/lib/comfyApp'
 import ModelThumb from '@/components/widgets/ModelThumb.vue'
 import ProxiedVideo from '@/components/widgets/ProxiedVideo.vue'
 import StageCard from '@/components/stages/StageCard.vue'
+import ThumbImg from '@/components/widgets/ThumbImg.vue'
 import ValuePreview from '@/components/stages/ValuePreview.vue'
 import ViewFullButton from '@/components/ViewFullButton.vue'
 import { assetTooltipOf as assetTooltip, useAssetLoaderCard } from '@/composables/stages/useAssetLoaderCard'
 import { assetPreviewUrl } from '@/utils/assetMedia'
+import { THUMB_CELL } from '@/utils/thumbUrl'
 import type { StageState } from '@/stores/stageStore'
 import { MODEL_FILE_EXTENSIONS } from '@/widgets/three/modelFormats'
 

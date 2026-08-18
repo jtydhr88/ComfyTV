@@ -25,9 +25,10 @@
     </template>
 
     <template v-else>
-      <img
+      <ThumbImg
         v-if="kind === 'image'"
         :src="value"
+        :thumb-max="THUMB_CELL"
         class="ctv:block ctv:w-full ctv:max-h-44 ctv:object-contain ctv:cursor-pointer ctv:bg-black"
         @click="open"
       />
@@ -60,8 +61,10 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import ProxiedVideo from '@/components/widgets/ProxiedVideo.vue'
+import ThumbImg from '@/components/widgets/ThumbImg.vue'
 
 import { useFileDrop } from '@/composables/stages/useFileDrop'
+import { THUMB_CELL } from '@/utils/thumbUrl'
 
 const { t } = useI18n()
 

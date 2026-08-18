@@ -47,9 +47,10 @@
         :title="tileTooltip(ref)"
         @click="openSlotPicker(i, $event)"
       >
-        <img
+        <ThumbImg
           v-if="batchUrlOf(ref)"
           :src="batchUrlOf(ref)!"
+          :thumb-max="THUMB_TILE"
           class="ctv:block ctv:size-full ctv:object-cover"
           draggable="false"
         />
@@ -66,9 +67,10 @@
             v-else-if="refType(ref) === 'audio'"
             class="ctv:flex ctv:items-center ctv:justify-center ctv:size-full ctv:text-muted-foreground"
           ><i class="pi pi-volume-up ctv:text-lg" /></div>
-          <img
+          <ThumbImg
             v-else
             :src="assetOf(ref)!.payload_url"
+            :thumb-max="THUMB_TILE"
             :alt="assetOf(ref)!.name"
             class="ctv:block ctv:size-full ctv:object-cover"
             draggable="false"
@@ -133,10 +135,12 @@ import { computed, onMounted, ref } from 'vue'
 
 import AssetPickerPopup from '@/components/stages/AssetPickerPopup.vue'
 import MentionSlotPopover from '@/components/stages/MentionSlotPopover.vue'
+import ThumbImg from '@/components/widgets/ThumbImg.vue'
 import ViewFullButton from '@/components/ViewFullButton.vue'
 import { refKey, refType } from '@/composables/stages/imageRefs'
 import { slotColor } from '@/composables/stages/imageSlotMentions'
 import { useImageReferences } from '@/composables/stages/useImageReferences'
+import { THUMB_TILE } from '@/utils/thumbUrl'
 import type { LGraphNode } from '@/lib/comfyApp'
 
 const props = defineProps<{

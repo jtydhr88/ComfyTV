@@ -43,9 +43,10 @@
           <IconBox class="ctv:size-8" />
         </ModelThumb>
       </div>
-      <img
+      <ThumbImg
         v-else
         :src="assetPreviewUrl(asset)"
+        :thumb-max="THUMB_CELL"
         :alt="asset.name"
         :title="tooltip"
         loading="lazy"
@@ -130,6 +131,7 @@
 import { computed } from 'vue'
 import IconBox from '~icons/lucide/box'
 import { assetPreviewUrl } from '@/utils/assetMedia'
+import { THUMB_CELL } from '@/utils/thumbUrl'
 import IconEllipsis from '~icons/lucide/ellipsis'
 import IconMaximize from '~icons/lucide/maximize-2'
 import IconPause from '~icons/lucide/pause'
@@ -138,6 +140,7 @@ import IconVolume2 from '~icons/lucide/volume-2'
 
 import type { Asset } from '@/api/schemas'
 import ModelThumb from '@/components/widgets/ModelThumb.vue'
+import ThumbImg from '@/components/widgets/ThumbImg.vue'
 import { useAudioPreview } from '@/composables/sidebar/useAudioPreview'
 import { useProxiedVideoUrl } from '@/composables/widgets/useProxiedVideoUrl'
 
