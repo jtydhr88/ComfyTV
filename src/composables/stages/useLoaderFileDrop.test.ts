@@ -72,7 +72,7 @@ describe('useLoaderFileDrop — drag over', () => {
     }
   })
 
-  it('claims unknown-MIME file drags only for the model kind', () => {
+  it('provisionally claims unknown-MIME file drags for every loader kind', () => {
     const blank = () => dragEvent({ types: ['Files'], items: [{ kind: 'file', type: '' }] })
     const model = useLoaderFileDrop({ kind: () => 'model', onFiles: vi.fn() })
     const image = useLoaderFileDrop({ kind: () => 'image', onFiles: vi.fn() })
@@ -81,7 +81,18 @@ describe('useLoaderFileDrop — drag over', () => {
     expect(e1.preventDefault).toHaveBeenCalled()
     const e2 = blank()
     image.onDragOver(e2)
-    expect(e2.preventDefault).not.toHaveBeenCalled()
+    expect(e2.preventDefault).toHaveBeenCalled()
+  })
+
+  it('recognizes macOS promised-file drags without the Files type', () => {
+    const drop = useLoaderFileDrop({ kind: () => 'image', onFiles: vi.fn() })
+    const e = dragEvent({
+      types: ['com.apple.filepromise'],
+      items: [{ kind: 'file', type: 'image/png' }],
+    })
+    drop.onDragOver(e)
+    expect(e.preventDefault).toHaveBeenCalled()
+    expect(e.dataTransfer!.dropEffect).toBe('copy')
   })
 
   it('claims asset drags only when onAsset is provided', () => {
@@ -120,6 +131,20 @@ describe('useLoaderFileDrop — file drops', () => {
     expect(e.stopPropagation).toHaveBeenCalled()
     expect(onFiles).toHaveBeenCalledWith([img])
     expect(drop.dragActive.value).toBe(false)
+  })
+
+  it('loads a promised image whose MIME is empty once its filename is available', () => {
+    const onFiles = vi.fn()
+    const drop = useLoaderFileDrop({ kind: () => 'image', onFiles })
+    const photo = new File(['x'], 'Photos Export.HEIC', { type: '' })
+    const e = dragEvent({
+      types: ['com.apple.filepromise'],
+      items: [{ kind: 'file', type: '' }],
+      files: [photo],
+    })
+    drop.onDrop(e)
+    expect(e.preventDefault).toHaveBeenCalled()
+    expect(onFiles).toHaveBeenCalledWith([photo])
   })
 
   it('matches 3D models by extension despite an empty MIME', () => {

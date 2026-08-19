@@ -13,6 +13,12 @@ vi.mock('./MainPromptInput.vue', () => ({
 
 const fetchStageDefaults = vi.fn()
 const listStagePresets = vi.fn()
+const uploadBlobNamed = vi.hoisted(() => vi.fn(async (file: File) => ({
+  name: file.name,
+  subfolder: 'comfytv/uploads',
+  type: 'input',
+  url: `/view?filename=${encodeURIComponent(file.name)}&subfolder=comfytv%2Fuploads&type=input`,
+})))
 vi.mock('@/api', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/api')>()
   return {
@@ -20,6 +26,10 @@ vi.mock('@/api', async (importOriginal) => {
     fetchStageDefaults: (...a: unknown[]) => fetchStageDefaults(...a),
     listStagePresets: (...a: unknown[]) => listStagePresets(...a),
   }
+})
+vi.mock('@/utils/uploadCanvas', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/utils/uploadCanvas')>()
+  return { ...actual, uploadBlobNamed }
 })
 
 function makeState(over: Partial<StageState> = {}): StageState {
@@ -118,6 +128,42 @@ describe('StageCard — base states', () => {
     renderCard(makeState({ variant: 'loader', kind: 'image' }))
     const runBtns = document.querySelectorAll('.run-btn')
     expect(runBtns).toHaveLength(0)
+  })
+
+  it('accepts a macOS promised image dropped on the preview even when it stops propagation', async () => {
+    const widget = {
+      name: 'image',
+      value: 'old.png',
+      options: { values: ['old.png'] },
+      callback: vi.fn(),
+    }
+    const { container } = renderCard(makeState({
+      variant: 'loader',
+      kind: 'image',
+      output: '/view?filename=old.png&type=input',
+    }), {
+      node: { comfyClass: 'ComfyTV.ImageLoaderStage', widgets: [widget] },
+    })
+    const preview = container.querySelector('img') as HTMLImageElement
+    expect(preview).toBeInTheDocument()
+    preview.addEventListener('drop', (event) => event.stopPropagation())
+
+    const photo = new File(['new image'], 'Photos Export.HEIC', { type: '' })
+    const event = new Event('drop', { bubbles: true, cancelable: true }) as DragEvent
+    Object.defineProperty(event, 'dataTransfer', { value: {
+      types: ['com.apple.filepromise'],
+      items: [{ kind: 'file', type: '' }],
+      files: [photo],
+      dropEffect: 'none',
+      getData: () => '',
+    } })
+    preview.dispatchEvent(event)
+
+    await waitFor(() => expect(uploadBlobNamed).toHaveBeenCalledWith(photo, {
+      subfolder: 'comfytv/uploads',
+      filename: 'Photos Export.HEIC',
+    }))
+    await waitFor(() => expect(widget.value).toBe('comfytv/uploads/Photos Export.HEIC'))
   })
 
   it('hides the run button for image-picker kind', () => {

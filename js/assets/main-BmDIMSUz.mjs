@@ -56790,7 +56790,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-BAY3A3ME.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-BtuqJK0K.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -56858,6 +56858,51 @@ function buildPointCloud(bytes) {
   group.add(new Points(geometry, material));
   return group;
 }
+const IMAGE_FILE_EXTENSIONS = [
+  ".avif",
+  ".bmp",
+  ".gif",
+  ".heic",
+  ".heif",
+  ".jpeg",
+  ".jpg",
+  ".jxl",
+  ".png",
+  ".tif",
+  ".tiff",
+  ".webp"
+];
+const VIDEO_FILE_EXTENSIONS = [
+  ".3g2",
+  ".3gp",
+  ".avi",
+  ".m4v",
+  ".mkv",
+  ".mov",
+  ".mp4",
+  ".mpeg",
+  ".mpg",
+  ".ogv",
+  ".webm"
+];
+const AUDIO_FILE_EXTENSIONS = [
+  ".aac",
+  ".aif",
+  ".aiff",
+  ".flac",
+  ".m4a",
+  ".mp3",
+  ".oga",
+  ".ogg",
+  ".opus",
+  ".wav",
+  ".weba",
+  ".wma"
+];
+function hasExtension(name, extensions) {
+  const lower = name.toLowerCase();
+  return extensions.some((ext) => lower.endsWith(ext));
+}
 function isModelFile(name) {
   const lower = name.toLowerCase();
   return MODEL_FILE_EXTENSIONS.some((ext) => lower.endsWith(ext));
@@ -56867,6 +56912,9 @@ function mediaTypeOf(file) {
   if (file.type.startsWith("video/")) return "video";
   if (file.type.startsWith("audio/")) return "audio";
   if (isModelFile(file.name)) return "model";
+  if (hasExtension(file.name, IMAGE_FILE_EXTENSIONS)) return "image";
+  if (hasExtension(file.name, VIDEO_FILE_EXTENSIONS)) return "video";
+  if (hasExtension(file.name, AUDIO_FILE_EXTENSIONS)) return "audio";
   return null;
 }
 function dragMayMatchKind(e, kind) {
@@ -56875,8 +56923,9 @@ function dragMayMatchKind(e, kind) {
   if (!items || items.length === 0) return true;
   for (const item of Array.from(items)) {
     if (item.kind !== "file") continue;
+    if (!item.type) return true;
     if (kind === "model") {
-      if (!item.type || item.type.startsWith("model/")) return true;
+      if (item.type.startsWith("model/")) return true;
     } else if (item.type.startsWith(`${kind}/`)) {
       return true;
     }
@@ -70338,8 +70387,8 @@ function useLoaderFileDrop(opts) {
     return !!opts.onAsset && Array.from(((_a3 = e.dataTransfer) == null ? void 0 : _a3.types) ?? []).includes(ASSET_DRAG_MIME);
   };
   const isFileDrag = (e) => {
-    var _a3, _b2;
-    return Array.from(((_a3 = e.dataTransfer) == null ? void 0 : _a3.types) ?? []).includes("Files") && !Array.from(((_b2 = e.dataTransfer) == null ? void 0 : _b2.types) ?? []).includes(ASSET_DRAG_MIME);
+    var _a3, _b2, _c, _d, _e2;
+    return !Array.from(((_a3 = e.dataTransfer) == null ? void 0 : _a3.types) ?? []).includes(ASSET_DRAG_MIME) && (Array.from(((_b2 = e.dataTransfer) == null ? void 0 : _b2.types) ?? []).includes("Files") || (((_d = (_c = e.dataTransfer) == null ? void 0 : _c.files) == null ? void 0 : _d.length) ?? 0) > 0 || Array.from(((_e2 = e.dataTransfer) == null ? void 0 : _e2.items) ?? []).some((item) => item.kind === "file"));
   };
   const claims = (e) => isAssetDrag2(e) || isFileDrag(e) && kinds().some((k2) => dragMayMatchKind(e, k2));
   function accept(e) {
@@ -117472,17 +117521,21 @@ const PLAIN_LOADER_WIDGET = {
 function loaderDropConfigOf(node) {
   return node ? PLAIN_LOADER_WIDGET[node.comfyClass] ?? null : null;
 }
+const LOADER_UPLOAD_SUBFOLDER = "comfytv/uploads";
 async function uploadLoaderFiles(node, widgetName, files) {
-  var _a3;
+  var _a3, _b2;
   let last = "";
   for (const f2 of files) {
-    const uploaded = await uploadBlobNamed(f2, { subfolder: "comfytv/uploads", filename: f2.name });
-    last = uploaded.name;
-    const w2 = getWidget(node, widgetName);
-    const values = (_a3 = w2 == null ? void 0 : w2.options) == null ? void 0 : _a3.values;
+    const uploaded = await uploadBlobNamed(f2, { subfolder: LOADER_UPLOAD_SUBFOLDER, filename: f2.name });
+    last = `${LOADER_UPLOAD_SUBFOLDER}/${uploaded.name}`;
+    const w22 = getWidget(node, widgetName);
+    const values = (_a3 = w22 == null ? void 0 : w22.options) == null ? void 0 : _a3.values;
     if (Array.isArray(values) && !values.includes(last)) values.push(last);
   }
-  if (last) writeWidget(node, widgetName, last);
+  if (!last) return;
+  const w2 = getWidget(node, widgetName);
+  if ((w2 == null ? void 0 : w2.value) === last) (_b2 = w2.callback) == null ? void 0 : _b2.call(w2, last);
+  else writeWidget(node, widgetName, last);
 }
 function useStageLoaderDrop(getNode) {
   const loaderDropCfg = computed(() => loaderDropConfigOf(getNode()));
@@ -117908,13 +117961,13 @@ const _sfc_main$3d = /* @__PURE__ */ defineComponent({
       var _a3;
       return openBlock(), createElementBlock("div", {
         class: normalizeClass(cardClass2.value),
-        onDragenter: _cache2[12] || (_cache2[12] = //@ts-ignore
+        onDragenterCapture: _cache2[12] || (_cache2[12] = //@ts-ignore
         (...args) => unref(onCardDragEnter) && unref(onCardDragEnter)(...args)),
-        onDragover: _cache2[13] || (_cache2[13] = //@ts-ignore
+        onDragoverCapture: _cache2[13] || (_cache2[13] = //@ts-ignore
         (...args) => unref(onCardDragOver) && unref(onCardDragOver)(...args)),
-        onDragleave: _cache2[14] || (_cache2[14] = //@ts-ignore
+        onDragleaveCapture: _cache2[14] || (_cache2[14] = //@ts-ignore
         (...args) => unref(onCardDragLeave) && unref(onCardDragLeave)(...args)),
-        onDrop: _cache2[15] || (_cache2[15] = //@ts-ignore
+        onDropCapture: _cache2[15] || (_cache2[15] = //@ts-ignore
         (...args) => unref(onCardDrop) && unref(onCardDrop)(...args))
       }, [
         !__props.hidePrompt ? (openBlock(), createBlock(MainPromptInput, {
@@ -118260,7 +118313,7 @@ const _sfc_main$3d = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const StageCard = /* @__PURE__ */ _export_sfc(_sfc_main$3d, [["__scopeId", "data-v-8f97ca58"]]);
+const StageCard = /* @__PURE__ */ _export_sfc(_sfc_main$3d, [["__scopeId", "data-v-28e64cba"]]);
 const _sfc_main$3c = /* @__PURE__ */ defineComponent({
   __name: "SceneCanvas",
   props: {
@@ -134893,7 +134946,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-Dtb9H8Da.mjs");
+    const { STLLoader } = await import("./STLLoader-4AQ4rCTb.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -134901,7 +134954,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-Xtb_SxfZ.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-D897e-4r.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -213933,4 +213986,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-DDSxBsZJ.mjs.map
+//# sourceMappingURL=main-BmDIMSUz.mjs.map

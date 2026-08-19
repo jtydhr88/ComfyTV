@@ -1,10 +1,10 @@
 <template>
   <div
     :class="cardClass"
-    @dragenter="onCardDragEnter"
-    @dragover="onCardDragOver"
-    @dragleave="onCardDragLeave"
-    @drop="onCardDrop"
+    @dragenter.capture="onCardDragEnter"
+    @dragover.capture="onCardDragOver"
+    @dragleave.capture="onCardDragLeave"
+    @drop.capture="onCardDrop"
   >
     <MainPromptInput v-if="!hidePrompt" :node="node" />
 

@@ -508,11 +508,11 @@
 }
 }\r
 
-.ctv-input-tile:hover .ctv-tile-disconnect[data-v-8f97ca58] { display: inline-flex;
+.ctv-input-tile:hover .ctv-tile-disconnect[data-v-28e64cba] { display: inline-flex;
 }
-.ctv-picker-input.ctv-src-upstream         .ctv-src-tag[data-v-8f97ca58] { background: color-mix(in srgb, var(--primary-background) 22%, transparent); color: var(--primary-background);
+.ctv-picker-input.ctv-src-upstream         .ctv-src-tag[data-v-28e64cba] { background: color-mix(in srgb, var(--primary-background) 22%, transparent); color: var(--primary-background);
 }
-.ctv-picker-input.ctv-src-upstream-pending .ctv-src-tag[data-v-8f97ca58] { background: color-mix(in srgb, var(--warning-background) 18%, transparent); color: var(--warning-background);
+.ctv-picker-input.ctv-src-upstream-pending .ctv-src-tag[data-v-28e64cba] { background: color-mix(in srgb, var(--warning-background) 18%, transparent); color: var(--warning-background);
 }\r
 
 .ctv-camera-dropdown option[data-v-d255fcd1] {\r
@@ -6119,5 +6119,5 @@ body > .p-overlay-mask.p-blockui-mask-document.p-overlay-mask-leave:empty {\r
     console.error("vite-plugin-css-injected-by-js", e);
   }
 })();
-import "./assets/main-DDSxBsZJ.mjs";
+import "./assets/main-BmDIMSUz.mjs";
 //# sourceMappingURL=main.js.map

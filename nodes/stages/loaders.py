@@ -1,6 +1,9 @@
 from ._common import *  # noqa: F401, F403
 
 
+_UPLOADS_SUBFOLDER = "comfytv/uploads"
+
+
 def _list_input_files(content_kinds: list[str]) -> list[str]:
     try:
         input_dir = folder_paths.get_input_directory()
@@ -8,6 +11,13 @@ def _list_input_files(content_kinds: list[str]) -> list[str]:
             f for f in os.listdir(input_dir)
             if os.path.isfile(os.path.join(input_dir, f))
         ]
+        uploads_dir = os.path.join(input_dir, *_UPLOADS_SUBFOLDER.split("/"))
+        if os.path.isdir(uploads_dir):
+            files.extend(
+                f"{_UPLOADS_SUBFOLDER}/{f}"
+                for f in os.listdir(uploads_dir)
+                if os.path.isfile(os.path.join(uploads_dir, f))
+            )
         return sorted(folder_paths.filter_files_content_types(files, content_kinds))
     except Exception:
         return []

@@ -39,8 +39,12 @@ export function useLoaderFileDrop(opts: LoaderFileDropOptions) {
     !!opts.onAsset && Array.from(e.dataTransfer?.types ?? []).includes(ASSET_DRAG_MIME)
 
   const isFileDrag = (e: DragEvent): boolean =>
-    Array.from(e.dataTransfer?.types ?? []).includes('Files')
-    && !Array.from(e.dataTransfer?.types ?? []).includes(ASSET_DRAG_MIME)
+    !Array.from(e.dataTransfer?.types ?? []).includes(ASSET_DRAG_MIME)
+    && (
+      Array.from(e.dataTransfer?.types ?? []).includes('Files')
+      || (e.dataTransfer?.files?.length ?? 0) > 0
+      || Array.from(e.dataTransfer?.items ?? []).some((item) => item.kind === 'file')
+    )
 
   const claims = (e: DragEvent): boolean =>
     isAssetDrag(e)

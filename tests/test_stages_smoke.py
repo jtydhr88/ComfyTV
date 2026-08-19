@@ -198,6 +198,22 @@ class TestLoaderExecute:
         assert "a.png" in files
         assert "b.mp4" in files  # passthrough — real impl would filter
 
+    def test_list_input_files_includes_uploads_subfolder(self, monkeypatch, tmp_path):
+        from ComfyTV.nodes.stages import loaders
+        import folder_paths
+        (tmp_path / "root.png").write_text("x")
+        uploads = tmp_path / "comfytv" / "uploads"
+        uploads.mkdir(parents=True)
+        (uploads / "dropped.png").write_text("y")
+        nested = uploads / "deeper"
+        nested.mkdir()
+        (nested / "ignored.png").write_text("z")
+        monkeypatch.setattr(folder_paths, "get_input_directory", lambda: str(tmp_path))
+        monkeypatch.setattr(folder_paths, "filter_files_content_types",
+                            lambda files, kinds: files, raising=False)
+        files = loaders._list_input_files(["image"])
+        assert files == ["comfytv/uploads/dropped.png", "root.png"]
+
 
 # ─── Stage execute() smoke tests — runner-less stages ──────────────────────
 

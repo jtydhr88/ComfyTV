@@ -53,17 +53,31 @@ describe('loaderDropConfigOf', () => {
 })
 
 describe('uploadLoaderFiles', () => {
-  it('uploads every file, appends unique combo values, selects the last', async () => {
+  it('uploads every file into comfytv/uploads and selects the subfolder-qualified name', async () => {
     const node = makeLoaderNode('ComfyTV.ImageLoaderStage', ['existing.png'])
     const files = [
       new File([''], 'a.png', { type: 'image/png' }),
-      new File([''], 'existing.png', { type: 'image/png' }),
+      new File([''], 'b.png', { type: 'image/png' }),
     ]
     await uploadLoaderFiles(node, 'image', files)
     expect(uploadBlobNamed).toHaveBeenCalledTimes(2)
     expect(uploadBlobNamed.mock.calls[0][1]).toEqual({ subfolder: 'comfytv/uploads', filename: 'a.png' })
-    expect(node.widgets[0].options.values).toEqual(['existing.png', 'a.png'])
-    expect(node.widgets[0].value).toBe('existing.png')
+    expect(node.widgets[0].options.values)
+      .toEqual(['existing.png', 'comfytv/uploads/a.png', 'comfytv/uploads/b.png'])
+    expect(node.widgets[0].value).toBe('comfytv/uploads/b.png')
+  })
+
+  it('refreshes the loader when an upload returns the currently selected name', async () => {
+    const node = makeLoaderNode('ComfyTV.ImageLoaderStage', ['comfytv/uploads/same.png'])
+    node.widgets[0].value = 'comfytv/uploads/same.png'
+    node.widgets[0].callback = vi.fn()
+
+    await uploadLoaderFiles(node, 'image', [
+      new File(['new bytes'], 'same.png', { type: 'image/png' }),
+    ])
+
+    expect(node.widgets[0].callback).toHaveBeenCalledWith('comfytv/uploads/same.png')
+    expect(node.widgets[0].options.values).toEqual(['comfytv/uploads/same.png'])
   })
 
   it('writes nothing when no files were uploaded', async () => {
@@ -98,7 +112,7 @@ describe('useStageLoaderDrop', () => {
     const file = new File([''], 'dropped.png', { type: 'image/png' })
     drop.onCardDrop(fileDragEvent([file]))
     await vi.waitFor(() => expect(uploadBlobNamed).toHaveBeenCalledTimes(1))
-    await vi.waitFor(() => expect(node.widgets[0].value).toBe('dropped.png'))
+    await vi.waitFor(() => expect(node.widgets[0].value).toBe('comfytv/uploads/dropped.png'))
   })
 
   it('drops on non-loader nodes never reach the uploader', () => {
