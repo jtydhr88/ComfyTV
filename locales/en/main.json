@@ -148,6 +148,15 @@
         "label": "Local LLM endpoint",
         "desc": "OpenAI-compatible base URL of a local model server (LM Studio, llama.cpp llama-server, vLLM, Ollama…). The Local LLM provider stays unavailable until this is set. Keyless local endpoints only — no API keys are ever stored.",
         "placeholder": "http://127.0.0.1:1234/v1"
+      },
+      "bot-enable-comfy-mcp": {
+        "label": "Mount comfy-mcp",
+        "desc": "Also mount the official comfy-mcp server (read-only tool set: node catalog, workflow validation, model/template search) in bot sessions. Claude Code and Qwen Code only — Codex and Local LLM stay comfytv-only."
+      },
+      "bot-comfy-mcp-command": {
+        "label": "comfy-mcp command",
+        "desc": "Command that launches the comfy-mcp stdio server. Blank = find comfy-mcp on PATH.",
+        "placeholder": "comfy-mcp"
       }
     },
     "agent": {

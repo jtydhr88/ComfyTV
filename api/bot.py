@@ -65,6 +65,31 @@ def _mcp_endpoint() -> str:
     return f"http://127.0.0.1:{port}/comfytv/mcp"
 
 
+def _comfy_mcp_argv() -> list[str]:
+    from ..bot._cli_common import resolve_comfy_mcp_argv
+    try:
+        if not storage.get_setting("bot-enable-comfy-mcp"):
+            return []
+        command = str(storage.get_setting("bot-comfy-mcp-command") or "")
+    except Exception:
+        _log.exception("[ComfyTV/bot] comfy-mcp settings lookup failed")
+        return []
+    argv = resolve_comfy_mcp_argv(command)
+    if not argv:
+        _log.warning("[ComfyTV/bot] bot-enable-comfy-mcp is on but no "
+                     "comfy-mcp executable was found — set "
+                     "bot-comfy-mcp-command or install comfy-mcp on PATH")
+    return argv
+
+
+def _allowed_tools(comfy_mcp_argv: list[str]) -> list[str]:
+    from ..bot._cli_common import COMFY_MCP_ALLOWED_TOOLS
+    tools = list(_ALLOWED_TOOLS)
+    if comfy_mcp_argv:
+        tools += [f"mcp__comfy__{t}" for t in COMFY_MCP_ALLOWED_TOOLS]
+    return tools
+
+
 def _provider_model(provider_id: str) -> str:
     from ..settings import SETTINGS_SPEC
     key = f"bot-model-{provider_id}"
@@ -153,6 +178,7 @@ async def _run_turn(chat: dict, text: str, state: _TurnState, *,
         except Exception:
             _log.exception("[ComfyTV/bot] history replay failed for %s", chat_id)
 
+    comfy_mcp_argv = _comfy_mcp_argv()
     try:
         result = await provider.send(
             TurnRequest(
@@ -161,9 +187,10 @@ async def _run_turn(chat: dict, text: str, state: _TurnState, *,
                 resume_token=chat.get("resume_token"),
                 history=history,
                 mcp_endpoint=_mcp_endpoint(),
-                allowed_tools=list(_ALLOWED_TOOLS),
+                allowed_tools=_allowed_tools(comfy_mcp_argv),
                 attachments=attachments or [],
                 model=_provider_model(chat["provider"]),
+                comfy_mcp_argv=comfy_mcp_argv,
             ),
             emit,
             state.handle,

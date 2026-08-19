@@ -7,6 +7,13 @@ import {
   findNamedSlot,
 } from '@/composables/stages/spawnFollowUp'
 import { writeImageRefs, type ImageRef } from '@/composables/stages/imageRefs'
+import {
+  handleCanvasCommand,
+  handleCanvasFocus,
+  handleGraphEdit,
+  handleGraphGet,
+  handleGraphRun,
+} from '@/composables/stages/mcpGraphCommands'
 import { mentionSendOrders } from '@/composables/stages/imageSlotMentions'
 import { claimStageUid, getStageUid } from '@/composables/stages/stageIdentity'
 import { useAssetStore } from '@/stores/assetStore'
@@ -421,6 +428,11 @@ async function executeCommand(app: any, cmd: any): Promise<CommandResult> {
     case 'cancel_stage': return handleCancelStage(app, cmd)
     case 'get_stage': return handleGetStage(app, cmd)
     case 'arrange_canvas': return handleArrangeCanvas(app, cmd)
+    case 'graph_get': return handleGraphGet(app)
+    case 'graph_edit': return handleGraphEdit(app, cmd)
+    case 'graph_run': return handleGraphRun(app)
+    case 'canvas_command': return handleCanvasCommand(app, cmd)
+    case 'canvas_focus': return handleCanvasFocus(app, cmd)
     default: throw new Error(`unknown command action ${String(cmd.action)}`)
   }
 }

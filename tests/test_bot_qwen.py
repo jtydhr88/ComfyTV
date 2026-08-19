@@ -110,6 +110,24 @@ class TestProjectSettings:
         data = json.loads(target.read_text(encoding="utf-8"))
         assert "comfytv" in data["mcpServers"]
 
+    def test_mounts_comfy_mcp_when_given(self, tmp_path):
+        from ComfyTV.bot._cli_common import COMFY_MCP_ALLOWED_TOOLS
+        path = write_project_settings(str(tmp_path), "http://x/mcp",
+                                      ["comfy-mcp", "--debug"])
+        data = json.loads(path.read_text(encoding="utf-8"))
+        comfy = data["mcpServers"]["comfy"]
+        assert comfy["command"] == "comfy-mcp"
+        assert comfy["args"] == ["--debug"]
+        assert comfy["includeTools"] == list(COMFY_MCP_ALLOWED_TOOLS)
+        assert data["allowMCPServers"] == ["comfytv", "comfy"]
+
+    def test_unmounts_stale_comfy_mcp(self, tmp_path):
+        write_project_settings(str(tmp_path), "http://x/mcp", ["comfy-mcp"])
+        path = write_project_settings(str(tmp_path), "http://x/mcp")
+        data = json.loads(path.read_text(encoding="utf-8"))
+        assert "comfy" not in data["mcpServers"]
+        assert data["allowMCPServers"] == ["comfytv"]
+
 
 class TestListModels:
     async def test_reads_model_providers(self, tmp_path, monkeypatch):

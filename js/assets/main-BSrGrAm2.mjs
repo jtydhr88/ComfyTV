@@ -56790,7 +56790,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-oHrenUVB.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-B8p5qeJR.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -59744,7 +59744,7 @@ const workflow$1 = { "uploadButton": "⬆ Upload workflow", "imported": 'Importe
 const stage$1 = { "run": "Run", "rerun": "Re-run", "running": "Running…", "cancel": "Cancel", "preparingWorkflow": "Preparing workflow…", "outputDurationHint": "Generation time", "section": { "context": "Context", "pool": "Pool", "output": "Output ({type})", "actions": "Actions" }, "pool": { "clear": "Clear", "clearHint": "Empty the picker pool and reset the selection", "confirmClear": "Clear pool?", "confirm": "Yes", "cancel": "No" }, "empty": { "no_output": "no output yet", "generating": "generating…", "pending_upstream": "upstream pending", "unsupported_type": "unsupported type {type}" }, "source": { "upstream": "← upstream", "pending": "… waiting" }, "disconnect": "Disconnect", "starting": "starting…", "runByKind": { "text": "Generate Text", "image": "Generate Image", "image-batch": "Generate Images", "video": "Generate Video", "audio": "Generate Audio", "panorama": "Generate Panorama", "storyboard": "Generate Storyboard", "model": "Generate 3D Model", "material": "Generate Material" }, "action": { "viewFull": "View full size", "download": "Download", "copyText": "Copy text", "renderMarkdown": "Render as Markdown", "showRawText": "Show raw text", "addTag": "Save to library / tag", "removeFromPicker": "Remove from picker", "close": "Close", "loadAsset": "Load as asset node", "prev": "Previous", "next": "Next", "pick": "Select this track" }, "preparingWorkflowDetail": "Hang on — converting workflow to api JSON. Try Run again in a moment." };
 const error$1 = { "dismiss": "Dismiss", "cancelled": "Cancelled", "upstreamNotReady": "Upstream not ready", "upstreamNotReadyDetail": "Upstream not ready: {list}. Run those stage(s) first so they produce a snapshot, then Run this stage again.", "workerDied": "Backend stopped without sending a result. The prompt worker likely died (CUDA OOM during cleanup is the usual cause). Restart ComfyUI to recover." };
 const sidebar$1 = { "tab": { "workflow": "Workflow", "assets": "Assets", "entries": "Entries", "params": "Stages", "presets": "Presets", "resources": "Resources", "servers": "Servers", "settings": "Settings" } };
-const settings$1 = { "title": "Settings", "hint": "Defaults come from comfytv.properties in the ComfyTV directory. Values saved here are stored in the database and take precedence.", "loading": "Loading…", "save": "Save", "saving": "Saving…", "backup": { "section": "Database backup", "now": "Back up now", "running": "Backing up…", "ok": "Backup written to {path}", "failed": "Backup failed: {error}" }, "fields": { "enable-db-backup": { "label": "Automatic backup on startup", "desc": "Back up the ComfyTV data directory (database + workflows) every time the server starts, before any migration runs." }, "db-backup-max-count": { "label": "Max backups to keep", "desc": "When the number of snapshots exceeds this, the oldest ones are deleted." }, "db-backup-path": { "label": "Backup location", "desc": "Leave empty to use the db-backup folder inside the ComfyTV directory. Snapshots are timestamped folders like 20260805-093000/comfytv.", "placeholder": "e.g. D:\\backups\\comfytv" }, "enable-mcp": { "label": "Enable MCP server", "desc": "Expose the ComfyTV MCP endpoint (/comfytv/mcp) so agents can read and drive the canvas. Off by default." }, "enable-bot": { "label": "Enable ComfyTV Bot", "desc": "Show the embedded bot sidebar and its chat API. Requires the MCP server to be enabled." }, "bot-model-claude-code": { "label": "Claude Code model", "desc": "Model passed to claude --model for bot turns. Accepts an alias (sonnet, opus, haiku) or a full model id. Blank = the CLI's own default.", "placeholder": "CLI default" }, "bot-model-codex": { "label": "Codex model", "desc": "Model passed to codex -m for bot turns. Blank = the CLI's own default.", "placeholder": "CLI default" }, "bot-model-qwen-code": { "label": "Qwen Code model", "desc": "Model passed to qwen -m for bot turns. Blank = the model selected in qwen's own settings.", "placeholder": "CLI default" }, "bot-model-local-llm": { "label": "Local LLM model", "desc": "Model id on the local endpoint. Blank = the first model the endpoint reports.", "placeholder": "first available" }, "bot-local-llm-url": { "label": "Local LLM endpoint", "desc": "OpenAI-compatible base URL of a local model server (LM Studio, llama.cpp llama-server, vLLM, Ollama…). The Local LLM provider stays unavailable until this is set. Keyless local endpoints only — no API keys are ever stored.", "placeholder": "http://127.0.0.1:1234/v1" } }, "agent": { "section": "Agent & MCP" } };
+const settings$1 = { "title": "Settings", "hint": "Defaults come from comfytv.properties in the ComfyTV directory. Values saved here are stored in the database and take precedence.", "loading": "Loading…", "save": "Save", "saving": "Saving…", "backup": { "section": "Database backup", "now": "Back up now", "running": "Backing up…", "ok": "Backup written to {path}", "failed": "Backup failed: {error}" }, "fields": { "enable-db-backup": { "label": "Automatic backup on startup", "desc": "Back up the ComfyTV data directory (database + workflows) every time the server starts, before any migration runs." }, "db-backup-max-count": { "label": "Max backups to keep", "desc": "When the number of snapshots exceeds this, the oldest ones are deleted." }, "db-backup-path": { "label": "Backup location", "desc": "Leave empty to use the db-backup folder inside the ComfyTV directory. Snapshots are timestamped folders like 20260805-093000/comfytv.", "placeholder": "e.g. D:\\backups\\comfytv" }, "enable-mcp": { "label": "Enable MCP server", "desc": "Expose the ComfyTV MCP endpoint (/comfytv/mcp) so agents can read and drive the canvas. Off by default." }, "enable-bot": { "label": "Enable ComfyTV Bot", "desc": "Show the embedded bot sidebar and its chat API. Requires the MCP server to be enabled." }, "bot-model-claude-code": { "label": "Claude Code model", "desc": "Model passed to claude --model for bot turns. Accepts an alias (sonnet, opus, haiku) or a full model id. Blank = the CLI's own default.", "placeholder": "CLI default" }, "bot-model-codex": { "label": "Codex model", "desc": "Model passed to codex -m for bot turns. Blank = the CLI's own default.", "placeholder": "CLI default" }, "bot-model-qwen-code": { "label": "Qwen Code model", "desc": "Model passed to qwen -m for bot turns. Blank = the model selected in qwen's own settings.", "placeholder": "CLI default" }, "bot-model-local-llm": { "label": "Local LLM model", "desc": "Model id on the local endpoint. Blank = the first model the endpoint reports.", "placeholder": "first available" }, "bot-local-llm-url": { "label": "Local LLM endpoint", "desc": "OpenAI-compatible base URL of a local model server (LM Studio, llama.cpp llama-server, vLLM, Ollama…). The Local LLM provider stays unavailable until this is set. Keyless local endpoints only — no API keys are ever stored.", "placeholder": "http://127.0.0.1:1234/v1" }, "bot-enable-comfy-mcp": { "label": "Mount comfy-mcp", "desc": "Also mount the official comfy-mcp server (read-only tool set: node catalog, workflow validation, model/template search) in bot sessions. Claude Code and Qwen Code only — Codex and Local LLM stay comfytv-only." }, "bot-comfy-mcp-command": { "label": "comfy-mcp command", "desc": "Command that launches the comfy-mcp stdio server. Blank = find comfy-mcp on PATH.", "placeholder": "comfy-mcp" } }, "agent": { "section": "Agent & MCP" } };
 const servers$1 = { "title": "ComfyUI Servers", "add": "Add", "addTooltip": "Register another ComfyUI instance on your network so stages can run on it", "empty": "No remote servers configured. Stages run on this machine. Add a server to unlock the per-stage server dropdown and run stages on several machines in parallel.", "edit": "Edit", "delete": "Delete", "deleteConfirm": 'Delete server "{label}"? Stages currently pointed at it will fall back to running locally.', "enable": "Enable", "disable": "Disable", "local": "Local (this machine)", "runOn": "Run on", "form": { "label": "Name", "labelPlaceholder": "e.g. GPU rig upstairs", "host": "Host / IP", "port": "Port", "create": "Add server", "save": "Save", "cancel": "Cancel", "saveFailed": "Save failed — is the name already in use?" }, "test": { "action": "Test connection", "testing": "Testing…", "ok": "Connected", "failed": "Connection failed" }, "job": { "started": "Running on {label}", "failed": "Remote run failed", "cancelled": "Remote run cancelled", "fallbackLocal": "Selected server is gone or disabled — this stage will run locally." }, "status": { "online": "Online", "offline": "Offline", "unknown": "Checking…", "idle": "Idle", "queueShort": "Q {n}", "queueDetail": "{running} running, {pending} pending", "fromComfyTV": "{n} from ComfyTV" }, "caps": { "badge": "ComfyTV v{version}", "comfyOnly": "ComfyUI only — ComfyTV not installed", "missingNodes": "{n} nodes missing", "missingTitle": "Nodes missing on this remote — upgrade its ComfyTV:" }, "preflight": { "blockedTitle": "Remote run blocked", "warnTitle": "Remote resource check", "runAnyway": "Run anyway", "noComfyTV": `Remote "{label}" doesn't have ComfyTV installed — install ComfyTV there or run locally.`, "missingNode": 'Remote "{label}" is missing node {node} — upgrade its ComfyTV.', "missingResource": 'Remote "{label}" is missing resource {file} — run anyway?', "resourceMismatch": 'Resource {file} has different content on remote "{label}" — run anyway?' } };
 const stageManager$1 = { "title": "Stage Manager", "refresh": "Refresh list", "import": "Import", "rescan": "Rescan", "rescanTooltip": "Scan the workflow library on disk (comfytv/workflows/ in the ComfyUI user directory) for new, changed, or removed files — no backend restart needed", "rescanFound": "Found {n} new workflow(s)", "rescanNone": "No new workflows found", "rescanNoneDetail": "Make sure the file is a .json inside comfytv/workflows/<kind>/ in the ComfyUI user directory (preset and .api.json sidecars don't count).", "rescanFailed": "Rescan failed", "setDefault": "Set as default", "unsetDefault": "Unset default", "defaultSet": "{label} is now the default workflow for this stage", "defaultCleared": "{label} is no longer the default — the first listed workflow is used", "defaultFailed": "Could not change the default workflow", "section": { "workflows": "Workflows", "params": "Parameters" }, "emptyWorkflows": "No workflows registered for this stage yet — import one here, or drop a .json into comfytv/workflows/<kind>/ in the ComfyUI user directory and hit Rescan.", "hint": "Workflows listed here are picked from the workflow dropdown on the matching stage node on the canvas.", "badge": { "linked": "linked", "linkedHint": "Linked from ComfyUI's native workflow folder (not managed by ComfyTV)", "fileMissing": "file missing", "notGui": "not GUI format", "notGuiHint": "Missing a top-level nodes array — open it in ComfyUI and re-save normally, not with Save (API Format)", "noApi": "API not generated", "noApiHint": "The API prompt is generated automatically the first time this workflow runs — normal for a freshly imported workflow.", "new": "new", "newHint": "Discovered in the most recent scan (startup or rescan)", "builtin": "built-in", "builtinHint": "Ships with ComfyTV (tracked in git). Workflows without this badge were imported or dropped in by a user.", "default": "default", "defaultHint": "Newly added stage nodes of this kind start with this workflow selected. If it is deleted or unlinked, the first listed workflow is used instead." } };
 const assets$1 = { "title": "Asset Library", "empty": "No assets yet — add images, video, or audio to reuse them across projects.", "emptyCategory": "No assets in this category yet.", "add": "Add media", "addTooltip": "Upload images, video, or audio into the library (or drag & drop them onto this panel)", "uploading": "Uploading {done}/{total}…", "uploadFailed": "Upload failed: {detail}", "dropHint": "Drop files to add them to the library", "search": "Search assets", "noResults": "No assets match your search.", "scanFolder": "Scan media folder", "scanFolderHint": "Drop large files into this folder — they are adopted on scan without uploading", "view": { "settings": "Display settings", "list": "List view", "grid": "Grid view" }, "media": { "all": "All types", "image": "Images", "video": "Video", "audio": "Audio", "model": "3D models" }, "category": { "all": "All", "none": "Uncategorized", "new": "New category", "newPrompt": "New category name:", "rename": "Rename category", "renamePrompt": "Category name:", "delete": "Delete category", "deleteConfirm": "Delete this category? It is removed from all assets; the assets and files on disk stay." }, "card": { "rename": "Rename", "renamePrompt": "Asset name:", "delete": "Remove from library", "deleteConfirm": "Remove this asset from the library? The file on disk stays.", "tags": "Edit tags", "loadNode": "Add as node to canvas", "makeProxy": "Generate preview proxy", "more": "More options", "playPreview": "Play", "pausePreview": "Pause", "fileMissing": "File missing", "fileMissingHint": "The file on disk was deleted; the library entry remains — re-import it or remove the asset" }, "tagPopover": { "empty": "No categories yet.", "create": "New category" } };
@@ -59912,7 +59912,7 @@ const workflow = { "uploadButton": "⬆ 上传工作流", "imported": "已导入
 const stage = { "run": "运行", "rerun": "重新运行", "running": "运行中…", "cancel": "取消", "preparingWorkflow": "准备工作流中…", "outputDurationHint": "生成耗时", "section": { "context": "上游输入", "pool": "图片池", "output": "输出 ({type})", "actions": "动作" }, "pool": { "clear": "清除", "clearHint": "清空图片池并重置选择", "confirmClear": "确认清空？", "confirm": "是", "cancel": "否" }, "empty": { "no_output": "暂无输出", "generating": "生成中…", "pending_upstream": "上游待运行", "unsupported_type": "不支持的类型 {type}" }, "source": { "upstream": "← 上游", "pending": "… 等待中" }, "disconnect": "断开此连接", "starting": "启动中…", "runByKind": { "text": "生成文本", "image": "生成图片", "image-batch": "生成图片", "video": "生成视频", "audio": "生成音频", "panorama": "生成全景图", "storyboard": "生成分镜", "model": "生成3D模型", "material": "生成材质" }, "action": { "viewFull": "查看大图", "download": "下载", "copyText": "复制文本", "renderMarkdown": "渲染 Markdown", "showRawText": "显示原文", "addTag": "存入资产库 / 打标签", "removeFromPicker": "从选择器移除", "close": "关闭", "loadAsset": "作为资产节点加载", "prev": "上一张", "next": "下一张", "pick": "选用这条" }, "preparingWorkflowDetail": "稍等 — 正在把工作流转换成 api JSON。稍后再点运行。" };
 const error = { "dismiss": "清除", "cancelled": "已取消", "upstreamNotReady": "上游未就绪", "upstreamNotReadyDetail": "上游未就绪:{list}。请先运行这些 stage 生成快照,然后再运行此 stage。", "workerDied": "后端未返回结果就停止了。prompt worker 可能已崩溃(通常是清理阶段 CUDA OOM)。重启 ComfyUI 后恢复。" };
 const sidebar = { "tab": { "workflow": "工作流", "assets": "资产库", "entries": "条目", "params": "Stage 管理", "presets": "预设", "resources": "资源", "servers": "服务器", "settings": "设置" } };
-const settings = { "title": "设置", "hint": "默认值来自 ComfyTV 目录下的 comfytv.properties。此处保存的值写入数据库,并优先生效。", "loading": "加载中…", "save": "保存", "saving": "保存中…", "backup": { "section": "数据库备份", "now": "立即备份", "running": "备份中…", "ok": "备份已写入 {path}", "failed": "备份失败:{error}" }, "fields": { "enable-db-backup": { "label": "启动时自动备份", "desc": "每次服务器启动时(在任何迁移执行之前)备份 ComfyTV 数据目录(数据库 + 工作流)。" }, "db-backup-max-count": { "label": "最大备份数量", "desc": "快照数量超过该值时,自动删除最旧的备份。" }, "db-backup-path": { "label": "备份位置", "desc": "留空则使用 ComfyTV 目录下的 db-backup 文件夹。快照以时间戳命名,如 20260805-093000/comfytv。", "placeholder": "如 D:\\backups\\comfytv" }, "enable-mcp": { "label": "启用 MCP 服务", "desc": "开放 ComfyTV 的 MCP 端点(/comfytv/mcp),允许 agent 读取并操作画布。默认关闭。" }, "enable-bot": { "label": "启用 ComfyTV Bot", "desc": "显示内嵌 Bot 侧边栏及其聊天接口。前置条件:先启用 MCP 服务。" }, "bot-model-claude-code": { "label": "Claude Code 模型", "desc": "Bot 回合传给 claude --model 的模型,支持别名(sonnet、opus、haiku)或完整模型 id。留空 = CLI 自己的默认。", "placeholder": "CLI 默认" }, "bot-model-codex": { "label": "Codex 模型", "desc": "Bot 回合传给 codex -m 的模型。留空 = CLI 自己的默认。", "placeholder": "CLI 默认" }, "bot-model-qwen-code": { "label": "Qwen Code 模型", "desc": "Bot 回合传给 qwen -m 的模型。留空 = 用 qwen 自己设置里选的模型。", "placeholder": "CLI 默认" }, "bot-model-local-llm": { "label": "Local LLM 模型", "desc": "本地端点上的模型 id。留空 = 用端点报告的第一个模型。", "placeholder": "自动取第一个" }, "bot-local-llm-url": { "label": "Local LLM 端点", "desc": "本地模型服务的 OpenAI 兼容 base URL(LM Studio、llama.cpp 的 llama-server、vLLM、Ollama 等)。不填时 Local LLM provider 不可用。仅限免 key 的本地端点 — 永远不存 API key。", "placeholder": "http://127.0.0.1:1234/v1" } }, "agent": { "section": "Agent 与 MCP" } };
+const settings = { "title": "设置", "hint": "默认值来自 ComfyTV 目录下的 comfytv.properties。此处保存的值写入数据库,并优先生效。", "loading": "加载中…", "save": "保存", "saving": "保存中…", "backup": { "section": "数据库备份", "now": "立即备份", "running": "备份中…", "ok": "备份已写入 {path}", "failed": "备份失败:{error}" }, "fields": { "enable-db-backup": { "label": "启动时自动备份", "desc": "每次服务器启动时(在任何迁移执行之前)备份 ComfyTV 数据目录(数据库 + 工作流)。" }, "db-backup-max-count": { "label": "最大备份数量", "desc": "快照数量超过该值时,自动删除最旧的备份。" }, "db-backup-path": { "label": "备份位置", "desc": "留空则使用 ComfyTV 目录下的 db-backup 文件夹。快照以时间戳命名,如 20260805-093000/comfytv。", "placeholder": "如 D:\\backups\\comfytv" }, "enable-mcp": { "label": "启用 MCP 服务", "desc": "开放 ComfyTV 的 MCP 端点(/comfytv/mcp),允许 agent 读取并操作画布。默认关闭。" }, "enable-bot": { "label": "启用 ComfyTV Bot", "desc": "显示内嵌 Bot 侧边栏及其聊天接口。前置条件:先启用 MCP 服务。" }, "bot-model-claude-code": { "label": "Claude Code 模型", "desc": "Bot 回合传给 claude --model 的模型,支持别名(sonnet、opus、haiku)或完整模型 id。留空 = CLI 自己的默认。", "placeholder": "CLI 默认" }, "bot-model-codex": { "label": "Codex 模型", "desc": "Bot 回合传给 codex -m 的模型。留空 = CLI 自己的默认。", "placeholder": "CLI 默认" }, "bot-model-qwen-code": { "label": "Qwen Code 模型", "desc": "Bot 回合传给 qwen -m 的模型。留空 = 用 qwen 自己设置里选的模型。", "placeholder": "CLI 默认" }, "bot-model-local-llm": { "label": "Local LLM 模型", "desc": "本地端点上的模型 id。留空 = 用端点报告的第一个模型。", "placeholder": "自动取第一个" }, "bot-local-llm-url": { "label": "Local LLM 端点", "desc": "本地模型服务的 OpenAI 兼容 base URL(LM Studio、llama.cpp 的 llama-server、vLLM、Ollama 等)。不填时 Local LLM provider 不可用。仅限免 key 的本地端点 — 永远不存 API key。", "placeholder": "http://127.0.0.1:1234/v1" }, "bot-enable-comfy-mcp": { "label": "挂载 comfy-mcp", "desc": "在 bot 会话中同时挂载官方 comfy-mcp(只读工具集:节点目录、工作流校验、模型/模板搜索)。仅 Claude Code 和 Qwen Code — Codex 与 Local LLM 保持只挂 comfytv。" }, "bot-comfy-mcp-command": { "label": "comfy-mcp 命令", "desc": "启动 comfy-mcp stdio 服务的命令。留空 = 在 PATH 上找 comfy-mcp。", "placeholder": "comfy-mcp" } }, "agent": { "section": "Agent 与 MCP" } };
 const servers = { "title": "ComfyUI 服务器", "add": "添加", "addTooltip": "登记局域网内的其他 ComfyUI 实例,让 stage 可以在它上面运行", "empty": "还没有配置远程服务器,所有 stage 都在本机运行。添加服务器后,每个 stage 会出现服务器下拉框,可多机并行运行。", "edit": "编辑", "delete": "删除", "deleteConfirm": "删除服务器「{label}」?指向它的 stage 会回退到本机运行。", "enable": "启用", "disable": "停用", "local": "本机 (Local)", "runOn": "运行于", "form": { "label": "名称", "labelPlaceholder": "例如:楼上那台 4090", "host": "主机 / IP", "port": "端口", "create": "添加服务器", "save": "保存", "cancel": "取消", "saveFailed": "保存失败——名称是不是重复了?" }, "test": { "action": "测试连接", "testing": "测试中…", "ok": "连接成功", "failed": "连接失败" }, "job": { "started": "正在 {label} 上运行", "failed": "远程运行失败", "cancelled": "远程运行已取消", "fallbackLocal": "所选服务器已删除或停用——这个 stage 将在本机运行。" }, "status": { "online": "在线", "offline": "离线", "unknown": "检测中…", "idle": "空闲", "queueShort": "队列 {n}", "queueDetail": "{running} 运行中,{pending} 排队", "fromComfyTV": "其中 {n} 来自 ComfyTV" }, "caps": { "badge": "ComfyTV v{version}", "comfyOnly": "仅 ComfyUI（未装 ComfyTV）", "missingNodes": "缺 {n} 个节点", "missingTitle": "远端缺少的节点——请升级远端 ComfyTV：" }, "preflight": { "blockedTitle": "远程运行被拦截", "warnTitle": "远端资源检查", "runAnyway": "仍要运行", "noComfyTV": "远端「{label}」未安装 ComfyTV——请先在远端安装，或改为本机运行。", "missingNode": "远端「{label}」缺少节点 {node}——请升级远端 ComfyTV。", "missingResource": "远端「{label}」缺少资源 {file}，仍要运行吗？", "resourceMismatch": "资源 {file} 在远端「{label}」上内容不一致，仍要运行吗？" } };
 const stageManager = { "title": "Stage 管理", "refresh": "刷新列表", "import": "导入", "rescan": "重新扫描", "rescanTooltip": "扫描磁盘上的工作流库（ComfyUI user 目录下的 comfytv/workflows/），发现新增、变更或删除的文件 —— 无需重启后端", "rescanFound": "发现 {n} 个新工作流", "rescanNone": "没有发现新工作流", "rescanNoneDetail": "请确认文件是 .json 且放在 ComfyUI user 目录下的 comfytv/workflows/对应类别目录中（preset 和 .api.json 附属文件不算）。", "rescanFailed": "重新扫描失败", "setDefault": "设为默认", "unsetDefault": "取消默认", "defaultSet": "{label} 已设为该 Stage 的默认工作流", "defaultCleared": "{label} 已取消默认 —— 将使用列表中的第一个工作流", "defaultFailed": "修改默认工作流失败", "section": { "workflows": "工作流", "params": "参数" }, "emptyWorkflows": "该 Stage 下还没有已注册的工作流 —— 点「导入」上传，或把 .json 放入 ComfyUI user 目录下的 comfytv/workflows/对应类别目录后点「重新扫描」。", "hint": "这里列出的工作流，在画布上对应 Stage 节点的 workflow 下拉框中选用。", "badge": { "linked": "外链", "linkedHint": "链接自 ComfyUI 原生工作流目录（不由 ComfyTV 管理）", "fileMissing": "文件丢失", "notGui": "非 GUI 格式", "notGuiHint": "缺少顶层 nodes 数组 —— 在 ComfyUI 中打开后用普通「保存」重新导出，不要用「保存（API 格式）」", "noApi": "API 未生成", "noApiHint": "首次运行该工作流时会自动生成 API prompt，新导入的工作流出现此标记属于正常。", "new": "新", "newHint": "最近一次扫描（启动或重新扫描）新发现的工作流", "builtin": "内置", "builtinHint": "ComfyTV 自带的工作流（git 跟踪）。没有此标记的是用户导入或手动放入的。", "default": "默认", "defaultHint": "新添加的该类 Stage 节点会预选此工作流。若它被删除或取消链接，则回退到列表中的第一个。" } };
 const assets = { "title": "资产库", "empty": "还没有资产 —— 添加图片、视频或音频后可跨项目复用。", "emptyCategory": "这个分类下还没有资产。", "add": "添加素材", "addTooltip": "上传图片、视频或音频到资产库（也可以直接拖拽文件到这个面板）", "uploading": "上传中 {done}/{total}…", "uploadFailed": "上传失败: {detail}", "dropHint": "松开把文件添加到资产库", "search": "搜索资产", "noResults": "没有匹配的资产。", "scanFolder": "扫描素材文件夹", "scanFolderHint": "大文件直接放进这个文件夹,扫描时自动收录,无需上传", "view": { "settings": "显示设置", "list": "列表视图", "grid": "网格视图" }, "media": { "all": "全部类型", "image": "图片", "video": "视频", "audio": "音频", "model": "3D 模型" }, "category": { "all": "全部", "none": "未分类", "new": "新建分类", "newPrompt": "新分类名称：", "rename": "重命名分类", "renamePrompt": "分类名称：", "delete": "删除分类", "deleteConfirm": "删除这个分类？它会从所有资产上移除；资产和磁盘上的文件保留。" }, "card": { "rename": "重命名", "renamePrompt": "资产名称：", "delete": "从资产库移除", "deleteConfirm": "把这个资产从资产库移除？磁盘上的文件保留。", "tags": "编辑标签", "loadNode": "作为节点添加到画布", "makeProxy": "生成预览代理", "more": "更多操作", "playPreview": "试听", "pausePreview": "暂停", "fileMissing": "文件缺失", "fileMissingHint": "本地文件已被删除，资产条目仍保留；可重新导入或从资产库移除" }, "tagPopover": { "empty": "还没有分类。", "create": "新建分类" } };
@@ -135016,7 +135016,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-BVqVhcUS.mjs");
+    const { STLLoader } = await import("./STLLoader-DgyBPmNH.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -135024,7 +135024,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-C6TjgHKH.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-BpA48Yu-.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -213678,6 +213678,428 @@ function installCanvasMirror(app2, deps) {
     app2.__comfytvCanvasMirrorInstalled = false;
   };
 }
+const WIDGET_VALUE_CAP = 2e3;
+const NODE_ERRORS_CAP = 1500;
+function rootGraph(app2) {
+  const graph = app2 == null ? void 0 : app2.graph;
+  if (!graph) throw new Error("no graph available in this tab");
+  return graph;
+}
+function requireNode(graph, ref2) {
+  var _a3, _b2;
+  const id = String(ref2 ?? "");
+  const node = ((_a3 = graph == null ? void 0 : graph.getNodeById) == null ? void 0 : _a3.call(graph, Number(id))) ?? ((_b2 = graph == null ? void 0 : graph.getNodeById) == null ? void 0 : _b2.call(graph, id));
+  if (!node) throw new Error(`node ${id} not found on the canvas`);
+  return node;
+}
+function slotIndex(slots, ref2, side) {
+  if (ref2 == null) return -1;
+  const asNumber = Number(ref2);
+  if (Number.isInteger(asNumber) && String(ref2).trim() !== "" && !Number.isNaN(asNumber) && String(asNumber) === String(ref2).trim()) {
+    if (asNumber < 0 || asNumber >= slots.length) {
+      throw new Error(`${side} slot index ${asNumber} out of range (0..${slots.length - 1})`);
+    }
+    return asNumber;
+  }
+  const name = String(ref2);
+  const idx = slots.findIndex((s) => String((s == null ? void 0 : s.name) ?? "") === name);
+  if (idx < 0) {
+    const names = slots.map((s) => String((s == null ? void 0 : s.name) ?? "")).join(", ") || "(none)";
+    throw new Error(`no ${side} slot '${name}'; slots: ${names}`);
+  }
+  return idx;
+}
+function widgetNames(node) {
+  return (node.widgets ?? []).map((w2) => String((w2 == null ? void 0 : w2.name) ?? "")).filter(Boolean).join(", ") || "(none)";
+}
+function applyWidgets(node, widgets, updated) {
+  if (widgets == null) return;
+  if (typeof widgets !== "object" || Array.isArray(widgets)) {
+    throw new Error("widgets must be an object mapping widget name -> value");
+  }
+  for (const [name, value] of Object.entries(widgets)) {
+    if (!getWidget(node, name)) {
+      throw new Error(`no widget '${name}' on node ${node.id}; widgets: ${widgetNames(node)}`);
+    }
+    writeWidget(node, name, value);
+    updated.push(`${node.id}.${name}`);
+  }
+}
+function slimGraphNode(node, links) {
+  const widgets = {};
+  for (const w2 of node.widgets ?? []) {
+    const name = String((w2 == null ? void 0 : w2.name) ?? "");
+    if (!name) continue;
+    let v2 = w2.value;
+    if (typeof v2 === "function" || v2 === void 0) continue;
+    if (typeof v2 === "string" && v2.length > WIDGET_VALUE_CAP) {
+      v2 = v2.slice(0, WIDGET_VALUE_CAP) + "…";
+    }
+    widgets[name] = v2;
+  }
+  const inputs = (node.inputs ?? []).map((inp) => {
+    const link2 = (inp == null ? void 0 : inp.link) != null ? links[inp.link] : null;
+    return {
+      name: String((inp == null ? void 0 : inp.name) ?? ""),
+      type: String((inp == null ? void 0 : inp.type) ?? ""),
+      ...(link2 == null ? void 0 : link2.origin_id) != null ? { from_node: String(link2.origin_id), from_slot: Number(link2.origin_slot) || 0 } : {}
+    };
+  });
+  const outputs = (node.outputs ?? []).map((out) => ({
+    name: String((out == null ? void 0 : out.name) ?? ""),
+    type: String((out == null ? void 0 : out.type) ?? ""),
+    to_nodes: ((out == null ? void 0 : out.links) ?? []).map((id) => {
+      var _a3;
+      return (_a3 = links[id]) == null ? void 0 : _a3.target_id;
+    }).filter((t2) => t2 != null).map((t2) => String(t2))
+  }));
+  const type = String(node.comfyClass ?? node.type ?? "");
+  return {
+    node_id: String(node.id),
+    type,
+    title: String(node.title ?? ""),
+    ...type.startsWith("ComfyTV.") ? { is_stage: true } : {},
+    ...node.subgraph ? { is_subgraph: true } : {},
+    ...node.mode ? { mode: Number(node.mode) } : {},
+    widgets,
+    inputs,
+    outputs
+  };
+}
+function handleGraphGet(app2) {
+  const graph = rootGraph(app2);
+  const links = graph.links ?? {};
+  const nodes = (graph._nodes ?? []).map((n) => slimGraphNode(n, links));
+  return { node_count: nodes.length, nodes };
+}
+function opAddNode(app2, graph, op, updated) {
+  const type = String(op.type ?? "");
+  if (!type) throw new Error("add_node needs a type (a node class name)");
+  const lg = window.LiteGraph;
+  if (!(lg == null ? void 0 : lg.createNode)) throw new Error("LiteGraph.createNode not available");
+  const node = lg.createNode(type);
+  if (!node) throw new Error(`unknown node type ${type}`);
+  graph.add(node);
+  if (Array.isArray(op.pos) && op.pos.length === 2) {
+    node.pos = [Number(op.pos[0]), Number(op.pos[1])];
+  }
+  if (op.title != null) node.title = String(op.title);
+  applyWidgets(node, op.widgets, updated);
+  return { op: "add_node", node_id: String(node.id), type };
+}
+function opConnect(graph, op) {
+  var _a3, _b2, _c;
+  const src = requireNode(graph, op.from_node);
+  const dst = requireNode(graph, op.to_node);
+  const fromIdx = op.from_slot != null ? slotIndex(src.outputs ?? [], op.from_slot, "output") : 0;
+  const out = (_a3 = src.outputs) == null ? void 0 : _a3[fromIdx];
+  if (!out) throw new Error(`node ${src.id} has no output slot ${fromIdx}`);
+  let toIdx;
+  if (op.to_slot != null) {
+    toIdx = slotIndex(dst.inputs ?? [], op.to_slot, "input");
+  } else {
+    toIdx = (dst.inputs ?? []).findIndex((inp) => (inp == null ? void 0 : inp.link) == null && ((inp == null ? void 0 : inp.type) === "*" || String((inp == null ? void 0 : inp.type) ?? "").split(",").includes(String(out.type))));
+    if (toIdx < 0) {
+      throw new Error(
+        `no free input on node ${dst.id} compatible with type ${String(out.type)}`
+      );
+    }
+  }
+  const link2 = src.connect(fromIdx, dst, toIdx);
+  if (!link2) throw new Error("the graph rejected the connection (type mismatch?)");
+  return {
+    op: "connect",
+    from: String(src.id),
+    to: String(dst.id),
+    input: String(((_c = (_b2 = dst.inputs) == null ? void 0 : _b2[toIdx]) == null ? void 0 : _c.name) ?? toIdx)
+  };
+}
+const NODE_MODES = { always: 0, mute: 2, bypass: 4 };
+function opSetMode(graph, op) {
+  const node = requireNode(graph, op.node);
+  const mode = String(op.mode ?? "");
+  if (!(mode in NODE_MODES)) {
+    throw new Error(`invalid mode '${mode}' — valid: always, mute, bypass`);
+  }
+  node.mode = NODE_MODES[mode];
+  return { op: "set_mode", node_id: String(node.id), mode };
+}
+function opClone(graph, op) {
+  var _a3, _b2;
+  const node = requireNode(graph, op.node);
+  if (typeof node.clone !== "function") {
+    throw new Error(`node ${node.id} cannot be cloned`);
+  }
+  const copy2 = node.clone();
+  if (!copy2) throw new Error(`cloning node ${node.id} failed`);
+  graph.add(copy2);
+  copy2.pos = Array.isArray(op.pos) && op.pos.length === 2 ? [Number(op.pos[0]), Number(op.pos[1])] : [(Number((_a3 = node.pos) == null ? void 0 : _a3[0]) || 0) + 40, (Number((_b2 = node.pos) == null ? void 0 : _b2[1]) || 0) + 40];
+  return { op: "clone", node_id: String(copy2.id), cloned_from: String(node.id) };
+}
+function opSetColor(graph, op) {
+  const node = requireNode(graph, op.node);
+  if (op.color !== void 0) node.color = op.color ? String(op.color) : void 0;
+  if (op.bgcolor !== void 0) node.bgcolor = op.bgcolor ? String(op.bgcolor) : void 0;
+  return { op: "set_color", node_id: String(node.id) };
+}
+function opCreateGroup(graph, op) {
+  var _a3;
+  const ids = op.nodes;
+  if (!Array.isArray(ids) || ids.length === 0) {
+    throw new Error("create_group needs nodes (a non-empty array of node ids)");
+  }
+  const lg = window.LiteGraph;
+  if (!(lg == null ? void 0 : lg.LGraphGroup)) throw new Error("LGraphGroup not available");
+  const members = ids.map((id) => requireNode(graph, id));
+  const group = new lg.LGraphGroup();
+  group.title = String(op.title ?? "Group");
+  if (op.color) group.color = String(op.color);
+  const pad = 24;
+  const xs = members.map((n) => {
+    var _a4;
+    return Number((_a4 = n.pos) == null ? void 0 : _a4[0]) || 0;
+  });
+  const ys = members.map((n) => {
+    var _a4;
+    return Number((_a4 = n.pos) == null ? void 0 : _a4[1]) || 0;
+  });
+  const x2 = members.map((n) => {
+    var _a4, _b2;
+    return (Number((_a4 = n.pos) == null ? void 0 : _a4[0]) || 0) + (Number((_b2 = n.size) == null ? void 0 : _b2[0]) || 200);
+  });
+  const y2 = members.map((n) => {
+    var _a4, _b2;
+    return (Number((_a4 = n.pos) == null ? void 0 : _a4[1]) || 0) + (Number((_b2 = n.size) == null ? void 0 : _b2[1]) || 100);
+  });
+  if (typeof group.resizeTo === "function") {
+    group.resizeTo(members, pad);
+  } else {
+    group.pos = [Math.min(...xs) - pad, Math.min(...ys) - pad - 30];
+    group.size = [
+      Math.max(...x2) - Math.min(...xs) + pad * 2,
+      Math.max(...y2) - Math.min(...ys) + pad * 2 + 30
+    ];
+  }
+  graph.add(group);
+  (_a3 = group.recomputeInsideNodes) == null ? void 0 : _a3.call(group);
+  return { op: "create_group", title: group.title, node_count: members.length };
+}
+function opCollapse(graph, op) {
+  var _a3, _b2, _c;
+  const node = requireNode(graph, op.node);
+  const want = op.collapsed !== false;
+  if (Boolean((_a3 = node.flags) == null ? void 0 : _a3.collapsed) !== want) (_b2 = node.collapse) == null ? void 0 : _b2.call(node);
+  return {
+    op: "collapse",
+    node_id: String(node.id),
+    collapsed: Boolean((_c = node.flags) == null ? void 0 : _c.collapsed)
+  };
+}
+function opPin(graph, op) {
+  const node = requireNode(graph, op.node);
+  if (typeof node.pin !== "function") {
+    throw new Error(`node ${node.id} cannot be pinned`);
+  }
+  const want = op.pinned !== false;
+  node.pin(want);
+  return { op: "pin", node_id: String(node.id), pinned: want };
+}
+function opConvertToSubgraph(app2, graph, op) {
+  var _a3, _b2;
+  const ids = op.nodes;
+  if (!Array.isArray(ids) || ids.length === 0) {
+    throw new Error("convert_to_subgraph needs nodes (a non-empty array of node ids)");
+  }
+  if (typeof graph.convertToSubgraph !== "function") {
+    throw new Error("this graph does not support convertToSubgraph");
+  }
+  const members = ids.map((id) => requireNode(graph, id));
+  const res = graph.convertToSubgraph(new Set(members));
+  if (!(res == null ? void 0 : res.node)) throw new Error("the graph refused to convert the selection");
+  (_b2 = (_a3 = app2 == null ? void 0 : app2.canvas) == null ? void 0 : _a3.select) == null ? void 0 : _b2.call(_a3, res.node);
+  return {
+    op: "convert_to_subgraph",
+    node_id: String(res.node.id),
+    packed: members.length
+  };
+}
+function opUnpackSubgraph(graph, op) {
+  const node = requireNode(graph, op.node);
+  if (!node.subgraph) {
+    throw new Error(`node ${node.id} is not a subgraph node`);
+  }
+  if (typeof graph.unpackSubgraph !== "function") {
+    throw new Error("this graph does not support unpackSubgraph");
+  }
+  graph.unpackSubgraph(node, { skipMissingNodes: true });
+  return { op: "unpack_subgraph", node_id: String(node.id) };
+}
+function handleGraphEdit(app2, cmd) {
+  var _a3, _b2, _c, _d;
+  const graph = rootGraph(app2);
+  const ops = cmd == null ? void 0 : cmd.ops;
+  if (!Array.isArray(ops) || ops.length === 0) {
+    throw new Error("ops must be a non-empty array of {op, ...} objects");
+  }
+  const results = [];
+  const updated = [];
+  (_a3 = graph.beforeChange) == null ? void 0 : _a3.call(graph);
+  try {
+    for (let i = 0; i < ops.length; i++) {
+      const op = ops[i];
+      const name = String((op == null ? void 0 : op.op) ?? "");
+      try {
+        if (name === "add_node") {
+          results.push(opAddNode(app2, graph, op, updated));
+        } else if (name === "remove_node") {
+          const node = requireNode(graph, op.node);
+          graph.remove(node);
+          results.push({ op: name, node_id: String(node.id) });
+        } else if (name === "set_widget") {
+          const node = requireNode(graph, op.node);
+          applyWidgets(node, { [String(op.name)]: op.value }, updated);
+          results.push({ op: name, node_id: String(node.id), name: String(op.name) });
+        } else if (name === "set_title") {
+          const node = requireNode(graph, op.node);
+          node.title = String(op.title ?? "");
+          results.push({ op: name, node_id: String(node.id) });
+        } else if (name === "connect") {
+          results.push(opConnect(graph, op));
+        } else if (name === "disconnect") {
+          const node = requireNode(graph, op.node);
+          const idx = slotIndex(node.inputs ?? [], op.input, "input");
+          (_b2 = node.disconnectInput) == null ? void 0 : _b2.call(node, idx);
+          results.push({ op: name, node_id: String(node.id), input: String(op.input) });
+        } else if (name === "set_mode") {
+          results.push(opSetMode(graph, op));
+        } else if (name === "clone") {
+          results.push(opClone(graph, op));
+        } else if (name === "set_color") {
+          results.push(opSetColor(graph, op));
+        } else if (name === "create_group") {
+          results.push(opCreateGroup(graph, op));
+        } else if (name === "collapse") {
+          results.push(opCollapse(graph, op));
+        } else if (name === "pin") {
+          results.push(opPin(graph, op));
+        } else if (name === "convert_to_subgraph") {
+          results.push(opConvertToSubgraph(app2, graph, op));
+        } else if (name === "unpack_subgraph") {
+          results.push(opUnpackSubgraph(graph, op));
+        } else {
+          throw new Error(
+            `unknown op '${name}' — valid: add_node, remove_node, set_widget, set_title, connect, disconnect, set_mode, clone, set_color, create_group, collapse, pin, convert_to_subgraph, unpack_subgraph`
+          );
+        }
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e);
+        throw new Error(
+          `ops[${i}] (${name || "?"}): ${msg}` + (results.length ? ` — ${results.length} earlier op(s) already applied` : "")
+        );
+      }
+    }
+  } finally {
+    (_c = graph.afterChange) == null ? void 0 : _c.call(graph);
+  }
+  (_d = graph.setDirtyCanvas) == null ? void 0 : _d.call(graph, true, true);
+  return { applied: results, updated_widgets: updated };
+}
+const CANVAS_COMMANDS = [
+  "Comfy.Undo",
+  "Comfy.Redo",
+  "Comfy.SaveWorkflow",
+  "Comfy.Canvas.FitView",
+  "Comfy.Canvas.ResetView",
+  "Comfy.Interrupt",
+  "Comfy.ClearPendingTasks",
+  "Comfy.RefreshNodeDefinitions",
+  "Comfy.Graph.GroupSelectedNodes"
+];
+function selectNodesOnCanvas(app2, ids) {
+  var _a3, _b2, _c;
+  const graph = rootGraph(app2);
+  const canvas = app2 == null ? void 0 : app2.canvas;
+  if (!canvas) throw new Error("no canvas available in this tab");
+  const members = ids.map((id) => requireNode(graph, id));
+  if (typeof canvas.deselectAll === "function") canvas.deselectAll();
+  else (_a3 = canvas.deselectAllNodes) == null ? void 0 : _a3.call(canvas);
+  for (const node of members) {
+    if (typeof canvas.select === "function") canvas.select(node);
+    else (_b2 = canvas.selectNode) == null ? void 0 : _b2.call(canvas, node, true);
+  }
+  (_c = canvas.setDirty) == null ? void 0 : _c.call(canvas, true, true);
+}
+async function handleCanvasCommand(app2, cmd) {
+  var _a3, _b2;
+  const id = String((cmd == null ? void 0 : cmd.command) ?? "");
+  if (!CANVAS_COMMANDS.includes(id)) {
+    throw new Error(
+      `command '${id}' is not allowed — allowed: ${CANVAS_COMMANDS.join(", ")}`
+    );
+  }
+  if (Array.isArray(cmd == null ? void 0 : cmd.nodes) && cmd.nodes.length) {
+    selectNodesOnCanvas(app2, cmd.nodes);
+  }
+  const commandApi = (_a3 = app2 == null ? void 0 : app2.extensionManager) == null ? void 0 : _a3.command;
+  if (typeof (commandApi == null ? void 0 : commandApi.execute) === "function") {
+    await commandApi.execute(id);
+    return { executed: id };
+  }
+  if (id === "Comfy.Interrupt" && typeof ((_b2 = app2 == null ? void 0 : app2.api) == null ? void 0 : _b2.interrupt) === "function") {
+    await app2.api.interrupt();
+    return { executed: id, via: "api.interrupt" };
+  }
+  throw new Error(
+    "the command system is not exposed in this frontend (app.extensionManager.command.execute missing)"
+  );
+}
+function handleCanvasFocus(app2, cmd) {
+  var _a3, _b2, _c;
+  const graph = rootGraph(app2);
+  const node = requireNode(graph, cmd == null ? void 0 : cmd.node);
+  const canvas = app2 == null ? void 0 : app2.canvas;
+  if (!canvas) throw new Error("no canvas available in this tab");
+  (_a3 = canvas.deselectAllNodes) == null ? void 0 : _a3.call(canvas);
+  if (typeof canvas.selectNodes === "function") canvas.selectNodes([node]);
+  else (_b2 = canvas.selectNode) == null ? void 0 : _b2.call(canvas, node);
+  if (typeof canvas.animateToBounds === "function" && node.pos && node.size) {
+    canvas.animateToBounds([
+      Number(node.pos[0]) - 80,
+      Number(node.pos[1]) - 80,
+      (Number(node.size[0]) || 200) + 160,
+      (Number(node.size[1]) || 100) + 160
+    ]);
+  } else if (typeof canvas.centerOnNode === "function") {
+    canvas.centerOnNode(node);
+  } else {
+    throw new Error("canvas navigation APIs unavailable in this frontend");
+  }
+  (_c = canvas.setDirty) == null ? void 0 : _c.call(canvas, true, true);
+  return { focused: String(node.id), title: String(node.title ?? "") };
+}
+async function handleGraphRun(app2) {
+  var _a3;
+  if (typeof (app2 == null ? void 0 : app2.graphToPrompt) !== "function") {
+    throw new Error("graphToPrompt unavailable in this tab");
+  }
+  if (typeof ((_a3 = app2 == null ? void 0 : app2.api) == null ? void 0 : _a3.queuePrompt) !== "function") {
+    throw new Error("queuePrompt unavailable in this tab");
+  }
+  const data = await app2.graphToPrompt();
+  let res;
+  try {
+    res = await app2.api.queuePrompt(0, data);
+  } catch (e) {
+    throw new Error(`queue rejected the graph: ${extractRunError(e, 0).message}`);
+  }
+  const promptId = String((res == null ? void 0 : res.prompt_id) ?? "");
+  const nodeErrors = (res == null ? void 0 : res.node_errors) ?? {};
+  if (!promptId) {
+    const detail = Object.keys(nodeErrors).length ? JSON.stringify(nodeErrors).slice(0, NODE_ERRORS_CAP) : "no prompt was queued — an all-ComfyTV canvas runs per stage via run_stage";
+    throw new Error(`queue did not accept the graph: ${detail}`);
+  }
+  return { queued: true, prompt_id: promptId };
+}
 const OkSchema = object({ ok: boolean() });
 const COMMAND_EVENT = "comfytv-mcp-command";
 const RESULT_PATH = "/comfytv/mcp_command_result";
@@ -214072,6 +214494,16 @@ async function executeCommand(app2, cmd) {
       return handleGetStage(app2, cmd);
     case "arrange_canvas":
       return handleArrangeCanvas(app2, cmd);
+    case "graph_get":
+      return handleGraphGet(app2);
+    case "graph_edit":
+      return handleGraphEdit(app2, cmd);
+    case "graph_run":
+      return handleGraphRun(app2);
+    case "canvas_command":
+      return handleCanvasCommand(app2, cmd);
+    case "canvas_focus":
+      return handleCanvasFocus(app2, cmd);
     default:
       throw new Error(`unknown command action ${String(cmd.action)}`);
   }
@@ -214503,4 +214935,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-aExqFoSr.mjs.map
+//# sourceMappingURL=main-BSrGrAm2.mjs.map

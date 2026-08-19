@@ -148,6 +148,15 @@
         "label": "Local LLM 端点",
         "desc": "本地模型服务的 OpenAI 兼容 base URL(LM Studio、llama.cpp 的 llama-server、vLLM、Ollama 等)。不填时 Local LLM provider 不可用。仅限免 key 的本地端点 — 永远不存 API key。",
         "placeholder": "http://127.0.0.1:1234/v1"
+      },
+      "bot-enable-comfy-mcp": {
+        "label": "挂载 comfy-mcp",
+        "desc": "在 bot 会话中同时挂载官方 comfy-mcp(只读工具集:节点目录、工作流校验、模型/模板搜索)。仅 Claude Code 和 Qwen Code — Codex 与 Local LLM 保持只挂 comfytv。"
+      },
+      "bot-comfy-mcp-command": {
+        "label": "comfy-mcp 命令",
+        "desc": "启动 comfy-mcp stdio 服务的命令。留空 = 在 PATH 上找 comfy-mcp。",
+        "placeholder": "comfy-mcp"
       }
     },
     "agent": {

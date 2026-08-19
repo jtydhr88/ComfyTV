@@ -3,6 +3,7 @@ from .seed import (
     seed_workflows_from_disk,
     reset_workflow_to_preset,
     import_workflow,
+    create_workflow,
     _is_gui_format, _label_from_stem, _read_preset, _safe_stem,
     _apply_preset_to_new_row, _upsert_workflow_row,
 )
@@ -41,6 +42,7 @@ __all__ = [
     "seed_workflows_from_disk",
     "reset_workflow_to_preset",
     "import_workflow",
+    "create_workflow",
     "link_workflow",
     "unlink_workflow",
     "list_native_workflows",

@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Optional
 
 from ._cli_common import (
+    COMFY_MCP_ALLOWED_TOOLS,
     CORE_MCP_TOOLS,
     CliStreamParser,
     MCP_TOOL_TIMEOUT_MS,
@@ -97,7 +98,8 @@ def resolve_qwen_command() -> Optional[list[str]]:
     return None
 
 
-def write_project_settings(home_dir: str, mcp_endpoint: str) -> Path:
+def write_project_settings(home_dir: str, mcp_endpoint: str,
+                           comfy_mcp_argv: Optional[list[str]] = None) -> Path:
     path = Path(home_dir) / ".qwen" / "settings.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     data: dict = {}
@@ -117,8 +119,20 @@ def write_project_settings(home_dir: str, mcp_endpoint: str) -> Path:
         "timeout": MCP_TOOL_TIMEOUT_MS,
         "includeTools": list(CORE_MCP_TOOLS),
     }
+    allow = ["comfytv"]
+    if comfy_mcp_argv:
+        servers["comfy"] = {
+            "command": comfy_mcp_argv[0],
+            "args": list(comfy_mcp_argv[1:]),
+            "trust": True,
+            "timeout": MCP_TOOL_TIMEOUT_MS,
+            "includeTools": list(COMFY_MCP_ALLOWED_TOOLS),
+        }
+        allow.append("comfy")
+    else:
+        servers.pop("comfy", None)
     data["mcpServers"] = servers
-    data["allowMCPServers"] = ["comfytv"]
+    data["allowMCPServers"] = allow
     data["excludeTools"] = list(_EXCLUDED_CORE_TOOLS)
     generator = data.get("contentGenerator")
     if not isinstance(generator, dict):
@@ -224,7 +238,8 @@ class QwenCodeProvider(AgentProvider):
                    handle: TurnHandle) -> TurnResult:
         home = self._resolve_home()
         if turn.mcp_endpoint:
-            await asyncio.to_thread(write_project_settings, home, turn.mcp_endpoint)
+            await asyncio.to_thread(write_project_settings, home,
+                                    turn.mcp_endpoint, turn.comfy_mcp_argv)
         return await run_cli_turn(
             self._build_argv(turn),
             cwd=home,

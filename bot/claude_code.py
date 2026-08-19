@@ -170,8 +170,14 @@ class ClaudeCodeProvider(AgentProvider):
         if turn.model:
             argv += ["--model", turn.model]
         if turn.mcp_endpoint:
-            mcp = {"mcpServers": {"comfytv": {"type": "http", "url": turn.mcp_endpoint}}}
-            argv += ["--mcp-config", json.dumps(mcp)]
+            servers: dict = {"comfytv": {"type": "http", "url": turn.mcp_endpoint}}
+            if turn.comfy_mcp_argv:
+                servers["comfy"] = {
+                    "type": "stdio",
+                    "command": turn.comfy_mcp_argv[0],
+                    "args": list(turn.comfy_mcp_argv[1:]),
+                }
+            argv += ["--mcp-config", json.dumps({"mcpServers": servers})]
         if turn.allowed_tools:
             argv += ["--allowedTools", ",".join(turn.allowed_tools)]
         if turn.resume_token:

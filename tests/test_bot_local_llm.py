@@ -85,7 +85,8 @@ class TestToolPlumbing:
 
         monkeypatch.setattr(provider, "_request_json", fake_request)
         tools = await provider._mcp_list_tools(None, "http://x/mcp")
-        assert [t["name"] for t in tools] == ["get_canvas", "wait_stage"]
+        assert [t["name"] for t in tools] == [
+            "get_canvas", "wait_stage", "workflow_edit"]
         assert all(t["name"] in CORE_MCP_TOOLS for t in tools)
 
 

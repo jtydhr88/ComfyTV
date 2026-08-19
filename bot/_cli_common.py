@@ -36,7 +36,46 @@ CORE_MCP_TOOLS = [
     "view_image",
     "media_frame",
     "pick_output",
+    "node_info",
+    "workflow_create",
+    "workflow_get",
+    "workflow_edit",
+    "stage_params",
+    "graph_get",
+    "graph_edit",
+    "graph_run",
+    "canvas_command",
+    "canvas_focus",
 ]
+
+COMFY_MCP_ALLOWED_TOOLS = [
+    "server_info",
+    "nodes",
+    "validate_workflow",
+    "search_models",
+    "search_templates",
+    "get_template",
+    "list_workflow_slots",
+    "list_workflow_notes",
+    "workflow_deps",
+    "node_dependencies",
+    "system_stats",
+    "which",
+]
+
+
+def resolve_comfy_mcp_argv(command: str) -> list[str]:
+    import shlex
+    import shutil
+    command = (command or "").strip()
+    if command:
+        try:
+            argv = shlex.split(command, posix=(sys.platform != "win32"))
+        except ValueError:
+            return []
+        return [a.strip('"') for a in argv if a]
+    found = shutil.which("comfy-mcp")
+    return [found] if found else []
 
 
 def base_spawn_env() -> dict:

@@ -19,6 +19,8 @@ SETTINGS_SPEC: dict[str, dict[str, Any]] = {
     "bot-model-qwen-code": {"type": "string", "default": ""},
     "bot-model-local-llm": {"type": "string", "default": ""},
     "bot-local-llm-url": {"type": "string", "default": ""},
+    "bot-enable-comfy-mcp": {"type": "boolean", "default": False},
+    "bot-comfy-mcp-command": {"type": "string", "default": ""},
 }
 
 

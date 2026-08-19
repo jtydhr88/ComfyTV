@@ -1,6 +1,8 @@
 import asyncio
+import json
 import re
 import time
+from urllib.parse import urlencode
 
 from .. import storage
 from ..nodes.stages import STAGE_META
@@ -477,6 +479,330 @@ async def _workflow_edit(args: dict) -> dict:
     fresh = workflow_db.get_workflow_config(cfg["kind"], cfg["label"])
     return {"results": results,
             "bindings": (fresh or {}).get("bindings", [])}
+
+
+_NODE_INFO_MAX_RESULTS = 20
+_NODE_INFO_MAX_CHOICES = 24
+
+
+def _slim_input_spec(spec) -> dict:
+    if not isinstance(spec, (list, tuple)) or not spec:
+        return {"type": str(spec)}
+    head = spec[0]
+    cfg = spec[1] if len(spec) > 1 and isinstance(spec[1], dict) else {}
+    out: dict = {}
+    choices = None
+    if isinstance(head, (list, tuple)):
+        choices = [str(c) for c in head]
+    elif str(head) == "COMBO" and isinstance(cfg.get("options"), list):
+        choices = [str(c) for c in cfg["options"]]
+    if choices is not None:
+        out["type"] = "COMBO"
+        out["choices"] = choices[:_NODE_INFO_MAX_CHOICES]
+        if len(choices) > _NODE_INFO_MAX_CHOICES:
+            out["choices_total"] = len(choices)
+    else:
+        out["type"] = str(head)
+    for key in ("default", "min", "max", "step", "multiline", "tooltip"):
+        if key in cfg:
+            out[key] = cfg[key]
+    return out
+
+
+def _node_info_dict(name: str, cls) -> dict:
+    getter = getattr(cls, "GET_NODE_INFO_V1", None)
+    if getter is not None:
+        try:
+            return dict(getter())
+        except Exception:
+            pass
+    import nodes as comfy_nodes
+    display = getattr(comfy_nodes, "NODE_DISPLAY_NAME_MAPPINGS", {})
+    try:
+        input_types = cls.INPUT_TYPES()
+    except Exception as e:
+        raise ValueError(f"node {name!r} failed to report its inputs: {e}")
+    return {
+        "name": name,
+        "display_name": display.get(name, name),
+        "description": str(getattr(cls, "DESCRIPTION", "") or ""),
+        "category": str(getattr(cls, "CATEGORY", "") or ""),
+        "output_node": bool(getattr(cls, "OUTPUT_NODE", False)),
+        "input": input_types,
+        "output": list(getattr(cls, "RETURN_TYPES", ()) or ()),
+        "output_name": list(getattr(cls, "RETURN_NAMES", ()) or ()),
+    }
+
+
+def _slim_node_info(info: dict) -> dict:
+    inputs: dict = {}
+    for section in ("required", "optional"):
+        src = (info.get("input") or {}).get(section) or {}
+        slim = {n: _slim_input_spec(spec) for n, spec in src.items()}
+        if slim:
+            inputs[section] = slim
+    names = info.get("output_name") or []
+    outputs = []
+    for i, typ in enumerate(info.get("output") or []):
+        outputs.append({
+            "type": "COMBO" if isinstance(typ, (list, tuple)) else str(typ),
+            "name": str(names[i]) if i < len(names) else "",
+        })
+    return {
+        "name": info.get("name"),
+        "display_name": info.get("display_name"),
+        "category": info.get("category"),
+        "description": str(info.get("description") or "")[:400],
+        "output_node": bool(info.get("output_node")),
+        "inputs": inputs,
+        "outputs": outputs,
+    }
+
+
+async def _node_info(args: dict) -> dict:
+    import nodes as comfy_nodes
+    mappings = getattr(comfy_nodes, "NODE_CLASS_MAPPINGS", {})
+    action = str(args.get("action") or "search")
+    if action == "get":
+        name = str(args.get("name") or "")
+        cls = mappings.get(name)
+        if cls is None:
+            close = sorted(k for k in mappings if name.lower() in k.lower())[:8]
+            hint = f" — close names: {close}" if close else ""
+            raise ValueError(f"unknown node class {name!r}{hint}")
+        return _slim_node_info(_node_info_dict(name, cls))
+    if action == "search":
+        query = str(args.get("query") or "").strip().lower()
+        if not query:
+            raise ValueError("query is required for action='search'")
+        tokens = query.split()
+        display = getattr(comfy_nodes, "NODE_DISPLAY_NAME_MAPPINGS", {})
+        hits = []
+        for cname, cls in mappings.items():
+            hay = " ".join((
+                cname,
+                display.get(cname, ""),
+                str(getattr(cls, "CATEGORY", "") or ""),
+                str(getattr(cls, "DESCRIPTION", "") or "")[:200],
+            )).lower()
+            if all(t in hay for t in tokens):
+                hits.append({
+                    "name": cname,
+                    "display_name": display.get(cname, cname),
+                    "category": str(getattr(cls, "CATEGORY", "") or ""),
+                })
+        return {"total": len(hits), "nodes": hits[:_NODE_INFO_MAX_RESULTS]}
+    raise ValueError(f"unknown action {action!r} (use 'search' or 'get')")
+
+
+async def _validate_api_prompt(api_json: dict) -> dict:
+    import uuid
+    import execution
+    result = await execution.validate_prompt(str(uuid.uuid4()), api_json, None)
+    valid = bool(result[0])
+    out: dict = {"valid": valid}
+    if not valid:
+        err = result[1] or {}
+        out["error"] = {k: err.get(k) for k in ("type", "message", "details")
+                        if err.get(k)}
+        slim = {}
+        for nid, info in (result[3] or {}).items():
+            msgs = []
+            for e in (info or {}).get("errors", []):
+                msg = str(e.get("message") or "")
+                if e.get("details"):
+                    msg += f": {e['details']}"
+                msgs.append(msg)
+            slim[nid] = {"class_type": (info or {}).get("class_type"),
+                         "errors": msgs}
+        if slim:
+            out["node_errors"] = slim
+    return out
+
+
+async def _workflow_create(args: dict) -> dict:
+    kind = str(args.get("kind") or "")
+    if kind not in WORKFLOW_KINDS:
+        raise ValueError(f"unknown workflow kind {kind!r} — valid kinds: "
+                         f"{', '.join(WORKFLOW_KINDS)}")
+    label = str(args.get("label") or "").strip()
+    if not label:
+        raise ValueError("label is required")
+    api_json = args.get("api_json")
+    graph = args.get("graph")
+    if api_json is None and graph is None:
+        raise ValueError("either api_json (API-format prompt) or graph "
+                         "(GUI-format workflow export) is required")
+    if api_json is not None and not isinstance(api_json, dict):
+        raise ValueError("api_json must be an object mapping node ids to "
+                         "{class_type, inputs}")
+    if isinstance(graph, dict):
+        graph = json.dumps(graph)
+    if graph is not None and not isinstance(graph, str):
+        raise ValueError("graph must be a GUI-format workflow object or its "
+                         "JSON string")
+
+    validation = None
+    if api_json is not None:
+        validation = await _validate_api_prompt(api_json)
+        if not validation["valid"]:
+            return {"created": False, "validation": validation}
+    if args.get("validate_only"):
+        return {"created": False, "validation": validation}
+
+    out = workflow_db.create_workflow(
+        kind, label, graph=graph, api_json=api_json,
+        description=args.get("description"))
+    result_node = args.get("result_node")
+    result_type = args.get("result_type")
+    if result_node or result_type:
+        cfg = workflow_db.get_workflow_config(kind, out["label"])
+        if cfg:
+            kwargs: dict = {}
+            if result_node:
+                kwargs["result_node"] = str(result_node)
+            if result_type:
+                kwargs["result_type"] = str(result_type)
+            workflow_db.update_workflow_meta(int(cfg["id"]), **kwargs)
+    refresh_registry()
+    note = None
+    if api_json is None:
+        note = ("registered without API JSON — the workflow must be opened "
+                "once in the ComfyTV browser UI (which converts the graph) "
+                "before it can run headlessly")
+    return {"created": True, **out, "validation": validation, "note": note}
+
+
+_GRAPH_OPS = ("add_node", "remove_node", "set_widget", "set_title",
+              "connect", "disconnect", "set_mode", "clone", "set_color",
+              "create_group", "collapse", "pin", "convert_to_subgraph",
+              "unpack_subgraph")
+
+_CANVAS_COMMANDS = (
+    "Comfy.Undo",
+    "Comfy.Redo",
+    "Comfy.SaveWorkflow",
+    "Comfy.Canvas.FitView",
+    "Comfy.Canvas.ResetView",
+    "Comfy.Interrupt",
+    "Comfy.ClearPendingTasks",
+    "Comfy.RefreshNodeDefinitions",
+    "Comfy.Graph.GroupSelectedNodes",
+)
+
+
+async def _canvas_command(args: dict) -> dict:
+    command = str(args.get("command") or "")
+    if command not in _CANVAS_COMMANDS:
+        raise ValueError(
+            f"command {command!r} is not allowed — allowed: "
+            f"{', '.join(_CANVAS_COMMANDS)}")
+    nodes = args.get("nodes")
+    if nodes is not None and (
+            not isinstance(nodes, list)
+            or not all(isinstance(n, (str, int)) for n in nodes)):
+        raise ValueError("nodes must be an array of node ids")
+    payload = _command_payload(args, ("project_id", "nodes"))
+    payload["command"] = command
+    return await submit_command("canvas_command", payload)
+
+
+async def _canvas_focus(args: dict) -> dict:
+    node = str(args.get("node") or "")
+    if not node:
+        raise ValueError("node is required (a graph node id from graph_get)")
+    payload = _command_payload(args, ("project_id",))
+    payload["node"] = node
+    return await submit_command("canvas_focus", payload)
+
+
+async def _graph_get(args: dict) -> dict:
+    return await submit_command(
+        "graph_get", _command_payload(args, ("project_id",)))
+
+
+async def _graph_edit(args: dict) -> dict:
+    ops = args.get("ops")
+    if not isinstance(ops, list) or not ops:
+        raise ValueError("ops must be a non-empty array of {op, ...} objects")
+    for i, op in enumerate(ops):
+        if not isinstance(op, dict) or str(op.get("op") or "") not in _GRAPH_OPS:
+            raise ValueError(
+                f"ops[{i}] must be an object with op one of: "
+                f"{', '.join(_GRAPH_OPS)}")
+    payload = _command_payload(args, ("project_id",))
+    payload["ops"] = ops
+    return await submit_command("graph_edit", payload)
+
+
+def _history_outputs(entry: dict) -> list[str]:
+    urls: list[str] = []
+    for node_out in (entry.get("outputs") or {}).values():
+        if not isinstance(node_out, dict):
+            continue
+        for files in node_out.values():
+            if not isinstance(files, list):
+                continue
+            for f in files:
+                if not isinstance(f, dict) or not f.get("filename"):
+                    continue
+                urls.append("/view?" + urlencode({
+                    "filename": f["filename"],
+                    "subfolder": f.get("subfolder") or "",
+                    "type": f.get("type") or "output",
+                }))
+    return urls
+
+
+def _history_error_message(status: dict) -> str:
+    for msg in status.get("messages") or []:
+        if (isinstance(msg, (list, tuple)) and len(msg) == 2
+                and msg[0] == "execution_error"):
+            data = msg[1] or {}
+            return (f"{data.get('node_type')} (node {data.get('node_id')}): "
+                    f"{data.get('exception_message')}")
+    return "execution failed"
+
+
+async def _graph_run(args: dict) -> dict:
+    prompt_id = str(args.get("prompt_id") or "")
+    base: dict = {}
+    if not prompt_id:
+        base = await submit_command(
+            "graph_run", _command_payload(args, ("project_id",)), timeout=60.0)
+        prompt_id = str(base.get("prompt_id") or "")
+        if not prompt_id:
+            return base
+
+    wait_s = args.get("wait_s")
+    wait_s = 60.0 if wait_s is None else max(0.0, float(wait_s))
+    wait_s = min(wait_s, 170.0)
+
+    from server import PromptServer
+    queue = getattr(PromptServer.instance, "prompt_queue", None)
+    if queue is None:
+        return {**base, "prompt_id": prompt_id, "status": "queued",
+                "note": "history unavailable in this server"}
+
+    deadline = time.monotonic() + wait_s
+    while True:
+        hist = queue.get_history(prompt_id=prompt_id) or {}
+        entry = hist.get(prompt_id)
+        if entry:
+            status = entry.get("status") or {}
+            out = {**base, "prompt_id": prompt_id,
+                   "outputs": _history_outputs(entry)}
+            if status.get("status_str") == "error":
+                out["status"] = "error"
+                out["error"] = _history_error_message(status)
+            else:
+                out["status"] = "done"
+            return out
+        if time.monotonic() >= deadline:
+            return {**base, "prompt_id": prompt_id, "status": "running",
+                    "hint": "re-call graph_run with this prompt_id to keep "
+                            "waiting"}
+        await asyncio.sleep(1.0)
 
 
 async def _asset_edit(args: dict) -> dict:
@@ -1821,6 +2147,185 @@ TOOLS: dict[str, dict] = {
             "additionalProperties": False,
         },
         "handler": _workflow_edit,
+    },
+    "node_info": {
+        "description": (
+            "Look up ComfyUI node classes in the LIVE in-process registry "
+            "(includes every installed custom node). action 'search' + query "
+            "(space-separated tokens, all must match against class name / "
+            "display name / category / description) lists matching classes; "
+            "action 'get' + name returns one class's schema: inputs "
+            "(required/optional with type, default, combo choices capped at "
+            f"{_NODE_INFO_MAX_CHOICES}) and outputs. Use this to author "
+            "API-format graphs for workflow_create. Server-side — no open "
+            "tab needed."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "action": {"type": "string", "enum": ["search", "get"]},
+                "query": {"type": "string"},
+                "name": {"type": "string"},
+            },
+            "additionalProperties": False,
+        },
+        "handler": _node_info,
+    },
+    "workflow_create": {
+        "description": (
+            "Create and register a NEW workflow for a kind. Provide kind + "
+            "label plus EITHER api_json (an API-format prompt: {node_id: "
+            "{class_type, inputs}} — author it with node_info, it is "
+            "validated against the live node registry and rejected with "
+            "per-node errors before anything is written) OR graph (a "
+            "GUI-format workflow export, stored as-is; it must be opened "
+            "once in the ComfyTV browser UI before it can run headlessly). "
+            "validate_only=true only runs the api_json validation. Optional "
+            "description, result_node (node id whose output is the stage "
+            "result) and result_type. After creating, wire stage inputs "
+            "with workflow_edit bind ops (main_prompt, option:<key>, "
+            "upstream_image:value[N], computed:width/height/length, ...). "
+            "The label lands deduplicated (label-2, ...) if taken. "
+            "Server-side — no open tab needed."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "kind": {"type": "string"},
+                "label": {"type": "string"},
+                "api_json": {"type": "object"},
+                "graph": {},
+                "description": {"type": "string"},
+                "result_node": {"type": "string"},
+                "result_type": {"type": "string"},
+                "validate_only": {"type": "boolean"},
+            },
+            "required": ["kind", "label"],
+            "additionalProperties": False,
+        },
+        "handler": _workflow_create,
+    },
+    "graph_get": {
+        "description": (
+            "Snapshot the NATIVE ComfyUI graph on the user's open canvas "
+            "(the root graph — every node, not just ComfyTV stages): "
+            "node_id, class type, title, widget values and connections "
+            "(ComfyTV stage nodes carry is_stage=true — drive those with "
+            "set_stage/run_stage instead). Use before graph_edit to see "
+            "what is on the canvas. Requires an open ComfyTV tab (the tab "
+            "executes the command)."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {"project_id": {"type": "string"}},
+            "additionalProperties": False,
+        },
+        "handler": _graph_get,
+    },
+    "graph_edit": {
+        "description": (
+            "Edit the NATIVE ComfyUI graph on the open canvas — changes are "
+            "immediately visible to the user. ops array, applied in order "
+            "(stops at the first failing op; earlier ops stay applied): "
+            "{op:'add_node', type, pos?, title?, widgets?} creates a node "
+            "(type is a node class name — node_info can search them; "
+            "returns the new node_id); {op:'set_widget', node, name, value} "
+            "writes a widget; {op:'set_title', node, title}; {op:'connect', "
+            "from_node, from_slot?, to_node, to_slot?} wires an output to "
+            "an input (slots by name or index; to_slot omitted = first free "
+            "type-compatible input); {op:'disconnect', node, input}; "
+            "{op:'remove_node', node}; {op:'set_mode', node, mode: "
+            "always/mute/bypass} (bypass to A/B a node's effect); "
+            "{op:'clone', node, pos?}; {op:'set_color', node, color?, "
+            "bgcolor?}; {op:'create_group', title, nodes: [ids], color?}; "
+            "{op:'collapse', node, collapsed?}; {op:'pin', node, pinned?}; "
+            "{op:'convert_to_subgraph', nodes: [ids]} packs the nodes into "
+            "a subgraph (returns the new subgraph node's id); "
+            "{op:'unpack_subgraph', node} explodes a subgraph node "
+            "(graph_get flags them is_subgraph=true) back inline. "
+            "The whole call is one undo step (Comfy.Undo reverts it). "
+            "Requires an open ComfyTV tab."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "project_id": {"type": "string"},
+                "ops": {"type": "array", "items": {"type": "object"},
+                        "minItems": 1},
+            },
+            "required": ["ops"],
+            "additionalProperties": False,
+        },
+        "handler": _graph_edit,
+    },
+    "graph_run": {
+        "description": (
+            "Queue the native canvas graph exactly like pressing ComfyUI's "
+            "Run button (ComfyTV stage nodes are stripped/bridged the same "
+            "way the Run button does), then wait up to wait_s (default 60, "
+            "max 170) for it to finish by watching local history. Returns "
+            "prompt_id plus status 'done' with outputs (/view URLs — "
+            "view_image can look at them), 'error' with the failing node, "
+            "or 'running' on timeout — re-call with the returned prompt_id "
+            "to keep waiting. Requires an open ComfyTV tab to queue; "
+            "waiting on a prompt_id is server-side."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "project_id": {"type": "string"},
+                "wait_s": {"type": "number"},
+                "prompt_id": {"type": "string"},
+            },
+            "additionalProperties": False,
+        },
+        "handler": _graph_run,
+    },
+    "canvas_command": {
+        "description": (
+            "Execute a whitelisted native canvas command in the open tab: "
+            "Comfy.Undo / Comfy.Redo (a whole graph_edit call is one undo "
+            "step), Comfy.SaveWorkflow (persist the canvas to its file), "
+            "Comfy.Canvas.FitView / Comfy.Canvas.ResetView, Comfy.Interrupt "
+            "(stop the current run), Comfy.ClearPendingTasks, "
+            "Comfy.RefreshNodeDefinitions (reload node classes after "
+            "installing a pack — no server restart), "
+            "Comfy.Graph.GroupSelectedNodes. Only these ids are allowed. "
+            "Optional nodes (array of node ids) selects those nodes first — "
+            "required for selection-dependent commands like "
+            "GroupSelectedNodes, and focuses FitView on them. Requires an "
+            "open ComfyTV tab."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "project_id": {"type": "string"},
+                "command": {"type": "string",
+                            "enum": list(_CANVAS_COMMANDS)},
+                "nodes": {"type": "array",
+                          "items": {"type": ["string", "integer"]}},
+            },
+            "required": ["command"],
+            "additionalProperties": False,
+        },
+        "handler": _canvas_command,
+    },
+    "canvas_focus": {
+        "description": (
+            "Select a native graph node and glide the user's viewport to it "
+            "— use after graph_edit to show the user what changed. node is "
+            "a node id from graph_get. Requires an open ComfyTV tab."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "project_id": {"type": "string"},
+                "node": {"type": "string"},
+            },
+            "required": ["node"],
+            "additionalProperties": False,
+        },
+        "handler": _canvas_focus,
     },
     "asset_edit": {
         "description": (
