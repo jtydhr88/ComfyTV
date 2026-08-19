@@ -1280,7 +1280,12 @@
     "cached": "Cached — will not regenerate",
     "generated": "Generated this run",
     "previewClip": "Preview this clip",
-    "clipPreview": "Clip preview"
+    "clipPreview": "Clip preview",
+    "play": "Play preview",
+    "pause": "Pause",
+    "playDisabled": "Nothing to preview yet — run the director first",
+    "filmPreview": "Film preview",
+    "clipsPreview": "Rough cut (per-clip, film not assembled yet)"
   },
   "gridSplit": {
     "connectImage": "Connect an image to split",

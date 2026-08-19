@@ -16,6 +16,13 @@
       <span class="ctv:text-2xs ctv:font-mono ctv:text-muted-foreground">
         {{ clips.length }} · {{ totalSeconds }}s
       </span>
+      <button
+        type="button" class="icon-btn"
+        :disabled="!previewCanPlay"
+        :title="!previewCanPlay ? $t('director.playDisabled')
+          : previewPlaying ? $t('director.pause') : $t('director.play')"
+        @click="togglePlay"
+      ><i :class="['pi', previewPlaying ? 'pi-pause' : 'pi-play']" /></button>
       <label class="ctv:ml-auto ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground"
              :title="$t('director.chainTooltip')">
         {{ $t('director.chain') }}
@@ -30,8 +37,24 @@
       </label>
     </div>
 
-    <div class="ctv:shrink-0 ctv:overflow-x-auto ctv:overflow-y-hidden ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-black">
-      <div class="ctv:relative ctv:h-[72px] ctv:m-1" :style="{ width: `${trackWidthPx}px` }">
+    <div ref="trackScrollEl" class="ctv:shrink-0 ctv:overflow-x-auto ctv:overflow-y-hidden ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-black">
+      <div class="ctv:relative ctv:m-1" :style="{ width: `${trackWidthPx}px` }">
+        <div
+          class="ctv:relative ctv:h-4 ctv:border-b ctv:border-white/10 ctv:touch-none"
+          :class="previewCanPlay ? 'ctv:cursor-pointer' : ''"
+          @pointerdown="onRulerPointerDown"
+        >
+          <div
+            v-for="(tick, i) in rulerTicks"
+            :key="i"
+            class="ctv:absolute ctv:top-0 ctv:border-l ctv:pointer-events-none"
+            :class="tick.major ? 'ctv:h-4 ctv:border-white/30' : 'ctv:h-1.5 ctv:border-white/15'"
+            :style="{ left: `${tick.px}px` }"
+          >
+            <span v-if="tick.label" class="ctv:text-[8px] ctv:text-white/40 ctv:ml-0.5">{{ tick.label }}</span>
+          </div>
+        </div>
+        <div class="ctv:relative ctv:h-[72px] ctv:mt-0.5">
         <div
           v-for="(clip, idx) in clips"
           :key="clip.id"
@@ -83,6 +106,35 @@
           :title="$t('director.addClip')"
           @click="addClip"
         ><i class="pi pi-plus" /></button>
+        </div>
+        <div
+          v-if="previewActive"
+          class="ctv:absolute ctv:top-0 ctv:bottom-0 ctv:w-px ctv:bg-primary-background ctv:pointer-events-none ctv:z-10"
+          :style="{ left: `${playheadPx}px` }"
+        >
+          <div class="playhead-cap" />
+        </div>
+      </div>
+    </div>
+
+    <div v-if="previewActive" class="ctv:flex ctv:flex-col ctv:gap-1">
+      <div class="ctv:flex ctv:items-center ctv:gap-2">
+        <span class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">
+          {{ previewMode === 'film' ? $t('director.filmPreview') : $t('director.clipsPreview') }}
+        </span>
+        <span class="ctv:text-2xs ctv:font-mono ctv:text-muted-foreground">
+          {{ playheadS.toFixed(1) }}s / {{ previewTotalS }}s
+        </span>
+        <button type="button" class="icon-btn ctv:ml-auto" :title="$t('stage.action.close')" @click="closePreview">
+          <i class="pi pi-times" />
+        </button>
+      </div>
+      <div ref="previewWrapEl">
+        <ValuePreview
+          type="COMFYTV_VIDEO"
+          :content="previewSrc || null"
+          :empty-label="$t('stage.empty.no_output')"
+        />
       </div>
     </div>
 
@@ -294,6 +346,7 @@
       :on-action="onAction"
       hide-context
       hide-prompt
+      hide-output
     />
   </div>
 </template>
@@ -309,11 +362,13 @@ import MainPromptInput from '@/components/stages/MainPromptInput.vue'
 import MentionSlotPopover from '@/components/stages/MentionSlotPopover.vue'
 import ViewFullButton from '@/components/ViewFullButton.vue'
 import StageCard from '@/components/stages/StageCard.vue'
+import ValuePreview from '@/components/stages/ValuePreview.vue'
 import {
   fetchImageSlotOptionsCached,
   type ImageSlotOption,
 } from '@/composables/stages/assetSlots'
 import { citedSlots, clipMentionSource } from '@/composables/stages/directorMentions'
+import { useDirectorPlayback } from '@/composables/stages/useDirectorPlayback'
 import { readImageRefs, refType } from '@/composables/stages/imageRefs'
 import { slotColor } from '@/composables/stages/imageSlotMentions'
 import {
@@ -398,6 +453,62 @@ const clipSource = clipMentionSource(
   () => selectedClip.value,
   () => sharedUrls.value,
 )
+
+const trackScrollEl = ref<HTMLElement | null>(null)
+const previewWrapEl = ref<HTMLElement | null>(null)
+
+const {
+  active: previewActive,
+  playing: previewPlaying,
+  playheadS,
+  playheadPx,
+  ticks: rulerTicks,
+  totalS: previewTotalS,
+  canPlay: previewCanPlay,
+  mode: previewMode,
+  currentSrc: previewSrc,
+  open: openPreview,
+  close: closePreview,
+  togglePlay,
+  onRulerPointerDown,
+  onLoadedMetadata: onPreviewLoadedMetadata,
+  onTimeUpdate: onPreviewTimeUpdate,
+  onEnded: onPreviewEnded,
+  onPlay: onPreviewPlay,
+  onPause: onPreviewPause,
+} = useDirectorPlayback({
+  clips,
+  statuses: () => statuses.value,
+  filmUrl: () => String(props.state.output ?? ''),
+  video: () => previewWrapEl.value?.querySelector('video') ?? null,
+})
+
+watch([previewActive, previewWrapEl], (_, __, onCleanup) => {
+  const el = previewWrapEl.value?.querySelector('video')
+  if (!previewActive.value || !el) return
+  const pairs: Array<[string, EventListener]> = [
+    ['loadedmetadata', onPreviewLoadedMetadata],
+    ['timeupdate', onPreviewTimeUpdate],
+    ['ended', onPreviewEnded],
+    ['play', onPreviewPlay],
+    ['pause', onPreviewPause],
+  ]
+  pairs.forEach(([t, h]) => el.addEventListener(t, h))
+  onCleanup(() => pairs.forEach(([t, h]) => el.removeEventListener(t, h)))
+}, { flush: 'post' })
+
+watch(() => props.state.output, (v) => {
+  if (String(v ?? '').trim()) openPreview()
+}, { immediate: true })
+
+watch(playheadPx, (px) => {
+  if (!previewPlaying.value) return
+  const el = trackScrollEl.value
+  if (!el || el.scrollWidth <= el.clientWidth) return
+  const lo = el.scrollLeft + 24
+  const hi = el.scrollLeft + el.clientWidth - 24
+  if (px < lo || px > hi) el.scrollLeft = Math.max(0, px - el.clientWidth / 2)
+})
 
 const REF_KINDS = [
   { key: 'images' as const, mention: 'image', media: 'image', info: 'image' as const },
@@ -682,5 +793,15 @@ function onUnpinBatch(id: string) {
 .add-clip:hover {
   color: var(--base-foreground, #eee);
   border-color: var(--primary-background, #4a9);
+}
+.playhead-cap {
+  position: absolute;
+  top: 0;
+  left: -4px;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 6px solid var(--primary-background, #4a9);
 }
 </style>

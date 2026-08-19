@@ -1280,7 +1280,12 @@
     "cached": "已缓存——不会重新生成",
     "generated": "本次运行已生成",
     "previewClip": "预览这个片段",
-    "clipPreview": "片段预览"
+    "clipPreview": "片段预览",
+    "play": "播放预览",
+    "pause": "暂停",
+    "playDisabled": "还没有可预览的内容——先运行导演台",
+    "filmPreview": "成片预览",
+    "clipsPreview": "粗剪连播（成片尚未合成）"
   },
   "gridSplit": {
     "connectImage": "请连接一张图以切分",

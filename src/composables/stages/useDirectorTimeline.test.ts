@@ -324,7 +324,7 @@ describe('useDirectorTimeline clip drag', () => {
     t.onClipPointerDown(pe('pointerdown', 10), t.clips.value[0], 0)
     expect(t.selectedId.value).toBe('a')
     expect(t.drag.value).toEqual({
-      id: 'a', previewX: 0, grabDx: 10, startX: 10, active: false,
+      id: 'a', previewX: 0, baseX: 0, startX: 10, scale: 1, active: false,
     })
     expect((root as any).setPointerCapture).toHaveBeenCalled()
   })
@@ -365,6 +365,19 @@ describe('useDirectorTimeline clip drag', () => {
     root.dispatchEvent(pe('pointermove', 2))
     expect(t.drag.value?.active).toBe(true)
     expect(t.clips.value.map(c => c.id)).toEqual(['a', 'b'])
+  })
+
+  it('divides pointer deltas by the canvas overlay scale', () => {
+    const node = twoClipNode()
+    const root = makeRoot()
+    Object.defineProperty(root, 'offsetWidth', { value: 100 })
+    root.getBoundingClientRect = () => ({ width: 200, left: 0 } as DOMRect)
+    const t = useDirectorTimeline(node, {} as any, ref(root))
+    t.onClipPointerDown(pe('pointerdown', 10), t.clips.value[0], 0)
+    expect(t.drag.value?.scale).toBe(2)
+    root.dispatchEvent(pe('pointermove', 230))
+    expect(t.drag.value?.active).toBe(true)
+    expect(t.drag.value?.previewX).toBe(110)
   })
 
   it('pointercancel ends the drag without committing', () => {

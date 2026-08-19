@@ -36,9 +36,14 @@ export interface DirectorClipStatus {
 }
 
 export const PPS = 14
-export const CLIP_MIN_W = 64
+export const CLIP_MIN_W = 20
+export const CLIP_GAP_PX = 4
 export const DURATION_MIN_S = 1
 export const DURATION_MAX_S = 120
+
+export function clipWidthPxOf(c: DirectorClip): number {
+  return Math.max(CLIP_MIN_W, c.duration_s * PPS)
+}
 
 function newId(): string {
   return 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6)
@@ -122,8 +127,9 @@ export function useDirectorTimeline(
   const drag = ref<{
     id: string
     previewX: number
-    grabDx: number
+    baseX: number
     startX: number
+    scale: number
     active: boolean
   } | null>(null)
 
@@ -142,12 +148,12 @@ export function useDirectorTimeline(
   })
 
   function clipWidthPx(c: DirectorClip): number {
-    return Math.max(CLIP_MIN_W, c.duration_s * PPS)
+    return clipWidthPxOf(c)
   }
 
   function startPxOf(idx: number): number {
     let x = 0
-    for (let i = 0; i < idx; i++) x += clipWidthPx(clips.value[i]) + 4
+    for (let i = 0; i < idx; i++) x += clipWidthPx(clips.value[i]) + CLIP_GAP_PX
     return x
   }
 
@@ -161,7 +167,7 @@ export function useDirectorTimeline(
   }
 
   const trackWidthPx = computed(() =>
-    clips.value.reduce((sum, c) => sum + clipWidthPx(c) + 4, 0) + 40,
+    clips.value.reduce((sum, c) => sum + clipWidthPx(c) + CLIP_GAP_PX, 0) + 40,
   )
 
   function commit() {
@@ -281,14 +287,22 @@ export function useDirectorTimeline(
 
   const DRAG_THRESHOLD_PX = 5
 
+  function overlayScale(): number {
+    const el = rootEl.value
+    if (!el) return 1
+    const w = el.getBoundingClientRect().width
+    return el.offsetWidth > 0 && w > 0 ? w / el.offsetWidth : 1
+  }
+
   function onClipPointerDown(e: PointerEvent, clip: DirectorClip, idx: number) {
     selectedId.value = clip.id
     const base = startPxOf(idx)
     drag.value = {
       id: clip.id,
       previewX: base,
-      grabDx: e.clientX - base,
+      baseX: base,
       startX: e.clientX,
+      scale: overlayScale(),
       active: false,
     }
     beginPointerDrag(e, onClipPointerMove, () => {
@@ -302,10 +316,10 @@ export function useDirectorTimeline(
     const d = drag.value
     if (!d) return
     if (!d.active) {
-      if (Math.abs(e.clientX - d.startX) < DRAG_THRESHOLD_PX) return
+      if (Math.abs(e.clientX - d.startX) < DRAG_THRESHOLD_PX * d.scale) return
       d.active = true
     }
-    const px = e.clientX - d.grabDx
+    const px = d.baseX + (e.clientX - d.startX) / d.scale
     d.previewX = px
     const draggedIdx = clips.value.findIndex(c => c.id === d.id)
     if (draggedIdx < 0) return
@@ -318,7 +332,7 @@ export function useDirectorTimeline(
     for (let j = 0; j < others.length; j++) {
       const mid = acc + clipWidthPx(others[j]) / 2
       if (centerX < mid) { targetIdx = j; break }
-      acc += clipWidthPx(others[j]) + 4
+      acc += clipWidthPx(others[j]) + CLIP_GAP_PX
     }
     if (targetIdx !== draggedIdx) {
       clips.value.splice(draggedIdx, 1)
@@ -326,17 +340,27 @@ export function useDirectorTimeline(
     }
   }
 
-  let resizeState: { id: string; startX: number; startDur: number } | null = null
+  let resizeState: {
+    id: string
+    startX: number
+    startDur: number
+    scale: number
+  } | null = null
   function onResizePointerDown(e: PointerEvent, clip: DirectorClip) {
     selectedId.value = clip.id
-    resizeState = { id: clip.id, startX: e.clientX, startDur: clip.duration_s }
+    resizeState = {
+      id: clip.id,
+      startX: e.clientX,
+      startDur: clip.duration_s,
+      scale: overlayScale(),
+    }
     beginPointerDrag(e, onResizeMove, () => { resizeState = null; commit() })
   }
   function onResizeMove(e: PointerEvent) {
     if (!resizeState) return
     const c = clips.value.find(x => x.id === resizeState!.id)
     if (!c) return
-    const ds = Math.round((e.clientX - resizeState.startX) / PPS)
+    const ds = Math.round((e.clientX - resizeState.startX) / (PPS * resizeState.scale))
     c.duration_s = Math.max(DURATION_MIN_S, Math.min(DURATION_MAX_S,
       resizeState.startDur + ds))
   }

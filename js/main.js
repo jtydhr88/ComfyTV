@@ -742,7 +742,7 @@
   pointer-events: none;
 }\r
 
-.icon-btn[data-v-78af1375] {\r
+.icon-btn[data-v-b9a39d0e] {\r
   background: transparent;\r
   border: 0;\r
   cursor: pointer;\r
@@ -751,45 +751,55 @@
   border-radius: 4px;\r
   font-size: 12px;
 }
-.icon-btn[data-v-78af1375]:hover,\r
-.icon-btn[data-v-78af1375]:focus-visible {\r
+.icon-btn[data-v-b9a39d0e]:hover,\r
+.icon-btn[data-v-b9a39d0e]:focus-visible {\r
   color: var(--base-foreground, #eee);\r
   background: rgba(255, 255, 255, 0.08);
 }
-.icon-btn[data-v-78af1375]:disabled {\r
+.icon-btn[data-v-b9a39d0e]:disabled {\r
   opacity: 0.4;\r
   cursor: default;\r
   pointer-events: none;
 }
-.chip-x[data-v-78af1375] {\r
+.chip-x[data-v-b9a39d0e] {\r
   background: transparent;\r
   border: 0;\r
   cursor: pointer;\r
   color: inherit;\r
   padding: 0 1px;
 }
-.clip-resize[data-v-78af1375]:hover {\r
+.clip-resize[data-v-b9a39d0e]:hover {\r
   background: rgba(255, 255, 255, 0.3);
 }
-.imgref-remove[data-v-78af1375] {\r
+.imgref-remove[data-v-b9a39d0e] {\r
   opacity: 0;\r
   pointer-events: none;\r
   transition: opacity 0.15s ease;
 }
-.imgref-tile:hover .imgref-remove[data-v-78af1375],\r
-.imgref-tile:focus-within .imgref-remove[data-v-78af1375] {\r
+.imgref-tile:hover .imgref-remove[data-v-b9a39d0e],\r
+.imgref-tile:focus-within .imgref-remove[data-v-b9a39d0e] {\r
   opacity: 1;\r
   pointer-events: auto;
 }
 @media (hover: none), (pointer: coarse) {
-.imgref-remove[data-v-78af1375] {\r
+.imgref-remove[data-v-b9a39d0e] {\r
     opacity: 1;\r
     pointer-events: auto;
 }
 }
-.add-clip[data-v-78af1375]:hover {\r
+.add-clip[data-v-b9a39d0e]:hover {\r
   color: var(--base-foreground, #eee);\r
   border-color: var(--primary-background, #4a9);
+}
+.playhead-cap[data-v-b9a39d0e] {\r
+  position: absolute;\r
+  top: 0;\r
+  left: -4px;\r
+  width: 0;\r
+  height: 0;\r
+  border-left: 4px solid transparent;\r
+  border-right: 4px solid transparent;\r
+  border-top: 6px solid var(--primary-background, #4a9);
 }\r
 
 .ctv-pad-area[data-v-05778c35] {\r
@@ -6119,5 +6129,5 @@ body > .p-overlay-mask.p-blockui-mask-document.p-overlay-mask-leave:empty {\r
     console.error("vite-plugin-css-injected-by-js", e);
   }
 })();
-import "./assets/main-BmDIMSUz.mjs";
+import "./assets/main-BeAyg-SS.mjs";
 //# sourceMappingURL=main.js.map
