@@ -23,6 +23,8 @@ import {
   classifyModelBytes,
   isGaussianSplatPLY,
   isMeshModelUrl,
+  isSceneModelUrl,
+  isSplatLikeModelUrl,
   loadSpark,
   modelUrlExtension,
 } from './modelFormats'
@@ -75,6 +77,16 @@ describe('modelUrlExtension / isMeshModelUrl', () => {
     expect(MODEL_FILE_EXTENSIONS).toContain('.glb')
     expect(MODEL_FILE_EXTENSIONS).toContain('.spz')
     expect(MODEL_FILE_EXTENSIONS).toContain('.ply')
+  })
+
+  it('classifies splat-like and scene-addable URLs', () => {
+    expect(isSplatLikeModelUrl('/view?filename=a.spz')).toBe(true)
+    expect(isSplatLikeModelUrl('/view?filename=a.ksplat')).toBe(true)
+    expect(isSplatLikeModelUrl('/view?filename=a.ply')).toBe(true)
+    expect(isSplatLikeModelUrl('/view?filename=a.glb')).toBe(false)
+    expect(isSceneModelUrl('/view?filename=a.glb')).toBe(true)
+    expect(isSceneModelUrl('/view?filename=a.spz')).toBe(true)
+    expect(isSceneModelUrl('/view?filename=a.txt')).toBe(false)
   })
 })
 

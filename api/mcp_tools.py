@@ -1308,7 +1308,10 @@ TOOLS: dict[str, dict] = {
         "description": (
             "Build/modify a Scene3D scene with an atomic array of structured "
             "ops (one undo step). Ops: add_primitive {shape: cube|sphere|"
-            "cylinder|plane, color?, name?}, add_model {asset_id|url}, "
+            "cylinder|plane, color?, name?}, add_model {asset_id|url} "
+            "(meshes glb/gltf/fbx/obj AND gaussian splats spz/splat/ksplat/"
+            "ply — splats render in the color channel only, hidden in depth/"
+            "normal/id control renders), "
             "add_character {model (from resources)}, add_light {type: "
             "directional|point|spot, color?, intensity?, position?, target?}, "
             "add_camera {fov?, output?}, set_transform {id, position?, "

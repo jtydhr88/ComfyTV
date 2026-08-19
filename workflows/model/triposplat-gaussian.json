@@ -1,0 +1,328 @@
+{
+  "id": "8f2b6c14-9d07-4e3a-b5c2-71a94de08f65",
+  "revision": 0,
+  "last_node_id": 13,
+  "last_link_id": 15,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "LoadImage",
+      "pos": [400, 400],
+      "size": [290, 396],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        { "name": "IMAGE", "type": "IMAGE", "links": [1, 2] },
+        { "name": "MASK", "type": "MASK", "links": null }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": ["the_lily_veil.png", "image"]
+    },
+    {
+      "id": 2,
+      "type": "LoadBackgroundRemovalModel",
+      "pos": [400, 860],
+      "size": [320, 110],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        { "name": "bg_model", "type": "BACKGROUND_REMOVAL", "links": [3] }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "Node name for S&R": "LoadBackgroundRemovalModel",
+        "models": [
+          {
+            "name": "birefnet.safetensors",
+            "url": "https://huggingface.co/Comfy-Org/BiRefNet/resolve/main/background_removal/birefnet.safetensors",
+            "directory": "background_removal"
+          }
+        ]
+      },
+      "widgets_values": ["birefnet.safetensors"]
+    },
+    {
+      "id": 3,
+      "type": "RemoveBackground",
+      "pos": [760, 860],
+      "size": [310, 100],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        { "name": "image", "type": "IMAGE", "link": 2 },
+        { "name": "bg_removal_model", "type": "BACKGROUND_REMOVAL", "link": 3 }
+      ],
+      "outputs": [
+        { "name": "mask", "type": "MASK", "links": [4] }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "Node name for S&R": "RemoveBackground"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 4,
+      "type": "TripoSplatPreprocessImage",
+      "pos": [1120, 700],
+      "size": [300, 160],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        { "name": "image", "type": "IMAGE", "link": 1 },
+        { "name": "mask", "type": "MASK", "link": 4 }
+      ],
+      "outputs": [
+        { "name": "image", "type": "IMAGE", "links": [5] }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "Node name for S&R": "TripoSplatPreprocessImage"
+      },
+      "widgets_values": [1, 1024]
+    },
+    {
+      "id": 5,
+      "type": "UNETLoader",
+      "pos": [400, 100],
+      "size": [410, 140],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        { "name": "MODEL", "type": "MODEL", "links": [6] }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "Node name for S&R": "UNETLoader",
+        "models": [
+          {
+            "name": "triposplat_fp16.safetensors",
+            "url": "https://huggingface.co/VAST-AI/TripoSplat/resolve/main/diffusion_models/triposplat_fp16.safetensors",
+            "directory": "diffusion_models"
+          }
+        ]
+      },
+      "widgets_values": ["triposplat_fp16.safetensors", "default"]
+    },
+    {
+      "id": 6,
+      "type": "CLIPVisionLoader",
+      "pos": [400, 280],
+      "size": [420, 60],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        { "name": "CLIP_VISION", "type": "CLIP_VISION", "links": [7] }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "Node name for S&R": "CLIPVisionLoader",
+        "models": [
+          {
+            "name": "dino_v3_vit_h.safetensors",
+            "url": "https://huggingface.co/VAST-AI/TripoSplat/resolve/main/clip_vision/dino_v3_vit_h.safetensors",
+            "directory": "clip_vision"
+          }
+        ]
+      },
+      "widgets_values": ["dino_v3_vit_h.safetensors"]
+    },
+    {
+      "id": 7,
+      "type": "VAELoader",
+      "pos": [860, 280],
+      "size": [420, 60],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        { "name": "VAE", "type": "VAE", "links": [8] }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "Node name for S&R": "VAELoader",
+        "models": [
+          {
+            "name": "flux2-vae.safetensors",
+            "url": "https://huggingface.co/VAST-AI/TripoSplat/resolve/main/vae/flux2-vae.safetensors",
+            "directory": "vae"
+          }
+        ]
+      },
+      "widgets_values": ["flux2-vae.safetensors"]
+    },
+    {
+      "id": 8,
+      "type": "TripoSplatConditioning",
+      "pos": [1480, 400],
+      "size": [290, 120],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        { "name": "clip_vision", "type": "CLIP_VISION", "link": 7 },
+        { "name": "vae", "type": "VAE", "link": 8 },
+        { "name": "image", "type": "IMAGE", "link": 5 }
+      ],
+      "outputs": [
+        { "name": "positive", "type": "CONDITIONING", "links": [9] },
+        { "name": "negative", "type": "CONDITIONING", "links": [10] },
+        { "name": "latent", "type": "LATENT", "links": [11] }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "Node name for S&R": "TripoSplatConditioning"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 9,
+      "type": "KSampler",
+      "pos": [1840, 200],
+      "size": [290, 262],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        { "name": "model", "type": "MODEL", "link": 6 },
+        { "name": "positive", "type": "CONDITIONING", "link": 9 },
+        { "name": "negative", "type": "CONDITIONING", "link": 10 },
+        { "name": "latent_image", "type": "LATENT", "link": 11 }
+      ],
+      "outputs": [
+        { "name": "LATENT", "type": "LATENT", "links": [12] }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [46, "fixed", 20, 3, "dpmpp_2m", "simple", 1]
+    },
+    {
+      "id": 10,
+      "type": "VAELoader",
+      "pos": [1840, 540],
+      "size": [420, 60],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        { "name": "VAE", "type": "VAE", "links": [13] }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "Node name for S&R": "VAELoader",
+        "models": [
+          {
+            "name": "triposplat_vae_decoder_fp16.safetensors",
+            "url": "https://huggingface.co/VAST-AI/TripoSplat/resolve/main/vae/triposplat_vae_decoder_fp16.safetensors",
+            "directory": "vae"
+          }
+        ]
+      },
+      "widgets_values": ["triposplat_vae_decoder_fp16.safetensors"]
+    },
+    {
+      "id": 11,
+      "type": "VAEDecodeTripoSplat",
+      "pos": [2220, 200],
+      "size": [430, 160],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        { "name": "samples", "type": "LATENT", "link": 12 },
+        { "name": "vae", "type": "VAE", "link": 13 }
+      ],
+      "outputs": [
+        { "name": "splat", "type": "SPLAT", "links": [14] }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "Node name for S&R": "VAEDecodeTripoSplat"
+      },
+      "widgets_values": [262144, 0, "fixed"]
+    },
+    {
+      "id": 12,
+      "type": "SplatToFile3D",
+      "pos": [2720, 200],
+      "size": [340, 110],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        { "name": "splat", "type": "SPLAT", "link": 14 }
+      ],
+      "outputs": [
+        { "name": "model_3d", "type": "FILE_3D", "links": [15] }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "Node name for S&R": "SplatToFile3D"
+      },
+      "widgets_values": ["spz"]
+    },
+    {
+      "id": 13,
+      "type": "SaveGLB",
+      "pos": [3120, 200],
+      "size": [400, 400],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mesh",
+          "type": "MESH,FILE_3D_GLB,FILE_3D_GLTF,FILE_3D_OBJ,FILE_3D_FBX,FILE_3D_STL,FILE_3D_USDZ,FILE_3D",
+          "link": 15
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "Node name for S&R": "SaveGLB"
+      },
+      "widgets_values": ["3d/comfytv-triposplat", ""]
+    }
+  ],
+  "links": [
+    [1, 1, 0, 4, 0, "IMAGE"],
+    [2, 1, 0, 3, 0, "IMAGE"],
+    [3, 2, 0, 3, 1, "BACKGROUND_REMOVAL"],
+    [4, 3, 0, 4, 1, "MASK"],
+    [5, 4, 0, 8, 2, "IMAGE"],
+    [6, 5, 0, 9, 0, "MODEL"],
+    [7, 6, 0, 8, 0, "CLIP_VISION"],
+    [8, 7, 0, 8, 1, "VAE"],
+    [9, 8, 0, 9, 1, "CONDITIONING"],
+    [10, 8, 1, 9, 2, "CONDITIONING"],
+    [11, 8, 2, 9, 3, "LATENT"],
+    [12, 9, 0, 11, 0, "LATENT"],
+    [13, 10, 0, 11, 1, "VAE"],
+    [14, 11, 0, 12, 0, "SPLAT"],
+    [15, 12, 0, 13, 0, "FILE_3D"]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": { "scale": 0.5, "offset": [0, 0] },
+    "frontendVersion": "1.44.19"
+  },
+  "version": 0.4
+}

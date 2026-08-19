@@ -1,0 +1,124 @@
+{
+  "id": "5d43a1f8-6e29-4b07-8c31-9be2075cd414",
+  "revision": 0,
+  "last_node_id": 5,
+  "last_link_id": 4,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "LoadImage",
+      "pos": [400, 200],
+      "size": [290, 396],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        { "name": "IMAGE", "type": "IMAGE", "links": [1] },
+        { "name": "MASK", "type": "MASK", "links": null }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": ["the_lily_veil.png", "image"]
+    },
+    {
+      "id": 2,
+      "type": "LoadMoGeModel",
+      "pos": [400, 660],
+      "size": [380, 60],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        { "name": "moge_model", "type": "MOGE_MODEL", "links": [2] }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "Node name for S&R": "LoadMoGeModel",
+        "models": [
+          {
+            "name": "moge_2_vitl_normal_fp16.safetensors",
+            "url": "https://huggingface.co/Comfy-Org/MoGe_safetensors/resolve/main/moge_2_vitl_normal_fp16.safetensors",
+            "directory": "geometry_estimation"
+          }
+        ]
+      },
+      "widgets_values": ["moge_2_vitl_normal_fp16.safetensors"]
+    },
+    {
+      "id": 3,
+      "type": "MoGeInference",
+      "pos": [860, 200],
+      "size": [320, 200],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        { "name": "moge_model", "type": "MOGE_MODEL", "link": 2 },
+        { "name": "image", "type": "IMAGE", "link": 1 }
+      ],
+      "outputs": [
+        { "name": "moge_geometry", "type": "MOGE_GEOMETRY", "links": [3] }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "Node name for S&R": "MoGeInference"
+      },
+      "widgets_values": [9, 0, 4, true, true]
+    },
+    {
+      "id": 4,
+      "type": "MoGePointMapToMesh",
+      "pos": [1240, 200],
+      "size": [320, 170],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        { "name": "moge_geometry", "type": "MOGE_GEOMETRY", "link": 3 }
+      ],
+      "outputs": [
+        { "name": "MESH", "type": "MESH", "links": [4] }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "Node name for S&R": "MoGePointMapToMesh"
+      },
+      "widgets_values": [0, 1, 0.04, true]
+    },
+    {
+      "id": 5,
+      "type": "SaveGLB",
+      "pos": [1620, 200],
+      "size": [400, 400],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        { "name": "mesh", "type": "MESH", "link": 4 }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "Node name for S&R": "SaveGLB"
+      },
+      "widgets_values": ["3d/comfytv-moge", ""]
+    }
+  ],
+  "links": [
+    [1, 1, 0, 3, 1, "IMAGE"],
+    [2, 2, 0, 3, 0, "MOGE_MODEL"],
+    [3, 3, 0, 4, 0, "MOGE_GEOMETRY"],
+    [4, 4, 0, 5, 0, "MESH"]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": { "scale": 0.7, "offset": [0, 0] },
+    "frontendVersion": "1.44.19"
+  },
+  "version": 0.4
+}

@@ -16,7 +16,11 @@ import type {
   TimelineDurationChange,
   TimelineTimeUpdate
 } from '@/widgets/three/load3d/TimelineController'
-import { isMeshModelUrl } from '@/widgets/three/modelFormats'
+import {
+  isMeshModelUrl,
+  isSceneModelUrl,
+  isSplatLikeModelUrl
+} from '@/widgets/three/modelFormats'
 import { fetchCameraPresetManifest } from '@/widgets/three/load3d/cameraPresetAssets'
 import type { CameraPresetManifestEntry } from '@/widgets/three/load3d/cameraPresetAssets'
 import type { CameraPresetTuning } from '@/widgets/three/load3d/interfaces'
@@ -194,7 +198,7 @@ export function useScene3dStage(
   )
   const modelAssets = computed(() =>
     assetStore.assets.filter(
-      (asset) => asset.media_type === 'model' && isMeshModelUrl(asset.payload_url)
+      (asset) => asset.media_type === 'model' && isSceneModelUrl(asset.payload_url)
     )
   )
   const selectedCamera = computed<SceneCameraEntry | null>(
@@ -536,15 +540,17 @@ export function useScene3dStage(
       asset.name || 'model',
       allIds()
     )
-    try {
-      const assets = await loadCustomModelAssets(asset.payload_url)
-      model.animation.clip = assets.clips[0]?.name ?? ''
-      const fit = computeModelFit(assets.template)
-      if (fit && needsAutoFit(fit.maxDim)) model.transform = fit.transform
-    } catch (error) {
-      console.error('[ComfyTV/scene3d] failed to load model asset', error)
-      toastError(t('scene3d.failedToLoadModelAsset'))
-      return
+    if (!isSplatLikeModelUrl(asset.payload_url)) {
+      try {
+        const assets = await loadCustomModelAssets(asset.payload_url)
+        model.animation.clip = assets.clips[0]?.name ?? ''
+        const fit = computeModelFit(assets.template)
+        if (fit && needsAutoFit(fit.maxDim)) model.transform = fit.transform
+      } catch (error) {
+        console.error('[ComfyTV/scene3d] failed to load model asset', error)
+        toastError(t('scene3d.failedToLoadModelAsset'))
+        return
+      }
     }
     const next = cloneScene(state.value)
     next.models.push(model)
@@ -554,7 +560,7 @@ export function useScene3dStage(
 
   async function fitSelectedModel(): Promise<void> {
     const model = selectedModel.value
-    if (!model) return
+    if (!model || isSplatLikeModelUrl(model.url)) return
     try {
       const assets = await loadCustomModelAssets(model.url)
       const fit = computeModelFit(assets.template)
@@ -1303,7 +1309,7 @@ export function useScene3dStage(
   async function mcpApplyOps(ops: any[]): Promise<SceneOpResult[]> {
     if (Array.isArray(ops)
         && ops.some((op) => op?.op === 'add_model' && op.asset_id != null)) {
-      await assetStore.hydrate()
+      await assetStore.refresh()
     }
     const { next, results } = applySceneOps(state.value, ops, {
       resolveModel: (assetId, url) => {
@@ -1311,7 +1317,7 @@ export function useScene3dStage(
         if (assetId == null) return null
         const asset = assetStore.byId(assetId)
         if (!asset || asset.media_type !== 'model'
-            || !isMeshModelUrl(asset.payload_url)) {
+            || !isSceneModelUrl(asset.payload_url)) {
           return null
         }
         return { url: asset.payload_url, name: asset.name || `asset ${assetId}` }

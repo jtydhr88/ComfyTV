@@ -1,0 +1,22 @@
+{
+  "_comment": "Shipped preset for MoGe-2 monocular geometry estimation, adapted from ComfyUI's official 3d_moge_perspective_to_mesh template (flattened: auto-resize branch and normal-map previews dropped). Chain: LoadImage #1 + LoadMoGeModel #2 -> MoGeInference #3 (resolution_level 9, fov auto) -> MoGePointMapToMesh #4 (decimation 1, discontinuity 0.04, textured) -> SaveGLB #5. Deterministic — no seed. Sky/invalid pixels are culled via the model's own mask.",
+
+  "label":       "MoGe-2 Depth Mesh",
+  "order":       30,
+  "description": "MoGe-2 image-to-geometry: lifts one upstream photo into a textured 3D point-map mesh (GLB) of the visible surfaces — scene relief, not a full closed object. Requires moge_2_vitl_normal_fp16.safetensors in models/geometry_estimation — see workflows/model/README.md. Optional custom param: resolution_level (0-9, default 9).",
+
+  "result": { "type": "ui_save_url", "node": "5" },
+
+  "inputs": {
+    "1": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "MoGe needs an upstream image — wire one into this stage's images slot."
+      }
+    },
+    "3": {
+      "resolution_level": { "from": "option:resolution_level", "default": "9", "cast": "int" }
+    }
+  }
+}

@@ -2,9 +2,16 @@
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 import { GLTFLoader, type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js'
+import { clone as cloneSkinned } from 'three/examples/jsm/utils/SkeletonUtils.js'
 
 import { app } from '@/lib/comfyApp'
 import { decryptAsset, decryptAssetJson } from '@/utils/assetCipher'
+import {
+  buildPointCloud,
+  classifyModelBytes,
+  loadSpark,
+  type ModelRenderKind
+} from '@/widgets/three/modelFormats'
 import { buildPrimitiveMesh, parsePrimitiveRecipe } from '@/widgets/three/primitiveGeometry'
 
 export interface Scene3dCharacterManifestEntry {
@@ -208,4 +215,81 @@ export async function loadCustomModelAssets(
 export async function getCustomModelClipNames(url: string): Promise<string[]> {
   const assets = await loadCustomModelAssets(url)
   return assets.clips.map((clip) => clip.name)
+}
+
+export interface SceneModelInstance {
+  kind: ModelRenderKind
+  root: THREE.Object3D
+  clips: THREE.AnimationClip[]
+  dispose: (() => void) | null
+}
+
+function sceneModelFilename(url: string): string {
+  try {
+    const name = new URL(url, 'http://x').searchParams.get('filename')
+    if (name) return name
+  } catch {}
+  return url.split('/').pop() || 'model'
+}
+
+export async function loadSceneModelInstance(
+  url: string
+): Promise<SceneModelInstance> {
+  const meshInstance = async (): Promise<SceneModelInstance> => {
+    const assets = await loadCustomModelAssets(url)
+    return {
+      kind: 'mesh',
+      root: cloneSkinned(assets.template),
+      clips: assets.clips,
+      dispose: null
+    }
+  }
+  if (parsePrimitiveRecipe(url)) return meshInstance()
+
+  let bytes: ArrayBuffer | null = null
+  const fetchBytes = async (): Promise<ArrayBuffer> => {
+    if (!bytes) {
+      const resp = await fetch(assetUrl(url))
+      if (!resp.ok) throw new Error(`${url}: HTTP ${resp.status}`)
+      bytes = await resp.arrayBuffer()
+    }
+    return bytes
+  }
+  const kind = await classifyModelBytes(url, fetchBytes)
+
+  if (kind === 'splat') {
+    const { SplatMesh } = await loadSpark()
+    const splat = new SplatMesh({
+      fileBytes: await fetchBytes(),
+      fileName: sceneModelFilename(url)
+    })
+    await splat.initialized
+    splat.quaternion.set(1, 0, 0, 0)
+    const group = new THREE.Group()
+    group.userData.comfytvSplat = true
+    group.add(splat)
+    return { kind, root: group, clips: [], dispose: () => splat.dispose() }
+  }
+
+  if (kind === 'pointcloud') {
+    const group = buildPointCloud(await fetchBytes())
+    return {
+      kind,
+      root: group,
+      clips: [],
+      dispose: () => {
+        group.traverse((child) => {
+          if (child instanceof THREE.Points) {
+            child.geometry.dispose()
+            const material = child.material
+            for (const m of Array.isArray(material) ? material : [material]) {
+              m.dispose()
+            }
+          }
+        })
+      }
+    }
+  }
+
+  return meshInstance()
 }

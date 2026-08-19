@@ -7,6 +7,8 @@
 
 !audio/ace-step-v1-song.json
 !audio/ace-step-v1-song_preset.json
+!audio/minimax-music3.json
+!audio/minimax-music3_preset.json
 !cutout/birefnet-cutout.json
 !cutout/birefnet-cutout_preset.json
 !erase/lama-erase.json
@@ -33,6 +35,12 @@
 !inpaint/fooocus-sdxl-inpaint_preset.json
 !material-estimate/qwen3vl-estimate.json
 !material-estimate/qwen3vl-estimate_preset.json
+!model/hunyuan3d-21.json
+!model/hunyuan3d-21_preset.json
+!model/moge2-mesh.json
+!model/moge2-mesh_preset.json
+!model/triposplat-gaussian.json
+!model/triposplat-gaussian_preset.json
 !multiangle/qwen-edit-2511-multiangle.json
 !multiangle/qwen-edit-2511-multiangle_preset.json
 !multiview/qwen-3view-character.json

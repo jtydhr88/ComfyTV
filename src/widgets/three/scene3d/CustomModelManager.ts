@@ -1,9 +1,8 @@
 import * as THREE from 'three'
-import { clone as cloneSkinned } from 'three/examples/jsm/utils/SkeletonUtils.js'
 
 import { actionSampleTime, characterElapsedTime } from './characterTime'
 import { bindClipToRoot } from './clipTracks'
-import { loadCustomModelAssets } from './scene3dAssets'
+import { loadSceneModelInstance } from './scene3dAssets'
 import type { SceneModelEntry } from './types'
 
 interface ModelRuntime {
@@ -12,13 +11,17 @@ interface ModelRuntime {
   mixer: THREE.AnimationMixer
   action: THREE.AnimationAction | null
   clips: THREE.AnimationClip[]
+  dispose: (() => void) | null
 }
 
 export class Scene3dCustomModelManager {
   private readonly runtimes = new Map<string, ModelRuntime>()
   private applyGeneration = 0
 
-  constructor(private readonly scene: THREE.Scene) {}
+  constructor(
+    private readonly scene: THREE.Scene,
+    private readonly ensureSparkRenderer?: () => Promise<void>
+  ) {}
 
   async applyModels(entries: readonly SceneModelEntry[]): Promise<void> {
     const generation = ++this.applyGeneration
@@ -34,9 +37,10 @@ export class Scene3dCustomModelManager {
         runtime = undefined
       }
       if (!runtime) {
-        let assets
+        let instance
         try {
-          assets = await loadCustomModelAssets(entry.url)
+          instance = await loadSceneModelInstance(entry.url)
+          if (instance.kind === 'splat') await this.ensureSparkRenderer?.()
         } catch (error) {
           console.error(
             '[ComfyTV/scene3d] failed to load custom model',
@@ -46,22 +50,28 @@ export class Scene3dCustomModelManager {
           if (generation !== this.applyGeneration) return
           continue
         }
-        if (generation !== this.applyGeneration) return
-        const root = cloneSkinned(assets.template)
+        if (generation !== this.applyGeneration) {
+          instance.dispose?.()
+          return
+        }
+        const root = instance.root
         root.userData.sceneObjectId = entry.id
-        root.traverse((child) => {
-          if (child instanceof THREE.Mesh) {
-            child.castShadow = true
-            child.receiveShadow = true
-          }
-        })
+        if (instance.kind === 'mesh') {
+          root.traverse((child) => {
+            if (child instanceof THREE.Mesh) {
+              child.castShadow = true
+              child.receiveShadow = true
+            }
+          })
+        }
         this.scene.add(root)
         runtime = {
           entry,
           root,
           mixer: new THREE.AnimationMixer(root),
           action: null,
-          clips: assets.clips
+          clips: instance.clips,
+          dispose: instance.dispose
         }
         this.runtimes.set(entry.id, runtime)
       }
@@ -125,6 +135,12 @@ export class Scene3dCustomModelManager {
     return [...this.runtimes.values()].map((runtime) => runtime.root)
   }
 
+  splatRoots(): THREE.Object3D[] {
+    return [...this.runtimes.values()]
+      .filter((runtime) => runtime.root.userData.comfytvSplat === true)
+      .map((runtime) => runtime.root)
+  }
+
   getClipNames(id: string): string[] {
     return (this.runtimes.get(id)?.clips ?? []).map((clip) => clip.name)
   }
@@ -149,6 +165,7 @@ export class Scene3dCustomModelManager {
   private removeRuntime(runtime: ModelRuntime, id: string): void {
     runtime.mixer.stopAllAction()
     this.scene.remove(runtime.root)
+    runtime.dispose?.()
     this.runtimes.delete(id)
   }
 

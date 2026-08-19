@@ -1,0 +1,27 @@
+{
+  "_comment": "Shipped preset for TripoSplat image-to-gaussian-splat, adapted from ComfyUI's official 3d_triposplat_image_to_gaussian_splat template. Flattened from the official subgraph: background removal is always on (LoadImage #1 -> RemoveBackground #3 -> TripoSplatPreprocessImage #4), the switch/preview/orbit-video/mesh-export branches are dropped. Chain continues TripoSplatConditioning #8 -> KSampler #9 (20 steps / cfg 3 / dpmpp_2m-simple) -> VAEDecodeTripoSplat #11 (262144 gaussians) -> SplatToFile3D #12 (spz) -> SaveGLB #13. The decode seed stays fixed at 0 (it only seeds the deterministic octree sampler); the KSampler seed is randomized per Run.",
+
+  "label":       "TripoSplat Gaussian",
+  "order":       20,
+  "description": "TripoSplat image-to-3D Gaussian Splat. Takes one upstream image (background is auto-removed via BiRefNet), outputs an .spz splat file. Requires triposplat_fp16 + dino_v3_vit_h + both TripoSplat VAEs + birefnet — see workflows/model/README.md. Optional custom params: seed, steps (20), guidance (3), num_gaussians (262144).",
+
+  "result": { "type": "ui_save_url", "node": "13" },
+
+  "inputs": {
+    "1": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "TripoSplat needs an upstream image — wire one into this stage's images slot."
+      }
+    },
+    "9": {
+      "seed":  { "from": "option:seed",     "default": "random_int31", "cast": "int" },
+      "steps": { "from": "option:steps",    "default": "20",           "cast": "int" },
+      "cfg":   { "from": "option:guidance", "default": "3",            "cast": "float" }
+    },
+    "11": {
+      "num_gaussians": { "from": "option:num_gaussians", "default": "262144", "cast": "int" }
+    }
+  }
+}

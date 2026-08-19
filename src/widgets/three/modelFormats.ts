@@ -33,6 +33,18 @@ export function isMeshModelUrl(url: string): boolean {
   return (MESH_MODEL_EXTENSIONS as readonly string[]).includes(modelUrlExtension(url))
 }
 
+export function isSplatLikeModelUrl(url: string): boolean {
+  const ext = modelUrlExtension(url)
+  return (
+    (SPLAT_MODEL_EXTENSIONS as readonly string[]).includes(ext) ||
+    (POINTCLOUD_MODEL_EXTENSIONS as readonly string[]).includes(ext)
+  )
+}
+
+export function isSceneModelUrl(url: string): boolean {
+  return isMeshModelUrl(url) || isSplatLikeModelUrl(url)
+}
+
 export async function isGaussianSplatPLY(bytes: ArrayBuffer): Promise<boolean> {
   try {
     const { PlyReader } = await loadSpark()

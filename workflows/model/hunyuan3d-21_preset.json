@@ -1,0 +1,24 @@
+{
+  "_comment": "Shipped preset for Hunyuan3D 2.1 image-to-mesh, adapted from ComfyUI's official 3d_hunyuan3d-v2.1 template (flattened, MarkdownNote dropped, KSampler seed randomized per Run). Chain: LoadImage #2 -> CLIPVisionEncode #13 -> Hunyuan3Dv2Conditioning #6 -> KSampler #7 -> VAEDecodeHunyuan3D #8 -> VoxelToMesh #9 -> SaveGLB #10. Sampler/decoder defaults match the official template (30 steps / cfg 5 / euler-normal, latent resolution 4096, num_chunks 8000, octree_resolution 256, surface-net threshold 0.6); quality knobs are overridable via stage custom params (seed / steps / guidance).",
+
+  "label":       "Hunyuan3D 2.1",
+  "order":       10,
+  "description": "Hunyuan3D 2.1 image-to-3D. Takes one upstream image, outputs an untextured mesh GLB. Requires hunyuan_3d_v2.1.safetensors in models/checkpoints — see workflows/model/README.md. Optional custom params: seed, steps (30), guidance (5).",
+
+  "result": { "type": "ui_save_url", "node": "10" },
+
+  "inputs": {
+    "2": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "Hunyuan3D 2.1 needs an upstream image — wire one into this stage's images slot."
+      }
+    },
+    "7": {
+      "seed":  { "from": "option:seed",     "default": "random_int31", "cast": "int" },
+      "steps": { "from": "option:steps",    "default": "30",           "cast": "int" },
+      "cfg":   { "from": "option:guidance", "default": "5",            "cast": "float" }
+    }
+  }
+}

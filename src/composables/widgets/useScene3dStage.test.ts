@@ -200,6 +200,24 @@ describe('useScene3dStage: setup + object add/remove', () => {
     expect(s.state.value.models[0].animation.clip).toBe('Idle')
   })
 
+  it('adds a splat model asset without probing mesh clips', async () => {
+    const { s } = await withScene()
+    assetStoreState.assets = [
+      {
+        id: 3,
+        name: 'Splat',
+        media_type: 'model',
+        payload_url: '/view?filename=a.spz&subfolder=3d'
+      }
+    ]
+    expect(s.modelAssets.value).toHaveLength(1)
+    await s.addModelFromAsset(assetStoreState.assets[0] as any)
+    expect(loadCustomModelAssets).not.toHaveBeenCalled()
+    expect(s.state.value.models).toHaveLength(1)
+    expect(s.state.value.models[0].animation.clip).toBe('')
+    expect(s.state.value.models[0].transform.scale.x).toBe(1)
+  })
+
   it('auto-fits oversized custom models on add, leaves sane sizes alone', async () => {
     const { s } = await withScene()
     assetStoreState.assets = [

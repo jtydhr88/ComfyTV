@@ -253,7 +253,7 @@ describe('applySceneOps', () => {
 
     expect(() => applySceneOps(createEmptyScene(), [
       { op: 'add_model', asset_id: 7 },
-    ], ctx)).toThrow(/did not resolve to a mesh model/)
+    ], ctx)).toThrow(/did not resolve to a loadable 3D model/)
 
     expect(() => applySceneOps(createEmptyScene(), [
       { op: 'add_camera' },

@@ -56790,7 +56790,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-DCf6LCup.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-oHrenUVB.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -56812,6 +56812,13 @@ function modelUrlExtension$1(url) {
 }
 function isMeshModelUrl(url) {
   return MESH_MODEL_EXTENSIONS.includes(modelUrlExtension$1(url));
+}
+function isSplatLikeModelUrl(url) {
+  const ext = modelUrlExtension$1(url);
+  return SPLAT_MODEL_EXTENSIONS.includes(ext) || POINTCLOUD_MODEL_EXTENSIONS.includes(ext);
+}
+function isSceneModelUrl(url) {
+  return isMeshModelUrl(url) || isSplatLikeModelUrl(url);
 }
 async function isGaussianSplatPLY(bytes) {
   var _a3, _b2;
@@ -111689,6 +111696,69 @@ async function getCustomModelClipNames(url) {
   const assets2 = await loadCustomModelAssets(url);
   return assets2.clips.map((clip) => clip.name);
 }
+function sceneModelFilename(url) {
+  try {
+    const name = new URL(url, "http://x").searchParams.get("filename");
+    if (name) return name;
+  } catch {
+  }
+  return url.split("/").pop() || "model";
+}
+async function loadSceneModelInstance(url) {
+  const meshInstance = async () => {
+    const assets2 = await loadCustomModelAssets(url);
+    return {
+      kind: "mesh",
+      root: clone(assets2.template),
+      clips: assets2.clips,
+      dispose: null
+    };
+  };
+  if (parsePrimitiveRecipe(url)) return meshInstance();
+  let bytes = null;
+  const fetchBytes = async () => {
+    if (!bytes) {
+      const resp = await fetch(assetUrl(url));
+      if (!resp.ok) throw new Error(`${url}: HTTP ${resp.status}`);
+      bytes = await resp.arrayBuffer();
+    }
+    return bytes;
+  };
+  const kind = await classifyModelBytes(url, fetchBytes);
+  if (kind === "splat") {
+    const { SplatMesh } = await loadSpark();
+    const splat = new SplatMesh({
+      fileBytes: await fetchBytes(),
+      fileName: sceneModelFilename(url)
+    });
+    await splat.initialized;
+    splat.quaternion.set(1, 0, 0, 0);
+    const group = new Group();
+    group.userData.comfytvSplat = true;
+    group.add(splat);
+    return { kind, root: group, clips: [], dispose: () => splat.dispose() };
+  }
+  if (kind === "pointcloud") {
+    const group = buildPointCloud(await fetchBytes());
+    return {
+      kind,
+      root: group,
+      clips: [],
+      dispose: () => {
+        group.traverse((child) => {
+          if (child instanceof Points) {
+            child.geometry.dispose();
+            const material = child.material;
+            for (const m2 of Array.isArray(material) ? material : [material]) {
+              m2.dispose();
+            }
+          }
+        });
+      }
+    };
+  }
+  return meshInstance();
+}
 const _hoisted_1$58 = {
   key: 0,
   class: "ctv:absolute ctv:inset-0 ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50 ctv:pointer-events-none"
@@ -134946,7 +135016,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-2QBpeUU7.mjs");
+    const { STLLoader } = await import("./STLLoader-BVqVhcUS.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -134954,7 +135024,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-AThMdpuJ.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-C6TjgHKH.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -142945,19 +143015,31 @@ class ChannelRenderer {
           this.renderColor(target, ctx);
           break;
         case "normal":
-          this.renderNormal(target, ctx);
+          this.withSplatsHidden(() => this.renderNormal(target, ctx));
           break;
         case "depth":
-          this.renderDepth(target, ctx);
+          this.withSplatsHidden(() => this.renderDepth(target, ctx));
           break;
         case "openpose":
           this.renderOpenpose(target, ctx);
           break;
         case "id":
-          this.renderId(target, ctx);
+          this.withSplatsHidden(() => this.renderId(target, ctx));
           break;
       }
     });
+  }
+  withSplatsHidden(fn3) {
+    const hidden = [];
+    for (const object2 of this.viewport.customModelManager.splatRoots()) {
+      hidden.push({ object: object2, visible: object2.visible });
+      object2.visible = false;
+    }
+    try {
+      fn3();
+    } finally {
+      for (const entry of hidden) entry.object.visible = entry.visible;
+    }
   }
   withCaptureLayers(fn3) {
     const layers2 = this.viewport.getCaptureLayers();
@@ -150432,12 +150514,14 @@ class Scene3dCharacterManager {
   }
 }
 class Scene3dCustomModelManager {
-  constructor(scene) {
+  constructor(scene, ensureSparkRenderer) {
     __publicField(this, "runtimes", /* @__PURE__ */ new Map());
     __publicField(this, "applyGeneration", 0);
     this.scene = scene;
+    this.ensureSparkRenderer = ensureSparkRenderer;
   }
   async applyModels(entries2) {
+    var _a3, _b2;
     const generation = ++this.applyGeneration;
     const wantedIds = new Set(entries2.map((entry) => entry.id));
     for (const [id, runtime] of this.runtimes) {
@@ -150450,9 +150534,10 @@ class Scene3dCustomModelManager {
         runtime = void 0;
       }
       if (!runtime) {
-        let assets2;
+        let instance2;
         try {
-          assets2 = await loadCustomModelAssets(entry.url);
+          instance2 = await loadSceneModelInstance(entry.url);
+          if (instance2.kind === "splat") await ((_a3 = this.ensureSparkRenderer) == null ? void 0 : _a3.call(this));
         } catch (error2) {
           console.error(
             "[ComfyTV/scene3d] failed to load custom model",
@@ -150462,22 +150547,28 @@ class Scene3dCustomModelManager {
           if (generation !== this.applyGeneration) return;
           continue;
         }
-        if (generation !== this.applyGeneration) return;
-        const root = clone(assets2.template);
+        if (generation !== this.applyGeneration) {
+          (_b2 = instance2.dispose) == null ? void 0 : _b2.call(instance2);
+          return;
+        }
+        const root = instance2.root;
         root.userData.sceneObjectId = entry.id;
-        root.traverse((child) => {
-          if (child instanceof Mesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
-          }
-        });
+        if (instance2.kind === "mesh") {
+          root.traverse((child) => {
+            if (child instanceof Mesh) {
+              child.castShadow = true;
+              child.receiveShadow = true;
+            }
+          });
+        }
         this.scene.add(root);
         runtime = {
           entry,
           root,
           mixer: new AnimationMixer(root),
           action: null,
-          clips: assets2.clips
+          clips: instance2.clips,
+          dispose: instance2.dispose
         };
         this.runtimes.set(entry.id, runtime);
       }
@@ -150536,6 +150627,9 @@ class Scene3dCustomModelManager {
   pickables() {
     return [...this.runtimes.values()].map((runtime) => runtime.root);
   }
+  splatRoots() {
+    return [...this.runtimes.values()].filter((runtime) => runtime.root.userData.comfytvSplat === true).map((runtime) => runtime.root);
+  }
   getClipNames(id) {
     var _a3;
     return (((_a3 = this.runtimes.get(id)) == null ? void 0 : _a3.clips) ?? []).map((clip) => clip.name);
@@ -150557,8 +150651,10 @@ class Scene3dCustomModelManager {
     return durations;
   }
   removeRuntime(runtime, id) {
+    var _a3;
     runtime.mixer.stopAllAction();
     this.scene.remove(runtime.root);
+    (_a3 = runtime.dispose) == null ? void 0 : _a3.call(runtime);
     this.runtimes.delete(id);
   }
   dispose() {
@@ -153411,8 +153507,18 @@ function createScene3dViewport(container, events, options) {
   const timelineController = new TimelineController(deps.eventManager);
   const characterManager = new Scene3dCharacterManager(deps.sceneManager.scene);
   const primitiveManager = new Scene3dPrimitiveManager(deps.sceneManager.scene);
+  let sparkReady = null;
+  const ensureSparkRenderer = () => sparkReady ?? (sparkReady = loadSpark().then(({ SparkRenderer }) => {
+    deps.sceneManager.scene.add(
+      new SparkRenderer({ renderer: deps.view.renderer })
+    );
+  }).catch((error2) => {
+    sparkReady = null;
+    throw error2;
+  }));
   const customModelManager = new Scene3dCustomModelManager(
-    deps.sceneManager.scene
+    deps.sceneManager.scene,
+    ensureSparkRenderer
   );
   const lightManager = new Scene3dLightManager(deps.sceneManager.scene);
   let viewport2 = null;
@@ -155719,7 +155825,7 @@ function applySceneOps(scene, ops, ctx) {
         );
         if (!resolved) {
           throw new Error(
-            `${where}: pass asset_id (a model asset from the assets tool) or url; asset ${op.asset_id ?? op.url ?? "(none)"} did not resolve to a mesh model`
+            `${where}: pass asset_id (a model asset from the assets tool) or url; asset ${op.asset_id ?? op.url ?? "(none)"} did not resolve to a loadable 3D model (mesh, gaussian splat or point cloud)`
           );
         }
         const entry = createDefaultModel(
@@ -156161,7 +156267,7 @@ function useScene3dStage(node, opts) {
   );
   const modelAssets = computed(
     () => assetStore2.assets.filter(
-      (asset) => asset.media_type === "model" && isMeshModelUrl(asset.payload_url)
+      (asset) => asset.media_type === "model" && isSceneModelUrl(asset.payload_url)
     )
   );
   const selectedCamera = computed(
@@ -156438,15 +156544,17 @@ function useScene3dStage(node, opts) {
       asset.name || "model",
       allIds2()
     );
-    try {
-      const assets2 = await loadCustomModelAssets(asset.payload_url);
-      model.animation.clip = ((_a3 = assets2.clips[0]) == null ? void 0 : _a3.name) ?? "";
-      const fit = computeModelFit(assets2.template);
-      if (fit && needsAutoFit(fit.maxDim)) model.transform = fit.transform;
-    } catch (error2) {
-      console.error("[ComfyTV/scene3d] failed to load model asset", error2);
-      toastError(t2("scene3d.failedToLoadModelAsset"));
-      return;
+    if (!isSplatLikeModelUrl(asset.payload_url)) {
+      try {
+        const assets2 = await loadCustomModelAssets(asset.payload_url);
+        model.animation.clip = ((_a3 = assets2.clips[0]) == null ? void 0 : _a3.name) ?? "";
+        const fit = computeModelFit(assets2.template);
+        if (fit && needsAutoFit(fit.maxDim)) model.transform = fit.transform;
+      } catch (error2) {
+        console.error("[ComfyTV/scene3d] failed to load model asset", error2);
+        toastError(t2("scene3d.failedToLoadModelAsset"));
+        return;
+      }
     }
     const next = cloneScene(state2.value);
     next.models.push(model);
@@ -156455,7 +156563,7 @@ function useScene3dStage(node, opts) {
   }
   async function fitSelectedModel() {
     const model = selectedModel.value;
-    if (!model) return;
+    if (!model || isSplatLikeModelUrl(model.url)) return;
     try {
       const assets2 = await loadCustomModelAssets(model.url);
       const fit = computeModelFit(assets2.template);
@@ -157088,14 +157196,14 @@ function useScene3dStage(node, opts) {
   }
   async function mcpApplyOps(ops) {
     if (Array.isArray(ops) && ops.some((op) => (op == null ? void 0 : op.op) === "add_model" && op.asset_id != null)) {
-      await assetStore2.hydrate();
+      await assetStore2.refresh();
     }
     const { next, results } = applySceneOps(state2.value, ops, {
       resolveModel: (assetId, url) => {
         if (url) return { url, name: url.split("filename=")[1] ?? "model" };
         if (assetId == null) return null;
         const asset = assetStore2.byId(assetId);
-        if (!asset || asset.media_type !== "model" || !isMeshModelUrl(asset.payload_url)) {
+        if (!asset || asset.media_type !== "model" || !isSceneModelUrl(asset.payload_url)) {
           return null;
         }
         return { url: asset.payload_url, name: asset.name || `asset ${assetId}` };
@@ -214395,4 +214503,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-BeAyg-SS.mjs.map
+//# sourceMappingURL=main-aExqFoSr.mjs.map

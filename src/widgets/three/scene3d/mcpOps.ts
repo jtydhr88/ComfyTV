@@ -198,7 +198,8 @@ export function applySceneOps(
         if (!resolved) {
           throw new Error(
             `${where}: pass asset_id (a model asset from the assets tool) or url; `
-            + `asset ${op.asset_id ?? op.url ?? '(none)'} did not resolve to a mesh model`)
+            + `asset ${op.asset_id ?? op.url ?? '(none)'} did not resolve to a loadable `
+            + `3D model (mesh, gaussian splat or point cloud)`)
         }
         const entry = createDefaultModel(
           resolved.url, String(op.name ?? resolved.name), allIds(next))

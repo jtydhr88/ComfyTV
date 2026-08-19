@@ -3,6 +3,7 @@ import { TimelineController } from '@/widgets/three/load3d/TimelineController'
 import { fetchCameraPresetData } from '@/widgets/three/load3d/cameraPresetAssets'
 import { buildViewport3dDeps } from '@/widgets/three/load3d/createViewport3d'
 import type { Load3DOptions } from '@/widgets/three/load3d/interfaces'
+import { loadSpark } from '@/widgets/three/modelFormats'
 
 import { Scene3dCharacterManager } from './CharacterManager'
 import { Scene3dCustomModelManager } from './CustomModelManager'
@@ -20,8 +21,21 @@ export function createScene3dViewport(
   const timelineController = new TimelineController(deps.eventManager)
   const characterManager = new Scene3dCharacterManager(deps.sceneManager.scene)
   const primitiveManager = new Scene3dPrimitiveManager(deps.sceneManager.scene)
+  let sparkReady: Promise<void> | null = null
+  const ensureSparkRenderer = (): Promise<void> =>
+    (sparkReady ??= loadSpark()
+      .then(({ SparkRenderer }) => {
+        deps.sceneManager.scene.add(
+          new SparkRenderer({ renderer: deps.view.renderer })
+        )
+      })
+      .catch((error) => {
+        sparkReady = null
+        throw error
+      }))
   const customModelManager = new Scene3dCustomModelManager(
-    deps.sceneManager.scene
+    deps.sceneManager.scene,
+    ensureSparkRenderer
   )
   const lightManager = new Scene3dLightManager(deps.sceneManager.scene)
 

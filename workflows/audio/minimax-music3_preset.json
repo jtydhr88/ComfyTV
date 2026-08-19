@@ -1,0 +1,27 @@
+{
+  "_comment": "Shipped preset for MiniMax Music 3 text-to-song, adapted from ComfyUI's official audio_minimax_music_3 template (flattened: SeedNode replaced by direct seed bindings on TextEncode #4 and KSampler #7, tiled-decode switch branch dropped in favor of plain VAEDecodeAudio — fine on high-VRAM GPUs). Chain: UNETLoader #1 + CLIPLoader #2 (type minimax) + VAELoader #3 -> MiniMaxMusic3TextEncode #4 (caption+lyrics+max_duration; its `seconds` output sizes EmptyMiniMaxMusic3LatentAudio #6, so the latent always matches the AR token length) -> KSampler #7 (30 steps / cfg 1.7 / euler-simple, official defaults) -> VAEDecodeAudio #9 -> SaveAudioAdvanced #8 (mp3 V0). The two seeds (AR token generation on #4, diffusion on #7) both bind option:seed — identical when the user pins a seed, independently random otherwise.",
+
+  "label":       "MiniMax Music 3",
+  "order":       20,
+  "description": "Text-to-song via MiniMax Music 3 — full songs up to ~5 minutes with stable structure. main_prompt → caption (write style / mood / vocals / arrangement; the official guide suggests Global Metadata → Vocal Details → Arrangement), stage lyrics → lyrics with [intro]/[verse]/[chorus]/[bridge]/[outro] tags driving song structure, stage duration → max_duration (the model may end the song earlier). Requires minimax_music3_dit_fp16 + text encoder + dav VAE — see workflows/audio/README.md.",
+
+  "result": {
+    "type": "ui_save_url",
+    "node": "8"
+  },
+
+  "inputs": {
+    "4": {
+      "caption": {
+        "from": "main_prompt",
+        "default": "Lo-fi hip-hop, chillhop, 78 BPM, laid-back and dreamy, soft vocals, dusty boom-bap drums, warm Rhodes piano, vinyl crackle."
+      },
+      "lyrics":       { "from": "option:lyrics", "default": "" },
+      "max_duration": { "from": "option:duration_s", "default": "120", "cast": "float" },
+      "seed":         { "from": "option:seed", "default": "random_int31", "cast": "int" }
+    },
+    "7": {
+      "seed": { "from": "option:seed", "default": "random_int31", "cast": "int" }
+    }
+  }
+}

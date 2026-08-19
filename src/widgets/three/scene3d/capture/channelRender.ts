@@ -86,19 +86,32 @@ export class ChannelRenderer {
           this.renderColor(target, ctx)
           break
         case 'normal':
-          this.renderNormal(target, ctx)
+          this.withSplatsHidden(() => this.renderNormal(target, ctx))
           break
         case 'depth':
-          this.renderDepth(target, ctx)
+          this.withSplatsHidden(() => this.renderDepth(target, ctx))
           break
         case 'openpose':
           this.renderOpenpose(target, ctx)
           break
         case 'id':
-          this.renderId(target, ctx)
+          this.withSplatsHidden(() => this.renderId(target, ctx))
           break
       }
     })
+  }
+
+  private withSplatsHidden(fn: () => void): void {
+    const hidden: Array<{ object: THREE.Object3D; visible: boolean }> = []
+    for (const object of this.viewport.customModelManager.splatRoots()) {
+      hidden.push({ object, visible: object.visible })
+      object.visible = false
+    }
+    try {
+      fn()
+    } finally {
+      for (const entry of hidden) entry.object.visible = entry.visible
+    }
   }
 
   private withCaptureLayers(fn: () => void): void {
