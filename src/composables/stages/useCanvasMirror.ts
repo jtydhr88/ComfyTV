@@ -17,6 +17,7 @@ export interface CanvasMirrorDeps {
   resolveApp: () => any
   resolveProjectId: () => string
   resolveStageState: (node: any) => { output?: string | null; running?: boolean; error?: { message: string } | null } | undefined
+  resolvePageActive?: () => boolean | undefined
 }
 
 function widgetValue(node: any, name: string): string {
@@ -87,6 +88,8 @@ export function installCanvasMirror(app: any, deps: CanvasMirrorDeps): (() => vo
 
   let lastPosted = ''
   let lastPostedProject = ''
+  let lastPostedPageActive: boolean | undefined
+  let forcePageStatePost = false
   let lastPostAt = 0
   let inFlight = false
   let timer: ReturnType<typeof setInterval> | null = null
@@ -94,9 +97,16 @@ export function installCanvasMirror(app: any, deps: CanvasMirrorDeps): (() => vo
   function tabInfo() {
     const api = deps.resolveApp()?.api
     const readyState = api?.socket?.readyState
+    const pageActive = deps.resolvePageActive
+      ? deps.resolvePageActive()
+      : (() => {
+        if (typeof document === 'undefined') return undefined
+        return document.visibilityState !== 'hidden'
+      })()
     return {
       clientId: api?.clientId ? String(api.clientId) : undefined,
       wsConnected: typeof readyState === 'number' ? readyState === 1 : undefined,
+      pageActive,
     }
   }
 
@@ -104,20 +114,24 @@ export function installCanvasMirror(app: any, deps: CanvasMirrorDeps): (() => vo
     if (inFlight) return
     const snapshot = buildCanvasSnapshot(deps)
     if (!snapshot) return
+    const { clientId, wsConnected, pageActive } = tabInfo()
     const serialized = JSON.stringify(snapshot)
     const now = Date.now()
     const changed = serialized !== lastPosted
     const heartbeatDue = now - lastPostAt >= HEARTBEAT_MS
-    if (!changed && !heartbeatDue) return
+    const pageStateChanged = forcePageStatePost
+      || (pageActive !== undefined && pageActive !== lastPostedPageActive)
+    const fullPost = pageActive !== false && (changed || pageStateChanged)
+    if (!fullPost && !heartbeatDue && !pageStateChanged) return
 
     inFlight = true
     try {
-      const { clientId, wsConnected } = tabInfo()
-      if (changed) {
+      if (fullPost) {
         await apiSend('/comfytv/canvas_state', 'POST', OkSchema, {
           ...snapshot,
           ...(clientId ? { client_id: clientId } : {}),
           ...(wsConnected !== undefined ? { ws_connected: wsConnected } : {}),
+          ...(pageActive !== undefined ? { page_active: pageActive } : {}),
         })
         lastPosted = serialized
         lastPostedProject = snapshot.project_id
@@ -128,6 +142,7 @@ export function installCanvasMirror(app: any, deps: CanvasMirrorDeps): (() => vo
             heartbeat: true,
             ...(clientId ? { client_id: clientId } : {}),
             ...(wsConnected !== undefined ? { ws_connected: wsConnected } : {}),
+            ...(pageActive !== undefined ? { page_active: pageActive } : {}),
           })
         } catch (e) {
           if ((e as any)?.status === 409) {
@@ -138,8 +153,15 @@ export function installCanvasMirror(app: any, deps: CanvasMirrorDeps): (() => vo
           throw e
         }
       }
+      lastPostedPageActive = pageActive
+      forcePageStatePost = false
       lastPostAt = now
-    } catch {
+    } catch (e) {
+      const status = (e as any)?.status
+      if (pageStateChanged && (status === 404 || status === 409)) {
+        lastPostedPageActive = pageActive
+        forcePageStatePost = false
+      }
     } finally {
       inFlight = false
     }
@@ -152,7 +174,18 @@ export function installCanvasMirror(app: any, deps: CanvasMirrorDeps): (() => vo
   }
 
   const onActivity = () => start()
+  const onPageStateChange = () => {
+    forcePageStatePost = true
+    if (timer != null) void tick()
+  }
   app.api?.addEventListener?.(MCP_ACTIVITY_EVENT, onActivity)
+  if (typeof document !== 'undefined') {
+    document.addEventListener('visibilitychange', onPageStateChange)
+  }
+  if (typeof window !== 'undefined') {
+    window.addEventListener('focus', onPageStateChange)
+    window.addEventListener('blur', onPageStateChange)
+  }
 
   void (async () => {
     try {
@@ -166,6 +199,13 @@ export function installCanvasMirror(app: any, deps: CanvasMirrorDeps): (() => vo
     if (timer != null) clearInterval(timer)
     timer = null
     app.api?.removeEventListener?.(MCP_ACTIVITY_EVENT, onActivity)
+    if (typeof document !== 'undefined') {
+      document.removeEventListener('visibilitychange', onPageStateChange)
+    }
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('focus', onPageStateChange)
+      window.removeEventListener('blur', onPageStateChange)
+    }
     app.__comfytvCanvasMirrorInstalled = false
   }
 }

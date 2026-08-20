@@ -72,6 +72,19 @@ class TestCodexParser:
             "status": "failed", "error": {"message": "boom"}}}))
         assert [(e.t, e.text) for e in events] == [("tool_result", "boom")]
 
+    def test_tool_failure_preserves_string_or_result_content(self):
+        p = _CodexStreamParser()
+        string_error = p.parse_line(_line({"type": "item.completed", "item": {
+            "id": "t4", "type": "mcp_tool_call", "tool": "srv",
+            "status": "failed", "error": "canvas command timed out"}}))
+        content_error = p.parse_line(_line({"type": "item.completed", "item": {
+            "id": "t5", "type": "mcp_tool_call", "tool": "srv",
+            "status": "failed", "result": {"content": [
+                {"type": "text", "text": "node 9 not found"},
+            ]}}}))
+        assert string_error[0].text == "canvas command timed out"
+        assert content_error[0].text == "node 9 not found"
+
     def test_turn_completed_and_failed(self):
         p = _CodexStreamParser()
         p.parse_line(_line({"type": "turn.completed"}))
@@ -106,6 +119,7 @@ class TestCodexArgv:
         assert argv[:2] == ["codex", "exec"]
         assert "--json" in argv
         assert "--skip-git-repo-check" in argv
+        assert "--approve-for-me" in argv
         assert "--sandbox" in argv
         assert argv[argv.index("--sandbox") + 1] == "workspace-write"
         assert 'mcp_servers.comfytv.url="http://127.0.0.1:8188/comfytv/mcp"' in argv
@@ -132,7 +146,8 @@ class TestCodexArgv:
         argv, _ = provider._build_argv(
             TurnRequest(chat_id="c", user_text="hi", resume_token="th-9"),
             str(tmp_path))
-        assert argv[:3] == ["codex", "exec", "resume"]
+        assert argv[:4] == ["codex", "exec", "--approve-for-me", "resume"]
+        assert "--approve-for-me" in argv
         assert "--sandbox" not in argv
         assert 'approvals_reviewer="auto_review"' in argv
         assert argv[-2] == "th-9"

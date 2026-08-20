@@ -57,7 +57,7 @@ Local LLM 完全不需要 agent CLI:ComfyTV 自己跑 agent 循环,对接任何 
 
 ## 简述原理
 
-每个回合都以 headless 模式启动一个全新 CLI 进程,锁死在 ComfyTV 的 MCP 服务上(`--strict-mcp-config`,工具白名单 `mcp__comfytv__*`),并恢复该对话的会话保证连续性。对话状态由 CLI 持有;ComfyTV 数据库只存一份用于显示的记录镜像。画布写操作仍遵循 MCP 规则 — 由打开着的 ComfyTV tab 执行,所以 Bot 干活时保持 tab 开着。
+每个回合都以 headless 模式启动一个全新 CLI 进程,锁死在 ComfyTV 的 MCP 服务上(`--strict-mcp-config`,工具白名单 `mcp__comfytv__*`),并恢复该对话的会话保证连续性。对话状态由 CLI 持有;ComfyTV 数据库只存一份用于显示的记录镜像。画布写操作仍遵循 MCP 规则——由打开着的 ComfyTV 页面执行，Comfy Desktop 与浏览器都可以。
 
 ## 排障
 
@@ -65,7 +65,7 @@ Local LLM 完全不需要 agent CLI:ComfyTV 自己跑 agent 循环,对接任何 
 |---|---|
 | 侧边栏没有 ✨ 图标 | **启用 ComfyTV Bot** 没开(设置 → Agent 与 MCP),它又依赖**启用 MCP 服务** |
 | 面板显示安装引导 | 没检测到 agent CLI — 按上表装一个并登录,然后点*重新检测* |
-| Bot 说够不到画布 | 没有打开的 ComfyTV tab(或服务器重启后 tab 的 websocket 断了 — 硬刷新) |
+| Bot 说够不到画布 | 没有打开的 ComfyTV 页面（Comfy Desktop 或浏览器）；或服务器重启后 websocket 断了——刷新该页面 |
 | 长渲染时 Bot 好像没动 | 它在 `wait_stage` 里阻塞等待 — 工具条目能看到;正常且省钱 |
 
 ## 另见

@@ -668,7 +668,7 @@ async def _workflow_create(args: dict) -> dict:
     note = None
     if api_json is None:
         note = ("registered without API JSON — the workflow must be opened "
-                "once in the ComfyTV browser UI (which converts the graph) "
+                "once in the ComfyTV UI (Desktop or browser, which converts the graph) "
                 "before it can run headlessly")
     return {"created": True, **out, "validation": validation, "note": note}
 
@@ -1411,7 +1411,7 @@ TOOLS: dict[str, dict] = {
         "description": (
             "List the workflows backing ComfyTV stages, optionally filtered by kind. "
             "has_api=false means the workflow has no pre-converted API JSON yet (it "
-            "must be opened in the ComfyTV browser UI once before it can run "
+            "must be opened in the ComfyTV UI (Desktop or browser) once before it can run "
             "headlessly); file_exists/gui_valid flag broken files."
         ),
         "inputSchema": {
@@ -1424,10 +1424,10 @@ TOOLS: dict[str, dict] = {
     "get_canvas": {
         "description": (
             "Snapshot of the user's live ComfyTV canvas (stages, prompts, selected "
-            "workflows, connections, last-run status), mirrored from an open browser "
-            "tab. Mirroring activates lazily on first MCP contact — right after "
+            "workflows, connections, last-run status), mirrored from an open ComfyTV "
+            "page (Desktop or browser). Mirroring activates lazily on first MCP contact — right after "
             "connecting, retry once after ~10 seconds. available=false after that "
-            "means no tab is open or it never reported; stale=true means the tab "
+            "means no page is open or it never reported; stale=true means the page "
             "stopped updating (likely closed). Never guess canvas contents when "
             "unavailable — say so instead."
         ),
@@ -1513,7 +1513,8 @@ TOOLS: dict[str, dict] = {
     "add_stage": {
         "description": (
             "Add a ComfyTV stage node to the user's live canvas (requires an open "
-            "ComfyTV browser tab — the tab executes the command). node_class is a "
+            "ComfyTV page in Desktop or a browser — the page executes the command). "
+            "node_class is a "
             "stage_catalog node_id (e.g. 'ComfyTV.ImageStage'). Optionally set "
             "title, prompt, workflow (a list_workflows label for the stage's "
             "kind), widgets (an object setting any stage widget by name, e.g. "
@@ -1570,7 +1571,7 @@ TOOLS: dict[str, dict] = {
             "way: widgets {\"selected_index\": N} (1-BASED) picks that "
             "candidate on the live card and updates the downstream output. "
             "node is a stage uid or graph_node_id from get_canvas. "
-            "Requires an open ComfyTV tab."
+            "Requires an open ComfyTV page in Desktop or a browser."
         ),
         "inputSchema": {
             "type": "object",
@@ -1594,7 +1595,7 @@ TOOLS: dict[str, dict] = {
             "Remove a ComfyTV stage node from the live canvas (its stored "
             "outputs stay in the project history). node is a stage uid or "
             "graph_node_id from get_canvas. Only ComfyTV stages can be "
-            "removed. Requires an open ComfyTV tab."
+            "removed. Requires an open ComfyTV page in Desktop or a browser."
         ),
         "inputSchema": {
             "type": "object",
@@ -1777,7 +1778,7 @@ TOOLS: dict[str, dict] = {
             "canvas. from_node/to_node are stage uids or graph_node_ids. "
             "from_slot is the source output index (default 0). to_slot is the "
             "target input name (e.g. 'images.0'); omit it to auto-pick the first "
-            "free type-compatible input. Requires an open ComfyTV tab."
+            "free type-compatible input. Requires an open ComfyTV page in Desktop or a browser."
         ),
         "inputSchema": {
             "type": "object",
@@ -1799,7 +1800,7 @@ TOOLS: dict[str, dict] = {
             "Run button (upstream snapshots, @mentions and asset refs all apply). "
             "Returns as soon as the run is queued — then call wait_stage on the "
             "same node to block until it finishes instead of polling. node is a "
-            "stage uid or graph_node_id. Requires an open ComfyTV tab."
+            "stage uid or graph_node_id. Requires an open ComfyTV page in Desktop or a browser."
         ),
         "inputSchema": {
             "type": "object",
@@ -2039,7 +2040,7 @@ TOOLS: dict[str, dict] = {
             "discards the user's manual layout — ask before arranging a "
             "canvas the user laid out by hand. margin is the spacing in "
             "pixels (default 100, 20-400); layout 'horizontal' (default) "
-            "or 'vertical'. Requires an open ComfyTV tab."
+            "or 'vertical'. Requires an open ComfyTV page in Desktop or a browser."
         ),
         "inputSchema": {
             "type": "object",
@@ -2059,7 +2060,7 @@ TOOLS: dict[str, dict] = {
             "queue; remote runs cancel the remote job) — use when a render "
             "is clearly wrong or stuck instead of waiting it out. node is a "
             "stage uid or graph node id; errors if the stage is not "
-            "running. Requires an open ComfyTV tab."
+            "running. Requires an open ComfyTV page in Desktop or a browser."
         ),
         "inputSchema": {
             "type": "object",
@@ -2080,7 +2081,7 @@ TOOLS: dict[str, dict] = {
             "nodes, asset_refs, running state, position and any dangling "
             "@mention warnings. Call before set_stage widgets so you edit "
             "from actual values instead of guessing. node is a stage uid or "
-            "graph node id. Requires an open ComfyTV tab."
+            "graph node id. Requires an open ComfyTV page in Desktop or a browser."
         ),
         "inputSchema": {
             "type": "object",
@@ -2100,7 +2101,7 @@ TOOLS: dict[str, dict] = {
             "current input values — linked inputs shown as «linked»), exposed "
             "widgets, sizing and meta. Use this before workflow_edit to see "
             "which node inputs exist and what is already bound. kind + label "
-            "come from list_workflows. Server-side — no open tab needed."
+            "come from list_workflows. Server-side — no open page needed."
         ),
         "inputSchema": {
             "type": "object",
@@ -2133,7 +2134,7 @@ TOOLS: dict[str, dict] = {
             "button). bind ops are checked against the API graph — unknown "
             "node_id/input_name is rejected with the valid list. Returns "
             "per-op results plus the workflow's bindings after the edit. "
-            "Server-side — no open tab needed."
+            "Server-side — no open page needed."
         ),
         "inputSchema": {
             "type": "object",
@@ -2179,14 +2180,14 @@ TOOLS: dict[str, dict] = {
             "validated against the live node registry and rejected with "
             "per-node errors before anything is written) OR graph (a "
             "GUI-format workflow export, stored as-is; it must be opened "
-            "once in the ComfyTV browser UI before it can run headlessly). "
+            "once in the ComfyTV UI (Desktop or browser) before it can run headlessly). "
             "validate_only=true only runs the api_json validation. Optional "
             "description, result_node (node id whose output is the stage "
             "result) and result_type. After creating, wire stage inputs "
             "with workflow_edit bind ops (main_prompt, option:<key>, "
             "upstream_image:value[N], computed:width/height/length, ...). "
             "The label lands deduplicated (label-2, ...) if taken. "
-            "Server-side — no open tab needed."
+            "Server-side — no open page needed."
         ),
         "inputSchema": {
             "type": "object",
@@ -2212,8 +2213,8 @@ TOOLS: dict[str, dict] = {
             "node_id, class type, title, widget values and connections "
             "(ComfyTV stage nodes carry is_stage=true — drive those with "
             "set_stage/run_stage instead). Use before graph_edit to see "
-            "what is on the canvas. Requires an open ComfyTV tab (the tab "
-            "executes the command)."
+            "what is on the canvas. Requires an open ComfyTV page in Desktop "
+            "or a browser (the page executes the command)."
         ),
         "inputSchema": {
             "type": "object",
@@ -2244,7 +2245,7 @@ TOOLS: dict[str, dict] = {
             "{op:'unpack_subgraph', node} explodes a subgraph node "
             "(graph_get flags them is_subgraph=true) back inline. "
             "The whole call is one undo step (Comfy.Undo reverts it). "
-            "Requires an open ComfyTV tab."
+            "Requires an open ComfyTV page in Desktop or a browser."
         ),
         "inputSchema": {
             "type": "object",
@@ -2267,7 +2268,7 @@ TOOLS: dict[str, dict] = {
             "prompt_id plus status 'done' with outputs (/view URLs — "
             "view_image can look at them), 'error' with the failing node, "
             "or 'running' on timeout — re-call with the returned prompt_id "
-            "to keep waiting. Requires an open ComfyTV tab to queue; "
+            "to keep waiting. Requires an open ComfyTV page in Desktop or a browser to queue; "
             "waiting on a prompt_id is server-side."
         ),
         "inputSchema": {
@@ -2283,7 +2284,7 @@ TOOLS: dict[str, dict] = {
     },
     "canvas_command": {
         "description": (
-            "Execute a whitelisted native canvas command in the open tab: "
+            "Execute a whitelisted native canvas command in the open ComfyTV page: "
             "Comfy.Undo / Comfy.Redo (a whole graph_edit call is one undo "
             "step), Comfy.SaveWorkflow (persist the canvas to its file), "
             "Comfy.Canvas.FitView / Comfy.Canvas.ResetView, Comfy.Interrupt "
@@ -2294,7 +2295,7 @@ TOOLS: dict[str, dict] = {
             "Optional nodes (array of node ids) selects those nodes first — "
             "required for selection-dependent commands like "
             "GroupSelectedNodes, and focuses FitView on them. Requires an "
-            "open ComfyTV tab."
+            "open ComfyTV page in Desktop or a browser."
         ),
         "inputSchema": {
             "type": "object",
@@ -2314,7 +2315,7 @@ TOOLS: dict[str, dict] = {
         "description": (
             "Select a native graph node and glide the user's viewport to it "
             "— use after graph_edit to show the user what changed. node is "
-            "a node id from graph_get. Requires an open ComfyTV tab."
+            "a node id from graph_get. Requires an open ComfyTV page in Desktop or a browser."
         ),
         "inputSchema": {
             "type": "object",

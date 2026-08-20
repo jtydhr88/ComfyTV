@@ -71,12 +71,15 @@ _AGENT_INSTRUCTIONS = (
     "`run_stage`, then block on `wait_stage` for the result.\n"
     "- Look at results with `view_image` (returns real pixels), "
     "`media_frame`, `fx_preview`.\n"
-    "- Canvas writes are executed by the user's open ComfyTV browser tab; "
-    "if they fail with a tab/timeout error, ask the user to open the "
-    "ComfyTV page instead of retrying endlessly.\n\n"
+    "- Canvas writes work through either Comfy Desktop or a browser page. "
+    "A `tab_page_active` diagnostic is not permission to stop: make one "
+    "real write attempt before deciding it failed. If a write really fails, "
+    "quote its tool error accurately; do not invent a focus problem or ask "
+    "the user to click the canvas or reply 'ready'.\n\n"
     "Never claim you cannot see the canvas — call `get_canvas`. Do not use "
-    "shell, file or web tools; everything goes through the comfytv MCP "
-    "tools.\n"
+    "shell, file, web, or desktop-control tools; everything goes through the "
+    "comfytv MCP tools. Never claim you can activate an OS window or that you "
+    "lack an OS permission to do so.\n"
 )
 
 
@@ -110,6 +113,32 @@ def _flatten_mcp_content(content) -> str:
                 parts.append(json.dumps(block, ensure_ascii=False))
         return "\n".join(parts)
     return json.dumps(content, ensure_ascii=False)
+
+
+def _tool_error_text(item: dict) -> str:
+    error = item.get("error")
+    if isinstance(error, dict):
+        for key in ("message", "error", "detail"):
+            value = error.get(key)
+            if value:
+                return str(value)
+        return json.dumps(error, ensure_ascii=False)
+    if error:
+        return str(error)
+
+    result = item.get("result")
+    if isinstance(result, dict):
+        text = _flatten_mcp_content(result.get("content"))
+        if text:
+            return text
+        for key in ("message", "error", "detail"):
+            value = result.get(key)
+            if value:
+                return str(value)
+        return json.dumps(result, ensure_ascii=False)
+    if result:
+        return str(result)
+    return "tool failed"
 
 
 class _CodexStreamParser:
@@ -177,11 +206,10 @@ class _CodexStreamParser:
                     arguments = {}
                 return [BotEvent(t="tool_use", name=name, input=arguments)]
             if item.get("error") or status == "failed":
-                message = (item.get("error") or {}).get("message") or "tool failed"
                 return [BotEvent(
                     t="tool_result",
                     name=name or self._tool_names.get(item_id, ""),
-                    text=str(message)[:TOOL_RESULT_CAP],
+                    text=_tool_error_text(item)[:TOOL_RESULT_CAP],
                 )]
             result = item.get("result") or {}
             text = _flatten_mcp_content(result.get("content"))
@@ -370,7 +398,9 @@ class CodexCodeProvider(AgentProvider):
 
         argv = argv + ["exec"]
         if turn.resume_token:
-            argv += ["resume"]
+            argv += ["--approve-for-me", "resume"]
+        else:
+            argv += ["--approve-for-me"]
         argv += flags
         if turn.resume_token:
             argv.append(turn.resume_token)

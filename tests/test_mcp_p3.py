@@ -81,6 +81,17 @@ class TestMirrorOwnership:
         from ComfyTV.api.canvas_state import get_mirror_client_id
         assert get_mirror_client_id("p1") == "tab-b"
 
+    async def test_inactive_full_post_cannot_take_over_fresh_mirror(self, client):
+        await _post_state(client, {"project_id": "p1", "stages": [],
+                                   "client_id": "tab-a", "page_active": True})
+        resp = await _post_state(client, {
+            "project_id": "p1", "stages": [{}],
+            "client_id": "tab-b", "page_active": False,
+        })
+        assert resp.status == 409
+        from ComfyTV.api.canvas_state import get_mirror_client_id
+        assert get_mirror_client_id("p1") == "tab-a"
+
     async def test_legacy_heartbeat_without_client_still_touches(self, client):
         await _post_state(client, {"project_id": "p1", "stages": [],
                                    "client_id": "tab-a"})
@@ -100,6 +111,17 @@ class TestWsObservability:
                                    "client_id": "tab-a", "ws_connected": True})
         assert get_canvas_state("p1")["tab_ws_connected"] is True
 
+    async def test_page_activity_flows_to_canvas_and_summary(self, client):
+        from ComfyTV.api.canvas_state import get_canvas_state, mirror_summary
+        await _post_state(client, {"project_id": "p1", "stages": [],
+                                   "client_id": "tab-a", "page_active": False})
+        assert get_canvas_state("p1")["tab_page_active"] is False
+        assert mirror_summary()[0]["tab_page_active"] is False
+
+        await _post_state(client, {"project_id": "p1", "heartbeat": True,
+                                   "client_id": "tab-a", "page_active": True})
+        assert get_canvas_state("p1")["tab_page_active"] is True
+
     async def test_submit_fails_fast_when_ws_down(self, client):
         from ComfyTV.api.canvas_state import store_canvas_state
         from ComfyTV.api.mcp_commands import submit_command
@@ -107,6 +129,26 @@ class TestWsObservability:
         with pytest.raises(ValueError, match="websocket is disconnected"):
             await submit_command("run_stage", {"node": "1", "project_id": "p1"},
                                  timeout=5.0)
+
+    async def test_submit_still_dispatches_when_mirror_page_is_inactive(
+            self, client, monkeypatch):
+        import server
+        from ComfyTV.api.canvas_state import store_canvas_state
+        from ComfyTV.api.mcp_commands import submit_command
+        sent = []
+        monkeypatch.setattr(server.PromptServer.instance, "send_sync",
+                            lambda *args: sent.append(args))
+        store_canvas_state("p1", [], client_id="tab-a", page_active=False)
+        task = asyncio.ensure_future(
+            submit_command("run_stage", {"node": "1", "project_id": "p1"},
+                           timeout=5.0))
+        await asyncio.sleep(0)
+        command = sent[0][1]
+        assert command["target_client_id"] == "tab-a"
+        await client.post("/comfytv/mcp_command_result", json={
+            "command_id": command["id"], "ok": True, "result": {"started": True},
+        })
+        assert await task == {"started": True}
 
     async def test_timeout_message_mentions_fresh_mirror(self, client, monkeypatch):
         import server
