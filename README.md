@@ -119,7 +119,7 @@ claude mcp add --transport http comfytv http://127.0.0.1:8188/comfytv/mcp
 
 Notes:
 
-- **Canvas visibility needs an open browser tab.** The `get_canvas` tool reads a snapshot the ComfyTV frontend mirrors to the backend every few seconds; with no tab open the tool reports `available: false` rather than guessing.
+- **Canvas visibility needs an open ComfyTV page.** The `get_canvas` tool reads a snapshot the ComfyTV frontend mirrors to the backend every few seconds; that page can be inside Comfy Desktop or a browser. With no page open the tool reports `available: false` rather than guessing.
 - **Zero cost when unused.** The canvas mirror stays dormant until an MCP client actually connects — users who never attach an agent get no background ticks or requests. Right after connecting, give the mirror ~10 seconds to warm up before the first `get_canvas`.
 - **Trust boundary.** The endpoint has the same (lack of) auth as every other ComfyUI route — if you expose port 8188 beyond localhost, the MCP endpoint is exposed with it.
 - **Pairs with [comfy-mcp](https://github.com/Comfy-Org/comfy-mcp).** comfytv-mcp covers the product layer (projects/canvas/stages); the official comfy-mcp covers the machine layer (installing nodes, downloading models, running raw workflows). Agents work best with both connected.

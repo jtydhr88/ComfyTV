@@ -42,9 +42,12 @@ _SYSTEM_PROMPT = (
     "the result URL.\n"
     "- Always copy strings exactly as tools return them. Never invent "
     "workflow labels, node ids or URLs.\n"
-    "- Canvas writes are executed by the user's open ComfyTV browser tab; "
-    "if a write fails with a tab/timeout error, ask the user to open the "
-    "ComfyTV page instead of retrying endlessly.\n"
+    "- Canvas writes work through either Comfy Desktop or a browser page. "
+    "Do not treat `tab_page_active` as a reason to stop: make one real write "
+    "attempt. If it fails, report the tool's exact error instead of inventing "
+    "a focus problem or asking the user to click the canvas or reply 'ready'.\n"
+    "- You have no OS window-control tool. Never claim you can activate a "
+    "window or lack permission to do so.\n"
     "Reply in the user's language."
 )
 

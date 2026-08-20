@@ -18,7 +18,12 @@ function makeNode(overrides: any = {}) {
   }
 }
 
-function makeDeps(nodes: any[], stateByUid: Record<string, any> = {}, projectId = 'p1') {
+function makeDeps(
+  nodes: any[],
+  stateByUid: Record<string, any> = {},
+  projectId = 'p1',
+  pageActive?: boolean,
+) {
   const graph = {
     _nodes: nodes,
     links: new Map(),
@@ -29,6 +34,7 @@ function makeDeps(nodes: any[], stateByUid: Record<string, any> = {}, projectId 
       resolveApp: () => ({ graph }),
       resolveProjectId: () => projectId,
       resolveStageState: (node: any) => stateByUid[node?.properties?.comfytv_stage_uid],
+      resolvePageActive: () => pageActive,
     },
     graph,
   }
@@ -224,6 +230,7 @@ describe('installCanvasMirror', () => {
       }),
       resolveProjectId: () => 'p1',
       resolveStageState: () => undefined,
+      resolvePageActive: () => true,
     }
     const host = makeHost()
     uninstall = installCanvasMirror(host, deps)
@@ -237,6 +244,56 @@ describe('installCanvasMirror', () => {
     expect(bodies[1].heartbeat).toBe(true)
     expect(bodies[1].client_id).toBe('tab-9')
     expect(bodies[1].ws_connected).toBe(true)
+  })
+
+  it('does not mark a visible Desktop page inactive only because hasFocus is false', async () => {
+    const originalHasFocus = Object.getOwnPropertyDescriptor(document, 'hasFocus')
+    Object.defineProperty(document, 'hasFocus', {
+      configurable: true,
+      value: () => false,
+    })
+    try {
+      const node = makeNode()
+      const graph = {
+        _nodes: [node], links: new Map(), getNodeById: () => node,
+      }
+      const deps = {
+        resolveApp: () => ({ graph }),
+        resolveProjectId: () => 'p1',
+        resolveStageState: () => undefined,
+      }
+      const host = makeHost()
+      uninstall = installCanvasMirror(host, deps)
+      await flush()
+      expect(postedBodies()[0].page_active).toBe(true)
+    } finally {
+      if (originalHasFocus) {
+        Object.defineProperty(document, 'hasFocus', originalHasFocus)
+      } else {
+        delete (document as any).hasFocus
+      }
+    }
+  })
+
+  it('lets a focused page reclaim the mirror after an inactive page yields', async () => {
+    let pageActive = false
+    const { deps } = makeDeps([makeNode()], {}, 'p1', pageActive)
+    deps.resolvePageActive = () => pageActive
+    const host = makeHost()
+    uninstall = installCanvasMirror(host, deps)
+    await flush()
+    expect(postedBodies()[0]).toMatchObject({
+      project_id: 'p1', heartbeat: true, page_active: false,
+    })
+
+    pageActive = true
+    window.dispatchEvent(new Event('focus'))
+    await flush()
+    const bodies = postedBodies()
+    expect(bodies[bodies.length - 1]).toMatchObject({
+      project_id: 'p1', page_active: true,
+    })
+    expect(bodies[bodies.length - 1].stages).toBeDefined()
   })
 
   it('stands by on a 409 heartbeat instead of re-posting', async () => {

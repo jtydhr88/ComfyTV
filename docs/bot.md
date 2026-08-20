@@ -35,7 +35,7 @@ Prerequisites:
 
 With more than one provider available, the ➕ button asks which engine a new chat should use; each chat remembers its provider. If no provider is found, the panel shows an install guide instead of a chat box.
 
-Provider isolation is per-engine: Claude Code runs with a strict per-turn MCP config and a tool whitelist; Codex runs `codex exec` sandboxed to the bot's working directory with shell and web search disabled, every MCP server except ComfyTV's turned off, and approval requests routed through Codex's automatic reviewer (headless runs cannot prompt); Qwen Code runs against a project-scoped `.qwen/settings.json` inside the bot's working directory (ComfyTV MCP server only, built-in shell/file tools excluded) — your global CLI configuration is never touched.
+Provider isolation is per-engine: Claude Code runs with a strict per-turn MCP config and a tool whitelist; Codex runs `codex exec` sandboxed to the bot's working directory with shell and web search disabled, every MCP server except ComfyTV's turned off, and its localhost canvas-tool approvals routed through Codex's automatic reviewer (headless runs cannot prompt); Qwen Code runs against a project-scoped `.qwen/settings.json` inside the bot's working directory (ComfyTV MCP server only, built-in shell/file tools excluded) — your global CLI configuration is never touched.
 
 ## Local LLM provider
 
@@ -57,7 +57,7 @@ Details worth knowing:
 
 ## How it works, briefly
 
-Each turn spawns a fresh CLI process in headless mode, locked down to the ComfyTV MCP server (`--strict-mcp-config`, tools whitelisted to `mcp__comfytv__*`), resuming the chat's session for continuity. The conversation state lives with the CLI; ComfyTV's database keeps a display mirror of the transcript. Canvas writes still follow MCP rules — an open ComfyTV tab executes them, so keep the tab open while the bot works.
+Each turn spawns a fresh CLI process in headless mode, locked down to the ComfyTV MCP server (`--strict-mcp-config`, tools whitelisted to `mcp__comfytv__*`), resuming the chat's session for continuity. The conversation state lives with the CLI; ComfyTV's database keeps a display mirror of the transcript. Canvas writes still follow MCP rules — an open ComfyTV page executes them, whether it is in Comfy Desktop or a browser.
 
 ## Troubleshooting
 
@@ -65,7 +65,7 @@ Each turn spawns a fresh CLI process in headless mode, locked down to the ComfyT
 |---|---|
 | No ✨ icon in the sidebar | **Enable ComfyTV Bot** is off (Settings → Agent & MCP), which itself requires **Enable MCP server** |
 | Panel shows an install guide | No agent CLI found — install one from the table above and sign in, then *Check again* |
-| Bot says it can't reach the canvas | No ComfyTV tab open (or tab websocket dropped after a server restart — hard-refresh) |
+| Bot says it can't reach the canvas | No ComfyTV page open (or page websocket dropped after a server restart — hard-refresh) |
 | Long renders: bot seems idle | It's inside a blocking `wait_stage` — the tool chip shows it; this is normal and cheap |
 
 ## See also

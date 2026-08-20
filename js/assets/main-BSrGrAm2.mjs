@@ -213601,6 +213601,8 @@ function installCanvasMirror(app2, deps) {
   app2.__comfytvCanvasMirrorInstalled = true;
   let lastPosted = "";
   let lastPostedProject = "";
+  let lastPostedPageActive;
+  let forcePageStatePost = false;
   let lastPostAt = 0;
   let inFlight = false;
   let timer = null;
@@ -213608,28 +213610,36 @@ function installCanvasMirror(app2, deps) {
     var _a4, _b3;
     const api = (_a4 = deps.resolveApp()) == null ? void 0 : _a4.api;
     const readyState = (_b3 = api == null ? void 0 : api.socket) == null ? void 0 : _b3.readyState;
+    const pageActive = deps.resolvePageActive ? deps.resolvePageActive() : (() => {
+      if (typeof document === "undefined") return void 0;
+      return document.visibilityState !== "hidden";
+    })();
     return {
       clientId: (api == null ? void 0 : api.clientId) ? String(api.clientId) : void 0,
-      wsConnected: typeof readyState === "number" ? readyState === 1 : void 0
+      wsConnected: typeof readyState === "number" ? readyState === 1 : void 0,
+      pageActive
     };
   }
   async function tick() {
     if (inFlight) return;
     const snapshot = buildCanvasSnapshot(deps);
     if (!snapshot) return;
+    const { clientId, wsConnected, pageActive } = tabInfo();
     const serialized = JSON.stringify(snapshot);
     const now = Date.now();
     const changed = serialized !== lastPosted;
     const heartbeatDue = now - lastPostAt >= HEARTBEAT_MS;
-    if (!changed && !heartbeatDue) return;
+    const pageStateChanged = forcePageStatePost || pageActive !== void 0 && pageActive !== lastPostedPageActive;
+    const fullPost = pageActive !== false && (changed || pageStateChanged);
+    if (!fullPost && !heartbeatDue && !pageStateChanged) return;
     inFlight = true;
     try {
-      const { clientId, wsConnected } = tabInfo();
-      if (changed) {
+      if (fullPost) {
         await apiSend("/comfytv/canvas_state", "POST", OkSchema$1, {
           ...snapshot,
           ...clientId ? { client_id: clientId } : {},
-          ...wsConnected !== void 0 ? { ws_connected: wsConnected } : {}
+          ...wsConnected !== void 0 ? { ws_connected: wsConnected } : {},
+          ...pageActive !== void 0 ? { page_active: pageActive } : {}
         });
         lastPosted = serialized;
         lastPostedProject = snapshot.project_id;
@@ -213639,7 +213649,8 @@ function installCanvasMirror(app2, deps) {
             project_id: lastPostedProject || snapshot.project_id,
             heartbeat: true,
             ...clientId ? { client_id: clientId } : {},
-            ...wsConnected !== void 0 ? { ws_connected: wsConnected } : {}
+            ...wsConnected !== void 0 ? { ws_connected: wsConnected } : {},
+            ...pageActive !== void 0 ? { page_active: pageActive } : {}
           });
         } catch (e) {
           if ((e == null ? void 0 : e.status) === 409) {
@@ -213650,8 +213661,15 @@ function installCanvasMirror(app2, deps) {
           throw e;
         }
       }
+      lastPostedPageActive = pageActive;
+      forcePageStatePost = false;
       lastPostAt = now;
-    } catch {
+    } catch (e) {
+      const status = e == null ? void 0 : e.status;
+      if (pageStateChanged && (status === 404 || status === 409)) {
+        lastPostedPageActive = pageActive;
+        forcePageStatePost = false;
+      }
     } finally {
       inFlight = false;
     }
@@ -213662,7 +213680,18 @@ function installCanvasMirror(app2, deps) {
     void tick();
   }
   const onActivity = () => start2();
+  const onPageStateChange = () => {
+    forcePageStatePost = true;
+    if (timer != null) void tick();
+  };
   (_b2 = (_a3 = app2.api) == null ? void 0 : _a3.addEventListener) == null ? void 0 : _b2.call(_a3, MCP_ACTIVITY_EVENT, onActivity);
+  if (typeof document !== "undefined") {
+    document.addEventListener("visibilitychange", onPageStateChange);
+  }
+  if (typeof window !== "undefined") {
+    window.addEventListener("focus", onPageStateChange);
+    window.addEventListener("blur", onPageStateChange);
+  }
   void (async () => {
     try {
       const status = await apiFetch("/comfytv/mcp_activity", ActivitySchema);
@@ -213675,6 +213704,13 @@ function installCanvasMirror(app2, deps) {
     if (timer != null) clearInterval(timer);
     timer = null;
     (_b3 = (_a4 = app2.api) == null ? void 0 : _a4.removeEventListener) == null ? void 0 : _b3.call(_a4, MCP_ACTIVITY_EVENT, onActivity);
+    if (typeof document !== "undefined") {
+      document.removeEventListener("visibilitychange", onPageStateChange);
+    }
+    if (typeof window !== "undefined") {
+      window.removeEventListener("focus", onPageStateChange);
+      window.removeEventListener("blur", onPageStateChange);
+    }
     app2.__comfytvCanvasMirrorInstalled = false;
   };
 }

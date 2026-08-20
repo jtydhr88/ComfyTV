@@ -8,7 +8,7 @@
 
 ComfyTV 在你的 ComfyUI 服务器上开放 [Model Context Protocol](https://modelcontextprotocol.io) 端点 `POST /comfytv/mcp`。任何支持 MCP 的 agent(Claude Code,或任何会说 streamable HTTP JSON-RPC 的客户端)都能连上来,把 ComfyTV 当成一套工具使用。
 
-设计上有个关键点:**画布的真相在浏览器 tab 里**。读工具由服务器直接回答,写工具(加节点、设 prompt、跑渲染)则由*打开着的 ComfyTV tab* 执行 — 服务器通过 websocket 把命令转给它。没有开着的 tab → 写工具会以明确的超时信息失败。
+设计上有个关键点:**画布的真相在打开着的 ComfyTV 页面里**。读工具由服务器直接回答,写工具(加节点、设 prompt、跑渲染)则由*打开着的 ComfyTV 页面*执行——无论它在 Comfy Desktop 还是浏览器中；服务器通过 websocket 把命令转给它。没有开着的页面 → 写工具会以明确的超时信息失败。
 
 ## 启用
 
@@ -100,7 +100,7 @@ url = "http://127.0.0.1:8188/comfytv/mcp"
 
 ## 前置条件与行为说明
 
-- 写工具需要开着的 ComfyTV tab;画布镜像在首次 MCP 调用后懒激活(刚连上时 `get_canvas` 等 ~10 秒重试)。
+- 写工具需要开着的 ComfyTV 页面（Comfy Desktop 或浏览器均可）;画布镜像在首次 MCP 调用后懒激活(刚连上时 `get_canvas` 等 ~10 秒重试)。
 - MCP 客户端会按会话缓存 `tools/list` — 服务器加了新工具后需重连。
 - 客户端若有单次工具调用超时,给 `wait_stage` 传更小的 `timeout_s` 分片续调。
 

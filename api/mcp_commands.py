@@ -23,14 +23,14 @@ def _timeout_message(action: str, timeout: float, project_id: str | None) -> str
         age = time.time() - entry["received_at"]
         if age <= STALE_AFTER_S:
             return (
-                f"a ComfyTV tab is mirroring the canvas (last update "
+                f"a ComfyTV page is mirroring the canvas (last update "
                 f"{age:.0f}s ago) but did not pick up the {action!r} command "
                 f"within {timeout:.0f}s — its websocket connection is likely "
                 "broken; ask the user to reload the ComfyTV page"
             )
     return (
-        f"no ComfyTV tab picked up the {action!r} command within "
-        f"{timeout:.0f}s — is the ComfyTV page open in a browser?"
+        f"no ComfyTV page picked up the {action!r} command within "
+        f"{timeout:.0f}s — is ComfyTV open in Desktop or a browser?"
     )
 
 
@@ -42,7 +42,7 @@ async def submit_command(action: str, payload: dict,
     entry = get_mirror_entry(project_id)
     if entry is not None and entry.get("ws_connected") is False:
         raise ValueError(
-            "the ComfyTV tab mirroring this project reports its websocket is "
+            "the ComfyTV page mirroring this project reports its websocket is "
             "disconnected — commands cannot reach it; ask the user to reload "
             "the ComfyTV page"
         )
@@ -95,6 +95,6 @@ async def post_command_result(request: web.Request) -> web.Response:
     else:
         error = body.get("error")
         future.set_exception(ValueError(
-            str(error) if error else "command failed in the ComfyTV tab"
+            str(error) if error else "command failed in the ComfyTV page"
         ))
     return web.json_response({"ok": True})

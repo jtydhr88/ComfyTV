@@ -8,7 +8,7 @@
 
 ComfyTV exposes a [Model Context Protocol](https://modelcontextprotocol.io) endpoint at `POST /comfytv/mcp` on your ComfyUI server. Any MCP-capable agent (Claude Code, or anything speaking streamable HTTP JSON-RPC) can connect and use ComfyTV as a set of tools.
 
-The design has one important twist: **the canvas truth lives in your browser tab**. Read tools answer from the server, but write tools (adding nodes, setting prompts, running stages) are executed *by the open ComfyTV tab* — the server relays commands to it over the websocket. No open tab → write tools fail with a clear timeout message.
+The design has one important twist: **the canvas truth lives in the open ComfyTV page**. Read tools answer from the server, but write tools (adding nodes, setting prompts, running stages) are executed *by the open ComfyTV page* — inside Comfy Desktop or a browser — and the server relays commands to it over the websocket. No open page → write tools fail with a clear timeout message.
 
 ## Enabling
 
@@ -104,7 +104,7 @@ accordingly.
 
 ## Requirements and behavior notes
 
-- Write tools need an open ComfyTV tab; the canvas mirror activates lazily after the first MCP call (retry `get_canvas` after ~10 s on a fresh connection).
+- Write tools need an open ComfyTV page in Desktop or a browser; the canvas mirror activates lazily after the first MCP call (retry `get_canvas` after ~10 s on a fresh connection).
 - MCP clients cache `tools/list` per session — reconnect after the server gains new tools.
 - If your client enforces a per-call tool timeout, pass a smaller `timeout_s` to `wait_stage` and re-call in slices.
 
