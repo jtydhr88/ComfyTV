@@ -392,7 +392,7 @@ export function useStageNode(
               snapshot = upstreamState.output
             }
           }
-          if (snapshot != null && snapshot !== '') {
+          if (snapshot != null) {
             if ((key === 'texts' || key.startsWith('texts.')) && snapshot.includes('@')) {
               const upstreamOrders = mentionSendOrders(upstreamNode)
               const { text, missing } = expandMentionTokens(

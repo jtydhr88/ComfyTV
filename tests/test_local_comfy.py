@@ -1150,11 +1150,11 @@ class TestTranslateSubpromptEvent:
             'progress_state', {'nodes': {}, 'prompt_id': 'sub'}, 'sub', 71, self._agg)
         assert out == []
 
-    def test_progress_reattributed_to_outer_node(self):
+    def test_raw_progress_swallowed(self):
         out = lc._translate_subprompt_event(
             'progress', {'value': 2, 'max': 8, 'node': '3', 'prompt_id': 'sub'},
             'sub', 71, self._agg)
-        assert out == [('progress', {'value': 2, 'max': 8, 'node': '71', 'prompt_id': 'sub'})]
+        assert out == []
 
     def test_progress_text_reattributed(self):
         out = lc._translate_subprompt_event(

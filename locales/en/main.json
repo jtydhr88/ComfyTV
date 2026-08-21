@@ -4,6 +4,51 @@
     "cancel": "Cancel",
     "close": "Close"
   },
+  "v2": {
+    "imageStageTitle": "Image · ImageStage",
+    "pickerTitle": "Pick · Image Picker",
+    "cropTitle": "Crop",
+    "stageHint": "Connect references, press ↑ to generate",
+    "pickerHint": "Connect an upstream batch, click to pick",
+    "cropHint": "Connect an upstream image to start cropping",
+    "batchCount": "{n}",
+    "batchPos": "{i}/{n}",
+    "refsCount": "{n} refs",
+    "poolCount": "{n} in pool",
+    "clear": "Clear",
+    "linkWorkflow": "Link workflow",
+    "videoColorTitle": "Color · Video FX",
+    "videoCurvesTitle": "Curves · Video FX",
+    "fxChainTitle": "FX Chain · Render",
+    "renderChain": "Render chain",
+    "scene3dTitle": "3D Scene · Editor",
+    "relightTitle": "Relight · Light ball",
+    "applying": "Applying…",
+    "appliedLive": "Applied · live downstream",
+    "dragToApply": "Drag the box to apply",
+    "imageLoaderTitle": "Image · Load",
+    "imageLoaderHint": "Drop an image here, or click to upload",
+    "imageLoaderEmpty": "No image loaded",
+    "assetLoaderTitle": "Asset · Load",
+    "assetLoaderHint": "Click to pick from the asset library",
+    "assetLoaderEmpty": "No asset selected",
+    "change": "Change",
+    "upload": "Upload",
+    "renameHint": "Double-click to rename",
+    "toolbar": {
+      "hd": "HD",
+      "expand": "Expand",
+      "angles": "Angles",
+      "relight": "Relight",
+      "redraw": "Redraw",
+      "erase": "Erase",
+      "cutout": "Cutout",
+      "grid": "Grid split",
+      "panorama": "Panorama",
+      "crop": "Crop",
+      "download": "Download"
+    }
+  },
   "workflow": {
     "uploadButton": "⬆ Upload workflow",
     "imported": "Imported \"{label}\"",
@@ -103,6 +148,10 @@
       "failed": "Backup failed: {error}"
     },
     "fields": {
+      "enable-v2": {
+        "label": "Enable ComfyTV V2 nodes (experimental)",
+        "desc": "EXPERIMENTAL — expect rough edges. Renders migrated stages with the new content-first V2 shells. Requires ComfyUI's own Node 2.0 (Vue nodes) setting to be enabled first. Refresh the page after changing."
+      },
       "enable-db-backup": {
         "label": "Automatic backup on startup",
         "desc": "Back up the ComfyTV data directory (database + workflows) every time the server starts, before any migration runs."

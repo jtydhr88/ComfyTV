@@ -9,6 +9,7 @@ CUSTOM_NODE_DIR = os.path.dirname(os.path.realpath(__file__))
 PROPERTIES_FILENAME = "comfytv.properties"
 
 SETTINGS_SPEC: dict[str, dict[str, Any]] = {
+    "enable-v2": {"type": "boolean", "default": False},
     "enable-db-backup": {"type": "boolean", "default": True},
     "db-backup-max-count": {"type": "int", "default": 10, "min": 1},
     "db-backup-path": {"type": "string", "default": ""},

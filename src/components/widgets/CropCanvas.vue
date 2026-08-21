@@ -57,15 +57,14 @@
     <div class="ctv:flex ctv:flex-col ctv:gap-1">
       <div class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]">
         <span class="ctv:min-w-9 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('imageCrop.ratio') }}</span>
-        <select
-          v-model="selectedRatio"
-          class="ctv-crop-select ctv:shrink-0 ctv:py-[3px] ctv:px-1.5 ctv:text-[11px] ctv:rounded
-                 ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle"
-        >
-          <option v-for="key in ratioKeys" :key="key" :value="key">
-            {{ key === 'custom' ? $t('imageCrop.custom') : key }}
-          </option>
-        </select>
+        <div class="ctv-crop-select ctv:w-24 ctv:shrink-0">
+          <ComfyTVSelect
+            :model-value="selectedRatio"
+            :options="ratioOptions"
+            :filterable="false"
+            @update:model-value="(v) => (selectedRatio = String(v))"
+          />
+        </div>
         <button
           type="button"
           :class="[
@@ -99,6 +98,9 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
 import { ASPECT_RATIOS, useImageCrop, type Bounds } from '@/composables/widgets/useImageCrop'
 
 const props = defineProps<{
@@ -146,7 +148,11 @@ const {
   modelValue: boundsRef,
 })
 
-const ratioKeys = Object.keys(ASPECT_RATIOS)
+const { t } = useI18n()
+const ratioOptions = Object.keys(ASPECT_RATIOS).map((key) => ({
+  value: key,
+  label: key === 'custom' ? t('imageCrop.custom') : key,
+}))
 
 function clampInt(raw: string, min = 0): number {
   const n = Number(raw)
@@ -177,9 +183,12 @@ function boundFieldSet(b: BoundField, raw: string) {
 </script>
 
 <style scoped>
-.ctv-crop-select :deep(option) {
-  background: var(--interface-menu-surface, #1a1a1f);
-  color: var(--base-foreground, #ddd);
+.ctv-crop-select :deep(button) {
+  height: 24px;
+  padding: 0 8px;
+  font-size: 11px;
+  border-radius: 6px;
+  border-width: 1px;
 }
 .ctv-bound-input { -moz-appearance: textfield; }
 .ctv-bound-input::-webkit-inner-spin-button,

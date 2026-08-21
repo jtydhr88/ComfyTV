@@ -50,7 +50,7 @@ def _translate_subprompt_event(event, data, sub_prompt_id, outer_node_id, aggreg
             'node':      str(outer_node_id),
         })]
     if event == 'progress':
-        return [('progress', {**data, 'node': str(outer_node_id)})]
+        return []
     if event == 'progress_text':
         return [('progress_text', {
             **data,

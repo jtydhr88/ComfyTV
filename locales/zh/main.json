@@ -4,6 +4,51 @@
     "cancel": "取消",
     "close": "关闭"
   },
+  "v2": {
+    "imageStageTitle": "图片节点 · ImageStage",
+    "pickerTitle": "图片选择 · Picker",
+    "cropTitle": "裁剪 · Crop",
+    "stageHint": "连入参考，点 ↑ 生成",
+    "pickerHint": "连入上游批次，点选一张",
+    "cropHint": "连入上游图片开始裁剪",
+    "batchCount": "{n}张",
+    "batchPos": "{i}/{n}张",
+    "refsCount": "{n} 个引用",
+    "poolCount": "池内 {n} 张",
+    "clear": "清空",
+    "linkWorkflow": "关联工作流",
+    "videoColorTitle": "调色 · Video FX",
+    "videoCurvesTitle": "曲线 · Video FX",
+    "fxChainTitle": "FX 链 · 出片",
+    "renderChain": "渲染整链",
+    "scene3dTitle": "3D 场景 · 编辑台",
+    "relightTitle": "打光 · 光球",
+    "applying": "应用中…",
+    "appliedLive": "已应用 · 下游实时",
+    "dragToApply": "拖框即应用",
+    "imageLoaderTitle": "图片 · Load",
+    "imageLoaderHint": "拖入图片，或点击上传",
+    "imageLoaderEmpty": "未加载图片",
+    "assetLoaderTitle": "资产 · Load",
+    "assetLoaderHint": "点击从资产库选择",
+    "assetLoaderEmpty": "未选择资产",
+    "change": "更换",
+    "upload": "上传",
+    "renameHint": "双击重命名",
+    "toolbar": {
+      "hd": "高清",
+      "expand": "扩图",
+      "angles": "多角度",
+      "relight": "打光",
+      "redraw": "重绘",
+      "erase": "擦除",
+      "cutout": "抠图",
+      "grid": "宫格切分",
+      "panorama": "全景",
+      "crop": "裁剪",
+      "download": "下载"
+    }
+  },
   "workflow": {
     "uploadButton": "⬆ 上传工作流",
     "imported": "已导入「{label}」",
@@ -103,6 +148,10 @@
       "failed": "备份失败:{error}"
     },
     "fields": {
+      "enable-v2": {
+        "label": "启用 ComfyTV V2 节点（实验性）",
+        "desc": "实验性功能，可能存在不稳定行为。已迁移的 stage 以内容导向的 V2 外壳渲染。必须先在 ComfyUI 本体设置中开启 Node 2.0（Vue 节点模式）。修改后需刷新页面。"
+      },
       "enable-db-backup": {
         "label": "启动时自动备份",
         "desc": "每次服务器启动时(在任何迁移执行之前)备份 ComfyTV 数据目录(数据库 + 工作流)。"

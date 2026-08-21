@@ -43,7 +43,7 @@ export function rewriteGlobalRunOutput(
       const originId = String(val[0])
       const originSlot = Number(val[1]) || 0
       const snap = getSnapshot(originId, originSlot)
-      if (snap != null && snap !== '') {
+      if (snap != null) {
         const target = clonedInputs ?? (clonedInputs = { ...inputs })
         target[key] = snap
       } else {

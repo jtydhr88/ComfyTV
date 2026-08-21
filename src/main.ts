@@ -46,6 +46,15 @@ import { checkThemeTokens } from '@/utils/devTokenCheck'
 import { installGlobalRunBridge } from '@/utils/globalRunBridge'
 import { installCanvasMirror } from '@/composables/stages/useCanvasMirror'
 import { installMcpCommandBus } from '@/composables/stages/useMcpCommandBus'
+import '@/v2/imageStageV2'
+import '@/v2/imagePickerV2'
+import '@/v2/cropV2'
+import '@/v2/videoFxV2'
+import '@/v2/scene3dV2'
+import '@/v2/relightV2'
+import '@/v2/loadersV2'
+import { V2_SHELLS } from '@/v2/registry'
+import { hydrateV2Flag, isV2Enabled } from '@/v2/flagV2'
 
 ;(window as any).__comfytv_host_pinia = getActivePinia()
 
@@ -53,6 +62,8 @@ const pinia = createPinia()
 setActivePinia(pinia)
 
 loadStageMeta()
+
+const v2Ready = isHeadlessConvertMode() ? Promise.resolve() : hydrateV2Flag()
 
 useExecutionStore().bindToApi(app.api)
 
@@ -358,6 +369,23 @@ const extension: ComfyExtension = {
       const mainPrompt = getWidget(node, 'main_prompt')
       if (mainPrompt && !mainPrompt.value && typeof legacy?.value === 'string' && legacy.value) {
         mainPrompt.value = legacy.value
+      }
+    }
+
+    await v2Ready
+    if (isV2Enabled() && !isHeadlessConvertMode()) {
+      const shell = V2_SHELLS[node.comfyClass]
+      if (shell) {
+        const { state, onRunRequest, onCancelRequest } =
+          shell(node, entry.kind, (entry.variant ?? 'generator') as StageVariant)
+        Object.assign(
+          ((node as any).__comfytvStageApi ??= {}),
+          { state, onRunRequest, onCancelRequest },
+        )
+        node.onRemoved = useChainCallback(node.onRemoved, () => {
+          delete (node as any).__comfytvStageApi
+        })
+        return
       }
     }
 
