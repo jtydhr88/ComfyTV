@@ -56825,7 +56825,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-CCaklkcv.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-DzLLQqGC.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -135111,7 +135111,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-DESRp6et.mjs");
+    const { STLLoader } = await import("./STLLoader-DlE8xIci.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -135119,7 +135119,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-6bPIgfii.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-CgODWmBS.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -187518,7 +187518,7 @@ const _sfc_main$27 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const FxClipPreviewPanel = /* @__PURE__ */ _export_sfc(_sfc_main$27, [["__scopeId", "data-v-b3d215c1"]]);
+const FxClipPreviewPanel = /* @__PURE__ */ _export_sfc(_sfc_main$27, [["__scopeId", "data-v-e8886d24"]]);
 function useFxClipPreview(options) {
   const state2 = /* @__PURE__ */ reactive({
     loading: false,
@@ -214607,59 +214607,6 @@ function createIslandGroup() {
     }
   };
 }
-const REGISTRY = Symbol("v2PropObservers");
-function findDescriptor(obj, key) {
-  let cur = obj;
-  while (cur) {
-    const d2 = Object.getOwnPropertyDescriptor(cur, key);
-    if (d2) return d2;
-    cur = Object.getPrototypeOf(cur);
-  }
-  return void 0;
-}
-function observeProperty(obj, key, listener) {
-  const registry2 = obj[REGISTRY] ?? (obj[REGISTRY] = /* @__PURE__ */ new Map());
-  let entry = registry2.get(key);
-  if (!entry) {
-    const listeners = /* @__PURE__ */ new Set();
-    const notify = () => {
-      for (const fn3 of [...listeners]) fn3();
-    };
-    const desc = findDescriptor(obj, key);
-    if (desc && desc.configurable === false) {
-      throw new Error(`observeProperty: '${key}' is non-configurable`);
-    }
-    if (desc && (desc.get || desc.set)) {
-      Object.defineProperty(obj, key, {
-        configurable: true,
-        enumerable: desc.enumerable ?? true,
-        get: desc.get ? () => desc.get.call(obj) : void 0,
-        set: (v3) => {
-          var _a3;
-          (_a3 = desc.set) == null ? void 0 : _a3.call(obj, v3);
-          notify();
-        }
-      });
-    } else {
-      let backing = obj[key];
-      Object.defineProperty(obj, key, {
-        configurable: true,
-        enumerable: (desc == null ? void 0 : desc.enumerable) ?? true,
-        get: () => backing,
-        set: (v3) => {
-          backing = v3;
-          notify();
-        }
-      });
-    }
-    entry = { listeners };
-    registry2.set(key, entry);
-  }
-  entry.listeners.add(listener);
-  return () => {
-    entry.listeners.delete(listener);
-  };
-}
 const _hoisted_1$g = { class: "v2-cparams__head" };
 const _hoisted_2$g = { class: "v2-cparams__title" };
 const _hoisted_3$f = { class: "v2-cparams__addwrap" };
@@ -214792,6 +214739,59 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
   }
 });
 const CustomParamsV2 = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["__scopeId", "data-v-4e76e858"]]);
+const REGISTRY = Symbol("v2PropObservers");
+function findDescriptor(obj, key) {
+  let cur = obj;
+  while (cur) {
+    const d2 = Object.getOwnPropertyDescriptor(cur, key);
+    if (d2) return d2;
+    cur = Object.getPrototypeOf(cur);
+  }
+  return void 0;
+}
+function observeProperty(obj, key, listener) {
+  const registry2 = obj[REGISTRY] ?? (obj[REGISTRY] = /* @__PURE__ */ new Map());
+  let entry = registry2.get(key);
+  if (!entry) {
+    const listeners = /* @__PURE__ */ new Set();
+    const notify = () => {
+      for (const fn3 of [...listeners]) fn3();
+    };
+    const desc = findDescriptor(obj, key);
+    if (desc && desc.configurable === false) {
+      throw new Error(`observeProperty: '${key}' is non-configurable`);
+    }
+    if (desc && (desc.get || desc.set)) {
+      Object.defineProperty(obj, key, {
+        configurable: true,
+        enumerable: desc.enumerable ?? true,
+        get: desc.get ? () => desc.get.call(obj) : void 0,
+        set: (v3) => {
+          var _a3;
+          (_a3 = desc.set) == null ? void 0 : _a3.call(obj, v3);
+          notify();
+        }
+      });
+    } else {
+      let backing = obj[key];
+      Object.defineProperty(obj, key, {
+        configurable: true,
+        enumerable: (desc == null ? void 0 : desc.enumerable) ?? true,
+        get: () => backing,
+        set: (v3) => {
+          backing = v3;
+          notify();
+        }
+      });
+    }
+    entry = { listeners };
+    registry2.set(key, entry);
+  }
+  entry.listeners.add(listener);
+  return () => {
+    entry.listeners.delete(listener);
+  };
+}
 function useWidgetValues(getNode, names) {
   const values = /* @__PURE__ */ reactive({});
   const disposers = [];
@@ -215520,8 +215520,651 @@ const _sfc_main$d = /* @__PURE__ */ defineComponent({
   }
 });
 const ServerSelectV2 = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["__scopeId", "data-v-9cd7b876"]]);
-const REF_RE = /^(images\.image|texts\.text|videos\.video)\d+$/;
-const v2_CSS = `
+const nudgeScope = effectScope(true);
+let nudgeFlip = false;
+let nudgeRoot = null;
+const nudgeTimer = nudgeScope.run(() => useTimeoutFn(() => {
+  var _a3, _b2;
+  const root = nudgeRoot;
+  nudgeRoot = null;
+  const id = root == null ? void 0 : root.getAttribute("data-node-id");
+  if (id == null) return;
+  const graph = app.graph;
+  const n = ((_a3 = graph == null ? void 0 : graph.getNodeById) == null ? void 0 : _a3.call(graph, id)) ?? ((_b2 = graph == null ? void 0 : graph.getNodeById) == null ? void 0 : _b2.call(graph, Number(id)));
+  if (!(n == null ? void 0 : n.setSize)) return;
+  nudgeFlip = !nudgeFlip;
+  n.setSize([n.size[0], n.size[1] + (nudgeFlip ? 0.01 : -0.01)]);
+}, 60, { immediate: false }));
+function nudgeSlotAnchors(root) {
+  nudgeRoot = root;
+  nudgeTimer.start();
+}
+function bindClusterHoverIntent(root, scope) {
+  const clusters = root.querySelectorAll(
+    '[data-testid^="node-body-"] > div:first-child > div'
+  );
+  for (const c2 of clusters) {
+    if (c2.dataset.v2Hover) continue;
+    c2.dataset.v2Hover = "1";
+    const leave = scope.run(() => useTimeoutFn(() => {
+      c2.classList.remove("v2-open");
+      nudgeSlotAnchors(root);
+    }, 220, { immediate: false }));
+    if (!leave) continue;
+    c2.addEventListener("pointerenter", () => {
+      leave.stop();
+      if (!c2.classList.contains("v2-open")) {
+        c2.classList.add("v2-open");
+        nudgeSlotAnchors(root);
+      }
+    });
+    c2.addEventListener("pointerleave", () => {
+      leave.stop();
+      leave.start();
+    });
+  }
+}
+function draggedItems(node, canvas, e) {
+  const selected = canvas == null ? void 0 : canvas.selectedItems;
+  if (!selected || !selected.has(node) || selected.size <= 1) return [node];
+  if (e.ctrlKey || e.metaKey) return selected;
+  const all = /* @__PURE__ */ new Set();
+  const add2 = (item) => {
+    if (!item || item.pinned || all.has(item)) return;
+    all.add(item);
+    if (item.children) for (const child of item.children) add2(child);
+  };
+  for (const item of selected) add2(item);
+  return all;
+}
+function selectForPointer(node, canvas, e) {
+  if (typeof (canvas == null ? void 0 : canvas.processSelect) === "function") canvas.processSelect(node, e);
+  else canvas == null ? void 0 : canvas.selectNode(node, e.shiftKey || e.ctrlKey || e.metaKey);
+}
+function bindNodeDrag(node, surface) {
+  let drag = null;
+  surface.addEventListener("pointerdown", (e) => {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      surface.setPointerCapture(e.pointerId);
+    } catch {
+    }
+    drag = { x: e.clientX, y: e.clientY, moved: false };
+  });
+  surface.addEventListener("pointermove", (e) => {
+    var _a3, _b2;
+    if (!drag || !(e.buttons & 1)) return;
+    e.stopPropagation();
+    const dx = e.clientX - drag.x;
+    const dy = e.clientY - drag.y;
+    if (!drag.moved && Math.abs(dx) < 3 && Math.abs(dy) < 3) return;
+    const canvas = app.canvas;
+    if (!drag.moved) {
+      drag.moved = true;
+      if (!node.selected) selectForPointer(node, canvas, e);
+    }
+    drag.x = e.clientX;
+    drag.y = e.clientY;
+    const scale = ((_a3 = canvas == null ? void 0 : canvas.ds) == null ? void 0 : _a3.scale) || 1;
+    const gdx = dx / scale;
+    const gdy = dy / scale;
+    for (const item of draggedItems(node, canvas, e)) {
+      if (item.pinned) continue;
+      item.pos = [item.pos[0] + gdx, item.pos[1] + gdy];
+    }
+    (_b2 = app.graph) == null ? void 0 : _b2.setDirtyCanvas(true, true);
+  });
+  const endDrag = (e) => {
+    if (!drag) return;
+    e.stopPropagation();
+    try {
+      if (surface.hasPointerCapture(e.pointerId)) surface.releasePointerCapture(e.pointerId);
+    } catch {
+    }
+    const wasClick = !drag.moved;
+    drag = null;
+    if (wasClick) selectForPointer(node, app.canvas, e);
+  };
+  surface.addEventListener("pointerup", endDrag);
+  surface.addEventListener("pointercancel", endDrag);
+}
+const I = (d2, sw = 1.7) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}">${d2}</svg>`;
+const ICON_STOP = `<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="7" y="7" width="10" height="10" rx="2"/></svg>`;
+const RUN_BUTTON_HTML = `<span class="v2-run__up">${I(`<path d="M12 19V5M5.5 11.5L12 5l6.5 6.5"/>`, 2.4)}</span><span class="v2-run__stop">${ICON_STOP}</span>`;
+const ICON_GRIP = `<svg class="v2-grip" viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="5" r="1.7"/><circle cx="16" cy="5" r="1.7"/><circle cx="8" cy="12" r="1.7"/><circle cx="16" cy="12" r="1.7"/><circle cx="8" cy="19" r="1.7"/><circle cx="16" cy="19" r="1.7"/></svg>`;
+function el$8(tag, cls, html2) {
+  const e = document.createElement(tag);
+  e.className = cls;
+  if (html2 != null) e.innerHTML = html2;
+  return e;
+}
+function bindPromptResize(node, promptAnchor, scope) {
+  scope.run(() => {
+    let last = -1;
+    useResizeObserver(promptAnchor, (entries2) => {
+      var _a3, _b2;
+      const h2 = ((_a3 = entries2[0]) == null ? void 0 : _a3.contentRect.height) ?? 0;
+      if (last >= 0) {
+        const delta = h2 - last;
+        if (Math.abs(delta) > 1) {
+          node.setSize([node.size[0], node.size[1] + delta]);
+          (_b2 = app.graph) == null ? void 0 : _b2.setDirtyCanvas(true, true);
+        }
+      }
+      last = h2;
+    });
+  });
+}
+function ensureMinSize(node, minW, minH) {
+  if (node.__comfytvFromSave) return;
+  const [w0, h0] = node.size;
+  node.setSize([Math.max(w0, minW), Math.max(h0, minH)]);
+}
+function createNodeScope(node) {
+  const scope = effectScope(true);
+  const anyNode = node;
+  const prev = anyNode.onRemoved;
+  anyNode.onRemoved = function(...args) {
+    scope.stop();
+    prev == null ? void 0 : prev.apply(this, args);
+  };
+  return scope;
+}
+function bindProgressRing(card, state2) {
+  const ring = document.createElement("div");
+  ring.className = "v2-ring";
+  card.appendChild(ring);
+  watch(
+    () => {
+      var _a3, _b2;
+      return [state2.running, (_a3 = state2.progress) == null ? void 0 : _a3.value, (_b2 = state2.progress) == null ? void 0 : _b2.max];
+    },
+    ([running, v3, m2]) => {
+      const value = Number(v3) || 0;
+      const max2 = Number(m2) || 0;
+      const p2 = running && max2 > 0 ? Math.min(1, Math.max(0, value / max2)) : 0;
+      ring.style.setProperty("--v2-p", p2.toFixed(4));
+      ring.dataset.on = running ? "1" : "";
+      ring.dataset.indeterminate = running && p2 <= 0 ? "1" : "";
+    },
+    { immediate: true }
+  );
+  return ring;
+}
+function bindShellChrome(node, opts) {
+  var _a3;
+  const anyNode = node;
+  const { scope, card, socketAnchor } = opts;
+  const socketY = opts.socketY ?? "center";
+  const warnStrip = el$8("div", "v2-warn");
+  socketAnchor.after(warnStrip);
+  let lastWarnKey = "";
+  const syncWarnings = (root2) => {
+    const map2 = anyNode._comfytvSlotWarnings ?? {};
+    const msgs = [...new Set(Object.values(map2).map((w2) => String((w2 == null ? void 0 : w2.message) ?? "")).filter(Boolean))];
+    const key = msgs.join("\n");
+    root2.toggleAttribute("data-v2-warn", msgs.length > 0);
+    if (key === lastWarnKey) return;
+    lastWarnKey = key;
+    warnStrip.dataset.show = msgs.length ? "1" : "";
+    warnStrip.replaceChildren(...msgs.slice(0, 4).map((m2) => {
+      const row = el$8("div", "v2-warn__row");
+      row.textContent = m2;
+      return row;
+    }));
+  };
+  if (opts.state) {
+    const state2 = opts.state;
+    const strip = el$8("div", "v2-error");
+    const msg = el$8("div", "v2-error__msg");
+    const x = el$8("button", "v2-error__x", "×");
+    strip.append(msg, x);
+    warnStrip.after(strip);
+    x.addEventListener("pointerdown", (e) => e.stopPropagation());
+    x.addEventListener("click", (e) => {
+      e.stopPropagation();
+      useStageStore().clearError(state2);
+    });
+    scope.run(() => {
+      watch(
+        () => state2.error,
+        (err2) => {
+          strip.dataset.show = err2 ? "1" : "";
+          const text2 = String((err2 == null ? void 0 : err2.message) ?? "").trim();
+          msg.textContent = text2;
+          msg.title = String((err2 == null ? void 0 : err2.traceback) ?? "").trim() || text2;
+        },
+        { immediate: true }
+      );
+    });
+    const dur = el$8("div", "v2-duration");
+    socketAnchor.appendChild(dur);
+    scope.run(() => {
+      watch(
+        () => [state2.durationMs, state2.output],
+        ([ms, output]) => {
+          if (ms == null || !Number.isFinite(ms) || ms <= 0 || !output) {
+            dur.dataset.show = "";
+            return;
+          }
+          const secs = ms / 1e3;
+          dur.textContent = secs < 60 ? `${secs.toFixed(1)}s` : `${Math.floor(secs / 60)}m ${Math.round(secs % 60)}s`;
+          dur.title = t("stage.outputDurationHint");
+          dur.dataset.show = "1";
+        },
+        { immediate: true }
+      );
+    });
+  }
+  const titleEl = card.querySelector(".v2-handle span");
+  const typeLabel = (titleEl == null ? void 0 : titleEl.textContent) ?? "";
+  const defaultTitle = String(((_a3 = node.constructor) == null ? void 0 : _a3.title) ?? "");
+  const customTitle = () => {
+    const raw = String(anyNode.title ?? "").trim();
+    return raw && raw !== defaultTitle ? raw : "";
+  };
+  const syncTitle = () => {
+    if (!titleEl || titleEl.isContentEditable) return;
+    const want = customTitle() || typeLabel;
+    if (titleEl.textContent !== want) titleEl.textContent = want;
+  };
+  if (titleEl) {
+    titleEl.title = t("v2.renameHint");
+    titleEl.addEventListener("pointerdown", (e) => {
+      if (titleEl.isContentEditable) e.stopPropagation();
+    });
+    titleEl.addEventListener("dblclick", (e) => {
+      e.stopPropagation();
+      titleEl.contentEditable = "plaintext-only";
+      titleEl.textContent = customTitle();
+      titleEl.focus();
+      const range = document.createRange();
+      range.selectNodeContents(titleEl);
+      const sel2 = window.getSelection();
+      sel2 == null ? void 0 : sel2.removeAllRanges();
+      sel2 == null ? void 0 : sel2.addRange(range);
+    });
+    const commit = (cancel) => {
+      if (!titleEl.isContentEditable) return;
+      const text2 = (titleEl.textContent ?? "").trim();
+      titleEl.contentEditable = "false";
+      if (!cancel) anyNode.title = text2 || defaultTitle;
+      syncTitle();
+    };
+    titleEl.addEventListener("keydown", (e) => {
+      if (!titleEl.isContentEditable) return;
+      e.stopPropagation();
+      if (e.key === "Enter") {
+        e.preventDefault();
+        commit(false);
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        commit(true);
+      }
+    });
+    titleEl.addEventListener("blur", () => commit(false));
+    syncTitle();
+  }
+  const syncSelected = () => {
+    const root2 = card.closest("[data-node-id]");
+    if (!root2) return;
+    root2.toggleAttribute("data-v2-selected", !!anyNode.selected);
+    queueMicrotask(() => {
+      document.body.toggleAttribute(
+        "data-v2-toolbar",
+        !!document.querySelector(".lg-node[data-v2-selected]")
+      );
+    });
+  };
+  const prevSel = anyNode.onSelected;
+  anyNode.onSelected = function(...args) {
+    prevSel == null ? void 0 : prevSel.apply(this, args);
+    syncSelected();
+  };
+  const prevDesel = anyNode.onDeselected;
+  anyNode.onDeselected = function(...args) {
+    prevDesel == null ? void 0 : prevDesel.apply(this, args);
+    syncSelected();
+  };
+  let root = null;
+  const syncSocketY = () => {
+    if (!root) return;
+    const rootBox = root.getBoundingClientRect();
+    const box = socketAnchor.getBoundingClientRect();
+    if (rootBox.height > 0 && box.height > 0) {
+      const scale = rootBox.height / (root.offsetHeight || rootBox.height);
+      const mid = socketY === "center" ? box.height / 2 : Math.min(box.height * socketY.frac, socketY.cap);
+      const y2 = (box.top + mid - rootBox.top) / (scale || 1);
+      root.style.setProperty("--v2-socket-y", `${Math.round(y2)}px`);
+    }
+  };
+  const syncAll = () => {
+    if (!card.isConnected) return;
+    const r = card.closest("[data-node-id]");
+    if (!r) return;
+    if (r !== root) {
+      root = r;
+      bindClusterHoverIntent(root, scope);
+    }
+    if (!root.hasAttribute("data-v2-shell")) root.setAttribute("data-v2-shell", "");
+    syncSelected();
+    syncTitle();
+    syncWarnings(root);
+    syncSocketY();
+  };
+  scope.run(() => {
+    useResizeObserver(card, syncAll);
+    useResizeObserver(socketAnchor, syncSocketY);
+  });
+  const disposers = [
+    observeProperty(anyNode, "selected", syncSelected),
+    observeProperty(anyNode, "title", syncTitle),
+    observeProperty(anyNode, "_comfytvSlotWarnings", () => {
+      if (root) syncWarnings(root);
+    })
+  ];
+  scope.run(() => {
+    onScopeDispose(() => {
+      for (const d2 of disposers) d2();
+    });
+  });
+  const prevConf = anyNode.onConfigure;
+  anyNode.onConfigure = function(...args) {
+    prevConf == null ? void 0 : prevConf.apply(this, args);
+    queueMicrotask(syncAll);
+  };
+  queueMicrotask(syncAll);
+}
+const V2_CSS_PANELS = `
+.v2-corner-host {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity .15s ease;
+  pointer-events: none;
+}
+.v2-preview:hover .v2-corner-host { opacity: 1; pointer-events: auto; }
+@media (hover: none) {
+  .v2-corner-host { opacity: 1; pointer-events: auto; }
+}
+
+.v2-strip {
+  position: absolute;
+  top: 34px;
+  right: 8px;
+  z-index: 5;
+  display: none;
+  gap: 6px;
+  padding: 8px;
+  border-radius: 12px;
+  background: rgba(24,24,30,.92);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 10px 28px rgba(0,0,0,.5);
+  max-width: 262px;
+  flex-wrap: wrap;
+}
+.v2-strip[data-open="1"] { display: flex; }
+.v2-strip__cell {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 9px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #2a2a2f;
+}
+.v2-strip__x {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 15px;
+  height: 15px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: rgba(12, 12, 16, 0.78);
+  color: #e6e6ea;
+  font: 500 10px/1 system-ui, sans-serif;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.v2-strip__cell:hover .v2-strip__x { display: flex; }
+@media (hover: none) {
+  .v2-strip__x { display: flex; }
+}
+.v2-strip__x:hover { background: rgba(239, 68, 68, 0.85); color: #fff; }
+.v2-strip__cell img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.v2-strip__cell[data-current="1"] { border-color: #60A5FA; }
+.v2-strip__cell:hover { border-color: rgba(255,255,255,.4); }
+.v2-strip__cell[data-current="1"]:hover { border-color: #60A5FA; }
+
+.v2-panel {
+  flex: none;
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: #232327;
+  border: 1px solid rgba(255,255,255,.05);
+  box-shadow: 0 8px 24px rgba(0,0,0,.4);
+}
+.v2-panel__chips { display: flex; gap: 8px; }
+.v2-panel__chipbtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 7px 10px 5px;
+  border-radius: 10px;
+  background: #2c2c31;
+  border: 1px solid rgba(255,255,255,.05);
+  color: #b9b9c0;
+  font: 500 10px/1 system-ui, sans-serif;
+  cursor: pointer;
+}
+.v2-panel__chipbtn svg { width: 15px; height: 15px; }
+.v2-panel__prompt {
+  width: 100%;
+  min-height: 54px;
+  resize: none;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #ececf1;
+  font: 400 13px/1.6 system-ui, sans-serif;
+  caret-color: #fff;
+}
+.v2-panel__prompt::placeholder { color: #5d5d66; }
+.v2-panel__refs:empty,
+.v2-panel__presets:empty,
+.v2-panel__controls:empty,
+.v2-panel__custom:empty,
+.v2-panel__params:empty { display: none; }
+.v2-panel__presets .ctv-preset-bar { gap: 6px; }
+.v2-panel__prompthost { margin: 0 -6px; }
+.v2-panel__prompthost .comfytv-prompt-editor {
+  resize: vertical;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  max-height: 520px;
+  cursor: text;
+  display: flex;
+  flex-direction: column;
+}
+.v2-panel__prompthost .comfytv-prompt-editor > div {
+  flex: 1 0 auto;
+  outline: none;
+}
+.v2-panel__prompthost .comfytv-prompt-editor::-webkit-resizer {
+  background:
+    linear-gradient(135deg, transparent 0 50%, rgba(255,255,255,.28) 50% 60%, transparent 60% 75%, rgba(255,255,255,.28) 75% 85%, transparent 85%);
+}
+.v2-panel__selects { flex: 1; min-width: 0; display: flex; }
+.v2-panel__prompthost .comfytv-prompt-editor { min-height: 54px; font-size: 13px; }
+.v2-panel__footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #b9b9c0;
+  font: 500 12px/1 system-ui, sans-serif;
+}
+.v2-select {
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #b9b9c0;
+  font: 500 12px/1 system-ui, sans-serif;
+  cursor: pointer;
+  max-width: 118px;
+  text-overflow: ellipsis;
+  padding-right: 12px;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23808088' stroke-width='1.4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0 center;
+  background-size: 8px;
+}
+.v2-select option { background: #232327; color: #ececf1; }
+.v2-panel__opt {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.v2-panel__opt svg { width: 14px; height: 14px; opacity: .85; flex: none; }
+.v2-panel__spacer { flex: 1; }
+.v2-panel__server { flex: none; display: flex; min-width: 0; max-width: 160px; }
+.v2-panel__count { color: #8f8f98; font-size: 11px; white-space: nowrap; }
+.v2-run {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: none;
+  background: #f4f4f6;
+  color: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex: none;
+  transition: transform .12s ease, background .12s ease;
+}
+.v2-run:hover { background: #fff; transform: scale(1.06); }
+.v2-run:active { transform: scale(.95); }
+.v2-run svg { width: 15px; height: 15px; }
+.v2-run__up, .v2-run__stop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.v2-refs-warns {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 6px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(245,158,11,.10);
+  border: 1px solid rgba(245,158,11,.32);
+  color: #fcd34d;
+  font: 500 10.5px/1.45 system-ui, sans-serif;
+}
+.v2-refs-warns__row { display: flex; gap: 6px; word-break: break-word; }
+.v2-refs-warns__row::before { content: '⚠'; flex: none; }
+.v2-warn {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(245,158,11,.10);
+  border: 1px solid rgba(245,158,11,.32);
+  color: #fcd34d;
+  font: 500 11px/1.45 system-ui, sans-serif;
+  flex: none;
+}
+.v2-warn[data-show="1"] { display: flex; }
+.v2-warn__row {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  word-break: break-word;
+}
+.v2-warn__row::before { content: '⚠'; flex: none; }
+.lg-node[data-v2-warn] [data-testid^="node-body-"] > div:first-child > div:not(.ml-auto) {
+  border-color: #f59e0b;
+  box-shadow: 0 2px 8px rgba(0,0,0,.55), 0 0 0 2px rgba(245,158,11,.25);
+}
+.v2-error {
+  display: none;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(239,68,68,.12);
+  border: 1px solid rgba(239,68,68,.35);
+  color: #fca5a5;
+  font: 500 11px/1.45 system-ui, sans-serif;
+  flex: none;
+}
+.v2-error[data-show="1"] { display: flex; }
+.v2-error__msg {
+  flex: 1;
+  min-width: 0;
+  max-height: 48px;
+  overflow: hidden;
+  word-break: break-word;
+}
+.v2-error__x {
+  flex: none;
+  border: none;
+  background: transparent;
+  color: #fca5a5;
+  font: 600 13px/1 system-ui, sans-serif;
+  cursor: pointer;
+  padding: 0 2px;
+}
+.v2-error__x:hover { color: #fecaca; }
+.v2-duration {
+  display: none;
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  z-index: 3;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(12, 12, 16, 0.65);
+  color: #b9b9c0;
+  font: 500 10px/1 system-ui, sans-serif;
+  pointer-events: none;
+}
+.v2-duration[data-show="1"] { display: block; }
+.v2-run .v2-run__stop { display: none; }
+.v2-run[data-busy="1"] { background: #ef4444; color: #fff; }
+.v2-run[data-busy="1"]:hover { background: #f87171; }
+.v2-run[data-busy="1"] .v2-run__up { display: none; }
+.v2-run[data-busy="1"] .v2-run__stop { display: flex; }
+`;
+const V2_CSS_CHROME = `
 @property --v2-p { syntax: '<number>'; initial-value: 0; inherits: false; }
 @property --v2-a { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
 
@@ -215935,294 +216578,16 @@ body[data-v2-toolbar] [data-testid="selection-toolbox"] { display: none; }
   .v2-preview[data-multi="1"] .v2-nav { opacity: 1; }
 }
 .v2-nav:hover { background: rgba(20,20,24,.9); }
-
-.v2-corner-host {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  z-index: 2;
-  opacity: 0;
-  transition: opacity .15s ease;
-  pointer-events: none;
-}
-.v2-preview:hover .v2-corner-host { opacity: 1; pointer-events: auto; }
-@media (hover: none) {
-  .v2-corner-host { opacity: 1; pointer-events: auto; }
-}
-
-.v2-strip {
-  position: absolute;
-  top: 34px;
-  right: 8px;
-  z-index: 5;
-  display: none;
-  gap: 6px;
-  padding: 8px;
-  border-radius: 12px;
-  background: rgba(24,24,30,.92);
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(255,255,255,.08);
-  box-shadow: 0 10px 28px rgba(0,0,0,.5);
-  max-width: 262px;
-  flex-wrap: wrap;
-}
-.v2-strip[data-open="1"] { display: flex; }
-.v2-strip__cell {
-  position: relative;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border: 2px solid transparent;
-  border-radius: 9px;
-  overflow: hidden;
-  cursor: pointer;
-  background: #2a2a2f;
-}
-.v2-strip__x {
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  width: 15px;
-  height: 15px;
-  padding: 0;
-  border: none;
-  border-radius: 999px;
-  background: rgba(12, 12, 16, 0.78);
-  color: #e6e6ea;
-  font: 500 10px/1 system-ui, sans-serif;
-  cursor: pointer;
-  display: none;
-  align-items: center;
-  justify-content: center;
-}
-.v2-strip__cell:hover .v2-strip__x { display: flex; }
-@media (hover: none) {
-  .v2-strip__x { display: flex; }
-}
-.v2-strip__x:hover { background: rgba(239, 68, 68, 0.85); color: #fff; }
-.v2-strip__cell img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.v2-strip__cell[data-current="1"] { border-color: #60A5FA; }
-.v2-strip__cell:hover { border-color: rgba(255,255,255,.4); }
-.v2-strip__cell[data-current="1"]:hover { border-color: #60A5FA; }
-
-.v2-panel {
-  flex: none;
-  margin-top: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 12px 14px;
-  border-radius: 16px;
-  background: #232327;
-  border: 1px solid rgba(255,255,255,.05);
-  box-shadow: 0 8px 24px rgba(0,0,0,.4);
-}
-.v2-panel__chips { display: flex; gap: 8px; }
-.v2-panel__chipbtn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding: 7px 10px 5px;
-  border-radius: 10px;
-  background: #2c2c31;
-  border: 1px solid rgba(255,255,255,.05);
-  color: #b9b9c0;
-  font: 500 10px/1 system-ui, sans-serif;
-  cursor: pointer;
-}
-.v2-panel__chipbtn svg { width: 15px; height: 15px; }
-.v2-panel__prompt {
-  width: 100%;
-  min-height: 54px;
-  resize: none;
-  border: none;
-  outline: none;
-  background: transparent;
-  color: #ececf1;
-  font: 400 13px/1.6 system-ui, sans-serif;
-  caret-color: #fff;
-}
-.v2-panel__prompt::placeholder { color: #5d5d66; }
-.v2-panel__refs:empty,
-.v2-panel__presets:empty,
-.v2-panel__controls:empty,
-.v2-panel__custom:empty,
-.v2-panel__params:empty { display: none; }
-.v2-panel__presets .ctv-preset-bar { gap: 6px; }
-.v2-panel__prompthost { margin: 0 -6px; }
-.v2-panel__prompthost .comfytv-prompt-editor {
-  resize: vertical;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  max-height: 520px;
-  cursor: text;
-  display: flex;
-  flex-direction: column;
-}
-.v2-panel__prompthost .comfytv-prompt-editor > div {
-  flex: 1 0 auto;
-  outline: none;
-}
-.v2-panel__prompthost .comfytv-prompt-editor::-webkit-resizer {
-  background:
-    linear-gradient(135deg, transparent 0 50%, rgba(255,255,255,.28) 50% 60%, transparent 60% 75%, rgba(255,255,255,.28) 75% 85%, transparent 85%);
-}
-.v2-panel__selects { flex: 1; min-width: 0; display: flex; }
-.v2-panel__prompthost .comfytv-prompt-editor { min-height: 54px; font-size: 13px; }
-.v2-panel__footer {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #b9b9c0;
-  font: 500 12px/1 system-ui, sans-serif;
-}
-.v2-select {
-  appearance: none;
-  -webkit-appearance: none;
-  border: none;
-  outline: none;
-  background: transparent;
-  color: #b9b9c0;
-  font: 500 12px/1 system-ui, sans-serif;
-  cursor: pointer;
-  max-width: 118px;
-  text-overflow: ellipsis;
-  padding-right: 12px;
-  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23808088' stroke-width='1.4'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0 center;
-  background-size: 8px;
-}
-.v2-select option { background: #232327; color: #ececf1; }
-.v2-panel__opt {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  white-space: nowrap;
-}
-.v2-panel__opt svg { width: 14px; height: 14px; opacity: .85; flex: none; }
-.v2-panel__spacer { flex: 1; }
-.v2-panel__server { flex: none; display: flex; min-width: 0; max-width: 160px; }
-.v2-panel__count { color: #8f8f98; font-size: 11px; white-space: nowrap; }
-.v2-run {
-  width: 32px;
-  height: 32px;
-  border-radius: 999px;
-  border: none;
-  background: #f4f4f6;
-  color: #111;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  flex: none;
-  transition: transform .12s ease, background .12s ease;
-}
-.v2-run:hover { background: #fff; transform: scale(1.06); }
-.v2-run:active { transform: scale(.95); }
-.v2-run svg { width: 15px; height: 15px; }
-.v2-run__up, .v2-run__stop {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.v2-refs-warns {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  margin-top: 6px;
-  padding: 6px 10px;
-  border-radius: 10px;
-  background: rgba(245,158,11,.10);
-  border: 1px solid rgba(245,158,11,.32);
-  color: #fcd34d;
-  font: 500 10.5px/1.45 system-ui, sans-serif;
-}
-.v2-refs-warns__row { display: flex; gap: 6px; word-break: break-word; }
-.v2-refs-warns__row::before { content: '⚠'; flex: none; }
-.v2-warn {
-  display: none;
-  flex-direction: column;
-  gap: 4px;
-  margin-top: 8px;
-  padding: 8px 12px;
-  border-radius: 12px;
-  background: rgba(245,158,11,.10);
-  border: 1px solid rgba(245,158,11,.32);
-  color: #fcd34d;
-  font: 500 11px/1.45 system-ui, sans-serif;
-  flex: none;
-}
-.v2-warn[data-show="1"] { display: flex; }
-.v2-warn__row {
-  display: flex;
-  gap: 6px;
-  align-items: flex-start;
-  word-break: break-word;
-}
-.v2-warn__row::before { content: '⚠'; flex: none; }
-.lg-node[data-v2-warn] [data-testid^="node-body-"] > div:first-child > div:not(.ml-auto) {
-  border-color: #f59e0b;
-  box-shadow: 0 2px 8px rgba(0,0,0,.55), 0 0 0 2px rgba(245,158,11,.25);
-}
-.v2-error {
-  display: none;
-  align-items: flex-start;
-  gap: 8px;
-  margin-top: 8px;
-  padding: 8px 12px;
-  border-radius: 12px;
-  background: rgba(239,68,68,.12);
-  border: 1px solid rgba(239,68,68,.35);
-  color: #fca5a5;
-  font: 500 11px/1.45 system-ui, sans-serif;
-  flex: none;
-}
-.v2-error[data-show="1"] { display: flex; }
-.v2-error__msg {
-  flex: 1;
-  min-width: 0;
-  max-height: 48px;
-  overflow: hidden;
-  word-break: break-word;
-}
-.v2-error__x {
-  flex: none;
-  border: none;
-  background: transparent;
-  color: #fca5a5;
-  font: 600 13px/1 system-ui, sans-serif;
-  cursor: pointer;
-  padding: 0 2px;
-}
-.v2-error__x:hover { color: #fecaca; }
-.v2-duration {
-  display: none;
-  position: absolute;
-  left: 10px;
-  bottom: 10px;
-  z-index: 3;
-  padding: 3px 8px;
-  border-radius: 999px;
-  background: rgba(12, 12, 16, 0.65);
-  color: #b9b9c0;
-  font: 500 10px/1 system-ui, sans-serif;
-  pointer-events: none;
-}
-.v2-duration[data-show="1"] { display: block; }
-.v2-run .v2-run__stop { display: none; }
-.v2-run[data-busy="1"] { background: #ef4444; color: #fff; }
-.v2-run[data-busy="1"]:hover { background: #f87171; }
-.v2-run[data-busy="1"] .v2-run__up { display: none; }
-.v2-run[data-busy="1"] .v2-run__stop { display: flex; }
 `;
-const I = (d2, sw = 1.7) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}">${d2}</svg>`;
+let cssInstalled$1 = false;
+function installV2ShellCss() {
+  if (cssInstalled$1) return;
+  cssInstalled$1 = true;
+  const style2 = document.createElement("style");
+  style2.textContent = V2_CSS_CHROME + V2_CSS_PANELS;
+  document.head.appendChild(style2);
+}
+const REF_RE = /^(images\.image|texts\.text|videos\.video)\d+$/;
 const ICON_IMAGE = I(`<rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="M4 18l5.2-5.2 3.4 3.4 3.2-3.2L21 18"/>`, 1.8);
 const ICON_HD = I(`<rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M7 9v6M7 12h3.4M10.4 9v6M14 9v6h1.8a3 3 0 000-6z"/>`);
 const ICON_EXPAND = I(`<path d="M9 4H5.5A1.5 1.5 0 004 5.5V9M15 4h3.5A1.5 1.5 0 0120 5.5V9M9 20H5.5A1.5 1.5 0 014 18.5V15M15 20h3.5a1.5 1.5 0 001.5-1.5V15"/><rect x="9" y="9" width="6" height="6" rx="1"/>`);
@@ -216235,373 +216600,6 @@ const ICON_GRID = I(`<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M
 const ICON_PANORAMA = I(`<circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a13.5 13.5 0 000 18M12 3a13.5 13.5 0 010 18"/>`);
 const ICON_CROP$1 = I(`<path d="M6 2.5V16a2 2 0 002 2h13.5M2.5 6H16a2 2 0 012 2v13.5"/>`);
 const ICON_DOWNLOAD = I(`<path d="M12 3.5V15M7 10.5l5 5 5-5M4 19.5h16"/>`);
-const ICON_STOP = `<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="7" y="7" width="10" height="10" rx="2"/></svg>`;
-const RUN_BUTTON_HTML = `<span class="v2-run__up">${I(`<path d="M12 19V5M5.5 11.5L12 5l6.5 6.5"/>`, 2.4)}</span><span class="v2-run__stop">${ICON_STOP}</span>`;
-let cssInstalled$1 = false;
-function installV2ShellCss() {
-  installCss$7();
-}
-const ICON_GRIP = `<svg class="v2-grip" viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="5" r="1.7"/><circle cx="16" cy="5" r="1.7"/><circle cx="8" cy="12" r="1.7"/><circle cx="16" cy="12" r="1.7"/><circle cx="8" cy="19" r="1.7"/><circle cx="16" cy="19" r="1.7"/></svg>`;
-function bindPromptResize(node, promptAnchor, scope) {
-  scope.run(() => {
-    let last = -1;
-    useResizeObserver(promptAnchor, (entries2) => {
-      var _a3, _b2;
-      const h2 = ((_a3 = entries2[0]) == null ? void 0 : _a3.contentRect.height) ?? 0;
-      if (last >= 0) {
-        const delta = h2 - last;
-        if (Math.abs(delta) > 1) {
-          node.setSize([node.size[0], node.size[1] + delta]);
-          (_b2 = app.graph) == null ? void 0 : _b2.setDirtyCanvas(true, true);
-        }
-      }
-      last = h2;
-    });
-  });
-}
-function ensureMinSize(node, minW, minH) {
-  if (node.__comfytvFromSave) return;
-  const [w0, h0] = node.size;
-  node.setSize([Math.max(w0, minW), Math.max(h0, minH)]);
-}
-function createNodeScope(node) {
-  const scope = effectScope(true);
-  const anyNode = node;
-  const prev = anyNode.onRemoved;
-  anyNode.onRemoved = function(...args) {
-    scope.stop();
-    prev == null ? void 0 : prev.apply(this, args);
-  };
-  return scope;
-}
-const nudgeScope = effectScope(true);
-let nudgeFlip = false;
-let nudgeRoot = null;
-const nudgeTimer = nudgeScope.run(() => useTimeoutFn(() => {
-  var _a3, _b2;
-  const root = nudgeRoot;
-  nudgeRoot = null;
-  const id = root == null ? void 0 : root.getAttribute("data-node-id");
-  if (id == null) return;
-  const graph = app.graph;
-  const n = ((_a3 = graph == null ? void 0 : graph.getNodeById) == null ? void 0 : _a3.call(graph, id)) ?? ((_b2 = graph == null ? void 0 : graph.getNodeById) == null ? void 0 : _b2.call(graph, Number(id)));
-  if (!(n == null ? void 0 : n.setSize)) return;
-  nudgeFlip = !nudgeFlip;
-  n.setSize([n.size[0], n.size[1] + (nudgeFlip ? 0.01 : -0.01)]);
-}, 60, { immediate: false }));
-function nudgeSlotAnchors(root) {
-  nudgeRoot = root;
-  nudgeTimer.start();
-}
-function bindClusterHoverIntent(root, scope) {
-  const clusters = root.querySelectorAll(
-    '[data-testid^="node-body-"] > div:first-child > div'
-  );
-  for (const c2 of clusters) {
-    if (c2.dataset.v2Hover) continue;
-    c2.dataset.v2Hover = "1";
-    const leave = scope.run(() => useTimeoutFn(() => {
-      c2.classList.remove("v2-open");
-      nudgeSlotAnchors(root);
-    }, 220, { immediate: false }));
-    if (!leave) continue;
-    c2.addEventListener("pointerenter", () => {
-      leave.stop();
-      if (!c2.classList.contains("v2-open")) {
-        c2.classList.add("v2-open");
-        nudgeSlotAnchors(root);
-      }
-    });
-    c2.addEventListener("pointerleave", () => {
-      leave.stop();
-      leave.start();
-    });
-  }
-}
-function bindShellChrome(node, opts) {
-  var _a3;
-  const anyNode = node;
-  const { scope, card, socketAnchor } = opts;
-  const socketY = opts.socketY ?? "center";
-  const warnStrip = el$8("div", "v2-warn");
-  socketAnchor.after(warnStrip);
-  let lastWarnKey = "";
-  const syncWarnings = (root2) => {
-    const map2 = anyNode._comfytvSlotWarnings ?? {};
-    const msgs = [...new Set(Object.values(map2).map((w2) => String((w2 == null ? void 0 : w2.message) ?? "")).filter(Boolean))];
-    const key = msgs.join("\n");
-    root2.toggleAttribute("data-v2-warn", msgs.length > 0);
-    if (key === lastWarnKey) return;
-    lastWarnKey = key;
-    warnStrip.dataset.show = msgs.length ? "1" : "";
-    warnStrip.replaceChildren(...msgs.slice(0, 4).map((m2) => {
-      const row = el$8("div", "v2-warn__row");
-      row.textContent = m2;
-      return row;
-    }));
-  };
-  if (opts.state) {
-    const state2 = opts.state;
-    const strip = el$8("div", "v2-error");
-    const msg = el$8("div", "v2-error__msg");
-    const x = el$8("button", "v2-error__x", "×");
-    strip.append(msg, x);
-    warnStrip.after(strip);
-    x.addEventListener("pointerdown", (e) => e.stopPropagation());
-    x.addEventListener("click", (e) => {
-      e.stopPropagation();
-      useStageStore().clearError(state2);
-    });
-    scope.run(() => {
-      watch(
-        () => state2.error,
-        (err2) => {
-          strip.dataset.show = err2 ? "1" : "";
-          const text2 = String((err2 == null ? void 0 : err2.message) ?? "").trim();
-          msg.textContent = text2;
-          msg.title = String((err2 == null ? void 0 : err2.traceback) ?? "").trim() || text2;
-        },
-        { immediate: true }
-      );
-    });
-    const dur = el$8("div", "v2-duration");
-    socketAnchor.appendChild(dur);
-    scope.run(() => {
-      watch(
-        () => [state2.durationMs, state2.output],
-        ([ms, output]) => {
-          if (ms == null || !Number.isFinite(ms) || ms <= 0 || !output) {
-            dur.dataset.show = "";
-            return;
-          }
-          const secs = ms / 1e3;
-          dur.textContent = secs < 60 ? `${secs.toFixed(1)}s` : `${Math.floor(secs / 60)}m ${Math.round(secs % 60)}s`;
-          dur.title = t("stage.outputDurationHint");
-          dur.dataset.show = "1";
-        },
-        { immediate: true }
-      );
-    });
-  }
-  const titleEl = card.querySelector(".v2-handle span");
-  const typeLabel = (titleEl == null ? void 0 : titleEl.textContent) ?? "";
-  const defaultTitle = String(((_a3 = node.constructor) == null ? void 0 : _a3.title) ?? "");
-  const customTitle = () => {
-    const raw = String(anyNode.title ?? "").trim();
-    return raw && raw !== defaultTitle ? raw : "";
-  };
-  const syncTitle = () => {
-    if (!titleEl || titleEl.isContentEditable) return;
-    const want = customTitle() || typeLabel;
-    if (titleEl.textContent !== want) titleEl.textContent = want;
-  };
-  if (titleEl) {
-    titleEl.title = t("v2.renameHint");
-    titleEl.addEventListener("pointerdown", (e) => {
-      if (titleEl.isContentEditable) e.stopPropagation();
-    });
-    titleEl.addEventListener("dblclick", (e) => {
-      e.stopPropagation();
-      titleEl.contentEditable = "plaintext-only";
-      titleEl.textContent = customTitle();
-      titleEl.focus();
-      const range = document.createRange();
-      range.selectNodeContents(titleEl);
-      const sel2 = window.getSelection();
-      sel2 == null ? void 0 : sel2.removeAllRanges();
-      sel2 == null ? void 0 : sel2.addRange(range);
-    });
-    const commit = (cancel) => {
-      if (!titleEl.isContentEditable) return;
-      const text2 = (titleEl.textContent ?? "").trim();
-      titleEl.contentEditable = "false";
-      if (!cancel) anyNode.title = text2 || defaultTitle;
-      syncTitle();
-    };
-    titleEl.addEventListener("keydown", (e) => {
-      if (!titleEl.isContentEditable) return;
-      e.stopPropagation();
-      if (e.key === "Enter") {
-        e.preventDefault();
-        commit(false);
-      } else if (e.key === "Escape") {
-        e.preventDefault();
-        commit(true);
-      }
-    });
-    titleEl.addEventListener("blur", () => commit(false));
-    syncTitle();
-  }
-  const syncSelected = () => {
-    const root2 = card.closest("[data-node-id]");
-    if (!root2) return;
-    root2.toggleAttribute("data-v2-selected", !!anyNode.selected);
-    queueMicrotask(() => {
-      document.body.toggleAttribute(
-        "data-v2-toolbar",
-        !!document.querySelector(".lg-node[data-v2-selected]")
-      );
-    });
-  };
-  const prevSel = anyNode.onSelected;
-  anyNode.onSelected = function(...args) {
-    prevSel == null ? void 0 : prevSel.apply(this, args);
-    syncSelected();
-  };
-  const prevDesel = anyNode.onDeselected;
-  anyNode.onDeselected = function(...args) {
-    prevDesel == null ? void 0 : prevDesel.apply(this, args);
-    syncSelected();
-  };
-  let root = null;
-  const syncSocketY = () => {
-    if (!root) return;
-    const rootBox = root.getBoundingClientRect();
-    const box = socketAnchor.getBoundingClientRect();
-    if (rootBox.height > 0 && box.height > 0) {
-      const scale = rootBox.height / (root.offsetHeight || rootBox.height);
-      const mid = socketY === "center" ? box.height / 2 : Math.min(box.height * socketY.frac, socketY.cap);
-      const y2 = (box.top + mid - rootBox.top) / (scale || 1);
-      root.style.setProperty("--v2-socket-y", `${Math.round(y2)}px`);
-    }
-  };
-  const syncAll = () => {
-    if (!card.isConnected) return;
-    const r = card.closest("[data-node-id]");
-    if (!r) return;
-    if (r !== root) {
-      root = r;
-      bindClusterHoverIntent(root, scope);
-    }
-    if (!root.hasAttribute("data-v2-shell")) root.setAttribute("data-v2-shell", "");
-    syncSelected();
-    syncTitle();
-    syncWarnings(root);
-    syncSocketY();
-  };
-  scope.run(() => {
-    useResizeObserver(card, syncAll);
-    useResizeObserver(socketAnchor, syncSocketY);
-  });
-  const disposers = [
-    observeProperty(anyNode, "selected", syncSelected),
-    observeProperty(anyNode, "title", syncTitle),
-    observeProperty(anyNode, "_comfytvSlotWarnings", () => {
-      if (root) syncWarnings(root);
-    })
-  ];
-  scope.run(() => {
-    onScopeDispose(() => {
-      for (const d2 of disposers) d2();
-    });
-  });
-  const prevConf = anyNode.onConfigure;
-  anyNode.onConfigure = function(...args) {
-    prevConf == null ? void 0 : prevConf.apply(this, args);
-    queueMicrotask(syncAll);
-  };
-  queueMicrotask(syncAll);
-}
-function draggedItems(node, canvas, e) {
-  const selected = canvas == null ? void 0 : canvas.selectedItems;
-  if (!selected || !selected.has(node) || selected.size <= 1) return [node];
-  if (e.ctrlKey || e.metaKey) return selected;
-  const all = /* @__PURE__ */ new Set();
-  const add2 = (item) => {
-    if (!item || item.pinned || all.has(item)) return;
-    all.add(item);
-    if (item.children) for (const child of item.children) add2(child);
-  };
-  for (const item of selected) add2(item);
-  return all;
-}
-function selectForPointer(node, canvas, e) {
-  if (typeof (canvas == null ? void 0 : canvas.processSelect) === "function") canvas.processSelect(node, e);
-  else canvas == null ? void 0 : canvas.selectNode(node, e.shiftKey || e.ctrlKey || e.metaKey);
-}
-function bindNodeDrag(node, surface) {
-  let drag = null;
-  surface.addEventListener("pointerdown", (e) => {
-    if (e.button !== 0) return;
-    e.preventDefault();
-    e.stopPropagation();
-    try {
-      surface.setPointerCapture(e.pointerId);
-    } catch {
-    }
-    drag = { x: e.clientX, y: e.clientY, moved: false };
-  });
-  surface.addEventListener("pointermove", (e) => {
-    var _a3, _b2;
-    if (!drag || !(e.buttons & 1)) return;
-    e.stopPropagation();
-    const dx = e.clientX - drag.x;
-    const dy = e.clientY - drag.y;
-    if (!drag.moved && Math.abs(dx) < 3 && Math.abs(dy) < 3) return;
-    const canvas = app.canvas;
-    if (!drag.moved) {
-      drag.moved = true;
-      if (!node.selected) selectForPointer(node, canvas, e);
-    }
-    drag.x = e.clientX;
-    drag.y = e.clientY;
-    const scale = ((_a3 = canvas == null ? void 0 : canvas.ds) == null ? void 0 : _a3.scale) || 1;
-    const gdx = dx / scale;
-    const gdy = dy / scale;
-    for (const item of draggedItems(node, canvas, e)) {
-      if (item.pinned) continue;
-      item.pos = [item.pos[0] + gdx, item.pos[1] + gdy];
-    }
-    (_b2 = app.graph) == null ? void 0 : _b2.setDirtyCanvas(true, true);
-  });
-  const endDrag = (e) => {
-    if (!drag) return;
-    e.stopPropagation();
-    try {
-      if (surface.hasPointerCapture(e.pointerId)) surface.releasePointerCapture(e.pointerId);
-    } catch {
-    }
-    const wasClick = !drag.moved;
-    drag = null;
-    if (wasClick) selectForPointer(node, app.canvas, e);
-  };
-  surface.addEventListener("pointerup", endDrag);
-  surface.addEventListener("pointercancel", endDrag);
-}
-function installCss$7() {
-  if (cssInstalled$1) return;
-  cssInstalled$1 = true;
-  const style2 = document.createElement("style");
-  style2.textContent = v2_CSS;
-  document.head.appendChild(style2);
-}
-function bindProgressRing(card, state2) {
-  const ring = document.createElement("div");
-  ring.className = "v2-ring";
-  card.appendChild(ring);
-  watch(
-    () => {
-      var _a3, _b2;
-      return [state2.running, (_a3 = state2.progress) == null ? void 0 : _a3.value, (_b2 = state2.progress) == null ? void 0 : _b2.max];
-    },
-    ([running, v3, m2]) => {
-      const value = Number(v3) || 0;
-      const max2 = Number(m2) || 0;
-      const p2 = running && max2 > 0 ? Math.min(1, Math.max(0, value / max2)) : 0;
-      ring.style.setProperty("--v2-p", p2.toFixed(4));
-      ring.dataset.on = running ? "1" : "";
-      ring.dataset.indeterminate = running && p2 <= 0 ? "1" : "";
-    },
-    { immediate: true }
-  );
-  return ring;
-}
-function el$8(tag, cls, html2) {
-  const e = document.createElement(tag);
-  e.className = cls;
-  if (html2 != null) e.innerHTML = html2;
-  return e;
-}
 function buildToolbar(dispatch) {
   const bar = el$8("div", "v2-toolbar");
   const items = [
@@ -216653,7 +216651,7 @@ function refCount(node) {
 function makeImageBatchShell(shellCfg = {}) {
   return function attach2(node, kind, variant) {
     var _a3;
-    installCss$7();
+    installV2ShellCss();
     const anyNode = node;
     const title = shellCfg.title !== void 0 ? shellCfg.title ?? String(((_a3 = node.constructor) == null ? void 0 : _a3.title) ?? node.comfyClass ?? "") : t("v2.imageStageTitle");
     const card = el$8("div", "v2-card");
@@ -217555,7 +217553,7 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const CompareEditorV2 = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["__scopeId", "data-v-8d92d412"]]);
+const CompareEditorV2 = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["__scopeId", "data-v-285630a8"]]);
 const _hoisted_1$8 = { class: "v2-ed__canvas" };
 const _hoisted_2$8 = { class: "v2-ed__fit" };
 const _hoisted_3$7 = {
@@ -217756,7 +217754,7 @@ const _sfc_main$9 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const GradeEditorV2 = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["__scopeId", "data-v-89f9af58"]]);
+const GradeEditorV2 = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["__scopeId", "data-v-2968aa77"]]);
 const _hoisted_1$7 = { class: "v2-ed__fit" };
 const _hoisted_2$7 = ["src"];
 const _hoisted_3$6 = {
@@ -217949,7 +217947,7 @@ const _sfc_main$8 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const GridSplitEditorV2 = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["__scopeId", "data-v-5bc9a03c"]]);
+const GridSplitEditorV2 = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["__scopeId", "data-v-11d37ac8"]]);
 const _hoisted_1$6 = { class: "v2-ed__canvas" };
 const _hoisted_2$6 = { class: "v2-ed__fit" };
 const _hoisted_3$5 = ["src"];
@@ -218450,385 +218448,7 @@ V2_SHELLS["ComfyTV.GridSplitStage"] = makeEditorShell({
   icon: ICON_GRIDSPLIT,
   minH: 460
 });
-const _hoisted_1$4 = { class: "fxc__stage" };
-const _hoisted_2$4 = { class: "fxc__live" };
-const _hoisted_3$3 = {
-  key: 0,
-  class: "fxc__hint"
-};
-const _hoisted_4$3 = {
-  key: 0,
-  class: "fxc__outwrap"
-};
-const _hoisted_5$2 = {
-  key: 1,
-  class: "fxc__mode"
-};
-const _hoisted_6 = ["data-on"];
-const _hoisted_7 = ["data-on"];
-const _hoisted_8 = {
-  key: 2,
-  class: "fxc__corner"
-};
-const _hoisted_9 = ["title"];
-const _hoisted_10 = ["data-done", "title"];
-const _hoisted_11 = { class: "fxc__panel" };
-const _hoisted_12 = { class: "fxc__chain" };
-const _hoisted_13 = ["data-nopreview", "title"];
-const _hoisted_14 = { class: "fxc__ord" };
-const _hoisted_15 = { class: "fxc__name" };
-const _hoisted_16 = {
-  key: 0,
-  class: "fxc__nodot"
-};
-const _hoisted_17 = {
-  key: 1,
-  class: "fxc__empty"
-};
-const _hoisted_18 = { class: "fxc__delivery" };
-const _hoisted_19 = { class: "fxc__dsummary" };
-const _hoisted_20 = {
-  key: 0,
-  class: "fxc__drows"
-};
-const _hoisted_21 = { class: "fxc__drow" };
-const _hoisted_22 = { class: "fxc__dlabel" };
-const _hoisted_23 = { class: "fxc__drow" };
-const _hoisted_24 = { class: "fxc__dlabel" };
-const _hoisted_25 = { class: "fxc__drow" };
-const _hoisted_26 = { class: "fxc__dlabel" };
-const _hoisted_27 = { class: "fxc__drow" };
-const _hoisted_28 = { class: "fxc__dlabel" };
-const _hoisted_29 = { class: "fxc__drow" };
-const _hoisted_30 = { class: "fxc__dlabel" };
-const _hoisted_31 = { class: "fxc__footer" };
-const _hoisted_32 = { class: "fxc__flabel" };
-const _hoisted_33 = ["data-busy"];
 const _sfc_main$5 = /* @__PURE__ */ defineComponent({
-  __name: "FxChainCardV2",
-  props: {
-    node: {},
-    state: {},
-    onAction: { type: Function },
-    onRunRequest: { type: Function },
-    onCancelRequest: { type: Function }
-  },
-  setup(__props) {
-    const props = __props;
-    function onRunClick() {
-      if (props.state.running) props.onCancelRequest();
-      else props.onRunRequest();
-    }
-    const { t: t2 } = useI18n();
-    const { rows } = useFxChain(props.node, () => props.state);
-    const src = () => ({ value: "source", label: t2("fxChain.sourceOpt") });
-    const CS_TARGETS = ["bt709", "bt601-6-625", "bt2020", "smpte170m"].map((v3) => ({ value: v3, label: v3 }));
-    const SIZES = computed(() => [
-      src(),
-      ...["2160", "1440", "1080", "720", "540", "480"].map((v3) => ({ value: v3, label: `${v3}p` }))
-    ]);
-    const FPS_OPTS = computed(() => [
-      src(),
-      ...["24", "25", "30", "50", "60"].map((v3) => ({ value: v3, label: v3 }))
-    ]);
-    const CODECS = [
-      { value: "h264", label: "H.264" },
-      { value: "hevc", label: "HEVC" },
-      { value: "prores", label: "ProRes" }
-    ];
-    const QUALITIES = computed(() => [
-      { value: "draft", label: t2("fxChain.qDraft") },
-      { value: "standard", label: t2("fxChain.qStandard") },
-      { value: "high", label: t2("fxChain.qHigh") }
-    ]);
-    const outColorspace = useStrWidget(props.node, "out_colorspace", "bt709");
-    const outSize = useStrWidget(props.node, "out_size", "source");
-    const outFps = useStrWidget(props.node, "out_fps", "source");
-    const outCodec = useStrWidget(props.node, "out_codec", "h264");
-    const outQuality = useStrWidget(props.node, "out_quality", "standard");
-    const deliveryOpen = /* @__PURE__ */ ref(false);
-    const deliverySummary = computed(() => {
-      const size2 = outSize.value === "source" ? t2("fxChain.sourceOpt") : `${outSize.value}p`;
-      const fps = outFps.value === "source" ? "" : ` · ${outFps.value}fps`;
-      return `${size2}${fps} · ${String(outCodec.value).toUpperCase()}`;
-    });
-    const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, "video"));
-    const playerRef = /* @__PURE__ */ ref(null);
-    const videoEl = computed(() => {
-      var _a3;
-      return ((_a3 = playerRef.value) == null ? void 0 : _a3.videoEl) ?? null;
-    });
-    const previewCanvas = /* @__PURE__ */ ref(null);
-    const { supported } = useChainedFxPreview({
-      videoEl,
-      canvasEl: previewCanvas,
-      nodeId: String(props.node.id),
-      node: props.node,
-      params: () => ({}),
-      createRenderer: () => new ChainBlitRenderer()
-    });
-    const outputUrl = computed(() => String(props.state.output ?? "") || null);
-    const mode = /* @__PURE__ */ ref("live");
-    watch(outputUrl, (url, prev) => {
-      if (url && url !== prev) mode.value = "output";
-    });
-    function onDownload() {
-      var _a3;
-      const url = outputUrl.value;
-      if (!url) return;
-      const a2 = document.createElement("a");
-      a2.href = url;
-      a2.download = decodeURIComponent(((_a3 = url.split("filename=")[1]) == null ? void 0 : _a3.split("&")[0]) || "output.mp4");
-      a2.click();
-    }
-    const saved = /* @__PURE__ */ ref(false);
-    const savedFlash = useTimeoutFn(() => {
-      saved.value = false;
-    }, 1200, { immediate: false });
-    function onSave() {
-      var _a3;
-      const url = outputUrl.value;
-      if (!url) return;
-      const label = decodeURIComponent(((_a3 = url.split("filename=")[1]) == null ? void 0 : _a3.split("&")[0]) || "video");
-      props.onAction("load-asset", { imageUrl: url, label, mediaType: "video" });
-      saved.value = true;
-      savedFlash.stop();
-      savedFlash.start();
-    }
-    return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", {
-        class: "fxc",
-        onPointerdown: _cache2[9] || (_cache2[9] = withModifiers(() => {
-        }, ["stop"])),
-        onPointermove: _cache2[10] || (_cache2[10] = withModifiers(() => {
-        }, ["stop"])),
-        onPointerup: _cache2[11] || (_cache2[11] = withModifiers(() => {
-        }, ["stop"]))
-      }, [
-        createVNode(_sfc_main$3g, { node: __props.node }, {
-          player: withCtx(() => [
-            createBaseVNode("div", _hoisted_1$4, [
-              withDirectives(createBaseVNode("div", _hoisted_2$4, [
-                createVNode(VideoPlayerLite, {
-                  ref_key: "playerRef",
-                  ref: playerRef,
-                  "source-video-url": sourceVideoUrl.value
-                }, {
-                  overlay: withCtx(() => [
-                    withDirectives(createBaseVNode("canvas", {
-                      ref_key: "previewCanvas",
-                      ref: previewCanvas,
-                      class: "fxc__canvas"
-                    }, null, 512), [
-                      [vShow, unref(supported)]
-                    ])
-                  ]),
-                  _: 1
-                }, 8, ["source-video-url"]),
-                !sourceVideoUrl.value ? (openBlock(), createElementBlock("div", _hoisted_3$3, [
-                  _cache2[12] || (_cache2[12] = createBaseVNode("svg", {
-                    viewBox: "0 0 24 24",
-                    fill: "none",
-                    stroke: "currentColor",
-                    "stroke-width": "1.8"
-                  }, [
-                    createBaseVNode("rect", {
-                      x: "3",
-                      y: "5",
-                      width: "18",
-                      height: "14",
-                      rx: "2.5"
-                    }),
-                    createBaseVNode("path", { d: "M10 9.5l5 2.5-5 2.5z" })
-                  ], -1)),
-                  createBaseVNode("span", null, toDisplayString$1(unref(t2)("v2.fxChainHint")), 1)
-                ])) : createCommentVNode("", true)
-              ], 512), [
-                [vShow, mode.value === "live"]
-              ]),
-              mode.value === "output" && outputUrl.value ? (openBlock(), createElementBlock("div", _hoisted_4$3, [
-                createVNode(ProxiedVideo, {
-                  src: outputUrl.value,
-                  class: "fxc__out",
-                  controls: "",
-                  playsinline: "",
-                  preload: "metadata"
-                }, null, 8, ["src"])
-              ])) : createCommentVNode("", true),
-              outputUrl.value ? (openBlock(), createElementBlock("div", _hoisted_5$2, [
-                createBaseVNode("button", {
-                  type: "button",
-                  "data-on": mode.value === "live" ? "1" : "",
-                  onClick: _cache2[0] || (_cache2[0] = withModifiers(($event) => mode.value = "live", ["stop"]))
-                }, toDisplayString$1(unref(t2)("v2.livePreview")), 9, _hoisted_6),
-                createBaseVNode("button", {
-                  type: "button",
-                  "data-on": mode.value === "output" ? "1" : "",
-                  onClick: _cache2[1] || (_cache2[1] = withModifiers(($event) => mode.value = "output", ["stop"]))
-                }, toDisplayString$1(unref(t2)("v2.outputLabel")), 9, _hoisted_7)
-              ])) : createCommentVNode("", true),
-              mode.value === "output" && outputUrl.value ? (openBlock(), createElementBlock("div", _hoisted_8, [
-                createBaseVNode("button", {
-                  type: "button",
-                  title: unref(t2)("stage.action.download"),
-                  onClick: withModifiers(onDownload, ["stop"])
-                }, [..._cache2[13] || (_cache2[13] = [
-                  createBaseVNode("svg", {
-                    viewBox: "0 0 24 24",
-                    fill: "none",
-                    stroke: "currentColor",
-                    "stroke-width": "2"
-                  }, [
-                    createBaseVNode("path", { d: "M12 3.5V15M7 10.5l5 5 5-5M4 19.5h16" })
-                  ], -1)
-                ])], 8, _hoisted_9),
-                createBaseVNode("button", {
-                  type: "button",
-                  "data-done": saved.value ? "1" : "",
-                  title: unref(t2)("stage.action.loadAsset"),
-                  onClick: withModifiers(onSave, ["stop"])
-                }, [..._cache2[14] || (_cache2[14] = [
-                  createBaseVNode("svg", {
-                    viewBox: "0 0 24 24",
-                    fill: "none",
-                    stroke: "currentColor",
-                    "stroke-width": "2"
-                  }, [
-                    createBaseVNode("path", { d: "M6.5 3.5h11a1 1 0 011 1V21l-6.5-4-6.5 4V4.5a1 1 0 011-1z" })
-                  ], -1)
-                ])], 8, _hoisted_10)
-              ])) : createCommentVNode("", true)
-            ])
-          ]),
-          default: withCtx(() => [
-            createBaseVNode("div", _hoisted_11, [
-              createBaseVNode("div", _hoisted_12, [
-                unref(rows).length ? (openBlock(true), createElementBlock(Fragment$1, { key: 0 }, renderList(unref(rows), (row) => {
-                  return openBlock(), createElementBlock("div", {
-                    key: row.ordinal,
-                    class: "fxc__chip",
-                    "data-nopreview": row.preview ? "" : "1",
-                    title: row.preview ? row.kind : `${row.kind} · ${unref(t2)("fxChain.noPreview")}`
-                  }, [
-                    createBaseVNode("span", _hoisted_14, toDisplayString$1(row.ordinal), 1),
-                    createBaseVNode("span", _hoisted_15, toDisplayString$1(row.label), 1),
-                    !row.preview ? (openBlock(), createElementBlock("span", _hoisted_16)) : createCommentVNode("", true)
-                  ], 8, _hoisted_13);
-                }), 128)) : (openBlock(), createElementBlock("div", _hoisted_17, toDisplayString$1(unref(t2)("fxChain.empty")), 1))
-              ]),
-              createBaseVNode("div", _hoisted_18, [
-                createBaseVNode("button", {
-                  type: "button",
-                  class: "fxc__dtoggle",
-                  onClick: _cache2[2] || (_cache2[2] = withModifiers(($event) => deliveryOpen.value = !deliveryOpen.value, ["stop"]))
-                }, [
-                  (openBlock(), createElementBlock("svg", {
-                    viewBox: "0 0 24 24",
-                    fill: "none",
-                    stroke: "currentColor",
-                    "stroke-width": "2",
-                    style: normalizeStyle({ transform: deliveryOpen.value ? "rotate(90deg)" : "" })
-                  }, [..._cache2[15] || (_cache2[15] = [
-                    createBaseVNode("path", { d: "M9 5l7 7-7 7" }, null, -1)
-                  ])], 4)),
-                  createBaseVNode("span", null, toDisplayString$1(unref(t2)("fxChain.delivery")), 1),
-                  createBaseVNode("span", _hoisted_19, toDisplayString$1(deliverySummary.value), 1)
-                ]),
-                deliveryOpen.value ? (openBlock(), createElementBlock("div", _hoisted_20, [
-                  createBaseVNode("div", _hoisted_21, [
-                    createBaseVNode("span", _hoisted_22, toDisplayString$1(unref(t2)("fxChain.dSize")), 1),
-                    createVNode(_sfc_main$2c, {
-                      modelValue: unref(outSize),
-                      "onUpdate:modelValue": _cache2[3] || (_cache2[3] = ($event) => /* @__PURE__ */ isRef(outSize) ? outSize.value = $event : null),
-                      options: SIZES.value
-                    }, null, 8, ["modelValue", "options"])
-                  ]),
-                  createBaseVNode("div", _hoisted_23, [
-                    createBaseVNode("span", _hoisted_24, toDisplayString$1(unref(t2)("fxChain.dFps")), 1),
-                    createVNode(_sfc_main$2c, {
-                      modelValue: unref(outFps),
-                      "onUpdate:modelValue": _cache2[4] || (_cache2[4] = ($event) => /* @__PURE__ */ isRef(outFps) ? outFps.value = $event : null),
-                      options: FPS_OPTS.value
-                    }, null, 8, ["modelValue", "options"])
-                  ]),
-                  createBaseVNode("div", _hoisted_25, [
-                    createBaseVNode("span", _hoisted_26, toDisplayString$1(unref(t2)("fxChain.dCodec")), 1),
-                    createVNode(_sfc_main$2c, {
-                      modelValue: unref(outCodec),
-                      "onUpdate:modelValue": _cache2[5] || (_cache2[5] = ($event) => /* @__PURE__ */ isRef(outCodec) ? outCodec.value = $event : null),
-                      options: CODECS
-                    }, null, 8, ["modelValue"])
-                  ]),
-                  createBaseVNode("div", _hoisted_27, [
-                    createBaseVNode("span", _hoisted_28, toDisplayString$1(unref(t2)("fxChain.dQuality")), 1),
-                    createVNode(_sfc_main$2c, {
-                      modelValue: unref(outQuality),
-                      "onUpdate:modelValue": _cache2[6] || (_cache2[6] = ($event) => /* @__PURE__ */ isRef(outQuality) ? outQuality.value = $event : null),
-                      options: QUALITIES.value
-                    }, null, 8, ["modelValue", "options"])
-                  ]),
-                  createBaseVNode("div", _hoisted_29, [
-                    createBaseVNode("span", _hoisted_30, toDisplayString$1(unref(t2)("fxChain.dColorspace")), 1),
-                    createVNode(_sfc_main$2c, {
-                      modelValue: unref(outColorspace),
-                      "onUpdate:modelValue": _cache2[7] || (_cache2[7] = ($event) => /* @__PURE__ */ isRef(outColorspace) ? outColorspace.value = $event : null),
-                      options: unref(CS_TARGETS)
-                    }, null, 8, ["modelValue", "options"])
-                  ])
-                ])) : createCommentVNode("", true)
-              ]),
-              createBaseVNode("div", _hoisted_31, [
-                createBaseVNode("span", _hoisted_32, toDisplayString$1(unref(t2)("v2.renderChain")), 1),
-                _cache2[17] || (_cache2[17] = createBaseVNode("span", { class: "fxc__fspacer" }, null, -1)),
-                createVNode(ServerSelectV2, {
-                  "get-node": () => __props.node,
-                  state: __props.state
-                }, null, 8, ["get-node", "state"]),
-                createBaseVNode("button", {
-                  type: "button",
-                  class: "v2-run",
-                  "data-busy": __props.state.running ? "1" : "",
-                  onPointerdown: _cache2[8] || (_cache2[8] = withModifiers(() => {
-                  }, ["stop"])),
-                  onClick: withModifiers(onRunClick, ["stop"])
-                }, [..._cache2[16] || (_cache2[16] = [
-                  createBaseVNode("span", { class: "v2-run__up" }, [
-                    createBaseVNode("svg", {
-                      viewBox: "0 0 24 24",
-                      fill: "none",
-                      stroke: "currentColor",
-                      "stroke-width": "2.4"
-                    }, [
-                      createBaseVNode("path", { d: "M12 19V5M5.5 11.5L12 5l6.5 6.5" })
-                    ])
-                  ], -1),
-                  createBaseVNode("span", { class: "v2-run__stop" }, [
-                    createBaseVNode("svg", {
-                      viewBox: "0 0 24 24",
-                      fill: "currentColor",
-                      stroke: "none"
-                    }, [
-                      createBaseVNode("rect", {
-                        x: "7",
-                        y: "7",
-                        width: "10",
-                        height: "10",
-                        rx: "2"
-                      })
-                    ])
-                  ], -1)
-                ])], 40, _hoisted_33)
-              ])
-            ])
-          ]),
-          _: 1
-        }, 8, ["node"])
-      ], 32);
-    };
-  }
-});
-const FxChainCardV2 = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["__scopeId", "data-v-1b839639"]]);
-const _sfc_main$4 = /* @__PURE__ */ defineComponent({
   __name: "CardEmbedV2",
   props: {
     card: {},
@@ -218860,614 +218480,7 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const CardEmbedV2 = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["__scopeId", "data-v-b4d1bc12"]]);
-const ICON_COLOR = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 010 18c-1.5 0-2-1-1.3-2.2.8-1.4-.2-2.8-1.9-2.8H7a4 4 0 01-4-4"/><circle cx="8" cy="9" r="1.2" fill="currentColor" stroke="none"/><circle cx="13" cy="7" r="1.2" fill="currentColor" stroke="none"/><circle cx="17" cy="11" r="1.2" fill="currentColor" stroke="none"/></svg>`;
-const ICON_CURVE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20C10 20 14 4 20 4"/><path d="M4 20V4M4 20h16"/></svg>`;
-const ICON_CHAIN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="5" height="5" rx="1.2"/><rect x="16" y="6" width="5" height="5" rx="1.2"/><rect x="9.5" y="14" width="5" height="5" rx="1.2"/><path d="M8 8.5h8M5.5 11v3.5a2 2 0 002 2h2M18.5 11v3.5a2 2 0 01-2 2h-2"/></svg>`;
-const ICON_LUT = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="M9.2 5v14M14.8 5v14M3.5 9.7h17M3.5 14.3h17"/></svg>`;
-const ICON_SELCOLOR = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3.5c3 3.6 5.5 6.6 5.5 9.6a5.5 5.5 0 11-11 0c0-3 2.5-6 5.5-9.6z"/><path d="M9.5 13.5a2.5 2.5 0 002.5 2.5"/></svg>`;
-const ICON_CDL = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4v16M12 4v16M19 4v16"/><circle cx="5" cy="9" r="2.2" fill="#17171b"/><circle cx="12" cy="15" r="2.2" fill="#17171b"/><circle cx="19" cy="7" r="2.2" fill="#17171b"/></svg>`;
-const ICON_HISTEQ = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V13M8 20V8M12 20V4.5M16 20V9M20 20V15"/><path d="M3 20h18"/></svg>`;
-const ICON_AWB = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17M12 3.5a8.5 8.5 0 010 17" fill="currentColor" fill-opacity=".25" stroke="none"/><path d="M12 3.5a8.5 8.5 0 000 17"/></svg>`;
-const ICON_PSEUDO = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="9" width="16" height="6" rx="3"/><path d="M8 9v6M12 9v6M16 9v6"/><path d="M6 4.5l2 2M18 4.5l-2 2M6 19.5l2-2M18 19.5l-2-2"/></svg>`;
-const ICON_HUECOR = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 12L18 6M12 12l-2.2 8.2"/><circle cx="12" cy="12" r="2.4"/></svg>`;
-const ICON_SEL0R = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.5 4.5l5 5L9 20H4v-5z"/><path d="M12.5 6.5l5 5"/><circle cx="18" cy="18" r="2.5"/></svg>`;
-const ICON_KEYER = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="8.5" r="4.5"/><circle cx="8" cy="8.5" r="1.6"/><path d="M11.5 12l8 8M16.5 17l2.5-2.5M14 19.5l2-2"/></svg>`;
-const ICON_PIK = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3.5 12L12 7.5l8.5 4.5L12 16.5z"/><path d="M3.5 16L12 20.5 20.5 16"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg>`;
-const ICON_DESPILL = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3.5c3 3.6 5.5 6.6 5.5 9.6a5.5 5.5 0 11-11 0c0-3 2.5-6 5.5-9.6z"/><path d="M4.5 19.5l15-15"/></svg>`;
-const ICON_COLSUP = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16l-6 7v6.5l-4 2V12z"/><path d="M15 15l6 6M21 15l-6 6"/></svg>`;
-const ICON_MATTEMORPH = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="9" stroke-dasharray="2.5 3"/><path d="M12 8.5v7M8.5 12h7"/></svg>`;
-const ICON_SHAPEMASK = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="10.5" width="10" height="10" rx="1.5"/><circle cx="15.5" cy="8" r="5"/></svg>`;
-const ICON_LENSDIST = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4c5.3 1.6 10.7 1.6 16 0M4 20c5.3-1.6 10.7-1.6 16 0M4 4v16M20 4v16"/><path d="M8.5 8.5c2.3.6 4.7.6 7 0M8.5 15.5c2.3-.6 4.7-.6 7 0"/></svg>`;
-const ICON_CHROMAB = `<svg viewBox="0 0 24 24" fill="none"><circle cx="10.5" cy="12" r="6.5" stroke="#F87171" stroke-width="1.8"/><circle cx="13.5" cy="12" r="6.5" stroke="#60A5FA" stroke-width="1.8"/></svg>`;
-const ICON_FLARE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="9" r="3.5"/><path d="M9 2v3M9 13v3M2 9h3M13 9h3M4 4l2 2M14 4l-2 2M4 14l2-2"/><circle cx="16.5" cy="16.5" r="1.5"/><circle cx="20" cy="20" r="1"/></svg>`;
-const ICON_GLOW = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="8" stroke-opacity=".45"/><circle cx="12" cy="12" r="11" stroke-opacity=".2"/></svg>`;
-const ICON_GODRAYS = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="7" r="3"/><path d="M6 21l3.5-9M12 21v-8.5M18 21l-3.5-9"/></svg>`;
-const ICON_BLURSHARP = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v18"/><circle cx="7" cy="12" r="3.6" stroke-dasharray="2 2.4"/><path d="M17 8.2l3.2 7.6H13.8z"/></svg>`;
-const ICON_DENOISE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><path d="M7 17l10-10"/><circle cx="8.5" cy="8.5" r=".9" fill="currentColor" stroke="none"/><circle cx="12" cy="6.8" r=".9" fill="currentColor" stroke="none"/><circle cx="15.5" cy="15.5" r=".9" fill="currentColor" stroke="none" opacity=".35"/><circle cx="11.5" cy="16.8" r=".9" fill="currentColor" stroke="none" opacity=".35"/></svg>`;
-const ICON_DEINT = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h7M13 6h7M4 10h4M10 10h10M4 14h16M4 18h16"/></svg>`;
-const ICON_POSTERIZE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V15h4v-4h4V7h4V4h4"/><path d="M4 19h16"/></svg>`;
-const ICON_OLDFILM = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="4" width="17" height="16" rx="2"/><path d="M7 4v16M17 4v16"/><path d="M3.5 8.5H7M3.5 12H7M3.5 15.5H7M17 8.5h3.5M17 12h3.5M17 15.5h3.5"/><path d="M11 7.5v3M13.5 13v4.5"/></svg>`;
-const ICON_ARTFX = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19.5 4.5c-6 1-11 5.5-12.5 10L4 20l5.5-3C14 15.5 18.5 10.5 19.5 4.5z"/><path d="M7 14.5c1 .3 2.2 1.5 2.5 2.5"/></svg>`;
-const ICON_GLITCH = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 6h14M3 10h10M16 10h5M7 14h14M3 18h8M14 18h5"/></svg>`;
-const ICON_KALEIDO = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17M4.6 7.8l14.8 8.4M4.6 16.2l14.8-8.4"/></svg>`;
-const ICON_WAVEWARP = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7c3-2.5 6 2.5 9 0s6 2.5 9 0M3 12c3-2.5 6 2.5 9 0s6 2.5 9 0M3 17c3-2.5 6 2.5 9 0s6 2.5 9 0"/></svg>`;
-const ICON_STROBE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 3L5.5 13.5H11L9.5 21 18 10h-6z"/></svg>`;
-const ICON_FEEDBACK = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="2"/><rect x="6.5" y="6.5" width="11" height="11" rx="1.5" stroke-opacity=".55"/><rect x="9.5" y="9.5" width="5" height="5" rx="1" stroke-opacity=".3"/></svg>`;
-const ICON_REGRAIN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><circle cx="8" cy="8" r=".9" fill="currentColor" stroke="none"/><circle cx="13" cy="6.8" r=".9" fill="currentColor" stroke="none"/><circle cx="17" cy="9.5" r=".9" fill="currentColor" stroke="none"/><circle cx="7" cy="13.5" r=".9" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r=".9" fill="currentColor" stroke="none"/><circle cx="16.5" cy="14.5" r=".9" fill="currentColor" stroke="none"/><circle cx="9.5" cy="17" r=".9" fill="currentColor" stroke="none"/><circle cx="14.5" cy="17.5" r=".9" fill="currentColor" stroke="none"/></svg>`;
-const ICON_STYLIZE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 4l5 5L8.5 20.5 3 22l1.5-5.5z"/><path d="M13 6l5 5"/><path d="M19 3l.6 1.6L21 5l-1.4.6L19 7l-.6-1.4L17 5l1.4-.4z" fill="currentColor" stroke="none"/></svg>`;
-const ICON_CHROMASHIFT = `<svg viewBox="0 0 24 24" fill="none"><rect x="4" y="6" width="13" height="13" rx="2" stroke="#F87171" stroke-width="1.8"/><rect x="7" y="4" width="13" height="13" rx="2" stroke="#60A5FA" stroke-width="1.8"/></svg>`;
-const ICON_TRANSFORM = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7.5" y="7.5" width="9" height="9" rx="1.5"/><path d="M12 2v3.5M12 18.5V22M2 12h3.5M18.5 12H22"/><path d="M10.2 3.8L12 2l1.8 1.8M10.2 20.2L12 22l1.8-1.8M3.8 10.2L2 12l1.8 1.8M20.2 10.2L22 12l-1.8 1.8"/></svg>`;
-const ICON_360 = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><ellipse cx="12" cy="12" rx="3.6" ry="8.5"/><path d="M3.8 9.5h16.4M3.8 14.5h16.4"/></svg>`;
-const ICON_CARD3D = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 4.5l12 2.5v12.5L6 17z"/><path d="M6 4.5V17M18 7v12.5"/></svg>`;
-const ICON_PARTICLES = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="18" r="2.4"/><circle cx="12" cy="11" r="1.6" fill="currentColor" stroke="none"/><circle cx="16.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="19.5" cy="11.5" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="15" r="1" fill="currentColor" stroke="none"/><circle cx="20" cy="4" r=".9" fill="currentColor" stroke="none"/></svg>`;
-const ICON_WATER = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 15.5c3-2.2 6 2.2 9 0s6 2.2 9 0"/><path d="M3 19.5c3-2.2 6 2.2 9 0s6 2.2 9 0"/><path d="M12 4.5c1.8 2.2 3.3 4 3.3 5.8a3.3 3.3 0 11-6.6 0c0-1.8 1.5-3.6 3.3-5.8z"/></svg>`;
-const ICON_LIGHTGRAF = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 18c2-6 5-9 8-9s4 3 1.5 5S8 15 9.5 11 15 4.5 20 4"/><circle cx="20" cy="4" r="1.6" fill="currentColor" stroke="none"/></svg>`;
-const ICON_TRIM = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><path d="M8.1 7.8L20 19M8.1 16.2L20 5M13 12.1l2-1.9"/></svg>`;
-const ICON_VCROP = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2.5V16a2 2 0 002 2h13.5M2.5 6H16a2 2 0 012 2v13.5"/></svg>`;
-const ICON_VSPLIT = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="7.5" height="12" rx="1.5"/><rect x="13.5" y="6" width="7.5" height="12" rx="1.5"/><path d="M12 3v18" stroke-dasharray="2.5 2.5"/></svg>`;
-const ICON_CONCAT = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="8" width="8" height="8" rx="1.5"/><rect x="13.5" y="8" width="8" height="8" rx="1.5"/><path d="M10.5 12h3"/></svg>`;
-const ICON_SPEED = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19a9 9 0 0116 0"/><path d="M12 19l4.5-6.5"/><circle cx="12" cy="19" r="1.6" fill="currentColor" stroke="none"/></svg>`;
-const ICON_ROTATE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 12a8 8 0 11-2.3-5.6"/><path d="M18 2.5V7h-4.5"/></svg>`;
-const ICON_VOLUME = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 9.5v5h3.5L12 19V5L7.5 9.5z"/><path d="M15.5 9a4.5 4.5 0 010 6M18 6.5a8 8 0 010 11"/></svg>`;
-const ICON_MUXAUDIO = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="5" width="13" height="10" rx="2"/><path d="M7 8.5l4 1.5-4 1.5z" fill="currentColor" stroke="none"/><path d="M19.5 8v8.2"/><circle cx="17.8" cy="17.5" r="1.8"/><path d="M19.5 8l2-.6"/></svg>`;
-const ICON_RESIZE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="6" width="17" height="12" rx="2"/><path d="M7 15l3-3M7 12v3h3M17 9l-3 3M17 12V9h-3"/></svg>`;
-const ICON_FRAMES = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="7" width="5.4" height="10" rx="1"/><rect x="9.3" y="7" width="5.4" height="10" rx="1"/><rect x="16.1" y="7" width="5.4" height="10" rx="1"/></svg>`;
-const ICON_TIMEREMAP = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.5 2"/><path d="M3.5 12c2-1.5 4-2.5 8.5-2.5" stroke-opacity=".4"/></svg>`;
-const ICON_SEQUENCE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4.5" width="18" height="5" rx="1.5"/><rect x="3" y="12" width="12" height="5" rx="1.5"/><path d="M6 19.5h9"/></svg>`;
-const ICON_SCENEDETECT = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="6" width="8.5" height="12" rx="1.5"/><rect x="13" y="6" width="8.5" height="12" rx="1.5"/><path d="M11 3l2 3-2-1-2 1z" fill="currentColor" stroke="none"/></svg>`;
-const ICON_CHROMAKEY = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4.5" width="18" height="13" rx="2"/><path d="M3 17.5L9 11l4 4 3-3 5 5.5"/><path d="M8 21h8"/></svg>`;
-const ICON_COMPOSITE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="12" height="12" rx="2"/><rect x="8.5" y="8.5" width="12" height="12" rx="2"/></svg>`;
-const ICON_CORNERPIN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6.5 5.5L18 7.5l-1 11L5 16z"/><circle cx="6.5" cy="5.5" r="1.8"/><circle cx="18" cy="7.5" r="1.8"/><circle cx="17" cy="18.5" r="1.8"/><circle cx="5" cy="16" r="1.8"/></svg>`;
-const ICON_ROTOMASK = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 17c-2.5-2.5-2-7 .5-9.5S14 5 16.5 7 20 13 17.5 15.5 9.5 19.5 7 17z" stroke-dasharray="3 2.6"/><path d="M14 21l6-6M17.5 21H20v-2.5" /></svg>`;
-const ICON_KEYMIX = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/></svg>`;
-const ICON_MATTEMON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4.5" width="18" height="13" rx="2"/><path d="M12 8a4.5 3.2 0 100 6.4A4.5 3.2 0 0012 8z"/><circle cx="12" cy="11.2" r="1.2" fill="currentColor" stroke="none"/><path d="M8 21h8"/></svg>`;
-const ICON_MASKPROP = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="12" r="4.5" stroke-dasharray="2.5 2.2"/><path d="M14.5 12H21M18.5 9.5L21 12l-2.5 2.5"/></svg>`;
-const ICON_PAINTSTROKE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 16c4 1 5-2 8-5s5.5-4.5 8-6"/><path d="M4 16l-1 5 5-1z" fill="currentColor" stroke="none"/></svg>`;
-const ICON_STMAP = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M4 9.3c5.3 1.4 10.7 1.4 16 0M4 14.6c5.3-1.4 10.7-1.4 16 0M9.3 4c1.4 5.3 1.4 10.7 0 16M14.6 4c-1.4 5.3-1.4 10.7 0 16"/></svg>`;
-const ICON_STMAPGEN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="11" height="11" rx="1.5"/><path d="M3.5 9h11M9 3.5v11"/><circle cx="17.5" cy="17.5" r="3.2"/><path d="M17.5 12.8v1.6M17.5 20.6v1.6M12.8 17.5h1.6M20.6 17.5h1.6"/></svg>`;
-const ICON_ZDEFOCUS = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5l4.2 6.3M20.2 9.8l-7.4 1.4M18.3 18.3l-5.5-5.2M12 20.5l-4.2-6.3M3.8 14.2l7.4-1.4M5.7 5.7l5.5 5.2"/></svg>`;
-const ICON_FRAMEBLEND = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="12" height="12" rx="1.5" stroke-opacity=".45"/><rect x="6" y="6" width="12" height="12" rx="1.5" stroke-opacity=".7"/><rect x="9" y="6" width="12" height="12" rx="1.5"/></svg>`;
-const ICON_TRANSITION = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="6" width="11" height="12" rx="1.5"/><rect x="10.5" y="6" width="11" height="12" rx="1.5" stroke-dasharray="2.5 2.2"/><path d="M9 12h6M13 9.5L15.5 12 13 14.5"/></svg>`;
-const ICON_LUMAWIPE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M10 5.5c3 4 3 9 0 13M14.5 5.5c2 4 2 9 0 13" stroke-opacity=".6"/></svg>`;
-const ICON_STAB = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 13c2.5 0 2.5-4 5-4s2.5 6 5 6 2.5-4 5-4" stroke-opacity=".45"/><path d="M3 12h18"/></svg>`;
-const ICON_STABPRO = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M8.5 12.2l2.3 2.3 4.7-4.7"/></svg>`;
-const ICON_STAB360 = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M3.8 12h16.4"/><path d="M7 8l-1.5-1.5M17 8l1.5-1.5" stroke-opacity=".55"/><path d="M12 8.5v7M9.5 11l2.5-2.5 2.5 2.5"/></svg>`;
-const ICON_INTERP = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="7" width="5.5" height="10" rx="1"/><rect x="16" y="7" width="5.5" height="10" rx="1"/><rect x="9.2" y="7" width="5.5" height="10" rx="1" stroke-dasharray="2.4 2"/><path d="M12 10.5v3M10.7 12h2.6"/></svg>`;
-const ICON_FACEBLUR = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="9.5" r="4"/><path d="M5 20c1.5-3.5 4-5 7-5s5.5 1.5 7 5"/><path d="M8.5 9.5h7" stroke-dasharray="1.6 1.8"/></svg>`;
-const ICON_SPOTREM = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><circle cx="12" cy="12" r="3.5" stroke-dasharray="2.2 2"/><path d="M9.8 14.2l4.4-4.4"/></svg>`;
-const ICON_SCOPES = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4.5" width="18" height="13" rx="2"/><path d="M5 14.5c2-1 3-6 5-6s2.5 4.5 4.5 4.5S17.5 9.5 19 9"/><path d="M8 21h8"/></svg>`;
-const ICON_CONTACTSHEET = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M3.5 9.2h17M3.5 14.9h17M9.2 3.5v17M14.9 3.5v17"/></svg>`;
-const ICON_AUDIOMETER = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 20V10M9.5 20V4M14 20v-9M18.5 20V7"/><path d="M3.5 20h17"/><circle cx="9.5" cy="4" r="1" fill="currentColor" stroke="none"/></svg>`;
-const ICON_TITLE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 6h14M12 6v12M8.5 18h7"/></svg>`;
-const ICON_SUBTITLE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4.5" width="18" height="15" rx="2"/><path d="M6 13.5h7M15 13.5h3M6 16.5h3M11 16.5h7"/></svg>`;
-const ICON_ANNOTATE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4.5" width="18" height="13" rx="2"/><path d="M7 14l3.5-3.5 2 2L16 9"/><circle cx="16.5" cy="8.5" r="1.8"/><path d="M8 21h8"/></svg>`;
-const ICON_KENBURNS = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="13" height="13" rx="1.5" stroke-opacity=".5"/><rect x="8" y="8" width="13" height="13" rx="1.5"/><path d="M12 12l4 4"/></svg>`;
-const ICON_SLITSCAN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="4" width="17" height="16" rx="2"/><path d="M10.5 4v16M13.5 4v16"/><path d="M10.5 9c1-1.5 2-1.5 3 0M10.5 15c1 1.5 2 1.5 3 0" stroke-opacity=".6"/></svg>`;
-const CONFIGS$2 = {
-  "ComfyTV.VideoColorStage": {
-    titleKey: "v2.videoColorTitle",
-    icon: ICON_COLOR,
-    card: markRaw(_sfc_main$2d),
-    hasRun: false
-  },
-  "ComfyTV.VideoCurvesStage": {
-    titleKey: "v2.videoCurvesTitle",
-    icon: ICON_CURVE,
-    card: markRaw(_sfc_main$2a),
-    hasRun: false
-  },
-  "ComfyTV.FXChainStage": {
-    titleKey: "v2.fxChainTitle",
-    icon: ICON_CHAIN,
-    card: markRaw(FxChainCardV2),
-    hasRun: true,
-    embed: false
-  },
-  "ComfyTV.VideoLUTStage": {
-    titleKey: "v2.fx.lut",
-    icon: ICON_LUT,
-    card: markRaw(_sfc_main$29),
-    hasRun: false
-  },
-  "ComfyTV.SelectiveColorStage": {
-    titleKey: "v2.fx.selectiveColor",
-    icon: ICON_SELCOLOR,
-    card: markRaw(_sfc_main$1b),
-    hasRun: false
-  },
-  "ComfyTV.CDLStage": {
-    titleKey: "v2.fx.cdl",
-    icon: ICON_CDL,
-    card: markRaw(_sfc_main$16),
-    hasRun: false
-  },
-  "ComfyTV.HistogramEqStage": {
-    titleKey: "v2.fx.histogramEq",
-    icon: ICON_HISTEQ,
-    card: markRaw(_sfc_main$15),
-    hasRun: false
-  },
-  "ComfyTV.GrayWorldStage": {
-    titleKey: "v2.fx.awb",
-    icon: ICON_AWB,
-    card: markRaw(_sfc_main$17),
-    hasRun: false
-  },
-  "ComfyTV.PseudocolorStage": {
-    titleKey: "v2.fx.pseudocolor",
-    icon: ICON_PSEUDO,
-    card: markRaw(_sfc_main$19),
-    hasRun: false
-  },
-  "ComfyTV.HueCorrectStage": {
-    titleKey: "v2.fx.hueCorrect",
-    icon: ICON_HUECOR,
-    card: markRaw(_sfc_main$1n),
-    hasRun: false
-  },
-  "ComfyTV.Select0rStage": {
-    titleKey: "v2.fx.select0r",
-    icon: ICON_SEL0R,
-    card: markRaw(_sfc_main$M),
-    hasRun: false
-  },
-  "ComfyTV.KeyerStage": {
-    titleKey: "v2.fx.keyer",
-    icon: ICON_KEYER,
-    card: markRaw(KeyerStageCard),
-    hasRun: false
-  },
-  "ComfyTV.PIKStage": {
-    titleKey: "v2.fx.pik",
-    icon: ICON_PIK,
-    card: markRaw(PIKStageCard),
-    hasRun: false
-  },
-  "ComfyTV.DespillStage": {
-    titleKey: "v2.fx.despill",
-    icon: ICON_DESPILL,
-    card: markRaw(_sfc_main$1h),
-    hasRun: false
-  },
-  "ComfyTV.ColorSuppressStage": {
-    titleKey: "v2.fx.colorSuppress",
-    icon: ICON_COLSUP,
-    card: markRaw(_sfc_main$1g),
-    hasRun: false
-  },
-  "ComfyTV.MatteMorphStage": {
-    titleKey: "v2.fx.matteMorph",
-    icon: ICON_MATTEMORPH,
-    card: markRaw(_sfc_main$1d),
-    hasRun: false
-  },
-  "ComfyTV.ShapeMaskStage": {
-    titleKey: "v2.fx.shapeMask",
-    icon: ICON_SHAPEMASK,
-    card: markRaw(_sfc_main$13),
-    hasRun: false
-  },
-  "ComfyTV.LensDistortStage": {
-    titleKey: "v2.fx.lensDistort",
-    icon: ICON_LENSDIST,
-    card: markRaw(_sfc_main$12),
-    hasRun: false
-  },
-  "ComfyTV.ChromaticAberrationStage": {
-    titleKey: "v2.fx.chromaticAberration",
-    icon: ICON_CHROMAB,
-    card: markRaw(_sfc_main$11),
-    hasRun: false
-  },
-  "ComfyTV.LensFlareStage": {
-    titleKey: "v2.fx.lensFlare",
-    icon: ICON_FLARE,
-    card: markRaw(_sfc_main$10),
-    hasRun: false
-  },
-  "ComfyTV.GlowStage": {
-    titleKey: "v2.fx.glow",
-    icon: ICON_GLOW,
-    card: markRaw(_sfc_main$1m),
-    hasRun: false
-  },
-  "ComfyTV.GodRaysStage": {
-    titleKey: "v2.fx.godRays",
-    icon: ICON_GODRAYS,
-    card: markRaw(_sfc_main$1l),
-    hasRun: false
-  },
-  "ComfyTV.VideoBlurSharpenStage": {
-    titleKey: "v2.fx.blurSharpen",
-    icon: ICON_BLURSHARP,
-    card: markRaw(_sfc_main$28),
-    hasRun: false
-  },
-  "ComfyTV.VideoDenoiseStage": {
-    titleKey: "v2.fx.denoise",
-    icon: ICON_DENOISE,
-    card: markRaw(_sfc_main$26),
-    hasRun: false
-  },
-  "ComfyTV.VideoDeinterlaceStage": {
-    titleKey: "v2.fx.deinterlace",
-    icon: ICON_DEINT,
-    card: markRaw(_sfc_main$1$),
-    hasRun: false
-  },
-  "ComfyTV.PosterizeStage": {
-    titleKey: "v2.fx.posterize",
-    icon: ICON_POSTERIZE,
-    card: markRaw(_sfc_main$18),
-    hasRun: false
-  },
-  "ComfyTV.OldFilmStage": {
-    titleKey: "v2.fx.oldFilm",
-    icon: ICON_OLDFILM,
-    card: markRaw(_sfc_main$V),
-    hasRun: false
-  },
-  "ComfyTV.ArtFXStage": {
-    titleKey: "v2.fx.artFx",
-    icon: ICON_ARTFX,
-    card: markRaw(_sfc_main$L),
-    hasRun: false
-  },
-  "ComfyTV.GlitchFXStage": {
-    titleKey: "v2.fx.glitch",
-    icon: ICON_GLITCH,
-    card: markRaw(_sfc_main$K),
-    hasRun: false
-  },
-  "ComfyTV.KaleidoscopeStage": {
-    titleKey: "v2.fx.kaleidoscope",
-    icon: ICON_KALEIDO,
-    card: markRaw(_sfc_main$J),
-    hasRun: false
-  },
-  "ComfyTV.WaveWarpStage": {
-    titleKey: "v2.fx.waveWarp",
-    icon: ICON_WAVEWARP,
-    card: markRaw(_sfc_main$I),
-    hasRun: false
-  },
-  "ComfyTV.StrobeStage": {
-    titleKey: "v2.fx.strobe",
-    icon: ICON_STROBE,
-    card: markRaw(_sfc_main$O),
-    hasRun: false
-  },
-  "ComfyTV.FeedbackFXStage": {
-    titleKey: "v2.fx.feedback",
-    icon: ICON_FEEDBACK,
-    card: markRaw(_sfc_main$P),
-    hasRun: false
-  },
-  "ComfyTV.RegrainStage": {
-    titleKey: "v2.fx.regrain",
-    icon: ICON_REGRAIN,
-    card: markRaw(_sfc_main$E),
-    hasRun: false
-  },
-  "ComfyTV.VideoStylizeStage": {
-    titleKey: "v2.fx.stylize",
-    icon: ICON_STYLIZE,
-    card: markRaw(_sfc_main$1_),
-    hasRun: false
-  },
-  "ComfyTV.ChromaShiftStage": {
-    titleKey: "v2.fx.chromaShift",
-    icon: ICON_CHROMASHIFT,
-    card: markRaw(_sfc_main$1a),
-    hasRun: false
-  },
-  "ComfyTV.VideoTransformStage": {
-    titleKey: "v2.fx.transform",
-    icon: ICON_TRANSFORM,
-    card: markRaw(_sfc_main$1z),
-    hasRun: false
-  },
-  "ComfyTV.Video360Stage": {
-    titleKey: "v2.fx.video360",
-    icon: ICON_360,
-    card: markRaw(_sfc_main$14),
-    hasRun: false
-  },
-  "ComfyTV.Card3DStage": {
-    titleKey: "v2.fx.card3d",
-    icon: ICON_CARD3D,
-    card: markRaw(_sfc_main$F),
-    hasRun: false
-  },
-  "ComfyTV.ParticlesStage": {
-    titleKey: "v2.fx.particles",
-    icon: ICON_PARTICLES,
-    card: markRaw(_sfc_main$$),
-    hasRun: false
-  },
-  "ComfyTV.WaterStage": {
-    titleKey: "v2.fx.water",
-    icon: ICON_WATER,
-    card: markRaw(_sfc_main$H),
-    hasRun: false
-  },
-  "ComfyTV.LightGraffitiStage": {
-    titleKey: "v2.fx.lightGraffiti",
-    icon: ICON_LIGHTGRAF,
-    card: markRaw(_sfc_main$G),
-    hasRun: false
-  },
-  "ComfyTV.VideoClipStage": {
-    titleKey: "v2.fx.trim",
-    icon: ICON_TRIM,
-    card: markRaw(_sfc_main$3l),
-    hasRun: true,
-    plain: true
-  },
-  "ComfyTV.VideoCropStage": {
-    titleKey: "v2.fx.vcrop",
-    icon: ICON_VCROP,
-    card: markRaw(_sfc_main$3j),
-    hasRun: true,
-    plain: true
-  },
-  "ComfyTV.VideoSplitStage": {
-    titleKey: "v2.fx.vsplit",
-    icon: ICON_VSPLIT,
-    card: markRaw(_sfc_main$3c),
-    hasRun: true,
-    plain: true
-  },
-  "ComfyTV.VideoConcatStage": {
-    titleKey: "v2.fx.concat",
-    icon: ICON_CONCAT,
-    card: markRaw(_sfc_main$3i),
-    hasRun: true,
-    plain: true
-  },
-  "ComfyTV.VideoSpeedStage": {
-    titleKey: "v2.fx.speed",
-    icon: ICON_SPEED,
-    card: markRaw(_sfc_main$3e),
-    hasRun: true
-  },
-  "ComfyTV.VideoRotateStage": {
-    titleKey: "v2.fx.rotate",
-    icon: ICON_ROTATE,
-    card: markRaw(_sfc_main$3d),
-    hasRun: true
-  },
-  "ComfyTV.VideoVolumeStage": {
-    titleKey: "v2.fx.volume",
-    icon: ICON_VOLUME,
-    card: markRaw(VideoVolumeStageCard),
-    hasRun: true
-  },
-  "ComfyTV.VideoMuxAudioStage": {
-    titleKey: "v2.fx.muxAudio",
-    icon: ICON_MUXAUDIO,
-    card: markRaw(VideoMuxAudioStageCard),
-    hasRun: true
-  },
-  "ComfyTV.VideoResizeStage": {
-    titleKey: "v2.fx.resize",
-    icon: ICON_RESIZE,
-    card: markRaw(VideoResizeStageCard),
-    hasRun: true
-  },
-  "ComfyTV.VideoFramesStage": {
-    titleKey: "v2.fx.frames",
-    icon: ICON_FRAMES,
-    card: markRaw(VideoFramesStageCard),
-    hasRun: true,
-    plain: true,
-    outputStrip: false
-  },
-  "ComfyTV.TimeRemapStage": {
-    titleKey: "v2.fx.timeRemap",
-    icon: ICON_TIMEREMAP,
-    card: markRaw(_sfc_main$1t),
-    hasRun: true
-  },
-  "ComfyTV.SequenceStage": {
-    titleKey: "v2.fx.sequence",
-    icon: ICON_SEQUENCE,
-    card: markRaw(SequenceStageCard),
-    hasRun: true,
-    plain: true
-  },
-  "ComfyTV.SceneDetectStage": {
-    titleKey: "v2.fx.sceneDetect",
-    icon: ICON_SCENEDETECT,
-    card: markRaw(_sfc_main$21),
-    hasRun: true,
-    outputStrip: false
-  },
-  "ComfyTV.VideoChromaKeyStage": {
-    titleKey: "v2.fx.chromaKey",
-    icon: ICON_CHROMAKEY,
-    card: markRaw(VideoChromaKeyStageCard),
-    hasRun: true
-  },
-  "ComfyTV.VideoCompositeStage": {
-    titleKey: "v2.fx.composite",
-    icon: ICON_COMPOSITE,
-    card: markRaw(_sfc_main$1A),
-    hasRun: true,
-    plain: true
-  },
-  "ComfyTV.CornerPinStage": {
-    titleKey: "v2.fx.cornerPin",
-    icon: ICON_CORNERPIN,
-    card: markRaw(_sfc_main$1y),
-    hasRun: true,
-    plain: true
-  },
-  "ComfyTV.RotoMaskStage": {
-    titleKey: "v2.fx.rotoMask",
-    icon: ICON_ROTOMASK,
-    card: markRaw(_sfc_main$1x),
-    hasRun: true,
-    plain: true
-  },
-  "ComfyTV.KeyMixStage": {
-    titleKey: "v2.fx.keyMix",
-    icon: ICON_KEYMIX,
-    card: markRaw(_sfc_main$1f),
-    hasRun: true
-  },
-  "ComfyTV.MatteMonitorStage": {
-    titleKey: "v2.fx.matteMonitor",
-    icon: ICON_MATTEMON,
-    card: markRaw(_sfc_main$1e),
-    hasRun: true
-  },
-  "ComfyTV.MaskPropagateStage": {
-    titleKey: "v2.fx.maskPropagate",
-    icon: ICON_MASKPROP,
-    card: markRaw(_sfc_main$1o),
-    hasRun: true
-  },
-  "ComfyTV.PaintStrokeStage": {
-    titleKey: "v2.fx.paintStroke",
-    icon: ICON_PAINTSTROKE,
-    card: markRaw(_sfc_main$1q),
-    hasRun: true,
-    plain: true
-  },
-  "ComfyTV.STMapStage": {
-    titleKey: "v2.fx.stmap",
-    icon: ICON_STMAP,
-    card: markRaw(_sfc_main$1p),
-    hasRun: true
-  },
-  "ComfyTV.STMapGenStage": {
-    titleKey: "v2.fx.stmapGen",
-    icon: ICON_STMAPGEN,
-    card: markRaw(_sfc_main$B),
-    hasRun: true,
-    plain: true,
-    outputKind: "image"
-  },
-  "ComfyTV.ZDefocusStage": {
-    titleKey: "v2.fx.zDefocus",
-    icon: ICON_ZDEFOCUS,
-    card: markRaw(_sfc_main$_),
-    hasRun: true
-  },
-  "ComfyTV.FrameBlendStage": {
-    titleKey: "v2.fx.frameBlend",
-    icon: ICON_FRAMEBLEND,
-    card: markRaw(_sfc_main$1c),
-    hasRun: true
-  },
-  "ComfyTV.VideoTransitionStage": {
-    titleKey: "v2.fx.transition",
-    icon: ICON_TRANSITION,
-    card: markRaw(_sfc_main$24),
-    hasRun: true,
-    plain: true
-  },
-  "ComfyTV.VideoLumaWipeStage": {
-    titleKey: "v2.fx.lumaWipe",
-    icon: ICON_LUMAWIPE,
-    card: markRaw(_sfc_main$23),
-    hasRun: true,
-    plain: true
-  },
-  "ComfyTV.VideoStabilizeStage": {
-    titleKey: "v2.fx.stabilize",
-    icon: ICON_STAB,
-    card: markRaw(_sfc_main$22),
-    hasRun: true
-  },
-  "ComfyTV.VideoStabilizeV2Stage": {
-    titleKey: "v2.fx.stabilizePro",
-    icon: ICON_STABPRO,
-    card: markRaw(_sfc_main$1r),
-    hasRun: true
-  },
-  "ComfyTV.Video360StabilizeStage": {
-    titleKey: "v2.fx.stabilize360",
-    icon: ICON_STAB360,
-    card: markRaw(_sfc_main$D),
-    hasRun: true
-  },
-  "ComfyTV.VideoInterpolateStage": {
-    titleKey: "v2.fx.interpolate",
-    icon: ICON_INTERP,
-    card: markRaw(_sfc_main$20),
-    hasRun: true
-  },
-  "ComfyTV.FaceBlurStage": {
-    titleKey: "v2.fx.faceBlur",
-    icon: ICON_FACEBLUR,
-    card: markRaw(_sfc_main$Z),
-    hasRun: true
-  },
-  "ComfyTV.SpotRemoverStage": {
-    titleKey: "v2.fx.spotRemover",
-    icon: ICON_SPOTREM,
-    card: markRaw(_sfc_main$Y),
-    hasRun: true
-  },
-  "ComfyTV.VideoScopesStage": {
-    titleKey: "v2.fx.scopes",
-    icon: ICON_SCOPES,
-    card: markRaw(_sfc_main$1Z),
-    hasRun: true,
-    plain: true,
-    outputKind: "image",
-    outputStrip: false
-  },
-  "ComfyTV.ContactSheetStage": {
-    titleKey: "v2.fx.contactSheet",
-    icon: ICON_CONTACTSHEET,
-    card: markRaw(_sfc_main$C),
-    hasRun: true,
-    plain: true,
-    outputKind: "image"
-  },
-  "ComfyTV.AudioMeterStage": {
-    titleKey: "v2.fx.audioMeter",
-    icon: ICON_AUDIOMETER,
-    card: markRaw(_sfc_main$S),
-    hasRun: true,
-    plain: true
-  },
-  "ComfyTV.TitleStage": {
-    titleKey: "v2.fx.title",
-    icon: ICON_TITLE,
-    card: markRaw(_sfc_main$1v),
-    hasRun: true
-  },
-  "ComfyTV.SubtitleStage": {
-    titleKey: "v2.fx.subtitle",
-    icon: ICON_SUBTITLE,
-    card: markRaw(_sfc_main$1u),
-    hasRun: true
-  },
-  "ComfyTV.AnnotateStage": {
-    titleKey: "v2.fx.annotate",
-    icon: ICON_ANNOTATE,
-    card: markRaw(_sfc_main$U),
-    hasRun: true
-  },
-  "ComfyTV.KenBurnsStage": {
-    titleKey: "v2.fx.kenBurns",
-    icon: ICON_KENBURNS,
-    card: markRaw(_sfc_main$W),
-    hasRun: true,
-    plain: true
-  },
-  "ComfyTV.SlitScanStage": {
-    titleKey: "v2.fx.slitScan",
-    icon: ICON_SLITSCAN,
-    card: markRaw(_sfc_main$Q),
-    hasRun: true
-  }
-};
+const CardEmbedV2 = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["__scopeId", "data-v-b4d1bc12"]]);
 const FX_CSS = `
 .v2-fx-host:not(.v2-fx-plain) .v2-fx-embed > div > :first-child {
   border-radius: 12px;
@@ -219895,8 +218908,998 @@ function attach$2(node, kind, variant, config2) {
   };
   return stageApi;
 }
+const ICON_LUT = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="M9.2 5v14M14.8 5v14M3.5 9.7h17M3.5 14.3h17"/></svg>`;
+const ICON_SELCOLOR = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3.5c3 3.6 5.5 6.6 5.5 9.6a5.5 5.5 0 11-11 0c0-3 2.5-6 5.5-9.6z"/><path d="M9.5 13.5a2.5 2.5 0 002.5 2.5"/></svg>`;
+const ICON_CDL = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4v16M12 4v16M19 4v16"/><circle cx="5" cy="9" r="2.2" fill="#17171b"/><circle cx="12" cy="15" r="2.2" fill="#17171b"/><circle cx="19" cy="7" r="2.2" fill="#17171b"/></svg>`;
+const ICON_HISTEQ = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V13M8 20V8M12 20V4.5M16 20V9M20 20V15"/><path d="M3 20h18"/></svg>`;
+const ICON_AWB = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17M12 3.5a8.5 8.5 0 010 17" fill="currentColor" fill-opacity=".25" stroke="none"/><path d="M12 3.5a8.5 8.5 0 000 17"/></svg>`;
+const ICON_PSEUDO = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="9" width="16" height="6" rx="3"/><path d="M8 9v6M12 9v6M16 9v6"/><path d="M6 4.5l2 2M18 4.5l-2 2M6 19.5l2-2M18 19.5l-2-2"/></svg>`;
+const ICON_HUECOR = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 12L18 6M12 12l-2.2 8.2"/><circle cx="12" cy="12" r="2.4"/></svg>`;
+const ICON_SEL0R = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.5 4.5l5 5L9 20H4v-5z"/><path d="M12.5 6.5l5 5"/><circle cx="18" cy="18" r="2.5"/></svg>`;
+const ICON_KEYER = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="8.5" r="4.5"/><circle cx="8" cy="8.5" r="1.6"/><path d="M11.5 12l8 8M16.5 17l2.5-2.5M14 19.5l2-2"/></svg>`;
+const ICON_PIK = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3.5 12L12 7.5l8.5 4.5L12 16.5z"/><path d="M3.5 16L12 20.5 20.5 16"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg>`;
+const ICON_DESPILL = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3.5c3 3.6 5.5 6.6 5.5 9.6a5.5 5.5 0 11-11 0c0-3 2.5-6 5.5-9.6z"/><path d="M4.5 19.5l15-15"/></svg>`;
+const ICON_COLSUP = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16l-6 7v6.5l-4 2V12z"/><path d="M15 15l6 6M21 15l-6 6"/></svg>`;
+const ICON_MATTEMORPH = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="9" stroke-dasharray="2.5 3"/><path d="M12 8.5v7M8.5 12h7"/></svg>`;
+const ICON_SHAPEMASK = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="10.5" width="10" height="10" rx="1.5"/><circle cx="15.5" cy="8" r="5"/></svg>`;
+const ICON_LENSDIST = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4c5.3 1.6 10.7 1.6 16 0M4 20c5.3-1.6 10.7-1.6 16 0M4 4v16M20 4v16"/><path d="M8.5 8.5c2.3.6 4.7.6 7 0M8.5 15.5c2.3-.6 4.7-.6 7 0"/></svg>`;
+const ICON_CHROMAB = `<svg viewBox="0 0 24 24" fill="none"><circle cx="10.5" cy="12" r="6.5" stroke="#F87171" stroke-width="1.8"/><circle cx="13.5" cy="12" r="6.5" stroke="#60A5FA" stroke-width="1.8"/></svg>`;
+const ICON_FLARE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="9" r="3.5"/><path d="M9 2v3M9 13v3M2 9h3M13 9h3M4 4l2 2M14 4l-2 2M4 14l2-2"/><circle cx="16.5" cy="16.5" r="1.5"/><circle cx="20" cy="20" r="1"/></svg>`;
+const ICON_GLOW = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="8" stroke-opacity=".45"/><circle cx="12" cy="12" r="11" stroke-opacity=".2"/></svg>`;
+const ICON_GODRAYS = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="7" r="3"/><path d="M6 21l3.5-9M12 21v-8.5M18 21l-3.5-9"/></svg>`;
+const ICON_BLURSHARP = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v18"/><circle cx="7" cy="12" r="3.6" stroke-dasharray="2 2.4"/><path d="M17 8.2l3.2 7.6H13.8z"/></svg>`;
+const ICON_DENOISE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><path d="M7 17l10-10"/><circle cx="8.5" cy="8.5" r=".9" fill="currentColor" stroke="none"/><circle cx="12" cy="6.8" r=".9" fill="currentColor" stroke="none"/><circle cx="15.5" cy="15.5" r=".9" fill="currentColor" stroke="none" opacity=".35"/><circle cx="11.5" cy="16.8" r=".9" fill="currentColor" stroke="none" opacity=".35"/></svg>`;
+const ICON_DEINT = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h7M13 6h7M4 10h4M10 10h10M4 14h16M4 18h16"/></svg>`;
+const ICON_POSTERIZE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V15h4v-4h4V7h4V4h4"/><path d="M4 19h16"/></svg>`;
+const ICON_OLDFILM = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="4" width="17" height="16" rx="2"/><path d="M7 4v16M17 4v16"/><path d="M3.5 8.5H7M3.5 12H7M3.5 15.5H7M17 8.5h3.5M17 12h3.5M17 15.5h3.5"/><path d="M11 7.5v3M13.5 13v4.5"/></svg>`;
+const ICON_ARTFX = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19.5 4.5c-6 1-11 5.5-12.5 10L4 20l5.5-3C14 15.5 18.5 10.5 19.5 4.5z"/><path d="M7 14.5c1 .3 2.2 1.5 2.5 2.5"/></svg>`;
+const ICON_GLITCH = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 6h14M3 10h10M16 10h5M7 14h14M3 18h8M14 18h5"/></svg>`;
+const ICON_KALEIDO = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17M4.6 7.8l14.8 8.4M4.6 16.2l14.8-8.4"/></svg>`;
+const ICON_WAVEWARP = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7c3-2.5 6 2.5 9 0s6 2.5 9 0M3 12c3-2.5 6 2.5 9 0s6 2.5 9 0M3 17c3-2.5 6 2.5 9 0s6 2.5 9 0"/></svg>`;
+const ICON_STROBE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 3L5.5 13.5H11L9.5 21 18 10h-6z"/></svg>`;
+const ICON_FEEDBACK = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="2"/><rect x="6.5" y="6.5" width="11" height="11" rx="1.5" stroke-opacity=".55"/><rect x="9.5" y="9.5" width="5" height="5" rx="1" stroke-opacity=".3"/></svg>`;
+const ICON_REGRAIN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><circle cx="8" cy="8" r=".9" fill="currentColor" stroke="none"/><circle cx="13" cy="6.8" r=".9" fill="currentColor" stroke="none"/><circle cx="17" cy="9.5" r=".9" fill="currentColor" stroke="none"/><circle cx="7" cy="13.5" r=".9" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r=".9" fill="currentColor" stroke="none"/><circle cx="16.5" cy="14.5" r=".9" fill="currentColor" stroke="none"/><circle cx="9.5" cy="17" r=".9" fill="currentColor" stroke="none"/><circle cx="14.5" cy="17.5" r=".9" fill="currentColor" stroke="none"/></svg>`;
+const ICON_STYLIZE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 4l5 5L8.5 20.5 3 22l1.5-5.5z"/><path d="M13 6l5 5"/><path d="M19 3l.6 1.6L21 5l-1.4.6L19 7l-.6-1.4L17 5l1.4-.4z" fill="currentColor" stroke="none"/></svg>`;
+const ICON_CHROMASHIFT = `<svg viewBox="0 0 24 24" fill="none"><rect x="4" y="6" width="13" height="13" rx="2" stroke="#F87171" stroke-width="1.8"/><rect x="7" y="4" width="13" height="13" rx="2" stroke="#60A5FA" stroke-width="1.8"/></svg>`;
+const ICON_TRANSFORM = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7.5" y="7.5" width="9" height="9" rx="1.5"/><path d="M12 2v3.5M12 18.5V22M2 12h3.5M18.5 12H22"/><path d="M10.2 3.8L12 2l1.8 1.8M10.2 20.2L12 22l1.8-1.8M3.8 10.2L2 12l1.8 1.8M20.2 10.2L22 12l-1.8 1.8"/></svg>`;
+const ICON_360 = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><ellipse cx="12" cy="12" rx="3.6" ry="8.5"/><path d="M3.8 9.5h16.4M3.8 14.5h16.4"/></svg>`;
+const ICON_CARD3D = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 4.5l12 2.5v12.5L6 17z"/><path d="M6 4.5V17M18 7v12.5"/></svg>`;
+const ICON_PARTICLES = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="18" r="2.4"/><circle cx="12" cy="11" r="1.6" fill="currentColor" stroke="none"/><circle cx="16.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="19.5" cy="11.5" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="15" r="1" fill="currentColor" stroke="none"/><circle cx="20" cy="4" r=".9" fill="currentColor" stroke="none"/></svg>`;
+const ICON_WATER = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 15.5c3-2.2 6 2.2 9 0s6 2.2 9 0"/><path d="M3 19.5c3-2.2 6 2.2 9 0s6 2.2 9 0"/><path d="M12 4.5c1.8 2.2 3.3 4 3.3 5.8a3.3 3.3 0 11-6.6 0c0-1.8 1.5-3.6 3.3-5.8z"/></svg>`;
+const ICON_LIGHTGRAF = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 18c2-6 5-9 8-9s4 3 1.5 5S8 15 9.5 11 15 4.5 20 4"/><circle cx="20" cy="4" r="1.6" fill="currentColor" stroke="none"/></svg>`;
+const CONFIGS$3 = {
+  "ComfyTV.VideoLUTStage": {
+    titleKey: "v2.fx.lut",
+    icon: ICON_LUT,
+    card: markRaw(_sfc_main$29),
+    hasRun: false
+  },
+  "ComfyTV.SelectiveColorStage": {
+    titleKey: "v2.fx.selectiveColor",
+    icon: ICON_SELCOLOR,
+    card: markRaw(_sfc_main$1b),
+    hasRun: false
+  },
+  "ComfyTV.CDLStage": {
+    titleKey: "v2.fx.cdl",
+    icon: ICON_CDL,
+    card: markRaw(_sfc_main$16),
+    hasRun: false
+  },
+  "ComfyTV.HistogramEqStage": {
+    titleKey: "v2.fx.histogramEq",
+    icon: ICON_HISTEQ,
+    card: markRaw(_sfc_main$15),
+    hasRun: false
+  },
+  "ComfyTV.GrayWorldStage": {
+    titleKey: "v2.fx.awb",
+    icon: ICON_AWB,
+    card: markRaw(_sfc_main$17),
+    hasRun: false
+  },
+  "ComfyTV.PseudocolorStage": {
+    titleKey: "v2.fx.pseudocolor",
+    icon: ICON_PSEUDO,
+    card: markRaw(_sfc_main$19),
+    hasRun: false
+  },
+  "ComfyTV.HueCorrectStage": {
+    titleKey: "v2.fx.hueCorrect",
+    icon: ICON_HUECOR,
+    card: markRaw(_sfc_main$1n),
+    hasRun: false
+  },
+  "ComfyTV.Select0rStage": {
+    titleKey: "v2.fx.select0r",
+    icon: ICON_SEL0R,
+    card: markRaw(_sfc_main$M),
+    hasRun: false
+  },
+  "ComfyTV.KeyerStage": {
+    titleKey: "v2.fx.keyer",
+    icon: ICON_KEYER,
+    card: markRaw(KeyerStageCard),
+    hasRun: false
+  },
+  "ComfyTV.PIKStage": {
+    titleKey: "v2.fx.pik",
+    icon: ICON_PIK,
+    card: markRaw(PIKStageCard),
+    hasRun: false
+  },
+  "ComfyTV.DespillStage": {
+    titleKey: "v2.fx.despill",
+    icon: ICON_DESPILL,
+    card: markRaw(_sfc_main$1h),
+    hasRun: false
+  },
+  "ComfyTV.ColorSuppressStage": {
+    titleKey: "v2.fx.colorSuppress",
+    icon: ICON_COLSUP,
+    card: markRaw(_sfc_main$1g),
+    hasRun: false
+  },
+  "ComfyTV.MatteMorphStage": {
+    titleKey: "v2.fx.matteMorph",
+    icon: ICON_MATTEMORPH,
+    card: markRaw(_sfc_main$1d),
+    hasRun: false
+  },
+  "ComfyTV.ShapeMaskStage": {
+    titleKey: "v2.fx.shapeMask",
+    icon: ICON_SHAPEMASK,
+    card: markRaw(_sfc_main$13),
+    hasRun: false
+  },
+  "ComfyTV.LensDistortStage": {
+    titleKey: "v2.fx.lensDistort",
+    icon: ICON_LENSDIST,
+    card: markRaw(_sfc_main$12),
+    hasRun: false
+  },
+  "ComfyTV.ChromaticAberrationStage": {
+    titleKey: "v2.fx.chromaticAberration",
+    icon: ICON_CHROMAB,
+    card: markRaw(_sfc_main$11),
+    hasRun: false
+  },
+  "ComfyTV.LensFlareStage": {
+    titleKey: "v2.fx.lensFlare",
+    icon: ICON_FLARE,
+    card: markRaw(_sfc_main$10),
+    hasRun: false
+  },
+  "ComfyTV.GlowStage": {
+    titleKey: "v2.fx.glow",
+    icon: ICON_GLOW,
+    card: markRaw(_sfc_main$1m),
+    hasRun: false
+  },
+  "ComfyTV.GodRaysStage": {
+    titleKey: "v2.fx.godRays",
+    icon: ICON_GODRAYS,
+    card: markRaw(_sfc_main$1l),
+    hasRun: false
+  },
+  "ComfyTV.VideoBlurSharpenStage": {
+    titleKey: "v2.fx.blurSharpen",
+    icon: ICON_BLURSHARP,
+    card: markRaw(_sfc_main$28),
+    hasRun: false
+  },
+  "ComfyTV.VideoDenoiseStage": {
+    titleKey: "v2.fx.denoise",
+    icon: ICON_DENOISE,
+    card: markRaw(_sfc_main$26),
+    hasRun: false
+  },
+  "ComfyTV.VideoDeinterlaceStage": {
+    titleKey: "v2.fx.deinterlace",
+    icon: ICON_DEINT,
+    card: markRaw(_sfc_main$1$),
+    hasRun: false
+  },
+  "ComfyTV.PosterizeStage": {
+    titleKey: "v2.fx.posterize",
+    icon: ICON_POSTERIZE,
+    card: markRaw(_sfc_main$18),
+    hasRun: false
+  },
+  "ComfyTV.OldFilmStage": {
+    titleKey: "v2.fx.oldFilm",
+    icon: ICON_OLDFILM,
+    card: markRaw(_sfc_main$V),
+    hasRun: false
+  },
+  "ComfyTV.ArtFXStage": {
+    titleKey: "v2.fx.artFx",
+    icon: ICON_ARTFX,
+    card: markRaw(_sfc_main$L),
+    hasRun: false
+  },
+  "ComfyTV.GlitchFXStage": {
+    titleKey: "v2.fx.glitch",
+    icon: ICON_GLITCH,
+    card: markRaw(_sfc_main$K),
+    hasRun: false
+  },
+  "ComfyTV.KaleidoscopeStage": {
+    titleKey: "v2.fx.kaleidoscope",
+    icon: ICON_KALEIDO,
+    card: markRaw(_sfc_main$J),
+    hasRun: false
+  },
+  "ComfyTV.WaveWarpStage": {
+    titleKey: "v2.fx.waveWarp",
+    icon: ICON_WAVEWARP,
+    card: markRaw(_sfc_main$I),
+    hasRun: false
+  },
+  "ComfyTV.StrobeStage": {
+    titleKey: "v2.fx.strobe",
+    icon: ICON_STROBE,
+    card: markRaw(_sfc_main$O),
+    hasRun: false
+  },
+  "ComfyTV.FeedbackFXStage": {
+    titleKey: "v2.fx.feedback",
+    icon: ICON_FEEDBACK,
+    card: markRaw(_sfc_main$P),
+    hasRun: false
+  },
+  "ComfyTV.RegrainStage": {
+    titleKey: "v2.fx.regrain",
+    icon: ICON_REGRAIN,
+    card: markRaw(_sfc_main$E),
+    hasRun: false
+  },
+  "ComfyTV.VideoStylizeStage": {
+    titleKey: "v2.fx.stylize",
+    icon: ICON_STYLIZE,
+    card: markRaw(_sfc_main$1_),
+    hasRun: false
+  },
+  "ComfyTV.ChromaShiftStage": {
+    titleKey: "v2.fx.chromaShift",
+    icon: ICON_CHROMASHIFT,
+    card: markRaw(_sfc_main$1a),
+    hasRun: false
+  },
+  "ComfyTV.VideoTransformStage": {
+    titleKey: "v2.fx.transform",
+    icon: ICON_TRANSFORM,
+    card: markRaw(_sfc_main$1z),
+    hasRun: false
+  },
+  "ComfyTV.Video360Stage": {
+    titleKey: "v2.fx.video360",
+    icon: ICON_360,
+    card: markRaw(_sfc_main$14),
+    hasRun: false
+  },
+  "ComfyTV.Card3DStage": {
+    titleKey: "v2.fx.card3d",
+    icon: ICON_CARD3D,
+    card: markRaw(_sfc_main$F),
+    hasRun: false
+  },
+  "ComfyTV.ParticlesStage": {
+    titleKey: "v2.fx.particles",
+    icon: ICON_PARTICLES,
+    card: markRaw(_sfc_main$$),
+    hasRun: false
+  },
+  "ComfyTV.WaterStage": {
+    titleKey: "v2.fx.water",
+    icon: ICON_WATER,
+    card: markRaw(_sfc_main$H),
+    hasRun: false
+  },
+  "ComfyTV.LightGraffitiStage": {
+    titleKey: "v2.fx.lightGraffiti",
+    icon: ICON_LIGHTGRAF,
+    card: markRaw(_sfc_main$G),
+    hasRun: false
+  }
+};
+for (const [cls, config2] of Object.entries(CONFIGS$3)) {
+  V2_SHELLS[cls] = (node, kind, variant) => attachFxShell(node, kind, variant, config2);
+}
+const _hoisted_1$4 = { class: "fxc__stage" };
+const _hoisted_2$4 = { class: "fxc__live" };
+const _hoisted_3$3 = {
+  key: 0,
+  class: "fxc__hint"
+};
+const _hoisted_4$3 = {
+  key: 0,
+  class: "fxc__outwrap"
+};
+const _hoisted_5$2 = {
+  key: 1,
+  class: "fxc__mode"
+};
+const _hoisted_6 = ["data-on"];
+const _hoisted_7 = ["data-on"];
+const _hoisted_8 = {
+  key: 2,
+  class: "fxc__corner"
+};
+const _hoisted_9 = ["title"];
+const _hoisted_10 = ["data-done", "title"];
+const _hoisted_11 = { class: "fxc__panel" };
+const _hoisted_12 = { class: "fxc__chain" };
+const _hoisted_13 = ["data-nopreview", "title"];
+const _hoisted_14 = { class: "fxc__ord" };
+const _hoisted_15 = { class: "fxc__name" };
+const _hoisted_16 = {
+  key: 0,
+  class: "fxc__nodot"
+};
+const _hoisted_17 = {
+  key: 1,
+  class: "fxc__empty"
+};
+const _hoisted_18 = { class: "fxc__delivery" };
+const _hoisted_19 = { class: "fxc__dsummary" };
+const _hoisted_20 = {
+  key: 0,
+  class: "fxc__drows"
+};
+const _hoisted_21 = { class: "fxc__drow" };
+const _hoisted_22 = { class: "fxc__dlabel" };
+const _hoisted_23 = { class: "fxc__drow" };
+const _hoisted_24 = { class: "fxc__dlabel" };
+const _hoisted_25 = { class: "fxc__drow" };
+const _hoisted_26 = { class: "fxc__dlabel" };
+const _hoisted_27 = { class: "fxc__drow" };
+const _hoisted_28 = { class: "fxc__dlabel" };
+const _hoisted_29 = { class: "fxc__drow" };
+const _hoisted_30 = { class: "fxc__dlabel" };
+const _hoisted_31 = { class: "fxc__footer" };
+const _hoisted_32 = { class: "fxc__flabel" };
+const _hoisted_33 = ["data-busy"];
+const _sfc_main$4 = /* @__PURE__ */ defineComponent({
+  __name: "FxChainCardV2",
+  props: {
+    node: {},
+    state: {},
+    onAction: { type: Function },
+    onRunRequest: { type: Function },
+    onCancelRequest: { type: Function }
+  },
+  setup(__props) {
+    const props = __props;
+    function onRunClick() {
+      if (props.state.running) props.onCancelRequest();
+      else props.onRunRequest();
+    }
+    const { t: t2 } = useI18n();
+    const { rows } = useFxChain(props.node, () => props.state);
+    const src = () => ({ value: "source", label: t2("fxChain.sourceOpt") });
+    const CS_TARGETS = ["bt709", "bt601-6-625", "bt2020", "smpte170m"].map((v3) => ({ value: v3, label: v3 }));
+    const SIZES = computed(() => [
+      src(),
+      ...["2160", "1440", "1080", "720", "540", "480"].map((v3) => ({ value: v3, label: `${v3}p` }))
+    ]);
+    const FPS_OPTS = computed(() => [
+      src(),
+      ...["24", "25", "30", "50", "60"].map((v3) => ({ value: v3, label: v3 }))
+    ]);
+    const CODECS = [
+      { value: "h264", label: "H.264" },
+      { value: "hevc", label: "HEVC" },
+      { value: "prores", label: "ProRes" }
+    ];
+    const QUALITIES = computed(() => [
+      { value: "draft", label: t2("fxChain.qDraft") },
+      { value: "standard", label: t2("fxChain.qStandard") },
+      { value: "high", label: t2("fxChain.qHigh") }
+    ]);
+    const outColorspace = useStrWidget(props.node, "out_colorspace", "bt709");
+    const outSize = useStrWidget(props.node, "out_size", "source");
+    const outFps = useStrWidget(props.node, "out_fps", "source");
+    const outCodec = useStrWidget(props.node, "out_codec", "h264");
+    const outQuality = useStrWidget(props.node, "out_quality", "standard");
+    const deliveryOpen = /* @__PURE__ */ ref(false);
+    const deliverySummary = computed(() => {
+      const size2 = outSize.value === "source" ? t2("fxChain.sourceOpt") : `${outSize.value}p`;
+      const fps = outFps.value === "source" ? "" : ` · ${outFps.value}fps`;
+      return `${size2}${fps} · ${String(outCodec.value).toUpperCase()}`;
+    });
+    const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, "video"));
+    const playerRef = /* @__PURE__ */ ref(null);
+    const videoEl = computed(() => {
+      var _a3;
+      return ((_a3 = playerRef.value) == null ? void 0 : _a3.videoEl) ?? null;
+    });
+    const previewCanvas = /* @__PURE__ */ ref(null);
+    const { supported } = useChainedFxPreview({
+      videoEl,
+      canvasEl: previewCanvas,
+      nodeId: String(props.node.id),
+      node: props.node,
+      params: () => ({}),
+      createRenderer: () => new ChainBlitRenderer()
+    });
+    const outputUrl = computed(() => String(props.state.output ?? "") || null);
+    const mode = /* @__PURE__ */ ref("live");
+    watch(outputUrl, (url, prev) => {
+      if (url && url !== prev) mode.value = "output";
+    });
+    function onDownload() {
+      var _a3;
+      const url = outputUrl.value;
+      if (!url) return;
+      const a2 = document.createElement("a");
+      a2.href = url;
+      a2.download = decodeURIComponent(((_a3 = url.split("filename=")[1]) == null ? void 0 : _a3.split("&")[0]) || "output.mp4");
+      a2.click();
+    }
+    const saved = /* @__PURE__ */ ref(false);
+    const savedFlash = useTimeoutFn(() => {
+      saved.value = false;
+    }, 1200, { immediate: false });
+    function onSave() {
+      var _a3;
+      const url = outputUrl.value;
+      if (!url) return;
+      const label = decodeURIComponent(((_a3 = url.split("filename=")[1]) == null ? void 0 : _a3.split("&")[0]) || "video");
+      props.onAction("load-asset", { imageUrl: url, label, mediaType: "video" });
+      saved.value = true;
+      savedFlash.stop();
+      savedFlash.start();
+    }
+    return (_ctx, _cache2) => {
+      return openBlock(), createElementBlock("div", {
+        class: "fxc",
+        onPointerdown: _cache2[9] || (_cache2[9] = withModifiers(() => {
+        }, ["stop"])),
+        onPointermove: _cache2[10] || (_cache2[10] = withModifiers(() => {
+        }, ["stop"])),
+        onPointerup: _cache2[11] || (_cache2[11] = withModifiers(() => {
+        }, ["stop"]))
+      }, [
+        createVNode(_sfc_main$3g, { node: __props.node }, {
+          player: withCtx(() => [
+            createBaseVNode("div", _hoisted_1$4, [
+              withDirectives(createBaseVNode("div", _hoisted_2$4, [
+                createVNode(VideoPlayerLite, {
+                  ref_key: "playerRef",
+                  ref: playerRef,
+                  "source-video-url": sourceVideoUrl.value
+                }, {
+                  overlay: withCtx(() => [
+                    withDirectives(createBaseVNode("canvas", {
+                      ref_key: "previewCanvas",
+                      ref: previewCanvas,
+                      class: "fxc__canvas"
+                    }, null, 512), [
+                      [vShow, unref(supported)]
+                    ])
+                  ]),
+                  _: 1
+                }, 8, ["source-video-url"]),
+                !sourceVideoUrl.value ? (openBlock(), createElementBlock("div", _hoisted_3$3, [
+                  _cache2[12] || (_cache2[12] = createBaseVNode("svg", {
+                    viewBox: "0 0 24 24",
+                    fill: "none",
+                    stroke: "currentColor",
+                    "stroke-width": "1.8"
+                  }, [
+                    createBaseVNode("rect", {
+                      x: "3",
+                      y: "5",
+                      width: "18",
+                      height: "14",
+                      rx: "2.5"
+                    }),
+                    createBaseVNode("path", { d: "M10 9.5l5 2.5-5 2.5z" })
+                  ], -1)),
+                  createBaseVNode("span", null, toDisplayString$1(unref(t2)("v2.fxChainHint")), 1)
+                ])) : createCommentVNode("", true)
+              ], 512), [
+                [vShow, mode.value === "live"]
+              ]),
+              mode.value === "output" && outputUrl.value ? (openBlock(), createElementBlock("div", _hoisted_4$3, [
+                createVNode(ProxiedVideo, {
+                  src: outputUrl.value,
+                  class: "fxc__out",
+                  controls: "",
+                  playsinline: "",
+                  preload: "metadata"
+                }, null, 8, ["src"])
+              ])) : createCommentVNode("", true),
+              outputUrl.value ? (openBlock(), createElementBlock("div", _hoisted_5$2, [
+                createBaseVNode("button", {
+                  type: "button",
+                  "data-on": mode.value === "live" ? "1" : "",
+                  onClick: _cache2[0] || (_cache2[0] = withModifiers(($event) => mode.value = "live", ["stop"]))
+                }, toDisplayString$1(unref(t2)("v2.livePreview")), 9, _hoisted_6),
+                createBaseVNode("button", {
+                  type: "button",
+                  "data-on": mode.value === "output" ? "1" : "",
+                  onClick: _cache2[1] || (_cache2[1] = withModifiers(($event) => mode.value = "output", ["stop"]))
+                }, toDisplayString$1(unref(t2)("v2.outputLabel")), 9, _hoisted_7)
+              ])) : createCommentVNode("", true),
+              mode.value === "output" && outputUrl.value ? (openBlock(), createElementBlock("div", _hoisted_8, [
+                createBaseVNode("button", {
+                  type: "button",
+                  title: unref(t2)("stage.action.download"),
+                  onClick: withModifiers(onDownload, ["stop"])
+                }, [..._cache2[13] || (_cache2[13] = [
+                  createBaseVNode("svg", {
+                    viewBox: "0 0 24 24",
+                    fill: "none",
+                    stroke: "currentColor",
+                    "stroke-width": "2"
+                  }, [
+                    createBaseVNode("path", { d: "M12 3.5V15M7 10.5l5 5 5-5M4 19.5h16" })
+                  ], -1)
+                ])], 8, _hoisted_9),
+                createBaseVNode("button", {
+                  type: "button",
+                  "data-done": saved.value ? "1" : "",
+                  title: unref(t2)("stage.action.loadAsset"),
+                  onClick: withModifiers(onSave, ["stop"])
+                }, [..._cache2[14] || (_cache2[14] = [
+                  createBaseVNode("svg", {
+                    viewBox: "0 0 24 24",
+                    fill: "none",
+                    stroke: "currentColor",
+                    "stroke-width": "2"
+                  }, [
+                    createBaseVNode("path", { d: "M6.5 3.5h11a1 1 0 011 1V21l-6.5-4-6.5 4V4.5a1 1 0 011-1z" })
+                  ], -1)
+                ])], 8, _hoisted_10)
+              ])) : createCommentVNode("", true)
+            ])
+          ]),
+          default: withCtx(() => [
+            createBaseVNode("div", _hoisted_11, [
+              createBaseVNode("div", _hoisted_12, [
+                unref(rows).length ? (openBlock(true), createElementBlock(Fragment$1, { key: 0 }, renderList(unref(rows), (row) => {
+                  return openBlock(), createElementBlock("div", {
+                    key: row.ordinal,
+                    class: "fxc__chip",
+                    "data-nopreview": row.preview ? "" : "1",
+                    title: row.preview ? row.kind : `${row.kind} · ${unref(t2)("fxChain.noPreview")}`
+                  }, [
+                    createBaseVNode("span", _hoisted_14, toDisplayString$1(row.ordinal), 1),
+                    createBaseVNode("span", _hoisted_15, toDisplayString$1(row.label), 1),
+                    !row.preview ? (openBlock(), createElementBlock("span", _hoisted_16)) : createCommentVNode("", true)
+                  ], 8, _hoisted_13);
+                }), 128)) : (openBlock(), createElementBlock("div", _hoisted_17, toDisplayString$1(unref(t2)("fxChain.empty")), 1))
+              ]),
+              createBaseVNode("div", _hoisted_18, [
+                createBaseVNode("button", {
+                  type: "button",
+                  class: "fxc__dtoggle",
+                  onClick: _cache2[2] || (_cache2[2] = withModifiers(($event) => deliveryOpen.value = !deliveryOpen.value, ["stop"]))
+                }, [
+                  (openBlock(), createElementBlock("svg", {
+                    viewBox: "0 0 24 24",
+                    fill: "none",
+                    stroke: "currentColor",
+                    "stroke-width": "2",
+                    style: normalizeStyle({ transform: deliveryOpen.value ? "rotate(90deg)" : "" })
+                  }, [..._cache2[15] || (_cache2[15] = [
+                    createBaseVNode("path", { d: "M9 5l7 7-7 7" }, null, -1)
+                  ])], 4)),
+                  createBaseVNode("span", null, toDisplayString$1(unref(t2)("fxChain.delivery")), 1),
+                  createBaseVNode("span", _hoisted_19, toDisplayString$1(deliverySummary.value), 1)
+                ]),
+                deliveryOpen.value ? (openBlock(), createElementBlock("div", _hoisted_20, [
+                  createBaseVNode("div", _hoisted_21, [
+                    createBaseVNode("span", _hoisted_22, toDisplayString$1(unref(t2)("fxChain.dSize")), 1),
+                    createVNode(_sfc_main$2c, {
+                      modelValue: unref(outSize),
+                      "onUpdate:modelValue": _cache2[3] || (_cache2[3] = ($event) => /* @__PURE__ */ isRef(outSize) ? outSize.value = $event : null),
+                      options: SIZES.value
+                    }, null, 8, ["modelValue", "options"])
+                  ]),
+                  createBaseVNode("div", _hoisted_23, [
+                    createBaseVNode("span", _hoisted_24, toDisplayString$1(unref(t2)("fxChain.dFps")), 1),
+                    createVNode(_sfc_main$2c, {
+                      modelValue: unref(outFps),
+                      "onUpdate:modelValue": _cache2[4] || (_cache2[4] = ($event) => /* @__PURE__ */ isRef(outFps) ? outFps.value = $event : null),
+                      options: FPS_OPTS.value
+                    }, null, 8, ["modelValue", "options"])
+                  ]),
+                  createBaseVNode("div", _hoisted_25, [
+                    createBaseVNode("span", _hoisted_26, toDisplayString$1(unref(t2)("fxChain.dCodec")), 1),
+                    createVNode(_sfc_main$2c, {
+                      modelValue: unref(outCodec),
+                      "onUpdate:modelValue": _cache2[5] || (_cache2[5] = ($event) => /* @__PURE__ */ isRef(outCodec) ? outCodec.value = $event : null),
+                      options: CODECS
+                    }, null, 8, ["modelValue"])
+                  ]),
+                  createBaseVNode("div", _hoisted_27, [
+                    createBaseVNode("span", _hoisted_28, toDisplayString$1(unref(t2)("fxChain.dQuality")), 1),
+                    createVNode(_sfc_main$2c, {
+                      modelValue: unref(outQuality),
+                      "onUpdate:modelValue": _cache2[6] || (_cache2[6] = ($event) => /* @__PURE__ */ isRef(outQuality) ? outQuality.value = $event : null),
+                      options: QUALITIES.value
+                    }, null, 8, ["modelValue", "options"])
+                  ]),
+                  createBaseVNode("div", _hoisted_29, [
+                    createBaseVNode("span", _hoisted_30, toDisplayString$1(unref(t2)("fxChain.dColorspace")), 1),
+                    createVNode(_sfc_main$2c, {
+                      modelValue: unref(outColorspace),
+                      "onUpdate:modelValue": _cache2[7] || (_cache2[7] = ($event) => /* @__PURE__ */ isRef(outColorspace) ? outColorspace.value = $event : null),
+                      options: unref(CS_TARGETS)
+                    }, null, 8, ["modelValue", "options"])
+                  ])
+                ])) : createCommentVNode("", true)
+              ]),
+              createBaseVNode("div", _hoisted_31, [
+                createBaseVNode("span", _hoisted_32, toDisplayString$1(unref(t2)("v2.renderChain")), 1),
+                _cache2[17] || (_cache2[17] = createBaseVNode("span", { class: "fxc__fspacer" }, null, -1)),
+                createVNode(ServerSelectV2, {
+                  "get-node": () => __props.node,
+                  state: __props.state
+                }, null, 8, ["get-node", "state"]),
+                createBaseVNode("button", {
+                  type: "button",
+                  class: "v2-run",
+                  "data-busy": __props.state.running ? "1" : "",
+                  onPointerdown: _cache2[8] || (_cache2[8] = withModifiers(() => {
+                  }, ["stop"])),
+                  onClick: withModifiers(onRunClick, ["stop"])
+                }, [..._cache2[16] || (_cache2[16] = [
+                  createBaseVNode("span", { class: "v2-run__up" }, [
+                    createBaseVNode("svg", {
+                      viewBox: "0 0 24 24",
+                      fill: "none",
+                      stroke: "currentColor",
+                      "stroke-width": "2.4"
+                    }, [
+                      createBaseVNode("path", { d: "M12 19V5M5.5 11.5L12 5l6.5 6.5" })
+                    ])
+                  ], -1),
+                  createBaseVNode("span", { class: "v2-run__stop" }, [
+                    createBaseVNode("svg", {
+                      viewBox: "0 0 24 24",
+                      fill: "currentColor",
+                      stroke: "none"
+                    }, [
+                      createBaseVNode("rect", {
+                        x: "7",
+                        y: "7",
+                        width: "10",
+                        height: "10",
+                        rx: "2"
+                      })
+                    ])
+                  ], -1)
+                ])], 40, _hoisted_33)
+              ])
+            ])
+          ]),
+          _: 1
+        }, 8, ["node"])
+      ], 32);
+    };
+  }
+});
+const FxChainCardV2 = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["__scopeId", "data-v-1b839639"]]);
+const ICON_COLOR = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 010 18c-1.5 0-2-1-1.3-2.2.8-1.4-.2-2.8-1.9-2.8H7a4 4 0 01-4-4"/><circle cx="8" cy="9" r="1.2" fill="currentColor" stroke="none"/><circle cx="13" cy="7" r="1.2" fill="currentColor" stroke="none"/><circle cx="17" cy="11" r="1.2" fill="currentColor" stroke="none"/></svg>`;
+const ICON_CURVE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20C10 20 14 4 20 4"/><path d="M4 20V4M4 20h16"/></svg>`;
+const ICON_CHAIN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="5" height="5" rx="1.2"/><rect x="16" y="6" width="5" height="5" rx="1.2"/><rect x="9.5" y="14" width="5" height="5" rx="1.2"/><path d="M8 8.5h8M5.5 11v3.5a2 2 0 002 2h2M18.5 11v3.5a2 2 0 01-2 2h-2"/></svg>`;
+const ICON_TRIM = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><path d="M8.1 7.8L20 19M8.1 16.2L20 5M13 12.1l2-1.9"/></svg>`;
+const ICON_VCROP = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2.5V16a2 2 0 002 2h13.5M2.5 6H16a2 2 0 012 2v13.5"/></svg>`;
+const ICON_VSPLIT = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="7.5" height="12" rx="1.5"/><rect x="13.5" y="6" width="7.5" height="12" rx="1.5"/><path d="M12 3v18" stroke-dasharray="2.5 2.5"/></svg>`;
+const ICON_CONCAT = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="8" width="8" height="8" rx="1.5"/><rect x="13.5" y="8" width="8" height="8" rx="1.5"/><path d="M10.5 12h3"/></svg>`;
+const ICON_SPEED = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19a9 9 0 0116 0"/><path d="M12 19l4.5-6.5"/><circle cx="12" cy="19" r="1.6" fill="currentColor" stroke="none"/></svg>`;
+const ICON_ROTATE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 12a8 8 0 11-2.3-5.6"/><path d="M18 2.5V7h-4.5"/></svg>`;
+const ICON_VOLUME = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 9.5v5h3.5L12 19V5L7.5 9.5z"/><path d="M15.5 9a4.5 4.5 0 010 6M18 6.5a8 8 0 010 11"/></svg>`;
+const ICON_MUXAUDIO = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="5" width="13" height="10" rx="2"/><path d="M7 8.5l4 1.5-4 1.5z" fill="currentColor" stroke="none"/><path d="M19.5 8v8.2"/><circle cx="17.8" cy="17.5" r="1.8"/><path d="M19.5 8l2-.6"/></svg>`;
+const ICON_RESIZE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="6" width="17" height="12" rx="2"/><path d="M7 15l3-3M7 12v3h3M17 9l-3 3M17 12V9h-3"/></svg>`;
+const ICON_FRAMES = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="7" width="5.4" height="10" rx="1"/><rect x="9.3" y="7" width="5.4" height="10" rx="1"/><rect x="16.1" y="7" width="5.4" height="10" rx="1"/></svg>`;
+const ICON_TIMEREMAP = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.5 2"/><path d="M3.5 12c2-1.5 4-2.5 8.5-2.5" stroke-opacity=".4"/></svg>`;
+const ICON_SEQUENCE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4.5" width="18" height="5" rx="1.5"/><rect x="3" y="12" width="12" height="5" rx="1.5"/><path d="M6 19.5h9"/></svg>`;
+const ICON_SCENEDETECT = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="6" width="8.5" height="12" rx="1.5"/><rect x="13" y="6" width="8.5" height="12" rx="1.5"/><path d="M11 3l2 3-2-1-2 1z" fill="currentColor" stroke="none"/></svg>`;
+const ICON_CHROMAKEY = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4.5" width="18" height="13" rx="2"/><path d="M3 17.5L9 11l4 4 3-3 5 5.5"/><path d="M8 21h8"/></svg>`;
+const ICON_COMPOSITE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="12" height="12" rx="2"/><rect x="8.5" y="8.5" width="12" height="12" rx="2"/></svg>`;
+const ICON_CORNERPIN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6.5 5.5L18 7.5l-1 11L5 16z"/><circle cx="6.5" cy="5.5" r="1.8"/><circle cx="18" cy="7.5" r="1.8"/><circle cx="17" cy="18.5" r="1.8"/><circle cx="5" cy="16" r="1.8"/></svg>`;
+const ICON_ROTOMASK = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 17c-2.5-2.5-2-7 .5-9.5S14 5 16.5 7 20 13 17.5 15.5 9.5 19.5 7 17z" stroke-dasharray="3 2.6"/><path d="M14 21l6-6M17.5 21H20v-2.5" /></svg>`;
+const ICON_KEYMIX = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/></svg>`;
+const ICON_MATTEMON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4.5" width="18" height="13" rx="2"/><path d="M12 8a4.5 3.2 0 100 6.4A4.5 3.2 0 0012 8z"/><circle cx="12" cy="11.2" r="1.2" fill="currentColor" stroke="none"/><path d="M8 21h8"/></svg>`;
+const ICON_MASKPROP = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="12" r="4.5" stroke-dasharray="2.5 2.2"/><path d="M14.5 12H21M18.5 9.5L21 12l-2.5 2.5"/></svg>`;
+const ICON_PAINTSTROKE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 16c4 1 5-2 8-5s5.5-4.5 8-6"/><path d="M4 16l-1 5 5-1z" fill="currentColor" stroke="none"/></svg>`;
+const ICON_STMAP = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M4 9.3c5.3 1.4 10.7 1.4 16 0M4 14.6c5.3-1.4 10.7-1.4 16 0M9.3 4c1.4 5.3 1.4 10.7 0 16M14.6 4c-1.4 5.3-1.4 10.7 0 16"/></svg>`;
+const ICON_STMAPGEN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="11" height="11" rx="1.5"/><path d="M3.5 9h11M9 3.5v11"/><circle cx="17.5" cy="17.5" r="3.2"/><path d="M17.5 12.8v1.6M17.5 20.6v1.6M12.8 17.5h1.6M20.6 17.5h1.6"/></svg>`;
+const ICON_ZDEFOCUS = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5l4.2 6.3M20.2 9.8l-7.4 1.4M18.3 18.3l-5.5-5.2M12 20.5l-4.2-6.3M3.8 14.2l7.4-1.4M5.7 5.7l5.5 5.2"/></svg>`;
+const ICON_FRAMEBLEND = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="12" height="12" rx="1.5" stroke-opacity=".45"/><rect x="6" y="6" width="12" height="12" rx="1.5" stroke-opacity=".7"/><rect x="9" y="6" width="12" height="12" rx="1.5"/></svg>`;
+const ICON_TRANSITION = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="6" width="11" height="12" rx="1.5"/><rect x="10.5" y="6" width="11" height="12" rx="1.5" stroke-dasharray="2.5 2.2"/><path d="M9 12h6M13 9.5L15.5 12 13 14.5"/></svg>`;
+const ICON_LUMAWIPE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M10 5.5c3 4 3 9 0 13M14.5 5.5c2 4 2 9 0 13" stroke-opacity=".6"/></svg>`;
+const ICON_STAB = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 13c2.5 0 2.5-4 5-4s2.5 6 5 6 2.5-4 5-4" stroke-opacity=".45"/><path d="M3 12h18"/></svg>`;
+const ICON_STABPRO = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M8.5 12.2l2.3 2.3 4.7-4.7"/></svg>`;
+const ICON_STAB360 = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M3.8 12h16.4"/><path d="M7 8l-1.5-1.5M17 8l1.5-1.5" stroke-opacity=".55"/><path d="M12 8.5v7M9.5 11l2.5-2.5 2.5 2.5"/></svg>`;
+const ICON_INTERP = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="7" width="5.5" height="10" rx="1"/><rect x="16" y="7" width="5.5" height="10" rx="1"/><rect x="9.2" y="7" width="5.5" height="10" rx="1" stroke-dasharray="2.4 2"/><path d="M12 10.5v3M10.7 12h2.6"/></svg>`;
+const ICON_FACEBLUR = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="9.5" r="4"/><path d="M5 20c1.5-3.5 4-5 7-5s5.5 1.5 7 5"/><path d="M8.5 9.5h7" stroke-dasharray="1.6 1.8"/></svg>`;
+const ICON_SPOTREM = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><circle cx="12" cy="12" r="3.5" stroke-dasharray="2.2 2"/><path d="M9.8 14.2l4.4-4.4"/></svg>`;
+const ICON_SCOPES = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4.5" width="18" height="13" rx="2"/><path d="M5 14.5c2-1 3-6 5-6s2.5 4.5 4.5 4.5S17.5 9.5 19 9"/><path d="M8 21h8"/></svg>`;
+const ICON_CONTACTSHEET = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M3.5 9.2h17M3.5 14.9h17M9.2 3.5v17M14.9 3.5v17"/></svg>`;
+const ICON_AUDIOMETER = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 20V10M9.5 20V4M14 20v-9M18.5 20V7"/><path d="M3.5 20h17"/><circle cx="9.5" cy="4" r="1" fill="currentColor" stroke="none"/></svg>`;
+const ICON_TITLE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 6h14M12 6v12M8.5 18h7"/></svg>`;
+const ICON_SUBTITLE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4.5" width="18" height="15" rx="2"/><path d="M6 13.5h7M15 13.5h3M6 16.5h3M11 16.5h7"/></svg>`;
+const ICON_ANNOTATE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4.5" width="18" height="13" rx="2"/><path d="M7 14l3.5-3.5 2 2L16 9"/><circle cx="16.5" cy="8.5" r="1.8"/><path d="M8 21h8"/></svg>`;
+const ICON_KENBURNS = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="13" height="13" rx="1.5" stroke-opacity=".5"/><rect x="8" y="8" width="13" height="13" rx="1.5"/><path d="M12 12l4 4"/></svg>`;
+const ICON_SLITSCAN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="4" width="17" height="16" rx="2"/><path d="M10.5 4v16M13.5 4v16"/><path d="M10.5 9c1-1.5 2-1.5 3 0M10.5 15c1 1.5 2 1.5 3 0" stroke-opacity=".6"/></svg>`;
+const CONFIGS$2 = {
+  "ComfyTV.VideoColorStage": {
+    titleKey: "v2.videoColorTitle",
+    icon: ICON_COLOR,
+    card: markRaw(_sfc_main$2d),
+    hasRun: false
+  },
+  "ComfyTV.VideoCurvesStage": {
+    titleKey: "v2.videoCurvesTitle",
+    icon: ICON_CURVE,
+    card: markRaw(_sfc_main$2a),
+    hasRun: false
+  },
+  "ComfyTV.FXChainStage": {
+    titleKey: "v2.fxChainTitle",
+    icon: ICON_CHAIN,
+    card: markRaw(FxChainCardV2),
+    hasRun: true,
+    embed: false
+  },
+  "ComfyTV.VideoClipStage": {
+    titleKey: "v2.fx.trim",
+    icon: ICON_TRIM,
+    card: markRaw(_sfc_main$3l),
+    hasRun: true,
+    plain: true
+  },
+  "ComfyTV.VideoCropStage": {
+    titleKey: "v2.fx.vcrop",
+    icon: ICON_VCROP,
+    card: markRaw(_sfc_main$3j),
+    hasRun: true,
+    plain: true
+  },
+  "ComfyTV.VideoSplitStage": {
+    titleKey: "v2.fx.vsplit",
+    icon: ICON_VSPLIT,
+    card: markRaw(_sfc_main$3c),
+    hasRun: true,
+    plain: true
+  },
+  "ComfyTV.VideoConcatStage": {
+    titleKey: "v2.fx.concat",
+    icon: ICON_CONCAT,
+    card: markRaw(_sfc_main$3i),
+    hasRun: true,
+    plain: true
+  },
+  "ComfyTV.VideoSpeedStage": {
+    titleKey: "v2.fx.speed",
+    icon: ICON_SPEED,
+    card: markRaw(_sfc_main$3e),
+    hasRun: true
+  },
+  "ComfyTV.VideoRotateStage": {
+    titleKey: "v2.fx.rotate",
+    icon: ICON_ROTATE,
+    card: markRaw(_sfc_main$3d),
+    hasRun: true
+  },
+  "ComfyTV.VideoVolumeStage": {
+    titleKey: "v2.fx.volume",
+    icon: ICON_VOLUME,
+    card: markRaw(VideoVolumeStageCard),
+    hasRun: true
+  },
+  "ComfyTV.VideoMuxAudioStage": {
+    titleKey: "v2.fx.muxAudio",
+    icon: ICON_MUXAUDIO,
+    card: markRaw(VideoMuxAudioStageCard),
+    hasRun: true
+  },
+  "ComfyTV.VideoResizeStage": {
+    titleKey: "v2.fx.resize",
+    icon: ICON_RESIZE,
+    card: markRaw(VideoResizeStageCard),
+    hasRun: true
+  },
+  "ComfyTV.VideoFramesStage": {
+    titleKey: "v2.fx.frames",
+    icon: ICON_FRAMES,
+    card: markRaw(VideoFramesStageCard),
+    hasRun: true,
+    plain: true,
+    outputStrip: false
+  },
+  "ComfyTV.TimeRemapStage": {
+    titleKey: "v2.fx.timeRemap",
+    icon: ICON_TIMEREMAP,
+    card: markRaw(_sfc_main$1t),
+    hasRun: true
+  },
+  "ComfyTV.SequenceStage": {
+    titleKey: "v2.fx.sequence",
+    icon: ICON_SEQUENCE,
+    card: markRaw(SequenceStageCard),
+    hasRun: true,
+    plain: true
+  },
+  "ComfyTV.SceneDetectStage": {
+    titleKey: "v2.fx.sceneDetect",
+    icon: ICON_SCENEDETECT,
+    card: markRaw(_sfc_main$21),
+    hasRun: true,
+    outputStrip: false
+  },
+  "ComfyTV.VideoChromaKeyStage": {
+    titleKey: "v2.fx.chromaKey",
+    icon: ICON_CHROMAKEY,
+    card: markRaw(VideoChromaKeyStageCard),
+    hasRun: true
+  },
+  "ComfyTV.VideoCompositeStage": {
+    titleKey: "v2.fx.composite",
+    icon: ICON_COMPOSITE,
+    card: markRaw(_sfc_main$1A),
+    hasRun: true,
+    plain: true
+  },
+  "ComfyTV.CornerPinStage": {
+    titleKey: "v2.fx.cornerPin",
+    icon: ICON_CORNERPIN,
+    card: markRaw(_sfc_main$1y),
+    hasRun: true,
+    plain: true
+  },
+  "ComfyTV.RotoMaskStage": {
+    titleKey: "v2.fx.rotoMask",
+    icon: ICON_ROTOMASK,
+    card: markRaw(_sfc_main$1x),
+    hasRun: true,
+    plain: true
+  },
+  "ComfyTV.KeyMixStage": {
+    titleKey: "v2.fx.keyMix",
+    icon: ICON_KEYMIX,
+    card: markRaw(_sfc_main$1f),
+    hasRun: true
+  },
+  "ComfyTV.MatteMonitorStage": {
+    titleKey: "v2.fx.matteMonitor",
+    icon: ICON_MATTEMON,
+    card: markRaw(_sfc_main$1e),
+    hasRun: true
+  },
+  "ComfyTV.MaskPropagateStage": {
+    titleKey: "v2.fx.maskPropagate",
+    icon: ICON_MASKPROP,
+    card: markRaw(_sfc_main$1o),
+    hasRun: true
+  },
+  "ComfyTV.PaintStrokeStage": {
+    titleKey: "v2.fx.paintStroke",
+    icon: ICON_PAINTSTROKE,
+    card: markRaw(_sfc_main$1q),
+    hasRun: true,
+    plain: true
+  },
+  "ComfyTV.STMapStage": {
+    titleKey: "v2.fx.stmap",
+    icon: ICON_STMAP,
+    card: markRaw(_sfc_main$1p),
+    hasRun: true
+  },
+  "ComfyTV.STMapGenStage": {
+    titleKey: "v2.fx.stmapGen",
+    icon: ICON_STMAPGEN,
+    card: markRaw(_sfc_main$B),
+    hasRun: true,
+    plain: true,
+    outputKind: "image"
+  },
+  "ComfyTV.ZDefocusStage": {
+    titleKey: "v2.fx.zDefocus",
+    icon: ICON_ZDEFOCUS,
+    card: markRaw(_sfc_main$_),
+    hasRun: true
+  },
+  "ComfyTV.FrameBlendStage": {
+    titleKey: "v2.fx.frameBlend",
+    icon: ICON_FRAMEBLEND,
+    card: markRaw(_sfc_main$1c),
+    hasRun: true
+  },
+  "ComfyTV.VideoTransitionStage": {
+    titleKey: "v2.fx.transition",
+    icon: ICON_TRANSITION,
+    card: markRaw(_sfc_main$24),
+    hasRun: true,
+    plain: true
+  },
+  "ComfyTV.VideoLumaWipeStage": {
+    titleKey: "v2.fx.lumaWipe",
+    icon: ICON_LUMAWIPE,
+    card: markRaw(_sfc_main$23),
+    hasRun: true,
+    plain: true
+  },
+  "ComfyTV.VideoStabilizeStage": {
+    titleKey: "v2.fx.stabilize",
+    icon: ICON_STAB,
+    card: markRaw(_sfc_main$22),
+    hasRun: true
+  },
+  "ComfyTV.VideoStabilizeV2Stage": {
+    titleKey: "v2.fx.stabilizePro",
+    icon: ICON_STABPRO,
+    card: markRaw(_sfc_main$1r),
+    hasRun: true
+  },
+  "ComfyTV.Video360StabilizeStage": {
+    titleKey: "v2.fx.stabilize360",
+    icon: ICON_STAB360,
+    card: markRaw(_sfc_main$D),
+    hasRun: true
+  },
+  "ComfyTV.VideoInterpolateStage": {
+    titleKey: "v2.fx.interpolate",
+    icon: ICON_INTERP,
+    card: markRaw(_sfc_main$20),
+    hasRun: true
+  },
+  "ComfyTV.FaceBlurStage": {
+    titleKey: "v2.fx.faceBlur",
+    icon: ICON_FACEBLUR,
+    card: markRaw(_sfc_main$Z),
+    hasRun: true
+  },
+  "ComfyTV.SpotRemoverStage": {
+    titleKey: "v2.fx.spotRemover",
+    icon: ICON_SPOTREM,
+    card: markRaw(_sfc_main$Y),
+    hasRun: true
+  },
+  "ComfyTV.VideoScopesStage": {
+    titleKey: "v2.fx.scopes",
+    icon: ICON_SCOPES,
+    card: markRaw(_sfc_main$1Z),
+    hasRun: true,
+    plain: true,
+    outputKind: "image",
+    outputStrip: false
+  },
+  "ComfyTV.ContactSheetStage": {
+    titleKey: "v2.fx.contactSheet",
+    icon: ICON_CONTACTSHEET,
+    card: markRaw(_sfc_main$C),
+    hasRun: true,
+    plain: true,
+    outputKind: "image"
+  },
+  "ComfyTV.AudioMeterStage": {
+    titleKey: "v2.fx.audioMeter",
+    icon: ICON_AUDIOMETER,
+    card: markRaw(_sfc_main$S),
+    hasRun: true,
+    plain: true
+  },
+  "ComfyTV.TitleStage": {
+    titleKey: "v2.fx.title",
+    icon: ICON_TITLE,
+    card: markRaw(_sfc_main$1v),
+    hasRun: true
+  },
+  "ComfyTV.SubtitleStage": {
+    titleKey: "v2.fx.subtitle",
+    icon: ICON_SUBTITLE,
+    card: markRaw(_sfc_main$1u),
+    hasRun: true
+  },
+  "ComfyTV.AnnotateStage": {
+    titleKey: "v2.fx.annotate",
+    icon: ICON_ANNOTATE,
+    card: markRaw(_sfc_main$U),
+    hasRun: true
+  },
+  "ComfyTV.KenBurnsStage": {
+    titleKey: "v2.fx.kenBurns",
+    icon: ICON_KENBURNS,
+    card: markRaw(_sfc_main$W),
+    hasRun: true,
+    plain: true
+  },
+  "ComfyTV.SlitScanStage": {
+    titleKey: "v2.fx.slitScan",
+    icon: ICON_SLITSCAN,
+    card: markRaw(_sfc_main$Q),
+    hasRun: true
+  }
+};
 for (const [cls, config2] of Object.entries(CONFIGS$2)) {
-  V2_SHELLS[cls] = (node, kind, variant) => attach$2(node, kind, variant, config2);
+  V2_SHELLS[cls] = (node, kind, variant) => attachFxShell(node, kind, variant, config2);
 }
 const _hoisted_1$3 = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
 const _hoisted_2$3 = {
@@ -222090,4 +222093,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-DkjnyN2D.mjs.map
+//# sourceMappingURL=main-4tD0EhM8.mjs.map

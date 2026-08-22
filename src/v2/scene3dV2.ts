@@ -5,15 +5,10 @@ import Scene3DStageCard from '@/components/stages/Scene3DStageCard.vue'
 import { useStageNode } from '@/composables/stages/useStageNode'
 import { t } from '@/i18n'
 import { type ComfyNode } from '@/lib/comfyApp'
-import {
-  bindNodeDrag,
-  bindProgressRing,
-  bindShellChrome,
-  createNodeScope,
-  ensureMinSize,
-  ICON_GRIP,
-  installV2ShellCss,
-} from '@/v2/imageStageV2'
+import { bindNodeDrag } from '@/v2/nodeDrag'
+import { bindShellChrome } from '@/v2/shellChrome'
+import { bindProgressRing, createNodeScope, ensureMinSize, ICON_GRIP } from '@/v2/shellCommon'
+import { installV2ShellCss } from '@/v2/shellCss'
 import { createIslandGroup } from '@/v2/islands'
 import { V2_SHELLS } from '@/v2/registry'
 import CardEmbedV2 from '@/v2/CardEmbedV2.vue'

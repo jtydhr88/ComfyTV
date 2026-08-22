@@ -8,17 +8,17 @@ import { type ComfyNode } from '@/lib/comfyApp'
 import CustomParamsV2 from '@/v2/CustomParamsV2.vue'
 import FooterSelectsV2, { type FooterExtra } from '@/v2/FooterSelectsV2.vue'
 import { createIslandGroup } from '@/v2/islands'
+import { bindNodeDrag } from '@/v2/nodeDrag'
+import { bindShellChrome } from '@/v2/shellChrome'
 import {
-  bindNodeDrag,
   bindProgressRing,
   bindPromptResize,
-  bindShellChrome,
   createNodeScope,
   ensureMinSize,
   ICON_GRIP,
-  installV2ShellCss,
   RUN_BUTTON_HTML,
-} from '@/v2/imageStageV2'
+} from '@/v2/shellCommon'
+import { installV2ShellCss } from '@/v2/shellCss'
 import MediaCornerV2 from '@/v2/MediaCornerV2.vue'
 import MediaPreviewV2 from '@/v2/MediaPreviewV2.vue'
 import ParamsPanelV2 from '@/v2/ParamsPanelV2.vue'

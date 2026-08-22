@@ -32,7 +32,7 @@ import ScoreToMidiStageCard from '@/components/stages/ScoreToMidiStageCard.vue'
 import SF2SynthStageCard from '@/components/stages/SF2SynthStageCard.vue'
 import PassthroughCardV2 from '@/v2/PassthroughCardV2.vue'
 import { V2_SHELLS } from '@/v2/registry'
-import { attachFxShell, type FxShellConfig } from '@/v2/videoFxV2'
+import { attachFxShell, type FxShellConfig } from '@/v2/fxShell'
 
 const ICON_DYN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 9.5v5M8 6.5v11M12 4v16M16 6.5v11M20 9.5v5"/><path d="M2.5 2.5l3 3M21.5 2.5l-3 3M2.5 21.5l3-3M21.5 21.5l-3-3"/></svg>`
 const ICON_LOUDNESS = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 9.5h3l4-3.5v12l-4-3.5H4z"/><path d="M14.5 9a4.5 4.5 0 010 6"/><path d="M17.5 6.5a8 8 0 010 11" stroke-dasharray="2 2.4"/></svg>`

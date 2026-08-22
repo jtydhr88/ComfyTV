@@ -25,7 +25,7 @@ import SplitPartStageCard from '@/components/stages/SplitPartStageCard.vue'
 import StoryboardEditorStageCard from '@/components/stages/StoryboardEditorStageCard.vue'
 import StoryboardStageCard from '@/components/stages/StoryboardStageCard.vue'
 import { V2_SHELLS } from '@/v2/registry'
-import { attachFxShell, type FxShellConfig } from '@/v2/videoFxV2'
+import { attachFxShell, type FxShellConfig } from '@/v2/fxShell'
 
 const ICON_SCORE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 9.5h18M3 13h18M3 16.5h18"/><circle cx="9" cy="13" r="1.8" fill="currentColor" stroke="none"/><path d="M10.8 13V6.8"/><circle cx="16" cy="16.5" r="1.8" fill="currentColor" stroke="none"/><path d="M17.8 16.5V9.8"/></svg>`
 const ICON_SCOREEDIT = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M6.5 8h5M6.5 12h8M6.5 16h4" stroke-width="2.6" opacity=".85"/><path d="M14 16h3.5" stroke-width="2.6" opacity=".45"/></svg>`

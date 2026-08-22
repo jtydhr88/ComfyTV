@@ -4,15 +4,10 @@ import { ensureStageUid } from '@/composables/stages/stageIdentity'
 import { useStageNode } from '@/composables/stages/useStageNode'
 import { t } from '@/i18n'
 import { app, type ComfyNode } from '@/lib/comfyApp'
-import {
-  bindNodeDrag,
-  bindProgressRing,
-  bindShellChrome,
-  createNodeScope,
-  ensureMinSize,
-  ICON_GRIP,
-  installV2ShellCss,
-} from '@/v2/imageStageV2'
+import { bindNodeDrag } from '@/v2/nodeDrag'
+import { bindShellChrome } from '@/v2/shellChrome'
+import { bindProgressRing, createNodeScope, ensureMinSize, ICON_GRIP } from '@/v2/shellCommon'
+import { installV2ShellCss } from '@/v2/shellCss'
 import MediaCornerV2 from '@/v2/MediaCornerV2.vue'
 import MediaPreviewV2 from '@/v2/MediaPreviewV2.vue'
 import { createIslandGroup } from '@/v2/islands'

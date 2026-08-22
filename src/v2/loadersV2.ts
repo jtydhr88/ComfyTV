@@ -5,15 +5,11 @@ import { useStageNode } from '@/composables/stages/useStageNode'
 import { uploadLoaderFiles } from '@/composables/stages/useStageLoaderDrop'
 import { t } from '@/i18n'
 import { app, type ComfyNode } from '@/lib/comfyApp'
-import {
-  bindNodeDrag,
-  bindShellChrome,
-  buildToolbar,
-  createNodeScope,
-  ensureMinSize,
-  ICON_GRIP,
-  installV2ShellCss,
-} from '@/v2/imageStageV2'
+import { buildToolbar } from '@/v2/imageBatchShell'
+import { bindNodeDrag } from '@/v2/nodeDrag'
+import { bindShellChrome } from '@/v2/shellChrome'
+import { createNodeScope, ensureMinSize, ICON_GRIP } from '@/v2/shellCommon'
+import { installV2ShellCss } from '@/v2/shellCss'
 import { V2_SHELLS } from '@/v2/registry'
 import AssetLoaderV2 from '@/v2/AssetLoaderV2.vue'
 import LoaderActionsV2 from '@/v2/LoaderActionsV2.vue'
