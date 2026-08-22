@@ -30,6 +30,7 @@
     </template>
     <template v-else>
       <img v-if="resolvedUrl" class="v2-mp__img" :src="resolvedUrl" draggable="false" />
+      <span v-if="batchCount > 1" class="v2-mp__count">{{ batchCount }}</span>
     </template>
     <div v-if="!hasContent" class="v2-mp__hint">
       <slot name="hint-icon">
@@ -76,9 +77,24 @@ function onModelViewChanged() {
   if (props.onCaptureView) scheduleCapture()
 }
 
-const resolvedUrl = computed(() => {
+const batchImages = computed<string[]>(() => {
+  if (props.kind !== 'image') return []
   const u = String(props.url ?? '')
-  if (!u) return ''
+  if (!u.trimStart().startsWith('{')) return []
+  try {
+    const parsed = JSON.parse(u)
+    const items = Array.isArray(parsed?.images) ? parsed.images : []
+    return items.map((x: any) => String(x?.image_url ?? '')).filter(Boolean)
+  } catch {
+    return []
+  }
+})
+
+const batchCount = computed(() => batchImages.value.length)
+
+const resolvedUrl = computed(() => {
+  const u = batchImages.value[0] ?? String(props.url ?? '')
+  if (!u || u.trimStart().startsWith('{')) return ''
   return (app as any).api.apiURL(u.replace(/^\/api/, ''))
 })
 
@@ -171,4 +187,14 @@ const hasContent = computed(() =>
   font: 500 12px/1.5 system-ui, sans-serif;
 }
 .v2-mp__hint svg { width: 26px; height: 26px; opacity: 0.55; }
+.v2-mp__count {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(23, 23, 27, 0.75);
+  color: #cdbdfc;
+  font: 600 10px/1 system-ui, sans-serif;
+}
 </style>

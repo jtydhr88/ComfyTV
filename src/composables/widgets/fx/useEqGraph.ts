@@ -45,7 +45,7 @@ export function useEqGraph(opts: UseEqGraphOptions) {
     }
 
     const bands = modelValue.value ?? []
-    ctx.strokeStyle = '#7ec8ff'
+    ctx.strokeStyle = '#a78bfa'
     ctx.lineWidth = 1.5
     ctx.beginPath()
     for (let px = 0; px <= EQ_W; px += 2) {

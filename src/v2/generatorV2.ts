@@ -33,10 +33,11 @@ const KIND_ICONS: Record<string, string> = {
   video: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M10 9.5l5 2.5-5 2.5z"/></svg>`,
   audio: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10v4M8 6v12M12 9v6M16 4v16M20 8v8"/></svg>`,
   text: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h10"/></svg>`,
+  model: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7.5 4.3v8.4L12 20l-7.5-4.3V7.3z"/><path d="M12 3v8.5M4.5 7.3l7.5 4.2 7.5-4.2" opacity=".6"/></svg>`,
 }
 
 interface GeneratorConfig {
-  preview: 'image' | 'video' | 'audio' | 'text'
+  preview: 'image' | 'video' | 'audio' | 'text' | 'model'
   linkKind?: string | null
   refTypes?: string[]
   corner?: boolean
@@ -231,6 +232,8 @@ const GENERATORS: Record<string, GeneratorConfig> = {
   },
   'ComfyTV.AudioExtractVocalStage': { preview: 'audio', linkKind: 'audio-vocal' },
   'ComfyTV.AudioExtractBgStage':   { preview: 'audio', linkKind: 'audio-bg' },
+  'ComfyTV.Model3DStage':          { preview: 'model', linkKind: 'model' },
+  'ComfyTV.TimelineVideoStage':    { preview: 'video', linkKind: 'timeline' },
 }
 
 for (const [cls, config] of Object.entries(GENERATORS)) {

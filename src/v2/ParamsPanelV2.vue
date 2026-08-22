@@ -75,6 +75,7 @@ const ALWAYS_SKIP = new Set([
   'force_run_token', 'project_id', 'parent_output_id', 'workflow',
   'main_prompt', 'custom_params', 'selected_index', 'pool',
   'v2_shell', 'comfytv_stage', '$$node-text-preview',
+  'captured_image', 'meta_json',
 ])
 
 interface Row {

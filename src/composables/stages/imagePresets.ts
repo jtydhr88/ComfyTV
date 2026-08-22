@@ -1,7 +1,7 @@
 export interface ImagePreset {
   id: string
   icon: string
-  category: 'imageVariant' | 'imageEdit' | 'videoChange'
+  category: 'imageVariant' | 'imageEdit' | 'videoChange' | 'audioChange'
   targetClass?: string
   inputSocket?: string
   inputAutogrowGroup?: string

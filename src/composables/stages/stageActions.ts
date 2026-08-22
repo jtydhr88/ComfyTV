@@ -3,6 +3,7 @@ import {
   type ImagePreset,
 } from '@/composables/stages/imagePresets'
 import { IMAGE_EDIT_PRESETS } from '@/composables/stages/imageEditPresets'
+import { AUDIO_CHANGE_PRESETS } from '@/composables/stages/audioChangePresets'
 import { VIDEO_CHANGE_PRESETS } from '@/composables/stages/videoChangePresets'
 
 export interface StageAction {
@@ -28,6 +29,9 @@ export const ACTIONS_BY_KIND: Record<string, StageAction[]> = {
   video: [
     { id: 'extend', icon: 'pi pi-arrow-right' },
     { id: 'change', icon: 'pi pi-pencil', presets: VIDEO_CHANGE_PRESETS },
+  ],
+  audio: [
+    { id: 'change', icon: 'pi pi-pencil', presets: AUDIO_CHANGE_PRESETS },
   ],
   panorama: [
     { id: 'view-current', icon: 'pi pi-camera' },

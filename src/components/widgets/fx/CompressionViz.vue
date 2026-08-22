@@ -46,7 +46,7 @@ function yPix(db: number) { return (1 - (db - MIN_DB) / -MIN_DB) * (H - 1) }
 function drawCurve() {
   const ctx = curveCanvas.value?.getContext('2d')
   if (!ctx) return
-  ctx.fillStyle = 'rgb(43,43,75)'
+  ctx.fillStyle = 'rgb(29,29,34)'
   ctx.fillRect(0, 0, W, H)
 
   ctx.strokeStyle = 'rgba(255,255,255,0.15)'
@@ -100,7 +100,7 @@ async function drawHistory() {
 
   const inR = resampleEnvelope(envs.input, W)
   const outR = resampleEnvelope(envs.output, W)
-  ctx.fillStyle = 'rgb(43,43,75)'
+  ctx.fillStyle = 'rgb(29,29,34)'
   ctx.fillRect(0, 0, W, H)
 
   ctx.fillStyle = 'rgba(86,86,149,0.8)'

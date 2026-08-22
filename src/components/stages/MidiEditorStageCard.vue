@@ -47,7 +47,7 @@
       >
         <button
           type="button"
-          class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:cursor-pointer ctv:text-base-foreground"
+          class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:cursor-pointer ctv:text-base-foreground ctv:bg-transparent ctv:border-none ctv:p-0"
           :class="mutedCh.has(c.ch) ? 'ctv:opacity-20' : ''"
           @click="roll.setActiveChannel(i)"
         >
@@ -59,14 +59,14 @@
         </button>
         <button
           type="button"
-          class="ctv:flex ctv:size-5 ctv:items-center ctv:justify-center ctv:rounded ctv:cursor-pointer ctv:text-2xs ctv:font-semibold ctv:hover:bg-white/10"
+          class="ctv:flex ctv:size-5 ctv:items-center ctv:justify-center ctv:rounded ctv:cursor-pointer ctv:text-2xs ctv:font-semibold ctv:bg-transparent ctv:border-none ctv:p-0 ctv:hover:bg-white/10"
           :class="soloCh === c.ch ? 'ctv:text-warning-background' : 'ctv:text-muted-foreground'"
           :title="$t('music.solo')"
           @click="toggleSolo(c.ch)"
         >S</button>
         <button
           type="button"
-          class="ctv:flex ctv:size-5 ctv:items-center ctv:justify-center ctv:rounded ctv:cursor-pointer ctv:hover:bg-white/10"
+          class="ctv:flex ctv:size-5 ctv:items-center ctv:justify-center ctv:rounded ctv:cursor-pointer ctv:bg-transparent ctv:border-none ctv:p-0 ctv:hover:bg-white/10"
           :class="mutedCh.has(c.ch) ? 'ctv:text-destructive-background' : 'ctv:text-muted-foreground'"
           :title="mutedCh.has(c.ch) ? $t('music.unmuteChannel') : $t('music.muteChannel')"
           @click="toggleMute(c.ch)"
@@ -242,9 +242,9 @@ const props = defineProps<{
 
 const { t } = useI18n()
 
-const btn = 'ctv:py-0.5 ctv:px-1.5 ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:text-base-foreground ctv:cursor-pointer ctv:hover:border-primary-background ctv:disabled:opacity-40'
-const btnOn = 'ctv:border-primary-background ctv:bg-primary-background/30'
-const sel = 'ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:px-1 ctv:py-0.5 ctv:text-2xs ctv:text-base-foreground'
+const btn = 'ctv:inline-flex ctv:items-center ctv:gap-1 ctv:py-1 ctv:px-2.5 ctv:rounded-lg ctv:border ctv:border-white/10 ctv:bg-white/5 ctv:text-base-foreground ctv:cursor-pointer ctv:hover:border-primary-background/60 ctv:disabled:opacity-40'
+const btnOn = 'ctv:border-primary-background/60 ctv:bg-primary-background/15 ctv:text-primary-background'
+const sel = 'ctv:rounded-lg ctv:border ctv:border-white/10 ctv:bg-white/5 ctv:px-2 ctv:py-1 ctv:text-2xs ctv:text-base-foreground ctv:cursor-pointer'
 
 const eventsJson = useStrWidget(props.node, 'events_json', '')
 const roll = useMidiEditor({ widget: eventsJson })

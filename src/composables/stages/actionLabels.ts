@@ -1,4 +1,4 @@
-export type PresetCategory = 'imageVariant' | 'imageEdit' | 'videoChange'
+export type PresetCategory = 'imageVariant' | 'imageEdit' | 'videoChange' | 'audioChange'
 
 export function actionNamespace(kind: string): string {
   if (kind === 'image-picker' || kind === 'image-batch') return 'image'

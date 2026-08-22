@@ -13,32 +13,7 @@
       <FxChips v-model="method" :options="METHODS" />
       <FxChips v-if="method !== 'w3fdif'" v-model="rate" :options="RATES" />
 
-      <div class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-2xs">
-        <button
-          type="button"
-          class="ctv:flex ctv:items-center ctv:gap-1 ctv:px-2 ctv:h-6 ctv:rounded ctv:cursor-pointer
-                 ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground
-                 ctv:hover:border-primary-background ctv:disabled:opacity-40 ctv:disabled:cursor-default"
-          :disabled="!sourceVideoUrl || preview.state.loading"
-          @click="preview.request()"
-        >
-          <i :class="['pi', preview.state.loading ? 'pi-spinner pi-spin' : 'pi-eye']" />
-          {{ $t('fxPreview.run') }}
-        </button>
-        <span v-if="preview.state.error" class="ctv:text-destructive-background ctv:truncate">
-          {{ $t('fxPreview.failed') }}
-        </span>
-        <span v-else-if="preview.state.stale" class="ctv:text-warning-background">
-          {{ $t('fxPreview.stale') }}
-        </span>
-        <span v-else-if="preview.state.url" class="ctv:text-muted-foreground">
-          {{ $t('fxPreview.window', { s: previewWindowLabel }) }}
-        </span>
-      </div>
-
-      <div v-if="preview.state.url" class="ctv:h-40 ctv:flex ctv:flex-col">
-        <VideoPlayerLite :source-video-url="preview.state.url" />
-      </div>
+      <FxClipPreviewPanel :preview="preview" :enabled="!!sourceVideoUrl" />
     </div>
 
     <div class="ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide">
@@ -67,6 +42,7 @@ import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import FxCardShell from '@/components/stages/FxCardShell.vue'
+import FxClipPreviewPanel from '@/components/stages/FxClipPreviewPanel.vue'
 import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
@@ -115,7 +91,4 @@ const preview = useFxClipPreview({
   getVideo: () => sourceVideoUrl.value,
   getPlayhead: playhead,
 })
-
-const previewWindowLabel = computed(() =>
-  (preview.state.t1 - preview.state.t0).toFixed(1))
 </script>

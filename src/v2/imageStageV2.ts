@@ -27,6 +27,15 @@ const v2_CSS = `
 .lg-node[data-v2-shell].outline-node-stroke-executing,
 .lg-node[data-v2-shell].te-man-concurrent-running-outline { outline: none !important; }
 
+.lg-node[data-v2-shell] {
+  --primary-background: rgba(167, 139, 250, 0.8);
+  --primary-background-hover: rgba(167, 139, 250, 0.95);
+  --accent-background: #A78BFA;
+  --secondary-background-selected: rgba(167, 139, 250, 0.22);
+  --interface-menu-component-surface-selected: rgba(167, 139, 250, 0.18);
+  accent-color: #A78BFA;
+}
+.lg-node[data-v2-shell] .ctv\\:text-success-background { color: #a78bfa; }
 .lg-node[data-v2-shell] .lg-node-header { display: none; }
 .lg-node[data-v2-shell] .lg-node-content { display: none; }
 .lg-node[data-v2-shell] .mt-auto { display: none; }
