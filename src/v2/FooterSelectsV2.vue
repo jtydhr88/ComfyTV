@@ -1,9 +1,10 @@
-﻿<template>
+<template>
   <div class="v2-fsel" @pointerdown.stop>
-    <div class="v2-fsel__item v2-fsel__item--grow">
-      <ComfyTVSelect :model-value="values.workflow" :options="optionsOf('workflow')" @update:model-value="v => write('workflow', v)" />
+    <div v-if="has('workflow')" class="v2-fsel__item v2-fsel__item--grow">
+      <ComfyTVSelect :model-value="sv('workflow')" :options="optionsOf('workflow')" @update:model-value="v => writeVal('workflow', v)" />
     </div>
     <button
+      v-if="has('workflow') && linkKind"
       type="button"
       class="v2-fsel__link"
       :title="t('v2.linkWorkflow')"
@@ -15,56 +16,80 @@
         <path d="M13.5 10.5a4 4 0 00-5.7 0l-3.3 3.3a4 4 0 105.7 5.7l1.6-1.6" />
       </svg>
     </button>
-    <div class="v2-fsel__item">
-      <ComfyTVSelect :model-value="values.aspect_ratio" :options="optionsOf('aspect_ratio')" :filterable="false" @update:model-value="v => write('aspect_ratio', v)" />
+    <div v-if="has('aspect_ratio')" class="v2-fsel__item">
+      <ComfyTVSelect :model-value="sv('aspect_ratio')" :options="optionsOf('aspect_ratio')" :filterable="false" @update:model-value="v => writeVal('aspect_ratio', v)" />
     </div>
-    <div class="v2-fsel__item">
-      <ComfyTVSelect :model-value="values.resolution" :options="optionsOf('resolution')" :filterable="false" @update:model-value="v => write('resolution', v)" />
+    <div v-if="has('resolution')" class="v2-fsel__item">
+      <ComfyTVSelect :model-value="sv('resolution')" :options="optionsOf('resolution')" :filterable="false" @update:model-value="v => writeVal('resolution', v)" />
     </div>
-    <div class="v2-fsel__item">
-      <ComfyTVSelect :model-value="values.batch_size" :options="batchOptions" :filterable="false" @update:model-value="v => write('batch_size', v)" />
+    <div v-if="has('batch_size')" class="v2-fsel__item">
+      <ComfyTVSelect :model-value="sv('batch_size') || '1'" :options="batchOptions" :filterable="false" @update:model-value="v => writeVal('batch_size', v)" />
     </div>
+    <template v-for="x in extra ?? []" :key="x.name">
+      <div v-if="has(x.name) && (x.type ?? 'combo') === 'combo'" class="v2-fsel__item">
+        <ComfyTVSelect :model-value="sv(x.name)" :options="optionsOf(x.name)" :filterable="false" @update:model-value="v => writeVal(x.name, v)" />
+      </div>
+      <input
+        v-else-if="has(x.name)"
+        type="number"
+        class="v2-fsel__num"
+        :value="sv(x.name)"
+        :min="optNum(x.name, 'min')"
+        :max="optNum(x.name, 'max')"
+        :step="optNum(x.name, 'step2') ?? optNum(x.name, 'step') ?? 1"
+        :title="x.titleKey ? t(x.titleKey) : x.name"
+        @change="(e) => writeVal(x.name, (e.target as HTMLInputElement).value)"
+      />
+    </template>
   </div>
 </template>
 
+<script lang="ts">
+export interface FooterExtra {
+  name: string
+  type?: 'combo' | 'number'
+  titleKey?: string
+}
+</script>
+
 <script setup lang="ts">
-import { useIntervalFn } from '@vueuse/core'
-import { reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
 import { openLinkWorkflow } from '@/composables/stages/openLinkWorkflow'
 import type { LGraphNode } from '@/lib/comfyApp'
+import { useWidgetValues } from '@/v2/useWidgetValues'
+
+const AUTO_NAMES = ['workflow', 'aspect_ratio', 'resolution', 'batch_size']
 
 const props = defineProps<{
   getNode: () => LGraphNode | undefined
+  linkKind?: string | null
+  extra?: FooterExtra[]
 }>()
 
-const NAMES = ['workflow', 'aspect_ratio', 'resolution', 'batch_size'] as const
-type Name = (typeof NAMES)[number]
+const { values, widgetOf, write } = useWidgetValues(
+  props.getNode,
+  [...AUTO_NAMES, ...(props.extra ?? []).map(x => x.name)],
+)
 
-function widgetOf(name: Name) {
-  return props.getNode()?.widgets?.find((w: any) => w.name === name) as any
+function sv(name: string): string {
+  const v = values[name]
+  return v == null ? '' : String(v)
 }
 
-const values = reactive<Record<Name, string>>({
-  workflow: '', aspect_ratio: '', resolution: '', batch_size: '1',
-})
-
-function pull() {
-  for (const name of NAMES) {
-    const v = widgetOf(name)?.value
-    const s = v == null ? '' : String(v)
-    if (values[name] !== s) values[name] = s
-  }
-}
-pull()
-
-useIntervalFn(pull, 500)
-
-function optionsOf(name: Name): string[] {
+function optionsOf(name: string): string[] {
   const vals = widgetOf(name)?.options?.values
   return Array.isArray(vals) ? vals.map(String) : []
+}
+
+function optNum(name: string, key: string): number | undefined {
+  const v = widgetOf(name)?.options?.[key]
+  return typeof v === 'number' ? v : undefined
+}
+
+function has(name: string): boolean {
+  return !!widgetOf(name)
 }
 
 const { t } = useI18n()
@@ -74,20 +99,22 @@ const batchOptions = Array.from({ length: 8 }, (_, i) => ({
   label: t('v2.batchCount', { n: i + 1 }),
 }))
 
-function write(name: Name, v: string | number) {
-  const w = widgetOf(name)
-  if (!w) return
-  w.value = name === 'batch_size' ? Number(v) : v
-  values[name] = String(v)
+function isNumberWidget(name: string): boolean {
+  const type = String(widgetOf(name)?.type ?? '')
+  return type === 'number' || type === 'slider' || type === 'int' || type === 'float'
+}
+
+function writeVal(name: string, v: string | number) {
+  write(name, name === 'batch_size' || isNumberWidget(name) ? Number(v) : v)
 }
 
 function onLinkWorkflow() {
-  openLinkWorkflow('image', {
+  openLinkWorkflow(props.linkKind ?? 'image', {
     onLinked: ({ label }) => {
       const w = widgetOf('workflow')
       const vals = w?.options?.values
       if (Array.isArray(vals) && !vals.includes(label)) vals.push(label)
-      write('workflow', label)
+      writeVal('workflow', label)
     },
   })
 }
@@ -100,6 +127,7 @@ function onLinkWorkflow() {
   gap: 6px;
   flex: 1;
   min-width: 0;
+  flex-wrap: wrap;
 }
 .v2-fsel__item { flex: none; min-width: 0; }
 .v2-fsel__item--grow { flex: 1 1 auto; min-width: 0; max-width: 150px; }
@@ -115,6 +143,19 @@ function onLinkWorkflow() {
 .v2-fsel :deep(button:hover) {
   background: rgba(255, 255, 255, 0.06);
 }
+.v2-fsel__num {
+  flex: none;
+  width: 52px;
+  height: 26px;
+  padding: 0 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: transparent;
+  color: #ececf1;
+  font: 500 11px/1 system-ui, sans-serif;
+  outline: none;
+}
+.v2-fsel__num:focus { border-color: rgba(167, 139, 250, 0.6); }
 .v2-fsel__link {
   flex: none;
   width: 26px;

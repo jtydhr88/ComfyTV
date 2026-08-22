@@ -7,21 +7,13 @@
     @dragleave="fileDrop.onDragLeave"
     @drop="fileDrop.onDrop"
   >
-    <div class="v2-al__preview" @pointerdown.stop @click="open = !open">
-      <img
-        v-if="selectedAsset"
-        class="v2-al__img"
-        :src="assetPreviewUrl(selectedAsset)"
-        :alt="selectedAsset.name"
-        draggable="false"
+    <div class="v2-al__preview" @pointerdown.stop @click="mediaType !== 'model' && (open = !open)">
+      <MediaPreviewV2
+        :kind="mediaType"
+        :url="previewUrl"
+        :hint="$t('v2.assetLoaderHint')"
+        :on-capture-view="mediaType === 'model' && onAction ? onModelCaptured : undefined"
       />
-      <div v-else class="v2-al__hint">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <path d="M20 12.5v5A2.5 2.5 0 0117.5 20h-11A2.5 2.5 0 014 17.5v-11A2.5 2.5 0 016.5 4h5" />
-          <path d="M15.5 4H20v4.5M20 4l-8.5 8.5" />
-        </svg>
-        <span>{{ $t('v2.assetLoaderHint') }}</span>
-      </div>
     </div>
     <div class="v2-al__footer" @pointerdown.stop>
       <span v-if="selectedAsset?.file_missing" class="v2-al__name v2-al__name--missing">
@@ -37,13 +29,13 @@
           <path d="M12 16V4M7.5 8.5L12 4l4.5 4.5M4 19.5h16" />
         </svg>
       </button>
-      <input ref="fileInput" type="file" accept="image/*" multiple class="v2-al__file" @change="onPickFiles" />
+      <input ref="fileInput" type="file" :accept="fileAccept" multiple class="v2-al__file" @change="onPickFiles" />
     </div>
   </div>
   <AssetPickerPopup
     v-if="open"
     :added-ids="addedIds"
-    :media-types="['image']"
+    :media-types="[mediaType]"
     @select="onSelect"
     @close="open = false"
   />
@@ -57,20 +49,36 @@ import AssetPickerPopup from '@/components/stages/AssetPickerPopup.vue'
 import { useAssetLoaderCard } from '@/composables/stages/useAssetLoaderCard'
 import type { LGraphNode } from '@/lib/comfyApp'
 import { assetPreviewUrl } from '@/utils/assetMedia'
+import MediaPreviewV2 from '@/v2/MediaPreviewV2.vue'
+import { MODEL_FILE_EXTENSIONS } from '@/widgets/three/modelFormats'
 import type { StageState } from '@/stores/stageStore'
 
 const props = defineProps<{
   node: LGraphNode
   state: StageState
+  onAction?: (id: string, context?: any) => void
 }>()
+
+function onModelCaptured(url: string) {
+  props.onAction?.('model-capture-view', { index: '', imageUrl: url, mediaType: 'image' })
+}
 
 const open = ref(false)
 const fileInput = ref<HTMLInputElement | null>(null)
 
-const { selectedAsset, selectAsset, importFiles, fileDrop } =
+const { mediaType, selectedAsset, selectAsset, importFiles, fileDrop } =
   useAssetLoaderCard(props.node, () => props.state)
 
 const addedIds = computed(() => (selectedAsset.value ? [selectedAsset.value.id] : []))
+
+const previewUrl = computed(() => {
+  const a = selectedAsset.value
+  if (!a) return null
+  return mediaType.value === 'image' ? assetPreviewUrl(a) : a.payload_url
+})
+
+const fileAccept = computed(() =>
+  mediaType.value === 'model' ? MODEL_FILE_EXTENSIONS.join(',') : `${mediaType.value}/*`)
 
 function onSelect(asset: Asset) {
   selectAsset(asset)
@@ -101,11 +109,9 @@ function onPickFiles(e: Event) {
 .v2-al__preview {
   position: relative;
   flex: 1;
-  min-height: 0;
+  min-height: 170px;
   border-radius: 12px;
   overflow: hidden;
-  background: linear-gradient(160deg, #23232a 0%, #1a1a20 100%);
-  border: 1px solid rgba(255, 255, 255, 0.07);
   display: flex;
   align-items: center;
   justify-content: center;

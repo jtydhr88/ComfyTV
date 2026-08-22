@@ -1,6 +1,7 @@
 <template>
   <div v-if="items.length" class="v2-corner" @pointerdown.stop>
     <button
+      v-if="mt === 'image'"
       type="button"
       class="v2-corner__btn"
       :title="t('stage.action.viewFull')"
@@ -88,7 +89,10 @@ const props = defineProps<{
   state: StageState
   source: 'batch' | 'pool'
   onAction: (id: string, context?: unknown) => void
+  mediaType?: 'image' | 'video' | 'audio'
 }>()
+
+const mt = computed(() => props.mediaType ?? 'image')
 
 const {
   tagMenu,
@@ -145,7 +149,7 @@ function onSave() {
   props.onAction('load-asset', {
     imageUrl: c.url,
     label: c.label || nameFromUrl(c.url),
-    mediaType: 'image',
+    mediaType: mt.value,
   })
   done.value = true
   doneFlash.stop()
@@ -155,7 +159,7 @@ function onSave() {
 function onTag(e: MouseEvent) {
   const c = current.value
   if (!c) return
-  openTagMenu(c.url, c.label || nameFromUrl(c.url), e, 'image')
+  openTagMenu(c.url, c.label || nameFromUrl(c.url), e, mt.value)
 }
 
 async function onCreateCategory() {

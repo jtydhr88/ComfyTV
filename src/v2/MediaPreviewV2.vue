@@ -1,0 +1,174 @@
+<template>
+  <div class="v2-mp" :data-kind="kind">
+    <template v-if="kind === 'video'">
+      <ProxiedVideo
+        v-if="resolvedUrl"
+        :src="url!"
+        class="v2-mp__video"
+        controls
+        muted
+        playsinline
+        preload="metadata"
+        @pointerdown.stop
+      />
+    </template>
+    <template v-else-if="kind === 'audio'">
+      <div v-if="resolvedUrl" class="v2-mp__audiowrap" @pointerdown.stop>
+        <svg class="v2-mp__audioicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <path d="M4 10v4M8 6v12M12 9v6M16 4v16M20 8v8" />
+        </svg>
+        <audio :src="resolvedUrl" controls preload="metadata" class="v2-mp__audio" />
+      </div>
+    </template>
+    <template v-else-if="kind === 'text'">
+      <div v-if="text" class="v2-mp__text" @pointerdown.stop @wheel.stop>{{ text }}</div>
+    </template>
+    <template v-else-if="kind === 'model'">
+      <div v-if="url" class="v2-mp__model" @pointerdown.stop @wheel.stop>
+        <ModelPreview ref="modelPreviewEl" :src="url" @view-changed="onModelViewChanged" />
+      </div>
+    </template>
+    <template v-else>
+      <img v-if="resolvedUrl" class="v2-mp__img" :src="resolvedUrl" draggable="false" />
+    </template>
+    <div v-if="!hasContent" class="v2-mp__hint">
+      <slot name="hint-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="3" y="4" width="18" height="16" rx="2.5" />
+          <path d="M9 9.5l7 3.5-7 3.5z" />
+        </svg>
+      </slot>
+      <span>{{ hint }}</span>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+
+import ModelPreview from '@/components/stages/ModelPreview.vue'
+import ProxiedVideo from '@/components/widgets/ProxiedVideo.vue'
+import { useModelViewCapture } from '@/composables/stages/useModelViewCapture'
+import { app } from '@/lib/comfyApp'
+
+const props = defineProps<{
+  kind: 'image' | 'video' | 'audio' | 'text' | 'model'
+  url?: string | null
+  text?: string | null
+  hint: string
+  onCaptureView?: (url: string) => void
+}>()
+
+const MODEL_CAPTURE_SIZE = 1024
+const MODEL_CAPTURE_DELAY_MS = 250
+
+const modelPreviewEl = ref<InstanceType<typeof ModelPreview> | null>(null)
+
+const { scheduleCapture } = useModelViewCapture({
+  getCanvas: () => modelPreviewEl.value?.captureCanvas(MODEL_CAPTURE_SIZE, MODEL_CAPTURE_SIZE),
+  filenamePrefix: 'comfytv-model-view',
+  logTag: 'MediaPreviewV2',
+  delayMs: MODEL_CAPTURE_DELAY_MS,
+  onCaptured: (url) => props.onCaptureView?.(url),
+})
+
+function onModelViewChanged() {
+  if (props.onCaptureView) scheduleCapture()
+}
+
+const resolvedUrl = computed(() => {
+  const u = String(props.url ?? '')
+  if (!u) return ''
+  return (app as any).api.apiURL(u.replace(/^\/api/, ''))
+})
+
+const hasContent = computed(() =>
+  props.kind === 'text' ? !!String(props.text ?? '').trim()
+  : props.kind === 'model' ? !!props.url
+  : !!resolvedUrl.value)
+</script>
+
+<style scoped>
+.v2-mp {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(160deg, #23232a 0%, #1a1a20 100%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.v2-mp__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.v2-mp__video,
+.v2-mp :deep(video) {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+.v2-mp__audiowrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+.v2-mp__audioicon {
+  width: 40px;
+  height: 40px;
+  color: #8f8f98;
+}
+.v2-mp__audio {
+  width: 100%;
+  max-width: 340px;
+  height: 34px;
+}
+.v2-mp__model {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  color: #6b6b74;
+  cursor: grab;
+}
+.v2-mp__model:active { cursor: grabbing; }
+.v2-mp__model :deep(> *) {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+.v2-mp__text {
+  position: absolute;
+  inset: 0;
+  padding: 12px 14px;
+  overflow-y: auto;
+  color: #d9d9de;
+  font: 400 12px/1.7 system-ui, sans-serif;
+  white-space: pre-wrap;
+  word-break: break-word;
+  text-align: left;
+  cursor: text;
+  user-select: text;
+}
+.v2-mp__hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #6b6b74;
+  font: 500 12px/1.5 system-ui, sans-serif;
+}
+.v2-mp__hint svg { width: 26px; height: 26px; opacity: 0.55; }
+</style>

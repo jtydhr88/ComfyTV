@@ -1,19 +1,20 @@
 ﻿
-import { getActivePinia } from 'pinia'
-import { createApp, markRaw } from 'vue'
+import { markRaw } from 'vue'
 
 import Scene3DStageCard from '@/components/stages/Scene3DStageCard.vue'
 import { useStageNode } from '@/composables/stages/useStageNode'
-import { i18n, t } from '@/i18n'
+import { t } from '@/i18n'
 import { type ComfyNode } from '@/lib/comfyApp'
 import {
   bindNodeDrag,
   bindProgressRing,
   bindShellChrome,
   createNodeScope,
+  ensureMinSize,
   ICON_GRIP,
   installV2ShellCss,
 } from '@/v2/imageStageV2'
+import { createIslandGroup } from '@/v2/islands'
 import { V2_SHELLS } from '@/v2/registry'
 import CardEmbedV2 from '@/v2/CardEmbedV2.vue'
 import type { StageKind, StageVariant } from '@/stores/stageStore'
@@ -68,25 +69,20 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant) {
     serialize: false,
   })
 
-  const [w0, h0] = node.size
-  node.setSize([Math.max(w0, 620), Math.max(h0, 700)])
+  ensureMinSize(node, 620, 700)
 
   const stageApi = useStageNode(node as any, kind, variant)
   const { state: stageState, onRunRequest, onCancelRequest, onDisconnect, onAction } = stageApi
   const scope = createNodeScope(node)
   scope.run(() => bindProgressRing(card, stageState))
 
-  const pinia = getActivePinia()
-  let embedApp: ReturnType<typeof createApp> | null = null
+  const islands = createIslandGroup()
   const mountApps = () => {
-    embedApp?.unmount()
-    embedApp = createApp(CardEmbedV2, {
+    islands.unmountAll()
+    islands.mount(embedAnchor, CardEmbedV2, {
       card: markRaw(Scene3DStageCard), node, state: stageState,
       onRunRequest, onCancelRequest, onDisconnect, onAction,
     })
-    if (pinia) embedApp.use(pinia)
-    embedApp.use(i18n)
-    embedApp.mount(embedAnchor)
   }
   mountApps()
 
@@ -97,12 +93,12 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant) {
   }
 
   bindShellChrome(node, {
-    scope, card, socketAnchor: embedAnchor, socketY: { frac: 0.3, cap: 200 },
+    scope, card, socketAnchor: embedAnchor, socketY: { frac: 0.3, cap: 200 }, state: stageState,
   })
 
   const prevRemoved = anyNode.onRemoved
   anyNode.onRemoved = function (...args: unknown[]) {
-    embedApp?.unmount()
+    islands.unmountAll()
     prevRemoved?.apply(this, args)
   }
 

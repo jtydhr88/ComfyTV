@@ -63,7 +63,8 @@
   },
   "scripts": {
     "dev": "vite build --watch",
-    "build": "vite build",
+    "build": "vue-tsc --noEmit && vite build",
+    "build:fast": "vite build",
     "encrypt-assets": "node scripts/encrypt-assets.mjs",
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest run",

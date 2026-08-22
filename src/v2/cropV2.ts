@@ -1,11 +1,9 @@
 ﻿
-import { getActivePinia } from 'pinia'
-import { createApp } from 'vue'
-
 import { useStageNode } from '@/composables/stages/useStageNode'
-import { i18n, t } from '@/i18n'
+import { t } from '@/i18n'
 import { type ComfyNode } from '@/lib/comfyApp'
-import { bindNodeDrag, bindProgressRing, bindShellChrome, createNodeScope, ICON_GRIP, installV2ShellCss } from '@/v2/imageStageV2'
+import { bindNodeDrag, bindProgressRing, bindShellChrome, createNodeScope, ensureMinSize, ICON_GRIP, installV2ShellCss } from '@/v2/imageStageV2'
+import { createIslandGroup } from '@/v2/islands'
 import { V2_SHELLS } from '@/v2/registry'
 import CropEditorV2 from '@/v2/CropEditorV2.vue'
 import type { StageKind, StageVariant } from '@/stores/stageStore'
@@ -55,22 +53,17 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant) {
     serialize: false,
   })
 
-  const [w0, h0] = node.size
-  node.setSize([Math.max(w0, 320), Math.max(h0, 360)])
+  ensureMinSize(node, 320, 360)
 
   const stageApi = useStageNode(node as any, kind, variant)
   const { state: stageState } = stageApi
   const scope = createNodeScope(node)
   scope.run(() => bindProgressRing(card, stageState))
 
-  const pinia = getActivePinia()
-  let editorApp: ReturnType<typeof createApp> | null = null
+  const islands = createIslandGroup()
   const mountApps = () => {
-    editorApp?.unmount()
-    editorApp = createApp(CropEditorV2, { node, state: stageState })
-    if (pinia) editorApp.use(pinia)
-    editorApp.use(i18n)
-    editorApp.mount(editorAnchor)
+    islands.unmountAll()
+    islands.mount(editorAnchor, CropEditorV2, { node, state: stageState })
   }
   mountApps()
 
@@ -82,11 +75,11 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant) {
 
   bindNodeDrag(node, card)
 
-  bindShellChrome(node, { scope, card, socketAnchor: editorAnchor })
+  bindShellChrome(node, { scope, card, socketAnchor: editorAnchor, state: stageState })
 
   const prevRemoved = anyNode.onRemoved
   anyNode.onRemoved = function (...args: unknown[]) {
-    editorApp?.unmount()
+    islands.unmountAll()
     prevRemoved?.apply(this, args)
   }
 

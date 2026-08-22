@@ -25,6 +25,13 @@
         :class="tabClass(tab === 'library')"
         @click="tab = 'library'"
       >{{ $t('promptAssets.tabLibrary') }}</button>
+      <span class="ctv:flex-1"></span>
+      <button
+        type="button"
+        :class="closeBtnClass"
+        :title="$t('promptAssets.close')"
+        @click="$emit('close')"
+      ><i class="pi pi-times" /></button>
     </div>
 
     <div
@@ -128,6 +135,13 @@
         :title="$t('promptAssets.upload')"
         @click="fileInput?.click()"
       ><IconUpload class="ctv:size-3.5" /></button>
+      <button
+        v-if="!hasBatch"
+        type="button"
+        :class="closeBtnClass"
+        :title="$t('promptAssets.close')"
+        @click="$emit('close')"
+      ><i class="pi pi-times" /></button>
       <input
         ref="fileInput"
         type="file"
@@ -258,6 +272,13 @@ function libraryLightboxIndex(asset: Asset): number {
 const groupBtnClass = [
   'ctv:inline-flex ctv:items-center ctv:justify-center ctv:size-4.5 ctv:cursor-pointer ctv:[font-family:inherit]',
   'ctv:rounded-sm ctv:border ctv:border-transparent ctv:text-3xs ctv:leading-none',
+  'ctv:bg-transparent ctv:text-muted-foreground',
+  'ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground',
+].join(' ')
+
+const closeBtnClass = [
+  'ctv:inline-flex ctv:items-center ctv:justify-center ctv:size-6 ctv:shrink-0 ctv:cursor-pointer ctv:[font-family:inherit]',
+  'ctv:rounded-sm ctv:border ctv:border-transparent ctv:text-xs ctv:leading-none',
   'ctv:bg-transparent ctv:text-muted-foreground',
   'ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground',
 ].join(' ')

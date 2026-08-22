@@ -104,7 +104,7 @@ export function useStageNode(
   const applyPickedIndex = (idx: number) => {
     state.pickedIndex = idx
     if (kind === 'image-batch') {
-      const picked = computePickedFromBatch(state.output, idx)
+      const picked = computePickedFromBatch(toImagePoolJson(state.output), idx)
       store.setOutputSlot(state, 1, picked)
       if (state.outputId != null && state.outputId > 0) {
         void postPickedIndex(state.outputId, idx)
@@ -271,6 +271,7 @@ export function useStageNode(
     },
   )
 
+  let lastMergedBatch = ''
   const stopPickerWatch = isPoolPickerKind(kind)
     ? watch(
         () => {
@@ -280,7 +281,8 @@ export function useStageNode(
         () => {
           const inp = state.inputs.find(i => i.slot === 'batch')
 
-          if (inp && inp.source === 'upstream' && inp.content) {
+          if (inp && inp.source === 'upstream' && inp.content && inp.content !== lastMergedBatch) {
+            lastMergedBatch = inp.content
             const before = imagePoolCount(state.pool)
             const merged = mergeImagePool(state.pool, toImagePoolJson(inp.content))
             store.setPickerPool(node, state, merged)
@@ -813,7 +815,7 @@ export function useStageNode(
                 : 1
       state.pickedIndex = idx
       if (widget && widget.value !== idx) widget.value = idx
-      const picked = computePickedFromBatch(restored, idx)
+      const picked = computePickedFromBatch(toImagePoolJson(restored), idx)
       store.setOutputSlot(state, 1, picked ?? null)
     }
   }

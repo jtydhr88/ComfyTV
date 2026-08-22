@@ -701,4 +701,9 @@ describe('computePickedFromBatch', () => {
     })
     expect(computePickedFromBatch(batch, 2)).toBe('clip2.mp4')
   })
+
+  it('picks a bare single-image URL once wrapped by toImagePoolJson', () => {
+    const url = '/view?filename=ComfyUI_00414_.png&subfolder=&type=output'
+    expect(computePickedFromBatch(toImagePoolJson(url), 1)).toBe(url)
+  })
 })

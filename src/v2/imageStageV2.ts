@@ -1,18 +1,22 @@
 ﻿
-import { useIntervalFn, useTimeoutFn } from '@vueuse/core'
-import { getActivePinia } from 'pinia'
-import { createApp, effectScope, watch, type EffectScope } from 'vue'
+import { useResizeObserver, useTimeoutFn } from '@vueuse/core'
+import { effectScope, onScopeDispose, watch, type EffectScope } from 'vue'
 
 import MainPromptInput from '@/components/stages/MainPromptInput.vue'
+import StagePresetBar from '@/components/stages/StagePresetBar.vue'
 import { useStageNode } from '@/composables/stages/useStageNode'
-import { i18n, t } from '@/i18n'
+import { t } from '@/i18n'
 import { app, type ComfyNode } from '@/lib/comfyApp'
 import { V2_SHELLS } from '@/v2/registry'
-import FooterSelectsV2 from '@/v2/FooterSelectsV2.vue'
+import { createIslandGroup } from '@/v2/islands'
+import { observeProperty } from '@/v2/observeProps'
+import CustomParamsV2 from '@/v2/CustomParamsV2.vue'
+import FooterSelectsV2, { type FooterExtra } from '@/v2/FooterSelectsV2.vue'
 import MediaCornerV2 from '@/v2/MediaCornerV2.vue'
+import ParamsPanelV2 from '@/v2/ParamsPanelV2.vue'
 import RefChipsV2 from '@/v2/RefChipsV2.vue'
 import ServerSelectV2 from '@/v2/ServerSelectV2.vue'
-import type { StageKind, StageVariant } from '@/stores/stageStore'
+import { useStageStore, type StageKind, type StageVariant } from '@/stores/stageStore'
 
 const REF_RE = /^(images\.image|texts\.text|videos\.video)\d+$/
 
@@ -26,6 +30,7 @@ const v2_CSS = `
 .lg-node[data-v2-shell] .lg-node-header { display: none; }
 .lg-node[data-v2-shell] .lg-node-content { display: none; }
 .lg-node[data-v2-shell] .mt-auto { display: none; }
+.lg-node[data-v2-shell] > .isolate { display: none; }
 .lg-node[data-v2-shell] { filter: none; }
 .lg-node[data-v2-shell] [data-testid="node-state-outline-overlay"] { display: none; }
 body[data-v2-toolbar] [data-testid="selection-toolbox"] { display: none; }
@@ -255,12 +260,16 @@ body[data-v2-toolbar] [data-testid="selection-toolbox"] { display: none; }
   z-index: 40;
 }
 .lg-node[data-v2-shell][data-v2-selected] .v2-toolbar { display: flex; }
+.v2-toolbar:empty { display: none !important; }
 .v2-toolbar__btn {
   display: flex;
   align-items: center;
   gap: 5px;
   padding: 6px 9px;
+  border: none;
   border-radius: 9px;
+  background: transparent;
+  appearance: none;
   color: #d9d9de;
   font: 500 12px/1 system-ui, sans-serif;
   cursor: pointer;
@@ -298,6 +307,8 @@ body[data-v2-toolbar] [data-testid="selection-toolbox"] { display: none; }
 }
 .v2-preview::before { transform: translate(7px, 4px) rotate(1.6deg); opacity: .8; }
 .v2-preview::after  { transform: translate(13px, 9px) rotate(3deg); opacity: .45; }
+.v2-preview--single::before,
+.v2-preview--single::after { display: none; }
 .v2-preview__media {
   position: absolute;
   inset: 0;
@@ -457,6 +468,28 @@ body[data-v2-toolbar] [data-testid="selection-toolbox"] { display: none; }
   cursor: pointer;
   background: #2a2a2f;
 }
+.v2-strip__x {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 15px;
+  height: 15px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: rgba(12, 12, 16, 0.78);
+  color: #e6e6ea;
+  font: 500 10px/1 system-ui, sans-serif;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.v2-strip__cell:hover .v2-strip__x { display: flex; }
+@media (hover: none) {
+  .v2-strip__x { display: flex; }
+}
+.v2-strip__x:hover { background: rgba(239, 68, 68, 0.85); color: #fff; }
 .v2-strip__cell img {
   display: block;
   width: 100%;
@@ -506,7 +539,30 @@ body[data-v2-toolbar] [data-testid="selection-toolbox"] { display: none; }
   caret-color: #fff;
 }
 .v2-panel__prompt::placeholder { color: #5d5d66; }
+.v2-panel__refs:empty,
+.v2-panel__presets:empty,
+.v2-panel__controls:empty,
+.v2-panel__custom:empty,
+.v2-panel__params:empty { display: none; }
+.v2-panel__presets .ctv-preset-bar { gap: 6px; }
 .v2-panel__prompthost { margin: 0 -6px; }
+.v2-panel__prompthost .comfytv-prompt-editor {
+  resize: vertical;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  max-height: 520px;
+  cursor: text;
+  display: flex;
+  flex-direction: column;
+}
+.v2-panel__prompthost .comfytv-prompt-editor > div {
+  flex: 1 0 auto;
+  outline: none;
+}
+.v2-panel__prompthost .comfytv-prompt-editor::-webkit-resizer {
+  background:
+    linear-gradient(135deg, transparent 0 50%, rgba(255,255,255,.28) 50% 60%, transparent 60% 75%, rgba(255,255,255,.28) 75% 85%, transparent 85%);
+}
 .v2-panel__selects { flex: 1; min-width: 0; display: flex; }
 .v2-panel__prompthost .comfytv-prompt-editor { min-height: 54px; font-size: 13px; }
 .v2-panel__footer {
@@ -566,6 +622,90 @@ body[data-v2-toolbar] [data-testid="selection-toolbox"] { display: none; }
   align-items: center;
   justify-content: center;
 }
+.v2-refs-warns {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 6px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(245,158,11,.10);
+  border: 1px solid rgba(245,158,11,.32);
+  color: #fcd34d;
+  font: 500 10.5px/1.45 system-ui, sans-serif;
+}
+.v2-refs-warns__row { display: flex; gap: 6px; word-break: break-word; }
+.v2-refs-warns__row::before { content: '⚠'; flex: none; }
+.v2-warn {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(245,158,11,.10);
+  border: 1px solid rgba(245,158,11,.32);
+  color: #fcd34d;
+  font: 500 11px/1.45 system-ui, sans-serif;
+  flex: none;
+}
+.v2-warn[data-show="1"] { display: flex; }
+.v2-warn__row {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  word-break: break-word;
+}
+.v2-warn__row::before { content: '⚠'; flex: none; }
+.lg-node[data-v2-warn] [data-testid^="node-body-"] > div:first-child > div:not(.ml-auto) {
+  border-color: #f59e0b;
+  box-shadow: 0 2px 8px rgba(0,0,0,.55), 0 0 0 2px rgba(245,158,11,.25);
+}
+.v2-error {
+  display: none;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(239,68,68,.12);
+  border: 1px solid rgba(239,68,68,.35);
+  color: #fca5a5;
+  font: 500 11px/1.45 system-ui, sans-serif;
+  flex: none;
+}
+.v2-error[data-show="1"] { display: flex; }
+.v2-error__msg {
+  flex: 1;
+  min-width: 0;
+  max-height: 48px;
+  overflow: hidden;
+  word-break: break-word;
+}
+.v2-error__x {
+  flex: none;
+  border: none;
+  background: transparent;
+  color: #fca5a5;
+  font: 600 13px/1 system-ui, sans-serif;
+  cursor: pointer;
+  padding: 0 2px;
+}
+.v2-error__x:hover { color: #fecaca; }
+.v2-duration {
+  display: none;
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  z-index: 3;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(12, 12, 16, 0.65);
+  color: #b9b9c0;
+  font: 500 10px/1 system-ui, sans-serif;
+  pointer-events: none;
+}
+.v2-duration[data-show="1"] { display: block; }
 .v2-run .v2-run__stop { display: none; }
 .v2-run[data-busy="1"] { background: #ef4444; color: #fff; }
 .v2-run[data-busy="1"]:hover { background: #f87171; }
@@ -596,6 +736,29 @@ export function installV2ShellCss() {
 }
 
 export const ICON_GRIP = `<svg class="v2-grip" viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="5" r="1.7"/><circle cx="16" cy="5" r="1.7"/><circle cx="8" cy="12" r="1.7"/><circle cx="16" cy="12" r="1.7"/><circle cx="8" cy="19" r="1.7"/><circle cx="16" cy="19" r="1.7"/></svg>`
+
+export function bindPromptResize(node: ComfyNode, promptAnchor: HTMLElement, scope: EffectScope) {
+  scope.run(() => {
+    let last = -1
+    useResizeObserver(promptAnchor, (entries) => {
+      const h = entries[0]?.contentRect.height ?? 0
+      if (last >= 0) {
+        const delta = h - last
+        if (Math.abs(delta) > 1) {
+          node.setSize([node.size[0], node.size[1] + delta])
+          ;(app as any).graph?.setDirtyCanvas(true, true)
+        }
+      }
+      last = h
+    })
+  })
+}
+
+export function ensureMinSize(node: ComfyNode, minW: number, minH: number) {
+  if ((node as any).__comfytvFromSave) return
+  const [w0, h0] = node.size
+  node.setSize([Math.max(w0, minW), Math.max(h0, minH)])
+}
 
 export function createNodeScope(node: ComfyNode): EffectScope {
   const scope = effectScope(true)
@@ -658,10 +821,76 @@ export function bindShellChrome(node: ComfyNode, opts: {
   card: HTMLElement
   socketAnchor: HTMLElement
   socketY?: 'center' | { frac: number; cap: number }
+  state?: { error?: { message?: string; traceback?: string } | null; durationMs?: number | null; output?: string | null }
 }) {
   const anyNode = node as any
   const { scope, card, socketAnchor } = opts
   const socketY = opts.socketY ?? 'center'
+
+  const warnStrip = el('div', 'v2-warn')
+  socketAnchor.after(warnStrip)
+  let lastWarnKey = ''
+  const syncWarnings = (root: HTMLElement) => {
+    const map = (anyNode._comfytvSlotWarnings ?? {}) as Record<string, { message: string }>
+    const msgs = [...new Set(Object.values(map).map((w) => String(w?.message ?? '')).filter(Boolean))]
+    const key = msgs.join('\n')
+    root.toggleAttribute('data-v2-warn', msgs.length > 0)
+    if (key === lastWarnKey) return
+    lastWarnKey = key
+    warnStrip.dataset.show = msgs.length ? '1' : ''
+    warnStrip.replaceChildren(...msgs.slice(0, 4).map((m) => {
+      const row = el('div', 'v2-warn__row')
+      row.textContent = m
+      return row
+    }))
+  }
+
+  if (opts.state) {
+    const state = opts.state
+    const strip = el('div', 'v2-error')
+    const msg = el('div', 'v2-error__msg')
+    const x = el('button', 'v2-error__x', '×') as HTMLButtonElement
+    strip.append(msg, x)
+    warnStrip.after(strip)
+    x.addEventListener('pointerdown', (e) => e.stopPropagation())
+    x.addEventListener('click', (e) => {
+      e.stopPropagation()
+      useStageStore().clearError(state as any)
+    })
+    scope.run(() => {
+      watch(
+        () => state.error,
+        (err) => {
+          strip.dataset.show = err ? '1' : ''
+          const text = String(err?.message ?? '').trim()
+          msg.textContent = text
+          msg.title = String(err?.traceback ?? '').trim() || text
+        },
+        { immediate: true },
+      )
+    })
+
+    const dur = el('div', 'v2-duration')
+    socketAnchor.appendChild(dur)
+    scope.run(() => {
+      watch(
+        () => [state.durationMs, state.output] as const,
+        ([ms, output]) => {
+          if (ms == null || !Number.isFinite(ms) || ms <= 0 || !output) {
+            dur.dataset.show = ''
+            return
+          }
+          const secs = ms / 1000
+          dur.textContent = secs < 60
+            ? `${secs.toFixed(1)}s`
+            : `${Math.floor(secs / 60)}m ${Math.round(secs % 60)}s`
+          dur.title = t('stage.outputDurationHint')
+          dur.dataset.show = '1'
+        },
+        { immediate: true },
+      )
+    })
+  }
 
   const titleEl = card.querySelector<HTMLElement>('.v2-handle span')
   const typeLabel = titleEl?.textContent ?? ''
@@ -730,27 +959,77 @@ export function bindShellChrome(node: ComfyNode, opts: {
     syncSelected()
   }
 
-  scope.run(() => {
-    useIntervalFn(() => {
-      if (!card.isConnected) return
-      const root = card.closest('[data-node-id]') as HTMLElement | null
-      if (!root) return
-      if (!root.hasAttribute('data-v2-shell')) root.setAttribute('data-v2-shell', '')
-      syncSelected()
-      syncTitle()
+  let root: HTMLElement | null = null
+
+  const syncSocketY = () => {
+    if (!root) return
+    const rootBox = root.getBoundingClientRect()
+    const box = socketAnchor.getBoundingClientRect()
+    if (rootBox.height > 0 && box.height > 0) {
+      const scale = rootBox.height / (root.offsetHeight || rootBox.height)
+      const mid = socketY === 'center'
+        ? box.height / 2
+        : Math.min(box.height * socketY.frac, socketY.cap)
+      const y = (box.top + mid - rootBox.top) / (scale || 1)
+      root.style.setProperty('--v2-socket-y', `${Math.round(y)}px`)
+    }
+  }
+
+  const syncAll = () => {
+    if (!card.isConnected) return
+    const r = card.closest('[data-node-id]') as HTMLElement | null
+    if (!r) return
+    if (r !== root) {
+      root = r
       bindClusterHoverIntent(root, scope)
-      const rootBox = root.getBoundingClientRect()
-      const box = socketAnchor.getBoundingClientRect()
-      if (rootBox.height > 0 && box.height > 0) {
-        const scale = rootBox.height / (root.offsetHeight || rootBox.height)
-        const mid = socketY === 'center'
-          ? box.height / 2
-          : Math.min(box.height * socketY.frac, socketY.cap)
-        const y = (box.top + mid - rootBox.top) / (scale || 1)
-        root.style.setProperty('--v2-socket-y', `${Math.round(y)}px`)
-      }
-    }, 500)
+    }
+    if (!root.hasAttribute('data-v2-shell')) root.setAttribute('data-v2-shell', '')
+    syncSelected()
+    syncTitle()
+    syncWarnings(root)
+    syncSocketY()
+  }
+
+  scope.run(() => {
+    useResizeObserver(card, syncAll)
+    useResizeObserver(socketAnchor, syncSocketY)
   })
+
+  const disposers = [
+    observeProperty(anyNode, 'selected', syncSelected),
+    observeProperty(anyNode, 'title', syncTitle),
+    observeProperty(anyNode, '_comfytvSlotWarnings', () => { if (root) syncWarnings(root) }),
+  ]
+  scope.run(() => {
+    onScopeDispose(() => { for (const d of disposers) d() })
+  })
+
+  const prevConf = anyNode.onConfigure
+  anyNode.onConfigure = function (...args: unknown[]) {
+    prevConf?.apply(this, args)
+    queueMicrotask(syncAll)
+  }
+
+  queueMicrotask(syncAll)
+}
+
+function draggedItems(node: ComfyNode, canvas: any, e: PointerEvent): Iterable<any> {
+  const selected: Set<any> | undefined = canvas?.selectedItems
+  if (!selected || !selected.has(node) || selected.size <= 1) return [node]
+  if (e.ctrlKey || e.metaKey) return selected
+  const all = new Set<any>()
+  const add = (item: any) => {
+    if (!item || item.pinned || all.has(item)) return
+    all.add(item)
+    if (item.children) for (const child of item.children) add(child)
+  }
+  for (const item of selected) add(item)
+  return all
+}
+
+function selectForPointer(node: ComfyNode, canvas: any, e: PointerEvent) {
+  if (typeof canvas?.processSelect === 'function') canvas.processSelect(node, e)
+  else canvas?.selectNode(node, e.shiftKey || e.ctrlKey || e.metaKey)
 }
 
 export function bindNodeDrag(node: ComfyNode, surface: HTMLElement) {
@@ -770,11 +1049,20 @@ export function bindNodeDrag(node: ComfyNode, surface: HTMLElement) {
     const dx = e.clientX - drag.x
     const dy = e.clientY - drag.y
     if (!drag.moved && Math.abs(dx) < 3 && Math.abs(dy) < 3) return
-    drag.moved = true
+    const canvas = (app as any).canvas
+    if (!drag.moved) {
+      drag.moved = true
+      if (!(node as any).selected) selectForPointer(node, canvas, e)
+    }
     drag.x = e.clientX
     drag.y = e.clientY
-    const scale = (app as any).canvas?.ds?.scale || 1
-    node.pos = [node.pos[0] + dx / scale, node.pos[1] + dy / scale]
+    const scale = canvas?.ds?.scale || 1
+    const gdx = dx / scale
+    const gdy = dy / scale
+    for (const item of draggedItems(node, canvas, e)) {
+      if (item.pinned) continue
+      item.pos = [item.pos[0] + gdx, item.pos[1] + gdy]
+    }
     ;(app as any).graph?.setDirtyCanvas(true, true)
   })
   const endDrag = (e: PointerEvent) => {
@@ -785,7 +1073,7 @@ export function bindNodeDrag(node: ComfyNode, surface: HTMLElement) {
     } catch { }
     const wasClick = !drag.moved
     drag = null
-    if (wasClick) (app as any).canvas?.selectNode(node)
+    if (wasClick) selectForPointer(node, (app as any).canvas, e)
   }
   surface.addEventListener('pointerup', endDrag)
   surface.addEventListener('pointercancel', endDrag)
@@ -827,7 +1115,7 @@ function el(tag: string, cls: string, html?: string) {
   return e
 }
 
-function buildToolbar(dispatch: (actionId: string) => void) {
+export function buildToolbar(dispatch: (actionId: string) => void) {
   const bar = el('div', 'v2-toolbar')
   const items: Array<[string, string, string] | null> = [
     [ICON_HD, t('v2.toolbar.hd'), 'edit:hd'],
@@ -874,9 +1162,19 @@ function refCount(node: ComfyNode): number {
   ).length
 }
 
-function attach(node: ComfyNode, kind: StageKind, variant: StageVariant) {
+interface ImageBatchShellConfig {
+  title?: string | null
+  linkKind?: string
+  footerExtra?: FooterExtra[]
+}
+
+function makeImageBatchShell(shellCfg: ImageBatchShellConfig = {}) {
+  return function attach(node: ComfyNode, kind: StageKind, variant: StageVariant) {
   installCss()
   const anyNode = node as any
+  const title = shellCfg.title !== undefined
+    ? (shellCfg.title ?? String((node.constructor as any)?.title ?? node.comfyClass ?? ''))
+    : t('v2.imageStageTitle')
 
   const card = el('div', 'v2-card')
   card.appendChild(buildToolbar((actionId) => {
@@ -891,7 +1189,7 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant) {
     }
     onAction(actionId)
   }))
-  const handle = el('div', 'v2-label v2-handle', `${ICON_GRIP}${ICON_IMAGE}<span>${t('v2.imageStageTitle')}</span>`)
+  const handle = el('div', 'v2-label v2-handle', `${ICON_GRIP}${ICON_IMAGE}<span>${title}</span>`)
   card.appendChild(handle)
   bindNodeDrag(node, handle)
 
@@ -914,37 +1212,44 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant) {
   const panel = el('div', 'v2-panel')
   const refsAnchor = el('div', 'v2-panel__refs')
   const promptAnchor = el('div', 'v2-panel__prompthost')
+  const presetAnchor = el('div', 'v2-panel__presets')
+  const customAnchor = el('div', 'v2-panel__custom')
+  const paramsAnchor = el('div', 'v2-panel__params')
   const footer = el('div', 'v2-panel__footer')
   const selectsAnchor = el('div', 'v2-panel__selects')
   const serverAnchor = el('div', 'v2-panel__server')
   const count = el('div', 'v2-panel__count', t('v2.refsCount', { n: 0 }))
   const run = el('button', 'v2-run', RUN_BUTTON_HTML) as HTMLButtonElement
   footer.append(selectsAnchor, serverAnchor, count, run)
-  panel.append(refsAnchor, promptAnchor, footer)
+  panel.append(refsAnchor, promptAnchor, presetAnchor, customAnchor, paramsAnchor, footer)
   card.append(preview, panel)
 
   const stageApi = useStageNode(node as any, kind, variant)
   const { state: stageState, onRunRequest, onCancelRequest, onAction } = stageApi
   const scope = createNodeScope(node)
 
-  const pinia = getActivePinia()
-  let mountedApps: Array<ReturnType<typeof createApp>> = []
+  const islands = createIslandGroup()
   const mountApps = () => {
-    for (const a of mountedApps) a.unmount()
-    mountedApps = []
+    islands.unmountAll()
     const specs: Array<[unknown, Record<string, unknown>, HTMLElement]> = [
-      [RefChipsV2, { getNode: () => node }, refsAnchor],
+      [RefChipsV2, { getNode: () => node, types: ['image'] }, refsAnchor],
       [MainPromptInput, { node }, promptAnchor],
-      [FooterSelectsV2, { getNode: () => node }, selectsAnchor],
+      [StagePresetBar, { node }, presetAnchor],
+      [FooterSelectsV2, {
+        getNode: () => node,
+        linkKind: shellCfg.linkKind ?? 'image',
+        extra: shellCfg.footerExtra ?? [],
+      }, selectsAnchor],
+      [CustomParamsV2, { node, state: stageState }, customAnchor],
+      [ParamsPanelV2, {
+        getNode: () => node,
+        exclude: ['aspect_ratio', 'resolution', 'batch_size', ...(shellCfg.footerExtra ?? []).map(x => x.name)],
+      }, paramsAnchor],
       [ServerSelectV2, { getNode: () => node, state: stageState }, serverAnchor],
       [MediaCornerV2, { state: stageState, source: 'batch', onAction }, cornerAnchor],
     ]
     for (const [comp, props, anchor] of specs) {
-      const a = createApp(comp as any, props)
-      if (pinia) a.use(pinia)
-      a.use(i18n)
-      a.mount(anchor)
-      mountedApps.push(a)
+      islands.mount(anchor, comp as any, props)
     }
   }
   mountApps()
@@ -961,8 +1266,7 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant) {
     serialize: false,
   })
 
-  const [w0, h0] = node.size
-  node.setSize([Math.max(w0, 340), Math.max(h0, 500)])
+  ensureMinSize(node, 340, 500)
 
   const LGGlobal = (window as any).LiteGraph
   const isValid = (a: unknown, b: unknown) => !!LGGlobal?.isValidConnection?.(a, b)
@@ -1030,7 +1334,7 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant) {
 
   const applyPick = (idx: number) => {
     if (batchList.length === 0) return
-    onAction('pick-item', { index: Math.min(Math.max(idx, 1), batchList.length) })
+    onAction('pick-item', { index: String(Math.min(Math.max(idx, 1), batchList.length)) })
   }
 
   const projectBatch = () => {
@@ -1108,17 +1412,24 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant) {
 
   bindNodeDrag(node, preview)
 
-  bindShellChrome(node, { scope, card, socketAnchor: preview })
+  bindShellChrome(node, { scope, card, socketAnchor: preview, state: stageState })
+  bindPromptResize(node, promptAnchor, scope)
 
   const prevRemoved = anyNode.onRemoved
   anyNode.onRemoved = function (...args: unknown[]) {
     document.body.removeAttribute('data-v2-toolbar')
-    for (const a of mountedApps) a.unmount()
-    mountedApps = []
+    islands.unmountAll()
     prevRemoved?.apply(this, args)
   }
 
   return stageApi
+  }
 }
 
-V2_SHELLS['ComfyTV.ImageStage'] = attach
+V2_SHELLS['ComfyTV.ImageStage'] = makeImageBatchShell()
+V2_SHELLS['ComfyTV.ShotImagesStage'] = makeImageBatchShell({ title: null, linkKind: 'shot-images' })
+V2_SHELLS['ComfyTV.ImageVariationsStage'] = makeImageBatchShell({
+  title: null,
+  linkKind: 'multiview',
+  footerExtra: [{ name: 'variant_count', type: 'number', titleKey: 'v2.ctl.variantCount' }],
+})

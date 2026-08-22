@@ -19,10 +19,13 @@
     <div v-if="hiddenCount > 0" class="v2-refchip v2-refchip--more">+{{ hiddenCount }}</div>
     <button type="button" class="v2-refchip v2-refchip--add" @click.stop="open = !open">＋</button>
   </div>
+  <div v-if="ir.slotWarnings.value.length" class="v2-refs-warns" @pointerdown.stop>
+    <div v-for="(w, i) in ir.slotWarnings.value" :key="i" class="v2-refs-warns__row">{{ w }}</div>
+  </div>
   <AssetPickerPopup
     v-if="open"
     :added-ids="addedIds"
-    :media-types="['image']"
+    :media-types="ir.acceptedMediaTypes.value"
     :batch-groups="ir.batchGroups.value"
     :added-batch-keys="addedBatchKeys"
     @select="onSelect"
@@ -48,12 +51,17 @@ const MAX_VISIBLE = 6
 
 const props = defineProps<{
   getNode: () => LGraphNode | undefined
+  types?: Array<'image' | 'video' | 'audio'>
 }>()
 
 const rootEl = ref<HTMLElement | null>(null)
 const open = ref(false)
 
-const ir = useImageReferences(props.getNode, rootEl, { forceTypes: ['image'] })
+const ir = useImageReferences(
+  props.getNode,
+  rootEl,
+  props.types ? { forceTypes: props.types } : undefined,
+)
 
 const visibleRefs = computed(() => ir.refs.value.slice(0, MAX_VISIBLE))
 const hiddenCount = computed(() => Math.max(0, ir.refs.value.length - MAX_VISIBLE))
