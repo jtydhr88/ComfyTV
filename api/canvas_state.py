@@ -9,6 +9,28 @@ STALE_AFTER_S = 30.0
 _mirrors: dict[str, dict] = {}
 
 
+def _stage_key(stage: dict) -> str:
+    uid = str(stage.get("uid") or "")
+    return uid or f"node:{stage.get('graph_node_id')}"
+
+
+def _stamp_last_runs(stages: list[dict], previous: list[dict]) -> None:
+    prev_by_key = {_stage_key(s): s for s in previous}
+    now = time.time()
+    for stage in stages:
+        run = stage.get("last_run")
+        if not isinstance(run, dict):
+            continue
+        prev_run = (prev_by_key.get(_stage_key(stage)) or {}).get("last_run")
+        if (isinstance(prev_run, dict) and "changed_at" in prev_run
+                and {k: v for k, v in prev_run.items() if k != "changed_at"} == run):
+            stamped = dict(prev_run)
+        else:
+            stamped = dict(run)
+            stamped["changed_at"] = now
+        stage["last_run"] = stamped
+
+
 def store_canvas_state(project_id: str, stages: list[dict],
                        client_id: str | None = None,
                        ws_connected: bool | None = None,
@@ -19,6 +41,7 @@ def store_canvas_state(project_id: str, stages: list[dict],
             and current.get("client_id") != client_id
             and time.time() - current["received_at"] <= STALE_AFTER_S):
         return "owned_by_other"
+    _stamp_last_runs(stages, current["stages"] if current else [])
     _mirrors[project_id] = {
         "project_id": project_id,
         "client_id": client_id,

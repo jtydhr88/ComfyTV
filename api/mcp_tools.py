@@ -1225,6 +1225,16 @@ def _mirror_stage(project_id, node_ref: str):
     raise ValueError(f"stage {node_ref!r} not found on the mirrored canvas")
 
 
+def _error_is_current(run: dict, initial_run: dict,
+                      run_started: float | None) -> bool:
+    if run != initial_run:
+        return True
+    changed = run.get("changed_at")
+    return (run_started is not None
+            and isinstance(changed, (int, float))
+            and changed >= run_started)
+
+
 def _output_created_ts(row) -> float | None:
     from datetime import datetime, timezone
     raw = (row or {}).get("created_at")
@@ -1286,7 +1296,8 @@ async def _wait_stage(args: dict) -> dict:
             fresh = None
         if fresh is not None:
             run = dict(fresh.get("last_run") or {})
-            if run.get("status") == "error" and run != initial_run:
+            if run.get("status") == "error" \
+                    and _error_is_current(run, initial_run, run_started):
                 return {
                     "status": "error",
                     "error": run.get("error") or "stage run failed",
