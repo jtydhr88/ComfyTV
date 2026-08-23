@@ -166,7 +166,7 @@ class TestWsObservability:
         monkeypatch.setattr(server.PromptServer.instance, "send_sync",
                             lambda *a, **k: None)
         from ComfyTV.api.mcp_commands import submit_command
-        with pytest.raises(ValueError, match="is the ComfyTV page open"):
+        with pytest.raises(ValueError, match="is ComfyTV open in Desktop or a browser"):
             await submit_command("run_stage", {"node": "1"}, timeout=0.05)
 
 

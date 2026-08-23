@@ -91,7 +91,7 @@ class TestCommandRegistry:
 
     async def test_submit_times_out_without_a_tab(self, client, sent):
         from ComfyTV.api.mcp_commands import pending_count, submit_command
-        with pytest.raises(ValueError, match="no ComfyTV tab"):
+        with pytest.raises(ValueError, match="no ComfyTV page"):
             await submit_command("run_stage", {"node": "1"}, timeout=0.05)
         assert pending_count() == 0
 
