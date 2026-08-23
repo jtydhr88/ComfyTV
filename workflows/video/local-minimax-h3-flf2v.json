@@ -2,7 +2,7 @@
  "id": "e3f2b845-8f2c-4b5a-9caf-eac1029d3e7e",
  "revision": 0,
  "last_node_id": 200,
- "last_link_id": 229,
+ "last_link_id": 238,
  "nodes": [
   {
    "id": 92,
@@ -829,6 +829,14 @@
         "name": "model",
         "type": "MODEL",
         "link": 5
+       },
+       {
+        "name": "steps",
+        "type": "INT",
+        "widget": {
+         "name": "steps"
+        },
+        "link": 238
        }
       ],
       "outputs": [
@@ -937,7 +945,7 @@
         "localized_name": "model",
         "name": "model",
         "type": "MODEL",
-        "link": 193
+        "link": 237
        },
        {
         "localized_name": "conditioning",
@@ -993,7 +1001,8 @@
         "type": "MODEL",
         "links": [
          5,
-         193
+         230,
+         232
         ]
        }
       ],
@@ -1363,6 +1372,298 @@
       "widgets_values": [
        2
       ]
+     },
+     {
+      "id": 121,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+       -2020,
+       4830
+      ],
+      "size": [
+       640,
+       130
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+       {
+        "localized_name": "model",
+        "name": "model",
+        "type": "MODEL",
+        "link": 230
+       }
+      ],
+      "outputs": [
+       {
+        "localized_name": "MODEL",
+        "name": "MODEL",
+        "type": "MODEL",
+        "links": [
+         231
+        ]
+       }
+      ],
+      "properties": {
+       "cnr_id": "comfy-core",
+       "ver": "0.33.0",
+       "Node name for S&R": "LoraLoaderModelOnly",
+       "models": [
+        {
+         "name": "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
+         "url": "https://huggingface.co/lightx2v/Minimax-h3-Turbo/resolve/main/minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
+         "directory": "loras"
+        }
+       ]
+      },
+      "widgets_values": [
+       "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
+       1
+      ],
+      "widgets_values_named": {
+       "lora_name": "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
+       "strength_model": 1
+      }
+     },
+     {
+      "id": 122,
+      "type": "ComfySwitchNode",
+      "pos": [
+       -400,
+       4790
+      ],
+      "size": [
+       270,
+       110
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+       {
+        "localized_name": "on_false",
+        "name": "on_false",
+        "type": "MODEL",
+        "link": 232
+       },
+       {
+        "localized_name": "on_true",
+        "name": "on_true",
+        "type": "MODEL",
+        "link": 231
+       },
+       {
+        "localized_name": "switch",
+        "name": "switch",
+        "type": "BOOLEAN",
+        "widget": {
+         "name": "switch"
+        },
+        "link": 233
+       }
+      ],
+      "outputs": [
+       {
+        "localized_name": "output",
+        "name": "output",
+        "type": "MODEL",
+        "links": [
+         237
+        ]
+       }
+      ],
+      "title": "If/Else Switch (Model)",
+      "properties": {
+       "cnr_id": "comfy-core",
+       "ver": "0.33.0",
+       "Node name for S&R": "ComfySwitchNode"
+      },
+      "widgets_values": [
+       false
+      ],
+      "widgets_values_named": {
+       "switch": false
+      }
+     },
+     {
+      "id": 123,
+      "type": "ComfySwitchNode",
+      "pos": [
+       -400,
+       4980
+      ],
+      "size": [
+       270,
+       110
+      ],
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+       {
+        "localized_name": "on_false",
+        "name": "on_false",
+        "type": "INT",
+        "link": 235
+       },
+       {
+        "localized_name": "on_true",
+        "name": "on_true",
+        "type": "INT",
+        "link": 236
+       },
+       {
+        "localized_name": "switch",
+        "name": "switch",
+        "type": "BOOLEAN",
+        "widget": {
+         "name": "switch"
+        },
+        "link": 234
+       }
+      ],
+      "outputs": [
+       {
+        "localized_name": "output",
+        "name": "output",
+        "type": "INT",
+        "links": [
+         238
+        ]
+       }
+      ],
+      "title": "If/Else Switch (Steps)",
+      "properties": {
+       "cnr_id": "comfy-core",
+       "ver": "0.33.0",
+       "Node name for S&R": "ComfySwitchNode"
+      },
+      "widgets_values": [
+       false
+      ],
+      "widgets_values_named": {
+       "switch": false
+      }
+     },
+     {
+      "id": 124,
+      "type": "PrimitiveInt",
+      "pos": [
+       -750,
+       4920
+      ],
+      "size": [
+       270,
+       90
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+       {
+        "localized_name": "INT",
+        "name": "INT",
+        "type": "INT",
+        "links": [
+         235
+        ]
+       }
+      ],
+      "properties": {
+       "cnr_id": "comfy-core",
+       "ver": "0.33.0",
+       "Node name for S&R": "PrimitiveInt"
+      },
+      "widgets_values": [
+       20,
+       "fixed"
+      ],
+      "widgets_values_named": {
+       "value": 20,
+       "fixed": "fixed"
+      }
+     },
+     {
+      "id": 125,
+      "type": "PrimitiveInt",
+      "pos": [
+       -750,
+       5060
+      ],
+      "size": [
+       270,
+       90
+      ],
+      "flags": {},
+      "order": 19,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+       {
+        "localized_name": "INT",
+        "name": "INT",
+        "type": "INT",
+        "links": [
+         236
+        ]
+       }
+      ],
+      "properties": {
+       "cnr_id": "comfy-core",
+       "ver": "0.33.0",
+       "Node name for S&R": "PrimitiveInt"
+      },
+      "widgets_values": [
+       6,
+       "fixed"
+      ],
+      "widgets_values_named": {
+       "value": 6,
+       "fixed": "fixed"
+      }
+     },
+     {
+      "id": 126,
+      "type": "PrimitiveBoolean",
+      "pos": [
+       -750,
+       5210
+      ],
+      "size": [
+       270,
+       90
+      ],
+      "flags": {},
+      "order": 20,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+       {
+        "localized_name": "BOOLEAN",
+        "name": "BOOLEAN",
+        "type": "BOOLEAN",
+        "links": [
+         233,
+         234
+        ]
+       }
+      ],
+      "title": "Boolean (Enable Lightning LoRA)",
+      "properties": {
+       "cnr_id": "comfy-core",
+       "ver": "0.33.0",
+       "Node name for S&R": "PrimitiveBoolean"
+      },
+      "widgets_values": [
+       false
+      ],
+      "widgets_values_named": {
+       "value": false
+      },
+      "color": "#322",
+      "bgcolor": "#533"
      }
     ],
     "groups": [
@@ -1479,14 +1780,6 @@
       "target_id": 14,
       "target_slot": 4,
       "type": "LATENT"
-     },
-     {
-      "id": 193,
-      "origin_id": 6,
-      "origin_slot": 0,
-      "target_id": 16,
-      "target_slot": 0,
-      "type": "MODEL"
      },
      {
       "id": 187,
@@ -1655,6 +1948,78 @@
       "target_id": 13,
       "target_slot": 0,
       "type": "COMBO"
+     },
+     {
+      "id": 230,
+      "origin_id": 6,
+      "origin_slot": 0,
+      "target_id": 121,
+      "target_slot": 0,
+      "type": "MODEL"
+     },
+     {
+      "id": 231,
+      "origin_id": 121,
+      "origin_slot": 0,
+      "target_id": 122,
+      "target_slot": 1,
+      "type": "MODEL"
+     },
+     {
+      "id": 232,
+      "origin_id": 6,
+      "origin_slot": 0,
+      "target_id": 122,
+      "target_slot": 0,
+      "type": "MODEL"
+     },
+     {
+      "id": 233,
+      "origin_id": 126,
+      "origin_slot": 0,
+      "target_id": 122,
+      "target_slot": 2,
+      "type": "BOOLEAN"
+     },
+     {
+      "id": 234,
+      "origin_id": 126,
+      "origin_slot": 0,
+      "target_id": 123,
+      "target_slot": 2,
+      "type": "BOOLEAN"
+     },
+     {
+      "id": 235,
+      "origin_id": 124,
+      "origin_slot": 0,
+      "target_id": 123,
+      "target_slot": 0,
+      "type": "INT"
+     },
+     {
+      "id": 236,
+      "origin_id": 125,
+      "origin_slot": 0,
+      "target_id": 123,
+      "target_slot": 1,
+      "type": "INT"
+     },
+     {
+      "id": 237,
+      "origin_id": 122,
+      "origin_slot": 0,
+      "target_id": 16,
+      "target_slot": 0,
+      "type": "MODEL"
+     },
+     {
+      "id": 238,
+      "origin_id": 123,
+      "origin_slot": 0,
+      "target_id": 9,
+      "target_slot": 1,
+      "type": "INT"
      }
     ],
     "extra": {}

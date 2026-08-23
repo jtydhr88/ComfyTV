@@ -7,6 +7,7 @@ import {
   assetChipLabel,
   fetchImageSlotOptions,
   fetchImageSlotOptionsCached,
+  fetchWorkflowMetaCached,
   type ImageSlotOption,
   nodeAcceptsAudioInput,
   nodeAcceptsAutogrowImages,
@@ -294,6 +295,10 @@ export function useImageReferences(
     if (wf) {
       try {
         options = await fetchImageSlotOptionsCached(wf.kind, wf.label)
+        if (options.length === 0) {
+          const meta = await fetchWorkflowMetaCached(wf.kind, wf.label)
+          if (meta.mention_style != null) options = null
+        }
       } catch {
         options = null
       }

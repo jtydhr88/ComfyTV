@@ -127,7 +127,7 @@ function write(name: string, v: unknown) {
 }
 .v2-ctl__row[data-wide='1'] { grid-column: 1 / -1; }
 .v2-ctl__label {
-  color: #8f8f98;
+  color: var(--v2-text-muted);
   font: 500 10px/1 system-ui, sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -135,22 +135,22 @@ function write(name: string, v: unknown) {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.v2-ctl :deep(button) {
+.v2-ctl :deep(button:not(.ctv-toggle)) {
   height: 26px;
   padding: 0 8px;
   font-size: 11px;
   border-radius: 8px;
   border-width: 1px;
   background: transparent;
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--v2-chip-border);
 }
-.v2-ctl :deep(button:hover) { background: rgba(255, 255, 255, 0.06); }
+.v2-ctl :deep(button:not(.ctv-toggle):hover) { background: var(--v2-hover-bg); }
 .v2-ctl :deep(textarea),
 .v2-ctl :deep(input[type='text']) {
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--v2-chip-border);
   border-radius: 8px;
   background: transparent;
-  color: #ececf1;
+  color: var(--v2-text-strong);
   font: 500 11px/1.5 system-ui, sans-serif;
 }
 </style>

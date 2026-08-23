@@ -53,7 +53,7 @@ const dims = computed(() => {
   min-height: 0;
   border-radius: 12px;
   overflow: hidden;
-  background: linear-gradient(160deg, #23232a 0%, #1a1a20 100%);
+  background: var(--v2-media-bg);
   display: flex;
   flex-direction: column;
 }
@@ -63,7 +63,7 @@ const dims = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #6b6b74;
+  color: var(--v2-text-faint);
   font: 500 12px/1.5 system-ui, sans-serif;
   pointer-events: none;
 }
@@ -74,19 +74,19 @@ const dims = computed(() => {
   gap: 8px;
   padding: 9px 14px;
   border-radius: 14px;
-  background: #232327;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--v2-slab-bg);
+  border: 1px solid var(--v2-slab-border);
   font: 500 11px/1 system-ui, sans-serif;
-  color: #8f8f98;
+  color: var(--v2-text-muted);
 }
-.v2-crop__dims { color: #b9b9c0; font-variant-numeric: tabular-nums; }
+.v2-crop__dims { color: var(--v2-text-mid); font-variant-numeric: tabular-nums; }
 .v2-crop__spacer { flex: 1; }
 .v2-crop__busy,
 .v2-crop__ok {
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #9a9aa2;
+  color: var(--v2-text-muted);
 }
 .v2-crop__busy::before,
 .v2-crop__ok::before {
@@ -94,8 +94,8 @@ const dims = computed(() => {
   width: 6px;
   height: 6px;
   border-radius: 999px;
-  background: #a78bfa;
-  box-shadow: 0 0 6px rgba(167, 139, 250, 0.7);
+  background: var(--v2-accent);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--v2-accent) 70%, transparent);
 }
 .v2-crop__busy::before { animation: v2croppulse 0.9s ease-in-out infinite; }
 @keyframes v2croppulse {

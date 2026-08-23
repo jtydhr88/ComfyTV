@@ -1,8 +1,8 @@
 {
   "id": "e3f2b845-8f2c-4b5a-9caf-eac1029d3e7e",
   "revision": 0,
-  "last_node_id": 133,
-  "last_link_id": 248,
+  "last_node_id": 139,
+  "last_link_id": 257,
   "nodes": [
     {
       "id": 92,
@@ -318,6 +318,14 @@
           "name": "model",
           "type": "MODEL",
           "link": 230
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "widget": {
+            "name": "steps"
+          },
+          "link": 257
         }
       ],
       "outputs": [
@@ -421,7 +429,7 @@
         {
           "name": "model",
           "type": "MODEL",
-          "link": 236
+          "link": 256
         },
         {
           "name": "conditioning",
@@ -463,7 +471,8 @@
           "type": "MODEL",
           "links": [
             230,
-            236
+            249,
+            251
           ]
         }
       ],
@@ -787,6 +796,298 @@
       "widgets_values_named": {
         "value": 2
       }
+    },
+    {
+      "id": 134,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        -2135,
+        4735
+      ],
+      "size": [
+        640,
+        130
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "model",
+          "name": "model",
+          "type": "MODEL",
+          "link": 249
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "MODEL",
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            250
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.33.0",
+        "Node name for S&R": "LoraLoaderModelOnly",
+        "models": [
+          {
+            "name": "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
+            "url": "https://huggingface.co/lightx2v/Minimax-h3-Turbo/resolve/main/minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
+            "directory": "loras"
+          }
+        ]
+      },
+      "widgets_values": [
+        "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
+        1
+      ],
+      "widgets_values_named": {
+        "lora_name": "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
+        "strength_model": 1
+      }
+    },
+    {
+      "id": 135,
+      "type": "ComfySwitchNode",
+      "pos": [
+        -515,
+        4695
+      ],
+      "size": [
+        270,
+        110
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "on_false",
+          "name": "on_false",
+          "type": "MODEL",
+          "link": 251
+        },
+        {
+          "localized_name": "on_true",
+          "name": "on_true",
+          "type": "MODEL",
+          "link": 250
+        },
+        {
+          "localized_name": "switch",
+          "name": "switch",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "switch"
+          },
+          "link": 252
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "output",
+          "name": "output",
+          "type": "MODEL",
+          "links": [
+            256
+          ]
+        }
+      ],
+      "title": "If/Else Switch (Model)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.33.0",
+        "Node name for S&R": "ComfySwitchNode"
+      },
+      "widgets_values": [
+        false
+      ],
+      "widgets_values_named": {
+        "switch": false
+      }
+    },
+    {
+      "id": 136,
+      "type": "ComfySwitchNode",
+      "pos": [
+        -515,
+        4885
+      ],
+      "size": [
+        270,
+        110
+      ],
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "on_false",
+          "name": "on_false",
+          "type": "INT",
+          "link": 254
+        },
+        {
+          "localized_name": "on_true",
+          "name": "on_true",
+          "type": "INT",
+          "link": 255
+        },
+        {
+          "localized_name": "switch",
+          "name": "switch",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "switch"
+          },
+          "link": 253
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "output",
+          "name": "output",
+          "type": "INT",
+          "links": [
+            257
+          ]
+        }
+      ],
+      "title": "If/Else Switch (Steps)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.33.0",
+        "Node name for S&R": "ComfySwitchNode"
+      },
+      "widgets_values": [
+        false
+      ],
+      "widgets_values_named": {
+        "switch": false
+      }
+    },
+    {
+      "id": 137,
+      "type": "PrimitiveInt",
+      "pos": [
+        -865,
+        4825
+      ],
+      "size": [
+        270,
+        90
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "localized_name": "INT",
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            254
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.33.0",
+        "Node name for S&R": "PrimitiveInt"
+      },
+      "widgets_values": [
+        20,
+        "fixed"
+      ],
+      "widgets_values_named": {
+        "value": 20,
+        "fixed": "fixed"
+      }
+    },
+    {
+      "id": 138,
+      "type": "PrimitiveInt",
+      "pos": [
+        -865,
+        4965
+      ],
+      "size": [
+        270,
+        90
+      ],
+      "flags": {},
+      "order": 19,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "localized_name": "INT",
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            255
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.33.0",
+        "Node name for S&R": "PrimitiveInt"
+      },
+      "widgets_values": [
+        6,
+        "fixed"
+      ],
+      "widgets_values_named": {
+        "value": 6,
+        "fixed": "fixed"
+      }
+    },
+    {
+      "id": 139,
+      "type": "PrimitiveBoolean",
+      "pos": [
+        -865,
+        5115
+      ],
+      "size": [
+        270,
+        90
+      ],
+      "flags": {},
+      "order": 20,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "localized_name": "BOOLEAN",
+          "name": "BOOLEAN",
+          "type": "BOOLEAN",
+          "links": [
+            252,
+            253
+          ]
+        }
+      ],
+      "title": "Boolean (Enable Lightning LoRA)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.33.0",
+        "Node name for S&R": "PrimitiveBoolean"
+      },
+      "widgets_values": [
+        false
+      ],
+      "widgets_values_named": {
+        "value": false
+      },
+      "color": "#322",
+      "bgcolor": "#533"
     }
   ],
   "links": [
@@ -853,14 +1154,6 @@
       125,
       4,
       "LATENT"
-    ],
-    [
-      236,
-      127,
-      0,
-      126,
-      0,
-      "MODEL"
     ],
     [
       237,
@@ -941,6 +1234,78 @@
       121,
       0,
       "LATENT"
+    ],
+    [
+      249,
+      127,
+      0,
+      134,
+      0,
+      "MODEL"
+    ],
+    [
+      250,
+      134,
+      0,
+      135,
+      1,
+      "MODEL"
+    ],
+    [
+      251,
+      127,
+      0,
+      135,
+      0,
+      "MODEL"
+    ],
+    [
+      252,
+      139,
+      0,
+      135,
+      2,
+      "BOOLEAN"
+    ],
+    [
+      253,
+      139,
+      0,
+      136,
+      2,
+      "BOOLEAN"
+    ],
+    [
+      254,
+      137,
+      0,
+      136,
+      0,
+      "INT"
+    ],
+    [
+      255,
+      138,
+      0,
+      136,
+      1,
+      "INT"
+    ],
+    [
+      256,
+      135,
+      0,
+      126,
+      0,
+      "MODEL"
+    ],
+    [
+      257,
+      136,
+      0,
+      124,
+      1,
+      "INT"
     ]
   ],
   "groups": [

@@ -13,6 +13,7 @@ const asMock = {
   workflowRefOfNode: vi.fn(),
   fetchImageSlotOptions: vi.fn(),
   fetchImageSlotOptionsCached: vi.fn(),
+  fetchWorkflowMetaCached: vi.fn(),
 }
 
 const { importAssetFiles } = vi.hoisted(() => ({
@@ -57,6 +58,7 @@ vi.mock('@/composables/stages/assetSlots', async (importOriginal) => {
     workflowRefOfNode: (...a: any[]) => asMock.workflowRefOfNode(...a),
     fetchImageSlotOptions: (...a: any[]) => asMock.fetchImageSlotOptions(...a),
     fetchImageSlotOptionsCached: (...a: any[]) => asMock.fetchImageSlotOptionsCached(...a),
+    fetchWorkflowMetaCached: (...a: any[]) => asMock.fetchWorkflowMetaCached(...a),
   }
 })
 
@@ -85,6 +87,7 @@ beforeEach(() => {
   asMock.workflowRefOfNode.mockReset().mockReturnValue(null)
   asMock.fetchImageSlotOptions.mockReset().mockResolvedValue([])
   asMock.fetchImageSlotOptionsCached.mockReset().mockResolvedValue([])
+  asMock.fetchWorkflowMetaCached.mockReset().mockResolvedValue({})
   pinned.list.mockReset().mockReturnValue([])
   pinned.byId.mockReset().mockReturnValue(undefined)
   pinned.refresh.mockReset().mockReturnValue(false)
@@ -290,6 +293,23 @@ describe('useImageReferences', () => {
       () => expect(ir.slotWarnings.value).toEqual(['imageRefs.warnNoSlots']),
       { timeout: 2000 },
     )
+  })
+
+  it('suppresses noSlots for mention-style workflows with dynamic image inputs', async () => {
+    const node = {
+      comfyClass: 'Test', inputs: [],
+      properties: { comfytv_image_refs: [{ asset_id: 1, slot: 0 }, { asset_id: 2, slot: 0 }] },
+    }
+    asMock.workflowRefOfNode.mockReturnValue({ kind: 'video', label: 'h3' })
+    asMock.fetchImageSlotOptionsCached.mockResolvedValue([])
+    asMock.fetchWorkflowMetaCached.mockResolvedValue({ mention_style: 'minimax_tags' })
+    const ir = useImageReferences(() => node, rootElStub())
+    ir.init()
+    await vi.waitFor(
+      () => expect(ir.slotWarnings.value).toEqual(['imageRefs.warnDuplicate:{"n":0}']),
+      { timeout: 2000 },
+    )
+    expect(ir.slotWarnings.value.join('|')).not.toContain('warnNoSlots')
   })
 
   it('falls back to null options (no consumability checks) when the slot fetch fails', async () => {

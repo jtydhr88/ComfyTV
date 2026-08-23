@@ -2,7 +2,7 @@
   "id": "e3f2b845-8f2c-4b5a-9caf-eac1029d3e7e",
   "revision": 0,
   "last_node_id": 403,
-  "last_link_id": 298,
+  "last_link_id": 307,
   "nodes": [
     {
       "id": 92,
@@ -299,6 +299,14 @@
           "name": "model",
           "type": "MODEL",
           "link": 252
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "widget": {
+            "name": "steps"
+          },
+          "link": 307
         }
       ],
       "outputs": [
@@ -398,7 +406,7 @@
         {
           "name": "model",
           "type": "MODEL",
-          "link": 257
+          "link": 306
         },
         {
           "name": "conditioning",
@@ -441,7 +449,8 @@
           "type": "MODEL",
           "links": [
             252,
-            257
+            299,
+            301
           ]
         }
       ],
@@ -1517,6 +1526,287 @@
         "example.mp3"
       ],
       "title": "Ref Audio 3"
+    },
+    {
+      "id": 145,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        -1490,
+        5100
+      ],
+      "size": [
+        640,
+        90
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 299
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            300
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.33.0",
+        "Node name for S&R": "LoraLoaderModelOnly",
+        "models": [
+          {
+            "name": "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+            "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/loras/minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+            "directory": "loras"
+          }
+        ]
+      },
+      "widgets_values": [
+        "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+        1
+      ],
+      "widgets_values_named": {
+        "lora_name": "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+        "strength_model": 1
+      }
+    },
+    {
+      "id": 141,
+      "type": "ComfySwitchNode",
+      "pos": [
+        -730,
+        4900
+      ],
+      "size": [
+        270,
+        110
+      ],
+      "flags": {},
+      "order": 20,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "on_false",
+          "type": "MODEL",
+          "link": 301
+        },
+        {
+          "name": "on_true",
+          "type": "MODEL",
+          "link": 300
+        },
+        {
+          "name": "switch",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "switch"
+          },
+          "link": 302
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "MODEL",
+          "links": [
+            306
+          ]
+        }
+      ],
+      "title": "If/Else Switch (model)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.33.0",
+        "Node name for S&R": "ComfySwitchNode"
+      },
+      "widgets_values": [
+        false
+      ],
+      "widgets_values_named": {
+        "switch": false
+      }
+    },
+    {
+      "id": 142,
+      "type": "ComfySwitchNode",
+      "pos": [
+        -390,
+        5070
+      ],
+      "size": [
+        270,
+        110
+      ],
+      "flags": {},
+      "order": 19,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "on_false",
+          "type": "INT",
+          "link": 304
+        },
+        {
+          "name": "on_true",
+          "type": "INT",
+          "link": 305
+        },
+        {
+          "name": "switch",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "switch"
+          },
+          "link": 303
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "INT",
+          "links": [
+            307
+          ]
+        }
+      ],
+      "title": "If/Else Switch (Steps)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.33.0",
+        "Node name for S&R": "ComfySwitchNode"
+      },
+      "widgets_values": [
+        false
+      ],
+      "widgets_values_named": {
+        "switch": false
+      }
+    },
+    {
+      "id": 143,
+      "type": "PrimitiveInt",
+      "pos": [
+        -730,
+        5050
+      ],
+      "size": [
+        270,
+        90
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            304
+          ]
+        }
+      ],
+      "title": "Int (Full)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.33.0",
+        "Node name for S&R": "PrimitiveInt"
+      },
+      "widgets_values": [
+        20,
+        "fixed"
+      ],
+      "widgets_values_named": {
+        "value": 20,
+        "fixed": "fixed"
+      }
+    },
+    {
+      "id": 144,
+      "type": "PrimitiveInt",
+      "pos": [
+        -730,
+        5180
+      ],
+      "size": [
+        270,
+        90
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            305
+          ]
+        }
+      ],
+      "title": "Int (Lightning LoRA)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.33.0",
+        "Node name for S&R": "PrimitiveInt"
+      },
+      "widgets_values": [
+        4,
+        "fixed"
+      ],
+      "widgets_values_named": {
+        "value": 4,
+        "fixed": "fixed"
+      }
+    },
+    {
+      "id": 146,
+      "type": "PrimitiveBoolean",
+      "pos": [
+        -1490,
+        5900
+      ],
+      "size": [
+        270,
+        70
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "BOOLEAN",
+          "type": "BOOLEAN",
+          "links": [
+            302,
+            303
+          ]
+        }
+      ],
+      "title": "Boolean (Enable Lightning LoRA)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.33.0",
+        "Node name for S&R": "PrimitiveBoolean"
+      },
+      "widgets_values": [
+        false
+      ],
+      "widgets_values_named": {
+        "value": false
+      },
+      "color": "#322",
+      "bgcolor": "#533"
     }
   ],
   "links": [
@@ -1575,14 +1865,6 @@
       125,
       3,
       "SIGMAS"
-    ],
-    [
-      257,
-      127,
-      0,
-      126,
-      0,
-      "MODEL"
     ],
     [
       258,
@@ -1831,6 +2113,78 @@
       136,
       18,
       "AUDIO"
+    ],
+    [
+      299,
+      127,
+      0,
+      145,
+      0,
+      "MODEL"
+    ],
+    [
+      300,
+      145,
+      0,
+      141,
+      1,
+      "MODEL"
+    ],
+    [
+      301,
+      127,
+      0,
+      141,
+      0,
+      "MODEL"
+    ],
+    [
+      302,
+      146,
+      0,
+      141,
+      2,
+      "BOOLEAN"
+    ],
+    [
+      303,
+      146,
+      0,
+      142,
+      2,
+      "BOOLEAN"
+    ],
+    [
+      304,
+      143,
+      0,
+      142,
+      0,
+      "INT"
+    ],
+    [
+      305,
+      144,
+      0,
+      142,
+      1,
+      "INT"
+    ],
+    [
+      306,
+      141,
+      0,
+      126,
+      0,
+      "MODEL"
+    ],
+    [
+      307,
+      142,
+      0,
+      124,
+      1,
+      "INT"
     ]
   ],
   "groups": [

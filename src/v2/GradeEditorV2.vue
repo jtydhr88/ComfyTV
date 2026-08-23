@@ -197,7 +197,7 @@ watch(sourceImageUrl, (url) => {
 }
 .v2-grade__reset {
   flex: none;
-  color: #8f8f98;
+  color: var(--v2-text-muted);
 }
 .v2-grade__error {
   color: var(--destructive-background, #ef4444);

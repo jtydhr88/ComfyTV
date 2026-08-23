@@ -25,9 +25,9 @@ const PICKER_CSS = `
   margin-top: 12px;
   padding: 10px 14px;
   border-radius: 14px;
-  background: #232327;
-  border: 1px solid rgba(255,255,255,.05);
-  color: #8f8f98;
+  background: var(--v2-slab-bg);
+  border: 1px solid var(--v2-slab-border);
+  color: var(--v2-text-muted);
   font: 500 11px/1 system-ui, sans-serif;
 }
 .v2-picker-footer__spacer { flex: 1; }
@@ -35,12 +35,12 @@ const PICKER_CSS = `
   border: none;
   padding: 5px 10px;
   border-radius: 8px;
-  background: rgba(255,255,255,.06);
-  color: #b9b9c0;
+  background: var(--v2-chip-bg);
+  color: var(--v2-text-mid);
   font: 500 11px/1 system-ui, sans-serif;
   cursor: pointer;
 }
-.v2-picker-footer__clear:hover { background: rgba(255,255,255,.12); color: #ececf1; }
+.v2-picker-footer__clear:hover { background: var(--v2-hover-bg); color: var(--v2-text-strong); }
 .v2-picker-footer__clear--danger { background: rgba(239,68,68,.2); color: #fca5a5; }
 .v2-picker-footer__clear--danger:hover { background: rgba(239,68,68,.35); color: #fecaca; }
 .v2-picker-footer__confirm {
@@ -53,14 +53,14 @@ const PICKER_CSS = `
   height: 26px;
   padding: 0;
   border-radius: 8px;
-  background: rgba(255,255,255,.06);
-  color: #b9b9c0;
+  background: var(--v2-chip-bg);
+  color: var(--v2-text-mid);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.v2-picker-footer__pin:hover { background: rgba(255,255,255,.12); color: #ececf1; }
+.v2-picker-footer__pin:hover { background: var(--v2-hover-bg); color: var(--v2-text-strong); }
 .v2-picker-footer__pin svg { width: 13px; height: 13px; }
 `
 

@@ -38,7 +38,8 @@ const ED_CSS = `
   min-height: 0;
   border-radius: 12px;
   overflow: hidden;
-  background: linear-gradient(160deg, #23232a 0%, #1a1a20 100%);
+  background: var(--v2-checker);
+  background-size: 18px 18px;
   display: flex;
   flex-direction: column;
 }
@@ -63,7 +64,7 @@ const ED_CSS = `
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #6b6b74;
+  color: var(--v2-text-faint);
   font: 500 12px/1.5 system-ui, sans-serif;
   pointer-events: none;
   text-align: center;
@@ -76,8 +77,8 @@ const ED_CSS = `
   gap: 10px;
   padding: 12px 14px;
   border-radius: 14px;
-  background: #232327;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--v2-slab-bg);
+  border: 1px solid var(--v2-slab-border);
   min-width: 0;
 }
 .v2-ed__row {
@@ -92,17 +93,17 @@ const ED_CSS = `
   font: 600 10px/1 system-ui, sans-serif;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #8f8f98;
+  color: var(--v2-text-muted);
 }
 .v2-ed__value {
   font: 500 11px/1 ui-monospace, monospace;
-  color: #d9d9de;
+  color: var(--v2-text-mid);
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 .v2-ed__range {
   width: 100%;
-  accent-color: #a78bfa;
+  accent-color: var(--v2-accent);
 }
 .v2-ed__chips {
   display: flex;
@@ -119,20 +120,20 @@ const ED_CSS = `
   gap: 6px;
   padding: 7px 8px;
   border-radius: 9px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.04);
-  color: #d9d9de;
+  border: 1px solid var(--v2-chip-border);
+  background: var(--v2-chip-bg);
+  color: var(--v2-text-mid);
   font: 500 11px/1 system-ui, sans-serif;
   cursor: pointer;
   appearance: none;
   user-select: none;
   white-space: nowrap;
 }
-.v2-ed__chip:hover { border-color: rgba(167, 139, 250, 0.45); }
+.v2-ed__chip:hover { border-color: var(--v2-accent-border); }
 .v2-ed__chip[data-on="1"] {
-  background: rgba(167, 139, 250, 0.16);
-  border-color: rgba(167, 139, 250, 0.6);
-  color: #cdbdfc;
+  background: var(--v2-accent-soft);
+  border-color: var(--v2-accent-border);
+  color: var(--v2-accent-text);
 }
 .v2-ed__chip svg { width: 14px; height: 14px; }
 .v2-ed__step {
@@ -143,8 +144,8 @@ const ED_CSS = `
   gap: 7px;
   padding: 5px 8px;
   border-radius: 9px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--v2-chip-border);
+  background: var(--v2-chip-bg);
 }
 .v2-ed__stepbtn {
   width: 22px;
@@ -154,19 +155,19 @@ const ED_CSS = `
   justify-content: center;
   border: none;
   border-radius: 7px;
-  background: rgba(255, 255, 255, 0.06);
-  color: #d9d9de;
+  background: var(--v2-chip-bg);
+  color: var(--v2-text-mid);
   font: 500 13px/1 system-ui, sans-serif;
   cursor: pointer;
   appearance: none;
 }
-.v2-ed__stepbtn:hover { background: rgba(167, 139, 250, 0.2); color: #cdbdfc; }
+.v2-ed__stepbtn:hover { background: var(--v2-accent-soft); color: var(--v2-accent-text); }
 .v2-ed__stepval {
   margin-left: auto;
   min-width: 24px;
   text-align: center;
   font: 500 11px/1 ui-monospace, monospace;
-  color: #d9d9de;
+  color: var(--v2-text-mid);
 }
 .v2-ed__status {
   flex: none;
@@ -175,19 +176,19 @@ const ED_CSS = `
   gap: 8px;
   padding: 9px 14px;
   border-radius: 14px;
-  background: #232327;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--v2-slab-bg);
+  border: 1px solid var(--v2-slab-border);
   font: 500 11px/1 system-ui, sans-serif;
-  color: #8f8f98;
+  color: var(--v2-text-muted);
 }
-.v2-ed__dims { color: #b9b9c0; font-variant-numeric: tabular-nums; }
+.v2-ed__dims { color: var(--v2-text-mid); font-variant-numeric: tabular-nums; }
 .v2-ed__spacer { flex: 1; }
 .v2-ed__busy,
 .v2-ed__ok {
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #9a9aa2;
+  color: var(--v2-text-muted);
 }
 .v2-ed__busy::before,
 .v2-ed__ok::before {
@@ -195,8 +196,8 @@ const ED_CSS = `
   width: 6px;
   height: 6px;
   border-radius: 999px;
-  background: #a78bfa;
-  box-shadow: 0 0 6px rgba(167, 139, 250, 0.7);
+  background: var(--v2-accent);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--v2-accent) 70%, transparent);
 }
 .v2-ed__busy::before { animation: v2edpulse 0.9s ease-in-out infinite; }
 @keyframes v2edpulse {

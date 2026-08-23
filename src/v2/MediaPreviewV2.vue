@@ -110,19 +110,23 @@ const hasContent = computed(() =>
   inset: 0;
   border-radius: 12px;
   overflow: hidden;
-  background: linear-gradient(160deg, #23232a 0%, #1a1a20 100%);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: var(--v2-media-bg);
+  border: 1px solid var(--v2-media-border);
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.v2-mp[data-kind="image"] {
+  background: var(--v2-checker);
+  background-size: 18px 18px;
 }
 .v2-mp__img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 .v2-mp__video,
 .v2-mp :deep(video) {
@@ -144,7 +148,7 @@ const hasContent = computed(() =>
 .v2-mp__audioicon {
   width: 40px;
   height: 40px;
-  color: #8f8f98;
+  color: var(--v2-text-muted);
 }
 .v2-mp__audio {
   width: 100%;
@@ -156,7 +160,7 @@ const hasContent = computed(() =>
   inset: 0;
   display: flex;
   flex-direction: column;
-  color: #6b6b74;
+  color: var(--v2-text-faint);
   cursor: grab;
 }
 .v2-mp__model:active { cursor: grabbing; }
@@ -170,7 +174,7 @@ const hasContent = computed(() =>
   inset: 0;
   padding: 12px 14px;
   overflow-y: auto;
-  color: #d9d9de;
+  color: var(--v2-text-mid);
   font: 400 12px/1.7 system-ui, sans-serif;
   white-space: pre-wrap;
   word-break: break-word;
@@ -183,7 +187,7 @@ const hasContent = computed(() =>
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  color: #6b6b74;
+  color: var(--v2-text-faint);
   font: 500 12px/1.5 system-ui, sans-serif;
 }
 .v2-mp__hint svg { width: 26px; height: 26px; opacity: 0.55; }

@@ -22,10 +22,10 @@ export const V2_CSS_PANELS = `
   gap: 6px;
   padding: 8px;
   border-radius: 12px;
-  background: rgba(24,24,30,.92);
+  background: var(--v2-slab-bg);
   backdrop-filter: blur(6px);
-  border: 1px solid rgba(255,255,255,.08);
-  box-shadow: 0 10px 28px rgba(0,0,0,.5);
+  border: 1px solid var(--v2-chip-border);
+  box-shadow: var(--v2-slab-shadow);
   max-width: 262px;
   flex-wrap: wrap;
 }
@@ -39,7 +39,7 @@ export const V2_CSS_PANELS = `
   border-radius: 9px;
   overflow: hidden;
   cursor: pointer;
-  background: #2a2a2f;
+  background: var(--v2-chip-bg);
 }
 .v2-strip__x {
   position: absolute;
@@ -81,9 +81,9 @@ export const V2_CSS_PANELS = `
   gap: 10px;
   padding: 12px 14px;
   border-radius: 16px;
-  background: #232327;
-  border: 1px solid rgba(255,255,255,.05);
-  box-shadow: 0 8px 24px rgba(0,0,0,.4);
+  background: var(--v2-slab-bg);
+  border: 1px solid var(--v2-slab-border);
+  box-shadow: var(--v2-slab-shadow);
 }
 .v2-panel__chips { display: flex; gap: 8px; }
 .v2-panel__chipbtn {
@@ -93,9 +93,9 @@ export const V2_CSS_PANELS = `
   gap: 4px;
   padding: 7px 10px 5px;
   border-radius: 10px;
-  background: #2c2c31;
-  border: 1px solid rgba(255,255,255,.05);
-  color: #b9b9c0;
+  background: var(--v2-chip-bg);
+  border: 1px solid var(--v2-chip-border);
+  color: var(--v2-text-mid);
   font: 500 10px/1 system-ui, sans-serif;
   cursor: pointer;
 }
@@ -107,11 +107,11 @@ export const V2_CSS_PANELS = `
   border: none;
   outline: none;
   background: transparent;
-  color: #ececf1;
+  color: var(--v2-text-strong);
   font: 400 13px/1.6 system-ui, sans-serif;
-  caret-color: #fff;
+  caret-color: var(--v2-text-strong);
 }
-.v2-panel__prompt::placeholder { color: #5d5d66; }
+.v2-panel__prompt::placeholder { color: var(--v2-text-faint); }
 .v2-panel__refs:empty,
 .v2-panel__presets:empty,
 .v2-panel__controls:empty,
@@ -134,7 +134,7 @@ export const V2_CSS_PANELS = `
 }
 .v2-panel__prompthost .comfytv-prompt-editor::-webkit-resizer {
   background:
-    linear-gradient(135deg, transparent 0 50%, rgba(255,255,255,.28) 50% 60%, transparent 60% 75%, rgba(255,255,255,.28) 75% 85%, transparent 85%);
+    linear-gradient(135deg, transparent 0 50%, var(--v2-scrollbar) 50% 60%, transparent 60% 75%, var(--v2-scrollbar) 75% 85%, transparent 85%);
 }
 .v2-panel__selects { flex: 1; min-width: 0; display: flex; }
 .v2-panel__prompthost .comfytv-prompt-editor { min-height: 54px; font-size: 13px; }
@@ -142,7 +142,7 @@ export const V2_CSS_PANELS = `
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #b9b9c0;
+  color: var(--v2-text-mid);
   font: 500 12px/1 system-ui, sans-serif;
 }
 .v2-select {
@@ -151,7 +151,7 @@ export const V2_CSS_PANELS = `
   border: none;
   outline: none;
   background: transparent;
-  color: #b9b9c0;
+  color: var(--v2-text-mid);
   font: 500 12px/1 system-ui, sans-serif;
   cursor: pointer;
   max-width: 118px;
@@ -162,7 +162,7 @@ export const V2_CSS_PANELS = `
   background-position: right 0 center;
   background-size: 8px;
 }
-.v2-select option { background: #232327; color: #ececf1; }
+.v2-select option { background: var(--v2-slab-bg); color: var(--v2-text-strong); }
 .v2-panel__opt {
   display: flex;
   align-items: center;
@@ -172,14 +172,14 @@ export const V2_CSS_PANELS = `
 .v2-panel__opt svg { width: 14px; height: 14px; opacity: .85; flex: none; }
 .v2-panel__spacer { flex: 1; }
 .v2-panel__server { flex: none; display: flex; min-width: 0; max-width: 160px; }
-.v2-panel__count { color: #8f8f98; font-size: 11px; white-space: nowrap; }
+.v2-panel__count { color: var(--v2-text-muted); font-size: 11px; white-space: nowrap; }
 .v2-run {
   width: 32px;
   height: 32px;
   border-radius: 999px;
-  border: none;
-  background: #f4f4f6;
-  color: #111;
+  border: 1px solid var(--v2-run-border, transparent);
+  background: var(--v2-run-bg);
+  color: var(--v2-run-fg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -187,7 +187,7 @@ export const V2_CSS_PANELS = `
   flex: none;
   transition: transform .12s ease, background .12s ease;
 }
-.v2-run:hover { background: #fff; transform: scale(1.06); }
+.v2-run:hover { background: var(--v2-run-hover); transform: scale(1.06); }
 .v2-run:active { transform: scale(.95); }
 .v2-run svg { width: 15px; height: 15px; }
 .v2-run__up, .v2-run__stop {

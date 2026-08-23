@@ -32,13 +32,13 @@ const LOADER_CSS = `
   margin-top: 12px;
   padding: 9px 14px;
   border-radius: 14px;
-  background: #232327;
-  border: 1px solid rgba(255,255,255,.05);
-  color: #8f8f98;
+  background: var(--v2-slab-bg);
+  border: 1px solid var(--v2-slab-border);
+  color: var(--v2-text-muted);
   font: 500 11px/1 system-ui, sans-serif;
 }
 .v2-loader-footer__name {
-  color: #b9b9c0;
+  color: var(--v2-text-mid);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -52,12 +52,12 @@ const LOADER_CSS = `
   border: none;
   padding: 5px 10px;
   border-radius: 8px;
-  background: rgba(255,255,255,.06);
-  color: #b9b9c0;
+  background: var(--v2-chip-bg);
+  color: var(--v2-text-mid);
   font: 500 11px/1 system-ui, sans-serif;
   cursor: pointer;
 }
-.v2-loader-footer__btn:hover { background: rgba(255,255,255,.12); color: #ececf1; }
+.v2-loader-footer__btn:hover { background: var(--v2-hover-bg); color: var(--v2-text-strong); }
 .v2-loader-footer__btn svg { width: 12px; height: 12px; }
 .v2-text-loader-host {
   flex: 1;
@@ -78,8 +78,8 @@ const LOADER_CSS = `
   overflow-y: auto;
   overscroll-behavior: contain;
   border-radius: 12px;
-  background: linear-gradient(160deg, #23232a 0%, #1a1a20 100%);
-  border: 1px solid rgba(255,255,255,.07);
+  background: var(--v2-media-bg);
+  border: 1px solid var(--v2-media-border);
   padding: 14px 16px;
   box-sizing: border-box;
   cursor: text;
@@ -97,8 +97,8 @@ const LOADER_CSS = `
   margin-top: 10px;
   padding: 8px 12px;
   border-radius: 14px;
-  background: #232327;
-  border: 1px solid rgba(255,255,255,.05);
+  background: var(--v2-slab-bg);
+  border: 1px solid var(--v2-slab-border);
 }
 `
 

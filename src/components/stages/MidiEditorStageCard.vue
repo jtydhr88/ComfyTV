@@ -242,9 +242,9 @@ const props = defineProps<{
 
 const { t } = useI18n()
 
-const btn = 'ctv:inline-flex ctv:items-center ctv:gap-1 ctv:py-1 ctv:px-2.5 ctv:rounded-lg ctv:border ctv:border-white/10 ctv:bg-white/5 ctv:text-base-foreground ctv:cursor-pointer ctv:hover:border-primary-background/60 ctv:disabled:opacity-40'
+const btn = 'ctv:inline-flex ctv:items-center ctv:gap-1 ctv:py-1 ctv:px-2.5 ctv:rounded-lg ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:text-base-foreground ctv:cursor-pointer ctv:hover:border-primary-background/60 ctv:disabled:opacity-40'
 const btnOn = 'ctv:border-primary-background/60 ctv:bg-primary-background/15 ctv:text-primary-background'
-const sel = 'ctv:rounded-lg ctv:border ctv:border-white/10 ctv:bg-white/5 ctv:px-2 ctv:py-1 ctv:text-2xs ctv:text-base-foreground ctv:cursor-pointer'
+const sel = 'ctv:rounded-lg ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:px-2 ctv:py-1 ctv:text-2xs ctv:text-base-foreground ctv:cursor-pointer'
 
 const eventsJson = useStrWidget(props.node, 'events_json', '')
 const roll = useMidiEditor({ widget: eventsJson })

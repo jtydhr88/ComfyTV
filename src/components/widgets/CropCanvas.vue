@@ -6,7 +6,7 @@
     @pointerup.stop
   >
     <div ref="containerEl"
-         class="ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[340px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle">
+         class="crop-canvas-backdrop ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[340px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle">
       <div v-if="!imageUrl"
            class="ctv:absolute ctv:inset-0 ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50">
         <i class="pi pi-image ctv:text-[32px] ctv:opacity-60" />
@@ -183,6 +183,10 @@ function boundFieldSet(b: BoundField, raw: string) {
 </script>
 
 <style scoped>
+.crop-canvas-backdrop {
+  background: var(--v2-checker, #1d1d22 repeating-conic-gradient(#25252b 0% 25%, #1d1d22 0% 50%));
+  background-size: 18px 18px;
+}
 .ctv-crop-select :deep(button) {
   height: 24px;
   padding: 0 8px;

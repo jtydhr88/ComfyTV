@@ -56,10 +56,10 @@ const windowLabel = computed(() =>
   gap: 6px;
   padding: 5px 10px;
   height: 26px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--v2-chip-border);
   border-radius: 9px;
-  background: rgba(255, 255, 255, 0.04);
-  color: #d9d9de;
+  background: var(--v2-chip-bg);
+  color: var(--v2-text-mid);
   font: 500 11px/1 system-ui, sans-serif;
   cursor: pointer;
   appearance: none;
@@ -67,8 +67,8 @@ const windowLabel = computed(() =>
   flex: none;
 }
 .clip-preview-btn:hover:not(:disabled) {
-  border-color: rgba(167, 139, 250, 0.55);
-  background: rgba(167, 139, 250, 0.12);
+  border-color: var(--v2-accent-border);
+  background: var(--v2-accent-soft);
 }
 .clip-preview-btn:disabled {
   opacity: 0.4;
@@ -83,8 +83,8 @@ const windowLabel = computed(() =>
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  border: 2px solid rgba(167, 139, 250, 0.25);
-  border-top-color: #a78bfa;
+  border: 2px solid color-mix(in srgb, var(--v2-accent) 25%, transparent);
+  border-top-color: var(--v2-accent);
   animation: clip-preview-rot 0.7s linear infinite;
   flex: none;
 }
@@ -95,7 +95,7 @@ const windowLabel = computed(() =>
 }
 .clip-preview-note {
   font-size: 10px;
-  color: #8b8b93;
+  color: var(--v2-text-muted);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

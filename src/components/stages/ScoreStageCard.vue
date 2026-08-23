@@ -90,7 +90,7 @@ const props = defineProps<{
   node: LGraphNode
 }>()
 
-const btn = 'ctv:inline-flex ctv:items-center ctv:gap-1 ctv:py-1 ctv:px-2.5 ctv:rounded-lg ctv:border ctv:border-white/10 ctv:bg-white/5 ctv:text-base-foreground ctv:cursor-pointer ctv:hover:border-primary-background/60'
+const btn = 'ctv:inline-flex ctv:items-center ctv:gap-1 ctv:py-1 ctv:px-2.5 ctv:rounded-lg ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:text-base-foreground ctv:cursor-pointer ctv:hover:border-primary-background/60'
 
 const musicxml = useStrWidget(props.node, 'musicxml', '')
 const inputText = computed(() => pickSourceImageUrl(props.state.inputs, 'text') ?? '')

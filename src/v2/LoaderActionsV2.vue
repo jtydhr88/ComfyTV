@@ -171,9 +171,9 @@ function onDownload() {
   gap: 2px;
   padding: 6px;
   border-radius: 12px;
-  background: #232327;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
+  background: var(--v2-slab-bg);
+  border: 1px solid var(--v2-chip-border);
+  box-shadow: var(--v2-slab-shadow);
 }
 .v2-lact__item {
   display: flex;
@@ -183,7 +183,7 @@ function onDownload() {
   border: none;
   border-radius: 8px;
   background: transparent;
-  color: #d9d9de;
+  color: var(--v2-text-mid);
   font: 500 11px/1.2 system-ui, sans-serif;
   cursor: pointer;
   text-align: left;
@@ -194,5 +194,5 @@ function onDownload() {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.v2-lact__item:hover { background: rgba(255, 255, 255, 0.08); }
+.v2-lact__item:hover { background: var(--v2-hover-bg); }
 </style>

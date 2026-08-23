@@ -147,16 +147,16 @@ function write(row: Row, v: unknown) {
   padding: 4px 8px;
   border-radius: 8px;
   background: transparent;
-  color: #8f8f98;
+  color: var(--v2-text-muted);
   font: 500 11px/1 system-ui, sans-serif;
   cursor: pointer;
 }
-.v2-params__toggle:hover { background: rgba(255, 255, 255, 0.06); color: #b9b9c0; }
+.v2-params__toggle:hover { background: var(--v2-hover-bg); color: var(--v2-text-mid); }
 .v2-params__toggle svg { width: 11px; height: 11px; transition: transform 0.15s ease; }
 .v2-params__count {
   padding: 1px 6px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--v2-hover-bg);
   font-size: 10px;
 }
 .v2-params__grid {
@@ -172,7 +172,7 @@ function write(row: Row, v: unknown) {
 }
 .v2-params__row[data-wide='1'] { grid-column: 1 / -1; }
 .v2-params__label {
-  color: #6b6b74;
+  color: var(--v2-text-faint);
   font: 500 10px/1 system-ui, sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -181,16 +181,16 @@ function write(row: Row, v: unknown) {
   white-space: nowrap;
 }
 .v2-params__input {
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--v2-chip-border);
   border-radius: 8px;
   background: transparent;
-  color: #ececf1;
+  color: var(--v2-text-strong);
   font: 500 11px/1.4 system-ui, sans-serif;
   padding: 5px 8px;
   outline: none;
   min-width: 0;
 }
-.v2-params__input:focus { border-color: rgba(167, 139, 250, 0.6); }
+.v2-params__input:focus { border-color: var(--v2-accent-border); }
 .v2-params__textarea { resize: vertical; min-height: 40px; }
 .v2-params__select :deep(button) {
   height: 26px;
@@ -199,14 +199,14 @@ function write(row: Row, v: unknown) {
   border-radius: 8px;
   border-width: 1px;
   background: transparent;
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--v2-chip-border);
 }
 .v2-params__bool {
   width: 34px;
   height: 20px;
   border: none;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--v2-hover-bg);
   cursor: pointer;
   position: relative;
   transition: background 0.15s ease;
@@ -218,9 +218,9 @@ function write(row: Row, v: unknown) {
   width: 14px;
   height: 14px;
   border-radius: 999px;
-  background: #b9b9c0;
+  background: var(--v2-text-mid);
   transition: transform 0.15s ease, background 0.15s ease;
 }
-.v2-params__bool[data-on='1'] { background: rgba(167, 139, 250, 0.55); }
+.v2-params__bool[data-on='1'] { background: color-mix(in srgb, var(--v2-accent) 55%, transparent); }
 .v2-params__bool[data-on='1'] span { transform: translateX(14px); background: #fff; }
 </style>

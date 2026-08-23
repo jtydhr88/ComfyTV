@@ -16,11 +16,11 @@ import type { StageKind, StageVariant } from '@/stores/stageStore'
 
 const SCENE_CSS = `
 .v2-scene-card {
-  background: #1e1e23;
-  border: 1px solid rgba(255,255,255,.06);
+  background: var(--v2-card-bg);
+  border: 1px solid var(--v2-card-border);
   border-radius: 16px;
   padding: 0 8px 8px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.4);
+  box-shadow: var(--v2-slab-shadow);
   box-sizing: border-box;
 }
 `

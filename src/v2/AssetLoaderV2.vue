@@ -103,7 +103,7 @@ function onPickFiles(e: Event) {
   border-radius: 12px;
 }
 .v2-al--drag {
-  outline: 2px dashed rgba(167, 139, 250, 0.75);
+  outline: 2px dashed color-mix(in srgb, var(--v2-accent) 75%, transparent);
   outline-offset: -2px;
 }
 .v2-al__preview {
@@ -129,7 +129,7 @@ function onPickFiles(e: Event) {
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  color: #6b6b74;
+  color: var(--v2-text-faint);
   font: 500 12px/1.5 system-ui, sans-serif;
 }
 .v2-al__hint svg { width: 26px; height: 26px; opacity: 0.55; }
@@ -140,13 +140,13 @@ function onPickFiles(e: Event) {
   gap: 8px;
   padding: 9px 14px;
   border-radius: 14px;
-  background: #232327;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  color: #8f8f98;
+  background: var(--v2-slab-bg);
+  border: 1px solid var(--v2-slab-border);
+  color: var(--v2-text-muted);
   font: 500 11px/1 system-ui, sans-serif;
 }
 .v2-al__name {
-  color: #b9b9c0;
+  color: var(--v2-text-mid);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -162,12 +162,12 @@ function onPickFiles(e: Event) {
   border: none;
   padding: 5px 10px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.06);
-  color: #b9b9c0;
+  background: var(--v2-chip-bg);
+  color: var(--v2-text-mid);
   font: 500 11px/1 system-ui, sans-serif;
   cursor: pointer;
 }
-.v2-al__btn:hover { background: rgba(255, 255, 255, 0.12); color: #ececf1; }
+.v2-al__btn:hover { background: var(--v2-hover-bg); color: var(--v2-text-strong); }
 .v2-al__btn svg { width: 12px; height: 12px; }
 .v2-al__file { display: none; }
 </style>

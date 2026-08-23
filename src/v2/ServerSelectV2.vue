@@ -38,7 +38,7 @@ const { showServerSelect, serverOptions, serverSelection, onServerPick } =
   align-items: center;
   gap: 5px;
   min-width: 0;
-  color: #8f8f98;
+  color: var(--v2-text-muted);
 }
 .v2-srv > svg {
   width: 14px;
@@ -57,9 +57,9 @@ const { showServerSelect, serverOptions, serverSelection, onServerPick } =
   border-radius: 8px;
   border-width: 1px;
   background: transparent;
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--v2-chip-border);
 }
 .v2-srv :deep(button:hover) {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--v2-hover-bg);
 }
 </style>

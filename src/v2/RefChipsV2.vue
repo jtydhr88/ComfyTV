@@ -99,8 +99,8 @@ onMounted(() => ir.init())
   height: 34px;
   border-radius: 9px;
   overflow: hidden;
-  background: #2c2c31;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--v2-chip-bg);
+  border: 1px solid var(--v2-chip-border);
   flex: none;
 }
 .v2-refchip__img {
@@ -143,21 +143,21 @@ onMounted(() => ir.init())
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #b9b9c0;
+  color: var(--v2-text-mid);
   font: 500 11px/1 system-ui, sans-serif;
 }
 .v2-refchip--add {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #b9b9c0;
+  color: var(--v2-text-mid);
   font: 400 16px/1 system-ui, sans-serif;
   cursor: pointer;
   background: transparent;
-  border: 1px dashed rgba(255, 255, 255, 0.22);
+  border: 1px dashed var(--v2-scrollbar);
 }
 .v2-refchip--add:hover {
-  border-color: rgba(255, 255, 255, 0.45);
-  color: #ececf1;
+  border-color: var(--v2-text-muted);
+  color: var(--v2-text-strong);
 }
 </style>

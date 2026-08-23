@@ -131,7 +131,7 @@ const hBands = computed(() => {
 }
 .v2-grid__band {
   position: absolute;
-  background: rgba(167, 139, 250, 0.75);
+  background: color-mix(in srgb, var(--v2-accent) 75%, transparent);
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.7);
 }
 </style>

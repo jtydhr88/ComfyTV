@@ -197,9 +197,9 @@ const menuItemClass = 'ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:px-1
 }
 .v2-corner__btn svg { width: 13px; height: 13px; }
 .v2-corner__btn:hover { background: rgba(20, 20, 24, 0.9); }
-.v2-corner__btn--saved { color: #a78bfa; }
+.v2-corner__btn--saved { color: var(--v2-accent); }
 .v2-corner__btn[data-done='1'] {
-  background: #a78bfa;
-  color: #17171b;
+  background: var(--v2-accent);
+  color: var(--v2-run-fg);
 }
 </style>

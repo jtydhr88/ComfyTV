@@ -125,7 +125,7 @@ const {
   gap: 8px;
 }
 .v2-cparams__title {
-  color: #8f8f98;
+  color: var(--v2-text-muted);
   font: 500 10px/1 system-ui, sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -135,16 +135,16 @@ const {
   margin-left: auto;
 }
 .v2-cparams__add {
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--v2-chip-border);
   border-radius: 8px;
   height: 22px;
   padding: 0 8px;
   background: transparent;
-  color: #b9b9c0;
+  color: var(--v2-text-mid);
   font: 500 10px/1 system-ui, sans-serif;
   cursor: pointer;
 }
-.v2-cparams__add:hover { background: rgba(255, 255, 255, 0.06); color: #ececf1; }
+.v2-cparams__add:hover { background: var(--v2-hover-bg); color: var(--v2-text-strong); }
 .v2-cparams__add:disabled { opacity: 0.4; pointer-events: none; }
 .v2-cparams__menu {
   position: absolute;
@@ -156,9 +156,9 @@ const {
   overflow-y: auto;
   padding: 4px;
   border-radius: 10px;
-  background: #232327;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+  background: var(--v2-slab-bg);
+  border: 1px solid var(--v2-chip-border);
+  box-shadow: var(--v2-slab-shadow);
 }
 .v2-cparams__menuitem {
   display: flex;
@@ -169,12 +169,12 @@ const {
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: #ececf1;
+  color: var(--v2-text-strong);
   font: 500 11px/1.2 system-ui, sans-serif;
   cursor: pointer;
   text-align: left;
 }
-.v2-cparams__menuitem:hover { background: rgba(255, 255, 255, 0.07); }
+.v2-cparams__menuitem:hover { background: var(--v2-hover-bg); }
 .v2-cparams__menulabel {
   flex: 1;
   overflow: hidden;
@@ -182,7 +182,7 @@ const {
   white-space: nowrap;
 }
 .v2-cparams__menutype {
-  color: #6b6b74;
+  color: var(--v2-text-faint);
   font-size: 9px;
 }
 .v2-cparams__row {
@@ -196,20 +196,20 @@ const {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: #8f8f98;
+  color: var(--v2-text-muted);
   font: 500 11px/1.2 system-ui, sans-serif;
 }
 .v2-cparams__control { flex: 1; min-width: 0; }
-.v2-cparams__control :deep(button) {
+.v2-cparams__control :deep(button:not(.ctv-toggle)) {
   height: 26px;
   padding: 0 8px;
   font-size: 11px;
   border-radius: 8px;
   border-width: 1px;
   background: transparent;
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--v2-chip-border);
 }
-.v2-cparams__control :deep(button:hover) { background: rgba(255, 255, 255, 0.06); }
+.v2-cparams__control :deep(button:not(.ctv-toggle):hover) { background: var(--v2-hover-bg); }
 .v2-cparams__remove {
   flex: none;
   width: 20px;
