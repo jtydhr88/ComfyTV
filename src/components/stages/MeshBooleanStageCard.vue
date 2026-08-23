@@ -76,7 +76,10 @@
           {{ $t('meshOps.voxelResolution') }}</span>
         <input type="range" class="ctv:flex-1 ctv:min-w-0" min="32" max="1024" step="32"
                :value="resolution" @input="setResolution(($event.target as HTMLInputElement).value)" />
-        <span class="ctv:w-12 ctv:text-right ctv:text-2xs ctv:font-mono">{{ resolution }}</span>
+        <input type="number" min="32" max="1024" step="32"
+               class="ctv-num-input ctv:w-12 ctv:py-0.5 ctv:px-1 ctv:text-right ctv:text-2xs ctv:font-mono ctv:rounded
+                      ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground"
+               :value="resolution" @change="onResolutionNum" />
       </div>
     </div>
 
@@ -169,6 +172,12 @@ function setChannel(ch: ViewChannel): void {
   channel.value = ch
   for (const g of [groupA, groupB, groupResult]) applyViewChannel(g, ch)
   scheduleCapture()
+}
+
+function onResolutionNum(e: Event): void {
+  const el = e.target as HTMLInputElement
+  if (el.value.trim() !== '' && Number.isFinite(Number(el.value))) setResolution(el.value)
+  el.value = String(resolution.value)
 }
 
 let view: RendererView | null = null
@@ -490,3 +499,9 @@ function chipClass(active: boolean, disabled = false): string {
     + (disabled ? ' ctv:opacity-40 ctv:cursor-not-allowed' : '')
 }
 </script>
+
+<style scoped>
+.ctv-num-input { -moz-appearance: textfield; appearance: textfield; }
+.ctv-num-input::-webkit-inner-spin-button,
+.ctv-num-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+</style>

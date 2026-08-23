@@ -45,22 +45,17 @@
         />
       </div>
 
-      <div
+      <FxSlider
         v-for="s in SLIDERS"
         :key="s.key"
-        class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]"
-      >
-        <span :class="paramLabelClass">{{ $t(`materialStage.param.${s.key}`) }}</span>
-        <input
-          type="range" :min="s.min" :max="s.max" :step="s.step"
-          class="ctv:flex-1 ctv:accent-primary-background ctv:cursor-pointer"
-          :value="params[s.key]"
-          @input="(e) => setParam(s.key, Number((e.target as HTMLInputElement).value))"
-        />
-        <span class="ctv:w-9 ctv:text-right ctv:text-2xs ctv:font-mono ctv:text-muted-foreground">
-          {{ params[s.key].toFixed(2) }}
-        </span>
-      </div>
+        :model-value="params[s.key]"
+        :label="$t(`materialStage.param.${s.key}`)"
+        :min="s.min"
+        :max="s.max"
+        :step="s.step"
+        :decimals="2"
+        @update:model-value="(v) => setParam(s.key, v)"
+      />
     </div>
 
     <StageCard
@@ -84,6 +79,7 @@ import { onBeforeUnmount, ref } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import MaterialSphere from '@/components/widgets/MaterialSphere.vue'
 import StageCard from '@/components/stages/StageCard.vue'
+import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import type { StageState } from '@/stores/stageStore'
 import {
   CAPTURE_SIZE,

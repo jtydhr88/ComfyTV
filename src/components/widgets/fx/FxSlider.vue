@@ -7,9 +7,10 @@
       <div class="ctv-fx-gradbar" :style="{ background: gradientCss }" />
       <input
         type="range" :min="min" :max="max" :step="step"
-        class="ctv-fx-range--grad ctv:cursor-pointer"
+        class="ctv-fx-range--grad ctv:cursor-pointer ctv:disabled:opacity-40"
         :style="{ '--thumb-color': thumbColor }"
         :value="modelValue"
+        :disabled="disabled"
         @input="onInput"
         @dblclick="reset"
       />
@@ -17,8 +18,9 @@
     <input
       v-else
       type="range" :min="min" :max="max" :step="step"
-      class="ctv:flex-1 ctv:accent-primary-background ctv:cursor-pointer"
+      class="ctv:flex-1 ctv:accent-primary-background ctv:cursor-pointer ctv:disabled:opacity-40"
       :value="modelValue"
+      :disabled="disabled"
       @input="onInput"
       @dblclick="reset"
     />
@@ -26,8 +28,9 @@
     <input
       type="number" :min="min" :max="max" :step="step"
       class="ctv-fx-num ctv:w-14 ctv:py-0.5 ctv:px-1 ctv:text-right ctv:text-[11px] ctv:font-mono ctv:rounded
-             ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground"
+             ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground ctv:disabled:opacity-40"
       :value="display"
+      :disabled="disabled"
       @change="onNum"
     />
     <span v-if="unit" class="ctv:shrink-0 ctv:w-4 ctv:text-2xs ctv:text-muted-foreground">{{ unit }}</span>
@@ -52,6 +55,7 @@ const props = withDefaults(defineProps<{
   resetTo?: number
   decimals?: number
   gradient?: ColorStop[]
+  disabled?: boolean
 }>(), { step: 0.01, unit: '', decimals: 2 })
 
 const emit = defineEmits<{ 'update:modelValue': [v: number] }>()

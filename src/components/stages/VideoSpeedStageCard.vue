@@ -13,16 +13,17 @@
       @pointermove.stop
       @pointerup.stop
     >
-      <div class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]">
-        <span class="ctv:min-w-9 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('videoSpeed.speed') }}</span>
-        <input
-          type="range" min="0.25" max="4" step="0.05"
-          class="ctv:flex-1 ctv:accent-primary-background ctv:cursor-pointer"
-          :value="speed"
-          @input="(e) => setSpeed(Number((e.target as HTMLInputElement).value))"
-        />
-        <span class="ctv:w-11 ctv:text-right ctv:font-mono ctv:font-bold ctv:text-primary-background">{{ speed.toFixed(2) }}x</span>
-      </div>
+      <FxSlider
+        :model-value="speed"
+        :label="$t('videoSpeed.speed')"
+        :min="0.25"
+        :max="4"
+        :step="0.05"
+        :decimals="2"
+        :reset-to="1"
+        unit="x"
+        @update:model-value="setSpeed"
+      />
 
       <div class="ctv:flex ctv:items-center ctv:gap-1">
         <button
@@ -77,6 +78,7 @@ import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import FxCardShell from '@/components/stages/FxCardShell.vue'
+import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
 import { useBoolWidget, useNumWidget } from '@/composables/widgets/useWidgetModel'

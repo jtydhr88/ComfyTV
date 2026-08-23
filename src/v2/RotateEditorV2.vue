@@ -23,7 +23,13 @@
           :value="angle"
           @input="angle = Number(($event.target as HTMLInputElement).value)"
         />
-        <span class="v2-ed__value">{{ angle }}°</span>
+        <input
+          type="number"
+          class="v2-ed__num"
+          min="-180" max="180" step="1"
+          :value="angle"
+          @change="onAngleNum"
+        />
       </div>
       <div class="v2-ed__chips">
         <button
@@ -81,6 +87,15 @@ const { computing, requestRecompute } = useTransformPipeline({
   subfolder: 'comfytv/transformer',
   compute: (img) => rotateToCanvas(img, angle.value),
 })
+
+function onAngleNum(e: Event) {
+  const el = e.target as HTMLInputElement
+  const v = Number(el.value)
+  if (el.value.trim() !== '' && Number.isFinite(v)) {
+    angle.value = Math.max(-180, Math.min(180, Math.round(v)))
+  }
+  el.value = String(angle.value)
+}
 
 watch(angle, () => requestRecompute())
 watch(sourceImageUrl, (url) => {

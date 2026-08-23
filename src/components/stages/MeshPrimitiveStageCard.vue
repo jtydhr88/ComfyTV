@@ -55,9 +55,16 @@
             :value="Number(params[def.key])"
             @input="setParam(def, Number(($event.target as HTMLInputElement).value))"
           />
-          <span class="ctv:w-10 ctv:shrink-0 ctv:text-right ctv:text-2xs ctv:tabular-nums">
-            {{ fmt(params[def.key]) }}
-          </span>
+          <input
+            type="number"
+            class="ctv-num-input ctv:w-12 ctv:shrink-0 ctv:py-0.5 ctv:px-1 ctv:text-right ctv:text-2xs ctv:tabular-nums ctv:rounded
+                   ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground"
+            :min="def.min"
+            :max="def.max"
+            :step="def.step"
+            :value="fmt(params[def.key])"
+            @change="onParamNum(def, $event)"
+          />
         </template>
       </div>
     </div>
@@ -133,6 +140,19 @@ function fmt(v: number | boolean): string {
   return Number.isInteger(n) ? String(n) : n.toFixed(2)
 }
 
+function onParamNum(def: ParamDef, e: Event): void {
+  const el = e.target as HTMLInputElement
+  const v = Number(el.value)
+  if (el.value.trim() !== '' && Number.isFinite(v)) setParam(def, v)
+  el.value = fmt(params[def.key])
+}
+
 onMounted(() => scheduleCapture())
 onBeforeUnmount(() => cancelCapture())
 </script>
+
+<style scoped>
+.ctv-num-input { -moz-appearance: textfield; appearance: textfield; }
+.ctv-num-input::-webkit-inner-spin-button,
+.ctv-num-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+</style>

@@ -68,7 +68,8 @@ export function useScene3dCameraPanel(
       min: 0.5,
       max: 2,
       step: 0.05,
-      format: (v: number) => `${v.toFixed(2)}x`,
+      precision: 2,
+      unit: 'x',
       update: (v: number) => emit.updateTuning({ fovScale: v })
     },
     {
@@ -78,7 +79,8 @@ export function useScene3dCameraPanel(
       min: 0.25,
       max: 4,
       step: 0.05,
-      format: (v: number) => `${v.toFixed(2)}x`,
+      precision: 2,
+      unit: 'x',
       update: (v: number) => emit.updateTuning({ pathScale: v })
     },
     {
@@ -88,7 +90,8 @@ export function useScene3dCameraPanel(
       min: -180,
       max: 180,
       step: 1,
-      format: (v: number) => `${Math.round(v)}°`,
+      precision: 0,
+      unit: '°',
       update: (v: number) => emit.updateTuning({ yawDegrees: v })
     },
     {
@@ -98,7 +101,8 @@ export function useScene3dCameraPanel(
       min: -45,
       max: 45,
       step: 1,
-      format: (v: number) => `${Math.round(v)}°`,
+      precision: 0,
+      unit: '°',
       update: (v: number) => emit.updateTuning({ rollDegrees: v })
     }
   ])

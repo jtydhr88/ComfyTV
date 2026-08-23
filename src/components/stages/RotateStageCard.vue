@@ -26,17 +26,16 @@
     </div>
 
     <div class="ctv:flex ctv:flex-col ctv:gap-1">
-      <div class="ctv:grid ctv:grid-cols-[64px_1fr_48px] ctv:items-center ctv:gap-1.5 ctv:text-xs">
-        <span class="ctv:text-2xs ctv:uppercase ctv:tracking-wider ctv:text-muted-foreground">{{ $t('rotate.angle') }}</span>
-        <input
-          type="range"
-          class="ctv:w-full"
-          min="-180" max="180" step="1"
-          :value="angle"
-          @input="(e) => angle = Number((e.target as HTMLInputElement).value)"
-        />
-        <span class="ctv:text-right ctv:text-base-foreground ctv:font-mono">{{ angle }}°</span>
-      </div>
+      <FxSlider
+        v-model="angle"
+        :label="$t('rotate.angle')"
+        :min="-180"
+        :max="180"
+        :step="1"
+        :decimals="0"
+        :reset-to="0"
+        unit="°"
+      />
       <div class="ctv:grid ctv:grid-cols-4 ctv:gap-1.5 ctv:text-xs">
         <button
           v-for="q in [{ d: -90, l: '⟲ 90°' }, { d: 0, l: '0°' }, { d: 180, l: '180°' }, { d: 90, l: '⟳ 90°' }]"
@@ -65,6 +64,7 @@ import { computed, watch } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
+import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import { rotatePreviewStyle, rotateToCanvas } from '@/composables/stages/imageOrientPreview'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
 import { useTransformPipeline } from '@/composables/widgets/useTransformPipeline'

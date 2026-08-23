@@ -29,7 +29,7 @@
       <span class="ctv:ml-auto ctv:text-2xs ctv:font-mono ctv:text-muted-foreground">{{ captureSize.w }}×{{ captureSize.h }}</span>
     </div>
 
-    <div class="ctv:grid ctv:grid-cols-[80px_1fr_36px] ctv:items-center ctv:gap-1.5 ctv:py-1 ctv:px-2 ctv:rounded
+    <div class="ctv:grid ctv:grid-cols-[80px_1fr_44px] ctv:items-center ctv:gap-1.5 ctv:py-1 ctv:px-2 ctv:rounded
                 ctv:bg-secondary-background ctv:border ctv:border-border-subtle">
       <span class="ctv:text-xs ctv:text-muted-foreground">{{ $t('panoramaView.viewCount') }}</span>
       <input
@@ -40,7 +40,15 @@
         :disabled="!panoramaUrl"
         @input="(e) => viewCount = Number((e.target as HTMLInputElement).value)"
       />
-      <span class="ctv:text-right ctv:text-xs ctv:font-mono ctv:text-base-foreground">{{ viewCount }}</span>
+      <input
+        type="number"
+        min="2" max="24" step="1"
+        class="ctv-num-input ctv:w-full ctv:py-0.5 ctv:px-1 ctv:text-right ctv:text-xs ctv:font-mono ctv:rounded
+               ctv:border ctv:border-border-subtle ctv:text-base-foreground ctv:bg-transparent ctv:disabled:opacity-40"
+        :value="viewCount"
+        :disabled="!panoramaUrl"
+        @change="onViewCountNum"
+      />
     </div>
 
     <StageCard
@@ -84,9 +92,21 @@ const resolution  = ref<string>(readWidgetStr(props.node, 'resolution',   '1K'))
 const { panoramaUrl, capturing, captureProgress, captureSize } = useMultiViewCapture(
   props.node, props.state, viewCount, aspectRatio, resolution,
 )
+
+function onViewCountNum(e: Event) {
+  const el = e.target as HTMLInputElement
+  const v = Number(el.value)
+  if (el.value.trim() !== '' && Number.isFinite(v)) {
+    viewCount.value = Math.max(2, Math.min(24, Math.round(v)))
+  }
+  el.value = String(viewCount.value)
+}
 </script>
 
 <style scoped>
+.ctv-num-input { -moz-appearance: textfield; appearance: textfield; }
+.ctv-num-input::-webkit-inner-spin-button,
+.ctv-num-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 .ctv-pano-select-wrap {
   position: relative;
   display: inline-flex;

@@ -105,6 +105,24 @@ const ED_CSS = `
   width: 100%;
   accent-color: var(--v2-accent);
 }
+.v2-ed__num {
+  width: 100%;
+  padding: 2px 4px;
+  font: 500 11px/1 ui-monospace, monospace;
+  color: var(--v2-text-mid);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  background: transparent;
+  border: 1px solid var(--v2-chip-border);
+  border-radius: 6px;
+  outline: none;
+  appearance: textfield;
+  -moz-appearance: textfield;
+  box-sizing: border-box;
+}
+.v2-ed__num::-webkit-inner-spin-button,
+.v2-ed__num::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.v2-ed__num:focus { border-color: var(--v2-accent-border); }
 .v2-ed__chips {
   display: flex;
   flex-wrap: wrap;

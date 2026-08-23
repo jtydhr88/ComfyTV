@@ -15,7 +15,19 @@
       </SliderTrack>
       <SliderThumb class="ctv-slider-thumb" />
     </SliderRoot>
-    <span v-if="!hideValue" class="ctv-slider-value">{{ display }}</span>
+    <input
+      v-if="!hideValue"
+      type="number"
+      class="ctv-slider-num"
+      :min="min"
+      :max="max"
+      :step="step ?? 1"
+      :value="display"
+      :disabled="disabled"
+      @change="onNumChange"
+      @pointerdown.stop
+    />
+    <span v-if="unit" class="ctv-slider-unit">{{ unit }}</span>
   </div>
 </template>
 
@@ -31,6 +43,7 @@ const props = defineProps<{
   precision?: number
   disabled?: boolean
   hideValue?: boolean
+  unit?: string
 }>()
 const emit = defineEmits<{ 'update:modelValue': [v: number]; commit: [v: number] }>()
 
@@ -41,12 +54,25 @@ const clamped = computed(() => {
 
 const display = computed(() => {
   const v = clamped.value
-  return props.precision === 0 ? String(Math.round(v)) : String(v)
+  if (props.precision !== undefined) return String(Number(v.toFixed(props.precision)))
+  return String(v)
 })
 
 function onChange(arr: number[] | undefined) {
   const v = arr?.[0]
   if (typeof v === 'number' && Number.isFinite(v)) emit('update:modelValue', v)
+}
+
+function onNumChange(e: Event) {
+  const el = e.target as HTMLInputElement
+  const raw = Number(el.value)
+  if (el.value.trim() !== '' && Number.isFinite(raw)) {
+    let v = props.precision !== undefined ? Number(raw.toFixed(props.precision)) : raw
+    v = Math.max(props.min, Math.min(props.max, v))
+    emit('update:modelValue', v)
+    emit('commit', v)
+  }
+  el.value = display.value
 }
 
 function onCommit(arr: number[] | undefined) {
@@ -97,12 +123,30 @@ function onCommit(arr: number[] | undefined) {
 }
 .ctv-slider-thumb:active { cursor: grabbing; }
 .ctv-slider-thumb[data-disabled] { opacity: 0.5; pointer-events: none; }
-.ctv-slider-value {
+.ctv-slider-num {
   flex-shrink: 0;
-  min-width: 32px;
+  width: 44px;
+  padding: 2px 4px;
   text-align: right;
   font-size: 11px;
+  font-family: inherit;
   font-variant-numeric: tabular-nums;
   color: var(--base-foreground, #ddd);
+  background: transparent;
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.1));
+  border-radius: 6px;
+  outline: none;
+  appearance: textfield;
+  -moz-appearance: textfield;
+  box-sizing: border-box;
+}
+.ctv-slider-num::-webkit-inner-spin-button,
+.ctv-slider-num::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.ctv-slider-num:focus { border-color: var(--primary-background, #4a8cff); }
+.ctv-slider-num:disabled { opacity: 0.5; pointer-events: none; }
+.ctv-slider-unit {
+  flex-shrink: 0;
+  font-size: 10px;
+  color: var(--muted-foreground, #888);
 }
 </style>

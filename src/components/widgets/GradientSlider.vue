@@ -17,7 +17,17 @@
         :aria-label="ariaLabel"
       />
     </SliderRoot>
-    <span class="ctv-gradient-value">{{ display }}</span>
+    <input
+      type="number"
+      class="ctv-gradient-num"
+      :min="min"
+      :max="max"
+      :step="step ?? 1"
+      :value="display"
+      :disabled="disabled"
+      @change="onNumChange"
+      @pointerdown.stop
+    />
   </div>
 </template>
 
@@ -50,9 +60,11 @@ const clamped = computed(() => {
   return Math.max(min.value, Math.min(max.value, v))
 })
 
-const display = computed(() =>
-  props.precision === 0 ? String(Math.round(clamped.value)) : String(clamped.value)
-)
+const display = computed(() => {
+  const v = clamped.value
+  if (props.precision !== undefined) return String(Number(v.toFixed(props.precision)))
+  return String(v)
+})
 
 const gradient = computed(() => stopsToGradient(props.stops))
 const thumbColor = computed(() => {
@@ -68,6 +80,18 @@ function onChange(arr: number[] | undefined) {
 function onCommit(arr: number[] | undefined) {
   const v = arr?.[0]
   if (typeof v === 'number' && Number.isFinite(v)) emit('commit', v)
+}
+
+function onNumChange(e: Event) {
+  const el = e.target as HTMLInputElement
+  const raw = Number(el.value)
+  if (el.value.trim() !== '' && Number.isFinite(raw)) {
+    let v = props.precision !== undefined ? Number(raw.toFixed(props.precision)) : raw
+    v = Math.max(min.value, Math.min(max.value, v))
+    emit('update:modelValue', v)
+    emit('commit', v)
+  }
+  el.value = display.value
 }
 </script>
 
@@ -112,12 +136,25 @@ function onCommit(arr: number[] | undefined) {
   opacity: 0.5;
   pointer-events: none;
 }
-.ctv-gradient-value {
+.ctv-gradient-num {
   flex-shrink: 0;
-  min-width: 32px;
+  width: 44px;
+  padding: 2px 4px;
   text-align: right;
   font-size: 11px;
+  font-family: inherit;
   font-variant-numeric: tabular-nums;
   color: var(--base-foreground, #ddd);
+  background: transparent;
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.1));
+  border-radius: 6px;
+  outline: none;
+  appearance: textfield;
+  -moz-appearance: textfield;
+  box-sizing: border-box;
 }
+.ctv-gradient-num::-webkit-inner-spin-button,
+.ctv-gradient-num::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.ctv-gradient-num:focus { border-color: var(--primary-background, #4a8cff); }
+.ctv-gradient-num:disabled { opacity: 0.5; pointer-events: none; }
 </style>

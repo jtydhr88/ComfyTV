@@ -40,11 +40,10 @@
           :min="control.min"
           :max="control.max"
           :step="control.step"
+          :precision="control.precision"
+          :unit="control.unit"
           @update:model-value="control.update"
         />
-        <span class="ctv:w-12 ctv:shrink-0 ctv:text-right ctv:text-2xs ctv:text-muted-foreground">
-          {{ control.format(control.value) }}
-        </span>
       </label>
       <div class="ctv:flex ctv:items-center ctv:gap-2">
         <span class="ctv:w-20 ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground">
@@ -92,11 +91,10 @@
           :min="10"
           :max="140"
           :step="1"
+          :precision="0"
+          unit="°"
           @update:model-value="(v) => emit('setFov', v)"
         />
-        <span class="ctv:w-12 ctv:shrink-0 ctv:text-right ctv:text-2xs ctv:text-muted-foreground">
-          {{ Math.round(camera.fov) }}°
-        </span>
       </label>
       <Scene3DTransformFields
         :transform="cameraTransform"
