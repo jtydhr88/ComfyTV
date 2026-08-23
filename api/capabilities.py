@@ -2,7 +2,12 @@ import logging
 try:
     import tomllib
 except ModuleNotFoundError:
-    import tomli as tomllib
+    try:
+        import tomli as tomllib
+    except ModuleNotFoundError as e:
+        raise ModuleNotFoundError(
+            "Python < 3.11 requires the optional dependency 'tomli' for TOML parsing. Install it (e.g. `pip install tomli`)."
+        ) from e
 from pathlib import Path
 
 from aiohttp import web
