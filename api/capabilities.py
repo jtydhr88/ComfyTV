@@ -1,5 +1,5 @@
 import logging
-import tomllib
+import re
 from pathlib import Path
 
 from aiohttp import web
@@ -16,8 +16,9 @@ def _read_version() -> str:
     try:
         text = (Path(__file__).resolve().parents[1] / "pyproject.toml") \
             .read_text(encoding="utf-8")
-        return str(tomllib.loads(text)["project"]["version"])
-    except (OSError, KeyError, TypeError, tomllib.TOMLDecodeError) as e:
+        m = re.search(r'^\s*version\s*=\s*["\']([^"\']+)["\']', text, re.MULTILINE)
+        return m.group(1) if m else "unknown"
+    except OSError as e:
         _log.warning("[ComfyTV/capabilities] version read failed: %s", e)
         return "unknown"
 
