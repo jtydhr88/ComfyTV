@@ -50,18 +50,36 @@ describe('useProxiedVideoUrl', () => {
     vi.useRealTimers()
   })
 
-  function setup(initial: string | null = SRC) {
+  function setup(
+    initial: string | null = SRC,
+    opts: { autoBuild?: boolean } = {},
+  ) {
     const source = ref<string | null>(initial)
     let api!: ReturnType<typeof useProxiedVideoUrl>
     const wrapper = mount(defineComponent({
       setup() {
-        api = useProxiedVideoUrl(source)
+        api = useProxiedVideoUrl(source, opts)
         return () => null
       },
     }))
     wrappers.push(wrapper)
     return { api, source, wrapper }
   }
+
+  it('dedupes concurrent ensure calls for the same url', async () => {
+    let resolveIt!: (v: unknown) => void
+    proxyEnsure.mockImplementation(() => new Promise((r) => { resolveIt = r }))
+    const a = setup()
+    const b = setup()
+    const c = setup()
+    await flush()
+    expect(proxyEnsure).toHaveBeenCalledTimes(1)
+    resolveIt({ status: 'ready', proxy_url: PROXY })
+    await flush()
+    expect(a.api.url.value).toBe(PROXY)
+    expect(b.api.url.value).toBe(PROXY)
+    expect(c.api.url.value).toBe(PROXY)
+  })
 
   it('starts with the source url and swaps to an existing proxy', async () => {
     proxyEnsure.mockResolvedValue({ status: 'ready', proxy_url: PROXY })
@@ -94,6 +112,46 @@ describe('useProxiedVideoUrl', () => {
     await advance(10000)
     await flush()
     expect(proxyEnsure).toHaveBeenCalledTimes(1)
+  })
+
+  it('autoBuild kicks off the build on candidate and polls to ready', async () => {
+    proxyEnsure
+      .mockResolvedValueOnce({ status: 'candidate' })
+      .mockResolvedValueOnce({ status: 'candidate' })
+      .mockResolvedValueOnce({ status: 'running', pct: 40 })
+      .mockResolvedValueOnce({ status: 'ready', proxy_url: PROXY })
+    const { api } = setup(SRC, { autoBuild: true })
+    await flush()
+    expect(api.canProxy.value).toBe(false)
+    expect(api.building.value).toBe(true)
+    expect(proxyEnsure).toHaveBeenCalledWith(SRC, { create: true, retry: false })
+    expect(queuePrompt).toHaveBeenCalledTimes(1)
+    await advance(2600)
+    await flush()
+    expect(api.pct.value).toBe(40)
+    await advance(2600)
+    await flush()
+    expect(api.url.value).toBe(PROXY)
+    expect(api.isProxy.value).toBe(true)
+  })
+
+  it('autoBuild does not double-queue when two players share a url', async () => {
+    proxyEnsure.mockResolvedValue({ status: 'candidate' })
+    setup(SRC, { autoBuild: true })
+    setup(SRC, { autoBuild: true })
+    await flush()
+    expect(queuePrompt).toHaveBeenCalledTimes(1)
+  })
+
+  it('candidate cache still shows the manual button to non-autoBuild users', async () => {
+    proxyEnsure.mockResolvedValue({ status: 'candidate' })
+    const a = setup()
+    await flush()
+    expect(a.api.canProxy.value).toBe(true)
+    const b = setup()
+    await flush()
+    expect(b.api.canProxy.value).toBe(true)
+    expect(queuePrompt).not.toHaveBeenCalled()
   })
 
   it('requestProxy creates the build and polls until ready', async () => {

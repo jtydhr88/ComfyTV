@@ -384,20 +384,28 @@ describe('useChainedFxPreview pipeline', () => {
     Object.defineProperty(v, 'paused', { value: true, configurable: true })
     v.dispatchEvent(new Event('pause'))
     expect(caf).toHaveBeenCalled()
+    expect(own.renderToCanvas).toHaveBeenCalledTimes(1)
+
+    Object.defineProperty(v, 'currentTime', { value: 2, configurable: true })
+    v.dispatchEvent(new Event('seeked'))
     expect(own.renderToCanvas).toHaveBeenCalledTimes(2)
   })
 
-  it('refreshes paused previews on the idle interval', () => {
+  it('idle interval re-renders only when the chain state changes', () => {
     vi.useFakeTimers()
     try {
       const { me, graphApp } = simpleChain()
       const own = okOwn()
-      mountPreview({ node: me, graphApp, own })
+      const { videoEl } = mountPreview({ node: me, graphApp, own })
       expect(own.renderToCanvas).toHaveBeenCalledTimes(1)
+      vi.advanceTimersByTime(1000)
+      expect(own.renderToCanvas).toHaveBeenCalledTimes(1)
+      Object.defineProperty(videoEl.value!, 'currentTime',
+        { value: 2, configurable: true })
       vi.advanceTimersByTime(500)
       expect(own.renderToCanvas).toHaveBeenCalledTimes(2)
       vi.advanceTimersByTime(500)
-      expect(own.renderToCanvas).toHaveBeenCalledTimes(3)
+      expect(own.renderToCanvas).toHaveBeenCalledTimes(2)
     } finally {
       vi.useRealTimers()
     }

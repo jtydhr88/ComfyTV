@@ -53,6 +53,12 @@ class TestThreshold:
             == 'original'
         assert ensure_proxy('https://example.com/a.mp4')['status'] == 'original'
 
+    def test_1080p_edge_needs_proxy(self, clip_path):
+        from ComfyTV.runners.proxy import needs_proxy
+        assert needs_proxy(clip_path, {'width': 1920, 'height': 1080})
+        assert needs_proxy(clip_path, {'width': 1080, 'height': 1920})
+        assert not needs_proxy(clip_path, {'width': 1919, 'height': 1080})
+
     def test_dims(self):
         from ComfyTV.runners.proxy import proxy_dims
         assert proxy_dims(3840, 2160) == (1280, 720)

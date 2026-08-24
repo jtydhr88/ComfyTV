@@ -173,15 +173,21 @@
           :title="asset.name"
           @click="$emit('select', asset)"
         >
-          <video
+          <div
             v-if="asset.media_type === 'video'"
-            :src="asset.payload_url"
-            muted
-            playsinline
-            preload="metadata"
-            :class="['ctv:block ctv:w-full ctv:aspect-square ctv:object-cover ctv:bg-black ctv:pointer-events-none',
+            :class="['ctv:relative ctv:w-full ctv:aspect-square ctv:bg-black ctv:pointer-events-none',
                      isAdded(asset.id) ? 'ctv:opacity-55' : '']"
-          />
+          >
+            <ThumbImg
+              :src="asset.payload_url"
+              :thumb-max="THUMB_TILE"
+              :alt="asset.name"
+              loading="lazy"
+              class="ctv:block ctv:size-full ctv:object-cover"
+              draggable="false"
+            />
+            <i class="pi pi-play-circle ctv:absolute ctv:bottom-0.5 ctv:right-0.5 ctv:text-xs ctv:text-white/80 ctv:drop-shadow" />
+          </div>
           <div
             v-else-if="asset.media_type === 'audio'"
             :class="['ctv:flex ctv:items-center ctv:justify-center ctv:w-full ctv:aspect-square ctv:text-muted-foreground',

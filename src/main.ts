@@ -60,6 +60,8 @@ import '@/v2/loadersV2'
 import '@/v2/generatorV2'
 import { V2_SHELLS } from '@/v2/registry'
 import { hydrateV2Flag, isV2Enabled } from '@/v2/flagV2'
+import { installPlaybackArbiter } from '@/composables/widgets/playbackArbiter'
+import { installCameraMotionLod } from '@/composables/widgets/cameraMotionLod'
 
 ;(window as any).__comfytv_host_pinia = getActivePinia()
 
@@ -69,6 +71,11 @@ setActivePinia(pinia)
 loadStageMeta()
 
 const v2Ready = isHeadlessConvertMode() ? Promise.resolve() : hydrateV2Flag()
+
+if (!isHeadlessConvertMode()) {
+  installPlaybackArbiter()
+  installCameraMotionLod()
+}
 
 useExecutionStore().bindToApi(app.api)
 

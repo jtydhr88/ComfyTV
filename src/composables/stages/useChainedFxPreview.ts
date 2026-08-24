@@ -55,6 +55,7 @@ interface StackEntry {
 
 export interface ChainCompositor {
   render(src: FxPreviewSource): FxPreviewSource | null
+  signature(): string
   lostClasses(): string[]
   dispose(): void
 }
@@ -114,6 +115,17 @@ export function createChainCompositor(
     return cur
   }
 
+  function signature(): string {
+    const stack = syncStack()
+    let out = ''
+    for (const entry of stack) {
+      const def = CHAIN_PREVIEW_STAGES[entry.cls]
+      if (!def) continue
+      out += `${entry.cls}${JSON.stringify(def.paramsOf(entry.node))};`
+    }
+    return out
+  }
+
   function lostClasses(): string[] {
     const out: string[] = []
     for (const entry of stackEntries.values()) {
@@ -127,7 +139,7 @@ export function createChainCompositor(
     stackEntries.clear()
   }
 
-  return { render, lostClasses, dispose }
+  return { render, signature, lostClasses, dispose }
 }
 
 export interface UseChainedFxPreviewOptions<TParams> {
@@ -150,9 +162,13 @@ export function useChainedFxPreview<TParams>(
   let ownRenderer: ChainRendererLike | null = null
   const compositor = createChainCompositor(opts.node, opts.graphApp ?? app)
   let rafId = 0
+  let vfc: { v: HTMLVideoElement; id: number } | null = null
   let idleTimer: ReturnType<typeof setInterval> | null = null
   let attached: HTMLVideoElement | null = null
   let lastHealthAt = 0
+  let visible = true
+  let lastSignature: string | null = null
+  let io: IntersectionObserver | null = null
 
   function ownClass(): string {
     return nodeClass(opts.node)
@@ -170,10 +186,13 @@ export function useChainedFxPreview<TParams>(
   }
 
   function renderOnce(): void {
-    if (!supported.value) return
+    if (!supported.value || !visible) return
     const v = opts.videoEl.value
     const target = opts.canvasEl.value
     if (!v || !target || v.readyState < 2) return
+    const sig = `${v.currentSrc}|${v.currentTime}|`
+      + `${JSON.stringify(opts.params())}|${compositor.signature()}`
+    if (v.paused && sig === lastSignature) return
     ownRenderer ??= opts.createRenderer()
 
     const src = compositor.render(v)
@@ -193,23 +212,50 @@ export function useChainedFxPreview<TParams>(
       stopLoop()
       return
     }
+    lastSignature = sig
     healthCheck()
   }
 
-  function loop(): void {
-    renderOnce()
-    if (supported.value) rafId = requestAnimationFrame(loop)
+  function scheduleNext(): void {
+    if (!supported.value) return
+    const v = attached
+    const anyV = v as (HTMLVideoElement & {
+      requestVideoFrameCallback?: (cb: () => void) => number
+    }) | null
+    if (anyV?.requestVideoFrameCallback) {
+      vfc = {
+        v: anyV,
+        id: anyV.requestVideoFrameCallback(() => {
+          vfc = null
+          renderOnce()
+          scheduleNext()
+        }),
+      }
+    } else {
+      rafId = requestAnimationFrame(() => {
+        rafId = 0
+        renderOnce()
+        scheduleNext()
+      })
+    }
   }
 
   function startLoop(): void {
     stopLoop()
     if (!supported.value) return
-    rafId = requestAnimationFrame(loop)
+    scheduleNext()
   }
 
   function stopLoop(): void {
     if (rafId) cancelAnimationFrame(rafId)
     rafId = 0
+    if (vfc) {
+      const anyV = vfc.v as HTMLVideoElement & {
+        cancelVideoFrameCallback?: (id: number) => void
+      }
+      anyV.cancelVideoFrameCallback?.(vfc.id)
+      vfc = null
+    }
   }
 
   function startIdleRefresh(): void {
@@ -241,6 +287,19 @@ export function useChainedFxPreview<TParams>(
     attached = null
   }
 
+  watch(opts.canvasEl, (c) => {
+    io?.disconnect()
+    io = null
+    visible = true
+    if (!c || typeof IntersectionObserver === 'undefined') return
+    io = new IntersectionObserver((entries) => {
+      const wasVisible = visible
+      visible = entries[entries.length - 1]?.isIntersecting ?? true
+      if (visible && !wasVisible) renderOnce()
+    })
+    io.observe(c)
+  }, { immediate: true })
+
   watch(opts.videoEl, (v) => {
     detach()
     stopLoop()
@@ -261,6 +320,8 @@ export function useChainedFxPreview<TParams>(
 
   onBeforeUnmount(() => {
     unregister?.()
+    io?.disconnect()
+    io = null
     detach()
     stopLoop()
     stopIdleRefresh()

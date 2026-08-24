@@ -32,7 +32,7 @@ def needs_proxy(src: Path, info: dict) -> bool:
     if src.stat().st_size >= PROXY_TRIGGER_BYTES:
         return True
     edge = max(int(info.get('width') or 0), int(info.get('height') or 0))
-    return edge > PROXY_TRIGGER_EDGE
+    return edge >= PROXY_TRIGGER_EDGE
 
 
 def proxy_dims(width: int, height: int) -> tuple:

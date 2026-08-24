@@ -10,6 +10,7 @@ const originalCache = new Set<string>()
 const candidateCache = new Set<string>()
 const requestedUrls = reactive(new Set<string>())
 const autoChecked = new Set<string>()
+const ensureInFlight = new Map<string, Promise<Awaited<ReturnType<typeof proxyEnsure>>>>()
 let promptSeq = 0
 
 export function clearProxyCaches(): void {
@@ -18,6 +19,16 @@ export function clearProxyCaches(): void {
   candidateCache.clear()
   requestedUrls.clear()
   autoChecked.clear()
+  ensureInFlight.clear()
+}
+
+function ensureDeduped(url: string): Promise<Awaited<ReturnType<typeof proxyEnsure>>> {
+  let p = ensureInFlight.get(url)
+  if (!p) {
+    p = proxyEnsure(url).finally(() => { ensureInFlight.delete(url) })
+    ensureInFlight.set(url, p)
+  }
+  return p
 }
 
 async function queueProxyPrompt(url: string): Promise<void> {
@@ -52,14 +63,20 @@ export async function autoProxyOutput(url: string): Promise<void> {
   autoChecked.add(url)
   let res
   try {
-    res = await proxyEnsure(url)
+    res = await ensureDeduped(url)
   } catch {
     return
   }
   if (res.status === 'candidate') await requestProxyBuild(url)
 }
 
-export function useProxiedVideoUrl(source: Ref<string | null>) {
+const autoBuildInFlight = new Set<string>()
+
+export function useProxiedVideoUrl(
+  source: Ref<string | null>,
+  opts: { autoBuild?: boolean } = {},
+) {
+  const autoBuild = opts.autoBuild === true
   const url = ref<string | null>(source.value)
   const isProxy = ref(false)
   const canProxy = ref(false)
@@ -76,7 +93,7 @@ export function useProxiedVideoUrl(source: Ref<string | null>) {
   async function tick(src: string, gen: number): Promise<void> {
     let res
     try {
-      res = await proxyEnsure(src)
+      res = await ensureDeduped(src)
     } catch {
       building.value = false
       return
@@ -93,8 +110,24 @@ export function useProxiedVideoUrl(source: Ref<string | null>) {
       building.value = false
     } else if (res.status === 'candidate') {
       candidateCache.add(src)
-      canProxy.value = true
-      building.value = false
+      if (autoBuild) {
+        canProxy.value = false
+        building.value = true
+        pct.value = 0
+        if (!requestedUrls.has(src) && !autoBuildInFlight.has(src)) {
+          autoBuildInFlight.add(src)
+          try {
+            await requestProxyBuild(src)
+          } finally {
+            autoBuildInFlight.delete(src)
+          }
+          if (gen !== generation || source.value !== src) return
+        }
+        timer = setTimeout(() => { void tick(src, gen) }, POLL_MS)
+      } else {
+        canProxy.value = true
+        building.value = false
+      }
     } else if (res.status === 'pending' || res.status === 'running') {
       building.value = true
       pct.value = res.pct ?? 0
@@ -132,7 +165,7 @@ export function useProxiedVideoUrl(source: Ref<string | null>) {
       return
     }
     if (originalCache.has(src)) return
-    if (candidateCache.has(src) && !requestedUrls.has(src)) {
+    if (candidateCache.has(src) && !requestedUrls.has(src) && !autoBuild) {
       canProxy.value = true
       return
     }

@@ -5,7 +5,7 @@ const V2_CSS_CHROME = `
 .v2-lact__backdrop {
   --v2-slab-bg: #232327;
   --v2-slab-border: rgba(255,255,255,.05);
-  --v2-slab-shadow: 0 8px 24px rgba(0,0,0,.4);
+  --v2-slab-shadow: 0 3px 10px rgba(0,0,0,.38);
   --v2-media-bg: linear-gradient(160deg, #23232a 0%, #1a1a20 100%);
   --v2-media-border: rgba(255,255,255,.07);
   --v2-checker: #1d1d22 repeating-conic-gradient(#25252b 0% 25%, #1d1d22 0% 50%);
@@ -33,7 +33,7 @@ html:not(.dark-theme) .lg-node[data-v2-shell],
 html:not(.dark-theme) .v2-lact__backdrop {
   --v2-slab-bg: #ffffff;
   --v2-slab-border: rgba(0,0,0,.08);
-  --v2-slab-shadow: 0 8px 24px rgba(0,0,0,.10);
+  --v2-slab-shadow: 0 3px 10px rgba(0,0,0,.10);
   --v2-media-bg: linear-gradient(160deg, #ececef 0%, #e2e2e6 100%);
   --v2-media-border: rgba(0,0,0,.09);
   --v2-checker: #eeeef1 repeating-conic-gradient(#e3e3e8 0% 25%, #eeeef1 0% 50%);

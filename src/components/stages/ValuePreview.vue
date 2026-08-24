@@ -79,12 +79,15 @@
         />
       </div>
     </div>
-    <ProxiedVideo
-      v-else-if="type === 'COMFYTV_VIDEO'"
-      :src="String(content)"
-      :class="videoClass"
-      controls muted playsinline preload="metadata"
-    />
+    <div v-else-if="type === 'COMFYTV_VIDEO'" class="ctv:relative ctv:size-full">
+      <ThumbImg
+        :src="String(content)"
+        :thumb-max="THUMB_CELL"
+        :class="imgClass"
+        :alt="String(content)"
+      />
+      <i class="pi pi-play-circle ctv:absolute ctv:bottom-1 ctv:right-1 ctv:text-sm ctv:text-white/80 ctv:pointer-events-none ctv:drop-shadow" />
+    </div>
 
     <template v-else-if="type === 'COMFYTV_AUDIO'">
       <div v-if="compact" :class="compactSummary">

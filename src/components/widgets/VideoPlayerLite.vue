@@ -16,6 +16,7 @@
       <template v-else>
         <video
           ref="videoEl"
+          data-ctv-media
           :src="effectiveUrl ?? undefined"
           :muted="muted"
           :style="videoStyle"
@@ -23,7 +24,7 @@
           :class="{ 'ctv-alpha-checker': isAlphaSource }"
           playsinline preload="metadata"
           @loadedmetadata="onMeta"
-          @timeupdate="onTimeUpdate"
+          @timeupdate="onTimeUpdatePlus"
           @play="onPlay"
           @pause="onPause"
           @error="onError"
@@ -119,7 +120,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { subscribeRafTick } from '@/composables/widgets/sharedRafTicker'
 import { isMidiUrl, useMidiRenderedUrl } from '@/composables/widgets/useMidiRenderedUrl'
 import { useMidiPianoRoll } from '@/composables/widgets/useMidiPianoRoll'
 import { useProxiedVideoUrl } from '@/composables/widgets/useProxiedVideoUrl'
@@ -151,7 +153,7 @@ const sourceVideoUrlRef = computed(() => props.sourceVideoUrl)
 const { url: midiResolvedUrl } = useMidiRenderedUrl(sourceVideoUrlRef)
 const {
   url: effectiveUrl, isProxy, canProxy, building, pct, requestProxy,
-} = useProxiedVideoUrl(midiResolvedUrl)
+} = useProxiedVideoUrl(midiResolvedUrl, { autoBuild: true })
 
 const waveEl = ref<HTMLCanvasElement | null>(null)
 const audioOnly = ref(false)
@@ -175,20 +177,12 @@ const wave = useAudioWaveform({
   canvas: waveEl,
 })
 
-let playheadRaf = 0
 function playheadTick() {
   const v = videoEl.value
-  if (v && audioOnly.value && duration.value > 0) {
+  if (v && duration.value > 0) {
     playheadPct.value = Math.min(100, (v.currentTime / duration.value) * 100)
   }
-  playheadRaf = requestAnimationFrame(playheadTick)
 }
-onMounted(() => {
-  playheadRaf = requestAnimationFrame(playheadTick)
-})
-onBeforeUnmount(() => {
-  cancelAnimationFrame(playheadRaf)
-})
 
 const isAlphaSource = computed(() =>
   /\.webm([?&#]|$)/i.test(props.sourceVideoUrl ?? '')
@@ -214,6 +208,26 @@ const {
   sourceVideoUrl: effectiveUrl,
   initialMuted: props.defaultMuted,
 })
+
+let unsubPlayhead: (() => void) | null = null
+watch([audioOnly, playing], ([audio, play]) => {
+  if (audio && play) {
+    unsubPlayhead ??= subscribeRafTick(playheadTick)
+  } else {
+    unsubPlayhead?.()
+    unsubPlayhead = null
+    if (audio) playheadTick()
+  }
+}, { immediate: true })
+onBeforeUnmount(() => {
+  unsubPlayhead?.()
+  unsubPlayhead = null
+})
+
+function onTimeUpdatePlus() {
+  onTimeUpdate()
+  if (audioOnly.value && !playing.value) playheadTick()
+}
 
 function applyTuning() {
   const v = videoEl.value
