@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { nextTick, ref } from 'vue'
 
 const store = {
   categories: [{ id: 1, name: 'people' }, { id: 2, name: 'bg' }],
@@ -72,6 +73,18 @@ describe('useAssetsPanel', () => {
     expect(store.ensureHydrated).toHaveBeenCalled()
     expect(store.installWebSocketSync).toHaveBeenCalled()
     expect(adoptAssetsMock).toHaveBeenCalled()
+  })
+
+  it('auto-scans the media folder only on the first activation', async () => {
+    const active = ref(true)
+    useAssetsPanel(() => active.value)
+    expect(adoptAssetsMock).toHaveBeenCalledTimes(1)
+    active.value = false
+    await nextTick()
+    active.value = true
+    await nextTick()
+    expect(adoptAssetsMock).toHaveBeenCalledTimes(1)
+    expect(store.ensureHydrated).toHaveBeenCalledTimes(2)
   })
 
   it('scans the media folder and refreshes only when something was adopted', async () => {

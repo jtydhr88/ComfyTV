@@ -122,45 +122,45 @@
       ><IconX class="ctv:size-3.5" /></button>
     </div>
 
-    <div class="ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-1.5">
-      <div v-if="visibleAssets.length === 0"
-           class="ctv:py-5 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60">
+    <div v-if="visibleAssets.length === 0"
+         class="ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-1.5">
+      <div class="ctv:py-5 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60">
         {{ emptyText }}
       </div>
-
-      <div
-        v-else-if="viewMode === 'grid'"
-        class="ctv:grid ctv:grid-cols-[repeat(auto-fill,minmax(min(160px,42vw),1fr))] ctv:gap-1"
-      >
-        <AssetGridCard
-          v-for="asset in visibleAssets"
-          :key="asset.id"
-          :asset="asset"
-          :meta="assetMeta(asset)"
-          :category-names="asset.category_ids.map(catName)"
-          :tooltip="assetTooltip(asset)"
-          @dragstart="onAssetDragStart(asset, $event)"
-          @contextmenu.prevent.stop="openAssetMenu(asset, $event, 'pointer')"
-          @open-menu="openAssetMenu(asset, $event, 'element')"
-          @view-full="viewFullAsset(asset)"
-        />
-      </div>
-
-      <div v-else class="ctv:flex ctv:flex-col ctv:gap-1">
-        <AssetListItem
-          v-for="asset in visibleAssets"
-          :key="asset.id"
-          :asset="asset"
-          :meta="assetMeta(asset)"
-          :category-names="asset.category_ids.map(catName)"
-          :tooltip="assetTooltip(asset)"
-          @dragstart="onAssetDragStart(asset, $event)"
-          @contextmenu.prevent.stop="openAssetMenu(asset, $event, 'pointer')"
-          @open-menu="openAssetMenu(asset, $event, 'element')"
-          @view-full="viewFullAsset(asset)"
-        />
-      </div>
     </div>
+
+    <VirtualGrid
+      v-else
+      :items="virtualItems"
+      :grid-style="viewMode === 'grid' ? gridModeStyle : listModeStyle"
+      :default-item-height="viewMode === 'grid' ? 240 : 48"
+      class="ctv:flex-1 ctv:min-h-0 ctv:p-1.5"
+    >
+      <template #item="{ item }">
+        <AssetGridCard
+          v-if="viewMode === 'grid'"
+          :asset="item.asset"
+          :meta="assetMeta(item.asset)"
+          :category-names="item.asset.category_ids.map(catName)"
+          :tooltip="assetTooltip(item.asset)"
+          @dragstart="onAssetDragStart(item.asset, $event)"
+          @contextmenu.prevent.stop="openAssetMenu(item.asset, $event, 'pointer')"
+          @open-menu="openAssetMenu(item.asset, $event, 'element')"
+          @view-full="viewFullAsset(item.asset)"
+        />
+        <AssetListItem
+          v-else
+          :asset="item.asset"
+          :meta="assetMeta(item.asset)"
+          :category-names="item.asset.category_ids.map(catName)"
+          :tooltip="assetTooltip(item.asset)"
+          @dragstart="onAssetDragStart(item.asset, $event)"
+          @contextmenu.prevent.stop="openAssetMenu(item.asset, $event, 'pointer')"
+          @open-menu="openAssetMenu(item.asset, $event, 'element')"
+          @view-full="viewFullAsset(item.asset)"
+        />
+      </template>
+    </VirtualGrid>
 
     <div
       v-if="fileDragDepth > 0"
@@ -291,7 +291,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import type { CSSProperties } from 'vue'
 
 import IconCheck from '~icons/lucide/check'
 import IconDownload from '~icons/lucide/download'
@@ -310,6 +311,7 @@ import IconX from '~icons/lucide/x'
 
 import AssetGridCard from '@/components/sidebar/assets/AssetGridCard.vue'
 import AssetListItem from '@/components/sidebar/assets/AssetListItem.vue'
+import VirtualGrid from '@/components/widgets/VirtualGrid.vue'
 import { MODEL_FILE_EXTENSIONS, useAssetsPanel } from '@/composables/sidebar/useAssetsPanel'
 
 const fileAccept = `image/*,video/*,audio/*,${MODEL_FILE_EXTENSIONS.join(',')}`
@@ -372,6 +374,20 @@ const {
   onDragLeave,
   onDrop,
 } = useAssetsPanel(() => props.active)
+
+const virtualItems = computed(() =>
+  visibleAssets.value.map(a => ({ key: a.id, asset: a })))
+
+const gridModeStyle: CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fill, minmax(min(160px, 42vw), 1fr))',
+  gap: '4px',
+}
+const listModeStyle: CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: '1fr',
+  gap: '4px',
+}
 
 function chipClass(active: boolean) {
   return [

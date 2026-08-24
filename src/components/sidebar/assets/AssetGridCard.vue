@@ -6,17 +6,31 @@
     draggable="true"
   >
     <div class="ctv:relative ctv:aspect-square ctv:overflow-hidden ctv:rounded-lg ctv:bg-secondary-background">
-      <video
+      <div
         v-if="asset.media_type === 'video'"
-        :src="proxiedUrl ?? undefined"
         :title="tooltip"
-        muted
-        playsinline
-        preload="metadata"
-        class="ctv-asset-thumb ctv:absolute ctv:inset-0 ctv:size-full ctv:object-cover ctv:bg-black"
-        @mouseenter="hoverPlay"
-        @mouseleave="hoverPause"
-      />
+        class="ctv:absolute ctv:inset-0 ctv:bg-black"
+        @mouseenter="videoHover = true"
+        @mouseleave="videoHover = false"
+      >
+        <video
+          v-if="videoHover"
+          :src="proxiedUrl ?? undefined"
+          autoplay
+          muted
+          playsinline
+          class="ctv-asset-thumb ctv:absolute ctv:inset-0 ctv:size-full ctv:object-cover"
+          @canplay="hoverAutoplay"
+        />
+        <ThumbImg
+          v-else
+          :src="asset.payload_url"
+          :thumb-max="THUMB_CELL"
+          :alt="asset.name"
+          loading="lazy"
+          class="ctv-asset-thumb ctv:absolute ctv:inset-0 ctv:size-full ctv:object-cover"
+        />
+      </div>
       <div
         v-else-if="asset.media_type === 'audio'"
         :title="tooltip"
@@ -128,7 +142,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import IconBox from '~icons/lucide/box'
 import { assetPreviewUrl } from '@/utils/assetMedia'
 import { THUMB_CELL } from '@/utils/thumbUrl'
@@ -165,13 +179,10 @@ const emit = defineEmits<{
   'view-full': []
 }>()
 
-function hoverPlay(e: MouseEvent) {
+const videoHover = ref(false)
+
+function hoverAutoplay(e: Event) {
   void (e.currentTarget as HTMLVideoElement).play().catch(() => {})
-}
-function hoverPause(e: MouseEvent) {
-  const v = e.currentTarget as HTMLVideoElement
-  v.pause()
-  v.currentTime = 0
 }
 </script>
 

@@ -9,12 +9,12 @@
       class="ctv:relative ctv:flex ctv:size-8 ctv:shrink-0 ctv:items-center ctv:justify-center ctv:overflow-hidden
              ctv:rounded-sm ctv:bg-secondary-background"
     >
-      <ProxiedVideo
+      <ThumbImg
         v-if="asset.media_type === 'video'"
         :src="asset.payload_url"
-        muted
-        playsinline
-        preload="metadata"
+        :thumb-max="THUMB_TILE"
+        :alt="asset.name"
+        loading="lazy"
         class="ctv:size-full ctv:object-cover ctv:pointer-events-none"
       />
       <button
@@ -96,7 +96,6 @@ import { computed } from 'vue'
 import IconBox from '~icons/lucide/box'
 import { assetPreviewUrl } from '@/utils/assetMedia'
 import { THUMB_TILE } from '@/utils/thumbUrl'
-import ProxiedVideo from '@/components/widgets/ProxiedVideo.vue'
 import IconEllipsis from '~icons/lucide/ellipsis'
 import IconMaximize from '~icons/lucide/maximize-2'
 import IconPause from '~icons/lucide/pause'

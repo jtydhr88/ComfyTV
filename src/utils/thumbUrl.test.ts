@@ -18,9 +18,19 @@ describe('thumbUrl', () => {
     expect(thumbUrl(src, 256)).toContain('/comfytv/thumb?url=')
   })
 
-  it('passes through non-image files', () => {
+  it('rewrites video files to the thumb endpoint (first frame)', () => {
     const src = '/view?filename=a.mp4&type=output'
+    expect(thumbUrl(src, 256)).toBe(
+      `/comfytv/thumb?url=${encodeURIComponent(src)}&max=256`)
+    expect(thumbUrl('/view?filename=b.webm&type=output', 256))
+      .toContain('/comfytv/thumb?url=')
+  })
+
+  it('passes through non-media files', () => {
+    const src = '/view?filename=a.txt&type=output'
     expect(thumbUrl(src, 256)).toBe(src)
+    expect(thumbUrl('/view?filename=a.mp3&type=output', 256))
+      .toBe('/view?filename=a.mp3&type=output')
   })
 
   it('passes through absolute, blob and data urls', () => {

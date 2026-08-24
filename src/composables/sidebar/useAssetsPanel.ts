@@ -356,10 +356,13 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
     void scanMediaFolder()
   }
 
+  let scannedOnce = false
   watch(isActive, (active) => {
-    if (active) {
-      store.ensureHydrated()
-      store.installWebSocketSync()
+    if (!active) return
+    store.ensureHydrated()
+    store.installWebSocketSync()
+    if (!scannedOnce) {
+      scannedOnce = true
       void scanMediaFolder()
     }
   }, { immediate: true })

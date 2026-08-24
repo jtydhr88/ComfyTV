@@ -353,19 +353,106 @@ describe('assetStore', () => {
     expect(s.assets.map(a => a.id)).toEqual([2])
   })
 
-  it('installWebSocketSync refreshes the cache when a comfytv-assets event fires', async () => {
-    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
-    mockHydrate(fetchApi, [], [asset({ id: 1 })])
+  async function installedHandler(s: ReturnType<typeof useAssetStore>) {
     const addEventListener = (app as any).api.addEventListener as ReturnType<typeof vi.fn>
     addEventListener.mockClear()
-    const s = useAssetStore()
-    await s.hydrate()
     s.installWebSocketSync()
     const handler = addEventListener.mock.calls
-      .find(c => c[0] === 'comfytv-assets')?.[1] as (() => void) | undefined
+      .find(c => c[0] === 'comfytv-assets')?.[1] as ((e?: any) => void) | undefined
     expect(handler).toBeTypeOf('function')
+    return handler!
+  }
+
+  it('hydrate pages through more than one batch and dedupes overlapping rows', async () => {
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    const page1 = Array.from({ length: 500 }, (_, i) => asset({ id: 600 - i }))
+    const page2 = [asset({ id: 101 }), asset({ id: 100 }), asset({ id: 99 })]
+    fetchApi.mockImplementation((path: string) => {
+      if (path.startsWith('/comfytv/asset_categories')) {
+        return Promise.resolve(jsonResp({ categories: [] }))
+      }
+      if (path.startsWith('/comfytv/assets')) {
+        const offset = Number(new URLSearchParams(path.split('?')[1]).get('offset'))
+        return Promise.resolve(jsonResp({ assets: offset === 0 ? page1 : page2 }))
+      }
+      return Promise.resolve(new Response('not found', { status: 404 }))
+    })
+    const s = useAssetStore()
+    await s.hydrate()
+    // page2 overlaps page1 at id 101 (row created mid-pagination shifts pages)
+    expect(s.assets).toHaveLength(502)
+    expect(s.assets[0].id).toBe(600)
+    expect(s.assets.at(-1)?.id).toBe(99)
+    const assetPaths = fetchApi.mock.calls
+      .map(c => c[0] as string)
+      .filter(p => p.startsWith('/comfytv/assets'))
+    expect(assetPaths).toEqual([
+      '/comfytv/assets?category=all&limit=500&offset=0',
+      '/comfytv/assets?category=all&limit=500&offset=500',
+    ])
+  })
+
+  it('ws create event inserts the row in descending id order without refetching', async () => {
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    mockHydrate(fetchApi, [], [asset({ id: 5 }), asset({ id: 3 })])
+    const s = useAssetStore()
+    await s.hydrate()
+    const handler = await installedHandler(s)
+    const calls = fetchApi.mock.calls.length
+    handler({ detail: { event: 'create', asset: asset({ id: 7 }) } })
+    handler({ detail: { event: 'create', asset: asset({ id: 4 }) } })
+    expect(s.assets.map(a => a.id)).toEqual([7, 5, 4, 3])
+    expect(fetchApi).toHaveBeenCalledTimes(calls)
+  })
+
+  it('ws update event replaces the cached row in place', async () => {
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    mockHydrate(fetchApi, [], [asset({ id: 5, name: 'old' }), asset({ id: 3 })])
+    const s = useAssetStore()
+    await s.hydrate()
+    const handler = await installedHandler(s)
+    handler({ detail: { event: 'update', asset: asset({ id: 5, name: 'new' }) } })
+    expect(s.assets.map(a => a.name)).toEqual(['new', 'pic'])
+  })
+
+  it('ws delete event drops the row', async () => {
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    mockHydrate(fetchApi, [], [asset({ id: 5 }), asset({ id: 3 })])
+    const s = useAssetStore()
+    await s.hydrate()
+    const handler = await installedHandler(s)
+    handler({ detail: { event: 'delete', id: 5 } })
+    expect(s.assets.map(a => a.id)).toEqual([3])
+  })
+
+  it('ws category events update categories and strip deleted tags', async () => {
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    mockHydrate(fetchApi, [category({ id: 1, name: 'people' })],
+      [asset({ id: 5, category_ids: [1, 2] })])
+    const s = useAssetStore()
+    await s.hydrate()
+    const handler = await installedHandler(s)
+    handler({ detail: { event: 'category-create', category: category({ id: 2, name: 'bg' }) } })
+    expect(s.categories.map(c => c.name)).toEqual(['bg', 'people'])
+    handler({ detail: { event: 'category-rename', category: category({ id: 2, name: 'z-bg' }) } })
+    expect(s.categories.map(c => c.name)).toEqual(['people', 'z-bg'])
+    handler({ detail: { event: 'category-delete', id: 2 } })
+    expect(s.categories.map(c => c.name)).toEqual(['people'])
+    expect(s.assets[0].category_ids).toEqual([1])
+  })
+
+  it('ws event with an unknown shape falls back to a debounced full refresh', async () => {
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    mockHydrate(fetchApi, [], [asset({ id: 1 })])
+    const s = useAssetStore()
+    await s.hydrate()
+    const handler = await installedHandler(s)
     mockHydrate(fetchApi, [], [asset({ id: 2 })])
-    handler!()
+    handler()
+    handler()
+    const calls = fetchApi.mock.calls.length
     await vi.waitFor(() => expect(s.assets.map(a => a.id)).toEqual([2]))
+    // two burst events collapse into a single refresh (2 requests: categories + assets)
+    expect(fetchApi.mock.calls.length).toBe(calls + 2)
   })
 })

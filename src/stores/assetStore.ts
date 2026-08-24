@@ -1,3 +1,4 @@
+import { useDebounceFn } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
@@ -5,6 +6,8 @@ import { apiFetch, apiSend } from '@/api'
 import {
   type Asset,
   type AssetCategory,
+  AssetCategorySchema,
+  AssetSchema,
   DeleteAssetSchema,
   ListAssetCategoriesSchema,
   ListAssetsSchema,
@@ -12,6 +15,28 @@ import {
   MutateAssetSchema,
 } from '@/api/schemas'
 import { app } from '@/lib/comfyApp'
+
+const PAGE_LIMIT = 500
+const REFRESH_DEBOUNCE_MS = 300
+
+async function fetchAllAssets(): Promise<Asset[]> {
+  const all: Asset[] = []
+  const seen = new Set<number>()
+  for (let offset = 0; ; offset += PAGE_LIMIT) {
+    const page = await apiFetch(
+      `/comfytv/assets?category=all&limit=${PAGE_LIMIT}&offset=${offset}`,
+      ListAssetsSchema,
+    )
+    for (const row of page.assets) {
+      if (!seen.has(row.id)) {
+        seen.add(row.id)
+        all.push(row)
+      }
+    }
+    if (page.assets.length < PAGE_LIMIT) break
+  }
+  return all
+}
 
 export type AssetCategoryFilter = 'all' | 'none' | number
 
@@ -44,10 +69,10 @@ export const useAssetStore = defineStore('assets', () => {
       try {
         const [cats, rows] = await Promise.all([
           apiFetch('/comfytv/asset_categories', ListAssetCategoriesSchema),
-          apiFetch('/comfytv/assets?category=all', ListAssetsSchema),
+          fetchAllAssets(),
         ])
         categories.value = cats.categories
-        assets.value = rows.assets
+        assets.value = rows
         hydrating = 'fetched'
       } catch (e) {
         console.warn('[ComfyTV/assets] hydrate failed', e)
@@ -198,13 +223,72 @@ export const useAssetStore = defineStore('assets', () => {
     }
   }
 
+  function upsertAsset(row: Asset): void {
+    const next = assets.value.slice()
+    const idx = next.findIndex(a => a.id === row.id)
+    if (idx >= 0) {
+      next[idx] = row
+    } else {
+      // rows are kept in descending id order (newest first)
+      const at = next.findIndex(a => a.id < row.id)
+      next.splice(at < 0 ? next.length : at, 0, row)
+    }
+    assets.value = next
+  }
+
+  function applyAssetEvent(detail: unknown): boolean {
+    const d = detail as
+      | { event?: string; asset?: unknown; category?: unknown; id?: unknown }
+      | null
+    switch (d?.event) {
+      case 'create':
+      case 'update': {
+        const parsed = AssetSchema.safeParse(d.asset)
+        if (!parsed.success) return false
+        upsertAsset(parsed.data)
+        return true
+      }
+      case 'delete': {
+        const id = d.id
+        if (typeof id !== 'number') return false
+        assets.value = assets.value.filter(a => a.id !== id)
+        return true
+      }
+      case 'category-create':
+      case 'category-rename': {
+        const parsed = AssetCategorySchema.safeParse(d.category)
+        if (!parsed.success) return false
+        categories.value = [
+          ...categories.value.filter(c => c.id !== parsed.data.id),
+          parsed.data,
+        ].sort((a, b) => a.name.localeCompare(b.name))
+        return true
+      }
+      case 'category-delete': {
+        const id = d.id
+        if (typeof id !== 'number') return false
+        categories.value = categories.value.filter(c => c.id !== id)
+        assets.value = assets.value.map(a =>
+          a.category_ids.includes(id)
+            ? { ...a, category_ids: a.category_ids.filter(c => c !== id) }
+            : a,
+        )
+        return true
+      }
+    }
+    return false
+  }
+
+  const refreshDebounced = useDebounceFn(() => { void refresh() }, REFRESH_DEBOUNCE_MS)
+
   function installWebSocketSync(): void {
     if (wsInstalled) return
     const api = (app as any)?.api
     if (!api?.addEventListener) return
     wsInstalled = true
-    api.addEventListener('comfytv-assets', () => {
-      void refresh()
+    api.addEventListener('comfytv-assets', (event: any) => {
+      const detail = event?.detail ?? event
+      if (hydrating !== 'fetched' || !applyAssetEvent(detail)) void refreshDebounced()
     })
   }
 

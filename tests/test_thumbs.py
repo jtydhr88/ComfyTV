@@ -23,6 +23,30 @@ def image_url(image_path):
     return media.path_to_view_url(image_path)
 
 
+@pytest.fixture()
+def video_path(image_path):
+    import av
+    import numpy as np
+    p = image_path.with_name('clip-real.mp4')
+    with av.open(str(p), 'w') as out:
+        stream = out.add_stream('libx264', rate=8)
+        stream.width, stream.height = 640, 320
+        stream.pix_fmt = 'yuv420p'
+        rgb = np.zeros((320, 640, 3), dtype=np.uint8)
+        rgb[..., 0] = 250
+        for _ in range(4):
+            frame = av.VideoFrame.from_ndarray(rgb, format='rgb24')
+            out.mux(stream.encode(frame))
+        out.mux(stream.encode(None))
+    return p
+
+
+@pytest.fixture()
+def video_url(video_path):
+    from ComfyTV.runners import media
+    return media.path_to_view_url(video_path)
+
+
 class TestSnapSize:
     def test_snaps_to_allowed_sizes(self):
         from ComfyTV.runners.thumbs import snap_size
@@ -61,13 +85,22 @@ class TestResolveThumb:
         url = media.path_to_view_url(small)
         assert resolve_thumb(url, 256) == small
 
-    def test_non_image_returns_original(self, image_path, reset_db):
+    def test_non_media_returns_original(self, image_path, reset_db):
+        from ComfyTV.runners import media
+        from ComfyTV.runners.thumbs import resolve_thumb
+        doc = image_path.with_name('notes.txt')
+        doc.write_bytes(b'plain text')
+        url = media.path_to_view_url(doc)
+        assert resolve_thumb(url, 256) == doc
+
+    def test_corrupt_video_raises_not_found(self, image_path, reset_db):
         from ComfyTV.runners import media
         from ComfyTV.runners.thumbs import resolve_thumb
         clip = image_path.with_name('clip.mp4')
         clip.write_bytes(b'not really a video')
         url = media.path_to_view_url(clip)
-        assert resolve_thumb(url, 256) == clip
+        with pytest.raises(FileNotFoundError):
+            resolve_thumb(url, 256)
 
     def test_missing_file_raises(self, reset_db):
         from ComfyTV.runners.thumbs import resolve_thumb
@@ -83,6 +116,22 @@ class TestResolveThumb:
         with Image.open(dest) as im:
             assert im.mode == 'RGBA'
             assert im.getpixel((0, 0))[3] < 255
+
+    def test_video_first_frame_gets_webp_thumb(self, video_url):
+        from ComfyTV.runners.thumbs import resolve_thumb
+        dest = resolve_thumb(video_url, 512)
+        assert dest.suffix == '.webp'
+        with Image.open(dest) as im:
+            assert im.size == (512, 256)
+            r, g, b = im.getpixel((256, 128))
+            assert r > 200 and g < 80 and b < 80
+
+    def test_video_thumb_cache_is_reused(self, video_url):
+        from ComfyTV.runners.thumbs import resolve_thumb
+        first = resolve_thumb(video_url, 512)
+        mtime = first.stat().st_mtime_ns
+        assert resolve_thumb(video_url, 512) == first
+        assert first.stat().st_mtime_ns == mtime
 
     def test_source_change_makes_new_thumb(self, image_path, image_url):
         import os

@@ -1,4 +1,5 @@
 const IMAGE_EXT_RE = /\.(png|jpe?g|webp|bmp)$/i
+const VIDEO_EXT_RE = /\.(3g2|3gp|avi|m4v|mkv|mov|mp4|mpe?g|ogv|webm)$/i
 const ANNOTATION_RE = /\s*\[(output|input|temp)\]$/
 
 export const THUMB_TILE = 256
@@ -17,6 +18,7 @@ export function thumbUrl(src: string | null | undefined, max: number): string {
   } catch {
     return src
   }
-  if (!IMAGE_EXT_RE.test(filename.replace(ANNOTATION_RE, ''))) return src
+  const clean = filename.replace(ANNOTATION_RE, '')
+  if (!IMAGE_EXT_RE.test(clean) && !VIDEO_EXT_RE.test(clean)) return src
   return `/comfytv/thumb?url=${encodeURIComponent(src)}&max=${max}`
 }
