@@ -1,0 +1,14 @@
+interface:
+  display_name: H3 Cinematic Director
+  short_description: 导演级分镜控制、一致性审核与MiniMax H3提示词
+  default_prompt: Use $h3-cinematic-director to turn this approved shot into a continuity-locked
+    MiniMax H3 production prompt.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  allow_implicit_invocation: false
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
