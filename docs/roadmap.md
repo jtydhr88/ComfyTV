@@ -26,6 +26,14 @@ Legend: ✅ done · ⏳ pending.
 | **Upscale · Ultrasharp 4x** | 4x-UltraSharp GAN upscale. |
 | **Multiangle · Qwen Edit 2511 Multiangle** | Qwen Image-Edit + Multiangle LoRA, driven by the 3D camera. |
 | **Video · Local LTX 2.3** (T2V + I2V + FLF2V + IA2V) | Fast; recommended default. T2V from text only; I2V needs an image; FLF2V interpolates between two keyframes; IA2V follows an audio track. |
+| **Video · Local MiniMax H3** (T2V + FLF2V + R2V) | Video **with sound** in one pass. R2V takes multiple image/audio references for identity-locked shots. Lightning LoRAs wired in (~half the render time). |
+| **Audio · MiniMax Music 3** | Higher-quality text-to-music alongside ACE-Step. |
+| **3D Model · Hunyuan3D 2.1 / MoGe-2 / TripoSplat** | Image → textured mesh / depth geometry / Gaussian splat, all as builtin `model` workflows. |
+| **Director + master timeline** | Shot-by-shot production console: generated clips, per-clip transitions, shared reference cast, content-addressed re-renders, ruler + playhead + unified film preview. |
+| **MCP server + ComfyTV Bot** | 45-tool agent endpoint (stages + native graph) and the embedded sidebar agent with four providers (Claude Code / Codex / Qwen Code / Local LLM), attachments and per-provider models. |
+| **Agent Skills** | SKILL.md instruction packs served to agents via MCP and to the Bot (`/` palette); manage in Settings → Skills. |
+| **V2 node skins (experimental)** | Content-first LibTV-style node shells, light + dark, behind the `enable-v2` setting. |
+| **Keyboard-first editing** | ←/→ frame stepping (±1) + Home/End on video track widgets; numeric sliders accept typed values with clamping. |
 | **Video editing · Clip / Crop / Resize / Extract Frame / Demux** | Real edits on the source clip — trim to range, crop a region, resize, pull a still, split audio from video. No GPU or model needed. |
 | **Extend a video** (↪ action) | One-click chain: extract the source's last frame → spawn a new Video Stage with that frame as the I2V starting image, fill prompt and Run. |
 | **Text · Qwen3 4B** | Local LLM text generation. |
@@ -64,9 +72,6 @@ Legend: ✅ done · ⏳ pending.
 
 ### Storyboard & shots
 - [ ] **Storyboard + Shot Images** — Storyboard runs the LLM shot-list, Shot Images iterates it per shot.
-
-### Timeline
-- [ ] **Director Timeline + Timeline Render** — LTX multishot + ffmpeg concat.
 
 ### Panorama
 - [ ] **Diffusion360 low-VRAM variant** (SD1.5 base + circular blending) — for users without enough VRAM for Flux Dev. Requires installing `ArcherFMY/Diffusion360_ComfyUI`.

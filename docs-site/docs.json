@@ -66,7 +66,8 @@
                   "guides/custom-workflows",
                   "guides/sidebar-config-editor",
                   "guides/mcp",
-                  "guides/bot"
+                  "guides/bot",
+                  "guides/skills"
                 ]
               }
             ]
@@ -419,7 +420,8 @@
                   "zh/guides/custom-workflows",
                   "zh/guides/sidebar-config-editor",
                   "zh/guides/mcp",
-                  "zh/guides/bot"
+                  "zh/guides/bot",
+                  "zh/guides/skills"
                 ]
               }
             ]

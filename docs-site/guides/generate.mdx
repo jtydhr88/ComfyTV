@@ -34,13 +34,18 @@ Pick `Local SD1.5 I2I`, wire a reference image into the **images** slot, write t
 
 ![Video stage](/images/video-run.png)
 
-- **workflow** — all four LTX 2.3 variants ship today:
-  - `Local LTX 2.3 T2V` — text → video.
-  - `Local LTX 2.3 I2V` — image → video.
-  - `Local LTX 2.3 FLF2V` — first-last-frame → video. Wire **two** images on **images** (start + end keyframes).
-  - `Local LTX 2.3 IA2V` — image + audio → video.
+- **workflow** — two families ship today:
+  - **LTX 2.3** (video only):
+    - `Local LTX 2.3 T2V` — text → video.
+    - `Local LTX 2.3 I2V` — image → video.
+    - `Local LTX 2.3 FLF2V` — first-last-frame → video. Wire **two** images on **images** (start + end keyframes).
+    - `Local LTX 2.3 IA2V` — image + audio → video.
+  - **MiniMax H3** (generates video **with sound** in one pass — ambience, foley, even dialogue):
+    - `Local MiniMax H3 T2V` — text → video+audio.
+    - `Local MiniMax H3 FLF2V` — first-last-frame → video+audio.
+    - `Local MiniMax H3 R2V` — multi-reference: wire several images (character sheets, scene, props, style) and optional audio references, then address them as `@image_N` / `<Audio N>` in the prompt to lock identity and continuity across shots. The H3 workflows ship with **Lightning** LoRAs wired in, roughly halving generation time (see [models.md](/guides/models)).
 - **resolution / aspect_ratio / duration**: output size, shape, length.
-- **audio** input — required for IA2V; the other LTX workflows don't use audio.
+- **audio** input — required for IA2V; used as reference audio by H3 R2V; the other workflows don't use audio.
 
 Once you have a clip, the whole [video suite](/guides/video-and-audio) — editing, color, keying, compositing, FX — takes over from there.
 
@@ -58,13 +63,18 @@ Local LLM text generation (built-in **Qwen3 4B**). Use it to expand a prompt, wr
 
 ![Music stage](/images/audio-run.png)
 
-Text-to-music via **ACE-Step v1 3.5B**:
+Text-to-music. Two workflows ship:
+
+- **ACE-Step v1 Song** — the lightweight default.
+- **MiniMax Music 3** — higher-quality full songs.
+
+Shared parameters:
 
 - **Prompt**: free-form tags — genre, mood, BPM, instrumentation.
 - **Lyrics** (optional): empty = instrumental; non-empty = vocal track.
 - **Duration**: slider (1–240 s, default 30).
 
-Output is a single FLAC audio file. From there the [audio suite](/guides/video-and-audio) (EQ, stem split, reverb, …) and the [Music nodes](/guides/making-music) can pick it up.
+Output is a single audio file. From there the [audio suite](/guides/video-and-audio) (EQ, stem split, reverb, …) and the [Music nodes](/guides/making-music) can pick it up.
 
 ---
 
@@ -80,4 +90,10 @@ Text-to-speech. Ships with a **Kokoro TTS** workflow: type the line to speak, pi
 
 ![3D model stage](/images/model3d-run.png)
 
-Generates a **3D model (GLB)** via a `model`-kind workflow — link or upload your own (e.g. a Hunyuan3D graph); none ships by default. The node embeds an orbit preview; after you orbit, it auto-captures a screenshot into its image output, so downstream image stages can consume the model's look. The GLB itself flows to the 3D nodes — Scene3D, mesh ops, materials; see the Node Reference.
+Generates a **3D model (GLB)** via a `model`-kind workflow. Three ship today:
+
+- **Hunyuan3D 2.1** — image → textured mesh.
+- **MoGe-2 Depth Mesh** — image → geometry via monocular depth estimation.
+- **TripoSplat Gaussian** — image → Gaussian splat (loads into Scene3D too).
+
+Model files for all three are listed in [models.md](/guides/models); you can also link or upload your own `model`-kind workflow. The node embeds an orbit preview; after you orbit, it auto-captures a screenshot into its image output, so downstream image stages can consume the model's look. The GLB itself flows to the 3D nodes — Scene3D, mesh ops, materials; see the Node Reference.

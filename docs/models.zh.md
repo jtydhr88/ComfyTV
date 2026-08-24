@@ -48,13 +48,49 @@ ComfyUI 通常会在首次启动时自动建好所有子目录;缺哪个手动�
 
 ---
 
+## Generate · 视频(MiniMax H3)
+
+三个变体共用文本编码器和两个 VAE;FL2VA 双工作流与 Ref2VA 的扩散模型和 Turbo LoRA 不同。
+
+| 工作流 | 文件 | 目录 |
+|---|---|---|
+| **Local MiniMax H3 T2V** / **FLF2V** | `minimax_h3_fl2va_pruned_int8_convrot.safetensors`、`qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors`、`minimax_h3_video_vae_fp16.safetensors`、`minimax_h3_audio_vae_fp32.safetensors`、`minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors` *(Lightning,可选)* | `diffusion_models/`、`text_encoders/`、`vae/`、`vae/`、`loras/` |
+| **Local MiniMax H3 R2V**(多参考) | `minimax_h3_ref2va_pruned_int8_convrot.safetensors`、文本编码器 + 双 VAE 同上、`minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors` *(Lightning,可选)* | `diffusion_models/`、…、`loras/` |
+
+**Lightning** LoRA 把生成压到 8 步(FL2VA)/ 4 步(Ref2VA),耗时约减半,自带工作流已接好;不下这个文件也能按全步数正常跑。
+
+下载:
+- Base + 文本编码器 + VAE:<https://huggingface.co/Comfy-Org/MiniMax-H3>
+- FL2VA Turbo LoRA:<https://huggingface.co/lightx2v/Minimax-h3-Turbo>
+
+---
+
 ## Generate · 音频(Audio)
 
 | 工作流 | 文件 | 目录 |
 |---|---|---|
 | **ACE-Step v1 Song** | `ace_step_v1_3.5b.safetensors` | `checkpoints/` |
+| **MiniMax Music 3** | `minimax_music3_dit_fp16.safetensors`、`minimax_music3_text_encoder_pruned_int8_convrot.safetensors`、`minimax_music3_dav.safetensors` | `diffusion_models/`、`text_encoders/`、`vae/` |
 
-ACE-Step v1 是 ComfyUI 核心原生支持,不需要装额外的 custom node。
+ACE-Step v1 和 MiniMax Music 3 都是 ComfyUI 核心原生支持,不需要装额外的 custom node。
+
+下载:<https://huggingface.co/Comfy-Org/MiniMax-Music-3>
+
+---
+
+## Generate · 3D 模型(3D Model)
+
+| 工作流 | 文件 | 目录 |
+|---|---|---|
+| **Hunyuan3D 2.1**(图生网格) | `hunyuan_3d_v2.1.safetensors` | `checkpoints/` |
+| **MoGe-2 Mesh**(图生几何) | `moge_2_vitl_normal_fp16.safetensors` | `geometry_estimation/` |
+| **TripoSplat Gaussian**(图生高斯泼溅) | `triposplat_fp16.safetensors`、`dino_v3_vit_h.safetensors`、`flux2-vae.safetensors`、`triposplat_vae_decoder_fp16.safetensors`、`birefnet.safetensors` | `diffusion_models/`、`clip_vision/`、`vae/`、`vae/`、`background_removal/` |
+
+下载:
+- Hunyuan3D 2.1:<https://huggingface.co/Comfy-Org/hunyuan3D_2.1_repackaged>
+- MoGe-2:<https://huggingface.co/Comfy-Org/MoGe_safetensors>
+- TripoSplat:<https://huggingface.co/VAST-AI/TripoSplat>
+- BiRefNet(背景去除):<https://huggingface.co/Comfy-Org/BiRefNet>
 
 ---
 

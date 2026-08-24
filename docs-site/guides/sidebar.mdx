@@ -34,7 +34,7 @@ The full editor walkthrough is in [sidebar-config-editor.md](/guides/sidebar-con
 
 A library of **images, video, audio, and 3D models** you want to keep reusing — independent of any single project.
 
-- **Get things in**: the upload button, or just **drag files onto the panel**. The panel also **scans ComfyTV's media folder** on open (and via *Scan folder* in the ⚙ menu) and adopts anything new it finds there.
+- **Get things in**: the upload button, or just **drag files onto the panel**. The panel also **scans ComfyTV's media folder** on open (and via *Scan folder* in the ⚙ menu) and adopts anything new it finds there. Video assets show a first-frame thumbnail, and the grid virtualizes — libraries stay smooth well into the thousands of entries.
 - **Organize**: create **categories** and tag assets with them — an asset can carry several tags. Filter by category chip, by media type (image / video / audio / model, with counts), or search by name. Grid and list views.
 - **Use an asset**: **drag it onto the canvas** — ComfyTV creates the matching *Load … from Asset* node wired to it — or use the card menu's *Load as node*. The menu also offers *View full* (lightbox), *Make proxy* (for videos), *Edit tags*, *Rename*, and *Delete*. Deleting removes the library entry; files on disk are left alone.
 - Asset images can also be dropped straight into a stage's prompt as reference images — see [Prompt references](#prompt-references) below.
@@ -109,12 +109,13 @@ Register other ComfyUI instances on your network (name / host / port) and stages
 
 ---
 
-## Settings — backups, MCP and the Bot
+## Settings — backups, V2, MCP, Bot and Skills
 
-Two sections of global switches, saved to the ComfyTV database:
+Global switches, saved to the ComfyTV database:
 
-- **Backup**: automatic snapshots of ComfyTV's data on server start (toggle, retention count, custom path) plus a *Back up now* button.
-- **Agent & MCP**: **Enable MCP server** opens the agent endpoint documented in [Agent access (MCP)](/guides/mcp); **Enable ComfyTV Bot** shows the embedded chat agent from [ComfyTV Bot](/guides/bot). Both default to **off**; the Bot switch requires MCP and unlocks only when it's on. Turning MCP off also turns the Bot off, and the ✨ icon appears or disappears immediately when you save.
+- **Backup**: automatic snapshots of ComfyTV's data on server start (toggle, retention count, custom path) plus a *Back up now* button. This section also hosts **Enable ComfyTV V2 nodes (experimental)** — the new content-first V2 node shells with light/dark skins; it requires ComfyUI's own *Node 2.0 (Vue nodes)* setting and a page refresh after toggling.
+- **Agent & MCP**: **Enable MCP server** opens the agent endpoint documented in [Agent access (MCP)](/guides/mcp); **Enable ComfyTV Bot** shows the embedded chat agent from [ComfyTV Bot](/guides/bot). Both default to **off**; the Bot switch requires MCP and unlocks only when it's on. Turning MCP off also turns the Bot off, and the ✨ icon appears or disappears immediately when you save. With the Bot on, a **model field per provider** appears here too — leave it blank for each CLI's default or pick one of the discovered suggestions.
+- **Skills**: manage the [Agent Skills](/guides/skills) served to agents — a global **Enable Agent Skills** switch, a per-skill enable toggle, **import** of a skill `.zip`, and delete for user-installed skills. Built-in skills can only be disabled, not deleted.
 
 ---
 

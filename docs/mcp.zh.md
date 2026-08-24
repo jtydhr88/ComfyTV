@@ -2,7 +2,7 @@
 
 # Agent 接入(MCP)
 
-> ComfyTV 内置 MCP 服务,让 AI agent 读取并驱动你的画布:搭建节点图、跑渲染、阻塞等待、用真视觉检查结果、管理工作流配置 — 共 36 个工具。
+> ComfyTV 内置 MCP 服务,让 AI agent 读取并驱动你的画布:搭建节点图、跑渲染、阻塞等待、用真视觉检查结果、编辑原生 ComfyUI 图、管理工作流配置 — 共 45 个工具,外加把已装的 [Agent Skills](skills.zh.md) 作为 MCP prompts 提供。
 
 ## 是什么
 
@@ -46,6 +46,8 @@ url = "http://127.0.0.1:8188/comfytv/mcp"
 | `outputs` | 各 stage 的渲染历史 |
 | `assets` / `resources` / `entries` | 资产库、LUT/字体/音色文件、提示词条目 |
 | `jobs` / `exec_errors` / `servers` | 远程任务、近期错误、机器列表 |
+| `node_info` | 搜索 ComfyUI 已装节点类并查看其输入/输出 |
+| `skill` | 列出已装的 [Agent Skills](skills.zh.md) 并读取其指令 — 工具自身的 description 内嵌一份实时技能索引 |
 
 **搭建与运行**
 
@@ -57,6 +59,18 @@ url = "http://127.0.0.1:8188/comfytv/mcp"
 | `wait_stage` | 阻塞等待出结果或报错 — 不用轮询 |
 | `cancel_stage` | 停止进行中的运行 |
 | `remove_stage` | 删节点 |
+| `arrange_canvas` | 整理画布布局(行/列/网格) |
+
+**原生 ComfyUI 图**
+
+| 工具 | 作用 |
+|---|---|
+| `graph_get` | 读原生画布图 — 所有节点、widget、连线、分组,不限 ComfyTV 节点 |
+| `graph_edit` | 批量编辑原生图:加/删/克隆节点、设 widget、连线、分组、折叠、bypass、打包/解包子图 — 整批一个撤销步 |
+| `graph_run` | 像点 ComfyUI 的 Run 按钮一样排队原生图并等待产出 |
+| `workflow_create` | 用 API 格式的图为某个 stage kind 新建一个工作流文件 |
+| `canvas_command` | 白名单原生命令:撤销/重做、保存、适配视图、中断、刷新节点定义 |
+| `canvas_focus` | 选中节点并把用户视口平滑移过去 — 展示你改了什么 |
 
 **看见与评判**
 
@@ -98,6 +112,10 @@ url = "http://127.0.0.1:8188/comfytv/mcp"
 
 **多机。**`servers` 列出配置的机器和实时负载;`set_stage {server: <id>}` 把某节点的运行路由过去,结果落回本机。
 
+**两层图。**stage 工具(`add_stage`/`set_stage`/…)工作在 ComfyTV 产品层;`graph_*` 家族直接编辑底下的原生 ComfyUI 图 — 任何插件的任何节点。有现成 stage 就用 stage;要搭裸管线就下到 `graph_edit` + `graph_run`,再用 `canvas_focus` 给用户看你改了哪。
+
+**技能。**用户装了 [Agent Skills](skills.zh.md) 时,`skill` 工具的 description 会列出它们;任务命中就先读再照做。每个启用的技能同时暴露为一条 **MCP prompt** — 在 Claude Code 里表现为 `/mcp__comfytv__<技能名>` 斜杠命令,可显式调用。
+
 ## 前置条件与行为说明
 
 - 写工具需要开着的 ComfyTV 页面（Comfy Desktop 或浏览器均可）;画布镜像在首次 MCP 调用后懒激活(刚连上时 `get_canvas` 等 ~10 秒重试)。
@@ -107,5 +125,6 @@ url = "http://127.0.0.1:8188/comfytv/mcp"
 ## 另见
 
 - [ComfyTV Bot](bot.zh.md) — 基于同一套工具的内嵌聊天代理
+- [Agent Skills](skills.zh.md) — 经 `skill` 工具和 MCP prompts 提供的指令包
 - [自定义工作流](custom-workflows.zh.md) — 绑定是什么、手工怎么配
 - [侧边栏](sidebar.zh.md) — 带 MCP 开关的设置面板

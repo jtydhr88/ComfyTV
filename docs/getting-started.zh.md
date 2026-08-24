@@ -36,7 +36,7 @@ git clone https://github.com/jtydhr88/ComfyTV
 放一个 **Project** 节点来命名/切换当前项目。你生成的一切都归档在项目下——带完整输出历史——重新加载工作流时自动恢复。
 
 ### 侧边栏
-左侧 **ComfyTV** 侧边栏有七个页签：**工作流**（选中 stage 的配置编辑器）、**资产库**（媒体库）、**条目**（可复用提示词片段，用 `@label` 引用）、**Stage 管理**（按 kind 的工作流 + 自定义参数、★ 默认）、**预设**、**资源**（LUT/字体/SoundFont）、**服务器**（让 stage 跑在别的机器上）。完整导览：[sidebar.zh.md](sidebar.zh.md)。
+左侧 **ComfyTV** 侧边栏有八个页签：**工作流**（选中 stage 的配置编辑器）、**资产库**（媒体库）、**条目**（可复用提示词片段，用 `@label` 引用）、**Stage 管理**（按 kind 的工作流 + 自定义参数、★ 默认）、**预设**、**资源**（LUT/字体/SoundFont）、**服务器**（让 stage 跑在别的机器上）、**设置**（备份、实验性 V2 节点皮肤,以及 agent 三开关——MCP、Bot、技能）。完整导览：[sidebar.zh.md](sidebar.zh.md)。
 
 ---
 

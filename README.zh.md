@@ -21,8 +21,10 @@ ComfyTV 把 ComfyUI 变成一个**类 TapNow / LibTV 型的画布式应用**—�
 - **以项目为单位**：stage 归属于项目；每次输出都带完整历史保存，刷新页面/重启后自动恢复。
 - **你的模型、你的工作流**：`workflows/<kind>/` 下自带一套精选工作流，全部跑在你自己的本地模型上。任何 ComfyUI 工作流都能以 JSON 导入，在侧边栏 GUI 里绑定输入，按 stage 保存预设、星标默认工作流。
 - **融入 ComfyUI 生态**：子图、第三方插件开箱即用；**Bridge 节点**能把任意插件接进 ComfyTV 流水线；远程 ComfyUI 机器可注册为额外的 Runner（Servers 页签），带能力预检。
-- **内置多库**：项目级**资产库**（图/视频/音频/3D 模型）、**资源库**（LUT、字体、SoundFont）和可复用的**提示词片段**——都住在[七页签侧边栏](docs/sidebar.zh.md)里，且都能在任意提示词里用 `@` 引用。
+- **内置多库**：项目级**资产库**（图/视频/音频/3D 模型）、**资源库**（LUT、字体、SoundFont）和可复用的**提示词片段**——都住在[八页签侧边栏](docs/sidebar.zh.md)里，且都能在任意提示词里用 `@` 引用。
 - **节点内富编辑器**：很多 stage 在节点里内嵌真正的编辑器——图层编辑器、故事板工作台、钢琴卷帘、3D 视口、示波器等；多数视频特效带实时预览。
+- **Agent 原生**：内嵌 [Bot](docs/bot.zh.md)、45 工具的 [MCP 服务](docs/mcp.zh.md)、可安装的 [Agent Skills](docs/skills.zh.md)——见下方 Agents 一节。
+- **双皮肤**：经典节点壳之外,还有实验性的内容优先 **V2 皮肤**（亮暗双色）,设置里一键切换。
 
 ## 内容一览
 
@@ -57,7 +59,7 @@ Score 节点支持 MusicXML 与刻谱渲染，钢琴卷帘式的**打谱器和 M
 Scene3D DCC 式工作台（多相机、相机路径关键帧、多通道视口捕获），3D 模型生成与加载，几何工坊（网格操作、布尔、基元、贴图烘焙），PBR 材质节点 + 按部件绑材质，3D 转线稿渲染。
 
 ### 编排与流转
-自动生成的挑选器（图/音频/视频）、A/B 对比、轨道式 Sequence 拼装；完整的导演时间线和「故事板 → 分镜出图」流水线在 [roadmap](docs/roadmap.zh.md) 上。
+自动生成的挑选器（图/音频/视频）、A/B 对比、轨道式 Sequence 拼装,以及**导演台**：逐镜的 clip 时间线,每一段都是生成出来的,带逐段转场、跨镜共享参考演员表、内容寻址缓存（只重渲改过的段）,以及带刻度尺、播放头、成片统一预览的总时间轴。「故事板 → 分镜出图」流水线在 [roadmap](docs/roadmap.zh.md) 上。
 
 ---
 
@@ -92,7 +94,7 @@ git clone https://github.com/jtydhr88/ComfyTV
 | 指南 | 覆盖范围 |
 |-------|----------------|
 | [getting-started.zh.md](docs/getting-started.zh.md) | 安装、画布基础、第一次生成、逐节点 Run、从批量中挑选 |
-| [sidebar.zh.md](docs/sidebar.zh.md) | 七页签侧边栏：工作流配置、资产库、提示词片段、Stage 管理、预设、资源、服务器——外加提示词里的 `@` 引用 |
+| [sidebar.zh.md](docs/sidebar.zh.md) | 八页签侧边栏：工作流配置、资产库、提示词片段、Stage 管理、预设、资源、服务器、设置——外加提示词里的 `@` 引用 |
 | [generate.zh.md](docs/generate.zh.md) | 文本/图/视频/音频生成，选模型，跑起来 |
 | [image-tools.zh.md](docs/image-tools.zh.md) | 裁剪、旋转、镜像、Inpaint、擦除、抠图、放大、扩图、宫格切分、变体、多视角、重打光 |
 | [panorama.zh.md](docs/panorama.zh.md) | 加载/查看 360° 全景图，单视角 + 多视角截图 |
@@ -104,6 +106,27 @@ git clone https://github.com/jtydhr88/ComfyTV
 | [custom-workflows.zh.md](docs/custom-workflows.zh.md) | 把你自己的 ComfyUI 工作流以 JSON 形式接进来（不改 Python） |
 | [sidebar-config-editor.zh.md](docs/sidebar-config-editor.zh.md) | 用侧边栏 GUI 编辑 stage 输入到工作流节点的绑定 |
 | [bridges.zh.md](docs/bridges.zh.md) | 通过 Bridge 节点接入第三方 ComfyUI 插件（mesh2motion、IPAdapter 等） |
+| [mcp.zh.md](docs/mcp.zh.md) | MCP 端点：45 个 agent 工具、客户端接入、关键套路 |
+| [bot.zh.md](docs/bot.zh.md) | 内嵌侧边栏聊天代理：provider、附件、技能 |
+| [skills.zh.md](docs/skills.zh.md) | Agent Skills：格式、管理、怎么写自己的 |
+
+---
+
+## Agents —— Bot、MCP 服务、Skills
+
+ComfyTV 天生就是给 AI agent 和人一起用的。三块能力,都在**设置**页签里管理（MCP 与 Bot 默认关闭）：
+
+**ComfyTV Bot** —— 内嵌在侧边栏的聊天代理（✨）。说出你要什么,它就搭节点、跑工作流、等渲染、用真视觉看结果并迭代。驱动的是你本机已装的 agent CLI——**Claude Code、Codex、Qwen Code**——或任何 OpenAI 兼容的**本地 LLM 服务**;绝不存任何 API key。支持图/视频/音频附件、按 provider 选模型、对话持久化。[指南 →](docs/bot.zh.md)
+
+**MCP 服务** —— 内置的 [MCP](https://modelcontextprotocol.io) 端点 `/comfytv/mcp`,共 **45 个工具**：读实时画布、建/跑/等 stage、亲眼检查结果（`view_image` 返回真像素）、编辑**原生 ComfyUI 图**（`graph_edit` / `graph_run`——任何插件的任何节点）、管理工作流绑定。跑在 ComfyUI 服务进程里,零额外安装：
+
+```
+claude mcp add --transport http comfytv http://127.0.0.1:8188/comfytv/mcp
+```
+
+画布写操作由打开着的 ComfyTV 页面执行（Comfy Desktop 或浏览器）。端点与 ComfyUI 共用同一信任边界——8188 端口的暴露请自行斟酌。搭配官方 [comfy-mcp](https://github.com/Comfy-Org/comfy-mcp) 覆盖机器层（装节点、下模型）。[指南 →](docs/mcp.zh.md)
+
+**Agent Skills** —— 可安装的 `SKILL.md` 指令包（开放的 Agent Skills 格式）,把你的方法论教给 agent。上面所有 agent 都能自动发现;在 Bot 里打 `/` 显式调用,在 Claude Code 里则是 `/mcp__comfytv__<名字>` 斜杠命令。内置一个技能：`h3-cinematic-director`,导演级的 MiniMax H3 生产方法论。[指南 →](docs/skills.zh.md)
 
 ---
 

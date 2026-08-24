@@ -51,7 +51,9 @@ Details worth knowing:
 ## Using the panel
 
 - **Conversations** are persistent: the list supports pin, rename and delete; each chat remembers its full context across turns (the CLI resumes the same session).
-- **Streaming**: replies stream in live; tool calls appear as collapsible chips (e.g. `add_stage`, `wait_stage`) so you can watch it work the canvas in real time — nodes appear and run on your canvas as it goes.
+- **Streaming**: replies stream in live; tool activity collapses into a drawer (closed by default) with chips per call (e.g. `add_stage`, `wait_stage`) so you can watch it work the canvas in real time — nodes appear and run on your canvas as it goes.
+- **Attachments**: on providers that support them, attach images / video / audio via the 📎 buttons, by dragging files in, picking from the asset library, or pasting. Videos are summarized with a middle frame, audio with a waveform, so the agent can actually *see* what you sent.
+- **Skills**: type **`/`** in the input to open the skill palette — pick an installed [Agent Skill](skills.md) and it becomes a chip on your message; the agent reads that skill first and follows its instructions for the task.
 - **Stop** aborts the current turn; partial output is kept.
 - Switching sidebar tabs (or closing the panel) does not interrupt a running turn — the turn continues server-side and the transcript catches up when you return.
 
@@ -71,4 +73,5 @@ Each turn spawns a fresh CLI process in headless mode, locked down to the ComfyT
 ## See also
 
 - [Agent access (MCP)](mcp.md) — the toolset the bot uses, and how to connect external agents
+- [Agent Skills](skills.md) — instruction packs the bot (and external agents) can invoke
 - [Sidebar](sidebar.md) — the Settings panel with both switches

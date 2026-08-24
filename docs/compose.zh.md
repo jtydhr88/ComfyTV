@@ -37,4 +37,4 @@
   ![故事板编辑器](images/storyboard-editor.png)
 
 - **Sequence**（Video）—— 轻量的轨道式拼装器，见 [video-and-audio.zh.md](video-and-audio.zh.md)。
-- **Director Timeline + Timeline Render** —— 完整的素材时间线 + 一键渲染在 [roadmap](https://github.com/jtydhr88/ComfyTV/blob/main/docs/roadmap.zh.md) 上。
+- **Director 导演台** —— 逐镜生产控制台:clip 时间线上每一段都是生成出来的(文生/图生/参考生视频),带逐段转场、跨镜共享参考演员表、内容寻址缓存(只重渲改过的段),以及带刻度尺、播放头、成片统一预览的**总时间轴**(整片连播,或逐段审片)。详见节点参考里的 Director 各页。

@@ -2,7 +2,7 @@
 
 # Agent access (MCP)
 
-> ComfyTV ships an MCP server so AI agents can read and drive your canvas: build node graphs, run stages, wait for renders, inspect results with real vision, and manage your workflow configuration — all through 36 tools.
+> ComfyTV ships an MCP server so AI agents can read and drive your canvas: build node graphs, run stages, wait for renders, inspect results with real vision, edit the native ComfyUI graph, and manage your workflow configuration — all through 45 tools, plus installed [Agent Skills](skills.md) served as MCP prompts.
 
 ## What it is
 
@@ -50,6 +50,8 @@ accordingly.
 | `outputs` | Render history per stage |
 | `assets` / `resources` / `entries` | Asset library, LUT/font/soundfont files, prompt snippets |
 | `jobs` / `exec_errors` / `servers` | Remote jobs, recent errors, machine list |
+| `node_info` | Search ComfyUI's installed node classes and inspect their inputs/outputs |
+| `skill` | List installed [Agent Skills](skills.md) and read their instructions — the tool's own description carries a live index of what's installed |
 
 **Build & run**
 
@@ -61,6 +63,18 @@ accordingly.
 | `wait_stage` | Block until the run lands an output or errors — no polling |
 | `cancel_stage` | Stop an in-flight run |
 | `remove_stage` | Delete a node |
+| `arrange_canvas` | Tidy the canvas layout (rows, columns, grids) |
+
+**Native ComfyUI graph**
+
+| Tool | What it does |
+|---|---|
+| `graph_get` | Read the native canvas graph — every node, widget, link and group, ComfyTV or not |
+| `graph_edit` | Batch-edit the native graph: add/remove/clone nodes, set widgets, wire links, group, collapse, bypass, pack/unpack subgraphs — one undo step |
+| `graph_run` | Queue the native graph exactly like ComfyUI's Run button and wait for the outputs |
+| `workflow_create` | Author a brand-new workflow file for a stage kind from an API-format graph |
+| `canvas_command` | Whitelisted native commands: undo/redo, save, fit view, interrupt, refresh node definitions |
+| `canvas_focus` | Select a node and glide the user's viewport to it — show the user what changed |
 
 **See & judge**
 
@@ -102,6 +116,10 @@ accordingly.
 
 **Multi-machine.** `servers` lists configured machines with live load; `set_stage {server: <id>}` routes a stage's runs there. Results land back on the local machine.
 
+**Two graph layers.** Stage tools (`add_stage`/`set_stage`/…) work at the ComfyTV product layer; the `graph_*` family edits the underlying native ComfyUI graph — any node from any plugin. Use stages when one exists for the job; drop to `graph_edit` + `graph_run` to build raw pipelines, and `canvas_focus` to show the user what you changed.
+
+**Skills.** When the user has [Agent Skills](skills.md) installed, the `skill` tool's description lists them; read a matching skill before acting and follow it. Each enabled skill is also exposed as an **MCP prompt** — in Claude Code they appear as `/mcp__comfytv__<skill-name>` slash commands for explicit invocation.
+
 ## Requirements and behavior notes
 
 - Write tools need an open ComfyTV page in Desktop or a browser; the canvas mirror activates lazily after the first MCP call (retry `get_canvas` after ~10 s on a fresh connection).
@@ -111,5 +129,6 @@ accordingly.
 ## See also
 
 - [ComfyTV Bot](bot.md) — the embedded chat agent built on these same tools
+- [Agent Skills](skills.md) — instruction packs served through the `skill` tool and MCP prompts
 - [Custom workflows](custom-workflows.md) — what bindings are, hand-edited
 - [Sidebar](sidebar.md) — the Settings panel with the MCP switch

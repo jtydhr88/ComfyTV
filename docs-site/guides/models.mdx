@@ -48,13 +48,49 @@ Download:
 
 ---
 
+## Generate · Video (MiniMax H3)
+
+All three variants share the text encoder and the two VAEs; the diffusion model and Turbo LoRA differ between the FL2VA pair and Ref2VA.
+
+| Workflow | Files | Folder |
+|---|---|---|
+| **Local MiniMax H3 T2V** / **FLF2V** | `minimax_h3_fl2va_pruned_int8_convrot.safetensors`, `qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors`, `minimax_h3_video_vae_fp16.safetensors`, `minimax_h3_audio_vae_fp32.safetensors`, `minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors` *(Lightning, optional)* | `diffusion_models/`, `text_encoders/`, `vae/`, `vae/`, `loras/` |
+| **Local MiniMax H3 R2V** (multi-reference) | `minimax_h3_ref2va_pruned_int8_convrot.safetensors`, text encoder + both VAEs as above, `minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors` *(Lightning, optional)* | `diffusion_models/`, …, `loras/` |
+
+The **Lightning** LoRAs cut generation to 8 steps (FL2VA) / 4 steps (Ref2VA) — roughly half the wall-clock time — and are wired into the shipped workflows; skip the download and the workflow still runs full-step.
+
+Download:
+- Base + text encoder + VAEs: https://huggingface.co/Comfy-Org/MiniMax-H3
+- FL2VA Turbo LoRA: https://huggingface.co/lightx2v/Minimax-h3-Turbo
+
+---
+
 ## Generate · Audio
 
 | Workflow | Files | Folder |
 |---|---|---|
 | **ACE-Step v1 Song** | `ace_step_v1_3.5b.safetensors` | `checkpoints/` |
+| **MiniMax Music 3** | `minimax_music3_dit_fp16.safetensors`, `minimax_music3_text_encoder_pruned_int8_convrot.safetensors`, `minimax_music3_dav.safetensors` | `diffusion_models/`, `text_encoders/`, `vae/` |
 
-ACE-Step v1 ships natively in ComfyUI core — no custom node needed.
+ACE-Step v1 and MiniMax Music 3 both run on ComfyUI core nodes — no custom node needed.
+
+Download: https://huggingface.co/Comfy-Org/MiniMax-Music-3
+
+---
+
+## Generate · 3D Model
+
+| Workflow | Files | Folder |
+|---|---|---|
+| **Hunyuan3D 2.1** (image → mesh) | `hunyuan_3d_v2.1.safetensors` | `checkpoints/` |
+| **MoGe-2 Mesh** (image → geometry) | `moge_2_vitl_normal_fp16.safetensors` | `geometry_estimation/` |
+| **TripoSplat Gaussian** (image → splat) | `triposplat_fp16.safetensors`, `dino_v3_vit_h.safetensors`, `flux2-vae.safetensors`, `triposplat_vae_decoder_fp16.safetensors`, `birefnet.safetensors` | `diffusion_models/`, `clip_vision/`, `vae/`, `vae/`, `background_removal/` |
+
+Download:
+- Hunyuan3D 2.1: https://huggingface.co/Comfy-Org/hunyuan3D_2.1_repackaged
+- MoGe-2: https://huggingface.co/Comfy-Org/MoGe_safetensors
+- TripoSplat: https://huggingface.co/VAST-AI/TripoSplat
+- BiRefNet (background removal): https://huggingface.co/Comfy-Org/BiRefNet
 
 ---
 

@@ -37,4 +37,4 @@ When one picker isn't enough, ComfyTV has larger arranging surfaces:
   ![Storyboard Editor](images/storyboard-editor.png)
 
 - **Sequence** (Video) — a lightweight track-style clip assembler; see [video-and-audio.md](video-and-audio.md).
-- **Director Timeline + Timeline Render** — a full clip timeline with a one-click render is on the [roadmap](https://github.com/jtydhr88/ComfyTV/blob/main/docs/roadmap.md).
+- **Director** — the shot-by-shot production console: a clip timeline where every clip is generated (text/image/reference-to-video), with per-clip transitions, a shared reference cast for cross-shot consistency, content-addressed caching so only changed clips re-render, and a **master timeline** with a ruler, playhead, and unified film preview (play the whole cut, or audit clip by clip). See the Director pages in the Node Reference.

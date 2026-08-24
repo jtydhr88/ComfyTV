@@ -20,6 +20,8 @@
 - **Volume / Mux Audio / Demux** —— 淡入淡出、替换或叠加音轨、把视频拆成音轨 + 无声视频（🔀 **Demux** 工具栏动作会同时生成两个节点）。
 - **↪ Extend**（工具栏动作）—— 一键成链：抽出源视频最后一帧，spawn 新 Video Stage 并把这帧接成 I2V 起始图。
 
+**时间线 widget 的键盘操作**（Clip、Split、Extract Frames 等）：点选轨道后,**`←` / `→`** 把当前手柄精确移动一帧,**`Home` / `End`** 跳到首/末帧——帧级精度剪辑,不用拿鼠标抠像素。各套件的数字滑块也支持**直接键入**：点数字、输入,自动夹取到合法范围。
+
 后端还没接上的：**Video Upscale**、**Subtitle Erase（Smart / Region）**——见 [roadmap.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/roadmap.zh.md)。
 
 ## 调色（ComfyTV / VideoFX）

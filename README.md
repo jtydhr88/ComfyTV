@@ -21,8 +21,10 @@ Today that means **~190 stages**, each with its own reference page.
 - **Project-centric**: stages belong to a project; every output is kept with full history and restores on reload.
 - **Your models, your workflows**: a curated set of workflows ships under `workflows/<kind>/`, all running against your own local models. Import any ComfyUI workflow as JSON, bind its inputs in the sidebar GUI editor, save per-stage presets, and star a default workflow per stage.
 - **Part of the ComfyUI ecosystem**: subgraphs and third-party plugins just work; **Bridge nodes** connect any plugin into a ComfyTV pipeline; remote ComfyUI machines can be registered as extra runners (Servers tab) with capability preflight.
-- **Libraries built in**: a project **asset library** (images / video / audio / 3D models), a **resource library** (LUTs, fonts, SoundFonts), and reusable **prompt fragments** — all in the [7-tab sidebar](docs/sidebar.md), and all reachable from any prompt via `@` references.
+- **Libraries built in**: a project **asset library** (images / video / audio / 3D models), a **resource library** (LUTs, fonts, SoundFonts), and reusable **prompt fragments** — all in the [8-tab sidebar](docs/sidebar.md), and all reachable from any prompt via `@` references.
 - **Rich in-node editors**: many stages embed a real editor in the node — layer editor, storyboard workbench, piano rolls, 3D viewports, scopes — with live previews on most video effects.
+- **Agent-native**: an embedded [Bot](docs/bot.md), a 45-tool [MCP server](docs/mcp.md), and installable [Agent Skills](docs/skills.md) — see the Agents section below.
+- **Two looks**: the classic node shells, plus an experimental content-first **V2 skin** (light + dark) behind a Settings toggle.
 
 ## What's inside
 
@@ -57,7 +59,7 @@ Score stage with MusicXML and engraved notation, piano-roll **score and MIDI edi
 Scene3D DCC-style stage (multi-camera, keyframed camera paths, multi-channel viewport capture), 3D model generation and loaders, a geometry workshop (mesh ops, booleans, primitives, map baking), PBR material stage with per-part material binding, and line-art rendering from 3D.
 
 ### Compose & flow
-Auto-spawned pickers (image / audio / video), A/B compare, track-style sequence assembly; a full director timeline and a storyboard → per-shot image pipeline are on the [roadmap](docs/roadmap.md).
+Auto-spawned pickers (image / audio / video), A/B compare, track-style sequence assembly, and a **Director console**: a shot-by-shot clip timeline where every clip is generated, with per-clip transitions, a shared reference cast for cross-shot consistency, content-addressed caching (only changed clips re-render), and a master timeline with ruler, playhead and unified film preview. A storyboard → per-shot image pipeline is on the [roadmap](docs/roadmap.md).
 
 ---
 
@@ -92,7 +94,7 @@ The full documentation lives at **[comfytv.org](https://comfytv.org)** — guide
 | Guide | What it covers |
 |-------|----------------|
 | [getting-started.md](docs/getting-started.md) | Install, the canvas basics, your first generation, per-node Run, picking from a set |
-| [sidebar.md](docs/sidebar.md) | The 7-tab sidebar: workflow config, asset library, prompt fragments, stage manager, presets, resources, servers — plus `@` references in prompts |
+| [sidebar.md](docs/sidebar.md) | The 8-tab sidebar: workflow config, asset library, prompt fragments, stage manager, presets, resources, servers, settings — plus `@` references in prompts |
 | [generate.md](docs/generate.md) | Text / Image / Video / Audio generation, choosing a model, running |
 | [image-tools.md](docs/image-tools.md) | Crop, Rotate, Mirror, Inpaint, Erase, Cutout, Upscale, Outpaint, Grid Split, Variations, Multiangle, Relight |
 | [panorama.md](docs/panorama.md) | Loading/viewing a 360° panorama, capturing single + multi viewports |
@@ -104,26 +106,27 @@ The full documentation lives at **[comfytv.org](https://comfytv.org)** — guide
 | [custom-workflows.md](docs/custom-workflows.md) | Adding your own ComfyUI workflow as a JSON file (no Python edits) |
 | [sidebar-config-editor.md](docs/sidebar-config-editor.md) | The sidebar GUI for editing how a stage's inputs map to its workflow nodes |
 | [bridges.md](docs/bridges.md) | Connecting third-party ComfyUI plugins (mesh2motion, IPAdapter, …) via Bridge nodes |
+| [mcp.md](docs/mcp.md) | The MCP endpoint: 45 agent tools, connecting clients, agent patterns |
+| [bot.md](docs/bot.md) | The embedded sidebar chat agent: providers, attachments, skills |
+| [skills.md](docs/skills.md) | Agent Skills: the format, managing them, writing your own |
 
 ---
 
-## MCP server (agent access)
+## Agents — Bot, MCP server, Skills
 
-ComfyTV ships a built-in, **read-only** [MCP](https://modelcontextprotocol.io) endpoint so AI agents (Claude Code, Claude Desktop, any MCP client) can inspect your ComfyTV state — projects, the live canvas, workflows, outputs, assets, remote jobs, and recent execution errors. Nothing here can run or modify anything.
+ComfyTV is built to be driven by AI agents as well as by hand. Three pieces, all managed from the **Settings** tab (MCP and the Bot are off by default):
 
-It runs inside the ComfyUI server process — no extra install:
+**ComfyTV Bot** — a chat agent embedded in the sidebar (✨). Describe what you want; it builds nodes, runs workflows, waits for renders, looks at the results with real vision and iterates. It drives your locally installed agent CLI — **Claude Code, Codex, Qwen Code** — or any OpenAI-compatible **local LLM server**; no API keys are ever stored. Image / video / audio attachments, per-provider model choice, persistent conversations. [Guide →](docs/bot.md)
+
+**MCP server** — a built-in [MCP](https://modelcontextprotocol.io) endpoint at `/comfytv/mcp` with **45 tools**: read the live canvas, build / run / wait on stages, inspect results (`view_image` returns actual pixels), edit the **native ComfyUI graph** (`graph_edit` / `graph_run` — any node from any plugin), and manage workflow bindings. It runs inside the ComfyUI server process — no extra install:
 
 ```
 claude mcp add --transport http comfytv http://127.0.0.1:8188/comfytv/mcp
 ```
 
-Notes:
+Canvas writes are executed by the open ComfyTV page (Comfy Desktop or a browser). The endpoint shares ComfyUI's trust boundary — expose port 8188 carefully. Pairs with the official [comfy-mcp](https://github.com/Comfy-Org/comfy-mcp) for the machine layer (installing nodes, downloading models). [Guide →](docs/mcp.md)
 
-- **Canvas visibility needs an open ComfyTV page.** The `get_canvas` tool reads a snapshot the ComfyTV frontend mirrors to the backend every few seconds; that page can be inside Comfy Desktop or a browser. With no page open the tool reports `available: false` rather than guessing.
-- **Zero cost when unused.** The canvas mirror stays dormant until an MCP client actually connects — users who never attach an agent get no background ticks or requests. Right after connecting, give the mirror ~10 seconds to warm up before the first `get_canvas`.
-- **Trust boundary.** The endpoint has the same (lack of) auth as every other ComfyUI route — if you expose port 8188 beyond localhost, the MCP endpoint is exposed with it.
-- **Pairs with [comfy-mcp](https://github.com/Comfy-Org/comfy-mcp).** comfytv-mcp covers the product layer (projects/canvas/stages); the official comfy-mcp covers the machine layer (installing nodes, downloading models, running raw workflows). Agents work best with both connected.
-- Local stage failures are also captured in a small in-memory buffer (`exec_errors` tool / `GET /comfytv/exec_errors`) so an agent can diagnose a failed run without tailing logs.
+**Agent Skills** — installable `SKILL.md` instruction packs (the open Agent Skills format) that teach agents your methodologies. Every agent above discovers them automatically; invoke one explicitly from the Bot by typing `/`, or from Claude Code as a `/mcp__comfytv__<name>` slash command. One skill ships built in: `h3-cinematic-director`, a director-grade MiniMax H3 production methodology. [Guide →](docs/skills.md)
 
 ---
 

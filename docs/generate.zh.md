@@ -34,13 +34,18 @@
 
 ![Video stage](images/video-run.png)
 
-- **workflow** —— LTX 2.3 四个变体全部自带：
-  - `Local LTX 2.3 T2V` —— 文生视频。
-  - `Local LTX 2.3 I2V` —— 图生视频。
-  - `Local LTX 2.3 FLF2V` —— 首尾帧生视频。在 **images** 上接**两张**图（起始 + 结束关键帧）。
-  - `Local LTX 2.3 IA2V` —— 图 + 音频生视频。
+- **workflow** —— 自带两个家族：
+  - **LTX 2.3**（纯视频）：
+    - `Local LTX 2.3 T2V` —— 文生视频。
+    - `Local LTX 2.3 I2V` —— 图生视频。
+    - `Local LTX 2.3 FLF2V` —— 首尾帧生视频。在 **images** 上接**两张**图（起始 + 结束关键帧）。
+    - `Local LTX 2.3 IA2V` —— 图 + 音频生视频。
+  - **MiniMax H3**（一趟直出**带声音**的视频——环境声、拟音甚至对白）：
+    - `Local MiniMax H3 T2V` —— 文生视频+音频。
+    - `Local MiniMax H3 FLF2V` —— 首尾帧生视频+音频。
+    - `Local MiniMax H3 R2V` —— 多参考：接入多张图（角色设定、场景、道具、风格）和可选的参考音频,在提示词里用 `@image_N` / `<Audio N>` 指名引用,跨镜锁定身份与连续性。H3 工作流内置 **Lightning** LoRA,生成耗时约减半（见 [models.zh.md](models.zh.md)）。
 - **resolution / aspect_ratio / duration**：输出尺寸、画幅、时长。
-- **audio** 输入 —— IA2V 必需；其他 LTX 工作流不用音频。
+- **audio** 输入 —— IA2V 必需；H3 R2V 作参考音频；其余工作流不用音频。
 
 出片之后，整个[视频套件](video-and-audio.zh.md)——剪辑、调色、抠像、合成、特效——就接手了。
 
@@ -58,13 +63,18 @@
 
 ![Music stage](images/audio-run.png)
 
-文生音乐，走 **ACE-Step v1 3.5B**：
+文生音乐，自带两个工作流：
+
+- **ACE-Step v1 Song** —— 轻量默认。
+- **MiniMax Music 3** —— 更高质量的完整歌曲。
+
+共同参数：
 
 - **提示词**：自由 tags——曲风、情绪、BPM、乐器编制。
 - **歌词**（可选）：留空 = 纯器乐；非空 = 人声曲目。
 - **时长**：滑块（1–240 秒，默认 30）。
 
-输出是一个 FLAC 音频文件。之后[音频套件](video-and-audio.zh.md)（均衡、分轨、混响……）和 [Music 节点](making-music.zh.md)都能接手。
+输出是一个音频文件。之后[音频套件](video-and-audio.zh.md)（均衡、分轨、混响……）和 [Music 节点](making-music.zh.md)都能接手。
 
 ---
 
@@ -82,4 +92,10 @@
 <!-- TODO(screenshot): 3D Model Stage（轨道预览视口） -->
 ![3D model stage](images/model3d-run.png)
 
-通过 `model` kind 的工作流生成 **3D 模型（GLB）**——Link 或 Upload 你自己的工作流（例如 Hunyuan3D 的图）；默认不自带。节点内嵌轨道预览；旋转视角后会自动截图进它的图片输出，下游图像 stage 可以直接消费模型的外观。GLB 本体流向 3D 节点——Scene3D、网格操作、材质，详见节点参考。
+通过 `model` kind 的工作流生成 **3D 模型（GLB）**。自带三个：
+
+- **Hunyuan3D 2.1** —— 图生带贴图网格。
+- **MoGe-2 Depth Mesh** —— 单目深度估计图生几何。
+- **TripoSplat Gaussian** —— 图生高斯泼溅（也能载入 Scene3D）。
+
+三者所需模型文件见 [models.zh.md](models.zh.md)；也可以 Link 或 Upload 你自己的 `model` kind 工作流。节点内嵌轨道预览；旋转视角后会自动截图进它的图片输出，下游图像 stage 可以直接消费模型的外观。GLB 本体流向 3D 节点——Scene3D、网格操作、材质，详见节点参考。

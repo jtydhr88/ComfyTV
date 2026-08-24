@@ -1,13 +1,13 @@
 ---
 title: "Agent access (MCP)"
-description: "ComfyTV ships an MCP server so AI agents can read and drive your canvas: build node graphs, run stages, wait for renders, inspect results with real vision, and manage your workflow configuration — all through 36 tools."
+description: "ComfyTV ships an MCP server so AI agents can read and drive your canvas: build node graphs, run stages, wait for renders, inspect results with real vision, edit the native ComfyUI graph, and manage your workflow configuration — all through 45 tools, plus installed [Agent Skills](skills.md) served as MCP prompts."
 ---
 
 ## What it is
 
 ComfyTV exposes a [Model Context Protocol](https://modelcontextprotocol.io) endpoint at `POST /comfytv/mcp` on your ComfyUI server. Any MCP-capable agent (Claude Code, or anything speaking streamable HTTP JSON-RPC) can connect and use ComfyTV as a set of tools.
 
-The design has one important twist: **the canvas truth lives in your browser tab**. Read tools answer from the server, but write tools (adding nodes, setting prompts, running stages) are executed *by the open ComfyTV tab* — the server relays commands to it over the websocket. No open tab → write tools fail with a clear timeout message.
+The design has one important twist: **the canvas truth lives in the open ComfyTV page**. Read tools answer from the server, but write tools (adding nodes, setting prompts, running stages) are executed *by the open ComfyTV page* — inside Comfy Desktop or a browser — and the server relays commands to it over the websocket. No open page → write tools fail with a clear timeout message.
 
 ## Enabling
 
@@ -49,6 +49,8 @@ accordingly.
 | `outputs` | Render history per stage |
 | `assets` / `resources` / `entries` | Asset library, LUT/font/soundfont files, prompt snippets |
 | `jobs` / `exec_errors` / `servers` | Remote jobs, recent errors, machine list |
+| `node_info` | Search ComfyUI's installed node classes and inspect their inputs/outputs |
+| `skill` | List installed [Agent Skills](/guides/skills) and read their instructions — the tool's own description carries a live index of what's installed |
 
 **Build & run**
 
@@ -60,6 +62,18 @@ accordingly.
 | `wait_stage` | Block until the run lands an output or errors — no polling |
 | `cancel_stage` | Stop an in-flight run |
 | `remove_stage` | Delete a node |
+| `arrange_canvas` | Tidy the canvas layout (rows, columns, grids) |
+
+**Native ComfyUI graph**
+
+| Tool | What it does |
+|---|---|
+| `graph_get` | Read the native canvas graph — every node, widget, link and group, ComfyTV or not |
+| `graph_edit` | Batch-edit the native graph: add/remove/clone nodes, set widgets, wire links, group, collapse, bypass, pack/unpack subgraphs — one undo step |
+| `graph_run` | Queue the native graph exactly like ComfyUI's Run button and wait for the outputs |
+| `workflow_create` | Author a brand-new workflow file for a stage kind from an API-format graph |
+| `canvas_command` | Whitelisted native commands: undo/redo, save, fit view, interrupt, refresh node definitions |
+| `canvas_focus` | Select a node and glide the user's viewport to it — show the user what changed |
 
 **See & judge**
 
@@ -101,14 +115,19 @@ accordingly.
 
 **Multi-machine.** `servers` lists configured machines with live load; `set_stage {server: <id>}` routes a stage's runs there. Results land back on the local machine.
 
+**Two graph layers.** Stage tools (`add_stage`/`set_stage`/…) work at the ComfyTV product layer; the `graph_*` family edits the underlying native ComfyUI graph — any node from any plugin. Use stages when one exists for the job; drop to `graph_edit` + `graph_run` to build raw pipelines, and `canvas_focus` to show the user what you changed.
+
+**Skills.** When the user has [Agent Skills](/guides/skills) installed, the `skill` tool's description lists them; read a matching skill before acting and follow it. Each enabled skill is also exposed as an **MCP prompt** — in Claude Code they appear as `/mcp__comfytv__<skill-name>` slash commands for explicit invocation.
+
 ## Requirements and behavior notes
 
-- Write tools need an open ComfyTV tab; the canvas mirror activates lazily after the first MCP call (retry `get_canvas` after ~10 s on a fresh connection).
+- Write tools need an open ComfyTV page in Desktop or a browser; the canvas mirror activates lazily after the first MCP call (retry `get_canvas` after ~10 s on a fresh connection).
 - MCP clients cache `tools/list` per session — reconnect after the server gains new tools.
 - If your client enforces a per-call tool timeout, pass a smaller `timeout_s` to `wait_stage` and re-call in slices.
 
 ## See also
 
 - [ComfyTV Bot](/guides/bot) — the embedded chat agent built on these same tools
+- [Agent Skills](/guides/skills) — instruction packs served through the `skill` tool and MCP prompts
 - [Custom workflows](/guides/custom-workflows) — what bindings are, hand-edited
 - [Sidebar](/guides/sidebar) — the Settings panel with the MCP switch
