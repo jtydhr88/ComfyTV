@@ -13,6 +13,7 @@ from .assets import _with_file_missing
 from .canvas_state import get_canvas_state, mirror_summary
 from .capabilities import VERSION
 from .mcp_commands import submit_command
+from .mcp_skill_tool import SKILL_TOOL
 from .stages import stages_payload, workflow_info_payload
 
 
@@ -2441,3 +2442,5 @@ TOOLS: dict[str, dict] = {
         "handler": _wait_stage,
     },
 }
+
+TOOLS["skill"] = SKILL_TOOL

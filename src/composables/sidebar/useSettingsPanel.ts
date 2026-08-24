@@ -8,6 +8,7 @@ import { useBotStore } from '@/stores/botStore'
 
 const AGENT_TOGGLE_KEYS = new Set(['enable-mcp', 'enable-bot'])
 const MODEL_KEY_PREFIX = 'bot-model-'
+const SKILL_KEYS = new Set(['enable-skills', 'skills-disabled'])
 
 function isAgentKey(key: string): boolean {
   return AGENT_TOGGLE_KEYS.has(key) || key.startsWith('bot-')
@@ -44,10 +45,12 @@ export function useSettingsPanel(isActive: () => boolean | undefined) {
   const dirty = computed(() =>
     rows.value.some((r) => values.value[r.key] !== r.value))
   const backupRows = computed(() =>
-    rows.value.filter((r) => !isAgentKey(r.key)))
+    rows.value.filter((r) => !isAgentKey(r.key) && !SKILL_KEYS.has(r.key)))
   const agentRows = computed(() =>
     rows.value.filter((r) => isAgentKey(r.key)
       && (AGENT_TOGGLE_KEYS.has(r.key) || values.value['enable-bot'] === true)))
+  const skillsRows = computed(() =>
+    rows.value.filter((r) => r.key === 'enable-skills'))
   const botToggleLocked = computed(() => values.value['enable-mcp'] !== true)
 
   function syncValues(): void {
@@ -123,6 +126,7 @@ export function useSettingsPanel(isActive: () => boolean | undefined) {
     rows,
     backupRows,
     agentRows,
+    skillsRows,
     botToggleLocked,
     values,
     loading,

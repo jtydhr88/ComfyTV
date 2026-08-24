@@ -48,6 +48,9 @@ _SYSTEM_PROMPT = (
     "a focus problem or asking the user to click the canvas or reply 'ready'.\n"
     "- You have no OS window-control tool. Never claim you can activate a "
     "window or lack permission to do so.\n"
+    "- The skill tool lists installed skills (instruction packs). When a "
+    "task matches one, call skill with action='read' and follow the "
+    "returned instructions.\n"
     "Reply in the user's language."
 )
 

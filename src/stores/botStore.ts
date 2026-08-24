@@ -16,7 +16,7 @@ import {
 import { app } from '@/lib/comfyApp'
 
 export interface BotBlock {
-  type: 'text' | 'tool_use' | 'tool_result' | 'image' | 'video' | 'audio'
+  type: 'text' | 'tool_use' | 'tool_result' | 'image' | 'video' | 'audio' | 'skill'
   text?: string
   name?: string
   input?: Record<string, unknown>
@@ -144,7 +144,8 @@ export const useBotStore = defineStore('bot', () => {
     }
   }
 
-  async function send(text: string, attachments: BotAttachment[] = []): Promise<boolean> {
+  async function send(text: string, attachments: BotAttachment[] = [],
+                      skill?: string): Promise<boolean> {
     const chatId = activeChatId.value
     if (!chatId || (!text.trim() && attachments.length === 0)) return false
     try {
@@ -154,6 +155,7 @@ export const useBotStore = defineStore('bot', () => {
           ...(attachments.length
             ? { attachments: attachments.map(a => ({ asset_id: a.asset_id })) }
             : {}),
+          ...(skill ? { skill } : {}),
         })
       if (activeChatId.value === chatId) {
         const ids = new Set(messages.value.map(m => m.id))

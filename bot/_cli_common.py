@@ -46,6 +46,7 @@ CORE_MCP_TOOLS = [
     "graph_run",
     "canvas_command",
     "canvas_focus",
+    "skill",
 ]
 
 COMFY_MCP_ALLOWED_TOOLS = [

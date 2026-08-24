@@ -16,8 +16,10 @@ import {
   LinkWorkflowResultSchema,
   ListNativeWorkflowsSchema,
   ListRemoteJobsSchema,
+  ImportSkillSchema,
   ListResourcesSchema,
   ListRemoteNativeWorkflowsSchema,
+  ListSkillsSchema,
   ListServerStatusSchema,
   ListServersSchema,
   ListStagePresetsSchema,
@@ -270,6 +272,29 @@ export function renameResource(
 
 export function deleteResource(id: number): Promise<z.infer<typeof OkSchema>> {
   return apiSend(`/comfytv/resources/${id}`, 'DELETE', OkSchema)
+}
+
+export function listSkills(): Promise<z.infer<typeof ListSkillsSchema>> {
+  return apiFetch('/comfytv/skills', ListSkillsSchema)
+}
+
+export function toggleSkill(
+  name: string, enabled: boolean,
+): Promise<z.infer<typeof OkSchema>> {
+  return apiSend(`/comfytv/skills/${encodeURIComponent(name)}`, 'PUT',
+    OkSchema, { enabled })
+}
+
+export function importSkill(file: File): Promise<z.infer<typeof ImportSkillSchema>> {
+  const fd = new FormData()
+  fd.append('file', file)
+  return apiFetch('/comfytv/skills/import', ImportSkillSchema,
+    { method: 'POST', body: fd })
+}
+
+export function deleteSkill(name: string): Promise<z.infer<typeof OkSchema>> {
+  return apiSend(`/comfytv/skills/${encodeURIComponent(name)}`, 'DELETE',
+    OkSchema)
 }
 
 export function fetchSettings(): Promise<z.infer<typeof ListSettingsSchema>> {

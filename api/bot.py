@@ -496,6 +496,13 @@ async def bot_send(request: web.Request) -> web.Response:
         return web.json_response(
             {"error": f"provider {chat['provider']!r} does not support "
                       "attachments"}, status=400)
+    skill_name = str(body.get("skill") or "").strip()
+    if skill_name:
+        from .. import skill_store
+        if skill_store.find_enabled(skill_name) is None:
+            return web.json_response(
+                {"error": f"unknown or disabled skill {skill_name!r}"},
+                status=400)
 
     attachments = []
     manifest_lines = []
@@ -514,12 +521,20 @@ async def bot_send(request: web.Request) -> web.Response:
         {"type": a["media_type"], "url": a["payload_url"], "asset_id": a["id"]}
         for a in attachment_assets
     ]
+    if skill_name:
+        display_blocks.append({"type": "skill", "name": skill_name})
     if text:
         display_blocks.append({"type": "text", "text": text})
 
     provider_text = text or (
         "Look at the attached media and report what you can determine about "
         "it (for audio/video use media_probe and the manifest facts).")
+    if skill_name:
+        provider_text = (
+            f"Use the ComfyTV skill {skill_name!r} for this task: first call "
+            f"the comfytv MCP tool skill with action='read' and "
+            f"name={skill_name!r}, then follow those instructions.\n\n"
+            + provider_text)
     if manifest_lines:
         provider_text += "\n\n" + "\n".join(manifest_lines)
 

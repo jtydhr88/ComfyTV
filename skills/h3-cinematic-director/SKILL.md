@@ -9,10 +9,10 @@ description: Convert approved scripts, shot briefs, storyboards, keyframes, char
 
 Operate as one explicit, self-contained application for four jobs:
 
-1. `分镜设计` — turn an approved dramatic beat into necessary, motivated shots.
-2. `H3提示词` — translate an approved shot into the exact MiniMax H3 prompt schema.
-3. `一致性审片` — compare neighboring shots, keyframes, and assets for continuity failures.
-4. `单点修复` — repair one failed variable without redesigning the approved shot.
+1. `shot-design` — turn an approved dramatic beat into necessary, motivated shots.
+2. `h3-prompt` — translate an approved shot into the exact MiniMax H3 prompt schema.
+3. `continuity-audit` — compare neighboring shots, keyframes, and assets for continuity failures.
+4. `single-variable-repair` — repair one failed variable without redesigning the approved shot.
 
 Treat Higgsfield-style director vocabulary as an internal control layer. Keep MiniMax H3's external field names, order, labels, and timing unchanged.
 
@@ -20,10 +20,10 @@ Treat Higgsfield-style director vocabulary as an internal control layer. Keep Mi
 
 The user may call the skill directly with:
 
-- `$h3-cinematic-director 分镜设计：...`
-- `$h3-cinematic-director H3提示词：...`
-- `$h3-cinematic-director 一致性审片：...`
-- `$h3-cinematic-director 单点修复：...`
+- `$h3-cinematic-director shot-design: ...`
+- `$h3-cinematic-director h3-prompt: ...`
+- `$h3-cinematic-director continuity-audit: ...`
+- `$h3-cinematic-director single-variable-repair: ...`
 
 If no application is named, infer the smallest applicable job from the request. Do not widen the task into story rewriting unless requested.
 
@@ -160,27 +160,27 @@ Load [references/continuity-audit.md](references/continuity-audit.md) and reject
 
 ## Application Outputs
 
-### 分镜设计
+### shot-design
 
 Lead with a continuity note, then a compact shot table. Explain why each shot exists and how it connects to neighboring shots. Do not write H3 prompts unless asked.
 
-### H3提示词
+### h3-prompt
 
 Output the copy-ready H3 prompt first. Follow with a concise production note listing mode, checkpoint, duration, reference roles, and high-risk variables.
 
-### 一致性审片
+### continuity-audit
 
 Return:
 
-1. `通过项`;
-2. `硬连续性错误`;
-3. `镜头逻辑错误`;
-4. `模型生成风险`;
-5. `最小修复方案`.
+1. `passing items`;
+2. `hard continuity errors`;
+3. `shot logic errors`;
+4. `model generation risks`;
+5. `minimal repair plan`.
 
 Do not redesign passing elements.
 
-### 单点修复
+### single-variable-repair
 
 State the failed variable, preserve all approved variables, and provide only the replacement prompt clause or replacement keyframe instruction needed. If the source keyframe itself is wrong, say so explicitly.
 

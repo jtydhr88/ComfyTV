@@ -386,6 +386,10 @@
         "label": "comfy-mcp 命令",
         "desc": "启动 comfy-mcp stdio 服务的命令。留空 = 在 PATH 上找 comfy-mcp。",
         "placeholder": "comfy-mcp"
+      },
+      "enable-skills": {
+        "label": "启用 Agent Skills",
+        "desc": "把已安装的技能通过 MCP(skill 工具 + prompts)提供给外部 agent 和内嵌 bot。"
       }
     },
     "agent": {
@@ -839,6 +843,16 @@
     "removeTitle": "移除资源",
     "removeConfirm": "从库中移除“{name}”？文件将保留在磁盘上。",
     "missing": "文件缺失"
+  },
+  "skills": {
+    "section": "技能",
+    "hint": "技能是 SKILL.md 指令包,经 MCP 提供给 agent。导入包含单个技能文件夹的 .zip;文件存放在 user/comfytv/skills。",
+    "import": "导入技能 (.zip)",
+    "empty": "尚未安装技能",
+    "remove": "删除",
+    "removeTitle": "删除技能",
+    "removeConfirm": "从磁盘删除技能「{name}」?此操作不可恢复。",
+    "source": { "builtin": "内置", "user": "用户" }
   },
   "presets": {
     "imageVariant": {
@@ -2591,6 +2605,7 @@
     "removeAttachment": "移除",
     "dropHint": "拖入图片 / 视频 / 音频作为附件",
     "attachFromLibrary": "从资产库选择",
-    "newChatWith": "选择对话引擎:"
+    "newChatWith": "选择对话引擎:",
+    "removeSkill": "移除技能"
   }
 }

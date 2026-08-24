@@ -261,6 +261,7 @@ class TestSettingsApi:
             "bot-model-claude-code", "bot-model-codex", "bot-model-qwen-code",
             "bot-model-local-llm", "bot-local-llm-url",
             "bot-enable-comfy-mcp", "bot-comfy-mcp-command",
+            "enable-skills", "skills-disabled",
         }
         for r in rows:
             assert set(r) == {"key", "type", "value", "default"}

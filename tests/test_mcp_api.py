@@ -66,7 +66,7 @@ class TestProtocol:
         result = data["result"]
         assert result["protocolVersion"] == "2025-06-18"
         assert result["serverInfo"]["name"] == "comfytv-mcp"
-        assert result["capabilities"] == {"tools": {}}
+        assert result["capabilities"] == {"tools": {}, "prompts": {}}
         assert "add_stage" in result["instructions"]
 
     async def test_initialize_unknown_version_falls_back(self, client):
@@ -123,11 +123,16 @@ class TestProtocol:
             "jsonrpc": "2.0", "id": 2, "method": "ping"})
         assert "Mcp-Session-Id" not in ping.headers
 
-    async def test_resources_and_prompts_are_empty(self, client):
+    async def test_resources_empty_prompts_mirror_skills(self, client, monkeypatch, tmp_path):
         assert (await _rpc(client, "resources/list"))["result"] == {
             "resources": []}
         assert (await _rpc(client, "resources/templates/list"))["result"] == {
             "resourceTemplates": []}
+        from ComfyTV import skill_store
+        empty = tmp_path / "no-skills"
+        empty.mkdir()
+        monkeypatch.setattr(skill_store, "BUILTIN_SKILLS_DIR", empty)
+        monkeypatch.setattr(skill_store, "user_skills_dir", lambda: empty)
         assert (await _rpc(client, "prompts/list"))["result"] == {"prompts": []}
         data = await _rpc(client, "resources/read",
                           {"uri": "comfytv://call/server_info"})
@@ -150,6 +155,7 @@ class TestProtocol:
             "director_get", "director_edit", "view_image", "fx_preview",
             "arrange_canvas",
             "scene_get", "scene_edit", "scene_capture", "scene_record",
+            "skill",
         }
         for t in tools.values():
             assert t["description"]

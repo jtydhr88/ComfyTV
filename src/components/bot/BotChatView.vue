@@ -32,6 +32,13 @@
         >
           <template v-if="msg.role === 'user'">
             <div
+              v-if="userSkill(msg)"
+              class="ctv:inline-flex ctv:items-center ctv:gap-1 ctv:rounded-full ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:px-2 ctv:py-0.5 ctv:text-2xs ctv:font-mono ctv:text-muted-foreground"
+            >
+              <i class="pi pi-bolt ctv:text-[9px]" />
+              /{{ userSkill(msg) }}
+            </div>
+            <div
               v-if="userMedia(msg).length"
               class="ctv:flex ctv:max-w-[85%] ctv:flex-wrap ctv:justify-end ctv:gap-1"
             >
@@ -101,8 +108,37 @@
         @close="pickerOpen = false"
       />
       <div
+        v-if="slashOpen && slashMatches.length"
+        class="ctv:mb-1.5 ctv:max-h-48 ctv:overflow-y-auto ctv:rounded-lg ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:p-1 ctv:flex ctv:flex-col"
+      >
+        <button
+          v-for="s in slashMatches"
+          :key="s.name"
+          class="ctv-bot-skill-option"
+          @click="pickSkill(s)"
+        >
+          <span class="ctv:shrink-0 ctv:font-mono ctv:text-xs ctv:text-base-foreground">/{{ s.name }}</span>
+          <span class="ctv:min-w-0 ctv:truncate ctv:text-2xs ctv:text-muted-foreground">{{ s.description }}</span>
+        </button>
+      </div>
+      <div
         class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:rounded-lg ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:px-2 ctv:py-1.5 ctv:focus-within:border-border"
       >
+        <div v-if="selectedSkill" class="ctv:flex ctv:flex-wrap ctv:gap-1.5">
+          <span
+            class="ctv:inline-flex ctv:items-center ctv:gap-1 ctv:rounded-full ctv:border ctv:border-border-subtle ctv:px-2 ctv:py-0.5 ctv:text-2xs ctv:font-mono ctv:text-base-foreground"
+          >
+            <i class="pi pi-bolt ctv:text-[9px]" />
+            /{{ selectedSkill.name }}
+            <button
+              class="ctv-bot-skill-x"
+              :title="$t('bot.removeSkill')"
+              @click="clearSkill()"
+            >
+              <i class="pi pi-times ctv:text-[9px]" />
+            </button>
+          </span>
+        </div>
         <div v-if="pending.length" class="ctv:flex ctv:flex-wrap ctv:gap-1.5">
           <div
             v-for="att in pending"
@@ -151,7 +187,7 @@
           :disabled="store.busy"
           @input="autoGrow"
           @paste="onPaste"
-          @keydown.enter.exact.prevent="submit"
+          @keydown.enter.exact.prevent="onEnter"
         />
         <div class="ctv:flex ctv:items-center ctv:gap-1.5">
           <template v-if="store.canAttach">
@@ -211,6 +247,7 @@ import { nextTick, onMounted, ref, watch } from 'vue'
 import type { Asset } from '@/api/schemas'
 import AssetPickerPopup from '@/components/stages/AssetPickerPopup.vue'
 import BotMessageBlocks from '@/components/bot/BotMessageBlocks.vue'
+import { useSkillSlash } from '@/composables/functional/useSkillSlash'
 import { importAssetFiles } from '@/composables/sidebar/assetImport'
 import {
   toastLoaderUploadFailed,
@@ -221,6 +258,14 @@ import { type BotAttachment, type BotChatMessage, useBotStore } from '@/stores/b
 
 const store = useBotStore()
 const draft = ref('')
+const {
+  open: slashOpen,
+  matches: slashMatches,
+  selected: selectedSkill,
+  pick: pickSkill,
+  pickFirst: pickFirstSkill,
+  clear: clearSkill,
+} = useSkillSlash(draft)
 const pending = ref<BotAttachment[]>([])
 const uploading = ref(false)
 const pickerOpen = ref(false)
@@ -233,6 +278,10 @@ function userText(msg: BotChatMessage): string {
     .filter(b => b.type === 'text')
     .map(b => b.text ?? '')
     .join('')
+}
+
+function userSkill(msg: BotChatMessage): string {
+  return msg.blocks.find(b => b.type === 'skill')?.name ?? ''
 }
 
 const ATTACHABLE = ['image', 'video', 'audio'] as const
@@ -315,15 +364,22 @@ function scrollToBottom(force = false) {
   if (force || nearBottom) el.scrollTop = el.scrollHeight
 }
 
+function onEnter() {
+  if (pickFirstSkill()) return
+  void submit()
+}
+
 async function submit() {
   const text = draft.value.trim()
   if ((!text && !pending.value.length) || store.busy || uploading.value) return
   const attachments = pending.value
+  const skill = selectedSkill.value?.name
   draft.value = ''
   pending.value = []
+  clearSkill()
   await nextTick()
   autoGrow()
-  await store.send(text, attachments)
+  await store.send(text, attachments, skill)
   await nextTick()
   scrollToBottom(true)
 }
@@ -335,6 +391,7 @@ watch(() => store.messages, async () => {
 
 watch(() => store.activeChatId, async () => {
   pending.value = []
+  clearSkill()
   await nextTick()
   scrollToBottom(true)
 })
@@ -356,6 +413,38 @@ onMounted(async () => {
   .ctv-bot-chip-x:hover {
     filter: brightness(1.4);
   }
+  .ctv-bot-skill-option:hover {
+    background: color-mix(in srgb, currentColor 10%, transparent);
+  }
+  .ctv-bot-skill-x:hover {
+    filter: brightness(1.4);
+  }
+}
+.ctv-bot-skill-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  padding: 5px 8px;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
+}
+.ctv-bot-skill-x {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  padding: 0;
+  margin-left: 2px;
+  color: inherit;
+  cursor: pointer;
 }
 .ctv-bot-attach {
   display: flex;

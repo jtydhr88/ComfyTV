@@ -70,7 +70,7 @@ def _initialize(params: dict) -> dict:
         else DEFAULT_PROTOCOL_VERSION
     return {
         "protocolVersion": version,
-        "capabilities": {"tools": {}},
+        "capabilities": {"tools": {}, "prompts": {}},
         "serverInfo": {
             "name": "comfytv-mcp",
             "title": "ComfyTV",
@@ -80,16 +80,53 @@ def _initialize(params: dict) -> dict:
     }
 
 
+def _tool_visible(name: str) -> bool:
+    if name != "skill":
+        return True
+    from .. import skill_store
+    return skill_store.skills_enabled()
+
+
 def _tools_list() -> dict:
+    tools = []
+    for name, spec in TOOLS.items():
+        if not _tool_visible(name):
+            continue
+        describe = spec.get("describe")
+        tools.append({
+            "name": name,
+            "description": describe() if describe else spec["description"],
+            "inputSchema": spec["inputSchema"],
+        })
+    return {"tools": tools}
+
+
+def _prompts_list() -> dict:
+    from .. import skill_store
     return {
-        "tools": [
+        "prompts": [
             {
-                "name": name,
-                "description": spec["description"],
-                "inputSchema": spec["inputSchema"],
+                "name": s["name"],
+                "title": s.get("display_name") or s["name"],
+                "description": s["description"],
             }
-            for name, spec in TOOLS.items()
+            for s in skill_store.enabled_skills()
         ]
+    }
+
+
+def _prompts_get(params: dict) -> dict | None:
+    from .. import skill_store
+    name = str(params.get("name") or "")
+    entry = skill_store.find_enabled(name)
+    if entry is None:
+        return None
+    return {
+        "description": entry["description"],
+        "messages": [{
+            "role": "user",
+            "content": {"type": "text", "text": skill_store.read_skill(name)},
+        }],
     }
 
 
@@ -113,7 +150,7 @@ def _payload_to_content(payload) -> list[dict]:
 async def _tools_call(params: dict) -> dict | None:
     name = params.get("name")
     spec = TOOLS.get(name)
-    if spec is None:
+    if spec is None or not _tool_visible(name):
         return None
     arguments = params.get("arguments") or {}
     if not isinstance(arguments, dict):
@@ -154,7 +191,13 @@ async def _dispatch(msg: dict) -> dict | None:
     if method == "resources/templates/list":
         return _result(msg_id, {"resourceTemplates": []})
     if method == "prompts/list":
-        return _result(msg_id, {"prompts": []})
+        return _result(msg_id, _prompts_list())
+    if method == "prompts/get":
+        outcome = _prompts_get(params)
+        if outcome is None:
+            return _error(msg_id, -32602,
+                          f"unknown prompt {params.get('name')!r}")
+        return _result(msg_id, outcome)
     return _error(msg_id, -32601, f"method not found: {method}")
 
 

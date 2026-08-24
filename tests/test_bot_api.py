@@ -645,3 +645,56 @@ class TestAttachmentCapability:
                                        "attachments": [{"asset_id": asset["id"]}]})
         assert resp.status == 400
         assert "does not support attachments" in (await resp.json())["error"]
+
+
+class TestSendWithSkill:
+    @pytest.fixture()
+    def skill_dirs(self, tmp_path, monkeypatch):
+        from ComfyTV import skill_store
+        builtin = tmp_path / "builtin-skills"
+        user = tmp_path / "user-skills"
+        builtin.mkdir()
+        user.mkdir()
+        monkeypatch.setattr(skill_store, "BUILTIN_SKILLS_DIR", builtin)
+        monkeypatch.setattr(skill_store, "user_skills_dir", lambda: user)
+        return builtin, user
+
+    async def test_send_with_skill_prepends_directive(
+            self, client, fake_provider, skill_dirs):
+        from test_skill_store import make_skill
+        builtin, _ = skill_dirs
+        make_skill(builtin, "trailer-cutter")
+        resp = await client.post("/comfytv/bot/chats",
+                                 json={"provider": "fake-test"})
+        chat = (await resp.json())["chat"]
+        resp = await client.post(f"/comfytv/bot/chats/{chat['id']}/send",
+                                 json={"text": "cut a trailer",
+                                       "skill": "trailer-cutter"})
+        assert resp.status == 200
+        user_msg = (await resp.json())["user_message"]
+        blocks = json.loads(user_msg["content"])
+        assert blocks[0] == {"type": "skill", "name": "trailer-cutter"}
+        assert blocks[1] == {"type": "text", "text": "cut a trailer"}
+
+        await _wait_done(client, chat["id"])
+        sent = fake_provider.last_turn.user_text
+        assert sent.startswith("Use the ComfyTV skill 'trailer-cutter'")
+        assert "action='read'" in sent
+        assert sent.endswith("cut a trailer")
+
+    async def test_send_with_unknown_or_disabled_skill(
+            self, client, fake_provider, skill_dirs):
+        from ComfyTV import skill_store
+        from test_skill_store import make_skill
+        builtin, _ = skill_dirs
+        resp = await client.post("/comfytv/bot/chats",
+                                 json={"provider": "fake-test"})
+        chat = (await resp.json())["chat"]
+        resp = await client.post(f"/comfytv/bot/chats/{chat['id']}/send",
+                                 json={"text": "x", "skill": "ghost"})
+        assert resp.status == 400
+        make_skill(builtin, "off-skill")
+        skill_store.set_skill_enabled("off-skill", False)
+        resp = await client.post(f"/comfytv/bot/chats/{chat['id']}/send",
+                                 json={"text": "x", "skill": "off-skill"})
+        assert resp.status == 400

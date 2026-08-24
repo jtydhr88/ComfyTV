@@ -118,6 +118,31 @@
           </div>
         </div>
         <div
+          v-for="row in skillsRows"
+          :key="row.key"
+          class="ctv:mt-2 ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1.5 ctv:px-2 ctv:rounded-lg
+                 ctv:bg-secondary-background ctv:border ctv:border-border-subtle"
+        >
+          <div class="ctv:flex ctv:items-center ctv:gap-2">
+            <div class="ctv:flex-1 ctv:min-w-0">
+              <div class="ctv:font-semibold">{{ $t(`settings.fields.${row.key}.label`) }}</div>
+              <div class="ctv:text-muted-foreground ctv:leading-relaxed">
+                {{ $t(`settings.fields.${row.key}.desc`) }}
+              </div>
+            </div>
+            <ComfyTVToggle
+              :model-value="values[row.key] === true"
+              @update:model-value="(v: boolean) => setValue(row.key, v)"
+            />
+          </div>
+        </div>
+
+        <SkillsSection
+          :active="props.active"
+          :enabled="values['enable-skills'] === true"
+        />
+
+        <div
           v-if="backupResult"
           class="ctv:py-1 ctv:px-1.5 ctv:rounded ctv:break-all"
           :class="backupResult.ok
@@ -142,6 +167,7 @@ import { useI18n } from 'vue-i18n'
 import ComfyTVNumber from '@/components/widgets/ComfyTVNumber.vue'
 import ComfyTVText from '@/components/widgets/ComfyTVText.vue'
 import ComfyTVToggle from '@/components/widgets/ComfyTVToggle.vue'
+import SkillsSection from '@/components/sidebar/SkillsSection.vue'
 import { useSettingsPanel } from '@/composables/sidebar/useSettingsPanel'
 
 const props = defineProps<{ active?: boolean }>()
@@ -152,6 +178,7 @@ const {
   rows,
   backupRows,
   agentRows,
+  skillsRows,
   botToggleLocked,
   values,
   loading,

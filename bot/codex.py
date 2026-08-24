@@ -71,6 +71,8 @@ _AGENT_INSTRUCTIONS = (
     "`run_stage`, then block on `wait_stage` for the result.\n"
     "- Look at results with `view_image` (returns real pixels), "
     "`media_frame`, `fx_preview`.\n"
+    "- The `skill` tool lists installed skills (instruction packs). When a "
+    "task matches one, read it first (action='read') and follow it.\n"
     "- Canvas writes work through either Comfy Desktop or a browser page. "
     "A `tab_page_active` diagnostic is not permission to stop: make one "
     "real write attempt before deciding it failed. If a write really fails, "

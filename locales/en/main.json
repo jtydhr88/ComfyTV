@@ -386,6 +386,10 @@
         "label": "comfy-mcp command",
         "desc": "Command that launches the comfy-mcp stdio server. Blank = find comfy-mcp on PATH.",
         "placeholder": "comfy-mcp"
+      },
+      "enable-skills": {
+        "label": "Enable Agent Skills",
+        "desc": "Serve installed skills to agents over MCP (skill tool + prompts) and to the embedded bot."
       }
     },
     "agent": {
@@ -839,6 +843,16 @@
     "removeTitle": "Remove resource",
     "removeConfirm": "Remove \"{name}\" from the library? The file stays on disk.",
     "missing": "Missing"
+  },
+  "skills": {
+    "section": "Skills",
+    "hint": "Skills are SKILL.md instruction packs served to agents via MCP. Import a .zip containing one skill folder; files live under user/comfytv/skills.",
+    "import": "Import skill (.zip)",
+    "empty": "No skills installed",
+    "remove": "Delete",
+    "removeTitle": "Delete skill",
+    "removeConfirm": "Delete skill \"{name}\" from disk? This cannot be undone.",
+    "source": { "builtin": "built-in", "user": "user" }
   },
   "presets": {
     "imageVariant": {
@@ -2591,6 +2605,7 @@
     "removeAttachment": "Remove",
     "dropHint": "Drop images, videos or audio to attach",
     "attachFromLibrary": "Attach from asset library",
-    "newChatWith": "New chat with:"
+    "newChatWith": "New chat with:",
+    "removeSkill": "Remove skill"
   }
 }
