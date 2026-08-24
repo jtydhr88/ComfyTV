@@ -6,11 +6,11 @@
       @update:range="onRangeUpdate"
     />
 
-    <div class="ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide">
-      <span v-if="!sourceAudioUrl" class="ctv:text-muted-foreground">{{ $t('audioTrim.noInputAudio') }}</span>
-      <span v-else-if="state.running" class="ctv:text-muted-foreground">{{ $t('audioTrim.trimming') }}</span>
-      <span v-else-if="state.output" class="ctv:text-success-background">{{ $t('audioTrim.trimmed') }}</span>
-      <span v-else class="ctv:text-muted-foreground">{{ $t('audioTrim.adjustThenRun') }}</span>
+    <div class="ctv-mt ctv-mt-status">
+      <span v-if="!sourceAudioUrl">{{ $t('audioTrim.noInputAudio') }}</span>
+      <span v-else-if="state.running">{{ $t('audioTrim.trimming') }}</span>
+      <span v-else-if="state.output" class="ctv-mt-status--ok">{{ $t('audioTrim.trimmed') }}</span>
+      <span v-else>{{ $t('audioTrim.adjustThenRun') }}</span>
     </div>
 
     <StageCard

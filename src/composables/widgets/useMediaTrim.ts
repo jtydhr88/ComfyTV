@@ -1,4 +1,5 @@
 import { computed, onBeforeUnmount, ref, watch, type Ref } from 'vue'
+import { DEFAULT_VIDEO_FPS } from '@/utils/videoMetadataUtil'
 
 export interface TrimRange {
   start: number
@@ -181,6 +182,8 @@ export function useMediaTrim(opts: {
 
   type DragKind = 'start' | 'end' | 'scrub' | null
   const dragging = ref<DragKind>(null)
+  const keyTarget = ref<Exclude<DragKind, null>>('scrub')
+  const stepSize = ref(1 / DEFAULT_VIDEO_FPS)
 
   function timeFromClientX(clientX: number): number {
     const el = trackEl.value
@@ -191,24 +194,30 @@ export function useMediaTrim(opts: {
     return Math.min(Math.max(0, frac), 1) * d
   }
 
-  function applyDrag(clientX: number) {
-    const t = timeFromClientX(clientX)
-    if (dragging.value === 'start') {
+  function applyAt(t: number, kind: Exclude<DragKind, null>) {
+    if (kind === 'start') {
       setStart(Math.min(t, selEnd.value - MIN_TRIM_GAP))
       seek(selStart.value)
-    } else if (dragging.value === 'end') {
+    } else if (kind === 'end') {
       setEnd(Math.max(t, selStart.value + MIN_TRIM_GAP))
       seek(selEnd.value)
-    } else if (dragging.value === 'scrub') {
+    } else {
       seek(t)
     }
+  }
+
+  function applyDrag(clientX: number) {
+    if (!dragging.value) return
+    applyAt(timeFromClientX(clientX), dragging.value)
   }
 
   function onDragStart(e: PointerEvent, kind: Exclude<DragKind, null>) {
     if (duration.value <= 0) return
     mediaEl.value?.pause()
     dragging.value = kind
+    keyTarget.value = kind
     ;(e.currentTarget as HTMLElement)?.setPointerCapture?.(e.pointerId)
+    trackEl.value?.focus?.({ preventScroll: true })
     applyDrag(e.clientX)
   }
   function onDragMove(e: PointerEvent) {
@@ -217,6 +226,35 @@ export function useMediaTrim(opts: {
   }
   function onDragEnd() {
     dragging.value = null
+  }
+
+  function nudge(dir: -1 | 1) {
+    if (duration.value <= 0) return
+    mediaEl.value?.pause()
+    const step = stepSize.value
+    const kind = keyTarget.value
+    const base = kind === 'start' ? selStart.value
+      : kind === 'end' ? selEnd.value
+      : currentTime.value
+    applyAt((Math.round(base / step) + dir) * step, kind)
+  }
+
+  function onTrackKeydown(e: KeyboardEvent) {
+    const dir = e.key === 'ArrowLeft' || e.key === 'ArrowDown' ? -1
+      : e.key === 'ArrowRight' || e.key === 'ArrowUp' ? 1
+      : 0
+    const jump = e.key === 'Home' ? selStart.value
+      : e.key === 'End' ? selEnd.value
+      : null
+    if (dir === 0 && jump === null) return
+    e.preventDefault()
+    e.stopPropagation()
+    if (dir !== 0) {
+      nudge(dir)
+    } else if (jump !== null && duration.value > 0) {
+      mediaEl.value?.pause()
+      seek(jump)
+    }
   }
 
   onBeforeUnmount(() => {
@@ -229,5 +267,6 @@ export function useMediaTrim(opts: {
     selStart, selEnd, selDuration,
     setStart, setEnd, seek, playSelection,
     dragging, onDragStart, onDragMove, onDragEnd,
+    keyTarget, stepSize, nudge, onTrackKeydown,
   }
 }

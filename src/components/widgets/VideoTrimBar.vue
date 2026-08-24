@@ -1,15 +1,17 @@
 <template>
   <div
-    class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow"
+    class="ctv-mt"
     @pointerdown.stop
     @pointermove.stop
     @pointerup.stop
   >
-    <div class="ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[240px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle">
-      <div v-if="!sourceVideoUrl"
-           class="ctv:absolute ctv:inset-0 ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50">
-        <i class="pi pi-video ctv:text-[32px] ctv:opacity-60" />
-        <div class="ctv:text-xs">{{ $t('videoTrim.noInputVideo') }}</div>
+    <div class="ctv-mt-media ctv-mt-media--video">
+      <div v-if="!sourceVideoUrl" class="ctv-mt-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <rect x="3" y="5" width="18" height="14" rx="2" />
+          <path d="M3 9h18M7 5v4M12 5v4M17 5v4M7 15v4M12 15v4M17 15v4M3 15h18" />
+        </svg>
+        <div>{{ $t('videoTrim.noInputVideo') }}</div>
       </div>
 
       <template v-else>
@@ -17,71 +19,68 @@
           ref="videoEl"
           :src="sourceVideoUrl"
           :muted="muted"
-          class="ctv:absolute ctv:inset-0 ctv:size-full ctv:object-contain ctv:cursor-pointer"
           playsinline preload="metadata"
           @click="playSelection"
         />
-        <div v-if="isLoading"
-             class="ctv:absolute ctv:inset-0 ctv:z-10 ctv:flex ctv:items-center ctv:justify-center ctv:text-xs
-                    ctv:bg-black/80 ctv:text-white/85 ctv:pointer-events-none">
-          {{ $t('videoTrim.loading') }}
-        </div>
-        <div v-else-if="loadError"
-             class="ctv:absolute ctv:inset-0 ctv:z-10 ctv:flex ctv:items-center ctv:justify-center ctv:text-xs
-                    ctv:bg-black/80 ctv:text-destructive-background ctv:pointer-events-none">
-          {{ $t('videoTrim.loadError') }}
-        </div>
+        <div v-if="isLoading" class="ctv-mt-overlay">{{ $t('videoTrim.loading') }}</div>
+        <div v-else-if="loadError" class="ctv-mt-overlay ctv-mt-overlay--error">{{ $t('videoTrim.loadError') }}</div>
       </template>
     </div>
 
-    <div class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]">
+    <div class="ctv-mt-transport">
       <button
         type="button"
-        class="ctv:flex ctv:items-center ctv:justify-center ctv:w-7 ctv:h-6 ctv:text-xs ctv:rounded ctv:cursor-pointer
-               ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground
-               ctv:hover:border-primary-background ctv:disabled:opacity-40 ctv:disabled:cursor-default"
+        class="ctv-mt-btn ctv-mt-btn--icon"
         :disabled="duration <= 0"
         :title="previewing ? $t('videoTrim.pause') : $t('videoTrim.playSelection')"
         @click="playSelection"
-      ><i :class="['pi', previewing ? 'pi-pause' : 'pi-play']" /></button>
+      >
+        <svg v-if="previewing" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" /></svg>
+        <svg v-else viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z" /></svg>
+      </button>
       <button
         type="button"
-        class="ctv:flex ctv:items-center ctv:justify-center ctv:w-7 ctv:h-6 ctv:text-xs ctv:rounded ctv:cursor-pointer
-               ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground
-               ctv:hover:border-primary-background"
+        class="ctv-mt-btn ctv-mt-btn--icon"
         :title="muted ? $t('videoTrim.unmute') : $t('videoTrim.mute')"
         @click="muted = !muted"
-      ><i :class="['pi', muted ? 'pi-volume-off' : 'pi-volume-up']" /></button>
+      >
+        <svg v-if="muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 9.5v5h3.5L12 18V6L7.5 9.5H4z" /><path d="M15.5 9.5l5 5M20.5 9.5l-5 5" />
+        </svg>
+        <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 9.5v5h3.5L12 18V6L7.5 9.5H4z" /><path d="M15.5 9a4 4 0 010 6M18 6.5a8 8 0 010 11" />
+        </svg>
+      </button>
 
-      <span class="ctv:font-mono ctv:text-muted-foreground">
-        {{ formatTime(currentTime) }} / {{ formatTime(duration) }}
+      <span class="ctv-mt-time">{{ formatTime(currentTime) }} / {{ formatTime(duration) }}</span>
+      <div class="ctv-mt-spacer" />
+      <span v-if="isSplit" class="ctv-mt-time ctv-mt-time--strong">
+        <span class="ctv-mt-accent">A</span> {{ selStart.toFixed(1) }}s
+        · <span class="ctv-mt-amber">B</span> {{ Math.max(0, duration - selStart).toFixed(1) }}s
       </span>
-      <span v-if="isSplit" class="ctv:ml-auto ctv:font-mono ctv:text-base-foreground">
-        <span class="ctv:text-primary-background ctv:font-bold">A</span> {{ selStart.toFixed(1) }}s
-        · <span class="ctv:text-[#ffd089] ctv:font-bold">B</span> {{ Math.max(0, duration - selStart).toFixed(1) }}s
-      </span>
-      <span v-else class="ctv:ml-auto ctv:font-mono ctv:text-base-foreground">
+      <span v-else class="ctv-mt-time ctv-mt-time--strong">
         {{ formatTime(selStart) }} – {{ formatTime(selEnd) }}
-        <span class="ctv:text-primary-background ctv:font-bold">({{ selDuration.toFixed(1) }}s)</span>
+        <span class="ctv-mt-accent">({{ selDuration.toFixed(1) }}s)</span>
       </span>
     </div>
 
     <div
       ref="trackEl"
-      class="ctv:relative ctv:w-full ctv:h-12 ctv:rounded ctv:overflow-hidden ctv:bg-secondary-background
-             ctv:border ctv:border-border-subtle ctv:select-none ctv:touch-none"
-      :class="duration > 0 ? 'ctv:cursor-crosshair' : 'ctv:cursor-default'"
+      tabindex="0"
+      class="ctv-mt-track ctv-mt-track--clip"
+      :class="{ 'ctv-mt-track--idle': duration <= 0 }"
+      :title="$t('videoTrim.frameStepHint')"
       @pointerdown="(e) => onDragStart(e, 'scrub')"
       @pointermove="onDragMove"
       @pointerup="onDragEnd"
       @pointercancel="onDragEnd"
+      @keydown="onTrackKeydown"
     >
-      <div class="ctv:absolute ctv:inset-0 ctv:flex ctv:pointer-events-none">
+      <div class="ctv-mt-film">
         <img
           v-for="(thumb, i) in thumbnails"
           :key="i"
           :src="thumb"
-          class="ctv:h-full ctv:object-cover ctv:min-w-0"
           :style="{ width: `${100 / THUMB_COUNT}%` }"
           draggable="false"
         />
@@ -89,68 +88,53 @@
 
       <template v-if="duration > 0">
         <template v-if="isSplit">
-          <div class="ctv:absolute ctv:inset-y-0 ctv:left-0 ctv:bg-primary-background/15 ctv:pointer-events-none"
-               :style="{ width: `${startPct}%` }" />
-          <div class="ctv:absolute ctv:inset-y-0 ctv:right-0 ctv:bg-[rgb(255_171_64/0.18)] ctv:pointer-events-none"
-               :style="{ width: `${100 - startPct}%` }" />
+          <div class="ctv-mt-dim ctv-mt-dim--a" :style="{ left: 0, width: `${startPct}%` }" />
+          <div class="ctv-mt-dim ctv-mt-dim--b" :style="{ right: 0, width: `${100 - startPct}%` }" />
         </template>
         <template v-else>
-          <div class="ctv:absolute ctv:inset-y-0 ctv:left-0 ctv:bg-black/65 ctv:pointer-events-none"
-               :style="{ width: `${startPct}%` }" />
-          <div class="ctv:absolute ctv:inset-y-0 ctv:right-0 ctv:bg-black/65 ctv:pointer-events-none"
-               :style="{ width: `${100 - endPct}%` }" />
-
-          <div class="ctv:absolute ctv:inset-y-0 ctv:border-y-2 ctv:border-primary-background ctv:pointer-events-none"
-               :style="{ left: `${startPct}%`, width: `${endPct - startPct}%` }" />
+          <div class="ctv-mt-dim" :style="{ left: 0, width: `${startPct}%` }" />
+          <div class="ctv-mt-dim" :style="{ right: 0, width: `${100 - endPct}%` }" />
+          <div class="ctv-mt-selframe" :style="{ left: `${startPct}%`, width: `${endPct - startPct}%` }" />
         </template>
 
         <div
-          class="ctv:absolute ctv:inset-y-0 ctv:w-2.5 ctv:-ml-[5px] ctv:z-20 ctv:cursor-ew-resize ctv:flex ctv:items-center ctv:justify-center
-                 ctv:bg-primary-background"
-          :class="isSplit ? 'ctv:rounded-sm' : 'ctv:rounded-l-sm'"
+          class="ctv-mt-handle"
+          :class="isSplit ? 'ctv-mt-handle--solo' : 'ctv-mt-handle--l'"
           :style="{ left: `${startPct}%` }"
           @pointerdown.stop="(e) => onDragStart(e, 'start')"
           @pointermove="onDragMove"
           @pointerup="onDragEnd"
           @pointercancel="onDragEnd"
-        ><span class="ctv:w-px ctv:h-4 ctv:bg-white/80" /></div>
+        ><span class="ctv-mt-grip" /></div>
         <div
           v-if="!isSplit"
-          class="ctv:absolute ctv:inset-y-0 ctv:w-2.5 ctv:-ml-[5px] ctv:z-20 ctv:cursor-ew-resize ctv:flex ctv:items-center ctv:justify-center
-                 ctv:bg-primary-background ctv:rounded-r-sm"
+          class="ctv-mt-handle ctv-mt-handle--r"
           :style="{ left: `${endPct}%` }"
           @pointerdown.stop="(e) => onDragStart(e, 'end')"
           @pointermove="onDragMove"
           @pointerup="onDragEnd"
           @pointercancel="onDragEnd"
-        ><span class="ctv:w-px ctv:h-4 ctv:bg-white/80" /></div>
+        ><span class="ctv-mt-grip" /></div>
 
-        <div class="ctv:absolute ctv:inset-y-0 ctv:w-px ctv:z-10 ctv:bg-white ctv:pointer-events-none
-                    ctv:shadow-[0_0_3px_rgb(255_255_255/0.8)]"
-             :style="{ left: `${playheadPct}%` }" />
+        <div class="ctv-mt-playhead" :style="{ left: `${playheadPct}%` }" />
       </template>
     </div>
 
-    <div class="ctv:flex ctv:items-center ctv:gap-1 ctv:text-[11px]">
-      <label class="ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1 ctv:rounded
-                    ctv:bg-secondary-background ctv:border ctv:border-border-subtle">
-        <span class="ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground">{{ isSplit ? $t('videoSplit.splitPoint') : $t('videoTrim.start') }}</span>
+    <div class="ctv-mt-fields">
+      <label class="ctv-mt-field">
+        <span>{{ isSplit ? $t('videoSplit.splitPoint') : $t('videoTrim.start') }}</span>
         <input
           type="number" min="0" step="0.1"
           :disabled="duration <= 0"
-          class="ctv-trim-input ctv:w-full ctv:border-0 ctv:outline-none ctv:bg-transparent ctv:text-[11px] ctv:font-mono ctv:text-base-foreground ctv:disabled:opacity-40"
           :value="selStart.toFixed(2)"
           @change="(e) => onFieldChange('start', (e.target as HTMLInputElement).value)"
         />
       </label>
-      <label v-if="!isSplit"
-             class="ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1 ctv:rounded
-                    ctv:bg-secondary-background ctv:border ctv:border-border-subtle">
-        <span class="ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground">{{ $t('videoTrim.end') }}</span>
+      <label v-if="!isSplit" class="ctv-mt-field">
+        <span>{{ $t('videoTrim.end') }}</span>
         <input
           type="number" min="0" step="0.1"
           :disabled="duration <= 0"
-          class="ctv-trim-input ctv:w-full ctv:border-0 ctv:outline-none ctv:bg-transparent ctv:text-[11px] ctv:font-mono ctv:text-base-foreground ctv:disabled:opacity-40"
           :value="selEnd.toFixed(2)"
           @change="(e) => onFieldChange('end', (e.target as HTMLInputElement).value)"
         />
@@ -158,13 +142,11 @@
       <button
         v-if="!isSplit"
         type="button"
-        class="ctv:shrink-0 ctv:py-0.5 ctv:px-1.5 ctv:text-2xs ctv:rounded ctv:cursor-pointer
-               ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground
-               ctv:hover:border-primary-background ctv:disabled:opacity-40 ctv:disabled:cursor-default"
+        class="ctv-mt-btn ctv-mt-btn--shrink"
         :disabled="duration <= 0"
         :title="$t('videoTrim.resetTooltip')"
         @click="resetSelection"
-      >{{ $t('videoTrim.reset') }}</button>
+      ><span>{{ $t('videoTrim.reset') }}</span></button>
     </div>
   </div>
 </template>
@@ -178,6 +160,7 @@ import {
   useVideoTrim,
   type TrimRange,
 } from '@/composables/widgets/useVideoTrim'
+import './mediaTrackV2.css'
 
 const props = withDefaults(defineProps<{
   sourceVideoUrl: string | null
@@ -211,7 +194,7 @@ const {
   duration, currentTime, isLoading, loadError, previewing,
   selStart, selEnd, selDuration,
   setStart, setEnd, playSelection,
-  onDragStart, onDragMove, onDragEnd,
+  onDragStart, onDragMove, onDragEnd, onTrackKeydown,
   thumbnails,
 } = useVideoTrim({
   videoEl,
@@ -238,11 +221,3 @@ function resetSelection() {
   rangeRef.value = { start: 0, end: 0 }
 }
 </script>
-
-<style scoped>
-.ctv-trim-input { -moz-appearance: textfield; }
-.ctv-trim-input::-webkit-inner-spin-button,
-.ctv-trim-input::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-}
-</style>

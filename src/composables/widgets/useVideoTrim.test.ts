@@ -1,12 +1,18 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { defineComponent, nextTick, ref } from 'vue'
 import { mount, type VueWrapper } from '@vue/test-utils'
+import { DEFAULT_VIDEO_FPS, fetchVideoMetadata } from '@/utils/videoMetadataUtil'
 import {
   formatTime,
   MIN_TRIM_GAP,
   useVideoTrim,
   type TrimRange,
 } from './useVideoTrim'
+
+vi.mock('@/utils/videoMetadataUtil', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/utils/videoMetadataUtil')>()
+  return { ...actual, fetchVideoMetadata: vi.fn(async () => undefined) }
+})
 
 function makeVideo(duration = 10): HTMLVideoElement {
   const v = document.createElement('video')
@@ -261,6 +267,110 @@ describe('useVideoTrim playhead loop', () => {
     ctx.videoEl.value = null
     expect(() => tick()).not.toThrow()
     expect(raf).toHaveBeenCalledTimes(1)
+  })
+})
+
+function keyEvt(key: string): KeyboardEvent {
+  return {
+    key,
+    preventDefault: vi.fn(),
+    stopPropagation: vi.fn(),
+  } as unknown as KeyboardEvent
+}
+
+describe('useVideoTrim keyboard stepping', () => {
+  it('arrow keys step the playhead by one frame and stay contained', async () => {
+    const { api, video } = await setupWithVideo()
+    video.currentTime = 1
+    api.currentTime.value = 1
+    const right = keyEvt('ArrowRight')
+    api.onTrackKeydown(right)
+    expect(right.preventDefault).toHaveBeenCalled()
+    expect(right.stopPropagation).toHaveBeenCalled()
+    expect(video.pause).toHaveBeenCalled()
+    expect(api.currentTime.value).toBeCloseTo(1 + 1 / DEFAULT_VIDEO_FPS, 5)
+    const left = keyEvt('ArrowLeft')
+    api.onTrackKeydown(left)
+    expect(api.currentTime.value).toBeCloseTo(1, 5)
+  })
+
+  it('vertical arrows mirror the horizontal ones', async () => {
+    const { api, video } = await setupWithVideo()
+    video.currentTime = 2
+    api.currentTime.value = 2
+    api.onTrackKeydown(keyEvt('ArrowUp'))
+    expect(api.currentTime.value).toBeCloseTo(2 + 1 / DEFAULT_VIDEO_FPS, 5)
+    api.onTrackKeydown(keyEvt('ArrowDown'))
+    expect(api.currentTime.value).toBeCloseTo(2, 5)
+  })
+
+  it('Home/End jump the playhead to the selection bounds', async () => {
+    const { api } = await setupWithVideo({ start: 2, end: 8 })
+    api.currentTime.value = 5
+    api.onTrackKeydown(keyEvt('Home'))
+    expect(api.currentTime.value).toBe(2)
+    api.onTrackKeydown(keyEvt('End'))
+    expect(api.currentTime.value).toBe(8)
+  })
+
+  it('clamps stepping at the clip boundaries', async () => {
+    const { api } = await setupWithVideo()
+    api.onTrackKeydown(keyEvt('ArrowLeft'))
+    expect(api.currentTime.value).toBe(0)
+    api.currentTime.value = 10
+    api.onTrackKeydown(keyEvt('ArrowRight'))
+    expect(api.currentTime.value).toBe(10)
+  })
+
+  it('leaves non-arrow keys untouched', async () => {
+    const { api } = await setupWithVideo()
+    const del = keyEvt('Delete')
+    api.onTrackKeydown(del)
+    expect(del.preventDefault).not.toHaveBeenCalled()
+    expect(del.stopPropagation).not.toHaveBeenCalled()
+  })
+
+  it('nudges the last dragged handle instead of the playhead', async () => {
+    const { api, modelValue } = await setupWithVideo()
+    api.onDragStart(pointerEvt(50), 'start')
+    api.onDragEnd()
+    expect(api.keyTarget.value).toBe('start')
+    const before = modelValue.value.start
+    api.onTrackKeydown(keyEvt('ArrowRight'))
+    expect(modelValue.value.start).toBeGreaterThan(before)
+    api.onTrackKeydown(keyEvt('ArrowLeft'))
+    expect(modelValue.value.start).toBeCloseTo(before, 2)
+  })
+
+  it('handle nudge respects the minimum gap', async () => {
+    const { api, modelValue } = await setupWithVideo({ start: 5, end: 5.05 })
+    api.onDragStart(pointerEvt(51), 'end')
+    api.onDragEnd()
+    api.onTrackKeydown(keyEvt('ArrowLeft'))
+    expect(modelValue.value.end).toBeGreaterThanOrEqual(modelValue.value.start + MIN_TRIM_GAP)
+  })
+
+  it('ignores arrows before metadata but still swallows them', () => {
+    const { api } = setup()
+    const right = keyEvt('ArrowRight')
+    api.onTrackKeydown(right)
+    expect(right.preventDefault).toHaveBeenCalled()
+    expect(api.currentTime.value).toBe(0)
+  })
+
+  it('adopts the probed fps as the step size', async () => {
+    vi.mocked(fetchVideoMetadata).mockResolvedValueOnce({
+      fps: 24, duration: 10, width: 64, height: 36, size: null,
+    })
+    const { api } = setup({ start: 0, end: 0 }, '/view?filename=v.mp4')
+    expect(fetchVideoMetadata).toHaveBeenCalledWith('/view?filename=v.mp4')
+    await vi.waitFor(() => expect(api.stepSize.value).toBeCloseTo(1 / 24, 6))
+  })
+
+  it('keeps the default step when the probe yields nothing', async () => {
+    const { api } = setup({ start: 0, end: 0 }, '/view?filename=v.mp4')
+    await new Promise(resolve => setTimeout(resolve, 0))
+    expect(api.stepSize.value).toBeCloseTo(1 / DEFAULT_VIDEO_FPS, 6)
   })
 })
 

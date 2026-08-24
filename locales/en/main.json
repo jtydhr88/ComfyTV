@@ -1281,6 +1281,7 @@
     "rotateTooltip": "Drag the round handle to rotate (Shift = 15° steps)"
   },
   "videoTrim": {
+    "frameStepHint": "Drag to position · ←/→ steps one frame",
     "noInputVideo": "No input video — connect a video upstream",
     "loading": "Loading…",
     "loadError": "Failed to load video",
@@ -1329,6 +1330,7 @@
     "adjustThenRun": "Drag the handle to place the cut, then Run"
   },
   "audioTrim": {
+    "frameStepHint": "Drag to position · ←/→ nudges 10 ms",
     "noInputAudio": "No input audio — connect an audio or video upstream",
     "loading": "Loading…",
     "loadError": "Failed to load audio",

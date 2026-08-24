@@ -1281,6 +1281,7 @@
     "rotateTooltip": "拖动圆形手柄旋转（Shift = 15° 步进）"
   },
   "videoTrim": {
+    "frameStepHint": "拖动定位 · ←/→ 逐帧微调",
     "noInputVideo": "无输入视频 — 请上游连接一个视频",
     "loading": "加载中…",
     "loadError": "视频加载失败",
@@ -1329,6 +1330,7 @@
     "adjustThenRun": "拖动把手确定切割点，然后 Run"
   },
   "audioTrim": {
+    "frameStepHint": "拖动定位 · ←/→ 10 毫秒微调",
     "noInputAudio": "无输入音频 — 请上游连接音频或视频",
     "loading": "加载中…",
     "loadError": "音频加载失败",

@@ -1,4 +1,5 @@
 import { onBeforeUnmount, ref, watch, type Ref } from 'vue'
+import { DEFAULT_VIDEO_FPS, fetchVideoMetadata } from '@/utils/videoMetadataUtil'
 import { useMediaTrim, waitEvent, type TrimRange } from './useMediaTrim'
 
 export { formatTime, MIN_TRIM_GAP, type TrimRange } from './useMediaTrim'
@@ -21,6 +22,20 @@ export function useVideoTrim(opts: {
 
   const thumbnails = ref<string[]>([])
   let filmstripSeq = 0
+  let infoSeq = 0
+
+  watch(opts.sourceVideoUrl, (url) => {
+    const mySeq = ++infoSeq
+    core.stepSize.value = 1 / DEFAULT_VIDEO_FPS
+    if (!url) return
+    fetchVideoMetadata(url).then((metadata) => {
+      if (mySeq !== infoSeq) return
+      const fps = metadata?.fps
+      if (typeof fps === 'number' && fps > 0) {
+        core.stepSize.value = 1 / fps
+      }
+    }).catch(() => {})
+  }, { immediate: true })
 
   async function buildFilmstrip(url: string) {
     const mySeq = ++filmstripSeq
@@ -65,6 +80,7 @@ export function useVideoTrim(opts: {
 
   onBeforeUnmount(() => {
     filmstripSeq++
+    infoSeq++
   })
 
   return {
