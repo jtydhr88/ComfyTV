@@ -57,8 +57,50 @@
     </template>
 
     <template v-else>
-      <div class="ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1.5 ctv:border-b ctv:border-border-subtle ctv:px-3 ctv:py-2">
+      <div
+        v-if="selectMode"
+        class="ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-2 ctv:border-b ctv:border-border-subtle ctv:px-3 ctv:py-2"
+      >
+        <input
+          type="checkbox"
+          class="ctv:m-0 ctv:cursor-pointer"
+          :checked="allSelected"
+          :title="$t('bot.selectAll')"
+          @change="toggleSelectAll"
+        />
+        <span class="ctv:flex-1 ctv:text-sm">
+          {{ $t('bot.selectedCount', { count: selectedIds.size }) }}
+        </span>
+        <button
+          class="ctv-bot-iconbtn"
+          :disabled="!selectedIds.size"
+          :class="{ 'ctv:opacity-40 ctv:cursor-default': !selectedIds.size }"
+          :title="$t('bot.deleteSelected')"
+          @click="confirmDeleteSelected()"
+        >
+          <i class="pi pi-trash ctv:text-xs" />
+        </button>
+        <button
+          class="ctv-bot-iconbtn"
+          :title="$t('bot.cancelSelect')"
+          @click="exitSelectMode()"
+        >
+          <i class="pi pi-times ctv:text-xs" />
+        </button>
+      </div>
+      <div
+        v-else
+        class="ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1.5 ctv:border-b ctv:border-border-subtle ctv:px-3 ctv:py-2"
+      >
         <span class="ctv:flex-1 ctv:text-sm ctv:font-semibold">{{ $t('bot.title') }}</span>
+        <button
+          v-if="store.chats.length"
+          class="ctv-bot-iconbtn"
+          :title="$t('bot.multiSelect')"
+          @click="selectMode = true"
+        >
+          <i class="pi pi-check-square ctv:text-xs" />
+        </button>
         <button
           class="ctv-bot-iconbtn"
           :title="$t('bot.newChat')"
@@ -99,9 +141,17 @@
           v-for="chat in store.chats"
           :key="chat.id"
           class="ctv-bot-row ctv:group ctv:flex ctv:cursor-pointer ctv:items-center ctv:gap-2 ctv:border-b ctv:border-border-subtle ctv:px-3 ctv:py-2"
-          @click="store.openChat(chat.id)"
+          @click="selectMode ? toggleSelected(chat.id) : store.openChat(chat.id)"
         >
+          <input
+            v-if="selectMode"
+            type="checkbox"
+            class="ctv:m-0 ctv:shrink-0 ctv:cursor-pointer"
+            :checked="selectedIds.has(chat.id)"
+            @click.stop="toggleSelected(chat.id)"
+          />
           <i
+            v-else
             class="pi ctv:text-xs"
             :class="chat.busy ? 'pi-spin pi-spinner' : (chat.pinned ? 'pi-star-fill ctv:text-amber-400' : 'pi-comment ctv:text-muted-foreground')"
           />
@@ -124,7 +174,7 @@
               {{ formatTime(chat.updated_at) }}
             </span>
           </div>
-          <div class="ctv-bot-row-actions ctv:flex ctv:shrink-0 ctv:gap-0.5">
+          <div v-if="!selectMode" class="ctv-bot-row-actions ctv:flex ctv:shrink-0 ctv:gap-0.5">
             <button
               class="ctv-bot-iconbtn"
               :title="$t('bot.rename')"
@@ -154,7 +204,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import BotChatView from '@/components/bot/BotChatView.vue'
@@ -200,6 +250,38 @@ function confirmDelete(chat: BotChat) {
   if (window.confirm(t('bot.deleteConfirm', { title: chat.title || t('bot.untitled') }))) {
     void store.deleteChat(chat.id)
   }
+}
+
+const selectMode = ref(false)
+const selectedIds = ref(new Set<string>())
+
+const allSelected = computed(() =>
+  store.chats.length > 0 && store.chats.every(c => selectedIds.value.has(c.id)))
+
+function toggleSelected(chatId: string) {
+  const next = new Set(selectedIds.value)
+  if (next.has(chatId)) next.delete(chatId)
+  else next.add(chatId)
+  selectedIds.value = next
+}
+
+function toggleSelectAll() {
+  selectedIds.value = allSelected.value
+    ? new Set()
+    : new Set(store.chats.map(c => c.id))
+}
+
+function exitSelectMode() {
+  selectMode.value = false
+  selectedIds.value = new Set()
+}
+
+async function confirmDeleteSelected() {
+  const ids = store.chats.filter(c => selectedIds.value.has(c.id)).map(c => c.id)
+  if (!ids.length) return
+  if (!window.confirm(t('bot.batchDeleteConfirm', { count: ids.length }))) return
+  await store.deleteChats(ids)
+  exitSelectMode()
 }
 
 function formatTime(iso: string | null): string {

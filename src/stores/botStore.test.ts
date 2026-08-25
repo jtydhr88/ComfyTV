@@ -219,6 +219,18 @@ describe('botStore events', () => {
     expect(await store.send('', [])).toBe(false)
   })
 
+  it('deleteChats removes deleted chats and keeps failures', async () => {
+    const store = seeded()
+    store.chats = [chat(), chat({ id: 'c2' }), chat({ id: 'c3' })] as any
+    fetchApi.mockImplementation(async (url: string) =>
+      url.endsWith('/c2')
+        ? jsonResp({ error: 'boom' }, 500)
+        : jsonResp({ ok: true }))
+    await store.deleteChats(['c1', 'c2', 'c3'])
+    expect(store.chats.map(c => c.id)).toEqual(['c2'])
+    expect(store.activeChatId).toBeNull()
+  })
+
   it('newChat requires an available provider', async () => {
     const store = useBotStore()
     store.providers = []

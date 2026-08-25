@@ -213,6 +213,22 @@ export const useBotStore = defineStore('bot', () => {
     }
   }
 
+  async function deleteChats(chatIds: string[]): Promise<void> {
+    const results = await Promise.allSettled(chatIds.map(id =>
+      apiSend(`/comfytv/bot/chats/${id}`, 'DELETE', BotOkSchema)))
+    const deleted = new Set(
+      chatIds.filter((_, i) => results[i].status === 'fulfilled'))
+    if (deleted.size) {
+      chats.value = chats.value.filter(c => !deleted.has(c.id))
+      if (activeChatId.value && deleted.has(activeChatId.value)) closeChat()
+    }
+    const failed = results.filter(r => r.status === 'rejected')
+    if (failed.length) {
+      console.warn('[ComfyTV/bot] batch delete failed for',
+                   failed.length, 'chats', failed[0])
+    }
+  }
+
   function upsertChat(chat: BotChat): void {
     const idx = chats.value.findIndex(c => c.id === chat.id)
     if (idx >= 0) chats.value[idx] = { ...chats.value[idx], ...chat }
@@ -335,6 +351,7 @@ export const useBotStore = defineStore('bot', () => {
     renameChat,
     togglePinned,
     deleteChat,
+    deleteChats,
     handleBotEvent,
     installWebSocketSync,
   }
