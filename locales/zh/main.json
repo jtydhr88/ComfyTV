@@ -373,6 +373,15 @@
         "desc": "本地端点上的模型 id。留空 = 用端点报告的第一个模型。",
         "placeholder": "自动取第一个"
       },
+      "bot-model-comfyui-llm": {
+        "label": "ComfyUI LLM 模型",
+        "desc": "Bot 回合使用的 models/text_encoders 里的文本编码器权重(Qwen3 或 Gemma 系)。留空 = 自动取第一个可生成的权重。推理跑在 ComfyUI 本体内 — 无需外部服务。",
+        "placeholder": "自动取第一个"
+      },
+      "bot-comfyui-llm-thinking": {
+        "label": "ComfyUI LLM 思考模式",
+        "desc": "让 Qwen3 系模型先在隐藏的 <think> 块里推理再回答。工具调用明显更聪明,代价是每轮多花一些生成时间。"
+      },
       "bot-local-llm-url": {
         "label": "Local LLM 端点",
         "desc": "本地模型服务的 OpenAI 兼容 base URL(LM Studio、llama.cpp 的 llama-server、vLLM、Ollama 等)。不填时 Local LLM provider 不可用。仅限免 key 的本地端点 — 永远不存 API key。",

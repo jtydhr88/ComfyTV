@@ -19,7 +19,7 @@ Typical asks:
 
 ## No API keys, by design
 
-The bot does not talk to any cloud model API directly and ComfyTV never stores a key. Instead it drives an **agent CLI already installed on your machine** using that CLI's own login — or, with the Local LLM provider, a **model server running on your own hardware**. Four providers ship today:
+The bot does not talk to any cloud model API directly and ComfyTV never stores a key. Instead it drives an **agent CLI already installed on your machine** using that CLI's own login — or, with the Local LLM and ComfyUI LLM providers, a **model running on your own hardware**. Five providers ship today:
 
 | Provider | Install | Sign in | Attachments |
 | --- | --- | --- | --- |
@@ -27,6 +27,7 @@ The bot does not talk to any cloud model API directly and ComfyTV never stores a
 | [Codex](https://developers.openai.com/codex) | `npm install -g @openai/codex` | `codex login` | images / video / audio |
 | [Qwen Code](https://qwenlm.github.io/qwen-code-docs/) | official install script (see its docs) | run `qwen`, then `/auth` | not yet |
 | Local LLM | any OpenAI-compatible local server | none — set the endpoint URL in Settings | not yet |
+| ComfyUI LLM | a Qwen3- or Gemma-family checkpoint in `models/text_encoders` | none | not yet |
 
 Prerequisites:
 
@@ -47,6 +48,17 @@ Details worth knowing:
 - The bot exposes the core canvas toolset (build / run / wait / look) rather than all tools — small local models drown in the full catalog.
 - `wait_stage` is looped provider-side, so the model is only consulted when the render actually finishes.
 - If the [LM Studio](https://lmstudio.ai) `lms` CLI is present, the driver model is unloaded from VRAM while a render runs and reloaded afterwards — on a single-GPU machine the canvas gets the whole card during generation.
+
+## ComfyUI LLM provider
+
+The ComfyUI LLM provider goes one step further: no external server either — inference runs **inside ComfyUI itself**, on the same text-encoder stack the core `TextGenerate` node uses. Drop a generation-capable Qwen3- or Gemma-family checkpoint (e.g. Qwen3 8B, or the Gemma 3/4 encoders LTX2 already uses) into `models/text_encoders` and the provider appears; pick the checkpoint under **Settings → Agent & MCP → ComfyUI LLM model** (blank = first found). Qwen3 has native tool-calling training and is the best driver; Gemma follows the same convention by instruction.
+
+Compared to the Local LLM provider:
+
+- Nothing to install or configure — no endpoint URL, no server process.
+- VRAM is arbitrated by ComfyUI's model management: while a render runs, the LLM is offloaded automatically and reloaded on the next turn. No `lms`-style juggling.
+- Tool calls use the Hermes convention Qwen3 was trained on (`<tool_call>` blocks), rendered and parsed by ComfyTV.
+- Turns are served one at a time from an OpenAI-compatible shim at `/comfytv/llm/v1` (non-streaming) — other local apps on your machine may point at it too while the bot is enabled.
 
 ## Using the panel
 

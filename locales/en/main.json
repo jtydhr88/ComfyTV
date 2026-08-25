@@ -373,6 +373,15 @@
         "desc": "Model id on the local endpoint. Blank = the first model the endpoint reports.",
         "placeholder": "first available"
       },
+      "bot-model-comfyui-llm": {
+        "label": "ComfyUI LLM model",
+        "desc": "Text-encoder checkpoint from models/text_encoders used for bot turns (Qwen3 or Gemma family). Blank = the first generation-capable checkpoint found. Runs inside ComfyUI itself — no external server needed.",
+        "placeholder": "first available"
+      },
+      "bot-comfyui-llm-thinking": {
+        "label": "ComfyUI LLM thinking",
+        "desc": "Let Qwen3 models reason in a hidden <think> block before answering. Noticeably smarter tool use, at the cost of extra generation time per turn."
+      },
       "bot-local-llm-url": {
         "label": "Local LLM endpoint",
         "desc": "OpenAI-compatible base URL of a local model server (LM Studio, llama.cpp llama-server, vLLM, Ollama…). The Local LLM provider stays unavailable until this is set. Keyless local endpoints only — no API keys are ever stored.",

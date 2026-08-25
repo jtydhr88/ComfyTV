@@ -19,7 +19,7 @@
 
 ## 不碰 API key,这是设计
 
-Bot 不直接调用任何云端模型 API,ComfyTV 也永远不存 key。它驱动的是**你机器上已经装好的 agent CLI**(用 CLI 自己的登录态),或者通过 Local LLM provider 驱动**你自己硬件上跑的模型服务**。当前内置四个:
+Bot 不直接调用任何云端模型 API,ComfyTV 也永远不存 key。它驱动的是**你机器上已经装好的 agent CLI**(用 CLI 自己的登录态),或者通过 Local LLM / ComfyUI LLM provider 驱动**你自己硬件上跑的模型**。当前内置五个:
 
 | Provider | 安装 | 登录 | 附件 |
 | --- | --- | --- | --- |
@@ -27,6 +27,7 @@ Bot 不直接调用任何云端模型 API,ComfyTV 也永远不存 key。它驱�
 | [Codex](https://developers.openai.com/codex) | `npm install -g @openai/codex` | `codex login` | 图片/视频/音频 |
 | [Qwen Code](https://qwenlm.github.io/qwen-code-docs/zh/) | 官方安装脚本(见其文档) | 运行 `qwen` 后 `/auth` | 暂不支持 |
 | Local LLM | 任意 OpenAI 兼容的本地模型服务 | 无 — 在设置里填端点 URL 即可 | 暂不支持 |
+| ComfyUI LLM | 往 `models/text_encoders` 放一个 Qwen3 或 Gemma 系权重 | 无 | 暂不支持 |
 
 前置条件:
 
@@ -47,6 +48,17 @@ Local LLM 完全不需要 agent CLI:ComfyTV 自己跑 agent 循环,对接任何 
 - 只暴露核心画布工具集(搭建/运行/等待/看图),不给全量目录 — 小模型会被塞爆。
 - `wait_stage` 由 provider 侧循环续片,渲染真正结束才回到模型。
 - 如果装了 [LM Studio](https://lmstudio.ai) 的 `lms` CLI,渲染期间会自动把驱动模型从显存卸掉、渲完再装回 — 单卡机器上出图时画布独占整张卡。
+
+## ComfyUI LLM provider
+
+ComfyUI LLM 更进一步:连外部服务也不需要 — 推理直接跑在 **ComfyUI 本体内**,用的就是核心 `TextGenerate` 节点那套文本编码器推理栈。往 `models/text_encoders` 放一个可生成的 Qwen3 或 Gemma 系权重(如 Qwen3 8B,或 LTX2 已在用的 Gemma 3/4 编码器),provider 即可用;在**设置 → Agent 与 MCP → ComfyUI LLM 模型**里选权重(留空 = 自动取第一个)。Qwen3 有原生工具调用训练、最适合当驱动;Gemma 靠指令跟随同一约定。
+
+对比 Local LLM:
+
+- 零安装零配置 — 不需要端点 URL,不需要额外服务进程。
+- 显存由 ComfyUI 的模型管理统一仲裁:渲染期间 LLM 自动 offload,下一轮对话自动装回 — 不再需要 `lms` 那种手工腾挪。
+- 工具调用走 Qwen3 训练所用的 Hermes 约定(`<tool_call>` 块),由 ComfyTV 负责渲染与解析。
+- 回合经由 `/comfytv/llm/v1` 的 OpenAI 兼容 shim 逐个处理(不支持流式)— bot 开启期间,本机其他应用也可以指向这个端点复用同一模型。
 
 ## 面板用法
 

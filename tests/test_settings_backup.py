@@ -259,7 +259,8 @@ class TestSettingsApi:
             "enable-db-backup", "db-backup-max-count", "db-backup-path",
             "enable-mcp", "enable-bot",
             "bot-model-claude-code", "bot-model-codex", "bot-model-qwen-code",
-            "bot-model-local-llm", "bot-local-llm-url",
+            "bot-model-local-llm", "bot-model-comfyui-llm",
+            "bot-comfyui-llm-thinking", "bot-local-llm-url",
             "bot-enable-comfy-mcp", "bot-comfy-mcp-command",
             "enable-skills", "skills-disabled",
         }
