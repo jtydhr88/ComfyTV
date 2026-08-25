@@ -18,7 +18,51 @@ import type {
 import { attachContextMenuGuard } from './load3dContextMenuGuard'
 import type { RenderLoopHandle } from './load3dRenderLoop'
 import { startRenderLoop } from './load3dRenderLoop'
-import { computeLetterboxedViewport, isLoad3dActive } from './load3dViewport'
+import type {
+  LetterboxedViewport,
+  LetterboxNdc,
+  ViewportRect
+} from './load3dViewport'
+import {
+  clientPointToLetterboxNdc,
+  computeLetterboxBars,
+  computeLetterboxedViewport,
+  isLoad3dActive
+} from './load3dViewport'
+
+const LETTERBOX_CLEAR_COLOR = 0x0a0a0a
+const LETTERBOX_DIM_OPACITY = 0.5
+
+type LetterboxDimmer = {
+  scene: THREE.Scene
+  camera: THREE.OrthographicCamera
+  geometry: THREE.PlaneGeometry
+  material: THREE.MeshBasicMaterial
+}
+
+function supportsViewOffset(
+  camera: THREE.Camera
+): camera is THREE.PerspectiveCamera | THREE.OrthographicCamera {
+  return (
+    camera instanceof THREE.PerspectiveCamera ||
+    camera instanceof THREE.OrthographicCamera
+  )
+}
+
+function createLetterboxDimmer(): LetterboxDimmer {
+  const geometry = new THREE.PlaneGeometry(2, 2)
+  const material = new THREE.MeshBasicMaterial({
+    color: 0x000000,
+    transparent: true,
+    opacity: LETTERBOX_DIM_OPACITY,
+    depthTest: false,
+    depthWrite: false
+  })
+  const scene = new THREE.Scene()
+  scene.add(new THREE.Mesh(geometry, material))
+  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, -1, 1)
+  return { scene, camera, geometry, material }
+}
 
 const VIEW_HELPER_SIZE = 128
 
@@ -34,7 +78,7 @@ export type Viewport3dDeps = {
 
 export class Viewport3d {
   protected readonly view: RendererView
-  protected clock: THREE.Clock
+  protected timer: THREE.Timer
   private renderLoop: RenderLoopHandle | null = null
   private onContextMenuCallback?: (event: MouseEvent) => void
   private getDimensionsCallback?: () => { width: number; height: number } | null
@@ -62,6 +106,7 @@ export class Viewport3d {
   private overlay: SceneOverlay | null = null
   private initialRenderTimer: ReturnType<typeof setTimeout> | null = null
   private viewPixelScale = 1
+  private letterboxDimmer: LetterboxDimmer | null = null
 
   constructor(
     container: HTMLElement,
@@ -69,7 +114,7 @@ export class Viewport3d {
     options: Load3DOptions = {}
   ) {
     this.view = deps.view
-    this.clock = new THREE.Clock()
+    this.timer = new THREE.Timer()
     this.isViewerMode = options.isViewerMode || false
     this.onContextMenuCallback = options.onContextMenu
     this.getDimensionsCallback = options.getDimensions
@@ -174,7 +219,7 @@ export class Viewport3d {
   }
 
   forceRender(): void {
-    const delta = this.clock.getDelta()
+    const delta = this.timer.update().getDelta()
     this.tickPerFrame(delta)
     this.renderView()
     this.INITIAL_RENDER_DONE = true
@@ -182,7 +227,9 @@ export class Viewport3d {
 
   private renderView(): void {
     this.view.beginRender()
+    this.runPreRenderCallbacks()
     this.renderMainScene()
+    this.runPostRenderCallbacks()
 
     this.renderer.setScissorTest(false)
     this.viewHelperManager.render(
@@ -191,6 +238,35 @@ export class Viewport3d {
     )
 
     this.view.blit()
+  }
+
+  private readonly preRenderCallbacks: Array<() => void> = []
+  private readonly postRenderCallbacks: Array<() => void> = []
+
+  addPreRenderCallback(cb: () => void): () => void {
+    const registered = () => cb()
+    this.preRenderCallbacks.push(registered)
+    return () => {
+      const i = this.preRenderCallbacks.indexOf(registered)
+      if (i >= 0) this.preRenderCallbacks.splice(i, 1)
+    }
+  }
+
+  addPostRenderCallback(cb: () => void): () => void {
+    const registered = () => cb()
+    this.postRenderCallbacks.push(registered)
+    return () => {
+      const i = this.postRenderCallbacks.indexOf(registered)
+      if (i >= 0) this.postRenderCallbacks.splice(i, 1)
+    }
+  }
+
+  private runPreRenderCallbacks(): void {
+    for (const cb of [...this.preRenderCallbacks]) cb()
+  }
+
+  private runPostRenderCallbacks(): void {
+    for (const cb of [...this.postRenderCallbacks]) cb()
   }
 
   protected tickPerFrame(delta: number): void {
@@ -279,41 +355,127 @@ export class Viewport3d {
   }
 
   renderMainScene(): void {
-    this.prepareMainViewport()
-    this.sceneManager.renderBackground()
-    this.renderer.render(this.sceneManager.scene, this.getRenderCamera())
-  }
+    const viewWidth = this.view.width
+    const viewHeight = this.view.height
 
-  clientPointToNdc(
-    clientX: number,
-    clientY: number
-  ): { x: number; y: number } | null {
-    const canvas = this.view.canvas
-    const rect = canvas.getBoundingClientRect()
-    if (rect.width <= 0 || rect.height <= 0) return null
-    const nx = (clientX - rect.left) / rect.width
-    const ny = (clientY - rect.top) / rect.height
-
-    if (!this.shouldMaintainAspectRatio()) {
-      return { x: nx * 2 - 1, y: -(ny * 2 - 1) }
+    if (this.getDimensionsCallback) {
+      const dims = this.getDimensionsCallback()
+      if (dims) {
+        this.applyTargetSize(dims.width, dims.height)
+      }
     }
 
-    const containerWidth = canvas.clientWidth
-    const containerHeight = canvas.clientHeight
-    const { offsetX, offsetY, width, height } = computeLetterboxedViewport(
-      { width: containerWidth, height: containerHeight },
+    this.renderer.setViewport(0, 0, viewWidth, viewHeight)
+    this.renderer.setScissor(0, 0, viewWidth, viewHeight)
+    this.renderer.setScissorTest(true)
+
+    if (!this.shouldMaintainAspectRatio()) {
+      this.renderer.setClearColor(
+        this.view.state.clearColor,
+        this.view.state.clearAlpha
+      )
+      this.renderer.clear()
+      this.sceneManager.renderBackground()
+      this.renderer.render(this.sceneManager.scene, this.getRenderCamera())
+      return
+    }
+
+    const container = { width: viewWidth, height: viewHeight }
+    const viewport = computeLetterboxedViewport(
+      container,
       this.targetAspectRatio
     )
-    const lx = (nx * containerWidth - offsetX) / width
-    const ly = (ny * containerHeight - offsetY) / height
-    if (lx < 0 || lx > 1 || ly < 0 || ly > 1) return null
-    return { x: lx * 2 - 1, y: -(ly * 2 - 1) }
+
+    this.renderer.setClearColor(LETTERBOX_CLEAR_COLOR)
+    this.renderer.clear()
+
+    this.cameraManager.updateAspectRatio(viewport.width / viewport.height)
+
+    const camera = this.getRenderCamera()
+
+    if (!supportsViewOffset(camera)) {
+      this.renderer.setViewport(
+        viewport.offsetX,
+        viewport.offsetY,
+        viewport.width,
+        viewport.height
+      )
+      this.renderer.setScissor(
+        viewport.offsetX,
+        viewport.offsetY,
+        viewport.width,
+        viewport.height
+      )
+      this.sceneManager.renderBackground()
+      this.renderer.render(this.sceneManager.scene, camera)
+      return
+    }
+
+    camera.setViewOffset(
+      viewport.width,
+      viewport.height,
+      -viewport.offsetX,
+      -viewport.offsetY,
+      viewWidth,
+      viewHeight
+    )
+
+    this.renderLetterboxedBackground(viewport)
+    this.renderer.render(this.sceneManager.scene, camera)
+    camera.clearViewOffset()
+
+    this.dimLetterboxBars(computeLetterboxBars(container, viewport))
+  }
+
+  private renderLetterboxedBackground(viewport: LetterboxedViewport): void {
+    if (this.sceneManager.getCurrentBackgroundInfo().type !== 'image') {
+      this.sceneManager.renderBackground()
+      return
+    }
+
+    this.renderer.setViewport(
+      viewport.offsetX,
+      viewport.offsetY,
+      viewport.width,
+      viewport.height
+    )
+    this.renderer.setScissor(
+      viewport.offsetX,
+      viewport.offsetY,
+      viewport.width,
+      viewport.height
+    )
+    this.sceneManager.renderBackground()
+    this.renderer.setViewport(0, 0, this.view.width, this.view.height)
+    this.renderer.setScissor(0, 0, this.view.width, this.view.height)
+  }
+
+  private dimLetterboxBars(bars: ViewportRect[]): void {
+    if (bars.length === 0) return
+
+    const dimmer = (this.letterboxDimmer ??= createLetterboxDimmer())
+    for (const bar of bars) {
+      this.renderer.setViewport(bar.x, bar.y, bar.width, bar.height)
+      this.renderer.setScissor(bar.x, bar.y, bar.width, bar.height)
+      this.renderer.render(dimmer.scene, dimmer.camera)
+    }
+  }
+
+  clientPointToNdc(clientX: number, clientY: number): LetterboxNdc | null {
+    const rect = this.domElement.getBoundingClientRect()
+    if (rect.width <= 0 || rect.height <= 0) return null
+    return clientPointToLetterboxNdc(
+      (clientX - rect.left) / rect.width,
+      (clientY - rect.top) / rect.height,
+      { width: rect.width, height: rect.height },
+      this.shouldMaintainAspectRatio() ? this.targetAspectRatio : null
+    )
   }
 
   protected startAnimation(): void {
     this.renderLoop = startRenderLoop({
       tick: () => {
-        const delta = this.clock.getDelta()
+        const delta = this.timer.update().getDelta()
         this.tickPerFrame(delta)
         this.renderView()
       },
@@ -451,6 +613,11 @@ export class Viewport3d {
       this.overlay.detach()
       this.overlay.dispose()
       this.overlay = null
+    }
+    if (this.letterboxDimmer) {
+      this.letterboxDimmer.geometry.dispose()
+      this.letterboxDimmer.material.dispose()
+      this.letterboxDimmer = null
     }
     this.sceneManager.dispose()
     this.cameraManager.dispose()

@@ -4,6 +4,9 @@ import { TransformControls } from 'three/examples/jsm/controls/TransformControls
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 import type { GizmoMode, Model3DTransform } from './interfaces'
+import type { PointerNdcSource } from './load3dViewport'
+
+const OFF_SCREEN_POINTER_NDC = { x: 10, y: 10 }
 
 export class GizmoManager {
   private transformControls: TransformControls | null = null
@@ -22,10 +25,7 @@ export class GizmoManager {
 
   private readonly pivotProxy = new THREE.Object3D()
   private readonly pivotOffset = new THREE.Vector3()
-  private getPointerNdc?: (
-    clientX: number,
-    clientY: number
-  ) => { x: number; y: number } | null
+  private getPointerNdc?: PointerNdcSource
 
   constructor(
     scene: THREE.Scene,
@@ -33,10 +33,7 @@ export class GizmoManager {
     orbitControls: OrbitControls,
     getActiveCamera: () => THREE.Camera,
     onTransformChange?: () => void,
-    getPointerNdc?: (
-      clientX: number,
-      clientY: number
-    ) => { x: number; y: number } | null
+    getPointerNdc?: PointerNdcSource
   ) {
     this.scene = scene
     this.interactionElement = interactionElement
@@ -68,23 +65,19 @@ export class GizmoManager {
 
     if (this.getPointerNdc) {
       const getNdc = this.getPointerNdc
-      const controls = this.transformControls as unknown as {
+      const transformControls = this.transformControls
+      const controls = transformControls as unknown as {
         _getPointer: (event: PointerEvent) => {
           x: number
           y: number
           button: number
         }
       }
-      let lastValid: { x: number; y: number } | null = null
       controls._getPointer = (event: PointerEvent) => {
         const ndc = getNdc(event.clientX, event.clientY)
-        if (!ndc) {
-          if (this.transformControls?.dragging && lastValid) {
-            return { ...lastValid, button: event.button }
-          }
-          return { x: 10, y: 10, button: event.button }
+        if (!ndc || (!ndc.inside && !transformControls.dragging)) {
+          return { ...OFF_SCREEN_POINTER_NDC, button: event.button }
         }
-        lastValid = { x: ndc.x, y: ndc.y }
         return { x: ndc.x, y: ndc.y, button: event.button }
       }
     }

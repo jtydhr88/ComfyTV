@@ -950,7 +950,7 @@ export class Scene3dViewport extends Viewport3d {
     if (!entry || entry.type !== 'directional') return null
     if (!this.lightOrbitHandles.isVisible()) return null
     const ndc = this.clientPointToNdc(event.clientX, event.clientY)
-    if (!ndc) return null
+    if (!ndc || !ndc.inside) return null
     return pickHandleAtPointer<LightOrbitHandleType>(
       this.raycaster,
       new THREE.Vector2(ndc.x, ndc.y),
@@ -1049,7 +1049,7 @@ export class Scene3dViewport extends Viewport3d {
 
   private pickSceneObject(event: PointerEvent): string | null {
     const ndc = this.clientPointToNdc(event.clientX, event.clientY)
-    if (!ndc) return null
+    if (!ndc || !ndc.inside) return null
     this.raycaster.setFromCamera(
       new THREE.Vector2(ndc.x, ndc.y),
       this.getRenderCamera()

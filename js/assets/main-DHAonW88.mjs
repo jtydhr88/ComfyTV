@@ -22176,7 +22176,7 @@ function setQuaternionFromProperEuler(q2, a2, b2, c2, order2) {
       warn("MathUtils: .setQuaternionFromProperEuler() encountered an unknown order: " + order2);
   }
 }
-function denormalize(value, array2) {
+function denormalize$1(value, array2) {
   switch (array2.constructor) {
     case Float32Array:
       return value;
@@ -22196,7 +22196,7 @@ function denormalize(value, array2) {
       throw new Error("Invalid component type.");
   }
 }
-function normalize$1(value, array2) {
+function normalize$2(value, array2) {
   switch (array2.constructor) {
     case Float32Array:
       return value;
@@ -22448,7 +22448,7 @@ const MathUtils = {
    * @param {TypedArray} array - The typed array that defines the data type of the value.
    * @return {number} The normalize value.
    */
-  normalize: normalize$1,
+  normalize: normalize$2,
   /**
    * Denormalizes the given value according to the given typed array.
    *
@@ -22458,7 +22458,7 @@ const MathUtils = {
    * @param {TypedArray} array - The typed array that defines the data type of the value.
    * @return {number} The denormalize (float) value in the range `[0,1]`.
    */
-  denormalize
+  denormalize: denormalize$1
 };
 const _Vector2 = class _Vector2 {
   /**
@@ -31427,7 +31427,7 @@ class BufferAttribute extends EventDispatcher {
    */
   getComponent(index, component) {
     let value = this.array[index * this.itemSize + component];
-    if (this.normalized) value = denormalize(value, this.array);
+    if (this.normalized) value = denormalize$1(value, this.array);
     return value;
   }
   /**
@@ -31439,7 +31439,7 @@ class BufferAttribute extends EventDispatcher {
    * @return {BufferAttribute} A reference to this instance.
    */
   setComponent(index, component, value) {
-    if (this.normalized) value = normalize$1(value, this.array);
+    if (this.normalized) value = normalize$2(value, this.array);
     this.array[index * this.itemSize + component] = value;
     return this;
   }
@@ -31451,7 +31451,7 @@ class BufferAttribute extends EventDispatcher {
    */
   getX(index) {
     let x = this.array[index * this.itemSize];
-    if (this.normalized) x = denormalize(x, this.array);
+    if (this.normalized) x = denormalize$1(x, this.array);
     return x;
   }
   /**
@@ -31462,7 +31462,7 @@ class BufferAttribute extends EventDispatcher {
    * @return {BufferAttribute} A reference to this instance.
    */
   setX(index, x) {
-    if (this.normalized) x = normalize$1(x, this.array);
+    if (this.normalized) x = normalize$2(x, this.array);
     this.array[index * this.itemSize] = x;
     return this;
   }
@@ -31474,7 +31474,7 @@ class BufferAttribute extends EventDispatcher {
    */
   getY(index) {
     let y2 = this.array[index * this.itemSize + 1];
-    if (this.normalized) y2 = denormalize(y2, this.array);
+    if (this.normalized) y2 = denormalize$1(y2, this.array);
     return y2;
   }
   /**
@@ -31485,7 +31485,7 @@ class BufferAttribute extends EventDispatcher {
    * @return {BufferAttribute} A reference to this instance.
    */
   setY(index, y2) {
-    if (this.normalized) y2 = normalize$1(y2, this.array);
+    if (this.normalized) y2 = normalize$2(y2, this.array);
     this.array[index * this.itemSize + 1] = y2;
     return this;
   }
@@ -31497,7 +31497,7 @@ class BufferAttribute extends EventDispatcher {
    */
   getZ(index) {
     let z2 = this.array[index * this.itemSize + 2];
-    if (this.normalized) z2 = denormalize(z2, this.array);
+    if (this.normalized) z2 = denormalize$1(z2, this.array);
     return z2;
   }
   /**
@@ -31508,7 +31508,7 @@ class BufferAttribute extends EventDispatcher {
    * @return {BufferAttribute} A reference to this instance.
    */
   setZ(index, z2) {
-    if (this.normalized) z2 = normalize$1(z2, this.array);
+    if (this.normalized) z2 = normalize$2(z2, this.array);
     this.array[index * this.itemSize + 2] = z2;
     return this;
   }
@@ -31520,7 +31520,7 @@ class BufferAttribute extends EventDispatcher {
    */
   getW(index) {
     let w2 = this.array[index * this.itemSize + 3];
-    if (this.normalized) w2 = denormalize(w2, this.array);
+    if (this.normalized) w2 = denormalize$1(w2, this.array);
     return w2;
   }
   /**
@@ -31531,7 +31531,7 @@ class BufferAttribute extends EventDispatcher {
    * @return {BufferAttribute} A reference to this instance.
    */
   setW(index, w2) {
-    if (this.normalized) w2 = normalize$1(w2, this.array);
+    if (this.normalized) w2 = normalize$2(w2, this.array);
     this.array[index * this.itemSize + 3] = w2;
     return this;
   }
@@ -31546,8 +31546,8 @@ class BufferAttribute extends EventDispatcher {
   setXY(index, x, y2) {
     index *= this.itemSize;
     if (this.normalized) {
-      x = normalize$1(x, this.array);
-      y2 = normalize$1(y2, this.array);
+      x = normalize$2(x, this.array);
+      y2 = normalize$2(y2, this.array);
     }
     this.array[index + 0] = x;
     this.array[index + 1] = y2;
@@ -31565,9 +31565,9 @@ class BufferAttribute extends EventDispatcher {
   setXYZ(index, x, y2, z2) {
     index *= this.itemSize;
     if (this.normalized) {
-      x = normalize$1(x, this.array);
-      y2 = normalize$1(y2, this.array);
-      z2 = normalize$1(z2, this.array);
+      x = normalize$2(x, this.array);
+      y2 = normalize$2(y2, this.array);
+      z2 = normalize$2(z2, this.array);
     }
     this.array[index + 0] = x;
     this.array[index + 1] = y2;
@@ -31587,10 +31587,10 @@ class BufferAttribute extends EventDispatcher {
   setXYZW(index, x, y2, z2, w2) {
     index *= this.itemSize;
     if (this.normalized) {
-      x = normalize$1(x, this.array);
-      y2 = normalize$1(y2, this.array);
-      z2 = normalize$1(z2, this.array);
-      w2 = normalize$1(w2, this.array);
+      x = normalize$2(x, this.array);
+      y2 = normalize$2(y2, this.array);
+      z2 = normalize$2(z2, this.array);
+      w2 = normalize$2(w2, this.array);
     }
     this.array[index + 0] = x;
     this.array[index + 1] = y2;
@@ -32977,7 +32977,7 @@ class InterleavedBufferAttribute {
    */
   getComponent(index, component) {
     let value = this.array[index * this.data.stride + this.offset + component];
-    if (this.normalized) value = denormalize(value, this.array);
+    if (this.normalized) value = denormalize$1(value, this.array);
     return value;
   }
   /**
@@ -32989,7 +32989,7 @@ class InterleavedBufferAttribute {
    * @return {InterleavedBufferAttribute} A reference to this instance.
    */
   setComponent(index, component, value) {
-    if (this.normalized) value = normalize$1(value, this.array);
+    if (this.normalized) value = normalize$2(value, this.array);
     this.data.array[index * this.data.stride + this.offset + component] = value;
     return this;
   }
@@ -33001,7 +33001,7 @@ class InterleavedBufferAttribute {
    * @return {InterleavedBufferAttribute} A reference to this instance.
    */
   setX(index, x) {
-    if (this.normalized) x = normalize$1(x, this.array);
+    if (this.normalized) x = normalize$2(x, this.array);
     this.data.array[index * this.data.stride + this.offset] = x;
     return this;
   }
@@ -33013,7 +33013,7 @@ class InterleavedBufferAttribute {
    * @return {InterleavedBufferAttribute} A reference to this instance.
    */
   setY(index, y2) {
-    if (this.normalized) y2 = normalize$1(y2, this.array);
+    if (this.normalized) y2 = normalize$2(y2, this.array);
     this.data.array[index * this.data.stride + this.offset + 1] = y2;
     return this;
   }
@@ -33025,7 +33025,7 @@ class InterleavedBufferAttribute {
    * @return {InterleavedBufferAttribute} A reference to this instance.
    */
   setZ(index, z2) {
-    if (this.normalized) z2 = normalize$1(z2, this.array);
+    if (this.normalized) z2 = normalize$2(z2, this.array);
     this.data.array[index * this.data.stride + this.offset + 2] = z2;
     return this;
   }
@@ -33037,7 +33037,7 @@ class InterleavedBufferAttribute {
    * @return {InterleavedBufferAttribute} A reference to this instance.
    */
   setW(index, w2) {
-    if (this.normalized) w2 = normalize$1(w2, this.array);
+    if (this.normalized) w2 = normalize$2(w2, this.array);
     this.data.array[index * this.data.stride + this.offset + 3] = w2;
     return this;
   }
@@ -33049,7 +33049,7 @@ class InterleavedBufferAttribute {
    */
   getX(index) {
     let x = this.data.array[index * this.data.stride + this.offset];
-    if (this.normalized) x = denormalize(x, this.array);
+    if (this.normalized) x = denormalize$1(x, this.array);
     return x;
   }
   /**
@@ -33060,7 +33060,7 @@ class InterleavedBufferAttribute {
    */
   getY(index) {
     let y2 = this.data.array[index * this.data.stride + this.offset + 1];
-    if (this.normalized) y2 = denormalize(y2, this.array);
+    if (this.normalized) y2 = denormalize$1(y2, this.array);
     return y2;
   }
   /**
@@ -33071,7 +33071,7 @@ class InterleavedBufferAttribute {
    */
   getZ(index) {
     let z2 = this.data.array[index * this.data.stride + this.offset + 2];
-    if (this.normalized) z2 = denormalize(z2, this.array);
+    if (this.normalized) z2 = denormalize$1(z2, this.array);
     return z2;
   }
   /**
@@ -33082,7 +33082,7 @@ class InterleavedBufferAttribute {
    */
   getW(index) {
     let w2 = this.data.array[index * this.data.stride + this.offset + 3];
-    if (this.normalized) w2 = denormalize(w2, this.array);
+    if (this.normalized) w2 = denormalize$1(w2, this.array);
     return w2;
   }
   /**
@@ -33096,8 +33096,8 @@ class InterleavedBufferAttribute {
   setXY(index, x, y2) {
     index = index * this.data.stride + this.offset;
     if (this.normalized) {
-      x = normalize$1(x, this.array);
-      y2 = normalize$1(y2, this.array);
+      x = normalize$2(x, this.array);
+      y2 = normalize$2(y2, this.array);
     }
     this.data.array[index + 0] = x;
     this.data.array[index + 1] = y2;
@@ -33115,9 +33115,9 @@ class InterleavedBufferAttribute {
   setXYZ(index, x, y2, z2) {
     index = index * this.data.stride + this.offset;
     if (this.normalized) {
-      x = normalize$1(x, this.array);
-      y2 = normalize$1(y2, this.array);
-      z2 = normalize$1(z2, this.array);
+      x = normalize$2(x, this.array);
+      y2 = normalize$2(y2, this.array);
+      z2 = normalize$2(z2, this.array);
     }
     this.data.array[index + 0] = x;
     this.data.array[index + 1] = y2;
@@ -33137,10 +33137,10 @@ class InterleavedBufferAttribute {
   setXYZW(index, x, y2, z2, w2) {
     index = index * this.data.stride + this.offset;
     if (this.normalized) {
-      x = normalize$1(x, this.array);
-      y2 = normalize$1(y2, this.array);
-      z2 = normalize$1(z2, this.array);
-      w2 = normalize$1(w2, this.array);
+      x = normalize$2(x, this.array);
+      y2 = normalize$2(y2, this.array);
+      z2 = normalize$2(z2, this.array);
+      w2 = normalize$2(w2, this.array);
     }
     this.data.array[index + 0] = x;
     this.data.array[index + 1] = y2;
@@ -42513,6 +42513,120 @@ class ArrayCamera extends PerspectiveCamera {
     this.isMultiViewCamera = false;
     this.cameras = array2;
   }
+}
+class Timer {
+  /**
+   * Constructs a new timer.
+   */
+  constructor() {
+    this._previousTime = 0;
+    this._currentTime = 0;
+    this._startTime = performance.now();
+    this._delta = 0;
+    this._elapsed = 0;
+    this._timescale = 1;
+    this._document = null;
+    this._pageVisibilityHandler = null;
+  }
+  /**
+   * Connect the timer to the given document.Calling this method is not mandatory to
+   * use the timer but enables the usage of the Page Visibility API to avoid large time
+   * delta values.
+   *
+   * @param {Document} document - The document.
+   */
+  connect(document2) {
+    this._document = document2;
+    if (document2.hidden !== void 0) {
+      this._pageVisibilityHandler = handleVisibilityChange.bind(this);
+      document2.addEventListener("visibilitychange", this._pageVisibilityHandler, false);
+    }
+  }
+  /**
+   * Disconnects the timer from the DOM and also disables the usage of the Page Visibility API.
+   */
+  disconnect() {
+    if (this._pageVisibilityHandler !== null) {
+      this._document.removeEventListener("visibilitychange", this._pageVisibilityHandler);
+      this._pageVisibilityHandler = null;
+    }
+    this._document = null;
+  }
+  /**
+   * Returns the time delta in seconds.
+   *
+   * @return {number} The time delta in second.
+   */
+  getDelta() {
+    return this._delta / 1e3;
+  }
+  /**
+   * Returns the elapsed time in seconds.
+   *
+   * @return {number} The elapsed time in second.
+   */
+  getElapsed() {
+    return this._elapsed / 1e3;
+  }
+  /**
+   * Returns the timescale.
+   *
+   * @return {number} The timescale.
+   */
+  getTimescale() {
+    return this._timescale;
+  }
+  /**
+   * Sets the given timescale which scale the time delta computation
+   * in `update()`.
+   *
+   * @param {number} timescale - The timescale to set.
+   * @return {Timer} A reference to this timer.
+   */
+  setTimescale(timescale) {
+    this._timescale = timescale;
+    return this;
+  }
+  /**
+   * Resets the time computation for the current simulation step.
+   *
+   * @return {Timer} A reference to this timer.
+   */
+  reset() {
+    this._currentTime = performance.now() - this._startTime;
+    return this;
+  }
+  /**
+   * Can be used to free all internal resources. Usually called when
+   * the timer instance isn't required anymore.
+   */
+  dispose() {
+    this.disconnect();
+  }
+  /**
+   * Updates the internal state of the timer. This method should be called
+   * once per simulation step and before you perform queries against the timer
+   * (e.g. via `getDelta()`).
+   *
+   * @param {number} timestamp - The current time in milliseconds. Can be obtained
+   * from the `requestAnimationFrame` callback argument. If not provided, the current
+   * time will be determined with `performance.now`.
+   * @return {Timer} A reference to this timer.
+   */
+  update(timestamp) {
+    if (this._pageVisibilityHandler !== null && this._document.hidden === true) {
+      this._delta = 0;
+    } else {
+      this._previousTime = this._currentTime;
+      this._currentTime = (timestamp !== void 0 ? timestamp : performance.now()) - this._startTime;
+      this._delta = (this._currentTime - this._previousTime) * this._timescale;
+      this._elapsed += this._delta;
+    }
+    return this;
+  }
+}
+function handleVisibilityChange() {
+  if (this._document.hidden === false) this.reset();
 }
 class PropertyMixer {
   /**
@@ -57283,7 +57397,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-Q3Orf6N3.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-omW9Rila.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -91802,7 +91916,7 @@ function normalizeKeyName$1(name) {
     result = "Shift-" + result;
   return result;
 }
-function normalize(map2) {
+function normalize$1(map2) {
   let copy2 = /* @__PURE__ */ Object.create(null);
   for (let prop in map2)
     copy2[normalizeKeyName$1(prop)] = map2[prop];
@@ -91823,7 +91937,7 @@ function keymap(bindings) {
   return new Plugin({ props: { handleKeyDown: keydownHandler(bindings) } });
 }
 function keydownHandler(bindings) {
-  let map2 = normalize(bindings);
+  let map2 = normalize$1(bindings);
   return function(view, event) {
     let name = keyName(event), baseName2, direct = map2[modifiers(name, event)];
     if (direct && direct(view.state, view.dispatch, view))
@@ -112756,6 +112870,7 @@ const _sfc_main$3A = /* @__PURE__ */ defineComponent({
       view.setSize(w2 * scale, h2 * scale);
       camera2.aspect = w2 / h2;
       camera2.updateProjectionMatrix();
+      if (scene) view.renderScene(scene, camera2);
     }
     function frameModel(root) {
       if (!camera2 || !controls) return;
@@ -123111,6 +123226,7 @@ class TransformControlsPlane extends Mesh {
     super.updateMatrixWorld(force);
   }
 }
+const OFF_SCREEN_POINTER_NDC$1 = { x: 10, y: 10 };
 class PositionHandle {
   constructor(name, camera2, domElement, onDraggingChange, onChange, options = {}) {
     __publicField(this, "proxy");
@@ -123145,9 +123261,12 @@ class PositionHandle {
     if (options.getPointerNdc) {
       const getNdc = options.getPointerNdc;
       const controls = this.controls;
+      const transformControls = this.controls;
       controls._getPointer = (event) => {
         const ndc = getNdc(event.clientX, event.clientY);
-        if (!ndc) return { x: 10, y: 10, button: event.button };
+        if (!ndc || !ndc.inside && !transformControls.dragging) {
+          return { ...OFF_SCREEN_POINTER_NDC$1, button: event.button };
+        }
         return { x: ndc.x, y: ndc.y, button: event.button };
       };
     }
@@ -136489,7 +136608,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-nMODreIW.mjs");
+    const { STLLoader } = await import("./STLLoader-BYpX2zWD.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -136497,7 +136616,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-BvDpKrmV.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-C_sN_icd.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -138387,6 +138506,7 @@ const _sfc_main$2S = /* @__PURE__ */ defineComponent({
       view.setSize(w2 * scale, h2 * scale);
       camera2.aspect = w2 / h2;
       camera2.updateProjectionMatrix();
+      if (scene) view.renderScene(scene, camera2);
     }
     function rebuild() {
       if (!scene) return;
@@ -138980,6 +139100,7 @@ const _sfc_main$2Q = /* @__PURE__ */ defineComponent({
       view.setSize(w2 * scale, h2 * scale);
       camera2.aspect = w2 / h2;
       camera2.updateProjectionMatrix();
+      if (scene) view.renderScene(scene, camera2);
     }
     function animate() {
       animationId = requestAnimationFrame(animate);
@@ -139260,7 +139381,7 @@ const _sfc_main$2Q = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const MeshBooleanStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$2Q, [["__scopeId", "data-v-65e0b8b5"]]);
+const MeshBooleanStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$2Q, [["__scopeId", "data-v-ab5e5531"]]);
 function computeFit$1(boxW, boxH, mediaW, mediaH) {
   if (!boxW || !boxH || !mediaW || !mediaH) return { scale: 1, offX: 0, offY: 0 };
   const scale = Math.min(boxW / mediaW, boxH / mediaH);
@@ -147334,6 +147455,7 @@ async function fetchCameraPresetData(file) {
   }
   return cached2;
 }
+const OFF_SCREEN_POINTER_NDC = { x: 10, y: 10 };
 class GizmoManager {
   constructor(scene, interactionElement, orbitControls, getActiveCamera, onTransformChange, getPointerNdc) {
     __publicField(this, "transformControls", null);
@@ -147377,18 +147499,13 @@ class GizmoManager {
     });
     if (this.getPointerNdc) {
       const getNdc = this.getPointerNdc;
-      const controls = this.transformControls;
-      let lastValid = null;
+      const transformControls = this.transformControls;
+      const controls = transformControls;
       controls._getPointer = (event) => {
-        var _a3;
         const ndc = getNdc(event.clientX, event.clientY);
-        if (!ndc) {
-          if (((_a3 = this.transformControls) == null ? void 0 : _a3.dragging) && lastValid) {
-            return { ...lastValid, button: event.button };
-          }
-          return { x: 10, y: 10, button: event.button };
+        if (!ndc || !ndc.inside && !transformControls.dragging) {
+          return { ...OFF_SCREEN_POINTER_NDC, button: event.button };
         }
-        lastValid = { x: ndc.x, y: ndc.y };
         return { x: ndc.x, y: ndc.y, button: event.button };
       };
     }
@@ -152909,6 +153026,12 @@ function startRenderLoop({
     }
   };
 }
+function normalize(value, min2, max2) {
+  return (value - min2) / (max2 - min2);
+}
+function denormalize(value, min2, max2) {
+  return min2 + value * (max2 - min2);
+}
 function computeLetterboxedViewport(container, targetAspectRatio) {
   const containerAspectRatio = container.width / container.height;
   if (containerAspectRatio > targetAspectRatio) {
@@ -152930,14 +153053,77 @@ function computeLetterboxedViewport(container, targetAspectRatio) {
     height
   };
 }
+function clientPointToLetterboxNdc(normalizedX, normalizedY, container, targetAspectRatio) {
+  const toNdc = (localX, localY) => ({
+    x: denormalize(localX, -1, 1),
+    y: -denormalize(localY, -1, 1),
+    inside: localX >= 0 && localX <= 1 && localY >= 0 && localY <= 1
+  });
+  if (targetAspectRatio === null) {
+    return toNdc(normalizedX, normalizedY);
+  }
+  const { offsetX, offsetY, width, height } = computeLetterboxedViewport(
+    container,
+    targetAspectRatio
+  );
+  if (width <= 0 || height <= 0) return null;
+  return toNdc(
+    normalize(normalizedX * container.width, offsetX, offsetX + width),
+    normalize(normalizedY * container.height, offsetY, offsetY + height)
+  );
+}
+function computeLetterboxBars(container, viewport2) {
+  if (viewport2.offsetX >= 1) {
+    return [
+      { x: 0, y: 0, width: viewport2.offsetX, height: container.height },
+      {
+        x: viewport2.offsetX + viewport2.width,
+        y: 0,
+        width: container.width - viewport2.offsetX - viewport2.width,
+        height: container.height
+      }
+    ];
+  }
+  if (viewport2.offsetY >= 1) {
+    return [
+      { x: 0, y: 0, width: container.width, height: viewport2.offsetY },
+      {
+        x: 0,
+        y: viewport2.offsetY + viewport2.height,
+        width: container.width,
+        height: container.height - viewport2.offsetY - viewport2.height
+      }
+    ];
+  }
+  return [];
+}
 function isLoad3dActive(flags) {
   return flags.mouseOnNode || flags.mouseOnScene || flags.mouseOnViewer || flags.recording || !flags.initialRenderDone || flags.animationPlaying;
+}
+const LETTERBOX_CLEAR_COLOR = 657930;
+const LETTERBOX_DIM_OPACITY = 0.5;
+function supportsViewOffset(camera2) {
+  return camera2 instanceof PerspectiveCamera || camera2 instanceof OrthographicCamera;
+}
+function createLetterboxDimmer() {
+  const geometry = new PlaneGeometry(2, 2);
+  const material = new MeshBasicMaterial({
+    color: 0,
+    transparent: true,
+    opacity: LETTERBOX_DIM_OPACITY,
+    depthTest: false,
+    depthWrite: false
+  });
+  const scene = new Scene();
+  scene.add(new Mesh(geometry, material));
+  const camera2 = new OrthographicCamera(-1, 1, 1, -1, -1, 1);
+  return { scene, camera: camera2, geometry, material };
 }
 const VIEW_HELPER_SIZE = 128;
 class Viewport3d {
   constructor(container, deps, options = {}) {
     __publicField(this, "view");
-    __publicField(this, "clock");
+    __publicField(this, "timer");
     __publicField(this, "renderLoop", null);
     __publicField(this, "onContextMenuCallback");
     __publicField(this, "getDimensionsCallback");
@@ -152961,9 +153147,12 @@ class Viewport3d {
     __publicField(this, "overlay", null);
     __publicField(this, "initialRenderTimer", null);
     __publicField(this, "viewPixelScale", 1);
+    __publicField(this, "letterboxDimmer", null);
     __publicField(this, "hasStarted", false);
+    __publicField(this, "preRenderCallbacks", []);
+    __publicField(this, "postRenderCallbacks", []);
     this.view = deps.view;
-    this.clock = new Clock();
+    this.timer = new Timer();
     this.isViewerMode = options.isViewerMode || false;
     this.onContextMenuCallback = options.onContextMenu;
     this.getDimensionsCallback = options.getDimensions;
@@ -153053,20 +153242,44 @@ class Viewport3d {
     return this.isViewerMode || this.targetWidth > 0 && this.targetHeight > 0;
   }
   forceRender() {
-    const delta = this.clock.getDelta();
+    const delta = this.timer.update().getDelta();
     this.tickPerFrame(delta);
     this.renderView();
     this.INITIAL_RENDER_DONE = true;
   }
   renderView() {
     this.view.beginRender();
+    this.runPreRenderCallbacks();
     this.renderMainScene();
+    this.runPostRenderCallbacks();
     this.renderer.setScissorTest(false);
     this.viewHelperManager.render(
       this.renderer,
       VIEW_HELPER_SIZE * this.viewPixelScale
     );
     this.view.blit();
+  }
+  addPreRenderCallback(cb) {
+    const registered2 = () => cb();
+    this.preRenderCallbacks.push(registered2);
+    return () => {
+      const i = this.preRenderCallbacks.indexOf(registered2);
+      if (i >= 0) this.preRenderCallbacks.splice(i, 1);
+    };
+  }
+  addPostRenderCallback(cb) {
+    const registered2 = () => cb();
+    this.postRenderCallbacks.push(registered2);
+    return () => {
+      const i = this.postRenderCallbacks.indexOf(registered2);
+      if (i >= 0) this.postRenderCallbacks.splice(i, 1);
+    };
+  }
+  runPreRenderCallbacks() {
+    for (const cb of [...this.preRenderCallbacks]) cb();
+  }
+  runPostRenderCallbacks() {
+    for (const cb of [...this.postRenderCallbacks]) cb();
   }
   tickPerFrame(delta) {
     var _a3, _b2;
@@ -153144,34 +153357,110 @@ class Viewport3d {
     }
   }
   renderMainScene() {
-    this.prepareMainViewport();
-    this.sceneManager.renderBackground();
-    this.renderer.render(this.sceneManager.scene, this.getRenderCamera());
-  }
-  clientPointToNdc(clientX, clientY) {
-    const canvas = this.view.canvas;
-    const rect = canvas.getBoundingClientRect();
-    if (rect.width <= 0 || rect.height <= 0) return null;
-    const nx = (clientX - rect.left) / rect.width;
-    const ny = (clientY - rect.top) / rect.height;
-    if (!this.shouldMaintainAspectRatio()) {
-      return { x: nx * 2 - 1, y: -(ny * 2 - 1) };
+    const viewWidth = this.view.width;
+    const viewHeight = this.view.height;
+    if (this.getDimensionsCallback) {
+      const dims = this.getDimensionsCallback();
+      if (dims) {
+        this.applyTargetSize(dims.width, dims.height);
+      }
     }
-    const containerWidth = canvas.clientWidth;
-    const containerHeight = canvas.clientHeight;
-    const { offsetX, offsetY, width, height } = computeLetterboxedViewport(
-      { width: containerWidth, height: containerHeight },
+    this.renderer.setViewport(0, 0, viewWidth, viewHeight);
+    this.renderer.setScissor(0, 0, viewWidth, viewHeight);
+    this.renderer.setScissorTest(true);
+    if (!this.shouldMaintainAspectRatio()) {
+      this.renderer.setClearColor(
+        this.view.state.clearColor,
+        this.view.state.clearAlpha
+      );
+      this.renderer.clear();
+      this.sceneManager.renderBackground();
+      this.renderer.render(this.sceneManager.scene, this.getRenderCamera());
+      return;
+    }
+    const container = { width: viewWidth, height: viewHeight };
+    const viewport2 = computeLetterboxedViewport(
+      container,
       this.targetAspectRatio
     );
-    const lx = (nx * containerWidth - offsetX) / width;
-    const ly = (ny * containerHeight - offsetY) / height;
-    if (lx < 0 || lx > 1 || ly < 0 || ly > 1) return null;
-    return { x: lx * 2 - 1, y: -(ly * 2 - 1) };
+    this.renderer.setClearColor(LETTERBOX_CLEAR_COLOR);
+    this.renderer.clear();
+    this.cameraManager.updateAspectRatio(viewport2.width / viewport2.height);
+    const camera2 = this.getRenderCamera();
+    if (!supportsViewOffset(camera2)) {
+      this.renderer.setViewport(
+        viewport2.offsetX,
+        viewport2.offsetY,
+        viewport2.width,
+        viewport2.height
+      );
+      this.renderer.setScissor(
+        viewport2.offsetX,
+        viewport2.offsetY,
+        viewport2.width,
+        viewport2.height
+      );
+      this.sceneManager.renderBackground();
+      this.renderer.render(this.sceneManager.scene, camera2);
+      return;
+    }
+    camera2.setViewOffset(
+      viewport2.width,
+      viewport2.height,
+      -viewport2.offsetX,
+      -viewport2.offsetY,
+      viewWidth,
+      viewHeight
+    );
+    this.renderLetterboxedBackground(viewport2);
+    this.renderer.render(this.sceneManager.scene, camera2);
+    camera2.clearViewOffset();
+    this.dimLetterboxBars(computeLetterboxBars(container, viewport2));
+  }
+  renderLetterboxedBackground(viewport2) {
+    if (this.sceneManager.getCurrentBackgroundInfo().type !== "image") {
+      this.sceneManager.renderBackground();
+      return;
+    }
+    this.renderer.setViewport(
+      viewport2.offsetX,
+      viewport2.offsetY,
+      viewport2.width,
+      viewport2.height
+    );
+    this.renderer.setScissor(
+      viewport2.offsetX,
+      viewport2.offsetY,
+      viewport2.width,
+      viewport2.height
+    );
+    this.sceneManager.renderBackground();
+    this.renderer.setViewport(0, 0, this.view.width, this.view.height);
+    this.renderer.setScissor(0, 0, this.view.width, this.view.height);
+  }
+  dimLetterboxBars(bars) {
+    if (bars.length === 0) return;
+    const dimmer = this.letterboxDimmer ?? (this.letterboxDimmer = createLetterboxDimmer());
+    for (const bar of bars) {
+      this.renderer.setViewport(bar.x, bar.y, bar.width, bar.height);
+      this.renderer.setScissor(bar.x, bar.y, bar.width, bar.height);
+      this.renderer.render(dimmer.scene, dimmer.camera);
+    }
+  }
+  clientPointToNdc(clientX, clientY) {
+    const rect = this.domElement.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) return null;
+    return clientPointToLetterboxNdc(
+      (clientX - rect.left) / rect.width,
+      (clientY - rect.top) / rect.height,
+      { width: rect.width, height: rect.height },
+      this.shouldMaintainAspectRatio() ? this.targetAspectRatio : null
+    );
   }
   startAnimation() {
     this.renderLoop = startRenderLoop({
       tick: () => {
-        const delta = this.clock.getDelta();
+        const delta = this.timer.update().getDelta();
         this.tickPerFrame(delta);
         this.renderView();
       },
@@ -153285,6 +153574,11 @@ class Viewport3d {
       this.overlay.detach();
       this.overlay.dispose();
       this.overlay = null;
+    }
+    if (this.letterboxDimmer) {
+      this.letterboxDimmer.geometry.dispose();
+      this.letterboxDimmer.material.dispose();
+      this.letterboxDimmer = null;
     }
     this.sceneManager.dispose();
     this.cameraManager.dispose();
@@ -154719,7 +155013,7 @@ class Scene3dViewport extends Viewport3d {
     if (!entry || entry.type !== "directional") return null;
     if (!this.lightOrbitHandles.isVisible()) return null;
     const ndc = this.clientPointToNdc(event.clientX, event.clientY);
-    if (!ndc) return null;
+    if (!ndc || !ndc.inside) return null;
     return pickHandleAtPointer(
       this.raycaster,
       new Vector2(ndc.x, ndc.y),
@@ -154812,7 +155106,7 @@ class Scene3dViewport extends Viewport3d {
   }
   pickSceneObject(event) {
     const ndc = this.clientPointToNdc(event.clientX, event.clientY);
-    if (!ndc) return null;
+    if (!ndc || !ndc.inside) return null;
     this.raycaster.setFromCamera(
       new Vector2(ndc.x, ndc.y),
       this.getRenderCamera()
@@ -186736,7 +187030,7 @@ const _sfc_main$2i = /* @__PURE__ */ defineComponent({
       view.setSize(w2 * scale, h2 * scale);
       camera2.aspect = w2 / h2;
       camera2.updateProjectionMatrix();
-      scheduleRender();
+      renderNow();
     }
     onMounted(() => {
       if (!hostEl.value) return;
@@ -223680,4 +223974,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-BPNFOCKK.mjs.map
+//# sourceMappingURL=main-DHAonW88.mjs.map

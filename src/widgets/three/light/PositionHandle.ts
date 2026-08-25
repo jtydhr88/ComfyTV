@@ -1,10 +1,14 @@
 ﻿import * as THREE from 'three'
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js'
 
+import type { PointerNdcSource } from '@/widgets/three/load3d/load3dViewport'
+
 import type { Vec3 } from './types'
 
 type DraggingChangeListener = (dragging: boolean) => void
 type ChangeListener = (position: Vec3) => void
+
+const OFF_SCREEN_POINTER_NDC = { x: 10, y: 10 }
 
 export class PositionHandle {
   private readonly proxy: THREE.Object3D
@@ -21,10 +25,7 @@ export class PositionHandle {
     private readonly onDraggingChange: DraggingChangeListener,
     private readonly onChange: ChangeListener,
     options: {
-      getPointerNdc?: (
-        clientX: number,
-        clientY: number
-      ) => { x: number; y: number } | null
+      getPointerNdc?: PointerNdcSource
     } = {}
   ) {
     this.proxy = new THREE.Object3D()
@@ -48,9 +49,12 @@ export class PositionHandle {
           button: number
         }
       }
+      const transformControls = this.controls
       controls._getPointer = (event: PointerEvent) => {
         const ndc = getNdc(event.clientX, event.clientY)
-        if (!ndc) return { x: 10, y: 10, button: event.button }
+        if (!ndc || (!ndc.inside && !transformControls.dragging)) {
+          return { ...OFF_SCREEN_POINTER_NDC, button: event.button }
+        }
         return { x: ndc.x, y: ndc.y, button: event.button }
       }
     }

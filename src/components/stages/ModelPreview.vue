@@ -109,6 +109,7 @@ function syncSize(): void {
   view.setSize(w * scale, h * scale)
   camera.aspect = w / h
   camera.updateProjectionMatrix()
+  if (scene) view.renderScene(scene, camera)
 }
 
 function frameModel(root: THREE.Object3D): void {

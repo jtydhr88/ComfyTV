@@ -69,7 +69,7 @@ function syncSize(): void {
   view.setSize(w * scale, h * scale)
   camera.aspect = w / h
   camera.updateProjectionMatrix()
-  scheduleRender()
+  renderNow()
 }
 
 onMounted(() => {
