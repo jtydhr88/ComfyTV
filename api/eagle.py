@@ -40,7 +40,7 @@ async def eagle_status(request: web.Request) -> web.Response:
         return web.json_response({"enabled": False, "mode": "disabled",
                                   "pending": 0})
     status = await eagle.probe(fresh=request.query.get("fresh") == "1")
-    pending = storage.eagle_pending_count()
+    pending = await asyncio.to_thread(storage.eagle_pending_count)
     if status["mode"] == "api" and pending > 0:
         _autoflush()
     return web.json_response({"enabled": True, **status, "pending": pending})
@@ -137,12 +137,18 @@ async def _item_file(request: web.Request, thumb: bool):
     if not eagle_lib.valid_item_id(item_id):
         return web.json_response({"error": "invalid item id"}, status=400)
     status = await eagle.probe()
-    lib = eagle.library_for_reads(status)
-    if lib is None:
-        return web.json_response({"error": "no eagle library reachable"}, status=409)
     resolver = eagle_lib.item_thumb_file if thumb else eagle_lib.item_main_file
-    path = await asyncio.to_thread(resolver, lib, item_id)
+
+    def _resolve():
+        lib = eagle.library_for_reads(status)
+        if lib is None:
+            return None
+        return resolver(lib, item_id) or "missing"
+
+    path = await asyncio.to_thread(_resolve)
     if path is None:
+        return web.json_response({"error": "no eagle library reachable"}, status=409)
+    if path == "missing":
         return web.Response(status=404)
     if thumb:
         # Items without an Eagle thumbnail resolve to the original file —
@@ -197,7 +203,7 @@ async def eagle_import(request: web.Request) -> web.Response:
         return web.json_response({"error": "invalid item id"}, status=400)
 
     status = await eagle.probe()
-    lib = eagle.library_for_reads(status)
+    lib = await asyncio.to_thread(eagle.library_for_reads, status)
     if lib is None:
         return web.json_response({"error": "no eagle library reachable"}, status=409)
 

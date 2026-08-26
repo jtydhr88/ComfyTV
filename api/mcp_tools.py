@@ -1269,7 +1269,7 @@ async def _wait_stage(args: dict) -> dict:
     if after is not None:
         baseline = int(after)
     else:
-        row = storage.latest_output_by_uid(pid, uid)
+        row = await asyncio.to_thread(storage.latest_output_by_uid, pid, uid)
         baseline = int(row["id"]) if row else 0
 
     def _is_fresh(row) -> bool:
@@ -1284,7 +1284,7 @@ async def _wait_stage(args: dict) -> dict:
 
     t0 = time.monotonic()
     while True:
-        row = storage.latest_output_by_uid(pid, uid)
+        row = await asyncio.to_thread(storage.latest_output_by_uid, pid, uid)
         if _is_fresh(row):
             return {
                 "status": "done",

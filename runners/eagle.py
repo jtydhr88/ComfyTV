@@ -72,7 +72,7 @@ async def probe(*, fresh: bool = False) -> dict:
             and now - _probe_cache["at"] < PROBE_CACHE_TTL_S:
         return _probe_cache["status"]
 
-    pinned = pinned_library()
+    pinned = await asyncio.to_thread(pinned_library)
     status: dict[str, Any] = {
         "online": False,
         "version": None,
@@ -115,7 +115,7 @@ async def probe(*, fresh: bool = False) -> dict:
             current and _norm_path(current) == _norm_path(pinned))):
         status["library_match"] = True
         status["mode"] = "api"
-    elif pinned and Path(pinned).is_dir():
+    elif pinned and await asyncio.to_thread(lambda: Path(pinned).is_dir()):
         status["mode"] = "disk"
 
     _probe_cache["at"] = now
@@ -209,7 +209,7 @@ async def list_items(status: dict, *, keyword: str = "", folder: str = "",
         items = [eagle_lib.normalize_item(r) for r in (raw or [])]
         return {"items": [i for i in items if i is not None], "total": None}
 
-    lib = library_for_reads(status)
+    lib = await asyncio.to_thread(library_for_reads, status)
     if lib is None:
         return {"items": [], "total": 0}
     items = await asyncio.to_thread(eagle_lib.read_items, lib)
@@ -263,7 +263,7 @@ async def list_folders(status: dict) -> list[dict]:
         out: list[dict] = []
         _flatten_api_folders(raw, None, 0, out)
         return out
-    lib = library_for_reads(status)
+    lib = await asyncio.to_thread(library_for_reads, status)
     if lib is None:
         return []
     return await asyncio.to_thread(eagle_lib.read_folders, lib)
@@ -363,7 +363,7 @@ async def send_or_queue(payload_url: str, *, name: str = "",
     from .. import storage
     from .media import view_url_to_path
 
-    path = view_url_to_path(payload_url)
+    path = await asyncio.to_thread(view_url_to_path, payload_url)
     if path is None:
         raise FileNotFoundError(payload_url)
     try:
@@ -371,7 +371,8 @@ async def send_or_queue(payload_url: str, *, name: str = "",
                        folder=folder)
         return {"sent": True}
     except EagleUnavailable as e:
-        row = storage.enqueue_eagle_send(
+        row = await asyncio.to_thread(
+            storage.enqueue_eagle_send,
             payload_url=payload_url, name=name, tags=tags,
             annotation=annotation, folder=folder)
         return {"sent": False, "queued": True, "pending": row,
@@ -383,25 +384,26 @@ async def flush_pending() -> dict:
     from .media import view_url_to_path
 
     async with _flush_lock:
-        rows = storage.list_eagle_pending()
+        rows = await asyncio.to_thread(storage.list_eagle_pending)
         sent = failed = 0
         for row in rows:
             try:
-                path = view_url_to_path(row["payload_url"])
+                path = await asyncio.to_thread(view_url_to_path, row["payload_url"])
                 if path is None:
                     raise FileNotFoundError(row["payload_url"])
                 await send_now(path, name=row["name"], tags=row["tags"],
                                annotation=row.get("annotation"),
                                folder=row.get("folder"))
-                storage.resolve_eagle_pending(row["id"])
+                await asyncio.to_thread(storage.resolve_eagle_pending, row["id"])
                 sent += 1
             except EagleUnavailable:
                 break
             except Exception as e:
-                storage.resolve_eagle_pending(row["id"], error=str(e))
+                await asyncio.to_thread(
+                    storage.resolve_eagle_pending, row["id"], error=str(e))
                 failed += 1
-        return {"sent": sent, "failed": failed,
-                "remaining": storage.eagle_pending_count()}
+        remaining = await asyncio.to_thread(storage.eagle_pending_count)
+        return {"sent": sent, "failed": failed, "remaining": remaining}
 
 
 AUTO_SEND_OUTPUT_TYPES = {"image", "video", "audio", "images"}
