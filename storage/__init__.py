@@ -9,4 +9,5 @@ from .servers import *  # noqa: F401,F403
 from .remote_jobs import *  # noqa: F401,F403
 from .proxy import *  # noqa: F401,F403
 from .settings import *  # noqa: F401,F403
+from .eagle_pending import *  # noqa: F401,F403
 from .bot import *  # noqa: F401,F403

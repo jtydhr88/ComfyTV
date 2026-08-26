@@ -3,7 +3,9 @@ import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { adoptAssets } from '@/api'
+import { sendToEagle } from '@/api/eagle'
 import type { Asset } from '@/api/schemas'
+import { app } from '@/lib/comfyApp'
 import { requestProxyBuild } from '@/composables/widgets/useProxiedVideoUrl'
 import { type LightboxItem, openLightbox } from '@/composables/useLightbox'
 import { ASSET_DRAG_MIME } from '@/composables/sidebar/assetCanvasDrop'
@@ -198,6 +200,27 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
     const a = menuAsset.value
     closeAssetMenu()
     if (a?.media_type === 'video') void requestProxyBuild(a.payload_url)
+  }
+
+  function toast(severity: string, summary: string, detail = '') {
+    ;(app as any)?.extensionManager?.toast?.add?.({ severity, summary, detail, life: 5000 })
+  }
+
+  async function onSendToEagle(asset: Asset) {
+    try {
+      const res = await sendToEagle({ payload_url: asset.payload_url, name: asset.name })
+      toast('success', res.sent
+        ? t('eagle.send.sent', { name: asset.name })
+        : t('eagle.send.queued', { n: res.pending_count }))
+    } catch (e) {
+      toast('error', t('eagle.send.failed'), String(e))
+    }
+  }
+
+  function menuSendToEagle() {
+    const a = menuAsset.value
+    closeAssetMenu()
+    if (a) void onSendToEagle(a)
   }
 
   function viewFullAsset(asset: Asset) {
@@ -405,6 +428,7 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
     closeAssetMenu,
     menuLoadNode,
     menuMakeProxy,
+    menuSendToEagle,
     menuEditTags,
     menuRenameAsset,
     menuDeleteAsset,

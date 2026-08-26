@@ -149,6 +149,24 @@ def adopt_outputs(
         return _output_to_dict(rows[0])
 
 
+def find_output_by_payload_url(payload_url: str) -> Optional[dict]:
+    """Latest output whose payload is (or contains) this /view URL."""
+    if not payload_url:
+        return None
+    with db.get_session() as s:
+        q = (select(Output)
+             .where(Output.payload_url == payload_url)
+             .order_by(desc(Output.id)).limit(1))
+        out = s.execute(q).scalars().first()
+        if out is None:
+            needle = json.dumps(payload_url)[1:-1]
+            q = (select(Output)
+                 .where(Output.payload_json.contains(needle))
+                 .order_by(desc(Output.id)).limit(1))
+            out = s.execute(q).scalars().first()
+        return _output_to_dict(out) if out is not None else None
+
+
 def find_output_by_param(
     project_id: str,
     stage_class: str,

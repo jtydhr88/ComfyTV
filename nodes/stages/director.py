@@ -232,7 +232,8 @@ class DirectorStage(io.ComfyNode):
             payload_url=url,
             params={'director_clip_hash': clip_hash,
                     'clip_id': str(clip.get('id') or ''),
-                    'workflow': label},
+                    'workflow': label,
+                    'prompt': str(prompt or '')},
         )
         return url
 

@@ -26,6 +26,11 @@ SETTINGS_SPEC: dict[str, dict[str, Any]] = {
     "bot-comfy-mcp-command": {"type": "string", "default": ""},
     "enable-skills": {"type": "boolean", "default": True},
     "skills-disabled": {"type": "string", "default": "[]"},
+    "enable-eagle": {"type": "boolean", "default": False},
+    "eagle-api-url": {"type": "string", "default": "http://127.0.0.1:41595"},
+    "eagle-library-path": {"type": "string", "default": ""},
+    "eagle-send-folder": {"type": "string", "default": "ComfyTV"},
+    "eagle-auto-send": {"type": "boolean", "default": False},
 }
 
 

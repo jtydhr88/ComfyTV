@@ -272,6 +272,21 @@ class BotMessage(Base):
     created_at:         Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
 
+class EaglePending(Base):
+    __tablename__ = "comfytv_eagle_pending"
+
+    id:          Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    payload_url: Mapped[str] = mapped_column(Text, default="")
+    name:        Mapped[str] = mapped_column(String, default="")
+    tags_json:   Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    annotation:  Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    folder:      Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    status:      Mapped[str] = mapped_column(String, default="pending", index=True)
+    error:       Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    created_at:  Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+    updated_at:  Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
+
+
 class Setting(Base):
     __tablename__ = "comfytv_settings"
 
@@ -374,6 +389,14 @@ def _migrate_additive_columns(engine) -> None:
                     "ALTER TABLE comfytv_outputs ADD COLUMN duration_ms INTEGER"
                 ))
             logging.info("[ComfyTV] migrated: comfytv_outputs + duration_ms")
+
+        eagle_cols = {c["name"] for c in insp.get_columns("comfytv_eagle_pending")}
+        if "folder" not in eagle_cols:
+            with engine.begin() as conn:
+                conn.execute(text(
+                    "ALTER TABLE comfytv_eagle_pending ADD COLUMN folder VARCHAR"
+                ))
+            logging.info("[ComfyTV] migrated: comfytv_eagle_pending + folder")
 
         wf_cols = {c["name"] for c in insp.get_columns("comfytv_workflows")}
         if "link_type" not in wf_cols:

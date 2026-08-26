@@ -6,22 +6,43 @@ import { app } from '@/lib/comfyApp'
 import { useAssetStore } from '@/stores/assetStore'
 
 export const ASSET_DRAG_MIME = 'application/x-comfytv-asset-id'
+export const EAGLE_DRAG_MIME = 'application/x-comfytv-eagle-item'
 
 export type ResolveAsset = (id: number) => Asset | null
 
-function isAssetDrag(e: DragEvent): boolean {
+function hasMime(e: DragEvent, mime: string): boolean {
   const types = e.dataTransfer?.types
-  return !!types && Array.from(types).includes(ASSET_DRAG_MIME)
+  return !!types && Array.from(types).includes(mime)
 }
 
 export function handleAssetDragOver(e: DragEvent): void {
-  if (!isAssetDrag(e)) return
+  if (!hasMime(e, ASSET_DRAG_MIME) && !hasMime(e, EAGLE_DRAG_MIME)) return
   e.preventDefault()
   if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy'
 }
 
 export function handleAssetDrop(e: DragEvent, resolveAsset: ResolveAsset): void {
-  if (!isAssetDrag(e)) return
+  if (hasMime(e, EAGLE_DRAG_MIME)) {
+    e.preventDefault()
+    e.stopPropagation()
+    const eagleId = e.dataTransfer?.getData(EAGLE_DRAG_MIME) ?? ''
+    if (!eagleId) return
+    const pos = clientToCanvasPos(e.clientX, e.clientY)
+    void (async () => {
+      try {
+        const { importEagleItem } = await import('@/api/eagle')
+        const res = await importEagleItem(eagleId)
+        if (res.asset) {
+          createAssetLoaderNode(res.asset, pos, { anchor: 'center', select: true })
+        }
+      } catch (err) {
+        console.warn('[ComfyTV/eagle] drop import failed:', err)
+      }
+    })()
+    return
+  }
+
+  if (!hasMime(e, ASSET_DRAG_MIME)) return
   e.preventDefault()
   e.stopPropagation()
 

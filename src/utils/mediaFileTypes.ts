@@ -25,6 +25,15 @@ export function isModelFile(name: string): boolean {
   return MODEL_FILE_EXTENSIONS.some((ext) => lower.endsWith(ext))
 }
 
+export function mediaTypeOfExt(ext: string): AssetMediaType | null {
+  const name = `f.${ext.replace(/^\./, '')}`
+  if (hasExtension(name, IMAGE_FILE_EXTENSIONS)) return 'image'
+  if (hasExtension(name, VIDEO_FILE_EXTENSIONS)) return 'video'
+  if (hasExtension(name, AUDIO_FILE_EXTENSIONS)) return 'audio'
+  if (isModelFile(name)) return 'model'
+  return null
+}
+
 export function mediaTypeOf(file: File): AssetMediaType | null {
   if (file.type.startsWith('image/')) return 'image'
   if (file.type.startsWith('video/')) return 'video'

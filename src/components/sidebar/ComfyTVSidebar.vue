@@ -24,6 +24,9 @@
     <div v-show="activeTab === 'assets'" class="ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden">
       <AssetsPanel :active="activeTab === 'assets'" />
     </div>
+    <div v-show="activeTab === 'eagle'" class="ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden">
+      <EaglePanel :active="activeTab === 'eagle'" />
+    </div>
     <div v-show="activeTab === 'entries'" class="ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden">
       <EntriesPanel :active="activeTab === 'entries'" />
     </div>
@@ -50,6 +53,7 @@ import { onMounted, ref } from 'vue'
 import { useStorage } from '@vueuse/core'
 
 import AssetsPanel from '@/components/sidebar/AssetsPanel.vue'
+import EaglePanel from '@/components/sidebar/EaglePanel.vue'
 import EntriesPanel from '@/components/sidebar/EntriesPanel.vue'
 import PresetsPanel from '@/components/sidebar/PresetsPanel.vue'
 import ResourcesPanel from '@/components/sidebar/ResourcesPanel.vue'
@@ -58,11 +62,12 @@ import SettingsPanel from '@/components/sidebar/SettingsPanel.vue'
 import WorkflowConfigSidebar from '@/components/sidebar/WorkflowConfigSidebar.vue'
 import StageParamsPanel from '@/components/sidebar/StageParamsPanel.vue'
 
-type SidebarTab = 'workflow' | 'assets' | 'entries' | 'params' | 'presets' | 'resources' | 'servers' | 'settings'
+type SidebarTab = 'workflow' | 'assets' | 'eagle' | 'entries' | 'params' | 'presets' | 'resources' | 'servers' | 'settings'
 
 const TABS: Array<{ id: SidebarTab; labelKey: string }> = [
   { id: 'workflow',  labelKey: 'sidebar.tab.workflow' },
   { id: 'assets',    labelKey: 'sidebar.tab.assets' },
+  { id: 'eagle',     labelKey: 'sidebar.tab.eagle' },
   { id: 'entries',   labelKey: 'sidebar.tab.entries' },
   { id: 'params',    labelKey: 'sidebar.tab.params' },
   { id: 'presets',   labelKey: 'sidebar.tab.presets' },

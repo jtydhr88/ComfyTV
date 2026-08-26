@@ -263,6 +263,8 @@ class TestSettingsApi:
             "bot-comfyui-llm-thinking", "bot-local-llm-url",
             "bot-enable-comfy-mcp", "bot-comfy-mcp-command",
             "enable-skills", "skills-disabled",
+            "enable-eagle", "eagle-api-url", "eagle-library-path",
+            "eagle-send-folder", "eagle-auto-send",
         }
         for r in rows:
             assert set(r) == {"key", "type", "value", "default"}

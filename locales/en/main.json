@@ -302,10 +302,62 @@
     "upstreamNotReadyDetail": "Upstream not ready: {list}. Run those stage(s) first so they produce a snapshot, then Run this stage again.",
     "workerDied": "Backend stopped without sending a result. The prompt worker likely died (CUDA OOM during cleanup is the usual cause). Restart ComfyUI to recover."
   },
+  "eagle": {
+    "title": "Eagle Library",
+    "refresh": "Refresh",
+    "search": "Search name or tags…",
+    "loading": "Loading…",
+    "empty": "No items",
+    "loadMore": "Load more",
+    "disabledHint": "Eagle integration is disabled. Turn on “Enable Eagle integration” in Settings and pin the ComfyTV .library path.",
+    "pendingBanner": "{n} item(s) queued for Eagle (waiting for the pinned library to open)",
+    "flushNow": "Send now",
+    "flushing": "Sending…",
+    "mode": {
+      "api": "Online",
+      "disk": "Read-only",
+      "offline": "Offline",
+      "disabled": "Disabled"
+    },
+    "hint": {
+      "disk": "Eagle is closed or has another library open: reading the library from disk (read-only). Sends are queued and flushed automatically once the pinned library opens.",
+      "offline": "Eagle unreachable: the app is not running and the pinned library path does not exist. Check the library path in Settings."
+    },
+    "folder": {
+      "all": "All folders"
+    },
+    "ai": {
+      "label": "AI",
+      "tooltip": "AI semantic search (needs Eagle's AI Search plugin): search by meaning, not by name"
+    },
+    "similar": {
+      "action": "Find similar",
+      "banner": "Items similar to “{name}”",
+      "clear": "Clear",
+      "failed": "Similar search failed"
+    },
+    "import": {
+      "action": "Import into Assets",
+      "done": "Imported “{name}”",
+      "existed": "“{name}” is already in Assets",
+      "failed": "Import failed"
+    },
+    "send": {
+      "action": "Send to Eagle",
+      "sent": "Sent to Eagle: {name}",
+      "queued": "Eagle not ready — queued ({n} pending)",
+      "failed": "Send failed"
+    },
+    "flush": {
+      "done": "Flushed {n} item(s) to Eagle",
+      "failed": "{n} item(s) failed to flush"
+    }
+  },
   "sidebar": {
     "tab": {
       "workflow": "Workflow",
       "assets": "Assets",
+      "eagle": "Eagle",
       "entries": "Entries",
       "params": "Stages",
       "presets": "Presets",
@@ -399,10 +451,35 @@
       "enable-skills": {
         "label": "Enable Agent Skills",
         "desc": "Serve installed skills to agents over MCP (skill tool + prompts) and to the embedded bot."
+      },
+      "enable-eagle": {
+        "label": "Enable Eagle integration",
+        "desc": "Connect the local Eagle (eagle.cool) library to ComfyTV: an Eagle panel appears in the sidebar and assets can be sent to Eagle. Requires the Eagle desktop app."
+      },
+      "eagle-api-url": {
+        "label": "Eagle API URL",
+        "desc": "Address of Eagle's local API, default port 41595. Local access only, no token needed.",
+        "placeholder": "http://127.0.0.1:41595"
+      },
+      "eagle-library-path": {
+        "label": "Pinned library path",
+        "desc": "The .library directory dedicated to ComfyTV. Sends only happen while Eagle has this library open (queued otherwise); browsing falls back to reading the directory from disk. Empty = follow whatever library Eagle has open (not recommended).",
+        "placeholder": "e.g. Y:\\Eagle\\ComfyTV.library"
+      },
+      "eagle-send-folder": {
+        "label": "Send target folder",
+        "desc": "Eagle folder that manually sent items are filed into; created automatically if missing. Empty = library root. Auto-archive uses per-project folders instead."
+      },
+      "eagle-auto-send": {
+        "label": "Auto-archive outputs to Eagle",
+        "desc": "Automatically archive every stage output (image/video/audio) into Eagle: filed into a per-project folder, annotation carries the full generation params (prompt/model/…), tagged with the project name. Uses the queue — piles up while Eagle is closed, never blocks generation."
       }
     },
     "agent": {
       "section": "Agent & MCP"
+    },
+    "eagle": {
+      "section": "Eagle Integration"
     }
   },
   "servers": {

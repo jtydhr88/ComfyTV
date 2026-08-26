@@ -71,6 +71,10 @@ def resolve_thumb(view_url: str, max_edge: int) -> Path:
     src = view_url_to_path(view_url)
     if src is None:
         raise FileNotFoundError(view_url)
+    return thumb_for_path(src, max_edge)
+
+
+def thumb_for_path(src: Path, max_edge: int) -> Path:
     suffix = src.suffix.lower()
     if suffix in VIDEO_EXTS:
         return _video_thumb(src, snap_size(max_edge))
@@ -102,6 +106,6 @@ def resolve_thumb(view_url: str, max_edge: int) -> Path:
     return dest
 
 
-__all__ = ['resolve_thumb', 'snap_size', 'thumb_dir', 'THUMB_SIZES',
+__all__ = ['resolve_thumb', 'thumb_for_path', 'snap_size', 'thumb_dir', 'THUMB_SIZES',
            'THUMB_SUBFOLDER', 'THUMB_SKIP_FACTOR', 'THUMB_QUALITY',
            'IMAGE_EXTS', 'VIDEO_EXTS']

@@ -302,10 +302,62 @@
     "upstreamNotReadyDetail": "上游未就绪:{list}。请先运行这些 stage 生成快照,然后再运行此 stage。",
     "workerDied": "后端未返回结果就停止了。prompt worker 可能已崩溃(通常是清理阶段 CUDA OOM)。重启 ComfyUI 后恢复。"
   },
+  "eagle": {
+    "title": "Eagle 素材库",
+    "refresh": "刷新",
+    "search": "搜索名称或标签…",
+    "loading": "加载中…",
+    "empty": "没有条目",
+    "loadMore": "加载更多",
+    "disabledHint": "Eagle 集成未启用。到「设置」页打开「启用 Eagle 集成」,并钉死 ComfyTV 专用的 .library 路径。",
+    "pendingBanner": "有 {n} 条待发送到 Eagle(等待打开钉死的库)",
+    "flushNow": "立即补发",
+    "flushing": "补发中…",
+    "mode": {
+      "api": "在线",
+      "disk": "只读",
+      "offline": "离线",
+      "disabled": "未启用"
+    },
+    "hint": {
+      "disk": "Eagle 未运行或打开了别的库:正在直接读取磁盘上的库(只读)。发送会排队,等库打开后自动补发。",
+      "offline": "找不到 Eagle:应用未运行,钉死的库路径也不可达。检查设置里的库路径。"
+    },
+    "folder": {
+      "all": "全部文件夹"
+    },
+    "ai": {
+      "label": "AI",
+      "tooltip": "AI 语义搜索(需要 Eagle 的 AI Search 插件):按含义搜图而非按名称"
+    },
+    "similar": {
+      "action": "找相似",
+      "banner": "与「{name}」相似的条目",
+      "clear": "清除",
+      "failed": "相似搜索失败"
+    },
+    "import": {
+      "action": "导入到资产库",
+      "done": "已导入「{name}」",
+      "existed": "「{name}」已在资产库",
+      "failed": "导入失败"
+    },
+    "send": {
+      "action": "发送到 Eagle",
+      "sent": "已发送到 Eagle:{name}",
+      "queued": "Eagle 未就绪,已排队({n} 条待发)",
+      "failed": "发送失败"
+    },
+    "flush": {
+      "done": "已补发 {n} 条到 Eagle",
+      "failed": "{n} 条补发失败"
+    }
+  },
   "sidebar": {
     "tab": {
       "workflow": "工作流",
       "assets": "资产库",
+      "eagle": "Eagle",
       "entries": "条目",
       "params": "Stage 管理",
       "presets": "预设",
@@ -399,10 +451,35 @@
       "enable-skills": {
         "label": "启用 Agent Skills",
         "desc": "把已安装的技能通过 MCP(skill 工具 + prompts)提供给外部 agent 和内嵌 bot。"
+      },
+      "enable-eagle": {
+        "label": "启用 Eagle 集成",
+        "desc": "把本机的 Eagle(eagle.cool)素材库接入 ComfyTV:侧边栏出现 Eagle 面板,资产可发送到 Eagle。需要 Eagle 桌面应用。"
+      },
+      "eagle-api-url": {
+        "label": "Eagle API 地址",
+        "desc": "Eagle 本地 API 的地址,默认端口 41595。仅本机访问,不需要 token。",
+        "placeholder": "http://127.0.0.1:41595"
+      },
+      "eagle-library-path": {
+        "label": "钉死的资源库路径",
+        "desc": "ComfyTV 专用的 .library 目录。发送只在 Eagle 打开该库时进行(否则排队),浏览在 Eagle 关闭或切到别的库时直接读磁盘。留空 = 跟随 Eagle 当前打开的库(不推荐)。",
+        "placeholder": "如 Y:\\Eagle资源库\\ComfyTV资源库.library"
+      },
+      "eagle-send-folder": {
+        "label": "发送目标文件夹",
+        "desc": "手动发送到 Eagle 时归入的文件夹名,不存在会自动创建。留空 = 库根目录。自动沉淀按项目名分文件夹,不走此设置。"
+      },
+      "eagle-auto-send": {
+        "label": "产出自动沉淀到 Eagle",
+        "desc": "每个 stage 的产出(图片/视频/音频)自动归档进 Eagle:按项目名分文件夹,annotation 带完整生成参数(prompt/模型等),tag 带项目名。走排队机制,Eagle 没开时攒着,不阻塞生成。"
       }
     },
     "agent": {
       "section": "Agent 与 MCP"
+    },
+    "eagle": {
+      "section": "Eagle 集成"
     }
   },
   "servers": {

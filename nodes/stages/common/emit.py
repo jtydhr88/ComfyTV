@@ -31,6 +31,10 @@ def _persist(
     picked_index=None,
     duration_ms=None,
 ):
+    from .provenance import consume_last_provenance
+    provenance = consume_last_provenance()
+    if params is None:
+        params = provenance
     try:
         node_id = getattr(cls.hidden, "unique_id", None) if hasattr(cls, "hidden") else None
         row = _storage_module.persist_output(
@@ -45,6 +49,18 @@ def _persist(
             picked_index=int(picked_index) if picked_index is not None else None,
             duration_ms=int(duration_ms) if duration_ms is not None else None,
         )
+        try:
+            from ....runners import eagle as _eagle
+            _eagle.auto_send_output(
+                payload_url=payload_url,
+                output_type=output_type,
+                project_id=project_id or "",
+                stage_class=_stage_name(cls),
+                params=params,
+                payload_json=payload_json,
+            )
+        except Exception:
+            logging.debug("[ComfyTV] eagle auto-send skipped", exc_info=True)
         return row.get('id') if row else None
     except Exception as e:
         logging.warning("[ComfyTV] persist_output failed for %s: %s", cls.__name__, e)

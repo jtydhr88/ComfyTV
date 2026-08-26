@@ -244,6 +244,14 @@
           <IconClapperboard class="ctv:size-4 ctv:shrink-0" />
           <span class="ctv:flex-1 ctv:truncate">{{ $t('assets.card.makeProxy') }}</span>
         </button>
+        <button
+          v-if="menuAsset?.media_type !== 'model'"
+          :class="menuItemClass"
+          @click="menuSendToEagle"
+        >
+          <IconSend class="ctv:size-4 ctv:shrink-0" />
+          <span class="ctv:flex-1 ctv:truncate">{{ $t('eagle.send.action') }}</span>
+        </button>
         <button :class="menuItemClass" @click="menuEditTags">
           <IconTag class="ctv:size-4 ctv:shrink-0" />
           <span class="ctv:flex-1 ctv:truncate">{{ $t('assets.card.tags') }}</span>
@@ -303,6 +311,7 @@ import IconMaximize from '~icons/lucide/maximize-2'
 import IconPencil from '~icons/lucide/pencil'
 import IconPlus from '~icons/lucide/plus'
 import IconSearch from '~icons/lucide/search'
+import IconSend from '~icons/lucide/send'
 import IconSettings2 from '~icons/lucide/settings-2'
 import IconTableOfContents from '~icons/lucide/table-of-contents'
 import IconTag from '~icons/lucide/tag'
@@ -359,6 +368,7 @@ const {
   closeAssetMenu,
   menuLoadNode,
   menuMakeProxy,
+  menuSendToEagle,
   menuEditTags,
   menuRenameAsset,
   menuDeleteAsset,

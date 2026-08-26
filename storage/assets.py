@@ -289,3 +289,17 @@ def asset_payload_urls() -> set:
     with db.get_session() as s:
         rows = s.execute(select(Asset.payload_url)).scalars().all()
         return set(rows)
+
+
+def find_asset_by_payload_url(payload_url: str) -> Optional[dict]:
+    if not payload_url:
+        return None
+    with db.get_session() as s:
+        a = s.execute(
+            select(Asset).where(Asset.payload_url == payload_url)
+            .order_by(desc(Asset.id)).limit(1)
+        ).scalars().first()
+        if a is None:
+            return None
+        cmap = _category_map(s, [a.id])
+        return _asset_to_dict(a, cmap.get(a.id, []))

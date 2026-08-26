@@ -14,6 +14,10 @@ function isAgentKey(key: string): boolean {
   return AGENT_TOGGLE_KEYS.has(key) || key.startsWith('bot-')
 }
 
+function isEagleKey(key: string): boolean {
+  return key === 'enable-eagle' || key.startsWith('eagle-')
+}
+
 function message(e: unknown): string {
   return e instanceof Error ? e.message : String(e)
 }
@@ -45,12 +49,16 @@ export function useSettingsPanel(isActive: () => boolean | undefined) {
   const dirty = computed(() =>
     rows.value.some((r) => values.value[r.key] !== r.value))
   const backupRows = computed(() =>
-    rows.value.filter((r) => !isAgentKey(r.key) && !SKILL_KEYS.has(r.key)))
+    rows.value.filter((r) =>
+      !isAgentKey(r.key) && !SKILL_KEYS.has(r.key) && !isEagleKey(r.key)))
   const agentRows = computed(() =>
     rows.value.filter((r) => isAgentKey(r.key)
       && (AGENT_TOGGLE_KEYS.has(r.key) || values.value['enable-bot'] === true)))
   const skillsRows = computed(() =>
     rows.value.filter((r) => r.key === 'enable-skills'))
+  const eagleRows = computed(() =>
+    rows.value.filter((r) => isEagleKey(r.key)
+      && (r.key === 'enable-eagle' || values.value['enable-eagle'] === true)))
   const botToggleLocked = computed(() => values.value['enable-mcp'] !== true)
 
   function syncValues(): void {
@@ -127,6 +135,7 @@ export function useSettingsPanel(isActive: () => boolean | undefined) {
     backupRows,
     agentRows,
     skillsRows,
+    eagleRows,
     botToggleLocked,
     values,
     loading,
