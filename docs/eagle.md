@@ -1,0 +1,91 @@
+**English** | [简体中文](eagle.zh.md)
+
+# Eagle integration
+
+> Connect the local [Eagle](https://eagle.cool) app as ComfyTV's long-term archive: browse and search your Eagle library from the sidebar, drag items straight onto the canvas, send any asset to Eagle with one click, and optionally auto-archive every render into per-project Eagle folders — each item carrying its full generation provenance (workflow, prompt, parameters) in the annotation.
+
+## The division of labor
+
+The built-in [asset library](sidebar.md) is the **workbench**: assets live with the project, feed stages via `@` references, and get proxies for editing. Eagle is the **cross-project archive and intake**: ratings, tags, folders, full-text and AI search, browser clipping — a curated collection that outlives any single project.
+
+The integration wires the two together in both directions:
+
+- **Out**: generated results flow into Eagle (manually or automatically), filed per project, searchable forever by the prompt that made them.
+- **In**: anything in Eagle — including references you clipped from the web — can be browsed in the sidebar and pulled onto the canvas as a regular asset.
+
+One model-level fact to accept up front: **Eagle always copies imported files into its `.library`** — there is no reference mode. The ComfyUI output stays where it is (ComfyTV never deletes files); the copy inside Eagle becomes the archived original.
+
+## Requirements & setup
+
+- The **Eagle desktop app** (Eagle 4; Eagle 4.0 Build 21+ unlocks the richer V2 API — older builds fall back to V1 with weaker search).
+- A library (or at least a folder) you are happy to receive ComfyTV output. A **dedicated library** is recommended — Eagle can only have one library open at a time.
+
+In the ComfyTV sidebar open **Settings → Eagle Integration**:
+
+| Setting | Meaning |
+|---|---|
+| **Enable Eagle integration** | Master switch. Adds the Eagle tab to the sidebar and the send actions. |
+| **Eagle API URL** | Eagle's local API, default `http://127.0.0.1:41595`. Local access needs no token. |
+| **Pinned library path** | The `.library` directory dedicated to ComfyTV. Strongly recommended — see the three states below. |
+| **Send target folder** | Eagle folder that *manually* sent items are filed into (created automatically). |
+| **Auto-archive outputs to Eagle** | Off by default. When on, every stage render is archived automatically — see below. |
+
+## The three states
+
+Eagle's API only ever operates on the **currently open** library. ComfyTV probes Eagle and derives one of three states, shown as a dot in the Eagle tab header:
+
+| State | When | Reads | Writes |
+|---|---|---|---|
+| **Online** | Eagle is running with the pinned library open | Full API: search, filters, folders | Sends go through immediately |
+| **Read-only** | Eagle is closed, or has *another* library open | ComfyTV reads the pinned `.library` directly from disk — browsing keeps working | Sends are **queued** |
+| **Offline** | Neither the app nor the pinned path is reachable | — | Sends are queued |
+
+The queue is the safety mechanism: with your personal library open, nothing is ever sent into it by mistake. Queued items flush automatically the next time ComfyTV sees the pinned library open (a banner in the Eagle tab shows the count, with a manual flush button).
+
+## Browsing and using Eagle items
+
+The **Eagle** sidebar tab lists the library with search, a folder dropdown, and media-type filters (on the V2 API, search is full-text and matches tags too). Video cards play on hover; audio cards have an inline preview button.
+
+To *use* an item:
+
+- **Drag it onto the canvas.** The item is imported into the asset library automatically and lands as a loader node at the drop point — from there it behaves exactly like any native asset (stage inputs, `@` references, proxies).
+- Or hover a card and click the **import arrow** to add it to the asset library without placing a node.
+
+Imported items are regular assets with `source: eagle`; re-importing the same item reuses the existing asset instead of duplicating it.
+
+## Sending to Eagle
+
+Right-click any asset in the asset library and choose **Send to Eagle**. The file is imported into Eagle (into the *send target folder*), tagged `comfytv`, and its annotation is filled with the generation provenance recovered from the output history — stage, project, workflow, prompt and parameters. In Eagle you can later search for that prompt text and land on the exact render.
+
+## Auto-archive
+
+Turn on **Auto-archive outputs to Eagle** and every stage render (image / video / audio, including each image of a batch) is archived the moment it is persisted:
+
+- filed into an Eagle folder named after the **project** (created automatically),
+- tagged `comfytv` + the project name,
+- annotation carrying the full provenance (workflow, prompt, options).
+
+Archiving is queued on a worker thread and never blocks generation; if Eagle is closed or on another library, items pile up in the queue and flush later. The community workflow this enables: generate freely, then curate in Eagle with ratings — the archive is complete by construction.
+
+## AI search & find-similar
+
+If Eagle's official **AI Search** plugin is installed and running, two extras light up automatically:
+
+- an **AI toggle** next to the search box — semantic search ("a red boat on waves") instead of keyword match;
+- a **find-similar** action on each card — visual similarity search across the library.
+
+Both stay hidden until the plugin reports ready.
+
+## Pairing with Eagle's MCP server (optional)
+
+Eagle also ships an official **MCP Server** plugin (default `http://127.0.0.1:41596/mcp`, streamable HTTP). It is independent of this integration but pairs well with the [ComfyTV MCP server](mcp.md) for agent workflows: an agent can read your current Eagle selection, batch-tag, re-file and annotate items, while driving ComfyTV generation through the ComfyTV tools.
+
+```bash
+claude mcp add --transport http eagle http://127.0.0.1:41596/mcp
+```
+
+## Notes & limits
+
+- Eagle **copies** files on import; treat the copy in the library as the archived original. ComfyTV keeps its own output files untouched either way.
+- Browsing in read-only mode uses the library's on-disk format directly; writing never touches the disk format — all writes go through Eagle's API.
+- On Eagle builds before the V2 API, search falls back to Eagle's V1 keyword matching.

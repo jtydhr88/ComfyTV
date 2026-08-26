@@ -2,11 +2,11 @@
 
 # The ComfyTV sidebar
 
-ComfyTV registers a single **ComfyTV** tab in ComfyUI's left sidebar rail. Inside it are **eight tabs** — everything that isn't a node on the canvas lives here: workflow configuration, the media library, prompt fragments, workflow/parameter management per stage kind, presets, resources, remote servers, and settings. The last tab you used is remembered across reloads.
+ComfyTV registers a single **ComfyTV** tab in ComfyUI's left sidebar rail. Inside it are **nine tabs** — everything that isn't a node on the canvas lives here: workflow configuration, the media library, the [Eagle library browser](eagle.md), prompt fragments, workflow/parameter management per stage kind, presets, resources, remote servers, and settings. The last tab you used is remembered across reloads.
 
 (When the [ComfyTV Bot](bot.md) is enabled, a second ✨ icon appears in the sidebar rail — that one is the embedded chat agent, documented separately.)
 
-<!-- TODO(screenshot): the sidebar with its 8-tab bar (Workflow / Assets / Entries / Stages / Presets / Resources / Servers / Settings) -->
+<!-- TODO(screenshot): the sidebar with its 9-tab bar (Workflow / Assets / Eagle / Entries / Stages / Presets / Resources / Servers / Settings) -->
 ![ComfyTV sidebar tabs](images/sidebar-tabs.png)
 
 ---
@@ -40,6 +40,12 @@ A library of **images, video, audio, and 3D models** you want to keep reusing �
 - **Organize**: create **categories** and tag assets with them — an asset can carry several tags. Filter by category chip, by media type (image / video / audio / model, with counts), or search by name. Grid and list views.
 - **Use an asset**: **drag it onto the canvas** — ComfyTV creates the matching *Load … from Asset* node wired to it — or use the card menu's *Load as node*. The menu also offers *View full* (lightbox), *Make proxy* (for videos), *Edit tags*, *Rename*, and *Delete*. Deleting removes the library entry; files on disk are left alone.
 - Asset images can also be dropped straight into a stage's prompt as reference images — see [Prompt references](#prompt-references) below.
+
+---
+
+## Eagle — the archive next door
+
+When the [Eagle integration](eagle.md) is enabled, this tab browses your local Eagle library: search (full-text on Eagle 4's V2 API), folder and media filters, hover video preview, audio auditioning. Drag any item onto the canvas and it is imported as a regular asset with a loader node at the drop point. The tab header shows the connection state (online / read-only / offline) and a pending-send banner when items are queued. Full walkthrough: [eagle.md](eagle.md).
 
 ---
 

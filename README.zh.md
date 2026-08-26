@@ -21,7 +21,8 @@ ComfyTV 把 ComfyUI 变成一个**类 TapNow / LibTV 型的画布式应用**—�
 - **以项目为单位**：stage 归属于项目；每次输出都带完整历史保存，刷新页面/重启后自动恢复。
 - **你的模型、你的工作流**：`workflows/<kind>/` 下自带一套精选工作流，全部跑在你自己的本地模型上。任何 ComfyUI 工作流都能以 JSON 导入，在侧边栏 GUI 里绑定输入，按 stage 保存预设、星标默认工作流。
 - **融入 ComfyUI 生态**：子图、第三方插件开箱即用；**Bridge 节点**能把任意插件接进 ComfyTV 流水线；远程 ComfyUI 机器可注册为额外的 Runner（Servers 页签），带能力预检。
-- **内置多库**：项目级**资产库**（图/视频/音频/3D 模型）、**资源库**（LUT、字体、SoundFont）和可复用的**提示词片段**——都住在[八页签侧边栏](docs/sidebar.zh.md)里，且都能在任意提示词里用 `@` 引用。
+- **内置多库**：项目级**资产库**（图/视频/音频/3D 模型）、**资源库**（LUT、字体、SoundFont）和可复用的**提示词片段**——都住在[九页签侧边栏](docs/sidebar.zh.md)里，且都能在任意提示词里用 `@` 引用。
+- **Eagle 当档案馆**：接入本机 [Eagle](https://eagle.cool)——在侧边栏浏览、搜索 Eagle 库，条目直接拖上画布，还可自动把每次渲染按项目归档进 Eagle，批注里带完整生成溯源（工作流/prompt/参数）。[指南 →](docs/eagle.zh.md)
 - **节点内富编辑器**：很多 stage 在节点里内嵌真正的编辑器——图层编辑器、故事板工作台、钢琴卷帘、3D 视口、示波器等；多数视频特效带实时预览。
 - **Agent 原生**：内嵌 [Bot](docs/bot.zh.md)、45 工具的 [MCP 服务](docs/mcp.zh.md)、可安装的 [Agent Skills](docs/skills.zh.md)——见下方 Agents 一节。
 - **双皮肤**：经典节点壳之外,还有实验性的内容优先 **V2 皮肤**（亮暗双色）,设置里一键切换。
@@ -94,7 +95,8 @@ git clone https://github.com/jtydhr88/ComfyTV
 | 指南 | 覆盖范围 |
 |-------|----------------|
 | [getting-started.zh.md](docs/getting-started.zh.md) | 安装、画布基础、第一次生成、逐节点 Run、从批量中挑选 |
-| [sidebar.zh.md](docs/sidebar.zh.md) | 八页签侧边栏：工作流配置、资产库、提示词片段、Stage 管理、预设、资源、服务器、设置——外加提示词里的 `@` 引用 |
+| [sidebar.zh.md](docs/sidebar.zh.md) | 九页签侧边栏：工作流配置、资产库、Eagle 浏览、提示词片段、Stage 管理、预设、资源、服务器、设置——外加提示词里的 `@` 引用 |
+| [eagle.zh.md](docs/eagle.zh.md) | Eagle 集成：浏览 Eagle 库、拖拽导入画布、发送资产、带溯源的自动沉淀、AI 搜索 |
 | [generate.zh.md](docs/generate.zh.md) | 文本/图/视频/音频生成，选模型，跑起来 |
 | [image-tools.zh.md](docs/image-tools.zh.md) | 裁剪、旋转、镜像、Inpaint、擦除、抠图、放大、扩图、宫格切分、变体、多视角、重打光 |
 | [panorama.zh.md](docs/panorama.zh.md) | 加载/查看 360° 全景图，单视角 + 多视角截图 |

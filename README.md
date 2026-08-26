@@ -21,7 +21,8 @@ Today that means **~190 stages**, each with its own reference page.
 - **Project-centric**: stages belong to a project; every output is kept with full history and restores on reload.
 - **Your models, your workflows**: a curated set of workflows ships under `workflows/<kind>/`, all running against your own local models. Import any ComfyUI workflow as JSON, bind its inputs in the sidebar GUI editor, save per-stage presets, and star a default workflow per stage.
 - **Part of the ComfyUI ecosystem**: subgraphs and third-party plugins just work; **Bridge nodes** connect any plugin into a ComfyTV pipeline; remote ComfyUI machines can be registered as extra runners (Servers tab) with capability preflight.
-- **Libraries built in**: a project **asset library** (images / video / audio / 3D models), a **resource library** (LUTs, fonts, SoundFonts), and reusable **prompt fragments** — all in the [8-tab sidebar](docs/sidebar.md), and all reachable from any prompt via `@` references.
+- **Libraries built in**: a project **asset library** (images / video / audio / 3D models), a **resource library** (LUTs, fonts, SoundFonts), and reusable **prompt fragments** — all in the [9-tab sidebar](docs/sidebar.md), and all reachable from any prompt via `@` references.
+- **Eagle as your archive**: connect the local [Eagle](https://eagle.cool) app — browse and search your Eagle library in the sidebar, drag items straight onto the canvas, and optionally auto-archive every render into per-project Eagle folders, each carrying its full generation provenance (workflow / prompt / parameters) in the annotation. [Guide →](docs/eagle.md)
 - **Rich in-node editors**: many stages embed a real editor in the node — layer editor, storyboard workbench, piano rolls, 3D viewports, scopes — with live previews on most video effects.
 - **Agent-native**: an embedded [Bot](docs/bot.md), a 45-tool [MCP server](docs/mcp.md), and installable [Agent Skills](docs/skills.md) — see the Agents section below.
 - **Two looks**: the classic node shells, plus an experimental content-first **V2 skin** (light + dark) behind a Settings toggle.
@@ -94,7 +95,8 @@ The full documentation lives at **[comfytv.org](https://comfytv.org)** — guide
 | Guide | What it covers |
 |-------|----------------|
 | [getting-started.md](docs/getting-started.md) | Install, the canvas basics, your first generation, per-node Run, picking from a set |
-| [sidebar.md](docs/sidebar.md) | The 8-tab sidebar: workflow config, asset library, prompt fragments, stage manager, presets, resources, servers, settings — plus `@` references in prompts |
+| [sidebar.md](docs/sidebar.md) | The 9-tab sidebar: workflow config, asset library, Eagle browser, prompt fragments, stage manager, presets, resources, servers, settings — plus `@` references in prompts |
+| [eagle.md](docs/eagle.md) | The Eagle integration: browsing your Eagle library, drag-to-canvas import, sending assets, auto-archive with provenance, AI search |
 | [generate.md](docs/generate.md) | Text / Image / Video / Audio generation, choosing a model, running |
 | [image-tools.md](docs/image-tools.md) | Crop, Rotate, Mirror, Inpaint, Erase, Cutout, Upscale, Outpaint, Grid Split, Variations, Multiangle, Relight |
 | [panorama.md](docs/panorama.md) | Loading/viewing a 360° panorama, capturing single + multi viewports |

@@ -140,7 +140,7 @@ for (const [label, ids] of CATEGORY_GROUPS) {
   if (zhPages.length) zhNodeGroups.push({ group: label, pages: zhPages });
 }
 
-const GUIDE_ORDER = ['getting-started', 'sidebar', 'generate', 'image-tools', 'panorama', 'video-and-audio', 'making-music', 'compose', 'models', 'bridges', 'custom-workflows', 'sidebar-config-editor', 'mcp', 'bot', 'skills'];
+const GUIDE_ORDER = ['getting-started', 'sidebar', 'eagle', 'generate', 'image-tools', 'panorama', 'video-and-audio', 'making-music', 'compose', 'models', 'bridges', 'custom-workflows', 'sidebar-config-editor', 'mcp', 'bot', 'skills'];
 
 function cleanGuide(md, locale) {
   let text = md.replace(/\r\n/g, '\n');
