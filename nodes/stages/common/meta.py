@@ -185,6 +185,9 @@ STAGE_META: dict[str, dict] = {
     'MeshBooleanStage':             {'kind': 'model'},
     'LineArtStage':                 {'kind': 'image'},
     'PosterStage':                  {'kind': 'image'},
+    'BlenderSceneStage':            {'kind': 'image',       'variant': 'loader'},
+    'BlenderCameraStage':           {'kind': 'image'},
+    'BlenderAnimationStage':        {'kind': 'video'},
 }
 
 

@@ -31,6 +31,7 @@ SETTINGS_SPEC: dict[str, dict[str, Any]] = {
     "eagle-library-path": {"type": "string", "default": ""},
     "eagle-send-folder": {"type": "string", "default": "ComfyTV"},
     "eagle-auto-send": {"type": "boolean", "default": False},
+    "blender-bridge-url": {"type": "string", "default": "http://127.0.0.1:7684"},
 }
 
 
