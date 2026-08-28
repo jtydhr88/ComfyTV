@@ -10,7 +10,12 @@ from typing import Optional
 
 import aiohttp
 
-from ._cli_common import CORE_MCP_TOOLS, PROBE_CACHE_S, TOOL_RESULT_CAP
+from ._cli_common import (
+    CORE_MCP_TOOLS,
+    PROBE_CACHE_S,
+    TOOL_RESULT_CAP,
+    merge_usage,
+)
 from .providers import (
     AgentProvider,
     BotEvent,
@@ -229,7 +234,7 @@ class LocalLlmProvider(AgentProvider):
             json_body={"jsonrpc": "2.0", "id": f"call-{name}",
                        "method": "tools/call",
                        "params": {"name": name, "arguments": arguments}},
-            timeout=200,
+            timeout=560 if name == "ask_user" else 200,
         )
         result = data.get("result") or {}
         text = self._extract_text(result.get("content"))
@@ -331,9 +336,10 @@ class LocalLlmProvider(AgentProvider):
                     {"role": "user", "content": turn.user_text},
                 ]
 
+                usage: Optional[dict] = None
                 for _ in range(_MAX_ITERATIONS):
                     if handle.stop_requested:
-                        return TurnResult(aborted=True)
+                        return TurnResult(aborted=True, usage=usage)
                     data = await self._request_json(
                         session, "POST", f"{base}/chat/completions",
                         headers=self._api_headers(),
@@ -347,6 +353,7 @@ class LocalLlmProvider(AgentProvider):
                         },
                         timeout=_LLM_TIMEOUT_S,
                     )
+                    usage = merge_usage(usage, data.get("usage"))
                     message = (data.get("choices") or [{}])[0].get("message") or {}
                     content = self._extract_text(message.get("content") or "")
                     tool_calls = message.get("tool_calls") or []
@@ -354,7 +361,7 @@ class LocalLlmProvider(AgentProvider):
                     if content:
                         await emit(BotEvent(t="delta", text=content))
                     if not tool_calls:
-                        return TurnResult()
+                        return TurnResult(usage=usage)
 
                     messages.append({
                         "role": "assistant",
@@ -363,9 +370,10 @@ class LocalLlmProvider(AgentProvider):
                     })
                     for tool_call in tool_calls:
                         if handle.stop_requested:
-                            return TurnResult(aborted=True)
+                            return TurnResult(aborted=True, usage=usage)
                         fn = tool_call.get("function") or {}
                         name = str(fn.get("name") or "")
+                        tc_id = str(tool_call.get("id") or "")
                         raw_args = fn.get("arguments") or "{}"
                         try:
                             args = (json.loads(raw_args)
@@ -374,7 +382,9 @@ class LocalLlmProvider(AgentProvider):
                             args = {}
                         if not isinstance(args, dict):
                             args = {}
-                        await emit(BotEvent(t="tool_use", name=name, input=args))
+                        await emit(BotEvent(t="tool_use", name=name, input=args,
+                                            id=tc_id))
+                        tool_failed = False
                         try:
                             if name == "wait_stage":
                                 result_text = await self._wait_stage_done(
@@ -385,15 +395,18 @@ class LocalLlmProvider(AgentProvider):
                                     session, turn.mcp_endpoint, name, args)
                         except Exception as e:
                             result_text = f"[error] {type(e).__name__}: {e}"
+                            tool_failed = True
                         result_text = result_text[:TOOL_RESULT_CAP]
                         await emit(BotEvent(
-                            t="tool_result", name=name, text=result_text))
+                            t="tool_result", name=name, text=result_text,
+                            id=tc_id, is_error=tool_failed))
                         messages.append({
                             "role": "tool",
-                            "tool_call_id": str(tool_call.get("id") or name),
+                            "tool_call_id": tc_id or name,
                             "content": result_text,
                         })
-                return TurnResult(error="too many tool-call iterations")
+                return TurnResult(error="too many tool-call iterations",
+                                  usage=usage)
         except asyncio.CancelledError:
             raise
         except Exception as e:

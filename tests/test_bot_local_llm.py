@@ -148,6 +148,44 @@ class TestAgentLoop:
         assert events[1].text == '{"comfytv_version": "1.9.0"}'
         assert events[-1].text == "all good"
 
+    async def test_usage_accumulates_and_tool_ids_flow(self, monkeypatch):
+        provider = LocalLlmProvider(base_url="http://x/v1", model="m1")
+        chat_responses = [
+            {"choices": [{"message": {
+                "content": "",
+                "tool_calls": [{"id": "t1", "function": {
+                    "name": "server_info", "arguments": "{}"}}],
+            }}],
+             "usage": {"prompt_tokens": 100, "completion_tokens": 5}},
+            {"choices": [{"message": {"content": "all good",
+                                      "tool_calls": []}}],
+             "usage": {"prompt_tokens": 120, "completion_tokens": 8}},
+        ]
+
+        async def fake_request(session, method, url, *, headers,
+                               json_body=None, timeout=120):
+            if url.endswith("/chat/completions"):
+                return chat_responses.pop(0)
+            return {"result": {"tools": [{"name": "server_info"}]}}
+
+        async def fake_call(session, endpoint, name, arguments):
+            raise RuntimeError("mcp down")
+
+        monkeypatch.setattr(provider, "_request_json", fake_request)
+        monkeypatch.setattr(provider, "_mcp_call_tool", fake_call)
+        events: list[BotEvent] = []
+        result = await provider.send(
+            TurnRequest(chat_id="c", user_text="check",
+                        mcp_endpoint="http://x/mcp"),
+            _collect(events), TurnHandle())
+        assert result.usage == {"input_tokens": 220, "output_tokens": 13}
+        tool_use = next(e for e in events if e.t == "tool_use")
+        tool_result = next(e for e in events if e.t == "tool_result")
+        assert tool_use.id == "t1"
+        assert tool_result.id == "t1"
+        assert tool_result.is_error is True
+        assert "[error]" in tool_result.text
+
     async def test_stop_aborts(self, monkeypatch):
         provider = LocalLlmProvider(base_url="http://x/v1", model="m1")
         handle = TurnHandle()

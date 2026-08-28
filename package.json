@@ -33,6 +33,7 @@
     "opensheetmusicdisplay": "^2.1.0",
     "pinia": "^3.0.4",
     "reka-ui": "^2.9.9",
+    "shiki": "^4.4.3",
     "three": "^0.184.0",
     "tippy.js": "^6.3.7",
     "vue": "^3.5.13",

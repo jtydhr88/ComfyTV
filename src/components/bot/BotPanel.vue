@@ -31,6 +31,17 @@
           {{ store.activeChat?.title || $t('bot.untitled') }}
         </span>
         <button
+          class="ctv:flex ctv:cursor-pointer ctv:items-center ctv:gap-1 ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-transparent ctv:px-1.5 ctv:py-0.5 ctv:text-2xs ctv:text-muted-foreground"
+          :title="$t('bot.runModeHint')"
+          @click="toggleRunMode()"
+        >
+          <i
+            class="pi ctv:text-[9px]"
+            :class="runMode === 'ask' ? 'pi-shield' : 'pi-bolt'"
+          />
+          {{ runMode === 'ask' ? $t('bot.runModeAsk') : $t('bot.runModeAuto') }}
+        </button>
+        <button
           class="ctv-bot-iconbtn"
           :title="$t('bot.newChat')"
           @click="openNew()"
@@ -213,6 +224,13 @@ import { useBotStore } from '@/stores/botStore'
 
 const store = useBotStore()
 const { t } = useI18n()
+
+const runMode = computed(() =>
+  store.activeChat?.run_mode === 'ask' ? 'ask' : 'auto')
+
+function toggleRunMode() {
+  void store.setRunMode(runMode.value === 'ask' ? 'auto' : 'ask')
+}
 
 const renamingId = ref<string | null>(null)
 const renameDraft = ref('')

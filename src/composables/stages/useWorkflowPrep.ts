@@ -1,6 +1,4 @@
-import { apiFetch, apiSend, OkSchema, WorkflowStateSchema } from '@/api'
-import { app } from '@/lib/comfyApp'
-import { convertGuiToApiHeadless } from '@/composables/stages/headlessConvert'
+import { apiFetch, apiSend, ConvertWorkflowResultSchema, WorkflowStateSchema } from '@/api'
 import { emitWorkflowApiGenerated } from '@/utils/workflowEvents'
 
 interface PrepState {
@@ -60,47 +58,13 @@ export function prepareWorkflow(kind: string, label: string): Promise<void> {
         throw new Error(`workflow file missing on disk: ${state.file_path}`)
       }
 
-      const fileResp = await (app as any).api.fetchApi(
-        `/comfytv/workflows/file?kind=${encodeURIComponent(kind)}&label=${encodeURIComponent(label)}`
+      const result = await apiSend(
+        '/comfytv/workflows/convert', 'POST', ConvertWorkflowResultSchema,
+        { kind, label },
       )
-      if (fileResp.status >= 400) {
-        throw new Error(`fetch file: ${fileResp.status} ${fileResp.statusText}`)
-      }
-      const mtimeHeader = fileResp.headers.get('X-Workflow-Mtime')
-      const fileMtime = mtimeHeader ? Number(mtimeHeader) : (state.file_mtime ?? 0)
-      const guiJsonText = await fileResp.text()
-      const guiJson = JSON.parse(guiJsonText)
-      if (!guiJson || typeof guiJson !== 'object' || !Array.isArray(guiJson.nodes)) {
-        throw new Error(
-          `workflow file is not a GUI-format export (no top-level "nodes" array). ` +
-          `Open it in ComfyUI and save normally — not "Save (API Format)" — to convert.`,
-        )
-      }
-
-      const apiJson = await convertGuiToApiHeadless(guiJson)
-
-      const nodeCount =
-        apiJson && typeof apiJson === 'object' && !Array.isArray(apiJson)
-          ? Object.keys(apiJson).length
-          : 0
-      if (nodeCount === 0) {
-        const sidecar = String(state.file_path || `${label}.json`).replace(/\.json$/i, '.api.json')
-        throw new Error(
-          `Couldn't convert "${label}" to an API prompt: the GUI→API conversion ran ` +
-          `but emitted nothing (0 nodes) — usually a subgraph that fails to expand in ` +
-          `this ComfyUI setup. The workflow was NOT saved.\n\n` +
-          `Fix: open this workflow in ComfyUI, use "Save (API Format)", and save the ` +
-          `result next to the workflow file as:\n  ${sidecar}\n` +
-          `ComfyTV will use that API prompt directly and skip conversion.`,
-        )
-      }
       console.info(
-        `[ComfyTV/workflow-prep] ${kind}/${label}: converted via headless iframe (${nodeCount} nodes)`,
+        `[ComfyTV/workflow-prep] ${kind}/${label}: converted server-side (${result.node_count} nodes)`,
       )
-
-      await apiSend('/comfytv/workflows/api_json', 'POST', OkSchema, {
-        kind, label, api_json: apiJson, file_mtime: fileMtime,
-      })
 
       _set(key, { busy: false, ready: true })
       emitWorkflowApiGenerated(kind, label)
@@ -117,4 +81,3 @@ export function prepareWorkflow(kind: string, label: string): Promise<void> {
   _inflight.set(key, task)
   return task
 }
-

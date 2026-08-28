@@ -24,6 +24,7 @@ SETTINGS_SPEC: dict[str, dict[str, Any]] = {
     "bot-local-llm-url": {"type": "string", "default": ""},
     "bot-enable-comfy-mcp": {"type": "boolean", "default": False},
     "bot-comfy-mcp-command": {"type": "string", "default": ""},
+    "bot-always-allow-runs": {"type": "boolean", "default": True},
     "enable-skills": {"type": "boolean", "default": True},
     "skills-disabled": {"type": "string", "default": "[]"},
     "enable-eagle": {"type": "boolean", "default": False},

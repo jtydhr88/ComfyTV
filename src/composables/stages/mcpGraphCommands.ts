@@ -187,6 +187,29 @@ function opSetColor(graph: any, op: any): CommandResult {
   return { op: 'set_color', node_id: String(node.id) }
 }
 
+const REVIEW_STATES = ['approved', 'review', 'archived', ''] as const
+const REVIEW_COLORS: Record<string, { color: string; bgcolor: string }> = {
+  approved: { color: '#2e7d32', bgcolor: '#1e3320' },
+  review: { color: '#b58900', bgcolor: '#332c14' },
+  archived: { color: '#555555', bgcolor: '#262626' },
+}
+
+function opSetReview(graph: any, op: any): CommandResult {
+  const node = requireNode(graph, op.node)
+  const state = String(op.state ?? '')
+  if (!(REVIEW_STATES as readonly string[]).includes(state)) {
+    throw new Error(
+      "set_review state must be approved, review, archived or '' to clear")
+  }
+  node.properties = node.properties ?? {}
+  if (state) node.properties.comfytv_review = state
+  else delete node.properties.comfytv_review
+  const palette = REVIEW_COLORS[state]
+  node.color = palette?.color
+  node.bgcolor = palette?.bgcolor
+  return { op: 'set_review', node_id: String(node.id), state }
+}
+
 function opCreateGroup(graph: any, op: any): CommandResult {
   const ids = op.nodes
   if (!Array.isArray(ids) || ids.length === 0) {
@@ -312,6 +335,8 @@ export function handleGraphEdit(app: any, cmd: any): CommandResult {
           results.push(opClone(graph, op))
         } else if (name === 'set_color') {
           results.push(opSetColor(graph, op))
+        } else if (name === 'set_review') {
+          results.push(opSetReview(graph, op))
         } else if (name === 'create_group') {
           results.push(opCreateGroup(graph, op))
         } else if (name === 'collapse') {
@@ -326,7 +351,7 @@ export function handleGraphEdit(app: any, cmd: any): CommandResult {
           throw new Error(
             `unknown op '${name}' — valid: add_node, remove_node, set_widget, `
             + 'set_title, connect, disconnect, set_mode, clone, set_color, '
-            + 'create_group, collapse, pin, convert_to_subgraph, '
+            + 'set_review, create_group, collapse, pin, convert_to_subgraph, '
             + 'unpack_subgraph')
         }
       } catch (e) {

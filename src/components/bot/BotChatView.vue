@@ -27,10 +27,23 @@
         <div
           v-for="msg in store.messages"
           :key="msg.id"
-          class="ctv:flex ctv:flex-col ctv:gap-1"
+          class="ctv-bot-msg ctv:flex ctv:flex-col ctv:gap-1"
           :class="msg.role === 'user' ? 'ctv:items-end' : 'ctv:items-stretch'"
         >
           <template v-if="msg.role === 'user'">
+            <div
+              v-if="userRefs(msg).length"
+              class="ctv:flex ctv:max-w-[85%] ctv:flex-wrap ctv:justify-end ctv:gap-1"
+            >
+              <span
+                v-for="(r, i) in userRefs(msg)"
+                :key="i"
+                class="ctv:inline-flex ctv:items-center ctv:gap-1 ctv:rounded-full ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:px-2 ctv:py-0.5 ctv:text-2xs ctv:text-muted-foreground"
+              >
+                <i class="pi ctv:text-[9px]" :class="refIcon(r)" />
+                @{{ refLabel(r) }}
+              </span>
+            </div>
             <div
               v-if="userSkill(msg)"
               class="ctv:inline-flex ctv:items-center ctv:gap-1 ctv:rounded-full ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:px-2 ctv:py-0.5 ctv:text-2xs ctv:font-mono ctv:text-muted-foreground"
@@ -68,12 +81,29 @@
               v-if="userText(msg)"
               class="ctv:max-w-[85%] ctv:rounded-xl ctv:rounded-br-sm ctv:bg-interface-menu-component-surface-hovered ctv:px-3 ctv:py-2 ctv:text-sm ctv:whitespace-pre-wrap ctv:break-words"
             >{{ userText(msg) }}</div>
+            <div
+              v-if="msg.status === 'queued'"
+              class="ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:italic"
+            >
+              <i class="pi pi-clock ctv:text-[9px]" />
+              {{ $t('bot.queuedHint') }}
+            </div>
           </template>
           <template v-else>
             <BotMessageBlocks
               :blocks="msg.blocks"
               :streaming="msg.status === 'streaming'"
+              :usage="msg.usage"
             />
+            <button
+              v-if="msg.status === 'done' && !store.busy"
+              class="ctv-bot-branch ctv:self-start ctv:flex ctv:cursor-pointer ctv:items-center ctv:gap-1 ctv:rounded-md ctv:border-none ctv:bg-transparent ctv:p-0.5 ctv:text-2xs ctv:text-muted-foreground ctv:opacity-0"
+              :title="$t('bot.branchFrom')"
+              @click="store.branchChat(msg.id)"
+            >
+              <i class="pi pi-share-alt ctv:text-[9px]" />
+              {{ $t('bot.branch') }}
+            </button>
             <div
               v-if="msg.status === 'streaming'"
               class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-xs ctv:text-muted-foreground"
@@ -122,8 +152,42 @@
         </button>
       </div>
       <div
+        v-if="mentionOpen && mentionMatches.length"
+        class="ctv:mb-1.5 ctv:max-h-48 ctv:overflow-y-auto ctv:rounded-lg ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:p-1 ctv:flex ctv:flex-col"
+      >
+        <button
+          v-for="m in mentionMatches"
+          :key="refKey(m)"
+          class="ctv-bot-skill-option"
+          @click="pickMention(m)"
+        >
+          <i class="pi ctv:shrink-0 ctv:text-[10px] ctv:text-muted-foreground" :class="refIcon(m)" />
+          <span class="ctv:shrink-0 ctv:text-xs ctv:text-base-foreground">{{ refLabel(m) }}</span>
+          <span class="ctv:min-w-0 ctv:truncate ctv:text-2xs ctv:text-muted-foreground">
+            {{ m.kind === 'stage' ? m.stage_class : m.media_type }}
+          </span>
+        </button>
+      </div>
+      <div
         class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:rounded-lg ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:px-2 ctv:py-1.5 ctv:focus-within:border-border"
       >
+        <div v-if="mentionRefs.length" class="ctv:flex ctv:flex-wrap ctv:gap-1.5">
+          <span
+            v-for="r in mentionRefs"
+            :key="refKey(r)"
+            class="ctv:inline-flex ctv:items-center ctv:gap-1 ctv:rounded-full ctv:border ctv:border-border-subtle ctv:px-2 ctv:py-0.5 ctv:text-2xs ctv:text-base-foreground"
+          >
+            <i class="pi ctv:text-[9px]" :class="refIcon(r)" />
+            @{{ refLabel(r) }}
+            <button
+              class="ctv-bot-skill-x"
+              :title="$t('bot.removeRef')"
+              @click="removeRef(refKey(r))"
+            >
+              <i class="pi pi-times ctv:text-[9px]" />
+            </button>
+          </span>
+        </div>
         <div v-if="selectedSkill" class="ctv:flex ctv:flex-wrap ctv:gap-1.5">
           <span
             class="ctv:inline-flex ctv:items-center ctv:gap-1 ctv:rounded-full ctv:border ctv:border-border-subtle ctv:px-2 ctv:py-0.5 ctv:text-2xs ctv:font-mono ctv:text-base-foreground"
@@ -184,7 +248,6 @@
           rows="1"
           class="ctv:max-h-40 ctv:w-full ctv:resize-none ctv:border-none ctv:bg-transparent ctv:text-sm ctv:text-base-foreground ctv:outline-none ctv:[font-family:inherit]"
           :placeholder="$t('bot.inputPlaceholder')"
-          :disabled="store.busy"
           @input="autoGrow"
           @paste="onPaste"
           @keydown.enter.exact.prevent="onEnter"
@@ -209,6 +272,14 @@
               <i class="pi ctv:text-xs" :class="pickerOpen ? 'pi-times' : 'pi-images'" />
             </button>
           </template>
+          <button
+            class="ctv-bot-attach"
+            :title="$t('bot.insertFromCanvas')"
+            :disabled="store.busy"
+            @click="insertFromCanvas"
+          >
+            <i class="pi pi-plus-circle ctv:text-xs" />
+          </button>
           <input
             ref="filePicker"
             type="file"
@@ -227,13 +298,12 @@
             {{ $t('bot.stop') }}
           </button>
           <button
-            v-else
             class="ctv-bot-send ctv:flex ctv:items-center ctv:gap-1 ctv:rounded-md ctv:border-none ctv:bg-interface-menu-component-surface-hovered ctv:px-2.5 ctv:py-1 ctv:text-xs ctv:text-base-foreground ctv:cursor-pointer ctv:disabled:opacity-40 ctv:disabled:cursor-default"
             :disabled="!draft.trim() && !pending.length"
             @click="submit"
           >
-            <i class="pi pi-send ctv:text-[11px]" />
-            {{ $t('bot.send') }}
+            <i class="pi ctv:text-[11px]" :class="store.busy ? 'pi-list' : 'pi-send'" />
+            {{ store.busy ? $t('bot.queue') : $t('bot.send') }}
           </button>
         </div>
       </div>
@@ -253,8 +323,16 @@ import {
   toastLoaderUploadFailed,
   useLoaderFileDrop,
 } from '@/composables/stages/useLoaderFileDrop'
+import { useBotMentions } from '@/composables/functional/useBotMentions'
 import { useAssetStore } from '@/stores/assetStore'
 import { type BotAttachment, type BotChatMessage, useBotStore } from '@/stores/botStore'
+import {
+  type BotRef,
+  refIcon,
+  refKey,
+  refLabel,
+  selectedCanvasStages,
+} from '@/utils/botRefs'
 
 const store = useBotStore()
 const draft = ref('')
@@ -266,6 +344,24 @@ const {
   pickFirst: pickFirstSkill,
   clear: clearSkill,
 } = useSkillSlash(draft)
+const {
+  refs: mentionRefs,
+  open: mentionOpen,
+  matches: mentionMatches,
+  pick: pickMention,
+  pickFirst: pickFirstMention,
+  addRef,
+  removeRef,
+  clear: clearRefs,
+} = useBotMentions(draft)
+
+function insertFromCanvas(): void {
+  selectedCanvasStages().forEach(addRef)
+}
+
+function userRefs(msg: BotChatMessage): BotRef[] {
+  return msg.blocks.filter(b => b.type === 'ref') as BotRef[]
+}
 const pending = ref<BotAttachment[]>([])
 const uploading = ref(false)
 const pickerOpen = ref(false)
@@ -365,21 +461,24 @@ function scrollToBottom(force = false) {
 }
 
 function onEnter() {
+  if (pickFirstMention()) return
   if (pickFirstSkill()) return
   void submit()
 }
 
 async function submit() {
   const text = draft.value.trim()
-  if ((!text && !pending.value.length) || store.busy || uploading.value) return
+  if ((!text && !pending.value.length) || uploading.value) return
   const attachments = pending.value
   const skill = selectedSkill.value?.name
+  const refs = mentionRefs.value
   draft.value = ''
   pending.value = []
   clearSkill()
+  clearRefs()
   await nextTick()
   autoGrow()
-  await store.send(text, attachments, skill)
+  await store.send(text, attachments, skill, refs)
   await nextTick()
   scrollToBottom(true)
 }
@@ -392,6 +491,7 @@ watch(() => store.messages, async () => {
 watch(() => store.activeChatId, async () => {
   pending.value = []
   clearSkill()
+  clearRefs()
   await nextTick()
   scrollToBottom(true)
 })
@@ -403,6 +503,10 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.ctv-bot-msg:hover .ctv-bot-branch,
+.ctv-bot-branch:focus-visible {
+  opacity: 1;
+}
 @media (hover: hover) {
   .ctv-bot-send:hover:not(:disabled) {
     filter: brightness(1.15);

@@ -16,7 +16,7 @@ TURN_IDLE_TIMEOUT_S = 600
 TURN_MAX_S = 4 * 3600
 TOOL_RESULT_CAP = 4000
 PROBE_CACHE_S = 60
-MCP_TOOL_TIMEOUT_MS = 180_000
+MCP_TOOL_TIMEOUT_MS = 600_000
 
 CORE_MCP_TOOLS = [
     "server_info",
@@ -47,6 +47,8 @@ CORE_MCP_TOOLS = [
     "canvas_command",
     "canvas_focus",
     "skill",
+    "ask_user",
+    "remember",
 ]
 
 COMFY_MCP_ALLOWED_TOOLS = [
@@ -85,6 +87,40 @@ def base_spawn_env() -> dict:
     return env
 
 
+_USAGE_KEY_ALIASES = {
+    "input_tokens": "input_tokens",
+    "prompt_tokens": "input_tokens",
+    "output_tokens": "output_tokens",
+    "completion_tokens": "output_tokens",
+    "cache_read_input_tokens": "cache_read_input_tokens",
+    "cached_input_tokens": "cache_read_input_tokens",
+    "cache_creation_input_tokens": "cache_creation_input_tokens",
+}
+
+
+def normalize_usage(raw, cost_usd=None) -> Optional[dict]:
+    out: dict = {}
+    if isinstance(raw, dict):
+        for key, target in _USAGE_KEY_ALIASES.items():
+            value = raw.get(key)
+            if isinstance(value, (int, float)) and target not in out:
+                out[target] = int(value)
+    if isinstance(cost_usd, (int, float)):
+        out["cost_usd"] = round(float(cost_usd), 6)
+    return out or None
+
+
+def merge_usage(total: Optional[dict], raw) -> Optional[dict]:
+    increment = normalize_usage(raw)
+    if increment is None:
+        return total
+    if total is None:
+        return increment
+    for key, value in increment.items():
+        total[key] = total.get(key, 0) + value
+    return total
+
+
 def tool_result_text(content) -> str:
     if isinstance(content, str):
         return content
@@ -102,6 +138,7 @@ class CliStreamParser:
         self.session_id: Optional[str] = None
         self.result_error: str = ""
         self.result_seen = False
+        self.usage: Optional[dict] = None
         self._text_from_assistant = text_from_assistant
         self._saw_stream_delta = False
         self._tool_names: dict[str, str] = {}
@@ -130,6 +167,8 @@ class CliStreamParser:
         if t == "result":
             self.result_seen = True
             self.session_id = data.get("session_id") or self.session_id
+            self.usage = normalize_usage(
+                data.get("usage"), data.get("total_cost_usd")) or self.usage
             if data.get("is_error"):
                 self.result_error = str(data.get("result") or data.get("subtype") or "error")
             return []
@@ -168,6 +207,7 @@ class CliStreamParser:
                 t="tool_use",
                 name=name,
                 input=raw_input if isinstance(raw_input, dict) else {},
+                id=block_id,
             ))
         return events
 
@@ -179,11 +219,14 @@ class CliStreamParser:
         for block in content:
             if not isinstance(block, dict) or block.get("type") != "tool_result":
                 continue
-            name = self._tool_names.get(str(block.get("tool_use_id") or ""), "")
+            tool_use_id = str(block.get("tool_use_id") or "")
+            name = self._tool_names.get(tool_use_id, "")
             events.append(BotEvent(
                 t="tool_result",
                 name=name,
                 text=tool_result_text(block.get("content"))[:TOOL_RESULT_CAP],
+                id=tool_use_id,
+                is_error=bool(block.get("is_error")),
             ))
         return events
 
@@ -292,18 +335,21 @@ async def run_cli_turn(
         await kill_process_tree(handle)
         return TurnResult(resume_token=parser.session_id,
                           error=f"turn timed out ({timeout_reason})",
-                          aborted=True)
+                          aborted=True, usage=parser.usage)
     finally:
         stderr_task.cancel()
 
     if handle.stop_requested:
-        return TurnResult(resume_token=parser.session_id, aborted=True)
+        return TurnResult(resume_token=parser.session_id, aborted=True,
+                          usage=parser.usage)
     if parser.result_error:
-        return TurnResult(resume_token=parser.session_id, error=parser.result_error)
+        return TurnResult(resume_token=parser.session_id,
+                          error=parser.result_error, usage=parser.usage)
     if proc.returncode not in (0, None) or not parser.result_seen:
         err = b"".join(stderr_buf).decode("utf-8", "replace").strip()
         return TurnResult(
             resume_token=parser.session_id,
             error=err[-800:] or f"{exe_label} exited with code {proc.returncode}",
+            usage=parser.usage,
         )
-    return TurnResult(resume_token=parser.session_id)
+    return TurnResult(resume_token=parser.session_id, usage=parser.usage)

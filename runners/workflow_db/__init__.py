@@ -1,4 +1,9 @@
-from . import seed, config, bindings, link, pull  # noqa: F401 — for test monkeypatching
+from . import seed, config, bindings, convert, link, pull  # noqa: F401 — for test monkeypatching
+from .convert import (
+    build_object_info,
+    convert_gui_to_api,
+    convert_workflow,
+)
 from .seed import (
     seed_workflows_from_disk,
     reset_workflow_to_preset,
@@ -65,4 +70,7 @@ __all__ = [
     "read_workflow_file",
     "set_api_json",
     "save_api_sidecar",
+    "build_object_info",
+    "convert_gui_to_api",
+    "convert_workflow",
 ]

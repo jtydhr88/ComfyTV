@@ -206,6 +206,23 @@ describe('handleGraphEdit', () => {
     expect((node as any).color).toBeUndefined()
   })
 
+  it('set_review stamps property and palette, clears both', () => {
+    const node = makeNode()
+    const { app } = makeApp([node])
+    const out: any = handleGraphEdit(app, {
+      ops: [{ op: 'set_review', node: '4', state: 'approved' }],
+    })
+    expect((node as any).properties.comfytv_review).toBe('approved')
+    expect((node as any).color).toBe('#2e7d32')
+    expect(out.applied[0]).toMatchObject({ op: 'set_review', state: 'approved' })
+    handleGraphEdit(app, { ops: [{ op: 'set_review', node: '4', state: '' }] })
+    expect((node as any).properties.comfytv_review).toBeUndefined()
+    expect((node as any).color).toBeUndefined()
+    expect(() => handleGraphEdit(app, {
+      ops: [{ op: 'set_review', node: '4', state: 'meh' }],
+    })).toThrow(/approved, review, archived/)
+  })
+
   it('collapse is idempotent set semantics over the native toggle', () => {
     const node = makeNode({
       flags: {},

@@ -85,6 +85,29 @@ class TestCodexParser:
         assert string_error[0].text == "canvas command timed out"
         assert content_error[0].text == "node 9 not found"
 
+    def test_turn_completed_captures_usage(self):
+        p = _CodexStreamParser()
+        p.parse_line(_line({"type": "turn.completed",
+                            "usage": {"input_tokens": 50,
+                                      "cached_input_tokens": 10,
+                                      "output_tokens": 7}}))
+        assert p.result_seen
+        assert p.usage == {"input_tokens": 50,
+                           "cache_read_input_tokens": 10,
+                           "output_tokens": 7}
+
+    def test_tool_events_carry_id_and_error(self):
+        p = _CodexStreamParser()
+        started = p.parse_line(_line({"type": "item.started", "item": {
+            "id": "t9", "type": "mcp_tool_call", "tool": "srv",
+            "arguments": {}, "status": "in_progress"}}))
+        failed = p.parse_line(_line({"type": "item.completed", "item": {
+            "id": "t9", "type": "mcp_tool_call", "tool": "srv",
+            "status": "failed", "error": {"message": "boom"}}}))
+        assert started[0].id == "t9"
+        assert failed[0].id == "t9"
+        assert failed[0].is_error is True
+
     def test_turn_completed_and_failed(self):
         p = _CodexStreamParser()
         p.parse_line(_line({"type": "turn.completed"}))
@@ -123,7 +146,7 @@ class TestCodexArgv:
         assert "--sandbox" in argv
         assert argv[argv.index("--sandbox") + 1] == "workspace-write"
         assert 'mcp_servers.comfytv.url="http://127.0.0.1:8188/comfytv/mcp"' in argv
-        assert "mcp_servers.comfytv.tool_timeout_sec=180" in argv
+        assert "mcp_servers.comfytv.tool_timeout_sec=600" in argv
         assert "features.shell_tool=false" in argv
         assert 'web_search="disabled"' in argv
         assert 'approvals_reviewer="auto_review"' in argv

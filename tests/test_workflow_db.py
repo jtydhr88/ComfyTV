@@ -648,14 +648,14 @@ class TestSeedAndCRUD:
     def test_get_workflow_for_invoke_returns_none_when_missing(self, reset_db):
         assert wdb.get_workflow_for_invoke("image", "Nope") is None
 
-    def test_get_workflow_for_invoke_raises_without_api_json(
+    def test_get_workflow_for_invoke_raises_when_unconvertible(
             self, reset_db, tmp_path, monkeypatch):
         from pathlib import Path
         wdir = tmp_path / "workflows"
         self._make_workflow(wdir, "sd15", "image")
         monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
         wdb.seed_workflows_from_disk(("image",))
-        with pytest.raises(RuntimeError, match="hasn't been prepared"):
+        with pytest.raises(RuntimeError, match="could not be converted"):
             wdb.get_workflow_for_invoke("image", "sd15")
 
     def test_get_workflow_for_invoke_happy_path(self, reset_db, tmp_path, monkeypatch):

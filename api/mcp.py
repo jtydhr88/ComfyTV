@@ -1,3 +1,4 @@
+import contextvars
 import json
 import logging
 import time
@@ -11,6 +12,9 @@ from .capabilities import VERSION
 from .mcp_tools import TOOLS
 
 _log = logging.getLogger(__name__)
+
+BOT_CHAT_ID: contextvars.ContextVar[str] = contextvars.ContextVar(
+    "comfytv_bot_chat", default="")
 
 _BROADCAST_THROTTLE_S = 60.0
 
@@ -81,6 +85,8 @@ def _initialize(params: dict) -> dict:
 
 
 def _tool_visible(name: str) -> bool:
+    if name in ("ask_user", "remember"):
+        return bool(BOT_CHAT_ID.get())
     if name != "skill":
         return True
     from .. import skill_store
@@ -240,7 +246,11 @@ async def mcp_post(request: web.Request) -> web.Response:
         return web.json_response(
             _error(None, -32600, "invalid JSON-RPC 2.0 message"), status=400,
         )
-    response = await _dispatch(msg)
+    token = BOT_CHAT_ID.set(str(request.query.get("bot_chat") or ""))
+    try:
+        response = await _dispatch(msg)
+    finally:
+        BOT_CHAT_ID.reset(token)
     if response is None:
         return web.Response(status=202)
     http_response = web.json_response(response)

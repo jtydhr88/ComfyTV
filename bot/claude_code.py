@@ -153,6 +153,12 @@ class ClaudeCodeProvider(AgentProvider):
     async def list_models(self) -> list[str]:
         return ["sonnet", "opus", "haiku"]
 
+    _DISALLOWED_BUILTIN_TOOLS = (
+        "Bash", "BashOutput", "KillShell", "Write", "Edit", "NotebookEdit",
+        "Read", "Glob", "Grep", "WebFetch", "WebSearch", "Task", "Agent",
+        "TodoWrite",
+    )
+
     def _build_argv(self, turn: TurnRequest) -> list[str]:
         argv = resolve_claude_command()
         if not argv:
@@ -180,6 +186,7 @@ class ClaudeCodeProvider(AgentProvider):
             argv += ["--mcp-config", json.dumps({"mcpServers": servers})]
         if turn.allowed_tools:
             argv += ["--allowedTools", ",".join(turn.allowed_tools)]
+        argv += ["--disallowedTools", ",".join(self._DISALLOWED_BUILTIN_TOOLS)]
         if turn.resume_token:
             argv += ["--resume", turn.resume_token]
         return argv

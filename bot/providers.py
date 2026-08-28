@@ -38,6 +38,8 @@ class BotEvent:
     name: str = ""
     input: Optional[dict] = None
     detail: str = ""
+    id: str = ""
+    is_error: bool = False
 
 
 @dataclass
@@ -45,6 +47,7 @@ class TurnResult:
     resume_token: Optional[str] = None
     error: str = ""
     aborted: bool = False
+    usage: Optional[dict] = None
 
 
 class TurnHandle:

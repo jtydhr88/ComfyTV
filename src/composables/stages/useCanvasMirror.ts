@@ -72,6 +72,7 @@ export function buildCanvasSnapshot(deps: CanvasMirrorDeps): { project_id: strin
       node_id: cls,
       stage_class: stageClassName(node),
       title: String(node.title ?? ''),
+      review_state: String(node.properties?.comfytv_review ?? ''),
       workflow: widgetValue(node, 'workflow'),
       prompt: prompt.slice(0, PROMPT_MAX_CHARS),
       mentions: [...prompt.matchAll(MENTION_PAT)].map((m) => m[1]),

@@ -49,6 +49,7 @@ describe('parseBlocks / toChatMessage', () => {
     expect(m).toEqual({
       id: 'm1', role: 'assistant', status: 'done',
       blocks: [{ type: 'text', text: 'yo' }],
+      usage: null,
     })
   })
 })
@@ -121,6 +122,22 @@ describe('botStore events', () => {
     ])
   })
 
+  it('tool events carry id, status and duration', () => {
+    const store = seeded()
+    store.handleBotEvent({ event: 'turn_tool_use', chat_id: 'c1',
+                           message_id: 'm1', id: 'tu-1',
+                           name: 'mcp__comfytv__run_stage', input: {} })
+    store.handleBotEvent({ event: 'turn_tool_result', chat_id: 'c1',
+                           message_id: 'm1', id: 'tu-1', status: 'error',
+                           duration_ms: 420,
+                           name: 'mcp__comfytv__run_stage', text: 'boom' })
+    const [use, result] = store.messages[0].blocks
+    expect(use.id).toBe('tu-1')
+    expect(result).toMatchObject({
+      id: 'tu-1', status: 'error', duration_ms: 420,
+    })
+  })
+
   it('turn_start marks busy and appends new messages once', () => {
     const store = seeded()
     store.messages = []
@@ -135,7 +152,7 @@ describe('botStore events', () => {
     expect(store.chats[0].busy).toBe(true)
   })
 
-  it('turn_done clears busy, sets status, title and error text', () => {
+  it('turn_done clears busy, sets status, title and an error notice', () => {
     const store = seeded()
     store.chats = [{ ...chat(), busy: true } as any]
     store.handleBotEvent({ event: 'turn_done', chat_id: 'c1',
@@ -144,7 +161,106 @@ describe('botStore events', () => {
     expect(store.chats[0].busy).toBe(false)
     expect(store.chats[0].title).toBe('derived')
     expect(store.messages[0].status).toBe('error')
-    expect(store.messages[0].blocks.at(-1)?.text).toContain('boom')
+    expect(store.messages[0].blocks.at(-1)).toEqual({
+      type: 'notice', level: 'error', text: 'boom',
+    })
+  })
+
+  it('queued send appends the message without marking busy', async () => {
+    const store = seeded()
+    const fetchApi = (app as any).api.fetchApi
+    fetchApi.mockResolvedValueOnce(jsonResp({
+      queued: true,
+      user_message: message({ id: 'u9', role: 'user', status: 'queued' }),
+    }))
+    await store.send('later please')
+    expect(store.messages.some(m => m.id === 'u9' && m.status === 'queued'))
+      .toBe(true)
+    expect(store.chats[0].busy).not.toBe(true)
+  })
+
+  it('message_queued event appends once; turn_start flips its status', () => {
+    const store = seeded()
+    const queuedMsg = message({ id: 'u9', role: 'user', status: 'queued' })
+    store.handleBotEvent({ event: 'message_queued', chat_id: 'c1',
+                           user_message: queuedMsg })
+    store.handleBotEvent({ event: 'message_queued', chat_id: 'c1',
+                           user_message: queuedMsg })
+    expect(store.messages.filter(m => m.id === 'u9')).toHaveLength(1)
+    store.handleBotEvent({
+      event: 'turn_start', chat_id: 'c1',
+      user_message: message({ id: 'u9', role: 'user', status: 'done' }),
+      assistant_message: message({ id: 'a9' }),
+    })
+    expect(store.messages.find(m => m.id === 'u9')?.status).toBe('done')
+    expect(store.messages.some(m => m.id === 'a9')).toBe(true)
+  })
+
+  it('branchChat switches to the new chat with copied messages', async () => {
+    const store = seeded()
+    const fetchApi = (app as any).api.fetchApi
+    fetchApi.mockResolvedValueOnce(jsonResp({
+      chat: chat({ id: 'c2', title: 'fork' }),
+      messages: [message({ id: 'b1', chat_id: 'c2' })],
+    }))
+    const ok = await store.branchChat('m1')
+    expect(ok).toBe(true)
+    expect(fetchApi.mock.calls.at(-1)?.[0])
+      .toBe('/comfytv/bot/chats/c1/branch')
+    expect(store.activeChatId).toBe('c2')
+    expect(store.messages.map(m => m.id)).toEqual(['b1'])
+  })
+
+  it('turn_ask appends an ask block once and resolution updates it', () => {
+    const store = seeded()
+    const ask = {
+      event: 'turn_ask', chat_id: 'c1', message_id: 'm1', ask_id: 'ask-1',
+      prompt: 'Run it?', options: [{ id: 'run', label: 'Run' },
+                                   { id: 'cancel', label: 'Cancel' }],
+      min_selections: 1, max_selections: 1, allow_other: false,
+      kind: 'run_approval',
+    }
+    store.handleBotEvent(ask)
+    store.handleBotEvent(ask)
+    const blocks = store.messages[0].blocks.filter(b => b.type === 'ask')
+    expect(blocks).toHaveLength(1)
+    expect(blocks[0]).toMatchObject({
+      ask_id: 'ask-1', status: 'pending', kind: 'run_approval',
+    })
+    store.handleBotEvent({
+      event: 'turn_ask_resolved', chat_id: 'c1', message_id: 'm1',
+      ask_id: 'ask-1', status: 'answered', selected: ['run'],
+    })
+    expect(store.messages[0].blocks.find(b => b.ask_id === 'ask-1'))
+      .toMatchObject({ status: 'answered', selected: ['run'] })
+  })
+
+  it('answerAsk posts to the ask endpoint', async () => {
+    const store = seeded()
+    const fetchApi = (app as any).api.fetchApi
+    fetchApi.mockResolvedValueOnce(new Response(
+      JSON.stringify({ ok: true }),
+      { status: 202, headers: { 'content-type': 'application/json' } }))
+    const ok = await store.answerAsk('ask-1', ['run'], 'note')
+    expect(ok).toBe(true)
+    const [path, init] = fetchApi.mock.calls.at(-1)
+    expect(path).toBe('/comfytv/bot/chats/c1/asks/ask-1/answer')
+    expect(JSON.parse(String(init.body))).toEqual({
+      selected: ['run'], other_text: 'note',
+    })
+  })
+
+  it('turn_done skips a duplicate notice and stores usage', () => {
+    const store = seeded()
+    store.messages[0].blocks.push({ type: 'notice', level: 'error',
+                                    text: 'persisted' })
+    const usage = { input_tokens: 12, output_tokens: 4, cost_usd: 0.01 }
+    store.handleBotEvent({ event: 'turn_done', chat_id: 'c1',
+                           message_id: 'm1', status: 'error',
+                           error: 'boom', usage })
+    const notices = store.messages[0].blocks.filter(b => b.type === 'notice')
+    expect(notices).toHaveLength(1)
+    expect(store.messages[0].usage).toEqual(usage)
   })
 
   it('chat_created/deleted maintain the list', () => {

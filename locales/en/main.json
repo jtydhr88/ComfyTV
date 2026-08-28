@@ -449,6 +449,10 @@
         "desc": "Command that launches the comfy-mcp stdio server. Blank = find comfy-mcp on PATH.",
         "placeholder": "comfy-mcp"
       },
+      "bot-always-allow-runs": {
+        "label": "Always allow bot runs",
+        "desc": "Run stages immediately without an approval card (the default). Disable this to let chats switched to Ask mode pause for your approval before each run."
+      },
       "enable-skills": {
         "label": "Enable Agent Skills",
         "desc": "Serve installed skills to agents over MCP (skill tool + prompts) and to the embedded bot."
@@ -2707,6 +2711,21 @@
     "dropHint": "Drop images, videos or audio to attach",
     "attachFromLibrary": "Attach from asset library",
     "newChatWith": "New chat with:",
-    "removeSkill": "Remove skill"
+    "removeSkill": "Remove skill",
+    "noResult": "(no result)",
+    "copyCode": "Copy code",
+    "runModeAuto": "Auto",
+    "runModeAsk": "Ask",
+    "runModeHint": "Auto runs stages immediately; Ask pauses for your approval before each run",
+    "askSubmit": "Submit",
+    "askOtherPlaceholder": "Or answer in your own words...",
+    "askExpired": "Expired without an answer",
+    "askCancelled": "Cancelled",
+    "insertFromCanvas": "Reference the stages selected on the canvas",
+    "removeRef": "Remove reference",
+    "branch": "Branch",
+    "branchFrom": "Start a new chat that continues from this reply",
+    "queue": "Queue",
+    "queuedHint": "Queued — sends when the current turn finishes"
   }
 }

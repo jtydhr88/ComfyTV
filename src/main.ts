@@ -36,10 +36,6 @@ import './tailwind.css'
 import './style.css'
 
 import { app, type ComfyNode } from '@/lib/comfyApp'
-import {
-  isHeadlessConvertMode,
-  runHeadlessConvertWorker,
-} from '@/composables/stages/headlessConvert'
 import type { ComfyExtension, ComfyNodeDef } from '@comfyorg/comfyui-frontend-types'
 import { applyHiddenWidgetFlags, getWidget } from '@/utils/widget'
 import { checkThemeTokens } from '@/utils/devTokenCheck'
@@ -70,12 +66,10 @@ setActivePinia(pinia)
 
 loadStageMeta()
 
-const v2Ready = isHeadlessConvertMode() ? Promise.resolve() : hydrateV2Flag()
+const v2Ready = hydrateV2Flag()
 
-if (!isHeadlessConvertMode()) {
-  installPlaybackArbiter()
-  installCameraMotionLod()
-}
+installPlaybackArbiter()
+installCameraMotionLod()
 
 useExecutionStore().bindToApi(app.api)
 
@@ -224,12 +218,6 @@ const extension: ComfyExtension = {
   ],
 
   setup() {
-    if (isHeadlessConvertMode()) {
-      console.info('[ComfyTV] headless convert mode 鈥?UI init skipped')
-      runHeadlessConvertWorker()
-      return
-    }
-
     checkThemeTokens()
     const selection = useSelectionStore()
     const a = app as any
@@ -385,7 +373,7 @@ const extension: ComfyExtension = {
     }
 
     await v2Ready
-    if (isV2Enabled() && !isHeadlessConvertMode()) {
+    if (isV2Enabled()) {
       const shell = V2_SHELLS[node.comfyClass]
       if (shell) {
         const { state, onRunRequest, onCancelRequest } =

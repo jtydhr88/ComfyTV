@@ -13,6 +13,7 @@ from ComfyTV.bot.providers import (
     BotEvent,
     ProviderCaps,
     ProviderStatus,
+    TurnRequest,
     TurnResult,
     register_provider,
 )
@@ -91,6 +92,49 @@ class TestStreamParser:
                                   {"type": "text", "text": "b"}]) == "a\nb"
         assert _tool_result_text(None) == ""
 
+    def test_tool_events_carry_id_and_error_flag(self):
+        p = _StreamParser()
+        use_events = p.parse_line(_line({"type": "assistant", "message": {
+            "content": [{"type": "tool_use", "id": "tu-9",
+                         "name": "mcp__comfytv__run_stage", "input": {}}]}}))
+        result_events = p.parse_line(_line({"type": "user", "message": {
+            "content": [{"type": "tool_result", "tool_use_id": "tu-9",
+                         "is_error": True,
+                         "content": [{"type": "text", "text": "nope"}]}]}}))
+        assert use_events[0].id == "tu-9"
+        assert use_events[0].is_error is False
+        assert result_events[0].id == "tu-9"
+        assert result_events[0].is_error is True
+
+    def test_result_captures_usage(self):
+        p = _StreamParser()
+        p.parse_line(_line({"type": "result", "session_id": "s",
+                            "total_cost_usd": 0.0123,
+                            "usage": {"input_tokens": 100, "output_tokens": 20,
+                                      "cache_read_input_tokens": 5}}))
+        assert p.usage == {"input_tokens": 100, "output_tokens": 20,
+                           "cache_read_input_tokens": 5, "cost_usd": 0.0123}
+
+
+class TestUsageHelpers:
+    def test_normalize_maps_openai_aliases(self):
+        from ComfyTV.bot._cli_common import normalize_usage
+        assert normalize_usage({"prompt_tokens": 7, "completion_tokens": 2}) \
+            == {"input_tokens": 7, "output_tokens": 2}
+
+    def test_normalize_empty_returns_none(self):
+        from ComfyTV.bot._cli_common import normalize_usage
+        assert normalize_usage({}) is None
+        assert normalize_usage(None) is None
+        assert normalize_usage("garbage") is None
+
+    def test_merge_accumulates(self):
+        from ComfyTV.bot._cli_common import merge_usage
+        total = merge_usage(None, {"prompt_tokens": 5, "completion_tokens": 1})
+        total = merge_usage(total, {"prompt_tokens": 3, "completion_tokens": 2})
+        assert total == {"input_tokens": 8, "output_tokens": 3}
+        assert merge_usage(total, None) == total
+
 
 class FakeProvider(AgentProvider):
     id = "fake-test"
@@ -152,9 +196,12 @@ async def client(reset_db):
     from ComfyTV import storage as _storage
     _storage.set_settings({"enable-mcp": True, "enable-bot": True})
     from ComfyTV import api  # noqa: F401
-    from ComfyTV.api.bot import ACTIVE_TURNS
+    from ComfyTV.api import bot_asks
+    from ComfyTV.api.bot import ACTIVE_TURNS, QUEUED
     import server
     ACTIVE_TURNS.clear()
+    QUEUED.clear()
+    bot_asks.PENDING.clear()
     app = web.Application()
     app.router.add_routes(server.PromptServer.instance.routes)
     test_server = TestServer(app)
@@ -162,6 +209,8 @@ async def client(reset_db):
     await test_client.start_server()
     yield test_client
     ACTIVE_TURNS.clear()
+    QUEUED.clear()
+    bot_asks.PENDING.clear()
     await test_client.close()
 
 
@@ -249,7 +298,18 @@ class TestBotEndpoints:
         assert data["chat"]["resume_token"] == "tok-1"
         assert data["chat"]["title"] == "看下画布"
         assert fake_provider.last_turn.allowed_tools == ["mcp__comfytv__*"]
-        assert fake_provider.last_turn.mcp_endpoint.endswith("/comfytv/mcp")
+        assert "/comfytv/mcp?bot_chat=" in fake_provider.last_turn.mcp_endpoint
+
+    def test_claude_argv_disallows_builtin_tools(self):
+        from ComfyTV.bot.claude_code import ClaudeCodeProvider
+        provider = ClaudeCodeProvider()
+        argv = provider._build_argv(TurnRequest(
+            chat_id="c", user_text="hi",
+            mcp_endpoint="http://x/comfytv/mcp?bot_chat=c",
+            allowed_tools=["mcp__comfytv__*"]))
+        flag = argv[argv.index("--disallowedTools") + 1]
+        for tool in ("Write", "Edit", "Bash", "Read", "WebFetch"):
+            assert tool in flag.split(",")
 
     async def test_second_turn_resumes(self, client, fake_provider):
         resp = await client.post("/comfytv/bot/chats",
@@ -263,7 +323,7 @@ class TestBotEndpoints:
         await _wait_done(client, chat["id"])
         assert fake_provider.last_turn.resume_token == "tok-1"
 
-    async def test_busy_chat_rejects_send(self, client, fake_provider):
+    async def test_busy_chat_queues_send_and_drains(self, client, fake_provider):
         fake_provider.gate = asyncio.Event()
         resp = await client.post("/comfytv/bot/chats",
                                  json={"provider": "fake-test"})
@@ -272,9 +332,43 @@ class TestBotEndpoints:
                           json={"text": "first"})
         resp = await client.post(f"/comfytv/bot/chats/{chat['id']}/send",
                                  json={"text": "second"})
-        assert resp.status == 409
+        assert resp.status == 200
+        body = await resp.json()
+        assert body["queued"] is True
+        assert body["user_message"]["status"] == "queued"
         fake_provider.gate.set()
-        await _wait_done(client, chat["id"])
+        fake_provider.gate = None
+        data = await _wait_done(client, chat["id"])
+        roles = [m["role"] for m in data["messages"]]
+        assert roles == ["user", "assistant", "user", "assistant"]
+        statuses = [m["status"] for m in data["messages"]]
+        assert "queued" not in statuses
+
+    async def test_branch_copies_history_and_resume_token(
+            self, client, fake_provider):
+        resp = await client.post("/comfytv/bot/chats",
+                                 json={"provider": "fake-test"})
+        chat = (await resp.json())["chat"]
+        await client.post(f"/comfytv/bot/chats/{chat['id']}/send",
+                          json={"text": "one"})
+        data = await _wait_done(client, chat["id"])
+        assistant_id = next(m["id"] for m in data["messages"]
+                            if m["role"] == "assistant")
+
+        resp = await client.post(f"/comfytv/bot/chats/{chat['id']}/branch",
+                                 json={"message_id": assistant_id})
+        assert resp.status == 200
+        body = await resp.json()
+        branch = body["chat"]
+        assert branch["id"] != chat["id"]
+        assert branch["resume_token"] == "tok-1"
+        assert [m["role"] for m in body["messages"]] == ["user", "assistant"]
+        assert {m["chat_id"] for m in body["messages"]} == {branch["id"]}
+
+        missing = await client.post(
+            f"/comfytv/bot/chats/{chat['id']}/branch",
+            json={"message_id": "nope"})
+        assert missing.status == 404
 
     async def test_stop_aborts_turn(self, client, fake_provider):
         fake_provider.gate = asyncio.Event()
@@ -303,6 +397,105 @@ class TestBotEndpoints:
         resp = await client.post(f"/comfytv/bot/chats/{chat['id']}/send",
                                  json={"text": "  "})
         assert resp.status == 400
+
+    async def test_turn_persists_tool_metadata_and_usage(
+            self, client, fake_provider, monkeypatch):
+        from ComfyTV.api import bot as bot_api
+        broadcasts: list[tuple[str, dict]] = []
+        monkeypatch.setattr(
+            bot_api, "_broadcast",
+            lambda ev, payload: broadcasts.append((ev, payload)))
+
+        fake_provider.script = [
+            BotEvent(t="tool_use", name="mcp__comfytv__get_canvas",
+                     input={}, id="tu-1"),
+            BotEvent(t="tool_result", name="mcp__comfytv__get_canvas",
+                     text="{}", id="tu-1"),
+            BotEvent(t="tool_use", name="mcp__comfytv__run_stage",
+                     input={"uid": "s1"}, id="tu-2"),
+            BotEvent(t="tool_result", name="mcp__comfytv__run_stage",
+                     text="boom", id="tu-2", is_error=True),
+            BotEvent(t="delta", text="done"),
+        ]
+        usage = {"input_tokens": 10, "output_tokens": 3, "cost_usd": 0.01}
+        fake_provider.result = TurnResult(resume_token="tok-1", usage=usage)
+
+        resp = await client.post("/comfytv/bot/chats",
+                                 json={"provider": "fake-test"})
+        chat_id = (await resp.json())["chat"]["id"]
+        await client.post(f"/comfytv/bot/chats/{chat_id}/send",
+                          json={"text": "go"})
+        data = await _wait_done(client, chat_id)
+
+        assistant = next(m for m in data["messages"]
+                         if m["role"] == "assistant")
+        assert assistant["usage"] == usage
+        blocks = json.loads(assistant["content"])
+        results = [b for b in blocks if b["type"] == "tool_result"]
+        assert results[0]["id"] == "tu-1"
+        assert results[0]["status"] == "success"
+        assert isinstance(results[0]["duration_ms"], int)
+        assert results[1]["id"] == "tu-2"
+        assert results[1]["status"] == "error"
+
+        tool_use_events = [p for ev, p in broadcasts if ev == "turn_tool_use"]
+        assert [p["id"] for p in tool_use_events] == ["tu-1", "tu-2"]
+        result_events = [p for ev, p in broadcasts if ev == "turn_tool_result"]
+        assert result_events[0]["status"] == "success"
+        assert "duration_ms" in result_events[0]
+        assert result_events[1]["status"] == "error"
+        turn_done = next(p for ev, p in broadcasts if ev == "turn_done")
+        assert turn_done["usage"] == usage
+
+    async def test_send_with_refs_builds_blocks_and_manifest(
+            self, client, fake_provider, reset_db):
+        from ComfyTV import storage
+        asset = storage.create_asset(
+            name="hero.png", media_type="image", payload_url="/x/hero.png")
+        resp = await client.post("/comfytv/bot/chats",
+                                 json={"provider": "fake-test"})
+        chat_id = (await resp.json())["chat"]["id"]
+        resp = await client.post(
+            f"/comfytv/bot/chats/{chat_id}/send",
+            json={"text": "use these", "refs": [
+                {"kind": "stage", "uid": "st-1", "title": "Hero shot",
+                 "stage_class": "ImageStage"},
+                {"kind": "asset", "asset_id": asset["id"]},
+            ]})
+        assert resp.status == 200
+        user_msg = (await resp.json())["user_message"]
+        blocks = json.loads(user_msg["content"])
+        kinds = [(b["type"], b.get("kind")) for b in blocks]
+        assert ("ref", "stage") in kinds and ("ref", "asset") in kinds
+        await _wait_done(client, chat_id)
+        sent = fake_provider.last_turn.user_text
+        assert "Referenced stage: st-1" in sent
+        assert f'asset_refs [{{"asset_id": {asset["id"]}}}]' in sent
+
+    async def test_send_rejects_bad_refs(self, client, fake_provider):
+        resp = await client.post("/comfytv/bot/chats",
+                                 json={"provider": "fake-test"})
+        chat_id = (await resp.json())["chat"]["id"]
+        resp = await client.post(
+            f"/comfytv/bot/chats/{chat_id}/send",
+            json={"text": "x", "refs": [{"kind": "asset", "asset_id": 999999}]})
+        assert resp.status == 400
+
+    async def test_turn_error_persists_notice_block(self, client, fake_provider):
+        fake_provider.script = [BotEvent(t="delta", text="partial")]
+        fake_provider.result = TurnResult(error="model exploded")
+        resp = await client.post("/comfytv/bot/chats",
+                                 json={"provider": "fake-test"})
+        chat_id = (await resp.json())["chat"]["id"]
+        await client.post(f"/comfytv/bot/chats/{chat_id}/send",
+                          json={"text": "go"})
+        data = await _wait_done(client, chat_id)
+        assistant = next(m for m in data["messages"]
+                         if m["role"] == "assistant")
+        assert assistant["status"] == "error"
+        blocks = json.loads(assistant["content"])
+        assert blocks[-1] == {"type": "notice", "level": "error",
+                              "text": "model exploded"}
 
     async def test_reap_marks_stale_streaming(self, client, fake_provider):
         from ComfyTV import storage

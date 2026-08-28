@@ -449,6 +449,10 @@
         "desc": "启动 comfy-mcp stdio 服务的命令。留空 = 在 PATH 上找 comfy-mcp。",
         "placeholder": "comfy-mcp"
       },
+      "bot-always-allow-runs": {
+        "label": "总是允许 bot 运行",
+        "desc": "不弹运行审批卡,bot 直接执行(默认行为)。关闭后,切到询问模式的会话才会在每次运行前等你批准。"
+      },
       "enable-skills": {
         "label": "启用 Agent Skills",
         "desc": "把已安装的技能通过 MCP(skill 工具 + prompts)提供给外部 agent 和内嵌 bot。"
@@ -2707,6 +2711,21 @@
     "dropHint": "拖入图片 / 视频 / 音频作为附件",
     "attachFromLibrary": "从资产库选择",
     "newChatWith": "选择对话引擎:",
-    "removeSkill": "移除技能"
+    "removeSkill": "移除技能",
+    "noResult": "(无结果)",
+    "copyCode": "复制代码",
+    "runModeAuto": "自动",
+    "runModeAsk": "询问",
+    "runModeHint": "自动模式立即执行;询问模式每次运行前先经你批准",
+    "askSubmit": "提交",
+    "askOtherPlaceholder": "或用自己的话回答…",
+    "askExpired": "超时未回答",
+    "askCancelled": "已取消",
+    "insertFromCanvas": "引用画布上选中的 stage",
+    "removeRef": "移除引用",
+    "branch": "分支",
+    "branchFrom": "从这条回复分支出新对话继续",
+    "queue": "排队",
+    "queuedHint": "已排队 — 当前轮结束后自动发送"
   }
 }

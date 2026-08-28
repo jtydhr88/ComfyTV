@@ -13,6 +13,7 @@ from ._cli_common import (
     TOOL_RESULT_CAP,
     base_spawn_env,
     kill_process_tree,
+    normalize_usage,
     run_cli_turn,
 )
 from .providers import (
@@ -26,7 +27,7 @@ from .providers import (
     TurnResult,
 )
 
-_MCP_TOOL_TIMEOUT_SEC = 180
+_MCP_TOOL_TIMEOUT_SEC = 600
 
 _MEDIA_EXT = {
     "image/jpeg": ".jpg",
@@ -148,6 +149,7 @@ class _CodexStreamParser:
         self.session_id: Optional[str] = None
         self.result_error: str = ""
         self.result_seen = False
+        self.usage: Optional[dict] = None
         self._text_emitted: dict[str, int] = {}
         self._tool_names: dict[str, str] = {}
         self._emitted_tool_use: set[str] = set()
@@ -168,6 +170,7 @@ class _CodexStreamParser:
             return []
         if event_type == "turn.completed":
             self.result_seen = True
+            self.usage = normalize_usage(data.get("usage")) or self.usage
             return []
         if event_type == "turn.failed":
             self.result_seen = True
@@ -206,12 +209,15 @@ class _CodexStreamParser:
                     self._tool_names[item_id] = name
                 if not isinstance(arguments, dict):
                     arguments = {}
-                return [BotEvent(t="tool_use", name=name, input=arguments)]
+                return [BotEvent(t="tool_use", name=name, input=arguments,
+                                 id=item_id)]
             if item.get("error") or status == "failed":
                 return [BotEvent(
                     t="tool_result",
                     name=name or self._tool_names.get(item_id, ""),
                     text=_tool_error_text(item)[:TOOL_RESULT_CAP],
+                    id=item_id,
+                    is_error=True,
                 )]
             result = item.get("result") or {}
             text = _flatten_mcp_content(result.get("content"))
@@ -221,6 +227,7 @@ class _CodexStreamParser:
                 t="tool_result",
                 name=name or self._tool_names.get(item_id, ""),
                 text=text[:TOOL_RESULT_CAP],
+                id=item_id,
             )]
 
         return []
