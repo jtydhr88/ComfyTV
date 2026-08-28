@@ -115,6 +115,12 @@ export const WorkflowStateSchema = z.object({
   file_exists: z.boolean(),
 })
 export type WorkflowState = z.infer<typeof WorkflowStateSchema>
+export const ConvertWorkflowResultSchema = z.object({
+  ok: z.boolean(),
+  node_count: z.number(),
+  file_mtime: z.number(),
+})
+export type ConvertWorkflowResult = z.infer<typeof ConvertWorkflowResultSchema>
 export const ExposedWidgetSchema = z.object({
   node_id: z.string(),
   node_title: z.string(),

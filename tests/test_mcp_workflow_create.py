@@ -120,7 +120,7 @@ class TestWorkflowCreate:
         out = await _workflow_create({
             "kind": "image", "label": "Bot T2I", "api_json": API_JSON,
             "description": "made by bot",
-            "result_node": "9", "result_type": "image",
+            "result_node": "9", "result_type": "ui_save_batch",
         })
         assert out["created"] is True
         assert out["has_api"] is True
@@ -131,7 +131,7 @@ class TestWorkflowCreate:
         assert cfg["has_api"] is True
         assert cfg["description"] == "made by bot"
         assert cfg["result_node"] == "9"
-        assert cfg["result_type"] == "image"
+        assert cfg["result_type"] == "ui_save_batch"
         assert cfg["meta"]["created_by"] == "mcp"
         assert cfg["meta"]["api_only"] is True
         nodes = {n["node_id"]: n for n in cfg["nodes"]}
@@ -168,22 +168,74 @@ class TestWorkflowCreate:
         with pytest.raises(ValueError):
             await _workflow_get({"kind": "image", "label": "Check"})
 
-    async def test_graph_path_needs_ui_conversion(self, reset_db):
+    async def test_graph_path_reports_unconvertible_graph(self, reset_db):
         from ComfyTV.api.mcp_tools import _workflow_create, _workflow_get
         out = await _workflow_create({
             "kind": "video", "label": "Cam Sweep", "graph": GUI_GRAPH})
         assert out["created"] is True
         assert out["has_api"] is False
-        assert "opened" in out["note"]
+        assert "retried on first run" in out["note"]
         cfg = await _workflow_get({"kind": "video", "label": "Cam Sweep"})
         assert cfg["has_api"] is False
         assert cfg["meta"].get("api_only") is None
+
+    async def test_graph_path_converts_server_side(self, reset_db, comfy_nodes):
+        from ComfyTV.api.mcp_tools import _workflow_create, _workflow_get
+
+        class _TVGen:
+            @classmethod
+            def INPUT_TYPES(cls):
+                return {"required": {"steps": ("INT", {"default": 20})}}
+
+        comfy_nodes.NODE_CLASS_MAPPINGS["TVGen"] = _TVGen
+        out = await _workflow_create({
+            "kind": "video", "label": "Auto Convert",
+            "graph": {"nodes": [{"id": 1, "type": "TVGen",
+                                 "widgets_values": [30]}],
+                      "links": []}})
+        assert out["created"] is True
+        assert "converted server-side" in out["note"]
+        cfg = await _workflow_get({"kind": "video", "label": "Auto Convert"})
+        assert cfg["has_api"] is True
 
     async def test_graph_must_be_gui_format(self, reset_db):
         from ComfyTV.api.mcp_tools import _workflow_create
         with pytest.raises(ValueError, match="GUI-format"):
             await _workflow_create({
                 "kind": "video", "label": "X", "graph": API_JSON})
+
+    async def test_bad_result_type_rejected_before_writing(self, reset_db):
+        from ComfyTV.api.mcp_tools import _workflow_create, _workflow_get
+        with pytest.raises(ValueError, match="ui_save_batch"):
+            await _workflow_create({
+                "kind": "image", "label": "Bad RT", "graph": GUI_GRAPH,
+                "result_type": "image"})
+        with pytest.raises(ValueError):
+            await _workflow_get({"kind": "image", "label": "Bad RT"})
+
+    async def test_set_meta_validates_result_type(self, reset_db, comfy_nodes):
+        from ComfyTV.api.mcp_tools import _workflow_create, _workflow_edit
+
+        class _TVGen2:
+            @classmethod
+            def INPUT_TYPES(cls):
+                return {"required": {"steps": ("INT", {"default": 20})}}
+
+        comfy_nodes.NODE_CLASS_MAPPINGS["TVGen2"] = _TVGen2
+        await _workflow_create({
+            "kind": "image", "label": "Meta RT",
+            "graph": {"nodes": [{"id": 1, "type": "TVGen2",
+                                 "widgets_values": [30]}],
+                      "links": []}})
+        with pytest.raises(ValueError, match="ui_save_batch"):
+            await _workflow_edit({
+                "kind": "image", "label": "Meta RT",
+                "ops": [{"op": "set_meta", "result_type": "image"}]})
+        out = await _workflow_edit({
+            "kind": "image", "label": "Meta RT",
+            "ops": [{"op": "set_meta", "result_type": "ui_save_batch",
+                     "result_node": "1"}]})
+        assert out["results"][0]["ok"] is True
 
     async def test_label_and_file_dedupe(self, reset_db, valid_prompt):
         from ComfyTV.api.mcp_tools import _workflow_create

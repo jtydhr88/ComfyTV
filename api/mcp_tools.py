@@ -286,10 +286,136 @@ _RUN_STARTED: dict[str, float] = {}
 _RUN_STARTED_MAX = 500
 
 
+def _bot_turn_state():
+    from .mcp import BOT_CHAT_ID
+    chat_id = BOT_CHAT_ID.get()
+    if not chat_id:
+        return "", None
+    from .bot import ACTIVE_TURNS
+    return chat_id, ACTIVE_TURNS.get(chat_id)
+
+
+async def _await_ask(chat_id: str, state, spec: dict) -> dict:
+    from . import bot_asks
+    from .bot import _broadcast
+
+    ask = bot_asks.create_ask(chat_id, state.message_id, spec)
+    block = {"type": "ask", "ask_id": ask.id, "status": "pending", **spec}
+    state.blocks.append(block)
+    storage.update_bot_message(state.message_id,
+                              content=json.dumps(state.blocks))
+    _broadcast("turn_ask", {
+        "chat_id": chat_id, "message_id": state.message_id,
+        "ask_id": ask.id, **spec,
+    })
+    try:
+        outcome = await asyncio.wait_for(ask.future,
+                                         timeout=bot_asks.ASK_TIMEOUT_S)
+    except asyncio.TimeoutError:
+        bot_asks.resolve_ask(ask.id, "expired")
+        outcome = {"status": "expired"}
+
+    block["status"] = outcome["status"]
+    if outcome.get("selected") is not None:
+        block["selected"] = outcome["selected"]
+    if outcome.get("other_text"):
+        block["other_text"] = outcome["other_text"]
+    storage.update_bot_message(state.message_id,
+                              content=json.dumps(state.blocks))
+    _broadcast("turn_ask_resolved", {
+        "chat_id": chat_id, "message_id": state.message_id,
+        "ask_id": ask.id, "status": outcome["status"],
+        "selected": outcome.get("selected"),
+        "other_text": outcome.get("other_text"),
+    })
+    return outcome
+
+
+_PREFS_MAX = 20
+
+
+async def _remember(args: dict) -> dict:
+    chat_id, _state = _bot_turn_state()
+    if not chat_id:
+        raise ValueError("remember is only available inside ComfyTV bot chats")
+    action = str(args.get("action") or "add")
+    if action == "clear":
+        chat = storage.update_bot_chat(chat_id, prefs=[])
+        return {"prefs": (chat or {}).get("prefs") or []}
+    if action != "add":
+        raise ValueError("action must be 'add' or 'clear'")
+    note = str(args.get("note") or "").strip()
+    if not note:
+        raise ValueError("note is required")
+    current = (storage.get_bot_chat(chat_id) or {}).get("prefs") or []
+    if note not in current:
+        current = (current + [note])[-_PREFS_MAX:]
+    chat = storage.update_bot_chat(chat_id, prefs=current)
+    return {"prefs": (chat or {}).get("prefs") or []}
+
+
+async def _ask_user(args: dict) -> dict:
+    from . import bot_asks
+
+    chat_id, state = _bot_turn_state()
+    if not chat_id:
+        raise ValueError("ask_user is only available inside ComfyTV bot chats")
+    if state is None:
+        raise ValueError("no active bot turn for this chat")
+    spec = bot_asks.validate_spec(args)
+    outcome = await _await_ask(chat_id, state, spec)
+    if outcome["status"] != "answered":
+        return {"status": outcome["status"],
+                "note": "the user did not answer; proceed conservatively or "
+                        "end the turn"}
+    return {"status": "answered",
+            "selected": outcome.get("selected") or [],
+            "other_text": outcome.get("other_text") or ""}
+
+
+async def _maybe_ask_run_approval(action: str) -> dict | None:
+    chat_id, state = _bot_turn_state()
+    if not chat_id or state is None:
+        return None
+    try:
+        if storage.get_setting("bot-always-allow-runs"):
+            return None
+    except Exception:
+        pass
+    chat = storage.get_bot_chat(chat_id)
+    if not chat or (chat.get("run_mode") or "auto") != "ask":
+        return None
+    outcome = await _await_ask(chat_id, state, {
+        "prompt": action,
+        "options": [
+            {"id": "run", "label": "Run"},
+            {"id": "always", "label": "Always run",
+             "description": "run this and switch the chat back to Auto"},
+            {"id": "cancel", "label": "Cancel"},
+        ],
+        "min_selections": 1,
+        "max_selections": 1,
+        "allow_other": False,
+        "kind": "run_approval",
+    })
+    selected = outcome.get("selected") or []
+    if outcome["status"] == "answered" and "always" in selected:
+        storage.update_bot_chat(chat_id, run_mode="auto")
+        return None
+    if outcome["status"] == "answered" and "run" in selected:
+        return None
+    return {"cancelled": True, "status": outcome["status"],
+            "note": "the user declined this run; do not retry it without "
+                    "new instructions"}
+
+
 async def _run_stage(args: dict) -> dict:
     node = args.get("node")
     if not node:
         raise ValueError("node is required (stage uid or graph node id)")
+    declined = await _maybe_ask_run_approval(f"Run stage {node}?")
+    if declined is not None:
+        return declined
     payload = _command_payload(args, ("project_id",))
     payload["node"] = str(node)
     started_at = time.time()
@@ -314,6 +440,16 @@ _FROM_RE = re.compile(
 _BIND_CASTS = ("int", "float", "str")
 _META_KEYS = ("description", "result_type", "result_node", "sizing",
               "prune_when_missing", "meta")
+_RESULT_TYPES = ("ui_save_url", "ui_save_batch", "graph_output_first")
+
+
+def _validate_result_type(value) -> None:
+    if value and str(value) not in _RESULT_TYPES:
+        raise ValueError(
+            f"result_type must be one of {_RESULT_TYPES} — 'ui_save_batch' "
+            f"for image batches from a SaveImage-style node, 'ui_save_url' "
+            f"for a single saved file, 'graph_output_first' for a node's "
+            f"first graph output value")
 _RESOURCE_KINDS = ("lut", "font", "soundfont")
 _VALUE_CAP = 200
 
@@ -429,6 +565,10 @@ async def _workflow_edit(args: dict) -> dict:
             if not any(k in op for k in _META_KEYS):
                 raise ValueError(
                     f"ops[{i}]: set_meta needs at least one of {_META_KEYS}")
+            try:
+                _validate_result_type(op.get("result_type"))
+            except ValueError as e:
+                raise ValueError(f"ops[{i}]: {e}")
         elif name in ("set_default", "reset_to_preset"):
             pass
         else:
@@ -643,6 +783,8 @@ async def _workflow_create(args: dict) -> dict:
         raise ValueError("graph must be a GUI-format workflow object or its "
                          "JSON string")
 
+    _validate_result_type(args.get("result_type"))
+
     validation = None
     if api_json is not None:
         validation = await _validate_api_prompt(api_json)
@@ -668,16 +810,20 @@ async def _workflow_create(args: dict) -> dict:
     refresh_registry()
     note = None
     if api_json is None:
-        note = ("registered without API JSON — the workflow must be opened "
-                "once in the ComfyTV UI (Desktop or browser, which converts the graph) "
-                "before it can run headlessly")
+        try:
+            converted = workflow_db.convert_workflow(kind, out["label"])
+            note = f"graph converted server-side ({converted['node_count']} nodes)"
+            out = {**out, "has_api": True}
+        except Exception as e:
+            note = (f"registered, but the graph could not be converted to API "
+                    f"format yet ({e}); conversion is retried on first run")
     return {"created": True, **out, "validation": validation, "note": note}
 
 
 _GRAPH_OPS = ("add_node", "remove_node", "set_widget", "set_title",
               "connect", "disconnect", "set_mode", "clone", "set_color",
-              "create_group", "collapse", "pin", "convert_to_subgraph",
-              "unpack_subgraph")
+              "set_review", "create_group", "collapse", "pin",
+              "convert_to_subgraph", "unpack_subgraph")
 
 _CANVAS_COMMANDS = (
     "Comfy.Undo",
@@ -769,6 +915,9 @@ async def _graph_run(args: dict) -> dict:
     prompt_id = str(args.get("prompt_id") or "")
     base: dict = {}
     if not prompt_id:
+        declined = await _maybe_ask_run_approval("Run the current graph?")
+        if declined is not None:
+            return declined
         base = await submit_command(
             "graph_run", _command_payload(args, ("project_id",)), timeout=60.0)
         prompt_id = str(base.get("prompt_id") or "")
@@ -1422,9 +1571,9 @@ TOOLS: dict[str, dict] = {
     "list_workflows": {
         "description": (
             "List the workflows backing ComfyTV stages, optionally filtered by kind. "
-            "has_api=false means the workflow has no pre-converted API JSON yet (it "
-            "must be opened in the ComfyTV UI (Desktop or browser) once before it can run "
-            "headlessly); file_exists/gui_valid flag broken files."
+            "has_api=false means the workflow has no pre-converted API JSON yet "
+            "(it is converted server-side automatically on first run); "
+            "file_exists/gui_valid flag broken files."
         ),
         "inputSchema": {
             "type": "object",
@@ -1826,6 +1975,59 @@ TOOLS: dict[str, dict] = {
         },
         "handler": _run_stage,
     },
+    "ask_user": {
+        "description": (
+            "Pause and ask the user a question in the chat panel; blocks "
+            "until they answer (or a few minutes pass). Use when a decision "
+            "genuinely belongs to the user: creative direction, destructive "
+            "actions, spending. options are the choices; set "
+            "min/max_selections for multi-select and allow_other to accept "
+            "free text. Returns {status, selected, other_text} — status "
+            "cancelled/expired means no answer, don't retry immediately."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "prompt": {"type": "string"},
+                "options": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {"type": "string"},
+                            "label": {"type": "string"},
+                            "description": {"type": "string"},
+                        },
+                        "required": ["id", "label"],
+                        "additionalProperties": False,
+                    },
+                },
+                "min_selections": {"type": "integer"},
+                "max_selections": {"type": "integer"},
+                "allow_other": {"type": "boolean"},
+            },
+            "required": ["prompt", "options"],
+            "additionalProperties": False,
+        },
+        "handler": _ask_user,
+    },
+    "remember": {
+        "description": (
+            "Save a chat-level preference the user states (default model, "
+            "sizes, approval habits, style rules); it is replayed to you at "
+            "the start of every later message in this chat. "
+            "action='add' with note, or action='clear' to forget them all."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "action": {"type": "string", "enum": ["add", "clear"]},
+                "note": {"type": "string"},
+            },
+            "additionalProperties": False,
+        },
+        "handler": _remember,
+    },
     "director_get": {
         "description": (
             "Read a Director stage's full timeline: settings (chain mode "
@@ -2192,11 +2394,14 @@ TOOLS: dict[str, dict] = {
             "{class_type, inputs}} — author it with node_info, it is "
             "validated against the live node registry and rejected with "
             "per-node errors before anything is written) OR graph (a "
-            "GUI-format workflow export, stored as-is; it must be opened "
-            "once in the ComfyTV UI (Desktop or browser) before it can run headlessly). "
+            "GUI-format workflow export; it is converted to an API prompt "
+            "server-side, so it can run headlessly right away). "
             "validate_only=true only runs the api_json validation. Optional "
             "description, result_node (node id whose output is the stage "
-            "result) and result_type. After creating, wire stage inputs "
+            "result) and result_type (ui_save_batch for image batches from a "
+            "SaveImage-style node, ui_save_url for a single saved file, "
+            "graph_output_first for a node's first graph output value). "
+            "After creating, wire stage inputs "
             "with workflow_edit bind ops (main_prompt, option:<key>, "
             "upstream_image:value[N], computed:width/height/length, ...). "
             "The label lands deduplicated (label-2, ...) if taken. "

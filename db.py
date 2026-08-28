@@ -253,6 +253,8 @@ class BotChat(Base):
     title:        Mapped[str] = mapped_column(String, default="")
     provider:     Mapped[str] = mapped_column(String, default="claude-code")
     resume_token: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    run_mode:     Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    prefs_json:   Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     pinned:       Mapped[bool] = mapped_column(Boolean, default=False)
     archived:     Mapped[bool] = mapped_column(Boolean, default=False)
     created_at:   Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
@@ -271,6 +273,7 @@ class BotMessage(Base):
     content:            Mapped[str] = mapped_column(Text, default="[]")
     status:             Mapped[str] = mapped_column(String, default="done")
     resume_token_after: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    usage_json:         Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     created_at:         Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
 
@@ -391,6 +394,28 @@ def _migrate_additive_columns(engine) -> None:
                     "ALTER TABLE comfytv_outputs ADD COLUMN duration_ms INTEGER"
                 ))
             logging.info("[ComfyTV] migrated: comfytv_outputs + duration_ms")
+
+        bot_msg_cols = {c["name"] for c in insp.get_columns("comfytv_bot_messages")}
+        if "usage_json" not in bot_msg_cols:
+            with engine.begin() as conn:
+                conn.execute(text(
+                    "ALTER TABLE comfytv_bot_messages ADD COLUMN usage_json TEXT"
+                ))
+            logging.info("[ComfyTV] migrated: comfytv_bot_messages + usage_json")
+
+        bot_chat_cols = {c["name"] for c in insp.get_columns("comfytv_bot_chats")}
+        if "run_mode" not in bot_chat_cols:
+            with engine.begin() as conn:
+                conn.execute(text(
+                    "ALTER TABLE comfytv_bot_chats ADD COLUMN run_mode VARCHAR"
+                ))
+            logging.info("[ComfyTV] migrated: comfytv_bot_chats + run_mode")
+        if "prefs_json" not in bot_chat_cols:
+            with engine.begin() as conn:
+                conn.execute(text(
+                    "ALTER TABLE comfytv_bot_chats ADD COLUMN prefs_json TEXT"
+                ))
+            logging.info("[ComfyTV] migrated: comfytv_bot_chats + prefs_json")
 
         eagle_cols = {c["name"] for c in insp.get_columns("comfytv_eagle_pending")}
         if "folder" not in eagle_cols:

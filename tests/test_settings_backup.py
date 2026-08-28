@@ -262,6 +262,7 @@ class TestSettingsApi:
             "bot-model-local-llm", "bot-model-comfyui-llm",
             "bot-comfyui-llm-thinking", "bot-local-llm-url",
             "bot-enable-comfy-mcp", "bot-comfy-mcp-command",
+            "bot-always-allow-runs",
             "enable-skills", "skills-disabled",
             "enable-eagle", "eagle-api-url", "eagle-library-path",
             "eagle-send-folder", "eagle-auto-send",

@@ -1,3 +1,4 @@
+import asyncio
 import json
 import re
 
@@ -6,6 +7,7 @@ from aiohttp import web
 from ..runners import (
     workflow_db, refresh_registry, seed_workflows, last_scan_added, WORKFLOW_KINDS,
 )
+from ..runners.vendor.workflow_to_api import WorkflowConversionError
 from ._common import routes
 
 
@@ -291,6 +293,30 @@ async def workflow_update_meta(request: web.Request) -> web.Response:
     if not ok:
         return web.json_response({"error": "workflow not found"}, status=404)
     return web.json_response({"ok": True})
+
+
+@routes.post("/comfytv/workflows/convert")
+async def workflow_convert(request: web.Request) -> web.Response:
+    try:
+        body = await request.json()
+    except Exception:
+        return web.json_response({"error": "json body required"}, status=400)
+
+    kind = str(body.get("kind") or "")
+    label = str(body.get("label") or "")
+    if not kind or not label:
+        return web.json_response({"error": "kind and label required"}, status=400)
+
+    loop = asyncio.get_running_loop()
+    try:
+        result = await loop.run_in_executor(
+            None, workflow_db.convert_workflow, kind, label
+        )
+    except FileNotFoundError as e:
+        return web.json_response({"error": str(e)}, status=404)
+    except WorkflowConversionError as e:
+        return web.json_response({"error": str(e)}, status=422)
+    return web.json_response({"ok": True, **result})
 
 
 @routes.post("/comfytv/workflows/api_json")

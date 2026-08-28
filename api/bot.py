@@ -31,9 +31,12 @@ class _TurnState:
         self.message_id = message_id
         self.blocks: list[dict] = []
         self.last_persist = 0.0
+        self.tool_started: dict[str, float] = {}
 
 
 ACTIVE_TURNS: dict[str, _TurnState] = {}
+
+QUEUED: dict[str, list[dict]] = {}
 
 
 def bot_enabled() -> bool:
@@ -60,9 +63,9 @@ def _broadcast(event: str, payload: dict) -> None:
         _log.exception("[ComfyTV/bot] broadcast failed")
 
 
-def _mcp_endpoint() -> str:
+def _mcp_endpoint(chat_id: str) -> str:
     port = getattr(PromptServer.instance, "port", None) or 8188
-    return f"http://127.0.0.1:{port}/comfytv/mcp"
+    return f"http://127.0.0.1:{port}/comfytv/mcp?bot_chat={chat_id}"
 
 
 def _comfy_mcp_argv() -> list[str]:
@@ -143,13 +146,28 @@ def _apply_event(state: _TurnState, ev: BotEvent) -> Optional[dict]:
             state.blocks.append({"type": "text", "text": ev.text})
         return {"event": "turn_delta", "text": ev.text}
     if ev.t == "tool_use":
-        state.blocks.append({"type": "tool_use", "name": ev.name,
-                             "input": ev.input or {}})
-        return {"event": "turn_tool_use", "name": ev.name, "input": ev.input or {}}
+        block = {"type": "tool_use", "name": ev.name, "input": ev.input or {}}
+        payload = {"event": "turn_tool_use", "name": ev.name,
+                   "input": ev.input or {}}
+        if ev.id:
+            block["id"] = payload["id"] = ev.id
+            state.tool_started[ev.id] = time.monotonic()
+        state.blocks.append(block)
+        return payload
     if ev.t == "tool_result":
-        state.blocks.append({"type": "tool_result", "name": ev.name,
-                             "text": ev.text})
-        return {"event": "turn_tool_result", "name": ev.name, "text": ev.text}
+        tool_status = "error" if ev.is_error else "success"
+        block = {"type": "tool_result", "name": ev.name, "text": ev.text,
+                 "status": tool_status}
+        payload = {"event": "turn_tool_result", "name": ev.name,
+                   "text": ev.text, "status": tool_status}
+        if ev.id:
+            block["id"] = payload["id"] = ev.id
+            started = state.tool_started.pop(ev.id, None)
+            if started is not None:
+                duration_ms = int((time.monotonic() - started) * 1000)
+                block["duration_ms"] = payload["duration_ms"] = duration_ms
+        state.blocks.append(block)
+        return payload
     return None
 
 
@@ -186,7 +204,7 @@ async def _run_turn(chat: dict, text: str, state: _TurnState, *,
                 user_text=provider_text if provider_text is not None else text,
                 resume_token=chat.get("resume_token"),
                 history=history,
-                mcp_endpoint=_mcp_endpoint(),
+                mcp_endpoint=_mcp_endpoint(chat_id),
                 allowed_tools=_allowed_tools(comfy_mcp_argv),
                 attachments=attachments or [],
                 model=_provider_model(chat["provider"]),
@@ -205,12 +223,18 @@ async def _run_turn(chat: dict, text: str, state: _TurnState, *,
         status = "aborted" if result.aborted else ("error" if error else "done")
 
     ACTIVE_TURNS.pop(chat_id, None)
+    from . import bot_asks
+    bot_asks.cancel_chat_asks(chat_id)
     token = result.resume_token if result else None
+    usage = result.usage if result else None
+    if error:
+        state.blocks.append({"type": "notice", "level": "error", "text": error})
     storage.update_bot_message(
         state.message_id,
         content=json.dumps(state.blocks),
         status=status,
         resume_token_after=token,
+        usage=usage,
     )
     updates: dict = {"resume_token": token} if token else {}
     if not (chat.get("title") or "").strip():
@@ -223,7 +247,49 @@ async def _run_turn(chat: dict, text: str, state: _TurnState, *,
         "status": status,
         "error": error,
         "title": updates.get("title"),
+        "usage": usage,
     })
+    _drain_queue(chat_id)
+
+
+def _begin_turn(chat: dict, *, text: str, provider_text: str,
+                attachments: list[dict], user_msg: dict) -> dict:
+    assistant_msg = storage.create_bot_message(
+        chat_id=chat["id"], role="assistant",
+        content="[]", status="streaming", parent_id=user_msg["id"],
+    )
+    state = _TurnState(TurnHandle(), assistant_msg["id"])
+    ACTIVE_TURNS[chat["id"]] = state
+    _broadcast("turn_start", {
+        "chat_id": chat["id"],
+        "user_message": user_msg,
+        "assistant_message": assistant_msg,
+    })
+    asyncio.create_task(
+        _run_turn(chat, text, state, provider_text=provider_text,
+                  attachments=attachments),
+        name=f"comfytv-bot-{chat['id'][:8]}",
+    )
+    return assistant_msg
+
+
+def _drain_queue(chat_id: str) -> None:
+    queue = QUEUED.get(chat_id)
+    if not queue:
+        QUEUED.pop(chat_id, None)
+        return
+    item = queue.pop(0)
+    if not queue:
+        QUEUED.pop(chat_id, None)
+    chat = storage.get_bot_chat(chat_id)
+    if chat is None:
+        return
+    user_msg = storage.update_bot_message(item["user_msg"]["id"],
+                                          status="done")
+    _begin_turn(chat, text=item["text"],
+                provider_text=item["provider_text"],
+                attachments=item["attachments"],
+                user_msg=user_msg or item["user_msg"])
 
 
 @routes.get("/comfytv/bot/status")
@@ -320,9 +386,14 @@ async def bot_update_chat(request: web.Request) -> web.Response:
     except Exception:
         return web.json_response({"error": "invalid JSON body"}, status=400)
     title = body.get("title")
+    run_mode = body.get("run_mode")
+    if run_mode is not None and run_mode not in ("auto", "ask"):
+        return web.json_response(
+            {"error": "run_mode must be 'auto' or 'ask'"}, status=400)
     updated = storage.update_bot_chat(
         chat["id"],
         title=str(title) if title is not None else None,
+        run_mode=run_mode,
         pinned=body.get("pinned"),
         archived=body.get("archived"),
     )
@@ -337,6 +408,7 @@ async def bot_delete_chat(request: web.Request) -> web.Response:
     chat, err = _chat_or_response(request)
     if err is not None:
         return err
+    QUEUED.pop(chat["id"], None)
     state = ACTIVE_TURNS.get(chat["id"])
     if state is not None:
         provider = get_provider(chat["provider"])
@@ -373,6 +445,56 @@ def _render_attachment(url: str) -> dict:
 
 
 _ATTACHABLE_TYPES = ("image", "video", "audio")
+_REFS_MAX = 12
+
+
+def _resolve_refs(raw) -> tuple[list[dict], list[str]]:
+    if raw is None:
+        return [], []
+    if not isinstance(raw, list):
+        raise ValueError("refs must be an array")
+    if len(raw) > _REFS_MAX:
+        raise ValueError(f"at most {_REFS_MAX} refs per message")
+    items: list[dict] = []
+    lines: list[str] = []
+    for i, item in enumerate(raw):
+        if not isinstance(item, dict):
+            raise ValueError(f"refs[{i}] must be an object")
+        kind = item.get("kind")
+        if kind == "stage":
+            uid = str(item.get("uid") or "")
+            gid = str(item.get("graph_node_id") or "")
+            if not uid and not gid:
+                raise ValueError(f"refs[{i}]: stage ref needs uid or graph_node_id")
+            title = str(item.get("title") or "")
+            stage_class = str(item.get("stage_class") or "")
+            items.append({"kind": "stage", "uid": uid, "graph_node_id": gid,
+                          "title": title, "stage_class": stage_class})
+            target = uid or f"graph node {gid}"
+            lines.append(
+                f"[Referenced stage: {target}"
+                f"{f' ({stage_class})' if stage_class else ''}"
+                f"{f' \"{title}\"' if title else ''} — inspect with get_stage, "
+                f"target it with set_stage/run_stage]")
+            continue
+        if kind == "asset":
+            aid = item.get("asset_id")
+            if not isinstance(aid, int):
+                raise ValueError(f"refs[{i}]: asset ref needs a numeric asset_id")
+            asset = storage.get_asset(aid)
+            if asset is None:
+                raise ValueError(f"refs[{i}]: asset {aid} not found")
+            name = asset.get("name") or "unnamed"
+            media_type = asset.get("media_type") or ""
+            items.append({"kind": "asset", "asset_id": aid, "name": name,
+                          "media_type": media_type})
+            lines.append(
+                f"[Referenced asset: #{aid} \"{name}\" ({media_type}) — pass "
+                f"asset_refs [{{\"asset_id\": {aid}}}] to a stage; preview "
+                f"images with view_image]")
+            continue
+        raise ValueError(f"refs[{i}]: kind must be 'stage' or 'asset'")
+    return items, lines
 
 
 def _resolve_attachment_assets(raw) -> list[dict]:
@@ -481,13 +603,12 @@ async def bot_send(request: web.Request) -> web.Response:
     text = str(body.get("text") or "").strip()
     try:
         attachment_assets = _resolve_attachment_assets(body.get("attachments"))
+        ref_items, ref_lines = _resolve_refs(body.get("refs"))
     except ValueError as e:
         return web.json_response({"error": str(e)}, status=400)
     if not text and not attachment_assets:
         return web.json_response(
             {"error": "text or attachments required"}, status=400)
-    if chat["id"] in ACTIVE_TURNS:
-        return web.json_response({"error": "chat is busy"}, status=409)
     provider = get_provider(chat["provider"])
     if provider is None:
         return web.json_response(
@@ -521,6 +642,7 @@ async def bot_send(request: web.Request) -> web.Response:
         {"type": a["media_type"], "url": a["payload_url"], "asset_id": a["id"]}
         for a in attachment_assets
     ]
+    display_blocks += [{"type": "ref", **r} for r in ref_items]
     if skill_name:
         display_blocks.append({"type": "skill", "name": skill_name})
     if text:
@@ -535,29 +657,40 @@ async def bot_send(request: web.Request) -> web.Response:
             f"the comfytv MCP tool skill with action='read' and "
             f"name={skill_name!r}, then follow those instructions.\n\n"
             + provider_text)
+    if ref_lines:
+        provider_text += "\n\n" + "\n".join(ref_lines)
     if manifest_lines:
         provider_text += "\n\n" + "\n".join(manifest_lines)
+    prefs = chat.get("prefs") or []
+    if prefs:
+        provider_text = (
+            "Saved chat preferences (via remember; follow unless the user "
+            "overrides):\n" + "\n".join(f"- {p}" for p in prefs)
+            + "\n\n" + provider_text)
+
+    if chat["id"] in ACTIVE_TURNS:
+        user_msg = storage.create_bot_message(
+            chat_id=chat["id"], role="user",
+            content=json.dumps(display_blocks), status="queued",
+        )
+        QUEUED.setdefault(chat["id"], []).append({
+            "user_msg": user_msg,
+            "text": text,
+            "provider_text": provider_text,
+            "attachments": attachments,
+        })
+        _broadcast("message_queued", {
+            "chat_id": chat["id"], "user_message": user_msg,
+        })
+        return web.json_response({"queued": True, "user_message": user_msg})
 
     user_msg = storage.create_bot_message(
         chat_id=chat["id"], role="user",
         content=json.dumps(display_blocks),
     )
-    assistant_msg = storage.create_bot_message(
-        chat_id=chat["id"], role="assistant",
-        content="[]", status="streaming", parent_id=user_msg["id"],
-    )
-    state = _TurnState(TurnHandle(), assistant_msg["id"])
-    ACTIVE_TURNS[chat["id"]] = state
-    _broadcast("turn_start", {
-        "chat_id": chat["id"],
-        "user_message": user_msg,
-        "assistant_message": assistant_msg,
-    })
-    asyncio.create_task(
-        _run_turn(chat, text, state, provider_text=provider_text,
-                  attachments=attachments),
-        name=f"comfytv-bot-{chat['id'][:8]}",
-    )
+    assistant_msg = _begin_turn(
+        chat, text=text, provider_text=provider_text,
+        attachments=attachments, user_msg=user_msg)
     return web.json_response({
         "user_message": user_msg,
         "assistant_message": assistant_msg,
@@ -574,17 +707,77 @@ async def bot_stop(request: web.Request) -> web.Response:
     state = ACTIVE_TURNS.get(chat["id"])
     if state is None:
         return web.json_response({"error": "no active turn"}, status=409)
+    from . import bot_asks
+    bot_asks.cancel_chat_asks(chat["id"])
     provider = get_provider(chat["provider"])
     if provider is not None:
         await provider.stop(state.handle)
     return web.json_response({"ok": True})
 
 
+@routes.post("/comfytv/bot/chats/{cid}/branch")
+async def bot_branch_chat(request: web.Request) -> web.Response:
+    if not bot_enabled():
+        return _disabled_response()
+    chat, err = _chat_or_response(request)
+    if err is not None:
+        return err
+    try:
+        body = await request.json()
+    except Exception:
+        return web.json_response({"error": "invalid JSON body"}, status=400)
+    message_id = str(body.get("message_id") or "")
+    if not message_id:
+        return web.json_response({"error": "message_id required"}, status=400)
+    branch = storage.branch_bot_chat(chat["id"], message_id)
+    if branch is None:
+        return web.json_response({"error": "message not found"}, status=404)
+    _broadcast("chat_created", {"chat": branch})
+    return web.json_response({
+        "chat": branch,
+        "messages": storage.list_bot_messages(branch["id"]),
+    })
+
+
+@routes.post("/comfytv/bot/chats/{cid}/asks/{aid}/answer")
+async def bot_answer_ask(request: web.Request) -> web.Response:
+    if not bot_enabled():
+        return _disabled_response()
+    chat, err = _chat_or_response(request)
+    if err is not None:
+        return err
+    try:
+        body = await request.json()
+    except Exception:
+        return web.json_response({"error": "invalid JSON body"}, status=400)
+    ask_id = request.match_info["aid"]
+    selected = body.get("selected")
+    if not isinstance(selected, list):
+        return web.json_response({"error": "selected must be a list"},
+                                 status=400)
+    selected = [str(s) for s in selected]
+    other_text = str(body.get("other_text") or "")
+
+    from . import bot_asks
+    ask = bot_asks.PENDING.get(ask_id)
+    if ask is None or ask.chat_id != chat["id"]:
+        return web.json_response(
+            {"error": "ask not found or already resolved"}, status=409)
+    try:
+        bot_asks.validate_answer(ask.spec, selected, other_text)
+    except ValueError as e:
+        return web.json_response({"error": str(e)}, status=422)
+    if bot_asks.resolve_ask(ask_id, "answered", selected, other_text) is None:
+        return web.json_response(
+            {"error": "ask not found or already resolved"}, status=409)
+    return web.json_response({"ok": True}, status=202)
+
+
 def _reap_stale_messages() -> None:
     try:
         for chat in storage.list_bot_chats(include_archived=True):
             for msg in storage.list_bot_messages(chat["id"]):
-                if msg["status"] == "streaming":
+                if msg["status"] in ("streaming", "queued"):
                     storage.update_bot_message(
                         msg["id"], status="aborted")
     except Exception:

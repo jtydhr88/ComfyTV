@@ -14,15 +14,43 @@ import {
   MutateBotChatSchema,
 } from '@/api/schemas'
 import { app } from '@/lib/comfyApp'
+import type { BotRef } from '@/utils/botRefs'
+
+export interface BotAskOption {
+  id: string
+  label: string
+  description?: string
+}
 
 export interface BotBlock {
-  type: 'text' | 'tool_use' | 'tool_result' | 'image' | 'video' | 'audio' | 'skill'
+  type: 'text' | 'tool_use' | 'tool_result' | 'image' | 'video' | 'audio'
+    | 'skill' | 'notice' | 'ask' | 'ref'
   text?: string
   name?: string
   input?: Record<string, unknown>
   url?: string
   asset_id?: number
+  id?: string
+  status?: string
+  duration_ms?: number
+  level?: 'info' | 'warning' | 'error'
+  uid?: string
+  graph_node_id?: string
+  stage_class?: string
+  title?: string
+  media_type?: string
+  ask_id?: string
+  prompt?: string
+  options?: BotAskOption[]
+  min_selections?: number
+  max_selections?: number
+  allow_other?: boolean
+  selected?: string[]
+  other_text?: string
+  kind?: string
 }
+
+export type BotUsage = Record<string, number>
 
 export interface BotAttachment {
   asset_id: number
@@ -36,6 +64,7 @@ export interface BotChatMessage {
   role: string
   status: string
   blocks: BotBlock[]
+  usage?: BotUsage | null
 }
 
 export function parseBlocks(content: string): BotBlock[] {
@@ -48,7 +77,13 @@ export function parseBlocks(content: string): BotBlock[] {
 }
 
 export function toChatMessage(m: BotMessage): BotChatMessage {
-  return { id: m.id, role: m.role, status: m.status, blocks: parseBlocks(m.content) }
+  return {
+    id: m.id,
+    role: m.role,
+    status: m.status,
+    blocks: parseBlocks(m.content),
+    usage: m.usage ?? null,
+  }
 }
 
 export function applyDelta(msg: BotChatMessage, text: string): void {
@@ -145,7 +180,7 @@ export const useBotStore = defineStore('bot', () => {
   }
 
   async function send(text: string, attachments: BotAttachment[] = [],
-                      skill?: string): Promise<boolean> {
+                      skill?: string, refs: BotRef[] = []): Promise<boolean> {
     const chatId = activeChatId.value
     if (!chatId || (!text.trim() && attachments.length === 0)) return false
     try {
@@ -156,15 +191,16 @@ export const useBotStore = defineStore('bot', () => {
             ? { attachments: attachments.map(a => ({ asset_id: a.asset_id })) }
             : {}),
           ...(skill ? { skill } : {}),
+          ...(refs.length ? { refs } : {}),
         })
       if (activeChatId.value === chatId) {
         const ids = new Set(messages.value.map(m => m.id))
         const additions = [data.user_message, data.assistant_message]
-          .filter(m => !ids.has(m.id))
+          .filter((m): m is BotMessage => !!m && !ids.has(m.id))
           .map(toChatMessage)
         if (additions.length) messages.value = [...messages.value, ...additions]
       }
-      setChatBusy(chatId, true)
+      if (!data.queued) setChatBusy(chatId, true)
       return true
     } catch (e) {
       console.warn('[ComfyTV/bot] send failed', e)
@@ -179,6 +215,51 @@ export const useBotStore = defineStore('bot', () => {
       await apiSend(`/comfytv/bot/chats/${chatId}/stop`, 'POST', BotOkSchema)
     } catch (e) {
       console.warn('[ComfyTV/bot] stop failed', e)
+    }
+  }
+
+  async function branchChat(messageId: string): Promise<boolean> {
+    const chatId = activeChatId.value
+    if (!chatId) return false
+    try {
+      const data = await apiSend(`/comfytv/bot/chats/${chatId}/branch`,
+        'POST', GetBotChatSchema, { message_id: messageId })
+      upsertChat(data.chat)
+      activeChatId.value = data.chat.id
+      messages.value = data.messages.map(toChatMessage)
+      return true
+    } catch (e) {
+      console.warn('[ComfyTV/bot] branch failed', e)
+      return false
+    }
+  }
+
+  async function answerAsk(askId: string, selected: string[],
+                           otherText = ''): Promise<boolean> {
+    const chatId = activeChatId.value
+    if (!chatId) return false
+    try {
+      await apiSend(`/comfytv/bot/chats/${chatId}/asks/${askId}/answer`,
+        'POST', BotOkSchema, {
+          selected,
+          ...(otherText ? { other_text: otherText } : {}),
+        })
+      return true
+    } catch (e) {
+      console.warn('[ComfyTV/bot] answer ask failed', e)
+      return false
+    }
+  }
+
+  async function setRunMode(mode: 'auto' | 'ask'): Promise<void> {
+    const chatId = activeChatId.value
+    if (!chatId) return
+    try {
+      const data = await apiSend(`/comfytv/bot/chats/${chatId}`, 'PATCH',
+        MutateBotChatSchema, { run_mode: mode })
+      upsertChat(data.chat)
+    } catch (e) {
+      console.warn('[ComfyTV/bot] run mode update failed', e)
     }
   }
 
@@ -267,11 +348,32 @@ export const useBotStore = defineStore('bot', () => {
     if (event === 'turn_start') {
       setChatBusy(detail.chat_id, true)
       if (activeChatId.value === detail.chat_id && detail.assistant_message) {
+        const byId = new Map(messages.value.map(m => [m.id, m]))
+        let changed = false
+        for (const raw of [detail.user_message, detail.assistant_message]) {
+          if (!raw) continue
+          const existing = byId.get(raw.id)
+          if (existing) {
+            if (existing.status !== raw.status) {
+              existing.status = String(raw.status)
+              changed = true
+            }
+          } else {
+            messages.value = [...messages.value, toChatMessage(raw)]
+            changed = false
+          }
+        }
+        if (changed) messages.value = [...messages.value]
+      }
+      return
+    }
+    if (event === 'message_queued') {
+      if (activeChatId.value === detail.chat_id && detail.user_message) {
         const ids = new Set(messages.value.map(m => m.id))
-        const additions = [detail.user_message, detail.assistant_message]
-          .filter(m => m && !ids.has(m.id))
-          .map(toChatMessage)
-        if (additions.length) messages.value = [...messages.value, ...additions]
+        if (!ids.has(detail.user_message.id)) {
+          messages.value = [...messages.value,
+                            toChatMessage(detail.user_message)]
+        }
       }
       return
     }
@@ -286,8 +388,12 @@ export const useBotStore = defineStore('bot', () => {
     if (event === 'turn_tool_use') {
       const msg = findMessage(detail.chat_id, detail.message_id)
       if (msg) {
-        msg.blocks.push({ type: 'tool_use', name: String(detail.name ?? ''),
-                          input: detail.input ?? {} })
+        msg.blocks.push({
+          type: 'tool_use',
+          name: String(detail.name ?? ''),
+          input: detail.input ?? {},
+          ...(detail.id ? { id: String(detail.id) } : {}),
+        })
         messages.value = [...messages.value]
       }
       return
@@ -295,8 +401,44 @@ export const useBotStore = defineStore('bot', () => {
     if (event === 'turn_tool_result') {
       const msg = findMessage(detail.chat_id, detail.message_id)
       if (msg) {
-        msg.blocks.push({ type: 'tool_result', name: String(detail.name ?? ''),
-                          text: String(detail.text ?? '') })
+        msg.blocks.push({
+          type: 'tool_result',
+          name: String(detail.name ?? ''),
+          text: String(detail.text ?? ''),
+          status: detail.status === 'error' ? 'error' : 'success',
+          ...(detail.id ? { id: String(detail.id) } : {}),
+          ...(typeof detail.duration_ms === 'number'
+            ? { duration_ms: detail.duration_ms } : {}),
+        })
+        messages.value = [...messages.value]
+      }
+      return
+    }
+    if (event === 'turn_ask') {
+      const msg = findMessage(detail.chat_id, detail.message_id)
+      if (msg && !msg.blocks.some(b => b.ask_id === detail.ask_id)) {
+        msg.blocks.push({
+          type: 'ask',
+          ask_id: String(detail.ask_id ?? ''),
+          status: 'pending',
+          prompt: String(detail.prompt ?? ''),
+          options: Array.isArray(detail.options) ? detail.options : [],
+          min_selections: Number(detail.min_selections ?? 1),
+          max_selections: Number(detail.max_selections ?? 1),
+          allow_other: detail.allow_other === true,
+          ...(detail.kind ? { kind: String(detail.kind) } : {}),
+        })
+        messages.value = [...messages.value]
+      }
+      return
+    }
+    if (event === 'turn_ask_resolved') {
+      const msg = findMessage(detail.chat_id, detail.message_id)
+      const block = msg?.blocks.find(b => b.ask_id === detail.ask_id)
+      if (msg && block) {
+        block.status = String(detail.status ?? 'answered')
+        if (Array.isArray(detail.selected)) block.selected = detail.selected
+        if (detail.other_text) block.other_text = String(detail.other_text)
         messages.value = [...messages.value]
       }
       return
@@ -310,8 +452,12 @@ export const useBotStore = defineStore('bot', () => {
       const msg = findMessage(detail.chat_id, detail.message_id)
       if (msg) {
         msg.status = String(detail.status ?? 'done')
-        if (detail.error) {
-          msg.blocks.push({ type: 'text', text: `\n[${detail.error}]` })
+        if (detail.error && !msg.blocks.some(b => b.type === 'notice')) {
+          msg.blocks.push({ type: 'notice', level: 'error',
+                            text: String(detail.error) })
+        }
+        if (detail.usage && typeof detail.usage === 'object') {
+          msg.usage = detail.usage
         }
         messages.value = [...messages.value]
       }
@@ -348,6 +494,9 @@ export const useBotStore = defineStore('bot', () => {
     newChat,
     send,
     stop,
+    branchChat,
+    answerAsk,
+    setRunMode,
     renameChat,
     togglePinned,
     deleteChat,

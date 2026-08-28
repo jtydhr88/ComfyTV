@@ -86,22 +86,25 @@ def get_workflow_for_invoke(kind: str, label: str) -> Optional[dict]:
         ).scalar_one_or_none()
         if row is None:
             return None
-        if not row.api_json:
-            raise RuntimeError(
-                f"Workflow {kind!r}/{label!r} hasn't been prepared yet — "
-                f"open it once in the UI so the browser can convert it, then re-run."
-            )
+        api_obj: Optional[dict] = None
+        if row.api_json:
+            try:
+                api_obj = json.loads(row.api_json)
+            except json.JSONDecodeError:
+                api_obj = None
+        if api_obj is None:
+            from .convert import convert_row
+            try:
+                api_obj = convert_row(s, row)["api_json"]
+            except Exception as e:
+                raise RuntimeError(
+                    f"Workflow {kind!r}/{label!r} could not be converted to "
+                    f"API format: {e}"
+                )
         bindings = s.execute(
             select(db.WorkflowInputBinding)
             .where(db.WorkflowInputBinding.workflow_id == row.id)
         ).scalars().all()
-
-        try:
-            api_obj = json.loads(row.api_json)
-        except json.JSONDecodeError as e:
-            raise RuntimeError(
-                f"Workflow {kind!r}/{label!r}: stored api_json is invalid: {e}"
-            )
 
         return {
             "api_json": api_obj,
