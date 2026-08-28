@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import importlib.util
 import os
 import sys
@@ -343,3 +344,104 @@ def write_workflow(sample_workflow_doc):
     gui_path, gui, _api = sample_workflow_doc
     gui_path.write_text(json.dumps(gui), encoding="utf-8")
     return gui_path
+
+
+from ComfyTV.bot.providers import (  # noqa: E402
+    AgentProvider as _AgentProvider,
+    ProviderCaps as _ProviderCaps,
+    ProviderStatus as _ProviderStatus,
+    TurnResult as _TurnResult,
+    register_provider as _register_provider,
+)
+
+
+class FakeProvider(_AgentProvider):
+    id = "fake-test"
+    label = "Fake"
+
+    def __init__(self):
+        self.script = []
+        self.result = _TurnResult(resume_token="tok-1")
+        self.gate = None
+        self.stopped = False
+        self.last_turn = None
+
+    async def probe(self):
+        return _ProviderStatus(available=True, version="0.0", logged_in=True)
+
+    def capabilities(self):
+        return _ProviderCaps(stateful=True, tools="mcp")
+
+    async def send(self, turn, emit, handle):
+        self.last_turn = turn
+        for ev in self.script:
+            await emit(ev)
+        if self.gate is not None:
+            await self.gate.wait()
+        if handle.stop_requested:
+            return _TurnResult(resume_token="tok-abort", aborted=True)
+        return self.result
+
+    async def stop(self, handle):
+        self.stopped = True
+        handle.stop_requested = True
+        if self.gate is not None:
+            self.gate.set()
+
+
+class FakeStatelessProvider(FakeProvider):
+    id = "fake-stateless"
+
+    def capabilities(self):
+        return _ProviderCaps(stateful=False, tools="mcp")
+
+
+@pytest.fixture()
+def fake_provider():
+    provider = FakeProvider()
+    _register_provider(provider)
+    return provider
+
+
+@pytest.fixture()
+def fake_stateless():
+    provider = FakeStatelessProvider()
+    _register_provider(provider)
+    return provider
+
+
+@pytest.fixture()
+async def bot_client(reset_db):
+    from aiohttp import web
+    from aiohttp.test_utils import TestClient, TestServer
+
+    from ComfyTV import storage as _storage
+    _storage.set_settings({"enable-mcp": True, "enable-bot": True})
+    from ComfyTV import api  # noqa: F401
+    from ComfyTV.api import bot_asks
+    from ComfyTV.api.bot import ACTIVE_TURNS, QUEUED
+    import server
+    ACTIVE_TURNS.clear()
+    QUEUED.clear()
+    bot_asks.PENDING.clear()
+    app = web.Application()
+    app.router.add_routes(server.PromptServer.instance.routes)
+    test_client = TestClient(TestServer(app))
+    await test_client.start_server()
+    yield test_client
+    ACTIVE_TURNS.clear()
+    QUEUED.clear()
+    bot_asks.PENDING.clear()
+    await test_client.close()
+
+
+async def wait_bot_done(client, chat_id, timeout=5.0):
+    deadline = asyncio.get_event_loop().time() + timeout
+    while asyncio.get_event_loop().time() < deadline:
+        resp = await client.get(f"/comfytv/bot/chats/{chat_id}")
+        data = await resp.json()
+        msgs = data["messages"]
+        if msgs and all(m["status"] != "streaming" for m in msgs):
+            return data
+        await asyncio.sleep(0.02)
+    raise AssertionError("turn did not finish")

@@ -179,7 +179,7 @@ class TestWriteTools:
             calls["timeout"] = timeout
             return {"ok_from_tab": True}
 
-        monkeypatch.setattr(mcp_tools, "submit_command", submit)
+        monkeypatch.setattr(mcp_tools._shared, "submit_command", submit)
         return calls
 
     async def test_add_stage_normalizes_class(self, client, fake_submit):

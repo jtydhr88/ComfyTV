@@ -91,7 +91,7 @@ def turn_context(reset_db, monkeypatch):
     bot_api.ACTIVE_TURNS[chat["id"]] = state
 
     broadcasts: list[tuple[str, dict]] = []
-    monkeypatch.setattr(bot_api, "_broadcast",
+    monkeypatch.setattr(bot_api.bot_turns, "_broadcast",
                         lambda ev, payload: broadcasts.append((ev, payload)))
     token = BOT_CHAT_ID.set(chat["id"])
     yield {"chat": chat, "message": msg, "state": state,
@@ -222,7 +222,7 @@ class TestRunApprovalGate:
             calls.append(name)
             return {"started": True, "uid": "s1"}
 
-        monkeypatch.setattr(mcp_tools, "submit_command", fake_submit)
+        monkeypatch.setattr(mcp_tools._shared, "submit_command", fake_submit)
         result = await mcp_tools._run_stage({"node": "s1"})
         assert result.get("started") is True
         assert calls == ["run_stage"]
@@ -238,7 +238,7 @@ class TestRunApprovalGate:
             calls.append(name)
             return {"started": True}
 
-        monkeypatch.setattr(mcp_tools, "submit_command", fake_submit)
+        monkeypatch.setattr(mcp_tools._shared, "submit_command", fake_submit)
         task = asyncio.ensure_future(mcp_tools._run_stage({"node": "s1"}))
         await asyncio.sleep(0.05)
         ask_id = next(iter(bot_asks.PENDING))
@@ -256,7 +256,7 @@ class TestRunApprovalGate:
         async def fake_submit(name, payload, timeout=60.0):
             return {"started": True, "uid": "s1"}
 
-        monkeypatch.setattr(mcp_tools, "submit_command", fake_submit)
+        monkeypatch.setattr(mcp_tools._shared, "submit_command", fake_submit)
         task = asyncio.ensure_future(mcp_tools._run_stage({"node": "s1"}))
         await asyncio.sleep(0.05)
         ask_id = next(iter(bot_asks.PENDING))
@@ -279,7 +279,7 @@ class TestRunApprovalGate:
         async def fake_submit(name, payload, timeout=60.0):
             return {"started": True, "uid": "s1"}
 
-        monkeypatch.setattr(mcp_tools, "submit_command", fake_submit)
+        monkeypatch.setattr(mcp_tools._shared, "submit_command", fake_submit)
         result = await mcp_tools._run_stage({"node": "s1"})
         assert result.get("started") is True
         assert not bot_asks.PENDING
@@ -295,7 +295,7 @@ class TestRunApprovalGate:
         async def fake_submit(name, payload, timeout=60.0):
             return {"started": True, "uid": "s1"}
 
-        monkeypatch.setattr(mcp_tools, "submit_command", fake_submit)
+        monkeypatch.setattr(mcp_tools._shared, "submit_command", fake_submit)
         task = asyncio.ensure_future(mcp_tools._run_stage({"node": "s1"}))
         await asyncio.sleep(0.05)
         ask_id = next(iter(bot_asks.PENDING))

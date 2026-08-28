@@ -307,7 +307,7 @@ class TestRemoveStageTool:
             calls["payload"] = payload
             return {"removed": True}
 
-        monkeypatch.setattr(mcp_tools, "submit_command", submit)
+        monkeypatch.setattr(mcp_tools._shared, "submit_command", submit)
         return calls
 
     async def _call_tool(self, client, name, arguments):

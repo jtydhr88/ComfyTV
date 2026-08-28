@@ -119,7 +119,7 @@ class TestCommandPassthrough:
             calls["timeout"] = timeout
             return {"ok": True}
 
-        monkeypatch.setattr(mcp_tools, "submit_command", submit)
+        monkeypatch.setattr(mcp_tools._shared, "submit_command", submit)
         return calls
 
     async def test_cancel_stage(self, reset_db, fake_submit):
@@ -152,7 +152,7 @@ class TestDirectorPassthrough:
             calls["timeout"] = timeout
             return {"ok": True}
 
-        monkeypatch.setattr(mcp_tools, "submit_command", submit)
+        monkeypatch.setattr(mcp_tools._shared, "submit_command", submit)
         return calls
 
     async def test_director_get(self, reset_db, fake_submit):
@@ -273,7 +273,7 @@ class TestArrangeCanvas:
             calls["payload"] = payload
             return {"arranged": 5}
 
-        monkeypatch.setattr(mcp_tools, "submit_command", submit)
+        monkeypatch.setattr(mcp_tools._shared, "submit_command", submit)
         return calls
 
     async def test_passthrough_with_options(self, reset_db, fake_submit):
