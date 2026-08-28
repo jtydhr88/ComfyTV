@@ -26,6 +26,7 @@ import RefChipsV2 from '@/v2/RefChipsV2.vue'
 import { V2_SHELLS } from '@/v2/registry'
 import ServerSelectV2 from '@/v2/ServerSelectV2.vue'
 import StageControlsV2, { type ControlSpec } from '@/v2/StageControlsV2.vue'
+import TextCornerV2 from '@/v2/TextCornerV2.vue'
 import type { StageKind, StageVariant } from '@/stores/stageStore'
 
 const KIND_ICONS: Record<string, string> = {
@@ -139,6 +140,8 @@ function makeGeneratorShell(config: GeneratorConfig) {
       }
       if (config.corner) {
         specs.push([MediaCornerV2, { state: stageState, source: 'batch', onAction }, cornerAnchor])
+      } else if (config.preview === 'text') {
+        specs.push([TextCornerV2, { state: stageState }, cornerAnchor])
       }
       for (const [comp, props, anchor] of specs) {
         islands.mount(anchor, comp as any, props ?? {})

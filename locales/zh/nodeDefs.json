@@ -6,6 +6,9 @@
     "AssetImageLoaderStage": {
       "display_name": "从资产加载图片"
     },
+    "AssetTextLoaderStage": {
+      "display_name": "从资产加载文本"
+    },
     "AssetVideoLoaderStage": {
       "display_name": "从资产加载视频"
     },
@@ -523,6 +526,15 @@
     "outputs": {
       "0": {
         "name": "图像"
+      }
+    }
+  },
+  "ComfyTV_AssetTextLoaderStage": {
+    "display_name": "从资产加载文本",
+    "inputs": {},
+    "outputs": {
+      "0": {
+        "name": "文本"
       }
     }
   },

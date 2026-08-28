@@ -36,6 +36,12 @@
       >
         <IconBox class="ctv:size-4" />
       </ModelThumb>
+      <div
+        v-else-if="asset.media_type === 'text'"
+        class="ctv:flex ctv:size-full ctv:items-center ctv:justify-center ctv:text-muted-foreground"
+      >
+        <IconFileText class="ctv:size-4" />
+      </div>
       <ThumbImg
         v-else
         :src="assetPreviewUrl(asset)"
@@ -97,6 +103,7 @@ import IconBox from '~icons/lucide/box'
 import { assetPreviewUrl } from '@/utils/assetMedia'
 import { THUMB_TILE } from '@/utils/thumbUrl'
 import IconEllipsis from '~icons/lucide/ellipsis'
+import IconFileText from '~icons/lucide/file-text'
 import IconMaximize from '~icons/lucide/maximize-2'
 import IconPause from '~icons/lucide/pause'
 import IconPlay from '~icons/lucide/play'

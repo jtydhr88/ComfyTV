@@ -8,12 +8,13 @@ import { type AssetCategoryFilter, useAssetStore } from '@/stores/assetStore'
 import { useStageStore, type StageState } from '@/stores/stageStore'
 import { bindWidgetCallback, getWidget, readWidgetStr, writeWidget } from '@/utils/widget'
 
-export type LoaderMediaType = 'image' | 'video' | 'audio' | 'model'
+export type LoaderMediaType = 'image' | 'video' | 'audio' | 'model' | 'text'
 
 export function loaderMediaTypeOf(kind: string): LoaderMediaType {
   return kind === 'video' ? 'video'
     : kind === 'audio' ? 'audio'
     : kind === 'model' ? 'model'
+    : kind === 'text' ? 'text'
     : 'image'
 }
 
@@ -52,11 +53,22 @@ export function useAssetLoaderCard(node: LGraphNode, getState: () => StageState)
     writeWidget(node, 'category', String(f))
   }
 
+  function setOutputFromUrl(url: string): void {
+    if (mediaType.value !== 'text') {
+      stageStore.setOutputSlot(getState(), 0, url)
+      return
+    }
+    void fetch(url)
+      .then(r => (r.ok ? r.text() : ''))
+      .catch(() => '')
+      .then(txt => stageStore.setOutputSlot(getState(), 0, txt))
+  }
+
   function selectAsset(asset: Asset): void {
     selectedId.value = asset.id
     writeWidget(node, 'asset_url', asset.payload_url)
     writeWidget(node, 'asset_id', asset.id)
-    stageStore.setOutputSlot(getState(), 0, asset.payload_url)
+    setOutputFromUrl(asset.payload_url)
   }
 
   async function selectAssetId(id: number): Promise<boolean> {
@@ -120,9 +132,9 @@ export function useAssetLoaderCard(node: LGraphNode, getState: () => StageState)
     if (match) {
       selectedId.value = match.id
       if (match.payload_url !== savedUrl) writeWidget(node, 'asset_url', match.payload_url)
-      stageStore.setOutputSlot(getState(), 0, match.payload_url)
+      setOutputFromUrl(match.payload_url)
     } else if (savedUrl) {
-      stageStore.setOutputSlot(getState(), 0, savedUrl)
+      setOutputFromUrl(savedUrl)
     }
   })
 

@@ -16,7 +16,7 @@ from ..db import (
 logger = logging.getLogger(__name__)
 
 
-ASSET_MEDIA_TYPES: tuple[str, ...] = ("image", "video", "audio", "model")
+ASSET_MEDIA_TYPES: tuple[str, ...] = ("image", "video", "audio", "model", "text")
 
 
 def _asset_category_to_dict(c: AssetCategory) -> dict:

@@ -283,6 +283,7 @@
       "viewFull": "查看大图",
       "download": "下载",
       "copyText": "复制文本",
+      "saveTextAsset": "存入资产库",
       "renderMarkdown": "渲染 Markdown",
       "showRawText": "显示原文",
       "addTag": "存入资产库 / 打标签",
@@ -608,7 +609,8 @@
       "image": "图片",
       "video": "视频",
       "audio": "音频",
-      "model": "3D 模型"
+      "model": "3D 模型",
+      "text": "文本"
     },
     "category": {
       "all": "全部",

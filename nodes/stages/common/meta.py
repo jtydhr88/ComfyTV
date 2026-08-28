@@ -172,6 +172,7 @@ STAGE_META: dict[str, dict] = {
     'AssetImageLoaderStage':        {'kind': 'image',       'variant': 'loader'},
     'AssetVideoLoaderStage':        {'kind': 'video',       'variant': 'loader'},
     'AssetAudioLoaderStage':        {'kind': 'audio',       'variant': 'loader'},
+    'AssetTextLoaderStage':         {'kind': 'text',        'variant': 'loader'},
     'Scene3DStage':                 {'kind': 'image',       'variant': 'loader'},
     'LayerEditorStage':             {'kind': 'image',       'variant': 'loader'},
     'StoryboardEditorStage':        {'kind': 'image',       'variant': 'loader'},

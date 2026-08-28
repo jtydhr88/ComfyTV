@@ -38,7 +38,7 @@ describe('importAssetFiles', () => {
   it('skips files whose media type is unknown and reports progress per media file', async () => {
     const onProgress = vi.fn()
     const created = await importAssetFiles([
-      new File(['x'], 'notes.txt', { type: 'text/plain' }),
+      new File(['x'], 'notes.bin', { type: '' }),
       new File(['x'], 'a.mp3', { type: 'audio/mpeg' }),
       new File(['x'], 'b.mp3', { type: 'audio/mpeg' }),
     ], { onProgress })

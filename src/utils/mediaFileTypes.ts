@@ -1,6 +1,6 @@
 import { MODEL_FILE_EXTENSIONS } from '@/widgets/three/modelFormats'
 
-export type AssetMediaType = 'image' | 'video' | 'audio' | 'model'
+export type AssetMediaType = 'image' | 'video' | 'audio' | 'model' | 'text'
 
 const IMAGE_FILE_EXTENSIONS = [
   '.avif', '.bmp', '.gif', '.heic', '.heif', '.jpeg', '.jpg', '.jxl',
@@ -13,6 +13,9 @@ const VIDEO_FILE_EXTENSIONS = [
 const AUDIO_FILE_EXTENSIONS = [
   '.aac', '.aif', '.aiff', '.flac', '.m4a', '.mp3', '.oga', '.ogg',
   '.opus', '.wav', '.weba', '.wma',
+]
+export const TEXT_FILE_EXTENSIONS = [
+  '.csv', '.md', '.srt', '.txt', '.vtt',
 ]
 
 function hasExtension(name: string, extensions: string[]): boolean {
@@ -31,6 +34,7 @@ export function mediaTypeOfExt(ext: string): AssetMediaType | null {
   if (hasExtension(name, VIDEO_FILE_EXTENSIONS)) return 'video'
   if (hasExtension(name, AUDIO_FILE_EXTENSIONS)) return 'audio'
   if (isModelFile(name)) return 'model'
+  if (hasExtension(name, TEXT_FILE_EXTENSIONS)) return 'text'
   return null
 }
 
@@ -42,6 +46,7 @@ export function mediaTypeOf(file: File): AssetMediaType | null {
   if (hasExtension(file.name, IMAGE_FILE_EXTENSIONS)) return 'image'
   if (hasExtension(file.name, VIDEO_FILE_EXTENSIONS)) return 'video'
   if (hasExtension(file.name, AUDIO_FILE_EXTENSIONS)) return 'audio'
+  if (hasExtension(file.name, TEXT_FILE_EXTENSIONS)) return 'text'
   return null
 }
 

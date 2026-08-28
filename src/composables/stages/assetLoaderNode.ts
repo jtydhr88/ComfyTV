@@ -6,6 +6,7 @@ const LOADER_CLASS_BY_MEDIA: Record<string, string> = {
   video: 'ComfyTV.AssetVideoLoaderStage',
   audio: 'ComfyTV.AssetAudioLoaderStage',
   model: 'ComfyTV.AssetModelLoaderStage',
+  text: 'ComfyTV.AssetTextLoaderStage',
 }
 
 export function assetLoaderClass(mediaType: string): string | null {

@@ -168,6 +168,7 @@ const SHELL_META: Record<string, Meta> = {
   'ComfyTV.AssetImageLoaderStage': { kind: 'image', variant: 'loader' },
   'ComfyTV.AssetVideoLoaderStage': { kind: 'video', variant: 'loader' },
   'ComfyTV.AssetAudioLoaderStage': { kind: 'audio', variant: 'loader' },
+  'ComfyTV.AssetTextLoaderStage': { kind: 'text', variant: 'loader' },
   'ComfyTV.AssetModelLoaderStage': { kind: 'model', variant: 'loader' },
   'ComfyTV.TextStage': { kind: 'text' },
   'ComfyTV.SubtitleGenStage': { kind: 'text' },
@@ -260,6 +261,7 @@ const EXTRA_WIDGETS: Record<string, Array<[string, string]>> = {
   'ComfyTV.AssetImageLoaderStage': [['asset_id', 'number']],
   'ComfyTV.AssetVideoLoaderStage': [['asset_id', 'number']],
   'ComfyTV.AssetAudioLoaderStage': [['asset_id', 'number']],
+  'ComfyTV.AssetTextLoaderStage': [['asset_id', 'number']],
   'ComfyTV.AssetModelLoaderStage': [['asset_id', 'number']],
   'ComfyTV.FXChainStage': [['out_colorspace', 'combo'], ['out_size', 'combo'], ['out_fps', 'combo'], ['out_codec', 'combo'], ['out_quality', 'combo']],
 }

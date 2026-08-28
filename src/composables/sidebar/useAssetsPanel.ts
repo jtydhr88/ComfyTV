@@ -19,7 +19,7 @@ import { type AssetMediaType, mediaTypeOf } from '@/utils/mediaFileTypes'
 export type AssetMediaFilter = 'all' | AssetMediaType
 export type AssetViewMode = 'grid' | 'list'
 
-export const ASSET_MEDIA_FILTERS: AssetMediaFilter[] = ['all', 'image', 'video', 'audio', 'model']
+export const ASSET_MEDIA_FILTERS: AssetMediaFilter[] = ['all', 'image', 'video', 'audio', 'model', 'text']
 
 export { MODEL_FILE_EXTENSIONS } from '@/widgets/three/modelFormats'
 

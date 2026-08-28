@@ -265,6 +265,7 @@ class TestSettingsApi:
             "enable-skills", "skills-disabled",
             "enable-eagle", "eagle-api-url", "eagle-library-path",
             "eagle-send-folder", "eagle-auto-send",
+            "blender-bridge-url",
         }
         for r in rows:
             assert set(r) == {"key", "type", "value", "default"}

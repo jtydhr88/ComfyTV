@@ -186,6 +186,10 @@
                   :title="$t('stage.action.copyText')"
                   @click.stop="copyTextOutput"><i :class="textOutputCopied ? 'pi pi-check' : 'pi pi-copy'" /></button>
           <button type="button" :class="textOutputBtn"
+                  :title="$t('stage.action.saveTextAsset')"
+                  :disabled="textOutputSaving"
+                  @click.stop="saveTextOutputAsset"><i :class="textOutputSaved ? 'pi pi-check' : 'pi pi-tag'" /></button>
+          <button type="button" :class="textOutputBtn"
                   :title="$t('stage.action.download')"
                   @click.stop="downloadTextOutput"><i class="pi pi-download" /></button>
         </div>
@@ -395,8 +399,11 @@ const textOutputSummary = computed(() => {
 })
 const {
   textCopied: textOutputCopied,
+  textSaved: textOutputSaved,
+  textSaving: textOutputSaving,
   copyText: copyTextOutput,
   downloadText: downloadTextOutput,
+  saveTextAsset: saveTextOutputAsset,
 } = useTextOutputActions(() => String(props.state.output ?? ''))
 const textOutputBtn = 'ctv:flex ctv:items-center ctv:justify-center ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:text-xs ctv:cursor-pointer'
   + ' ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-muted-foreground ctv:hover:text-base-foreground ctv:hover:border-primary-background'

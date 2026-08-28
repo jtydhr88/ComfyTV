@@ -18,6 +18,10 @@
                 :title="$t('stage.action.copyText')"
                 @click.stop="onCopyText"><i :class="textCopied ? 'pi pi-check' : 'pi pi-copy'" /></button>
         <button type="button" :class="imgActionBtn"
+                :title="$t('stage.action.saveTextAsset')"
+                :disabled="textSaving"
+                @click.stop="onSaveTextAsset"><i :class="textSaved ? 'pi pi-check' : 'pi pi-tag'" /></button>
+        <button type="button" :class="imgActionBtn"
                 :title="$t('stage.action.download')"
                 @click.stop="onDownloadText"><i class="pi pi-download" /></button>
       </div>
@@ -626,8 +630,11 @@ function onLoadAssetFromBar(p: { url: string; label: string }) {
 
 const {
   textCopied,
+  textSaved,
+  textSaving,
   copyText: onCopyText,
   downloadText: onDownloadText,
+  saveTextAsset: onSaveTextAsset,
 } = useTextOutputActions(() => String(props.content ?? ''))
 
 function onItemClick(img: BatchImage, i: number) {

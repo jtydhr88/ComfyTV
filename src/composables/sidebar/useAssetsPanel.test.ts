@@ -285,10 +285,18 @@ describe('useAssetsPanel', () => {
     }))
   })
 
-  it('addFiles skips files that are not image/video/audio', async () => {
+  it('addFiles skips files without a supported media type', async () => {
     const p = useAssetsPanel(() => false)
-    await p.addFiles([new File(['x'], 'a.txt', { type: 'text/plain' })])
+    await p.addFiles([new File(['x'], 'a.bin', { type: '' })])
     expect(store.create).not.toHaveBeenCalled()
+  })
+
+  it('addFiles uploads text assets without dimensions', async () => {
+    const p = useAssetsPanel(() => false)
+    await p.addFiles([new File(['x'], 'notes.txt', { type: 'text/plain' })])
+    expect(store.create).toHaveBeenCalledWith(expect.objectContaining({
+      name: 'notes', media_type: 'text', width: null, height: null,
+    }))
   })
 
   it('assetTooltip shows the name, with dimensions when present', () => {

@@ -122,8 +122,10 @@ export const useAssetStore = defineStore('assets', () => {
         '/comfytv/asset_categories', 'POST', MutateAssetCategorySchema,
         { name: name.trim() },
       )
-      categories.value = [...categories.value, data.category]
-        .sort((a, b) => a.name.localeCompare(b.name))
+      categories.value = [
+        ...categories.value.filter(c => c.id !== data.category.id),
+        data.category,
+      ].sort((a, b) => a.name.localeCompare(b.name))
       return data.category
     } catch (e) {
       console.warn('[ComfyTV/assets] create category failed', name, e)
@@ -167,7 +169,7 @@ export const useAssetStore = defineStore('assets', () => {
   async function create(opts: CreateAssetOpts): Promise<Asset | null> {
     try {
       const data = await apiSend('/comfytv/assets', 'POST', MutateAssetSchema, opts)
-      assets.value = [data.asset, ...assets.value]
+      upsertAsset(data.asset)
       return data.asset
     } catch (e) {
       console.warn('[ComfyTV/assets] create failed', opts.name, e)

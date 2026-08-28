@@ -441,6 +441,34 @@ describe('assetStore', () => {
     expect(s.assets[0].category_ids).toEqual([1])
   })
 
+  it('createCategory dedupes when the ws broadcast beat the POST response', async () => {
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    mockHydrate(fetchApi, [], [])
+    const s = useAssetStore()
+    await s.hydrate()
+    const handler = await installedHandler(s)
+    fetchApi.mockImplementationOnce(() => {
+      handler({ detail: { event: 'category-create', category: category({ id: 2, name: 'bg' }) } })
+      return Promise.resolve(jsonResp({ ok: true, category: category({ id: 2, name: 'bg' }) }))
+    })
+    await s.createCategory('bg')
+    expect(s.categories.map(c => c.id)).toEqual([2])
+  })
+
+  it('create dedupes when the ws broadcast beat the POST response', async () => {
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    mockHydrate(fetchApi, [], [])
+    const s = useAssetStore()
+    await s.hydrate()
+    const handler = await installedHandler(s)
+    fetchApi.mockImplementationOnce(() => {
+      handler({ detail: { event: 'create', asset: asset({ id: 9 }) } })
+      return Promise.resolve(jsonResp({ ok: true, asset: asset({ id: 9 }) }))
+    })
+    await s.create({ name: 'pic', payload_url: '/u/p.png' })
+    expect(s.assets.map(a => a.id)).toEqual([9])
+  })
+
   it('ws event with an unknown shape falls back to a debounced full refresh', async () => {
     const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
     mockHydrate(fetchApi, [], [asset({ id: 1 })])

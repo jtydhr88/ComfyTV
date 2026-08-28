@@ -193,6 +193,11 @@
             :class="['ctv:flex ctv:items-center ctv:justify-center ctv:w-full ctv:aspect-square ctv:text-muted-foreground',
                      isAdded(asset.id) ? 'ctv:opacity-55' : '']"
           ><i class="pi pi-volume-up ctv:text-lg" /></div>
+          <div
+            v-else-if="asset.media_type === 'text'"
+            :class="['ctv:flex ctv:items-center ctv:justify-center ctv:w-full ctv:aspect-square ctv:text-muted-foreground',
+                     isAdded(asset.id) ? 'ctv:opacity-55' : '']"
+          ><i class="pi pi-file ctv:text-lg" /></div>
           <ThumbImg
             v-else
             :src="assetPreviewUrl(asset)"
@@ -234,6 +239,7 @@ import ViewFullButton from '@/components/ViewFullButton.vue'
 import { importAssetFiles } from '@/composables/sidebar/assetImport'
 import { toastLoaderUploadFailed, useLoaderFileDrop } from '@/composables/stages/useLoaderFileDrop'
 import { assetPreviewUrl } from '@/utils/assetMedia'
+import { TEXT_FILE_EXTENSIONS } from '@/utils/mediaFileTypes'
 import { THUMB_TILE } from '@/utils/thumbUrl'
 import { useAssetPicker } from '@/composables/stages/useAssetPicker'
 
@@ -304,7 +310,9 @@ const fileInput = ref<HTMLInputElement | null>(null)
 const uploading = ref(false)
 
 const uploadAccept = computed(() =>
-  (props.mediaTypes ?? ['image']).map(t => `${t}/*`).join(','),
+  (props.mediaTypes ?? ['image'])
+    .map(t => (t === 'text' ? TEXT_FILE_EXTENSIONS.join(',') : `${t}/*`))
+    .join(','),
 )
 
 const {

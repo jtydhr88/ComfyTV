@@ -38,6 +38,7 @@ describe('assetLoaderClass', () => {
     expect(assetLoaderClass('video')).toBe('ComfyTV.AssetVideoLoaderStage')
     expect(assetLoaderClass('audio')).toBe('ComfyTV.AssetAudioLoaderStage')
     expect(assetLoaderClass('model')).toBe('ComfyTV.AssetModelLoaderStage')
+    expect(assetLoaderClass('text')).toBe('ComfyTV.AssetTextLoaderStage')
   })
 
   it('returns null for media types without a loader stage', () => {

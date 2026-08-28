@@ -49,6 +49,13 @@
         </button>
       </div>
       <div
+        v-else-if="asset.media_type === 'text'"
+        :title="tooltip"
+        class="ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center ctv:text-muted-foreground"
+      >
+        <IconFileText class="ctv:size-8" />
+      </div>
+      <div
         v-else-if="asset.media_type === 'model'"
         :title="tooltip"
         class="ctv:absolute ctv:inset-0"
@@ -147,6 +154,7 @@ import IconBox from '~icons/lucide/box'
 import { assetPreviewUrl } from '@/utils/assetMedia'
 import { THUMB_CELL } from '@/utils/thumbUrl'
 import IconEllipsis from '~icons/lucide/ellipsis'
+import IconFileText from '~icons/lucide/file-text'
 import IconMaximize from '~icons/lucide/maximize-2'
 import IconPause from '~icons/lucide/pause'
 import IconPlay from '~icons/lucide/play'

@@ -99,6 +99,11 @@
                        ctv:bg-secondary-background-hover ctv:text-muted-foreground"
               ><i class="pi pi-volume-up" /></div>
               <div
+                v-else-if="mediaType === 'text'"
+                class="ctv:flex ctv:items-center ctv:justify-center ctv:w-full ctv:aspect-square ctv:text-2xl
+                       ctv:bg-secondary-background-hover ctv:text-muted-foreground"
+              ><i class="pi pi-file" /></div>
+              <div
                 v-else-if="mediaType === 'model'"
                 class="ctv:relative ctv:w-full ctv:aspect-square ctv:bg-secondary-background-hover"
               >
@@ -194,6 +199,7 @@ import ValuePreview from '@/components/stages/ValuePreview.vue'
 import ViewFullButton from '@/components/ViewFullButton.vue'
 import { assetTooltipOf as assetTooltip, useAssetLoaderCard } from '@/composables/stages/useAssetLoaderCard'
 import { assetPreviewUrl } from '@/utils/assetMedia'
+import { TEXT_FILE_EXTENSIONS } from '@/utils/mediaFileTypes'
 import { THUMB_CELL } from '@/utils/thumbUrl'
 import type { StageState } from '@/stores/stageStore'
 import { MODEL_FILE_EXTENSIONS } from '@/widgets/three/modelFormats'
@@ -256,7 +262,9 @@ const previewContent = computed(() => {
 })
 
 const fileAccept = computed(() =>
-  mediaType.value === 'model' ? MODEL_FILE_EXTENSIONS.join(',') : `${mediaType.value}/*`)
+  mediaType.value === 'model' ? MODEL_FILE_EXTENSIONS.join(',')
+  : mediaType.value === 'text' ? TEXT_FILE_EXTENSIONS.join(',')
+  : `${mediaType.value}/*`)
 
 function onPickFiles(e: Event) {
   const input = e.target as HTMLInputElement

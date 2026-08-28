@@ -283,6 +283,7 @@
       "viewFull": "View full size",
       "download": "Download",
       "copyText": "Copy text",
+      "saveTextAsset": "Save to asset library",
       "renderMarkdown": "Render as Markdown",
       "showRawText": "Show raw text",
       "addTag": "Save to library / tag",
@@ -608,7 +609,8 @@
       "image": "Images",
       "video": "Video",
       "audio": "Audio",
-      "model": "3D models"
+      "model": "3D models",
+      "text": "Text"
     },
     "category": {
       "all": "All",

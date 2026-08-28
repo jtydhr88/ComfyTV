@@ -139,12 +139,13 @@ function downloadOutput(state: StageState) {
 
 function attachLoaderToolbar(opts: {
   card: HTMLElement
-  mediaKind: 'image' | 'video' | 'audio' | 'model'
+  mediaKind: 'image' | 'video' | 'audio' | 'model' | 'text'
   state: StageState
   onAction: (id: string, context?: any) => void
   islands: ReturnType<typeof createIslandGroup>
 }) {
   const { card, mediaKind, state, onAction, islands } = opts
+  if (mediaKind === 'text') return
   if (mediaKind === 'image') {
     const bar = buildToolbar((actionId) => {
       if (actionId === 'download') {
@@ -297,11 +298,12 @@ function makePlainLoader(cfg: PlainLoaderCfg) {
   }
 }
 
-const ASSET_LOADER_MEDIA: Record<string, 'image' | 'video' | 'audio' | 'model'> = {
+const ASSET_LOADER_MEDIA: Record<string, 'image' | 'video' | 'audio' | 'model' | 'text'> = {
   'ComfyTV.AssetImageLoaderStage': 'image',
   'ComfyTV.AssetVideoLoaderStage': 'video',
   'ComfyTV.AssetAudioLoaderStage': 'audio',
   'ComfyTV.AssetModelLoaderStage': 'model',
+  'ComfyTV.AssetTextLoaderStage': 'text',
 }
 
 function attachAssetLoader(node: ComfyNode, kind: StageKind, variant: StageVariant) {
@@ -416,3 +418,4 @@ V2_SHELLS['ComfyTV.AssetImageLoaderStage'] = attachAssetLoader
 V2_SHELLS['ComfyTV.AssetVideoLoaderStage'] = attachAssetLoader
 V2_SHELLS['ComfyTV.AssetAudioLoaderStage'] = attachAssetLoader
 V2_SHELLS['ComfyTV.AssetModelLoaderStage'] = attachAssetLoader
+V2_SHELLS['ComfyTV.AssetTextLoaderStage'] = attachAssetLoader

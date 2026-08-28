@@ -13,6 +13,7 @@ MEDIA_EXTS = {
     "video": {".mp4", ".mov", ".mkv", ".webm", ".m4v", ".avi"},
     "image": {".png", ".jpg", ".jpeg", ".webp", ".gif", ".bmp"},
     "audio": {".mp3", ".wav", ".flac", ".ogg", ".m4a", ".aac", ".opus"},
+    "text": {".txt", ".md", ".srt", ".vtt", ".csv"},
 }
 
 

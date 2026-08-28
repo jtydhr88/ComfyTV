@@ -29,18 +29,18 @@ class TestAdoptMediaFolder:
     def test_adopts_by_extension(self, media_root):
         from ComfyTV import storage
         from ComfyTV.api.assets import adopt_media_folder
-        for name in ('a.mp4', 'b.png', 'c.wav', 'ignore.txt'):
+        for name in ('a.mp4', 'b.png', 'c.wav', 'd.txt', 'ignore.bin'):
             f = media_root / name
             f.write_bytes(b'x' * 32)
             _settled(f)
 
         adopted = adopt_media_folder()
-        assert sorted(a['name'] for a in adopted) == ['a', 'b', 'c']
+        assert sorted(a['name'] for a in adopted) == ['a', 'b', 'c', 'd']
         types = {a['name']: a['media_type'] for a in adopted}
-        assert types == {'a': 'video', 'b': 'image', 'c': 'audio'}
+        assert types == {'a': 'video', 'b': 'image', 'c': 'audio', 'd': 'text'}
         assert all(a['source'] == 'folder' for a in adopted)
         assert all(a['payload_url'].startswith('/view?') for a in adopted)
-        assert len(storage.list_assets(limit=50)) == 3
+        assert len(storage.list_assets(limit=50)) == 4
 
     def test_second_scan_is_a_noop(self, media_root):
         from ComfyTV.api.assets import adopt_media_folder

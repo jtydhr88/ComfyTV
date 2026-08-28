@@ -6,6 +6,9 @@
     "AssetImageLoaderStage": {
       "display_name": "Load Image from Asset"
     },
+    "AssetTextLoaderStage": {
+      "display_name": "Load Text from Asset"
+    },
     "AssetVideoLoaderStage": {
       "display_name": "Load Video from Asset"
     },
@@ -523,6 +526,15 @@
     "outputs": {
       "0": {
         "name": "Image"
+      }
+    }
+  },
+  "ComfyTV_AssetTextLoaderStage": {
+    "display_name": "Load Text from Asset",
+    "inputs": {},
+    "outputs": {
+      "0": {
+        "name": "Text"
       }
     }
   },

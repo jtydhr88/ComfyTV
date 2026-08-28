@@ -11,6 +11,7 @@
       <MediaPreviewV2
         :kind="mediaType"
         :url="previewUrl"
+        :text="previewText"
         :hint="$t('v2.assetLoaderHint')"
         :on-capture-view="mediaType === 'model' && onAction ? onModelCaptured : undefined"
       />
@@ -42,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 import type { Asset } from '@/api/schemas'
 import AssetPickerPopup from '@/components/stages/AssetPickerPopup.vue'
@@ -50,6 +51,7 @@ import { useAssetLoaderCard } from '@/composables/stages/useAssetLoaderCard'
 import type { LGraphNode } from '@/lib/comfyApp'
 import { assetPreviewUrl } from '@/utils/assetMedia'
 import MediaPreviewV2 from '@/v2/MediaPreviewV2.vue'
+import { TEXT_FILE_EXTENSIONS } from '@/utils/mediaFileTypes'
 import { MODEL_FILE_EXTENSIONS } from '@/widgets/three/modelFormats'
 import type { StageState } from '@/stores/stageStore'
 
@@ -73,12 +75,28 @@ const addedIds = computed(() => (selectedAsset.value ? [selectedAsset.value.id] 
 
 const previewUrl = computed(() => {
   const a = selectedAsset.value
-  if (!a) return null
+  if (!a || mediaType.value === 'text') return null
   return mediaType.value === 'image' ? assetPreviewUrl(a) : a.payload_url
 })
 
+const previewText = ref('')
+watch(
+  () => (mediaType.value === 'text' ? selectedAsset.value?.payload_url ?? '' : ''),
+  (url) => {
+    previewText.value = ''
+    if (!url) return
+    void fetch(url)
+      .then(r => (r.ok ? r.text() : ''))
+      .then(txt => { previewText.value = txt })
+      .catch(() => {})
+  },
+  { immediate: true },
+)
+
 const fileAccept = computed(() =>
-  mediaType.value === 'model' ? MODEL_FILE_EXTENSIONS.join(',') : `${mediaType.value}/*`)
+  mediaType.value === 'model' ? MODEL_FILE_EXTENSIONS.join(',')
+  : mediaType.value === 'text' ? TEXT_FILE_EXTENSIONS.join(',')
+  : `${mediaType.value}/*`)
 
 function onSelect(asset: Asset) {
   selectAsset(asset)

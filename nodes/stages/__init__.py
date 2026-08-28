@@ -103,6 +103,7 @@ from .loaders import (
     TextLoaderStage,
     ImageLoaderStage, VideoLoaderStage, AudioLoaderStage,
     AssetImageLoaderStage, AssetVideoLoaderStage, AssetAudioLoaderStage,
+    AssetTextLoaderStage,
     ModelLoaderStage, AssetModelLoaderStage,
 )
 from .geometry import (
@@ -175,6 +176,7 @@ class ComfyTVExtension(ComfyExtension):
             TextLoaderStage,
             ImageLoaderStage, VideoLoaderStage, AudioLoaderStage,
             AssetImageLoaderStage, AssetVideoLoaderStage, AssetAudioLoaderStage,
+            AssetTextLoaderStage,
             Model3DStage, ModelLoaderStage, AssetModelLoaderStage,
             MeshOpStage, MeshPrimitiveStage, MeshBooleanStage, MeshBakeMapsStage,
             LineArtStage,

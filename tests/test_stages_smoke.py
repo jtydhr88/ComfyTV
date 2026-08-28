@@ -44,7 +44,7 @@ class TestSchemaDefinitions:
     @pytest.mark.parametrize("cls_name", [
         # Loaders
         "ImageLoaderStage", "VideoLoaderStage",
-        "ModelLoaderStage", "AssetModelLoaderStage",
+        "ModelLoaderStage", "AssetModelLoaderStage", "AssetTextLoaderStage",
         # Generators
         "ProjectStage", "TextStage", "ImageStage", "VideoStage",
         "AudioStage", "SpeechStage", "ShotImagesStage", "StoryboardStage",
@@ -150,6 +150,18 @@ class TestLoaderExecute:
         out = AssetModelLoaderStage.execute(project_id="default",
                                             asset_url="/view?filename=m.glb")
         assert out.values[0] == "/view?filename=m.glb"
+
+    def test_asset_text_loader_reads_file_content(self, reset_db):
+        import os
+        import folder_paths
+        from ComfyTV.nodes.stages.loaders import AssetTextLoaderStage
+        out_dir = folder_paths.get_output_directory()
+        os.makedirs(out_dir, exist_ok=True)
+        with open(os.path.join(out_dir, "t.txt"), "w", encoding="utf-8") as fh:
+            fh.write("hello asset")
+        out = AssetTextLoaderStage.execute(project_id="default",
+                                           asset_url="/view?filename=t.txt")
+        assert out.values[0] == "hello asset"
 
     def test_asset_loader_missing_file_raises(self, reset_db):
         from ComfyTV.nodes.stages.loaders import AssetImageLoaderStage
