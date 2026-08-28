@@ -52,12 +52,12 @@ class TestAllowlists:
 
 class TestBotWiring:
     def test_disabled_by_default(self, reset_db):
-        from ComfyTV.api.bot import _comfy_mcp_argv
+        from ComfyTV.api.bot_turns import _comfy_mcp_argv
         assert _comfy_mcp_argv() == []
 
     def test_enabled_with_command(self, reset_db):
         from ComfyTV import storage
-        from ComfyTV.api.bot import _comfy_mcp_argv
+        from ComfyTV.api.bot_turns import _comfy_mcp_argv
         storage.set_settings({"bot-enable-comfy-mcp": True,
                               "bot-comfy-mcp-command": "comfy-mcp --debug"})
         assert _comfy_mcp_argv() == ["comfy-mcp", "--debug"]
@@ -65,13 +65,13 @@ class TestBotWiring:
     def test_enabled_but_missing_executable(self, reset_db, monkeypatch):
         import shutil
         from ComfyTV import storage
-        from ComfyTV.api.bot import _comfy_mcp_argv
+        from ComfyTV.api.bot_turns import _comfy_mcp_argv
         storage.set_settings({"bot-enable-comfy-mcp": True})
         monkeypatch.setattr(shutil, "which", lambda name: None)
         assert _comfy_mcp_argv() == []
 
     def test_allowed_tools_extended_only_when_mounted(self, reset_db):
-        from ComfyTV.api.bot import _allowed_tools
+        from ComfyTV.api.bot_turns import _allowed_tools
         assert _allowed_tools([]) == ["mcp__comfytv__*"]
         extended = _allowed_tools(["comfy-mcp"])
         assert extended[0] == "mcp__comfytv__*"

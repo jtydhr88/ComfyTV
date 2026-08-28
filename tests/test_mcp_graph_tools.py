@@ -13,7 +13,7 @@ def bus(monkeypatch):
         calls.append((action, payload))
         return results.get(action, {"ok": True})
 
-    monkeypatch.setattr(mcp_tools, "submit_command", fake_submit)
+    monkeypatch.setattr(mcp_tools._shared, "submit_command", fake_submit)
     return {"calls": calls, "results": results}
 
 

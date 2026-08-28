@@ -25,7 +25,7 @@ def mirror(reset_db):
 @pytest.fixture()
 def wait_tool(mirror, monkeypatch):
     from ComfyTV.api import mcp_tools
-    monkeypatch.setattr(mcp_tools, "_WAIT_POLL_S", 0.01)
+    monkeypatch.setattr(mcp_tools.runs, "_WAIT_POLL_S", 0.01)
     return mcp_tools._wait_stage
 
 
@@ -156,7 +156,7 @@ class TestFastCompletionRace:
         async def submit(action, payload, timeout=15.0):
             return {"started": True, "uid": "uid-recorded"}
 
-        monkeypatch.setattr(mcp_tools, "submit_command", submit)
+        monkeypatch.setattr(mcp_tools._shared, "submit_command", submit)
         await mcp_tools._run_stage({"node": "7"})
         assert "uid-recorded" in mcp_tools._RUN_STARTED
 
@@ -166,7 +166,7 @@ class TestFastCompletionRace:
         async def submit(action, payload, timeout=15.0):
             return {"ok": True}
 
-        monkeypatch.setattr(mcp_tools, "submit_command", submit)
+        monkeypatch.setattr(mcp_tools._shared, "submit_command", submit)
         await mcp_tools._run_stage({"node": "7"})
         assert mcp_tools._RUN_STARTED == {}
 

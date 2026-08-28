@@ -47,7 +47,7 @@ def fake_submit(monkeypatch):
         calls["timeout"] = timeout
         return {"ok_from_tab": True}
 
-    monkeypatch.setattr(mcp_tools, "submit_command", submit)
+    monkeypatch.setattr(mcp_tools._shared, "submit_command", submit)
     return calls
 
 
