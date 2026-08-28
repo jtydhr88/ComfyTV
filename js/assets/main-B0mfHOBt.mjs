@@ -57857,7 +57857,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-C30aNXo-.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-6IqBaRel.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -73841,7 +73841,7 @@ const _sfc_main$41 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const BotComposer = /* @__PURE__ */ _export_sfc(_sfc_main$41, [["__scopeId", "data-v-e3ece2d9"]]);
+const BotComposer = /* @__PURE__ */ _export_sfc(_sfc_main$41, [["__scopeId", "data-v-7ddc1869"]]);
 const _hoisted_1$5P = { class: "ctv:mb-1.5 ctv:flex ctv:items-start ctv:gap-1.5" };
 const _hoisted_2$3K = { class: "ctv:break-words ctv:whitespace-pre-wrap ctv:font-medium" };
 const _hoisted_3$3D = { class: "ctv:flex ctv:flex-wrap ctv:gap-1.5" };
@@ -77341,7 +77341,7 @@ const _sfc_main$3X = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const BotChatView = /* @__PURE__ */ _export_sfc(_sfc_main$3X, [["__scopeId", "data-v-e45b8b8a"]]);
+const BotChatView = /* @__PURE__ */ _export_sfc(_sfc_main$3X, [["__scopeId", "data-v-f92a9a6d"]]);
 const _hoisted_1$5J = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:overflow-hidden ctv:text-base-foreground" };
 const _hoisted_2$3E = {
   key: 0,
@@ -138630,7 +138630,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-Ch5MpNlV.mjs");
+    const { STLLoader } = await import("./STLLoader-QmwofbN_.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -138638,7 +138638,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-DWIcFVm9.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-tW4FmS7B.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -220943,6 +220943,42 @@ function installV2ShellCss() {
   style2.textContent = V2_CSS_CHROME + V2_CSS_PANELS;
   document.head.appendChild(style2);
 }
+const SCROLLABLE_OVERFLOW = /(auto|scroll|overlay)/;
+function isTextEntry(el2) {
+  if (!el2) return false;
+  return el2.tagName === "TEXTAREA" || el2.tagName === "INPUT" || el2.isContentEditable;
+}
+function findScrollable(start2, root) {
+  let el2 = start2;
+  while (el2) {
+    if (el2.scrollHeight > el2.clientHeight + 1 && SCROLLABLE_OVERFLOW.test(getComputedStyle(el2).overflowY)) return el2;
+    if (el2 === root) return null;
+    el2 = el2.parentElement;
+  }
+  return null;
+}
+function bindWheelCapture(root) {
+  let held = null;
+  root.addEventListener("pointerover", (e) => {
+    const el2 = findScrollable(e.target, root);
+    if (held && held !== el2 && document.activeElement === held) held.blur();
+    held = null;
+    if (!el2) return;
+    if (el2.dataset.captureWheel !== "true") {
+      el2.dataset.captureWheel = "true";
+      if (!isTextEntry(el2) && !el2.hasAttribute("tabindex")) el2.tabIndex = -1;
+    }
+    if (isTextEntry(el2)) return;
+    if (el2.contains(document.activeElement)) return;
+    if (isTextEntry(document.activeElement)) return;
+    el2.focus({ preventScroll: true });
+    held = el2;
+  });
+  root.addEventListener("pointerleave", () => {
+    if (held && document.activeElement === held) held.blur();
+    held = null;
+  });
+}
 const REF_RE = /^(images\.image|texts\.text|videos\.video)\d+$/;
 const ICON_IMAGE = I(`<rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="M4 18l5.2-5.2 3.4 3.4 3.2-3.2L21 18"/>`, 1.8);
 const ICON_HD = I(`<rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M7 9v6M7 12h3.4M10.4 9v6M14 9v6h1.8a3 3 0 000-6z"/>`);
@@ -221011,6 +221047,7 @@ function makeImageBatchShell(shellCfg = {}) {
     const anyNode = node;
     const title = shellCfg.title !== void 0 ? shellCfg.title ?? String(((_a3 = node.constructor) == null ? void 0 : _a3.title) ?? node.comfyClass ?? "") : t("v2.imageStageTitle");
     const card = el$8("div", "v2-card");
+    bindWheelCapture(card);
     card.appendChild(buildToolbar((actionId) => {
       var _a4, _b2;
       if (actionId === "download") {
@@ -221503,6 +221540,7 @@ function makePoolPicker(previewKind) {
     };
     const title = previewKind === "image" ? t("v2.pickerTitle") : String(((_a3 = node.constructor) == null ? void 0 : _a3.title) ?? node.comfyClass ?? "");
     const card = el$7("div", "v2-card");
+    bindWheelCapture(card);
     const handle = el$7("div", "v2-label v2-handle", `${ICON_GRIP}${ICON_PICK}<span>${title}</span>`);
     card.appendChild(handle);
     bindNodeDrag(node, handle);
@@ -221824,6 +221862,7 @@ function attach$3(node, kind, variant) {
   installCss$5();
   const anyNode = node;
   const card = el$6("div", "v2-card v2-crop-card");
+  bindWheelCapture(card);
   const label = el$6("div", "v2-label v2-handle", `${ICON_GRIP}${ICON_CROP}<span>${t("v2.cropTitle")}</span>`);
   const editorAnchor = el$6("div", "v2-crop-host");
   editorAnchor.style.cssText = "display:flex;flex-direction:column;flex:1;min-height:0;";
@@ -222777,6 +222816,7 @@ function makeEditorShell(config2) {
     installCss$4();
     const anyNode = node;
     const card = el$5("div", "v2-card v2-ed-card");
+    bindWheelCapture(card);
     const label = el$5("div", "v2-label v2-handle", `${ICON_GRIP}${config2.icon}<span>${t(config2.titleKey)}</span>`);
     const editorAnchor = el$5("div", "v2-ed-host");
     editorAnchor.style.cssText = "display:flex;flex-direction:column;flex:1;min-height:0;";
@@ -223083,6 +223123,7 @@ function attach$2(node, kind, variant, config2) {
   installCss$3();
   const anyNode = node;
   const card = el$4("div", "v2-card");
+  bindWheelCapture(card);
   const handle = el$4(
     "div",
     "v2-label v2-handle",
@@ -223096,26 +223137,6 @@ function attach$2(node, kind, variant, config2) {
   );
   embedAnchor.style.cssText = "display:flex;flex-direction:column;flex:1;min-height:0;";
   card.appendChild(embedAnchor);
-  if (!config2.plain) {
-    embedAnchor.addEventListener("pointerover", (e) => {
-      const slab = embedAnchor.querySelector(".v2-fx-embed > div > :nth-child(2)");
-      if (!slab || slab.scrollHeight <= slab.clientHeight + 1) return;
-      const inSlab = slab.contains(e.target);
-      if (inSlab) {
-        if (slab.dataset.captureWheel !== "true") {
-          slab.dataset.captureWheel = "true";
-          slab.tabIndex = -1;
-        }
-        if (!slab.contains(document.activeElement)) slab.focus({ preventScroll: true });
-      } else if (document.activeElement === slab) {
-        slab.blur();
-      }
-    });
-    embedAnchor.addEventListener("pointerleave", () => {
-      const slab = embedAnchor.querySelector(".v2-fx-embed > div > :nth-child(2)");
-      if (slab && document.activeElement === slab) slab.blur();
-    });
-  }
   let promptAnchor = null;
   if (config2.prompt) {
     const promptPanel = el$4("div", "v2-fx-promptpanel");
@@ -224940,6 +224961,7 @@ function attach$1(node, kind, variant) {
   installCss$2();
   const anyNode = node;
   const card = el$3("div", "v2-card v2-scene-card");
+  bindWheelCapture(card);
   const handle = el$3(
     "div",
     "v2-label v2-handle",
@@ -225039,6 +225061,7 @@ function attach(node, kind, variant) {
   installCss$1();
   const anyNode = node;
   const card = el$2("div", "v2-card v2-relight-card");
+  bindWheelCapture(card);
   const handle = el$2(
     "div",
     "v2-label v2-handle",
@@ -225545,6 +225568,7 @@ function makePlainLoader(cfg) {
     installCss();
     const anyNode = node;
     const card = el$1("div", "v2-card");
+    bindWheelCapture(card);
     const handle = el$1(
       "div",
       "v2-label v2-handle",
@@ -225672,6 +225696,7 @@ function attachAssetLoader(node, kind, variant) {
   installCss();
   const anyNode = node;
   const card = el$1("div", "v2-card");
+  bindWheelCapture(card);
   const handle = el$1(
     "div",
     "v2-label v2-handle",
@@ -225724,6 +225749,7 @@ function attachTextLoader(node, kind, variant) {
   installCss();
   const anyNode = node;
   const card = el$1("div", "v2-card");
+  bindWheelCapture(card);
   const handle = el$1(
     "div",
     "v2-label v2-handle",
@@ -225996,6 +226022,7 @@ function makeGeneratorShell(config2) {
     const icon = KIND_ICONS[config2.preview] ?? KIND_ICONS.image;
     const title = String(((_a3 = node.constructor) == null ? void 0 : _a3.title) ?? node.comfyClass ?? "");
     const card = el("div", "v2-card");
+    bindWheelCapture(card);
     const handle = el("div", "v2-label v2-handle", `${ICON_GRIP}${icon}<span>${title}</span>`);
     card.appendChild(handle);
     bindNodeDrag(node, handle);
@@ -226732,4 +226759,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-B-3L9sh6.mjs.map
+//# sourceMappingURL=main-B0mfHOBt.mjs.map

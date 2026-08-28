@@ -10,6 +10,7 @@ import { bindNodeDrag } from '@/v2/nodeDrag'
 import { bindShellChrome } from '@/v2/shellChrome'
 import { bindProgressRing, createNodeScope, ensureMinSize, ICON_GRIP } from '@/v2/shellCommon'
 import { installV2ShellCss } from '@/v2/shellCss'
+import { bindWheelCapture } from '@/v2/wheelCapture'
 import { createIslandGroup } from '@/v2/islands'
 import { V2_SHELLS } from '@/v2/registry'
 import CardEmbedV2 from '@/v2/CardEmbedV2.vue'
@@ -65,6 +66,7 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant) {
   const anyNode = node as any
 
   const card = el('div', 'v2-card v2-relight-card')
+  bindWheelCapture(card)
   const handle = el('div', 'v2-label v2-handle',
     `${ICON_GRIP}${ICON_LIGHT}<span>${t('v2.relightTitle')}</span>`)
   card.appendChild(handle)

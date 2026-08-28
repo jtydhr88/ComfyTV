@@ -19,6 +19,7 @@ import {
   RUN_BUTTON_HTML,
 } from '@/v2/shellCommon'
 import { installV2ShellCss } from '@/v2/shellCss'
+import { bindWheelCapture } from '@/v2/wheelCapture'
 import MediaCornerV2 from '@/v2/MediaCornerV2.vue'
 import MediaPreviewV2 from '@/v2/MediaPreviewV2.vue'
 import ParamsPanelV2 from '@/v2/ParamsPanelV2.vue'
@@ -63,6 +64,7 @@ function makeGeneratorShell(config: GeneratorConfig) {
     const title = String((node.constructor as any)?.title ?? node.comfyClass ?? '')
 
     const card = el('div', 'v2-card')
+    bindWheelCapture(card)
     const handle = el('div', 'v2-label v2-handle', `${ICON_GRIP}${icon}<span>${title}</span>`)
     card.appendChild(handle)
     bindNodeDrag(node, handle)

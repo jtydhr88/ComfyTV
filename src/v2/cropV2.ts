@@ -6,6 +6,7 @@ import { bindNodeDrag } from '@/v2/nodeDrag'
 import { bindShellChrome } from '@/v2/shellChrome'
 import { bindProgressRing, createNodeScope, ensureMinSize, ICON_GRIP } from '@/v2/shellCommon'
 import { installV2ShellCss } from '@/v2/shellCss'
+import { bindWheelCapture } from '@/v2/wheelCapture'
 import { createIslandGroup } from '@/v2/islands'
 import { V2_SHELLS } from '@/v2/registry'
 import CropEditorV2 from '@/v2/CropEditorV2.vue'
@@ -45,6 +46,7 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant) {
   const anyNode = node as any
 
   const card = el('div', 'v2-card v2-crop-card')
+  bindWheelCapture(card)
   const label = el('div', 'v2-label v2-handle', `${ICON_GRIP}${ICON_CROP}<span>${t('v2.cropTitle')}</span>`)
   const editorAnchor = el('div', 'v2-crop-host')
   editorAnchor.style.cssText = 'display:flex;flex-direction:column;flex:1;min-height:0;'

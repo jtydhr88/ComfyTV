@@ -14,6 +14,7 @@ import { createIslandGroup } from '@/v2/islands'
 import { bindNodeDrag } from '@/v2/nodeDrag'
 import { bindShellChrome } from '@/v2/shellChrome'
 import { installV2ShellCss } from '@/v2/shellCss'
+import { bindWheelCapture } from '@/v2/wheelCapture'
 import {
   ICON_GRIP,
   RUN_BUTTON_HTML,
@@ -256,6 +257,7 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant, config:
   const anyNode = node as any
 
   const card = el('div', 'v2-card')
+  bindWheelCapture(card)
   const handle = el('div', 'v2-label v2-handle',
     `${ICON_GRIP}${config.icon}<span>${t(config.titleKey)}</span>`)
   card.appendChild(handle)
@@ -265,26 +267,6 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant, config:
     (config.plain ? 'v2-fx-host v2-fx-plain' : 'v2-fx-host') + (config.hostClass ? ` ${config.hostClass}` : ''))
   embedAnchor.style.cssText = 'display:flex;flex-direction:column;flex:1;min-height:0;'
   card.appendChild(embedAnchor)
-  if (!config.plain) {
-    embedAnchor.addEventListener('pointerover', (e) => {
-      const slab = embedAnchor.querySelector('.v2-fx-embed > div > :nth-child(2)') as HTMLElement | null
-      if (!slab || slab.scrollHeight <= slab.clientHeight + 1) return
-      const inSlab = slab.contains(e.target as Node)
-      if (inSlab) {
-        if (slab.dataset.captureWheel !== 'true') {
-          slab.dataset.captureWheel = 'true'
-          slab.tabIndex = -1
-        }
-        if (!slab.contains(document.activeElement)) slab.focus({ preventScroll: true })
-      } else if (document.activeElement === slab) {
-        slab.blur()
-      }
-    })
-    embedAnchor.addEventListener('pointerleave', () => {
-      const slab = embedAnchor.querySelector('.v2-fx-embed > div > :nth-child(2)') as HTMLElement | null
-      if (slab && document.activeElement === slab) slab.blur()
-    })
-  }
 
   let promptAnchor: HTMLElement | null = null
   if (config.prompt) {
