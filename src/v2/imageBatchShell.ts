@@ -16,6 +16,7 @@ import ServerSelectV2 from '@/v2/ServerSelectV2.vue'
 import { bindNodeDrag } from '@/v2/nodeDrag'
 import { bindShellChrome } from '@/v2/shellChrome'
 import { installV2ShellCss } from '@/v2/shellCss'
+import { bindWheelCapture } from '@/v2/wheelCapture'
 import {
   I,
   ICON_GRIP,
@@ -105,6 +106,7 @@ function makeImageBatchShell(shellCfg: ImageBatchShellConfig = {}) {
     : t('v2.imageStageTitle')
 
   const card = el('div', 'v2-card')
+  bindWheelCapture(card)
   card.appendChild(buildToolbar((actionId) => {
     if (actionId === 'download') {
       const url = batchList[pickedIdx - 1]?.url

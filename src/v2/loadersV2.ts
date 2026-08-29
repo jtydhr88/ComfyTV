@@ -15,6 +15,7 @@ import AssetLoaderV2 from '@/v2/AssetLoaderV2.vue'
 import LoaderActionsV2 from '@/v2/LoaderActionsV2.vue'
 import MediaCornerV2 from '@/v2/MediaCornerV2.vue'
 import MediaPreviewV2 from '@/v2/MediaPreviewV2.vue'
+import { bindWheelCapture } from '@/v2/wheelCapture'
 import { createIslandGroup } from '@/v2/islands'
 import type { StageKind, StageState, StageVariant } from '@/stores/stageStore'
 
@@ -175,6 +176,7 @@ function makePlainLoader(cfg: PlainLoaderCfg) {
     const anyNode = node as any
 
     const card = el('div', 'v2-card')
+    bindWheelCapture(card)
     const handle = el('div', 'v2-label v2-handle',
       `${ICON_GRIP}${ICON_LOAD}<span>${nodeTitle(node)}</span>`)
     card.appendChild(handle)
@@ -311,6 +313,7 @@ function attachAssetLoader(node: ComfyNode, kind: StageKind, variant: StageVaria
   const anyNode = node as any
 
   const card = el('div', 'v2-card')
+  bindWheelCapture(card)
   const handle = el('div', 'v2-label v2-handle',
     `${ICON_GRIP}${ICON_ASSET}<span>${nodeTitle(node)}</span>`)
   card.appendChild(handle)
@@ -367,6 +370,7 @@ function attachTextLoader(node: ComfyNode, kind: StageKind, variant: StageVarian
   const anyNode = node as any
 
   const card = el('div', 'v2-card')
+  bindWheelCapture(card)
   const handle = el('div', 'v2-label v2-handle',
     `${ICON_GRIP}${ICON_TEXT}<span>${nodeTitle(node)}</span>`)
   card.appendChild(handle)
