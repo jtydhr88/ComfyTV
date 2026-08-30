@@ -23,6 +23,7 @@ from . import poster     # noqa: F401
 from . import settings   # noqa: F401
 from . import skills     # noqa: F401
 from . import canvas_state  # noqa: F401
+from . import collab     # noqa: F401
 from . import exec_errors   # noqa: F401
 from . import mcp        # noqa: F401
 from . import mcp_commands  # noqa: F401

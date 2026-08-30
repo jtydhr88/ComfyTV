@@ -264,6 +264,7 @@ class TestSettingsApi:
             "bot-enable-comfy-mcp", "bot-comfy-mcp-command",
             "bot-always-allow-runs",
             "enable-skills", "skills-disabled",
+            "enable-collab",
             "enable-eagle", "eagle-api-url", "eagle-library-path",
             "eagle-send-folder", "eagle-auto-send",
             "blender-bridge-url",

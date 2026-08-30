@@ -364,6 +364,7 @@
       "presets": "预设",
       "resources": "资源",
       "servers": "服务器",
+      "collab": "协作",
       "settings": "设置"
     }
   },
@@ -457,6 +458,10 @@
         "label": "启用 Agent Skills",
         "desc": "把已安装的技能通过 MCP(skill 工具 + prompts)提供给外部 agent 和内嵌 bot。"
       },
+      "enable-collab": {
+        "label": "启用多人协作（实验性）",
+        "desc": "实验性功能——请勿在生产环境依赖。局域网内的实时多人 presence 与共同编辑。关闭时协作代码完全不运行（无会话、无 WebSocket、无 UI）。修改后需刷新已打开的页面。"
+      },
       "enable-eagle": {
         "label": "启用 Eagle 集成",
         "desc": "把本机的 Eagle(eagle.cool)素材库接入 ComfyTV:侧边栏出现 Eagle 面板,资产可发送到 Eagle。需要 Eagle 桌面应用。"
@@ -485,6 +490,9 @@
     },
     "eagle": {
       "section": "Eagle 集成"
+    },
+    "collab": {
+      "section": "多人协作（实验性）"
     }
   },
   "servers": {
@@ -1930,6 +1938,24 @@
     "empty": "还没有条目——用书签按钮保存一个,或在侧边栏「条目」tab 里管理。",
     "searchPlaceholder": "搜索标签或内容…",
     "noMatch": "没有匹配的条目。"
+  },
+  "collab": {
+    "editName": "修改显示名",
+    "you": "我",
+    "offline": "协作连接中…",
+    "alone": "还没有其他人在线。",
+    "stale": "未更新",
+    "badgeOnline": "{count} 人在线",
+    "badgeEditing": "共同编辑 · {count}",
+    "badgeTooltip": "ComfyTV 协作——详见 ComfyTV 侧边栏",
+    "toastTitle": "ComfyTV 协作",
+    "someoneStarted": "有人开启了本项目的共同编辑，可在 ComfyTV 侧边栏加入。",
+    "start": "开启共同编辑",
+    "joinEdit": "加入共同编辑",
+    "joinEditConfirm": "加入后本标签页的画布会被替换为共享的图，未保存的本地修改会丢失。继续？",
+    "coEditing": "共同编辑",
+    "liveSession": "共同编辑进行中",
+    "emptyCanvas": "共享画布上还没有 stage。"
   },
   "menu": {
     "openEntryManager": "ComfyTV — 打开条目管理",

@@ -3,6 +3,7 @@
 @import 'tailwindcss/theme' layer(theme) prefix(ctv);
 @import 'tailwindcss/utilities' layer(utilities) source(none);
 
+@source './collab';
 @source './components';
 @source './composables';
 @source './stores';

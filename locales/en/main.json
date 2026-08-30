@@ -364,6 +364,7 @@
       "presets": "Presets",
       "resources": "Resources",
       "servers": "Servers",
+      "collab": "Collab",
       "settings": "Settings"
     }
   },
@@ -457,6 +458,10 @@
         "label": "Enable Agent Skills",
         "desc": "Serve installed skills to agents over MCP (skill tool + prompts) and to the embedded bot."
       },
+      "enable-collab": {
+        "label": "Enable collaboration (experimental)",
+        "desc": "EXPERIMENTAL — do not rely on this in production. Real-time multi-user presence and co-editing over the local network. When off, no collaboration code runs at all (no session, no websocket, no UI). Reload open pages after changing this."
+      },
       "enable-eagle": {
         "label": "Enable Eagle integration",
         "desc": "Connect the local Eagle (eagle.cool) library to ComfyTV: an Eagle panel appears in the sidebar and assets can be sent to Eagle. Requires the Eagle desktop app."
@@ -485,6 +490,9 @@
     },
     "eagle": {
       "section": "Eagle Integration"
+    },
+    "collab": {
+      "section": "Collaboration (experimental)"
     }
   },
   "servers": {
@@ -1930,6 +1938,24 @@
     "empty": "No entries yet — save one with the bookmark button, or manage them in the Entries sidebar tab.",
     "searchPlaceholder": "Search label or content…",
     "noMatch": "No entries match."
+  },
+  "collab": {
+    "editName": "Edit your display name",
+    "you": "you",
+    "offline": "Collaboration is connecting…",
+    "alone": "No one else is online.",
+    "stale": "stale",
+    "badgeOnline": "{count} online",
+    "badgeEditing": "co-editing · {count}",
+    "badgeTooltip": "ComfyTV collaboration — see the ComfyTV sidebar",
+    "toastTitle": "ComfyTV collaboration",
+    "someoneStarted": "Someone started co-editing this project. Join from the ComfyTV sidebar.",
+    "start": "start co-editing",
+    "joinEdit": "join co-editing",
+    "joinEditConfirm": "Joining will REPLACE this tab's canvas with the shared graph. Unsaved local changes will be lost. Continue?",
+    "coEditing": "co-editing",
+    "liveSession": "Co-editing in progress",
+    "emptyCanvas": "No stages on the shared canvas yet."
   },
   "menu": {
     "openEntryManager": "ComfyTV — open entry manager",
