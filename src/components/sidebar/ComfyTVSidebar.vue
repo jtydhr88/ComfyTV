@@ -45,6 +45,9 @@
     <div v-show="activeTab === 'servers'" class="ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden">
       <ServersPanel />
     </div>
+    <div v-show="activeTab === 'collab'" class="ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden">
+      <CollabPanel />
+    </div>
     <div v-show="activeTab === 'settings'" class="ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden">
       <SettingsPanel :active="activeTab === 'settings'" />
     </div>
@@ -52,8 +55,10 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onMounted, ref, type Component } from 'vue'
+import { computed, nextTick, onMounted, ref, type Component } from 'vue'
 import { useResizeObserver, useStorage } from '@vueuse/core'
+
+import { usePresenceStore } from '@/collab/presenceStore'
 
 import IconBird from '~icons/lucide/bird'
 import IconImages from '~icons/lucide/images'
@@ -61,11 +66,13 @@ import IconPackage from '~icons/lucide/package'
 import IconServer from '~icons/lucide/server'
 import IconSettings from '~icons/lucide/settings'
 import IconSlidersHorizontal from '~icons/lucide/sliders-horizontal'
+import IconUsers from '~icons/lucide/users'
 import IconStar from '~icons/lucide/star'
 import IconStickyNote from '~icons/lucide/sticky-note'
 import IconWorkflow from '~icons/lucide/workflow'
 
 import AssetsPanel from '@/components/sidebar/AssetsPanel.vue'
+import CollabPanel from '@/components/sidebar/CollabPanel.vue'
 import EaglePanel from '@/components/sidebar/EaglePanel.vue'
 import EntriesPanel from '@/components/sidebar/EntriesPanel.vue'
 import PresetsPanel from '@/components/sidebar/PresetsPanel.vue'
@@ -75,9 +82,9 @@ import SettingsPanel from '@/components/sidebar/SettingsPanel.vue'
 import WorkflowConfigSidebar from '@/components/sidebar/WorkflowConfigSidebar.vue'
 import StageParamsPanel from '@/components/sidebar/StageParamsPanel.vue'
 
-type SidebarTab = 'workflow' | 'assets' | 'eagle' | 'entries' | 'params' | 'presets' | 'resources' | 'servers' | 'settings'
+type SidebarTab = 'workflow' | 'assets' | 'eagle' | 'entries' | 'params' | 'presets' | 'resources' | 'servers' | 'collab' | 'settings'
 
-const TABS: Array<{ id: SidebarTab; labelKey: string; icon: Component }> = [
+const ALL_TABS: Array<{ id: SidebarTab; labelKey: string; icon: Component }> = [
   { id: 'workflow',  labelKey: 'sidebar.tab.workflow',  icon: IconWorkflow },
   { id: 'assets',    labelKey: 'sidebar.tab.assets',    icon: IconImages },
   { id: 'eagle',     labelKey: 'sidebar.tab.eagle',     icon: IconBird },
@@ -86,8 +93,13 @@ const TABS: Array<{ id: SidebarTab; labelKey: string; icon: Component }> = [
   { id: 'presets',   labelKey: 'sidebar.tab.presets',   icon: IconStar },
   { id: 'resources', labelKey: 'sidebar.tab.resources', icon: IconPackage },
   { id: 'servers',   labelKey: 'sidebar.tab.servers',   icon: IconServer },
+  { id: 'collab',    labelKey: 'sidebar.tab.collab',    icon: IconUsers },
   { id: 'settings',  labelKey: 'sidebar.tab.settings',  icon: IconSettings },
 ]
+
+const presence = usePresenceStore()
+const TABS = computed(() =>
+  ALL_TABS.filter((t) => t.id !== 'collab' || presence.featureEnabled))
 
 const activeTab = useStorage<SidebarTab>('comfytv:sidebar:active-tab', 'workflow')
 

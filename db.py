@@ -213,6 +213,14 @@ class ProxyMedia(Base):
     updated_at:   Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
 
 
+class CollabDoc(Base):
+    __tablename__ = "comfytv_collab_docs"
+
+    project_id: Mapped[str] = mapped_column(String, primary_key=True)
+    state:      Mapped[str] = mapped_column(Text, default="{}")
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
+
+
 class ComfyServer(Base):
     __tablename__ = "comfytv_servers"
 

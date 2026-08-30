@@ -17,9 +17,6 @@ vi.mock('@/components/stages/RelightStageCard.vue', () => ({
 vi.mock('@/components/stages/Scene3DStageCard.vue', () => ({
   default: defineComponent({ name: 'Scene3DStub', render: () => null }),
 }))
-vi.mock('@/components/ExecutionStatusBar.vue', () => ({
-  default: defineComponent({ name: 'StatusBarStub', render: () => null }),
-}))
 vi.mock('@/components/dialog/ComfyTVDialog.vue', () => ({
   default: defineComponent({ name: 'DialogStub', render: () => null }),
 }))

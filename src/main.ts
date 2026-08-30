@@ -41,6 +41,10 @@ import { applyHiddenWidgetFlags, getWidget } from '@/utils/widget'
 import { checkThemeTokens } from '@/utils/devTokenCheck'
 import { installGlobalRunBridge } from '@/utils/globalRunBridge'
 import { installCanvasMirror } from '@/composables/stages/useCanvasMirror'
+import { installCollabPresence } from '@/collab/useCollabPresence'
+import { collabTopbarBadge } from '@/collab/topbarBadge'
+import { usePresenceStore } from '@/collab/presenceStore'
+import { execTopbarBadge, installExecBadge } from '@/composables/execBadge'
 import { installMcpCommandBus } from '@/composables/stages/useMcpCommandBus'
 import '@/v2/imageBatchShell'
 import '@/v2/poolPickersV2'
@@ -203,6 +207,8 @@ function mountProjectStage(node: ComfyNode) {
 const extension: ComfyExtension = {
   name: 'ComfyTV',
 
+  topbarBadges: [execTopbarBadge, collabTopbarBadge],
+
   commands: [
     {
       id: 'ComfyTV.openEntryManager',
@@ -240,6 +246,14 @@ const extension: ComfyExtension = {
       resolveApp: () => a,
       resolveProjectId: () => useProjectStore(pinia).currentProjectId,
     })
+
+    installCollabPresence(a, {
+      resolveProjectId: () => useProjectStore(pinia).currentProjectId,
+      resolveApp: () => a,
+      resolveStageState: (node) => useStageStore(pinia).getStage(node),
+    })
+
+    installExecBadge()
 
     try {
       const ComfyButton = (window as any).comfyAPI?.button?.ComfyButton
@@ -299,6 +313,10 @@ const extension: ComfyExtension = {
       id:      'comfytv-workflow-config',
       title:   'ComfyTV',
       icon:    'pi pi-sliders-h',
+      iconBadge: () => {
+        const count = usePresenceStore(pinia).peerCount
+        return count > 0 ? String(count) : null
+      },
       tooltip: i18n.global.t('menu.configSidebarTooltip'),
       type:    'custom',
       render: (container: HTMLElement) => {

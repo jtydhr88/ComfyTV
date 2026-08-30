@@ -27,6 +27,7 @@ SETTINGS_SPEC: dict[str, dict[str, Any]] = {
     "bot-always-allow-runs": {"type": "boolean", "default": True},
     "enable-skills": {"type": "boolean", "default": True},
     "skills-disabled": {"type": "string", "default": "[]"},
+    "enable-collab": {"type": "boolean", "default": False},
     "enable-eagle": {"type": "boolean", "default": False},
     "eagle-api-url": {"type": "string", "default": "http://127.0.0.1:41595"},
     "eagle-library-path": {"type": "string", "default": ""},

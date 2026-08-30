@@ -50,7 +50,10 @@ export function useSettingsPanel(isActive: () => boolean | undefined) {
     rows.value.some((r) => values.value[r.key] !== r.value))
   const backupRows = computed(() =>
     rows.value.filter((r) =>
-      !isAgentKey(r.key) && !SKILL_KEYS.has(r.key) && !isEagleKey(r.key)))
+      !isAgentKey(r.key) && !SKILL_KEYS.has(r.key) && !isEagleKey(r.key)
+      && r.key !== 'enable-collab'))
+  const collabRows = computed(() =>
+    rows.value.filter((r) => r.key === 'enable-collab'))
   const agentRows = computed(() =>
     rows.value.filter((r) => isAgentKey(r.key)
       && (AGENT_TOGGLE_KEYS.has(r.key) || values.value['enable-bot'] === true)))
@@ -136,6 +139,7 @@ export function useSettingsPanel(isActive: () => boolean | undefined) {
     agentRows,
     skillsRows,
     eagleRows,
+    collabRows,
     botToggleLocked,
     values,
     loading,
