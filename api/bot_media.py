@@ -54,10 +54,12 @@ def _resolve_refs(raw) -> tuple[list[dict], list[str]]:
             items.append({"kind": "stage", "uid": uid, "graph_node_id": gid,
                           "title": title, "stage_class": stage_class})
             target = uid or f"graph node {gid}"
+            if stage_class:
+                target += f" ({stage_class})"
+            if title:
+                target += f' "{title}"'
             lines.append(
-                f"[Referenced stage: {target}"
-                f"{f' ({stage_class})' if stage_class else ''}"
-                f"{f' \"{title}\"' if title else ''} — inspect with get_stage, "
+                f"[Referenced stage: {target} — inspect with get_stage, "
                 f"target it with set_stage/run_stage]")
             continue
         if kind == "asset":
