@@ -16,14 +16,15 @@
         <path d="M13.5 10.5a4 4 0 00-5.7 0l-3.3 3.3a4 4 0 105.7 5.7l1.6-1.6" />
       </svg>
     </button>
-    <div v-if="has('aspect_ratio')" class="v2-fsel__item">
-      <ComfyTVSelect :model-value="sv('aspect_ratio')" :options="optionsOf('aspect_ratio')" :filterable="false" @update:model-value="v => writeVal('aspect_ratio', v)" />
-    </div>
-    <div v-if="has('resolution')" class="v2-fsel__item">
-      <ComfyTVSelect :model-value="sv('resolution')" :options="optionsOf('resolution')" :filterable="false" @update:model-value="v => writeVal('resolution', v)" />
-    </div>
-    <div v-if="has('batch_size')" class="v2-fsel__item">
-      <ComfyTVSelect :model-value="sv('batch_size') || '1'" :options="batchOptions" :filterable="false" @update:model-value="v => writeVal('batch_size', v)" />
+    <div v-if="has('aspect_ratio') || has('resolution') || has('batch_size')" class="v2-fsel__item">
+      <GenOptionsV2
+        :ratio="has('aspect_ratio') ? sv('aspect_ratio') : null"
+        :ratio-options="optionsOf('aspect_ratio')"
+        :resolution="has('resolution') ? sv('resolution') : null"
+        :resolution-options="optionsOf('resolution')"
+        :batch="has('batch_size') ? (sv('batch_size') || '1') : null"
+        @update="(name, v) => writeVal(name, v)"
+      />
     </div>
     <template v-for="x in extra ?? []" :key="x.name">
       <div v-if="has(x.name) && (x.type ?? 'combo') === 'combo'" class="v2-fsel__item">
@@ -56,6 +57,7 @@ export interface FooterExtra {
 import { useI18n } from 'vue-i18n'
 
 import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
+import GenOptionsV2 from '@/v2/GenOptionsV2.vue'
 import { openLinkWorkflow } from '@/composables/stages/openLinkWorkflow'
 import { comboOptionsVersion } from '@/composables/stages/workflowCombo'
 import type { LGraphNode } from '@/lib/comfyApp'
@@ -95,11 +97,6 @@ function has(name: string): boolean {
 }
 
 const { t } = useI18n()
-
-const batchOptions = Array.from({ length: 8 }, (_, i) => ({
-  value: String(i + 1),
-  label: t('v2.batchCount', { n: i + 1 }),
-}))
 
 function isNumberWidget(name: string): boolean {
   const type = String(widgetOf(name)?.type ?? '')

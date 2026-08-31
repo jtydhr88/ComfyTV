@@ -5,6 +5,11 @@
     "close": "Close"
   },
   "v2": {
+    "genopt": {
+      "resolution": "Resolution",
+      "ratio": "Aspect ratio",
+      "count": "Count"
+    },
     "panelCollapse": "Collapse the panel — keeps a one-line summary and Run",
     "panelExpand": "Expand the panel",
     "imageStageTitle": "Image · ImageStage",
