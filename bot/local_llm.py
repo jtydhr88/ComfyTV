@@ -60,6 +60,18 @@ _SYSTEM_PROMPT = (
 )
 
 
+def _user_content(text: str, attachments: Optional[list[dict]]):
+    images = [
+        {"type": "image_url",
+         "image_url": {"url": f"data:{a.get('media_type') or 'image/jpeg'}"
+                              f";base64,{a['data']}"}}
+        for a in attachments or [] if a.get("data")
+    ]
+    if not images:
+        return text
+    return [{"type": "text", "text": text}, *images]
+
+
 class LocalLlmProvider(AgentProvider):
     id = "local-llm"
     label = "Local LLM"
@@ -71,7 +83,7 @@ class LocalLlmProvider(AgentProvider):
         self._probe_cache: Optional[tuple[float, ProviderStatus]] = None
 
     def capabilities(self) -> ProviderCaps:
-        return ProviderCaps(stateful=False, tools="mcp", attachments=False)
+        return ProviderCaps(stateful=False, tools="mcp", attachments=True)
 
     def _base_url(self) -> str:
         if self._base_url_override is not None:
@@ -333,7 +345,9 @@ class LocalLlmProvider(AgentProvider):
                 messages: list[dict] = [
                     {"role": "system", "content": _SYSTEM_PROMPT},
                     *self._history_messages(turn.history),
-                    {"role": "user", "content": turn.user_text},
+                    {"role": "user",
+                     "content": _user_content(turn.user_text,
+                                              turn.attachments)},
                 ]
 
                 usage: Optional[dict] = None

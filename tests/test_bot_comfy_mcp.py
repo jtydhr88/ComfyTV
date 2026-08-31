@@ -49,6 +49,15 @@ class TestAllowlists:
                      "workflow_edit", "stage_params"):
             assert tool in CORE_MCP_TOOLS
 
+    def test_core_tools_cover_every_registered_mcp_tool(self):
+        from ComfyTV.api.mcp_tools import TOOLS
+        missing = sorted(set(TOOLS) - set(CORE_MCP_TOOLS))
+        assert not missing, (
+            f"new MCP tools invisible to Qwen/Local LLM bots: {missing} — "
+            "add them to CORE_MCP_TOOLS")
+        stale = sorted(set(CORE_MCP_TOOLS) - set(TOOLS))
+        assert not stale, f"CORE_MCP_TOOLS lists unregistered tools: {stale}"
+
 
 class TestBotWiring:
     def test_disabled_by_default(self, reset_db):

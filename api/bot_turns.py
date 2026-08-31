@@ -86,8 +86,16 @@ def _blocks_text(content: str) -> str:
         return ""
     if not isinstance(blocks, list):
         return ""
-    parts = [str(b.get("text") or "") for b in blocks
-             if isinstance(b, dict) and b.get("type") == "text"]
+    parts = []
+    for b in blocks:
+        if not isinstance(b, dict):
+            continue
+        kind = b.get("type")
+        if kind == "text":
+            parts.append(str(b.get("text") or ""))
+        elif kind in ("image", "video", "audio"):
+            parts.append(f"[attached {kind}: asset #{b.get('asset_id')} "
+                         f"{str(b.get('url') or '')}]")
     return "\n".join(p for p in parts if p.strip()).strip()
 
 

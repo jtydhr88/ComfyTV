@@ -74,9 +74,8 @@ class TestProjectSettings:
         assert set(data["excludeTools"]) == set(_EXCLUDED_CORE_TOOLS)
         include = server["includeTools"]
         for name in ("get_canvas", "add_stage", "run_stage", "wait_stage",
-                     "view_image"):
+                     "view_image", "scene_edit", "asset_edit"):
             assert name in include
-        assert "scene_edit" not in include
         assert data["contentGenerator"]["timeout"] == 180_000
 
     def test_preserves_user_content_generator_timeout(self, tmp_path):

@@ -271,3 +271,22 @@ class TestSendWithSkill:
         resp = await client.post(f"/comfytv/bot/chats/{chat['id']}/send",
                                  json={"text": "x", "skill": "off-skill"})
         assert resp.status == 400
+
+
+class TestReplayBlocksText:
+    def test_media_blocks_become_text_lines(self):
+        from ComfyTV.api.bot_turns import _blocks_text
+        content = json.dumps([
+            {"type": "image", "url": "/view?filename=a.png", "asset_id": 7},
+            {"type": "text", "text": "what is this?"},
+        ])
+        assert _blocks_text(content) == (
+            "[attached image: asset #7 /view?filename=a.png]\nwhat is this?")
+
+    def test_tool_blocks_still_ignored(self):
+        from ComfyTV.api.bot_turns import _blocks_text
+        content = json.dumps([
+            {"type": "tool_use", "name": "assets", "input": {}},
+            {"type": "text", "text": "done"},
+        ])
+        assert _blocks_text(content) == "done"

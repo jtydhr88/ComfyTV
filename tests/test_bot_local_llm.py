@@ -5,7 +5,7 @@ import json
 import pytest
 
 from ComfyTV.bot._cli_common import CORE_MCP_TOOLS
-from ComfyTV.bot.local_llm import LocalLlmProvider
+from ComfyTV.bot.local_llm import LocalLlmProvider, _user_content
 from ComfyTV.bot.providers import BotEvent, TurnHandle, TurnRequest
 
 
@@ -27,13 +27,28 @@ class TestConfig:
     def test_stateless_caps(self):
         caps = LocalLlmProvider(base_url="http://x/v1").capabilities()
         assert caps.stateful is False
-        assert caps.attachments is False
+        assert caps.attachments is True
 
     def test_api_key_from_env_only(self, monkeypatch):
         provider = LocalLlmProvider(base_url="http://x/v1")
         assert "Authorization" not in provider._api_headers()
         monkeypatch.setenv("COMFYTV_LOCAL_LLM_API_KEY", "local")
         assert provider._api_headers()["Authorization"] == "Bearer local"
+
+
+class TestUserContent:
+    def test_plain_string_without_attachments(self):
+        assert _user_content("hi", None) == "hi"
+        assert _user_content("hi", [{"media_type": "image/jpeg"}]) == "hi"
+
+    def test_multimodal_parts_with_attachments(self):
+        content = _user_content("what is this?", [
+            {"data": "QUJD", "media_type": "image/jpeg"},
+            {"data": "REVG"},
+        ])
+        assert content[0] == {"type": "text", "text": "what is this?"}
+        assert content[1]["image_url"]["url"] == "data:image/jpeg;base64,QUJD"
+        assert content[2]["image_url"]["url"] == "data:image/jpeg;base64,REVG"
 
 
 class TestHistory:
@@ -80,13 +95,13 @@ class TestToolPlumbing:
                                json_body=None, timeout=120):
             return {"result": {"tools": [
                 {"name": "get_canvas"}, {"name": "scene_edit"},
-                {"name": "wait_stage"}, {"name": "workflow_edit"},
+                {"name": "not_a_registered_tool"}, {"name": "workflow_edit"},
             ]}}
 
         monkeypatch.setattr(provider, "_request_json", fake_request)
         tools = await provider._mcp_list_tools(None, "http://x/mcp")
         assert [t["name"] for t in tools] == [
-            "get_canvas", "wait_stage", "workflow_edit"]
+            "get_canvas", "scene_edit", "workflow_edit"]
         assert all(t["name"] in CORE_MCP_TOOLS for t in tools)
 
 
