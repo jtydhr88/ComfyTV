@@ -143,8 +143,7 @@ class TestCodexArgv:
         assert "--json" in argv
         assert "--skip-git-repo-check" in argv
         assert "--approve-for-me" in argv
-        assert "--sandbox" in argv
-        assert argv[argv.index("--sandbox") + 1] == "workspace-write"
+        assert "--sandbox" not in argv
         assert 'mcp_servers.comfytv.url="http://127.0.0.1:8188/comfytv/mcp"' in argv
         assert "mcp_servers.comfytv.tool_timeout_sec=600" in argv
         assert "features.shell_tool=false" in argv
