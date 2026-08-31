@@ -391,8 +391,6 @@ class CodexCodeProvider(AgentProvider):
         flags += ["-c", 'approvals_reviewer="auto_review"']
         if turn.model:
             flags += ["-m", turn.model]
-        if not turn.resume_token:
-            flags += ["--sandbox", "workspace-write"]
 
         temp_files: list[str] = []
         for i, att in enumerate(turn.attachments):
