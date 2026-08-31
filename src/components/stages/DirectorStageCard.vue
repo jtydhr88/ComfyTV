@@ -352,7 +352,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, watchEffect } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import AssetPickerPopup from '@/components/stages/AssetPickerPopup.vue'
@@ -427,13 +427,24 @@ watch(() => props.state.directorClips, () => {
   }
 })
 
-function onDirectorRun() {
+function maybeRerollForRepeat() {
   if (!props.state.running
       && lastSuccessFingerprint
       && !props.state.error
       && runFingerprint() === lastSuccessFingerprint) {
     rerollAllSeeds()
   }
+}
+
+let unregisterPreRun: (() => void) | null = null
+onMounted(() => {
+  unregisterPreRun =
+    (props.node as any).__comfytvStageApi?.registerPreRun?.(maybeRerollForRepeat) ?? null
+})
+onUnmounted(() => { unregisterPreRun?.() })
+
+function onDirectorRun() {
+  if (!unregisterPreRun) maybeRerollForRepeat()
   props.onRunRequest()
 }
 

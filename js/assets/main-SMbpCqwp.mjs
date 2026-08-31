@@ -58387,7 +58387,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-Ck0dMysn.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-BG8EvSse.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -141342,7 +141342,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-CZjKYs50.mjs");
+    const { STLLoader } = await import("./STLLoader-BLOlBfA7.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -141350,7 +141350,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-DVt8u59R.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-idREvyrJ.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -142388,9 +142388,20 @@ const _sfc_main$2Z = /* @__PURE__ */ defineComponent({
       onDownloadResult
     } = useLineArt(props.node, props.state);
     const previewEl = /* @__PURE__ */ ref(null);
-    function onRun() {
+    function writeCameraNow() {
       var _a3;
       writeCamera(((_a3 = previewEl.value) == null ? void 0 : _a3.cameraState()) ?? null);
+    }
+    let unregisterPreRun = null;
+    onMounted(() => {
+      var _a3, _b2;
+      unregisterPreRun = ((_b2 = (_a3 = props.node.__comfytvStageApi) == null ? void 0 : _a3.registerPreRun) == null ? void 0 : _b2.call(_a3, writeCameraNow)) ?? null;
+    });
+    onUnmounted(() => {
+      unregisterPreRun == null ? void 0 : unregisterPreRun();
+    });
+    function onRun() {
+      if (!unregisterPreRun) writeCameraNow();
       props.onRunRequest();
     }
     function chipClass2(active) {
@@ -146224,10 +146235,21 @@ const _sfc_main$2R = /* @__PURE__ */ defineComponent({
         lastSuccessFingerprint = runFingerprint();
       }
     });
-    function onDirectorRun() {
+    function maybeRerollForRepeat() {
       if (!props.state.running && lastSuccessFingerprint && !props.state.error && runFingerprint() === lastSuccessFingerprint) {
         rerollAllSeeds();
       }
+    }
+    let unregisterPreRun = null;
+    onMounted(() => {
+      var _a3, _b2;
+      unregisterPreRun = ((_b2 = (_a3 = props.node.__comfytvStageApi) == null ? void 0 : _a3.registerPreRun) == null ? void 0 : _b2.call(_a3, maybeRerollForRepeat)) ?? null;
+    });
+    onUnmounted(() => {
+      unregisterPreRun == null ? void 0 : unregisterPreRun();
+    });
+    function onDirectorRun() {
+      if (!unregisterPreRun) maybeRerollForRepeat();
       props.onRunRequest();
     }
     const {
@@ -146920,7 +146942,7 @@ const _sfc_main$2R = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const DirectorStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$2R, [["__scopeId", "data-v-b9a39d0e"]]);
+const DirectorStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$2R, [["__scopeId", "data-v-8878db3c"]]);
 function useChainCallback(originalCallback, ...callbacks) {
   return function(...args) {
     if (typeof originalCallback === "function") {
@@ -229763,4 +229785,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-DpDj_L0U.mjs.map
+//# sourceMappingURL=main-SMbpCqwp.mjs.map

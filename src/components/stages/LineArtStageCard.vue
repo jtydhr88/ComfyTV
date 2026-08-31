@@ -114,7 +114,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 import IconPenTool from '~icons/lucide/pen-tool'
 
@@ -149,8 +149,19 @@ const {
 
 const previewEl = ref<InstanceType<typeof ModelPreview> | null>(null)
 
-function onRun(): void {
+function writeCameraNow(): void {
   writeCamera(previewEl.value?.cameraState() ?? null)
+}
+
+let unregisterPreRun: (() => void) | null = null
+onMounted(() => {
+  unregisterPreRun =
+    (props.node as any).__comfytvStageApi?.registerPreRun?.(writeCameraNow) ?? null
+})
+onUnmounted(() => { unregisterPreRun?.() })
+
+function onRun(): void {
+  if (!unregisterPreRun) writeCameraNow()
   props.onRunRequest()
 }
 
