@@ -88,14 +88,18 @@ import {
 
 interface Option { value: string; label: string }
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   modelValue: string | number | null
   options:    Array<string | Option>
   disabled?:  boolean
   filterable?: boolean
   filterPlaceholder?: string
   placeholder?: string
-}>()
+}>(), {
+  filterable: undefined,
+  filterPlaceholder: undefined,
+  placeholder: undefined,
+})
 const emit = defineEmits<{ 'update:modelValue': [v: string | number] }>()
 
 const isOpen = ref(false)
