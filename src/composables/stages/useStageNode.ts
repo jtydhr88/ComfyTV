@@ -82,6 +82,7 @@ export interface UseStageNodeResult {
   onCancelRequest: () => Promise<void>
   onDisconnect: (slotName: string) => void
   onAction: (actionId: string, context?: ImagePickContext) => void
+  registerPreRun: (fn: () => unknown) => () => void
 }
 
 function inputFileUrl(value: string): string {
@@ -306,6 +307,15 @@ export function useStageNode(
       )
     : null
 
+  const preRunHooks: Array<() => unknown> = []
+  const registerPreRun = (fn: () => unknown) => {
+    preRunHooks.push(fn)
+    return () => {
+      const i = preRunHooks.indexOf(fn)
+      if (i >= 0) preRunHooks.splice(i, 1)
+    }
+  }
+
   const onRunRequest = async () => {
     if (state.running) return
     if (variant === 'loader') return
@@ -317,6 +327,13 @@ export function useStageNode(
         life: 3000,
       })
       return
+    }
+    for (const fn of [...preRunHooks]) {
+      try {
+        await fn()
+      } catch (e) {
+        console.warn('[ComfyTV] pre-run hook failed, running anyway:', e)
+      }
     }
     refresh()
 
@@ -876,5 +893,5 @@ export function useStageNode(
     store.unregisterStage(node)
   })
 
-  return { state, onRunRequest, onCancelRequest, onDisconnect, onAction }
+  return { state, onRunRequest, onCancelRequest, onDisconnect, onAction, registerPreRun }
 }

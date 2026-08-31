@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
@@ -38,12 +38,23 @@ const painterRef = ref<InstanceType<typeof PainterCanvas> | null>(null)
 
 const sourceImageUrl = computed(() => pickSourceImageUrl(props.state.inputs))
 
-async function onRunWithMaskCommit() {
+async function commit() {
   try {
     await painterRef.value?.commitMask()
   } catch (e) {
     console.warn('[ComfyTV/painter] commitMask failed, running anyway:', e)
   }
+}
+
+let unregisterPreRun: (() => void) | null = null
+onMounted(() => {
+  unregisterPreRun =
+    (props.node as any).__comfytvStageApi?.registerPreRun?.(commit) ?? null
+})
+onUnmounted(() => { unregisterPreRun?.() })
+
+async function onRunWithMaskCommit() {
+  if (!unregisterPreRun) await commit()
   props.onRunRequest()
 }
 </script>

@@ -140,8 +140,8 @@ function mountStage(node: ComfyNode, kind: StageKind, variant: StageVariant = 'g
 
   installTextPreviewCap(node)
 
-  const { state, onRunRequest, onCancelRequest, onDisconnect, onAction } = useStageNode(node, kind, variant)
-  ;(node as any).__comfytvStageApi = { state, onRunRequest, onCancelRequest }
+  const { state, onRunRequest, onCancelRequest, onDisconnect, onAction, registerPreRun } = useStageNode(node, kind, variant)
+  ;(node as any).__comfytvStageApi = { state, onRunRequest, onCancelRequest, registerPreRun }
 
   const Card = RICH_STAGE_CARDS[node.comfyClass] ?? StageCard
   const props: any = {
@@ -394,11 +394,11 @@ const extension: ComfyExtension = {
     if (isV2Enabled()) {
       const shell = V2_SHELLS[node.comfyClass]
       if (shell) {
-        const { state, onRunRequest, onCancelRequest } =
+        const { state, onRunRequest, onCancelRequest, registerPreRun } =
           shell(node, entry.kind, (entry.variant ?? 'generator') as StageVariant)
         Object.assign(
           ((node as any).__comfytvStageApi ??= {}),
-          { state, onRunRequest, onCancelRequest },
+          { state, onRunRequest, onCancelRequest, registerPreRun },
         )
         node.onRemoved = useChainCallback(node.onRemoved, () => {
           delete (node as any).__comfytvStageApi

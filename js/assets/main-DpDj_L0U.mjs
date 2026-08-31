@@ -58387,7 +58387,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-8aRvyY9d.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-Ck0dMysn.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -126317,13 +126317,24 @@ const _sfc_main$3w = /* @__PURE__ */ defineComponent({
     const props = __props;
     const painterRef = /* @__PURE__ */ ref(null);
     const sourceImageUrl = computed(() => pickSourceImageUrl(props.state.inputs));
-    async function onRunWithMaskCommit() {
+    async function commit() {
       var _a3;
       try {
         await ((_a3 = painterRef.value) == null ? void 0 : _a3.commitMask());
       } catch (e) {
         console.warn("[ComfyTV/painter] commitMask failed, running anyway:", e);
       }
+    }
+    let unregisterPreRun = null;
+    onMounted(() => {
+      var _a3, _b2;
+      unregisterPreRun = ((_b2 = (_a3 = props.node.__comfytvStageApi) == null ? void 0 : _a3.registerPreRun) == null ? void 0 : _b2.call(_a3, commit)) ?? null;
+    });
+    onUnmounted(() => {
+      unregisterPreRun == null ? void 0 : unregisterPreRun();
+    });
+    async function onRunWithMaskCommit() {
+      if (!unregisterPreRun) await commit();
       props.onRunRequest();
     }
     return (_ctx, _cache2) => {
@@ -141331,7 +141342,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-Bxag0yqe.mjs");
+    const { STLLoader } = await import("./STLLoader-CZjKYs50.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -141339,7 +141350,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-k7oS-arN.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-DVt8u59R.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -220054,6 +220065,14 @@ function useStageNode(node, kind, variant = "generator") {
     },
     { immediate: true }
   ) : null;
+  const preRunHooks = [];
+  const registerPreRun = (fn3) => {
+    preRunHooks.push(fn3);
+    return () => {
+      const i = preRunHooks.indexOf(fn3);
+      if (i >= 0) preRunHooks.splice(i, 1);
+    };
+  };
   const onRunRequest = async () => {
     var _a4, _b3, _c3, _d3, _e3, _f3, _g2, _h2, _i2, _j2, _k, _l, _m2, _n2, _o, _p, _q, _r2, _s, _t2, _u, _v4, _w, _x2, _y2, _z2, _A, _B, _C, _D, _E, _F, _G, _H, _I, _J, _K, _L, _M;
     if (state2.running) return;
@@ -220066,6 +220085,13 @@ function useStageNode(node, kind, variant = "generator") {
         life: 3e3
       });
       return;
+    }
+    for (const fn3 of [...preRunHooks]) {
+      try {
+        await fn3();
+      } catch (e) {
+        console.warn("[ComfyTV] pre-run hook failed, running anyway:", e);
+      }
     }
     refresh();
     const tokenWidget = (_d3 = node.widgets) == null ? void 0 : _d3.find((w2) => w2.name === "force_run_token");
@@ -220572,7 +220598,7 @@ function useStageNode(node, kind, variant = "generator") {
     releaseStageUid(node);
     store2.unregisterStage(node);
   });
-  return { state: state2, onRunRequest, onCancelRequest, onDisconnect, onAction };
+  return { state: state2, onRunRequest, onCancelRequest, onDisconnect, onAction, registerPreRun };
 }
 const _sfc_main$l = {};
 const _hoisted_1$j = { class: "ctv:flex ctv:flex-col ctv:items-center ctv:gap-2 ctv:py-8 ctv:px-4 ctv:text-center" };
@@ -229388,8 +229414,8 @@ function mountStage(node, kind, variant = "generator") {
     serialize: false
   });
   installTextPreviewCap(node);
-  const { state: state2, onRunRequest, onCancelRequest, onDisconnect, onAction } = useStageNode(node, kind, variant);
-  node.__comfytvStageApi = { state: state2, onRunRequest, onCancelRequest };
+  const { state: state2, onRunRequest, onCancelRequest, onDisconnect, onAction, registerPreRun } = useStageNode(node, kind, variant);
+  node.__comfytvStageApi = { state: state2, onRunRequest, onCancelRequest, registerPreRun };
   const Card = RICH_STAGE_CARDS[node.comfyClass] ?? StageCard;
   const props = {
     state: state2,
@@ -229631,10 +229657,10 @@ const extension = {
     if (isV2Enabled()) {
       const shell = V2_SHELLS[node.comfyClass];
       if (shell) {
-        const { state: state2, onRunRequest, onCancelRequest } = shell(node, entry.kind, entry.variant ?? "generator");
+        const { state: state2, onRunRequest, onCancelRequest, registerPreRun } = shell(node, entry.kind, entry.variant ?? "generator");
         Object.assign(
           node.__comfytvStageApi ?? (node.__comfytvStageApi = {}),
-          { state: state2, onRunRequest, onCancelRequest }
+          { state: state2, onRunRequest, onCancelRequest, registerPreRun }
         );
         node.onRemoved = useChainCallback(node.onRemoved, () => {
           delete node.__comfytvStageApi;
@@ -229737,4 +229763,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-DSVcas00.mjs.map
+//# sourceMappingURL=main-DpDj_L0U.mjs.map
