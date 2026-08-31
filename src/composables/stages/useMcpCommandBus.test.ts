@@ -483,6 +483,7 @@ describe('installMcpCommandBus', () => {
         { name: 'main_prompt', value: 'use @image_2' },
         { name: 'duration_s', value: 4 },
         { name: 'long', value: 'y'.repeat(5000) },
+        { name: 'huge', value: 'z'.repeat(20000) },
         { name: 'fn', value: () => {} },
       ],
       inputs: [{ name: 'images.image0', type: 'COMFYTV_IMAGE', link: 11 }],
@@ -501,7 +502,9 @@ describe('installMcpCommandBus', () => {
     expect(result.ok).toBe(true)
     const detail = result.result
     expect(detail.widgets.duration_s).toBe(4)
-    expect(detail.widgets.long.length).toBe(4001)
+    expect(detail.widgets.long).toBe('y'.repeat(5000))
+    expect(detail.widgets.huge.startsWith('z'.repeat(16000))).toBe(true)
+    expect(detail.widgets.huge).toContain('[display truncated — full 20000-char value is stored intact]')
     expect(detail.widgets.fn).toBeUndefined()
     expect(detail.inputs[0]).toEqual({
       name: 'images.image0', type: 'COMFYTV_IMAGE',

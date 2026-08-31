@@ -356,7 +356,7 @@ async function handleCancelStage(app: any, cmd: any): Promise<CommandResult> {
   return { cancelled: true, graph_node_id: String(node.id), uid: getStageUid(node) }
 }
 
-const _WIDGET_VALUE_CAP = 4000
+const _WIDGET_VALUE_CAP = 16000
 
 function handleGetStage(app: any, cmd: any): CommandResult {
   const node = findStageNode(app?.graph, String(cmd.node))
@@ -370,7 +370,8 @@ function handleGetStage(app: any, cmd: any): CommandResult {
     let v = (w as any).value
     if (typeof v === 'function' || v === undefined) continue
     if (typeof v === 'string' && v.length > _WIDGET_VALUE_CAP) {
-      v = v.slice(0, _WIDGET_VALUE_CAP) + '…'
+      v = v.slice(0, _WIDGET_VALUE_CAP)
+        + ` … [display truncated — full ${v.length}-char value is stored intact]`
     }
     widgets[name] = v
   }

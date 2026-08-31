@@ -22,6 +22,7 @@ export function bindPromptResize(node: ComfyNode, promptAnchor: HTMLElement, sco
     let last = -1
     useResizeObserver(promptAnchor, (entries) => {
       const h = entries[0]?.contentRect.height ?? 0
+      if (h <= 0) return
       if (last >= 0) {
         const delta = h - last
         if (Math.abs(delta) > 1) {

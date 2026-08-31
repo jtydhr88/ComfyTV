@@ -368,6 +368,35 @@ describe('V2 shell smoke', () => {
     /templateDefs\.filter|templates\.value\.map/,
   ]
 
+  it('panel collapse bar toggles, keeps Run, shows the info line, persists', () => {
+    const node = makeNode('ComfyTV.VideoStage')
+    node.widgets.find((w: any) => w.name === 'workflow').value = 'Wan 2.2'
+    node.widgets.find((w: any) => w.name === 'main_prompt').value = 'a cat\nby the sea'
+    V2_SHELLS['ComfyTV.VideoStage'](node as any, 'video', 'generator')
+
+    const card = node.widgets.find((w: any) => w.name === 'v2_shell').element as HTMLElement
+    const panel = card.querySelector('.v2-panel') as HTMLElement
+    const bar = panel.querySelector('.v2-collapse') as HTMLElement
+    const run = card.querySelector('.v2-run') as HTMLElement
+    const info = bar.querySelector('.v2-collapse__info') as HTMLElement
+    expect(bar).toBeTruthy()
+    expect(panel.hasAttribute('data-v2-collapsed')).toBe(false)
+    expect(bar.contains(run)).toBe(false)
+
+    bar.click()
+    expect(panel.hasAttribute('data-v2-collapsed')).toBe(true)
+    expect(node.properties.v2_panel_collapsed).toBe(true)
+    expect(bar.contains(run)).toBe(true)
+    expect(info.textContent).toBe('Wan 2.2 · a cat by the sea')
+
+    bar.click()
+    expect(panel.hasAttribute('data-v2-collapsed')).toBe(false)
+    expect(node.properties.v2_panel_collapsed).toBe(false)
+    expect(bar.contains(run)).toBe(false)
+    expect(panel.querySelector('.v2-panel__footer')!.contains(run)).toBe(true)
+    node.onRemoved?.()
+  })
+
   for (const [cls, attach] of shellEntries) {
     it(`attaches and renders islands for ${cls}`, async () => {
       const meta = SHELL_META[cls]

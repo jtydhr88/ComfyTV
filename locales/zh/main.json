@@ -5,6 +5,8 @@
     "close": "关闭"
   },
   "v2": {
+    "panelCollapse": "收起面板——只保留一行信息和运行按钮",
+    "panelExpand": "展开面板",
     "imageStageTitle": "图片节点 · ImageStage",
     "pickerTitle": "图片选择 · Picker",
     "cropTitle": "裁剪 · 编辑",
@@ -254,7 +256,10 @@
       "clearHint": "清空图片池并重置选择",
       "confirmClear": "确认清空？",
       "confirm": "是",
-      "cancel": "否"
+      "cancel": "否",
+      "modeAppend": "追加",
+      "modeReplace": "覆盖",
+      "modeHint": "新结果进池方式。追加:保留已有并把新结果放到最前;覆盖:每次运行只保留最新一批。"
     },
     "empty": {
       "no_output": "暂无输出",
@@ -1924,6 +1929,10 @@
     "addKind": "+ 添加{kind}",
     "promptHelp": "提示词资产插入时会直接展开进提示词(文本+槽位标签),不以 {'@'} 标记形式存在。内容可引用槽位({'@'}image_N / {'@'}video_N / {'@'}audio_N),不允许引用其他条目。",
     "promptRefsError": "提示词资产不能引用其他条目——请移除:{tokens}"
+  },
+  "promptUpstream": {
+    "connected": "已接入 {n} 段上游文本,运行时将拼接在提示词之后",
+    "pending": "(上游尚未运行)"
   },
   "promptSave": {
     "open": "把当前提示词保存为可复用资产(条目 → Prompts)",

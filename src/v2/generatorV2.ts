@@ -9,6 +9,7 @@ import CustomParamsV2 from '@/v2/CustomParamsV2.vue'
 import FooterSelectsV2, { type FooterExtra } from '@/v2/FooterSelectsV2.vue'
 import { createIslandGroup } from '@/v2/islands'
 import { bindNodeDrag } from '@/v2/nodeDrag'
+import { bindPanelCollapse, stageInfoLine } from '@/v2/panelCollapse'
 import { bindShellChrome } from '@/v2/shellChrome'
 import {
   bindProgressRing,
@@ -184,6 +185,10 @@ function makeGeneratorShell(config: GeneratorConfig) {
     bindNodeDrag(node, preview)
     bindShellChrome(node, { scope, card, socketAnchor: preview, state: stageState })
     bindPromptResize(node, promptAnchor, scope)
+    bindPanelCollapse(node, {
+      scope, panel, footer, run,
+      info: () => stageInfoLine(node, stageState),
+    })
 
     const prevRemoved = anyNode.onRemoved
     anyNode.onRemoved = function (...args: unknown[]) {

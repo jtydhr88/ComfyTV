@@ -12,8 +12,8 @@ import {
   useStageStore,
   computePickedImageUrl,
   computePickedFromBatch,
-  mergeImagePool,
   imagePoolCount,
+  nextPickerPool,
   toImagePoolJson,
   removeImageFromPool,
   isPoolPickerKind,
@@ -283,12 +283,14 @@ export function useStageNode(
 
           if (inp && inp.source === 'upstream' && inp.content && inp.content !== lastMergedBatch) {
             lastMergedBatch = inp.content
+            const appendW = node.widgets?.find((w: any) => w.name === 'append_results')
+            const append = !appendW || appendW.value !== false
             const before = imagePoolCount(state.pool)
-            const merged = mergeImagePool(state.pool, toImagePoolJson(inp.content))
+            const merged = nextPickerPool(state.pool, toImagePoolJson(inp.content), append)
             store.setPickerPool(node, state, merged)
             const added = imagePoolCount(merged) - before
 
-            if (added > 0) {
+            if (!append || added > 0) {
               state.pickedIndex = 1
               setWidget(node, 'selected_index', 1)
             }

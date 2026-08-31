@@ -5,6 +5,8 @@
     "close": "Close"
   },
   "v2": {
+    "panelCollapse": "Collapse the panel — keeps a one-line summary and Run",
+    "panelExpand": "Expand the panel",
     "imageStageTitle": "Image · ImageStage",
     "pickerTitle": "Pick · Image Picker",
     "cropTitle": "Crop · Edit",
@@ -254,7 +256,10 @@
       "clearHint": "Empty the picker pool and reset the selection",
       "confirmClear": "Clear pool?",
       "confirm": "Yes",
-      "cancel": "No"
+      "cancel": "No",
+      "modeAppend": "Append",
+      "modeReplace": "Replace",
+      "modeHint": "How new run results enter the pool. Append: keep existing items and add new ones on top. Replace: keep only the latest batch."
     },
     "empty": {
       "no_output": "no output yet",
@@ -1924,6 +1929,10 @@
     "addKind": "+ Add {kind}",
     "promptHelp": "Prompt assets are inserted EXPANDED into the prompt (text + slot chips), not as a tag. They may reference slots ({'@'}image_N / {'@'}video_N / {'@'}audio_N) but no other entries.",
     "promptRefsError": "Prompt assets can't reference other entries — remove: {tokens}"
+  },
+  "promptUpstream": {
+    "connected": "{n} connected text input(s) will be appended to this prompt at run",
+    "pending": "(upstream not run yet)"
   },
   "promptSave": {
     "open": "Save this prompt as a reusable asset (Entries → Prompts)",

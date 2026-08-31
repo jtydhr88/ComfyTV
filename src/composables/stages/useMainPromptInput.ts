@@ -128,6 +128,12 @@ export function entryTooltipText(
   }, entries, t)
 }
 
+export function upstreamTextInputs<T extends { slot: string; source: string }>(
+  inputs: T[] | undefined,
+): T[] {
+  return (inputs ?? []).filter(i => i.slot.startsWith('texts.') && i.source !== 'empty')
+}
+
 export interface PromptEditorCoreOpts {
   initialText: string
   placeholder: () => string

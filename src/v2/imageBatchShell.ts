@@ -14,6 +14,7 @@ import ParamsPanelV2 from '@/v2/ParamsPanelV2.vue'
 import RefChipsV2 from '@/v2/RefChipsV2.vue'
 import ServerSelectV2 from '@/v2/ServerSelectV2.vue'
 import { bindNodeDrag } from '@/v2/nodeDrag'
+import { bindPanelCollapse, stageInfoLine } from '@/v2/panelCollapse'
 import { bindShellChrome } from '@/v2/shellChrome'
 import { installV2ShellCss } from '@/v2/shellCss'
 import { bindWheelCapture } from '@/v2/wheelCapture'
@@ -344,6 +345,10 @@ function makeImageBatchShell(shellCfg: ImageBatchShellConfig = {}) {
 
   bindShellChrome(node, { scope, card, socketAnchor: preview, state: stageState })
   bindPromptResize(node, promptAnchor, scope)
+  bindPanelCollapse(node, {
+    scope, panel, footer, run,
+    info: () => stageInfoLine(node, stageState),
+  })
 
   const prevRemoved = anyNode.onRemoved
   anyNode.onRemoved = function (...args: unknown[]) {

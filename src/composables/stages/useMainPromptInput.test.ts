@@ -41,7 +41,7 @@ vi.mock('@/stores/assetStore', () => ({
 
 import { Fragment, Schema, Slice } from '@tiptap/pm/model'
 
-import { chipifyFragment, entryTooltipText, textToContent, useMainPromptInput } from './useMainPromptInput'
+import { chipifyFragment, entryTooltipText, textToContent, upstreamTextInputs, useMainPromptInput } from './useMainPromptInput'
 
 function makeFakeEditor(initialText = '') {
   const state = { text: initialText }
@@ -382,6 +382,18 @@ describe('useMainPromptInput — tiptap integration points', () => {
       { type: 'text', text: 'hi ' },
       { type: 'mention', label: 'image_0' },
     ])
+  })
+
+  it('upstreamTextInputs keeps only connected texts.* slots', () => {
+    const inputs = [
+      { slot: 'texts.text0', source: 'upstream', content: 'a poem' },
+      { slot: 'texts.text1', source: 'upstream-pending', content: null },
+      { slot: 'texts.text2', source: 'empty', content: null },
+      { slot: 'images.image0', source: 'upstream', content: '/view?x' },
+    ]
+    expect(upstreamTextInputs(inputs).map(i => i.slot))
+      .toEqual(['texts.text0', 'texts.text1'])
+    expect(upstreamTextInputs(undefined)).toEqual([])
   })
 
   it('entryTooltip resolves entries and slot labels via the node send order', () => {

@@ -1,5 +1,18 @@
 <template>
   <div v-if="widget" ref="rootEl" class="ctv:relative ctv:pt-1 ctv:px-2 ctv:pb-1">
+    <div
+      v-if="upstreamTexts.length"
+      class="ctv:mb-1 ctv:px-2 ctv:py-1 ctv:box-border ctv:rounded
+             ctv:bg-primary-background/10 ctv:border ctv:border-dashed ctv:border-primary-background/40
+             ctv:text-2xs ctv:leading-snug"
+      :title="upstreamTextPreview"
+    >
+      <div class="ctv:flex ctv:items-center ctv:gap-1 ctv:text-primary-background ctv:font-medium">
+        <i class="pi pi-link ctv:text-2xs" />
+        <span>{{ $t('promptUpstream.connected', { n: upstreamTexts.length }) }}</span>
+      </div>
+      <div class="ctv:text-muted-foreground ctv:whitespace-pre-wrap ctv:break-words ctv:line-clamp-2">{{ upstreamTextPreview }}</div>
+    </div>
     <EditorContent :editor="editor" class="comfytv-prompt-editor" />
     <div class="ctv:flex ctv:gap-1 ctv:mt-1">
       <button
@@ -85,7 +98,7 @@ import type { Entry } from '@/api/schemas'
 import type { CameraSelection } from '@/composables/stages/cameraControlCatalog'
 import { CAMERA_BUILDER } from '@/composables/stages/promptModules/builders'
 import { nonSlotMentionLabels, normalizeMentionText } from '@/composables/stages/imageSlotMentions'
-import { inlineContentFromText, useMainPromptInput } from '@/composables/stages/useMainPromptInput'
+import { inlineContentFromText, upstreamTextInputs, useMainPromptInput } from '@/composables/stages/useMainPromptInput'
 import { usePromptModules } from '@/composables/stages/usePromptModules'
 import { useEntryStore } from '@/stores/entryStore'
 import { useProjectStore } from '@/stores/projectStore'
@@ -99,12 +112,20 @@ import PromptHelperPanel from './PromptHelperPanel.vue'
 
 const props = defineProps<{ node?: LGraphNode }>()
 
+const { t } = useI18n()
+
 const rootEl = ref<HTMLElement | null>(null)
 
-const { widget, editor, promptText, applyPromptText } = useMainPromptInput(
+const { widget, editor, promptText, applyPromptText, stageState } = useMainPromptInput(
   () => props.node,
   MentionList,
 )
+
+const upstreamTexts = computed(() => upstreamTextInputs(stageState.value?.inputs))
+const upstreamTextPreview = computed(() =>
+  upstreamTexts.value
+    .map(i => String(i.content ?? '').trim() || t('promptUpstream.pending'))
+    .join('\n'))
 
 const helperOpen = ref(false)
 const helper = usePromptModules(() => promptText.value, applyPromptText)
@@ -131,7 +152,6 @@ function onParseMentions() {
   applyPromptText(normalizeMentionText(promptText.value))
 }
 
-const { t } = useI18n()
 const entryStore = useEntryStore()
 const projectStore = useProjectStore()
 

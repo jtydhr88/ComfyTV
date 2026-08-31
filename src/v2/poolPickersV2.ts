@@ -16,6 +16,7 @@ import { V2_SHELLS } from '@/v2/registry'
 import { usePinnedBatchStore } from '@/stores/pinnedBatchStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { toImagePoolJson, useStageStore, type StageKind, type StageVariant } from '@/stores/stageStore'
+import { bindWidgetCallback } from '@/utils/widget'
 
 const PICKER_CSS = `
 .v2-picker-footer {
@@ -44,6 +45,8 @@ const PICKER_CSS = `
 .v2-picker-footer__clear:hover { background: var(--v2-hover-bg); color: var(--v2-text-strong); }
 .v2-picker-footer__clear--danger { background: rgba(239,68,68,.2); color: #fca5a5; }
 .v2-picker-footer__clear--danger:hover { background: rgba(239,68,68,.35); color: #fecaca; }
+.v2-picker-footer__mode[data-replace="1"] { background: rgba(245,158,11,.18); color: #fbbf24; }
+.v2-picker-footer__mode[data-replace="1"]:hover { background: rgba(245,158,11,.3); color: #fcd34d; }
 .v2-picker-footer__confirm {
   color: #fca5a5;
   font: 600 11px/1.2 system-ui, sans-serif;
@@ -138,13 +141,14 @@ function makePoolPicker(previewKind: 'image' | 'video' | 'audio') {
     const pinBtn = el('button', 'v2-picker-footer__pin', ICON_PIN) as HTMLButtonElement
     pinBtn.title = t('imageRefs.pinBatch')
     if (previewKind !== 'image') pinBtn.style.display = 'none'
+    const modeBtn = el('button', 'v2-picker-footer__clear v2-picker-footer__mode') as HTMLButtonElement
     const clearBtn = el('button', 'v2-picker-footer__clear', t('v2.clear')) as HTMLButtonElement
     clearBtn.title = t('stage.pool.clearHint')
     const confirmBtn = el('button', 'v2-picker-footer__clear v2-picker-footer__clear--danger', t('stage.pool.confirm')) as HTMLButtonElement
     const cancelBtn = el('button', 'v2-picker-footer__clear', t('stage.pool.cancel')) as HTMLButtonElement
     confirmBtn.style.display = 'none'
     cancelBtn.style.display = 'none'
-    footer.append(count, spacer, confirmMsg, pinBtn, clearBtn, confirmBtn, cancelBtn)
+    footer.append(count, spacer, confirmMsg, modeBtn, pinBtn, clearBtn, confirmBtn, cancelBtn)
 
     card.append(preview, footer)
 
@@ -288,7 +292,27 @@ function makePoolPicker(previewKind: 'image' | 'video' | 'audio') {
       strip.dataset.open = strip.dataset.open === '1' ? '' : '1'
     })
 
-    for (const b of [clearBtn, confirmBtn, cancelBtn, pinBtn]) {
+    const appendW = getW('append_results')
+    const appendOn = () => !appendW || appendW.value !== false
+    const syncModeBtn = () => {
+      modeBtn.textContent = appendOn() ? t('stage.pool.modeAppend') : t('stage.pool.modeReplace')
+      modeBtn.title = t('stage.pool.modeHint')
+      modeBtn.dataset.replace = appendOn() ? '' : '1'
+    }
+    if (appendW) {
+      syncModeBtn()
+      bindWidgetCallback(node as any, 'append_results', syncModeBtn)
+    } else {
+      modeBtn.style.display = 'none'
+    }
+    modeBtn.addEventListener('click', (e) => {
+      e.stopPropagation()
+      if (!appendW) return
+      appendW.value = !appendOn()
+      syncModeBtn()
+    })
+
+    for (const b of [clearBtn, confirmBtn, cancelBtn, pinBtn, modeBtn]) {
       b.addEventListener('pointerdown', (e) => e.stopPropagation())
     }
     clearBtn.addEventListener('click', (e) => {

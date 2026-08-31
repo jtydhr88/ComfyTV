@@ -396,6 +396,14 @@ export function mergeImagePool(
   return JSON.stringify({ images: merged })
 }
 
+export function nextPickerPool(
+  currentPoolJson: string | null | undefined,
+  incomingJson: string,
+  append: boolean,
+): string {
+  return append ? mergeImagePool(currentPoolJson, incomingJson) : incomingJson
+}
+
 export function removeImageFromPool(
   poolJson: string | null | undefined,
   imageUrl: string,

@@ -45,6 +45,13 @@
             <button :class="clearBtn" @click="confirmingClear = false">{{ $t('stage.pool.cancel') }}</button>
           </template>
         </template>
+        <button
+          v-if="hasAppendToggle"
+          :class="[poolCount > 0 ? '' : 'ctv:ml-auto', clearBtn,
+                   !poolAppendOn && 'ctv:text-warning-background']"
+          :title="$t('stage.pool.modeHint')"
+          @click.stop="togglePoolAppend"
+        >{{ poolAppendOn ? $t('stage.pool.modeAppend') : $t('stage.pool.modeReplace') }}</button>
       </div>
       <ValuePreview
         :type="poolPreviewType"
@@ -282,7 +289,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 import ImageReferences from './ImageReferences.vue'
 import MainPromptInput from './MainPromptInput.vue'
@@ -310,6 +317,7 @@ import { batchImageUrls, isPoolPickerKind, toImagePoolJson, useStageStore, type 
 import { usePinnedBatchStore } from '@/stores/pinnedBatchStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { ensureStageUid } from '@/composables/stages/stageIdentity'
+import { bindWidgetCallback, getWidget, writeWidget } from '@/utils/widget'
 
 const props = defineProps<{
   state: StageState
@@ -346,6 +354,21 @@ const {
 } = useStageCard(() => props.state, props.onAction)
 
 const isPicker = computed(() => isPoolPickerKind(props.state.kind))
+
+const hasAppendToggle = computed(() => isPicker.value && !!getWidget(props.node, 'append_results'))
+const poolAppendOn = ref(true)
+const syncPoolAppend = () => {
+  const w = getWidget(props.node, 'append_results')
+  poolAppendOn.value = !w || w.value !== false
+}
+onMounted(() => {
+  syncPoolAppend()
+  bindWidgetCallback(props.node, 'append_results', syncPoolAppend)
+})
+function togglePoolAppend() {
+  writeWidget(props.node, 'append_results', !poolAppendOn.value)
+  syncPoolAppend()
+}
 
 const acceptsContextMedia = computed(() => nodeAcceptsAutogrowImages(props.node))
 

@@ -343,7 +343,10 @@ TOOLS: dict[str, dict] = {
             "connections with source nodes, output connections with target "
             "nodes, asset_refs, running state, position and any dangling "
             "@mention warnings. Call before set_stage widgets so you edit "
-            "from actual values instead of guessing. node is a stage uid or "
+            "from actual values instead of guessing. String widget values "
+            "over 16000 chars are shortened for display only (marked "
+            "'[display truncated …]') — the stored value is never cut, so "
+            "do not write a truncated read-back over it. node is a stage uid or "
             "graph node id. Requires an open ComfyTV page in Desktop or a browser."
         ),
         "inputSchema": {

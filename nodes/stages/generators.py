@@ -408,6 +408,11 @@ class _PickerStage(io.ComfyNode):
                                 socketless=True, extra_dict={"hidden": True},
                                 tooltip=cls._POOL_TOOLTIP),
                 cls._batch_input(),
+                io.Boolean.Input("append_results", default=True, socketless=True,
+                                 extra_dict={"hidden": True},
+                                 tooltip="On: new upstream results are appended to the pool "
+                                         "(existing items kept). Off: each new run replaces "
+                                         "the pool with just the latest batch."),
             ],
             outputs=[cls._OUTPUT_TYPE.Output(cls._OUTPUT_NAME)],
             is_output_node=True,
@@ -415,7 +420,8 @@ class _PickerStage(io.ComfyNode):
         )
 
     @classmethod
-    def execute(cls, project_id="", parent_output_id=0, selected_index=1, pool="", batch=None):
+    def execute(cls, project_id="", parent_output_id=0, selected_index=1, pool="", batch=None,
+                append_results=True):
         source = pool if (pool or "").strip() else batch
         payload = _pick_image_from_batch(source, int(selected_index or 1))
         return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,

@@ -6,7 +6,7 @@ vi.mock('@/composables/widgets/useProxiedVideoUrl', () => ({
   autoProxyOutput: (...a: unknown[]) => (autoProxyOutput as (...x: unknown[]) => unknown)(...a),
 }))
 
-import { useStageStore, computePickedImageUrl, computePickedFromBatch, imagePoolCount, mergeImagePool, toImagePoolJson, removeImageFromPool, type StageState } from './stageStore'
+import { useStageStore, computePickedImageUrl, computePickedFromBatch, imagePoolCount, mergeImagePool, nextPickerPool, toImagePoolJson, removeImageFromPool, type StageState } from './stageStore'
 
 function freshState(overrides: Partial<StageState> = {}): StageState {
   return {
@@ -519,6 +519,21 @@ describe('mergeImagePool', () => {
   it('merges a single image url (COMFYTV_IMAGE) into the pool', () => {
     const merged = mergeImagePool(pool('a', 'b'), toImagePoolJson('/view?filename=c.png'))
     expect(urls(merged)).toEqual(['/view?filename=c.png', 'a', 'b'])
+  })
+})
+
+describe('nextPickerPool', () => {
+  const img = (url: string) => ({ index: '1', image_url: url, label: url })
+  const pool = (...urls: string[]) => JSON.stringify({ images: urls.map(img) })
+  const urls = (json: string) =>
+    (JSON.parse(json).images as Array<{ image_url: string }>).map(i => i.image_url)
+
+  it('append mode merges the incoming batch into the pool', () => {
+    expect(urls(nextPickerPool(pool('a', 'b'), pool('c'), true))).toEqual(['c', 'a', 'b'])
+  })
+
+  it('replace mode keeps only the incoming batch', () => {
+    expect(urls(nextPickerPool(pool('a', 'b'), pool('c'), false))).toEqual(['c'])
   })
 })
 

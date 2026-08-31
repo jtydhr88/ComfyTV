@@ -284,4 +284,40 @@ export const V2_CSS_PANELS = `
 .v2-run[data-busy="1"]:hover { background: #f87171; }
 .v2-run[data-busy="1"] .v2-run__up { display: none; }
 .v2-run[data-busy="1"] .v2-run__stop { display: flex; }
+.v2-collapse {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: -8px -8px -6px;
+  padding: 1px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--v2-text-faint);
+}
+.v2-collapse:hover { color: var(--v2-text-mid); background: var(--v2-chip-bg); }
+.v2-collapse__chevron { display: flex; flex: none; }
+.v2-collapse__chevron svg { width: 14px; height: 14px; transition: transform .15s ease; }
+.v2-collapse__info {
+  display: none;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--v2-text-mid);
+  font: 500 12px/1.3 system-ui, sans-serif;
+  text-align: left;
+}
+.v2-panel[data-v2-collapsed] { gap: 0; }
+.v2-panel[data-v2-collapsed] > :not(.v2-collapse) { display: none; }
+.v2-panel[data-v2-collapsed] .v2-collapse {
+  justify-content: flex-start;
+  margin: 0;
+  padding: 0;
+  min-height: 32px;
+}
+.v2-panel[data-v2-collapsed] .v2-collapse:hover { background: transparent; }
+.v2-panel[data-v2-collapsed] .v2-collapse__chevron svg { transform: rotate(180deg); }
+.v2-panel[data-v2-collapsed] .v2-collapse__info { display: block; }
 `
