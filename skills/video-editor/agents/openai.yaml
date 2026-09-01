@@ -1,0 +1,13 @@
+interface:
+  display_name: Video Editor
+  short_description: Conversation-driven editing — cuts, pacing, grades, and subtitles on the ComfyTV canvas
+  default_prompt: Use $video-editor to turn this footage into a tight cut.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  allow_implicit_invocation: false
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas

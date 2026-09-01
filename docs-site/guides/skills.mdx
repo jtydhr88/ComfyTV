@@ -45,7 +45,11 @@ The format is **progressive**: agents first see just the name + description, rea
 
 A user skill with the same `name` as a built-in one **overrides** it.
 
-ComfyTV ships one built-in skill today: **`h3-cinematic-director`** — a director-level methodology for MiniMax H3 video production: shot design, the exact H3 prompt schema (T2VA/I2VA/FL2VA/L2VA/Ref2VA), continuity auditing, and single-variable repair. Try it with the shipped [H3 workflows](/guides/generate#video-stage).
+ComfyTV ships three built-in skills today:
+
+- **`brainstorm`** — pre-production ideation on the canvas: develops an idea, script, or storyboard concept one decision at a time, landing every confirmed element as a stage before anything is generated.
+- **`h3-cinematic-director`** — a director-level methodology for MiniMax H3 video production: shot design, the exact H3 prompt schema (T2VA/I2VA/FL2VA/L2VA/Ref2VA), continuity auditing, and single-variable repair. Try it with the shipped [H3 workflows](/guides/generate#video-stage).
+- **`video-editor`** — conversation-driven editing of existing footage: the agent reads a video through `media_timeline` composites, proposes a cut strategy from silence gaps, and builds the edit as clip/concat/FX/subtitle stages on your canvas — always confirming the plan before running anything.
 
 ## Managing skills
 

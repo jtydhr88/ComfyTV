@@ -81,6 +81,7 @@ url = "http://127.0.0.1:8188/comfytv/mcp"
 | `media_probe` | 视频时长/帧率/分辨率/有无音轨 |
 | `media_frame` | 从视频抽一帧,返回 PNG URL |
 | `media_waveform` | 渲染音频波形图 |
+| `media_timeline` | 视频区间的胶片条+波形合成图,静音段自动检出当剪点候选 |
 | `pick_output` | 从多候选出图里选定一张 |
 
 **配置**

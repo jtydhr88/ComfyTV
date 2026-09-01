@@ -101,6 +101,7 @@ from .media import (  # noqa: F401
     _fx_preview,
     _media_frame,
     _media_probe,
+    _media_timeline,
     _media_waveform,
     _render_view_image,
     _view_image,

@@ -31,6 +31,37 @@ async def _media_waveform(args: dict) -> dict:
         audio_render.render_waveform_image, url, width, height)
     return {"image": image}
 
+_TIMELINE_MAX_FRAMES = 16
+
+async def _media_timeline(args: dict) -> dict:
+    url = str(args.get("url") or "")
+    if not url:
+        raise ValueError("url is required (a /view?… payload_url)")
+    try:
+        start = float(args.get("start", 0.0) or 0.0)
+    except (TypeError, ValueError):
+        raise ValueError("start must be a number (seconds)")
+    end = args.get("end")
+    if end is not None:
+        try:
+            end = float(end)
+        except (TypeError, ValueError):
+            raise ValueError("end must be a number (seconds)")
+    try:
+        n_frames = int(args.get("n_frames", 10) or 10)
+    except (TypeError, ValueError):
+        raise ValueError("n_frames must be an integer")
+    n_frames = max(2, min(n_frames, _TIMELINE_MAX_FRAMES))
+    words = args.get("words")
+    if words is not None and not isinstance(words, list):
+        raise ValueError("words must be an array of {text, start, end}")
+
+    from ...runners import timeline_render
+    result = await asyncio.to_thread(
+        timeline_render.render_timeline_image, url, start, end, n_frames, words)
+    image = await asyncio.to_thread(_render_view_image, result["url"], 1568)
+    return {**result, "_images": image["_images"]}
+
 _VIEW_MAX_PX_DEFAULT = 768
 
 _VIEW_MAX_PX_CAP = 1200
@@ -187,6 +218,35 @@ TOOLS: dict[str, dict] = {
             "additionalProperties": False,
         },
         "handler": _media_waveform,
+    },
+    "media_timeline": {
+        "description": (
+            "Read a video's timeline at a glance: renders one composite "
+            "image — evenly spaced filmstrip frames over a time-aligned "
+            "audio waveform with detected silence gaps shaded — and "
+            "returns it inline plus the silence spans as data. Silences "
+            "≥0.35s are the cleanest cut candidates. Use at decision "
+            "points (finding cut points, checking pacing, verifying a "
+            "render at a boundary) instead of pulling frames one by one "
+            "with media_frame. url is a /view?… payload_url; start/end "
+            "bound the window in seconds (default: whole video); "
+            "n_frames 2-16 (default 10). Optional words: array of "
+            "{text, start, end} word timestamps to label on the "
+            "waveform, if a transcript is available."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "url": {"type": "string"},
+                "start": {"type": "number"},
+                "end": {"type": "number"},
+                "n_frames": {"type": "integer"},
+                "words": {"type": "array"},
+            },
+            "required": ["url"],
+            "additionalProperties": False,
+        },
+        "handler": _media_timeline,
     },
     "view_image": {
         "description": (

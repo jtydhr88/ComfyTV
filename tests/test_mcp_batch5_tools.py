@@ -39,8 +39,10 @@ class TestStageParamsTool:
 
 class TestMediaTools:
     async def test_probe_requires_url(self, reset_db):
-        from ComfyTV.api.mcp_tools import _media_probe, _media_frame, _media_waveform
-        for tool in (_media_probe, _media_frame, _media_waveform):
+        from ComfyTV.api.mcp_tools import (
+            _media_probe, _media_frame, _media_waveform, _media_timeline)
+        for tool in (_media_probe, _media_frame, _media_waveform,
+                     _media_timeline):
             with pytest.raises(ValueError, match="url is required"):
                 await tool({})
 
@@ -83,6 +85,32 @@ class TestMediaTools:
                                               "height": 1})
         assert out == {"image": "/view?wave.png"}
         assert seen["args"] == ("/view?a", 4000, 100)
+
+    async def test_timeline_delegates_and_clamps(self, reset_db, monkeypatch):
+        from ComfyTV.api.mcp_tools import media as mcp_media
+        from ComfyTV.runners import timeline_render
+        seen = {}
+
+        def fake_render(url, start, end, n_frames, words):
+            seen["args"] = (url, start, end, n_frames, words)
+            return {"url": "/view?tl.png", "start": 1.0, "end": 5.0,
+                    "n_frames": n_frames, "silences": [[2.0, 2.6]]}
+
+        monkeypatch.setattr(timeline_render, "render_timeline_image",
+                            fake_render)
+        monkeypatch.setattr(mcp_media, "_render_view_image",
+                            lambda url, max_px: {"_images": [{"data": "x",
+                                                              "mime": "image/jpeg"}]})
+        out = await mcp_media._media_timeline(
+            {"url": "/view?v", "start": 1, "end": 5, "n_frames": 99})
+        assert seen["args"] == ("/view?v", 1.0, 5.0, 16, None)
+        assert out["silences"] == [[2.0, 2.6]]
+        assert out["_images"]
+
+        with pytest.raises(ValueError, match="words must be"):
+            await mcp_media._media_timeline({"url": "/view?v", "words": "no"})
+        with pytest.raises(ValueError, match="end must be"):
+            await mcp_media._media_timeline({"url": "/view?v", "end": "x"})
 
 
 class TestPickOutput:

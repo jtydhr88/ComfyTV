@@ -44,6 +44,7 @@ CORE_MCP_TOOLS = [
     "media_probe",
     "media_frame",
     "media_waveform",
+    "media_timeline",
     "fx_preview",
     "pick_output",
     "director_get",

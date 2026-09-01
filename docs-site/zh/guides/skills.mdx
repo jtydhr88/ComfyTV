@@ -46,7 +46,11 @@ agent 要遵循的分步指令……
 
 用户技能与内置技能同 `name` 时,**用户版覆盖内置版**。
 
-ComfyTV 目前内置一个技能:**`h3-cinematic-director`** —— MiniMax H3 视频生产的导演级方法论:分镜设计、H3 提示词精确 schema(T2VA/I2VA/FL2VA/L2VA/Ref2VA)、一致性审片、单点修复。配合自带的 [H3 工作流](/guides/generate#video-stage)使用。
+ComfyTV 目前内置三个技能:
+
+- **`brainstorm`** —— 画布上的前期创意开发:想法/剧本/分镜概念一次收敛一个决策,确认的元素即刻落成 stage,方向锁定前不做任何生成。
+- **`h3-cinematic-director`** —— MiniMax H3 视频生产的导演级方法论:分镜设计、H3 提示词精确 schema(T2VA/I2VA/FL2VA/L2VA/Ref2VA)、一致性审片、单点修复。配合自带的 [H3 工作流](/guides/generate#video-stage)使用。
+- **`video-editor`** —— 对已有素材的会话式剪辑:agent 用 `media_timeline` 合成图「读」视频,从静音段提出剪辑策略,再以 clip/concat/FX/字幕 stage 的形式把剪辑落在画布上——动手前必先确认方案。
 
 ## 管理技能
 
