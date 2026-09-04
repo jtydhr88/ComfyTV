@@ -270,7 +270,11 @@ class TestSettingsApi:
             "blender-bridge-url",
         }
         for r in rows:
-            assert set(r) == {"key", "type", "value", "default"}
+            assert set(r) == {"key", "type", "value", "default", "experimental"}
+        assert {r["key"] for r in rows if r["experimental"]} == {
+            "enable-v2", "bot-model-comfyui-llm", "bot-comfyui-llm-thinking",
+            "enable-collab", "blender-bridge-url",
+        }
 
     async def test_put_updates(self, client):
         resp = await client.put("/comfytv/settings", json={

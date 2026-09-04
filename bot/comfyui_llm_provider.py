@@ -6,7 +6,7 @@ from .providers import ProviderStatus
 
 class ComfyUiLlmProvider(LocalLlmProvider):
     id = "comfyui-llm"
-    label = "ComfyUI LLM"
+    label = "ComfyUI LLM (experimental)"
 
     def _base_url(self) -> str:
         if self._base_url_override is not None:

@@ -9,7 +9,7 @@ CUSTOM_NODE_DIR = os.path.dirname(os.path.realpath(__file__))
 PROPERTIES_FILENAME = "comfytv.properties"
 
 SETTINGS_SPEC: dict[str, dict[str, Any]] = {
-    "enable-v2": {"type": "boolean", "default": False},
+    "enable-v2": {"type": "boolean", "default": False, "experimental": True},
     "enable-db-backup": {"type": "boolean", "default": True},
     "db-backup-max-count": {"type": "int", "default": 10, "min": 1},
     "db-backup-path": {"type": "string", "default": ""},
@@ -18,22 +18,22 @@ SETTINGS_SPEC: dict[str, dict[str, Any]] = {
     "bot-model-claude-code": {"type": "string", "default": ""},
     "bot-model-codex": {"type": "string", "default": ""},
     "bot-model-qwen-code": {"type": "string", "default": ""},
-    "bot-model-local-llm": {"type": "string", "default": ""},
-    "bot-model-comfyui-llm": {"type": "string", "default": ""},
-    "bot-comfyui-llm-thinking": {"type": "boolean", "default": True},
     "bot-local-llm-url": {"type": "string", "default": ""},
+    "bot-model-local-llm": {"type": "string", "default": ""},
+    "bot-model-comfyui-llm": {"type": "string", "default": "", "experimental": True},
+    "bot-comfyui-llm-thinking": {"type": "boolean", "default": True, "experimental": True},
     "bot-enable-comfy-mcp": {"type": "boolean", "default": False},
     "bot-comfy-mcp-command": {"type": "string", "default": ""},
     "bot-always-allow-runs": {"type": "boolean", "default": True},
     "enable-skills": {"type": "boolean", "default": True},
     "skills-disabled": {"type": "string", "default": "[]"},
-    "enable-collab": {"type": "boolean", "default": False},
+    "enable-collab": {"type": "boolean", "default": False, "experimental": True},
     "enable-eagle": {"type": "boolean", "default": False},
     "eagle-api-url": {"type": "string", "default": "http://127.0.0.1:41595"},
     "eagle-library-path": {"type": "string", "default": ""},
     "eagle-send-folder": {"type": "string", "default": "ComfyTV"},
     "eagle-auto-send": {"type": "boolean", "default": False},
-    "blender-bridge-url": {"type": "string", "default": "http://127.0.0.1:7684"},
+    "blender-bridge-url": {"type": "string", "default": "http://127.0.0.1:7684", "experimental": True},
 }
 
 

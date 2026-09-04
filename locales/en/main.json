@@ -389,6 +389,19 @@
     "loading": "Loading…",
     "save": "Save",
     "saving": "Saving…",
+    "search": "Search settings…",
+    "noMatch": "No settings match",
+    "experimental": "Experimental",
+    "reset": "Reset to default",
+    "on": "On",
+    "off": "Off",
+    "status": { "checking": "Checking…", "online": "Connected", "offline": "Offline" },
+    "blender": {
+      "section": "Blender bridge"
+    },
+    "general": {
+      "section": "General"
+    },
     "backup": {
       "section": "Database backup",
       "now": "Back up now",
@@ -398,7 +411,7 @@
     },
     "fields": {
       "enable-v2": {
-        "label": "Enable ComfyTV V2 nodes (experimental)",
+        "label": "Enable ComfyTV V2 nodes",
         "desc": "EXPERIMENTAL — expect rough edges. Renders migrated stages with the new content-first V2 shells. Requires ComfyUI's own Node 2.0 (Vue nodes) setting to be enabled first. Refresh the page after changing."
       },
       "enable-db-backup": {
@@ -444,12 +457,12 @@
       },
       "bot-model-comfyui-llm": {
         "label": "ComfyUI LLM model",
-        "desc": "Text-encoder checkpoint from models/text_encoders used for bot turns (Qwen3 or Gemma family). Blank = the first generation-capable checkpoint found. Runs inside ComfyUI itself — no external server needed.",
+        "desc": "EXPERIMENTAL — a toy provider, not meant for real use; pick Local LLM or one of the CLI providers instead. Text-encoder checkpoint from models/text_encoders used for bot turns (Qwen3 or Gemma family). Blank = the first generation-capable checkpoint found. Runs inside ComfyUI itself — no external server needed.",
         "placeholder": "first available"
       },
       "bot-comfyui-llm-thinking": {
         "label": "ComfyUI LLM thinking",
-        "desc": "Let Qwen3 models reason in a hidden <think> block before answering. Noticeably smarter tool use, at the cost of extra generation time per turn."
+        "desc": "EXPERIMENTAL — only affects the toy ComfyUI LLM provider. Let Qwen3 models reason in a hidden <think> block before answering. Noticeably smarter tool use, at the cost of extra generation time per turn."
       },
       "bot-local-llm-url": {
         "label": "Local LLM endpoint",
@@ -474,7 +487,7 @@
         "desc": "Serve installed skills to agents over MCP (skill tool + prompts) and to the embedded bot."
       },
       "enable-collab": {
-        "label": "Enable collaboration (experimental)",
+        "label": "Enable collaboration",
         "desc": "EXPERIMENTAL — do not rely on this in production. Real-time multi-user presence and co-editing over the local network. When off, no collaboration code runs at all (no session, no websocket, no UI). Reload open pages after changing this."
       },
       "enable-eagle": {
@@ -498,6 +511,11 @@
       "eagle-auto-send": {
         "label": "Auto-archive outputs to Eagle",
         "desc": "Automatically archive every stage output (image/video/audio) into Eagle: filed into a per-project folder, annotation carries the full generation params (prompt/model/…), tagged with the project name. Uses the queue — piles up while Eagle is closed, never blocks generation."
+      },
+      "blender-bridge-url": {
+        "label": "Blender bridge URL",
+        "desc": "EXPERIMENTAL — expect rough edges. Address of the blender-web bridge that the Blender Scene / Camera / Animation stages talk to. Start it with blender-for-comfytv.bat; the stages stay unavailable until it responds. Default port 7684, local only.",
+        "placeholder": "http://127.0.0.1:7684"
       }
     },
     "agent": {
@@ -507,7 +525,7 @@
       "section": "Eagle Integration"
     },
     "collab": {
-      "section": "Collaboration (experimental)"
+      "section": "Collaboration"
     }
   },
   "servers": {

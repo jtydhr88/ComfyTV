@@ -1,8 +1,12 @@
 <template>
-  <div class="ctv:mt-2 ctv:px-1 ctv:flex ctv:items-center ctv:gap-1">
-    <span class="ctv:flex-1 ctv:font-semibold ctv:text-muted-foreground ctv:uppercase ctv:text-2xs ctv:tracking-wide">
-      {{ $t('skills.section') }}
-    </span>
+  <div class="ctv:flex ctv:items-center ctv:gap-1">
+    <button :class="headBtnClass" :aria-expanded="!collapsed" @click="emit('toggle')">
+      <i :class="['pi', collapsed ? 'pi-chevron-right' : 'pi-chevron-down', 'ctv:w-2.5 ctv:text-2xs']" />
+      <span class="ctv:truncate">{{ $t('skills.section') }}</span>
+      <span v-if="!loading" class="ctv:font-normal ctv:normal-case ctv:tracking-normal">
+        ({{ validSkills.length }})
+      </span>
+    </button>
     <button
       :class="iconBtnClass"
       :title="$t('skills.import')"
@@ -21,45 +25,73 @@
     />
   </div>
 
-  <div class="ctv:px-1 ctv:text-muted-foreground ctv:leading-relaxed">
-    {{ $t('skills.hint') }}
-  </div>
+  <div v-show="!collapsed" class="ctv:mt-1 ctv:flex ctv:flex-col ctv:gap-1">
+    <div class="ctv:px-1 ctv:text-2xs ctv:text-muted-foreground ctv:leading-relaxed">
+      {{ $t('skills.hint') }}
+    </div>
 
-  <div v-if="error" class="ctv:py-1 ctv:px-1.5 ctv:rounded ctv:bg-destructive-background/15 ctv:text-destructive-background ctv:break-all">
-    {{ error }}
-  </div>
+    <div v-if="error" class="ctv:py-1 ctv:px-1.5 ctv:rounded ctv:bg-destructive-background/15 ctv:text-destructive-background ctv:break-all">
+      {{ error }}
+    </div>
 
-  <div
-    v-if="!loading && validSkills.length === 0 && invalidSkills.length === 0"
-    class="ctv:py-2 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60"
-  >
-    {{ $t('skills.empty') }}
-  </div>
+    <div
+      v-if="!loading && validSkills.length === 0 && invalidSkills.length === 0"
+      class="ctv:py-2 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60"
+    >
+      {{ $t('skills.empty') }}
+    </div>
 
-  <div
-    v-for="skill in validSkills"
-    :key="skill.name"
-    class="ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1.5 ctv:px-2 ctv:rounded-lg
-           ctv:bg-secondary-background ctv:border ctv:border-border-subtle"
-  >
-    <div class="ctv:flex ctv:items-center ctv:gap-2">
-      <div class="ctv:flex-1 ctv:min-w-0">
-        <div class="ctv:flex ctv:items-center ctv:gap-1.5">
-          <span class="ctv:font-semibold ctv:truncate">
-            {{ skill.display_name || skill.name }}
-          </span>
-          <span
-            class="ctv:shrink-0 ctv:rounded ctv:px-1 ctv:py-0.5 ctv:text-2xs
-                   ctv:bg-interface-menu-component-surface-hovered ctv:text-muted-foreground"
+    <div
+      v-for="skill in validSkills"
+      :key="skill.name"
+      class="ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1.5 ctv:px-2 ctv:rounded-lg
+             ctv:bg-interface-panel-surface ctv:border ctv:border-border-subtle"
+    >
+      <div class="ctv:flex ctv:items-center ctv:gap-2">
+        <div class="ctv:flex-1 ctv:min-w-0">
+          <div class="ctv:flex ctv:items-center ctv:gap-1.5">
+            <span class="ctv:font-semibold ctv:truncate">
+              {{ skill.display_name || skill.name }}
+            </span>
+            <span
+              class="ctv:shrink-0 ctv:rounded ctv:px-1 ctv:py-0.5 ctv:text-2xs
+                     ctv:bg-interface-menu-component-surface-hovered ctv:text-muted-foreground"
+            >
+              {{ $t(`skills.source.${skill.source}`) }}
+            </span>
+          </div>
+          <div
+            class="ctv:text-muted-foreground ctv:leading-relaxed ctv:line-clamp-2"
+            :title="skill.description"
           >
-            {{ $t(`skills.source.${skill.source}`) }}
-          </span>
+            {{ skill.description }}
+          </div>
         </div>
-        <div
-          class="ctv:text-muted-foreground ctv:leading-relaxed ctv:line-clamp-2"
-          :title="skill.description"
+        <button
+          v-if="skill.source === 'user'"
+          :class="[iconBtnClass, 'ctv:hover:text-destructive-background']"
+          :title="$t('skills.remove')"
+          @click="onRemove(skill)"
         >
-          {{ skill.description }}
+          <IconTrash2 class="ctv:size-3.5" />
+        </button>
+        <ComfyTVToggle
+          :model-value="skill.enabled"
+          @update:model-value="(v: boolean) => onToggle(skill, v)"
+        />
+      </div>
+    </div>
+
+    <div
+      v-for="skill in invalidSkills"
+      :key="skill.name"
+      class="ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2 ctv:rounded-lg
+             ctv:bg-interface-panel-surface ctv:border ctv:border-border-subtle ctv:opacity-60"
+    >
+      <div class="ctv:flex-1 ctv:min-w-0">
+        <div class="ctv:font-semibold ctv:truncate">{{ skill.name }}</div>
+        <div class="ctv:text-destructive-background ctv:leading-relaxed ctv:break-all">
+          {{ skill.error }}
         </div>
       </div>
       <button
@@ -70,34 +102,7 @@
       >
         <IconTrash2 class="ctv:size-3.5" />
       </button>
-      <ComfyTVToggle
-        :model-value="skill.enabled"
-        :disabled="!enabled"
-        @update:model-value="(v: boolean) => onToggle(skill, v)"
-      />
     </div>
-  </div>
-
-  <div
-    v-for="skill in invalidSkills"
-    :key="skill.name"
-    class="ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2 ctv:rounded-lg
-           ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:opacity-60"
-  >
-    <div class="ctv:flex-1 ctv:min-w-0">
-      <div class="ctv:font-semibold ctv:truncate">{{ skill.name }}</div>
-      <div class="ctv:text-destructive-background ctv:leading-relaxed ctv:break-all">
-        {{ skill.error }}
-      </div>
-    </div>
-    <button
-      v-if="skill.source === 'user'"
-      :class="[iconBtnClass, 'ctv:hover:text-destructive-background']"
-      :title="$t('skills.remove')"
-      @click="onRemove(skill)"
-    >
-      <IconTrash2 class="ctv:size-3.5" />
-    </button>
   </div>
 </template>
 
@@ -110,7 +115,8 @@ import { useSkillsPanel } from '@/composables/sidebar/useSkillsPanel'
 import IconTrash2 from '~icons/lucide/trash-2'
 import IconUpload from '~icons/lucide/upload'
 
-const props = defineProps<{ active?: boolean; enabled?: boolean }>()
+const props = defineProps<{ active?: boolean; collapsed?: boolean }>()
+const emit = defineEmits<{ toggle: [] }>()
 
 const fileInput = ref<HTMLInputElement | null>(null)
 
@@ -125,6 +131,10 @@ const {
   onRemove,
 } = useSkillsPanel(() => props.active)
 
+const headBtnClass = 'ctv:flex-1 ctv:min-w-0 ctv:flex ctv:items-center ctv:gap-1.5 ctv:py-0 ctv:px-0 ctv:cursor-pointer '
+  + 'ctv:[font-family:inherit] ctv:bg-transparent ctv:border-none ctv:text-inherit ctv:text-left '
+  + 'ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:font-semibold ctv:text-muted-foreground '
+  + 'ctv:hover:text-base-foreground'
 const iconBtnClass = 'ctv:inline-flex ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:shrink-0 '
   + 'ctv:rounded-md ctv:border-none ctv:bg-transparent ctv:p-1 ctv:text-muted-foreground '
   + 'ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground '

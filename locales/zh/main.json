@@ -389,6 +389,19 @@
     "loading": "加载中…",
     "save": "保存",
     "saving": "保存中…",
+    "search": "搜索设置…",
+    "noMatch": "没有匹配的设置项",
+    "experimental": "实验性",
+    "reset": "恢复默认",
+    "on": "开",
+    "off": "关",
+    "status": { "checking": "检测中…", "online": "已连接", "offline": "未连接" },
+    "blender": {
+      "section": "Blender 桥接"
+    },
+    "general": {
+      "section": "通用"
+    },
     "backup": {
       "section": "数据库备份",
       "now": "立即备份",
@@ -398,7 +411,7 @@
     },
     "fields": {
       "enable-v2": {
-        "label": "启用 ComfyTV V2 节点（实验性）",
+        "label": "启用 ComfyTV V2 节点",
         "desc": "实验性功能，可能存在不稳定行为。已迁移的 stage 以内容导向的 V2 外壳渲染。必须先在 ComfyUI 本体设置中开启 Node 2.0（Vue 节点模式）。修改后需刷新页面。"
       },
       "enable-db-backup": {
@@ -444,12 +457,12 @@
       },
       "bot-model-comfyui-llm": {
         "label": "ComfyUI LLM 模型",
-        "desc": "Bot 回合使用的 models/text_encoders 里的文本编码器权重(Qwen3 或 Gemma 系)。留空 = 自动取第一个可生成的权重。推理跑在 ComfyUI 本体内 — 无需外部服务。",
+        "desc": "实验性 — 玩具性质的 provider,一般情况不要用,请改用 Local LLM 或 CLI 类 provider。Bot 回合使用的 models/text_encoders 里的文本编码器权重(Qwen3 或 Gemma 系)。留空 = 自动取第一个可生成的权重。推理跑在 ComfyUI 本体内 — 无需外部服务。",
         "placeholder": "自动取第一个"
       },
       "bot-comfyui-llm-thinking": {
         "label": "ComfyUI LLM 思考模式",
-        "desc": "让 Qwen3 系模型先在隐藏的 <think> 块里推理再回答。工具调用明显更聪明,代价是每轮多花一些生成时间。"
+        "desc": "实验性 — 只对玩具性质的 ComfyUI LLM provider 生效。让 Qwen3 系模型先在隐藏的 <think> 块里推理再回答。工具调用明显更聪明,代价是每轮多花一些生成时间。"
       },
       "bot-local-llm-url": {
         "label": "Local LLM 端点",
@@ -474,7 +487,7 @@
         "desc": "把已安装的技能通过 MCP(skill 工具 + prompts)提供给外部 agent 和内嵌 bot。"
       },
       "enable-collab": {
-        "label": "启用多人协作（实验性）",
+        "label": "启用多人协作",
         "desc": "实验性功能——请勿在生产环境依赖。局域网内的实时多人 presence 与共同编辑。关闭时协作代码完全不运行（无会话、无 WebSocket、无 UI）。修改后需刷新已打开的页面。"
       },
       "enable-eagle": {
@@ -498,6 +511,11 @@
       "eagle-auto-send": {
         "label": "产出自动沉淀到 Eagle",
         "desc": "每个 stage 的产出(图片/视频/音频)自动归档进 Eagle:按项目名分文件夹,annotation 带完整生成参数(prompt/模型等),tag 带项目名。走排队机制,Eagle 没开时攒着,不阻塞生成。"
+      },
+      "blender-bridge-url": {
+        "label": "Blender 桥接地址",
+        "desc": "实验性 — 会有毛边。Blender Scene / Camera / Animation 这几个 stage 连接的 blender-web 桥接服务地址。用 blender-for-comfytv.bat 启动;桥接没响应时这些 stage 不可用。默认端口 7684,仅限本机。",
+        "placeholder": "http://127.0.0.1:7684"
       }
     },
     "agent": {
@@ -507,7 +525,7 @@
       "section": "Eagle 集成"
     },
     "collab": {
-      "section": "多人协作（实验性）"
+      "section": "多人协作"
     }
   },
   "servers": {
