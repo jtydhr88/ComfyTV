@@ -1,12 +1,18 @@
 import type { EffectiveMode } from './mode'
-import type { Rect } from './node'
+import type { Rect, Transform } from './node'
+import type { TileGrid } from './tile/tileBuffer'
 
 export interface NodeTexture {
   source: WebGLTexture | HTMLCanvasElement | ImageBitmap | OffscreenCanvas
   rect: Rect
   linear: boolean
+
+  quad?: Transform
   key?: string
+
+  stamp?: string
   version?: number
+
   dirtyRects?: Rect[]
 }
 
@@ -15,6 +21,7 @@ export interface LayerInput {
   mode: EffectiveMode
   opacity: number
   mask?: NodeTexture
+  clipToBackdrop?: boolean
 }
 
 export interface AdjustmentInput {
@@ -23,7 +30,21 @@ export interface AdjustmentInput {
   mask?: NodeTexture
 }
 
-export type CompositeInput = LayerInput | AdjustmentInput
+export interface TileLayerInput {
+  tiles: {
+    grid: TileGrid
+    quad: Transform
+    linear: boolean
+    drawZero: boolean
+    proxy?: (index: number) => Uint8Array | null
+  }
+  mode: EffectiveMode
+  opacity: number
+  mask?: NodeTexture
+  clipToBackdrop?: boolean
+}
+
+export type CompositeInput = LayerInput | AdjustmentInput | TileLayerInput
 
 export interface CompositorInit {
   width: number
@@ -46,8 +67,12 @@ export interface Compositor {
   upload(source: HTMLCanvasElement | ImageBitmap | OffscreenCanvas): WebGLTexture
 
   readback(region?: Rect): ImageData
+
+  presentCanvas(clip?: Rect | null): HTMLCanvasElement | OffscreenCanvas | null
   toBlob(): Promise<Blob>
   getCanvas(): HTMLCanvasElement | OffscreenCanvas | null
+
+  debugStats?(): { tilePasses: number; atlases: number; atlasSlots: number; atlasVramBytes: number; texCacheEntries: number }
   dispose(): void
 }
 

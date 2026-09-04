@@ -4,7 +4,6 @@ import { computed, ref } from 'vue'
 import type { LayerEditorController } from './useLayerEditorStage'
 import type { LayerRow } from '../types'
 
-
 import { buildDisplayRows, clampArtboard, dropPositionFor, useLayerListPanel } from './useLayerListPanel'
 
 function node(id: string, kind: string, extra: Record<string, unknown> = {}) {

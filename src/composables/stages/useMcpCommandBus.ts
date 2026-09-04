@@ -261,8 +261,32 @@ function sceneApi(app: any, cmd: any) {
   return stageSubApi(app, cmd, 'scene3d', 'Scene3D')
 }
 
+function layerApi(app: any, cmd: any) {
+  return stageSubApi(app, cmd, 'layerEditor', 'LayerEditor')
+}
+
 function directorApi(app: any, cmd: any) {
   return stageSubApi(app, cmd, 'director', 'Director')
+}
+
+async function handleLayerGet(app: any, cmd: any): Promise<CommandResult> {
+  const api = layerApi(app, cmd)
+  const out: CommandResult = { document: api.getState(), busy: api.isBusy() }
+  if (cmd.resources !== false) out.resources = api.resources()
+  return out
+}
+
+async function handleLayerEdit(app: any, cmd: any): Promise<CommandResult> {
+  const api = layerApi(app, cmd)
+  if (api.isBusy()) throw new Error('layer editor is busy capturing or importing/exporting — retry after it finishes')
+  const applied = await api.applyOps(cmd.ops)
+  return { applied, document: api.getState() }
+}
+
+async function handleLayerCapture(app: any, cmd: any): Promise<CommandResult> {
+  const api = layerApi(app, cmd)
+  if (api.isBusy()) throw new Error('layer editor is busy capturing or importing/exporting — retry after it finishes')
+  return cmd.mode === 'batch' ? await api.captureBatch() : await api.capture()
 }
 
 async function handleDirectorGet(app: any, cmd: any): Promise<CommandResult> {
@@ -422,6 +446,9 @@ async function executeCommand(app: any, cmd: any): Promise<CommandResult> {
     case 'scene_edit': return handleSceneEdit(app, cmd)
     case 'scene_capture': return handleSceneCapture(app, cmd)
     case 'scene_record': return handleSceneRecord(app, cmd)
+    case 'layer_get': return handleLayerGet(app, cmd)
+    case 'layer_edit': return handleLayerEdit(app, cmd)
+    case 'layer_capture': return handleLayerCapture(app, cmd)
     case 'director_get': return handleDirectorGet(app, cmd)
     case 'director_edit': return handleDirectorEdit(app, cmd)
     case 'connect_stages': return handleConnectStages(app, cmd)

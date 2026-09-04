@@ -20,6 +20,7 @@ function copyNodeDocs() {
 }
 
 export default defineConfig({
+  base: './',
   plugins: [
     vue(),
     tailwindcss(),

@@ -118,9 +118,15 @@ from .director_scene import (  # noqa: F401
     _scene_target,
     _validate_channel,
 )
+from .layer_editor import (  # noqa: F401
+    _layer_capture,
+    _layer_edit,
+    _layer_get,
+    _layer_target,
+)
 from ..mcp_skill_tool import SKILL_TOOL
 
-from . import _shared, info, canvas, stages, runs, bot_tools, workflows, nodes, library, media, director_scene
+from . import _shared, info, canvas, stages, runs, bot_tools, workflows, nodes, library, media, director_scene, layer_editor
 
 TOOLS: dict[str, dict] = {}
 TOOLS.update(info.TOOLS)
@@ -133,4 +139,5 @@ TOOLS.update(nodes.TOOLS)
 TOOLS.update(library.TOOLS)
 TOOLS.update(media.TOOLS)
 TOOLS.update(director_scene.TOOLS)
+TOOLS.update(layer_editor.TOOLS)
 TOOLS["skill"] = SKILL_TOOL

@@ -38,6 +38,7 @@ export interface NodeBase {
   locks: Locks
   colorTag?: string
   fx?: LayerFxData[]
+  clip?: boolean
 }
 
 export type ChannelRole = 'mask' | 'selection' | 'saved'

@@ -61,7 +61,6 @@ describe('clone source registry', () => {
 describe('CoverageBuffer rect lists (symmetric strokes)', () => {
   it('far-apart dabs stay separate rects instead of one huge union', () => {
     const buf = new CoverageBuffer(2048, 2048)
-    // Four quadrant clusters, like mirror-both painting.
     buf.stampCircle(200, 200, 20, 1, 1)
     buf.stampCircle(1800, 200, 20, 1, 1)
     buf.stampCircle(200, 1800, 20, 1, 1)

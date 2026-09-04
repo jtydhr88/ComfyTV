@@ -613,6 +613,56 @@ describe('installMcpCommandBus', () => {
     expect(results[1].error).toContain('busy')
   })
 
+  it('layer editor tools route to the mounted layerEditor api', async () => {
+    const layerApi = {
+      getState: vi.fn(() => ({ canvas: { width: 1024, height: 1024 }, layers: [] })),
+      resources: vi.fn(() => ({ ops: ['add_layer'] })),
+      isBusy: vi.fn(() => false),
+      applyOps: vi.fn(async () => [{ op: 'add_layer', id: 'l1' }]),
+      capture: vi.fn(async () => ({ image: '/view?cap.png' })),
+      captureBatch: vi.fn(async () => ({ image: '/view?cap.png', images: '[]' })),
+    }
+    const node = makeNode({
+      comfyClass: 'ComfyTV.LayerEditorStage',
+      __comfytvStageApi: { layerEditor: layerApi },
+    })
+    const { host, deps } = makeHost([node])
+    uninstall = installMcpCommandBus(host, deps)
+
+    await dispatch(host, { id: 'c1', action: 'layer_get', node: 'u1' })
+    await dispatch(host, { id: 'c2', action: 'layer_get', node: 'u1', resources: false })
+    await dispatch(host, { id: 'c3', action: 'layer_edit', node: 'u1', ops: [{ op: 'add_layer' }] })
+    await dispatch(host, { id: 'c4', action: 'layer_capture', node: 'u1' })
+    await dispatch(host, { id: 'c5', action: 'layer_capture', node: 'u1', mode: 'batch' })
+
+    const results = postedResults()
+    expect(results[0].result.document.canvas.width).toBe(1024)
+    expect(results[0].result.resources.ops).toEqual(['add_layer'])
+    expect(results[1].result.resources).toBeUndefined()
+    expect(results[2].result.applied).toEqual([{ op: 'add_layer', id: 'l1' }])
+    expect(results[2].result.document).toBeTruthy()
+    expect(layerApi.applyOps).toHaveBeenCalledWith([{ op: 'add_layer' }])
+    expect(results[3].result.image).toBe('/view?cap.png')
+    expect(results[4].result.images).toBe('[]')
+    expect(layerApi.captureBatch).toHaveBeenCalledTimes(1)
+  })
+
+  it('layer editor tools error on other stages and busy editors', async () => {
+    const busy = makeNode({
+      id: 6, properties: { comfytv_stage_uid: 'u6' },
+      __comfytvStageApi: { layerEditor: { isBusy: () => true, getState: () => ({}), resources: () => ({}) } },
+    })
+    const { host, deps } = makeHost([makeNode(), busy])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, { id: 'c1', action: 'layer_get', node: 'u1' })
+    await dispatch(host, { id: 'c2', action: 'layer_edit', node: 'u6', ops: [{ op: 'undo' }] })
+    const results = postedResults()
+    expect(results[0].ok).toBe(false)
+    expect(results[0].error).toContain('not a mounted LayerEditor stage')
+    expect(results[1].ok).toBe(false)
+    expect(results[1].error).toContain('busy')
+  })
+
   it('run_stage errors when the stage card is not mounted', async () => {
     const { host, deps } = makeHost([makeNode()])
     uninstall = installMcpCommandBus(host, deps)

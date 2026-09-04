@@ -47,3 +47,5 @@ export const AdoptAssetsSchema = z.object({
   dir: z.string(),
 })
 export type AdoptAssetsResult = z.infer<typeof AdoptAssetsSchema>
+
+export const AssetEnvelopeSchema = z.object({ asset: AssetSchema })

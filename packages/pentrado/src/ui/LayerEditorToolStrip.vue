@@ -65,6 +65,7 @@ import IconRotateCcw from '~icons/lucide/rotate-ccw'
 import IconCircleDashed from '~icons/lucide/circle-dashed'
 import IconEraser from '~icons/lucide/eraser'
 import IconFlame from '~icons/lucide/flame'
+import IconCrop from '~icons/lucide/crop'
 import IconGrid from '~icons/lucide/grid-3x3'
 import IconHand from '~icons/lucide/hand'
 import IconLasso from '~icons/lucide/lasso'
@@ -93,6 +94,7 @@ const editor = props.editor
 const TOOL_OPTIONS: Array<{ id: ToolId; labelKey: string; icon: unknown }> = [
   { id: 'select', labelKey: 'pentrado.toolSelect', icon: IconMousePointer },
   { id: 'transform', labelKey: 'pentrado.toolTransform', icon: IconScaling },
+  { id: 'crop', labelKey: 'pentrado.toolCrop', icon: IconCrop },
   { id: 'marquee', labelKey: 'pentrado.toolMarquee', icon: IconSquareDashed },
   { id: 'marquee-ellipse', labelKey: 'pentrado.toolMarqueeEllipse', icon: IconCircleDashed },
   { id: 'lasso', labelKey: 'pentrado.toolLasso', icon: IconLasso },

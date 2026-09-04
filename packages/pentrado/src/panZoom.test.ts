@@ -42,6 +42,41 @@ describe('createPanZoom', () => {
     })
   })
 
+  describe('setZoom', () => {
+    it('zooms around the viewport center and clamps into [0.05, 20]', () => {
+      const els = makeEls(800, 600)
+      const pz = createPanZoom(() => els)
+      pz.fit(1024, 1024)
+      const before = styleNumbers(els.container)
+      const cx = 400
+      const cy = 300
+      const scale = 2 / pz.zoom()
+      pz.setZoom(2)
+      expect(pz.zoom()).toBe(2)
+      const after = styleNumbers(els.container)
+      expect(after.left).toBeCloseTo(cx - (cx - before.left) * scale)
+      expect(after.top).toBeCloseTo(cy - (cy - before.top) * scale)
+
+      pz.setZoom(1000)
+      expect(pz.zoom()).toBe(20)
+      pz.setZoom(0)
+      expect(pz.zoom()).toBe(0.05)
+    })
+
+    it('is a safe no-op without elements or at the same ratio', () => {
+      const pz = createPanZoom(() => null)
+      expect(() => pz.setZoom(2)).not.toThrow()
+      expect(pz.zoom()).toBe(1)
+
+      const els = makeEls()
+      const pz2 = createPanZoom(() => els)
+      pz2.fit(512, 512)
+      const before = styleNumbers(els.container)
+      pz2.setZoom(pz2.zoom())
+      expect(styleNumbers(els.container)).toEqual(before)
+    })
+  })
+
   describe('fit', () => {
     it('fits a large artboard into the viewport at 90% and centers it', () => {
       const els = makeEls(800, 600)
@@ -104,10 +139,9 @@ describe('createPanZoom', () => {
     it('keeps the cursor position fixed while zooming', () => {
       const els = makeEls()
       const pz = createPanZoom(() => els)
-      pz.invalidate() // pan = (0, 0)
+      pz.invalidate()
       pz.handleWheel(wheel(-1, 100, 50))
       const st = styleNumbers(els.container)
-      // mouse at artboard-space (100, 50); zoom 1 -> 1.1 shifts pan by -0.1 * mouse
       expect(st.left).toBeCloseTo(100 - 100 * 1.1)
       expect(st.top).toBeCloseTo(50 - 50 * 1.1)
     })

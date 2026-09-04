@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
+import { effectScope } from 'vue'
 
 import type { LGraphNode } from '@/lib/comfyApp'
 
@@ -53,5 +54,48 @@ describe('onNodeConfigure', () => {
 
   it('is a no-op for a null node', () => {
     expect(() => onNodeConfigure(null, vi.fn())).not.toThrow()
+  })
+})
+
+describe('detaching', () => {
+  it('bindWidgetCallback returns a detach that restores the original callback', () => {
+    const orig = vi.fn()
+    const apply = vi.fn()
+    const w = { name: 'angle', value: 0, callback: orig } as any
+    const detach = bindWidgetCallback(nodeWith([w]), 'angle', apply)
+    detach()
+    w.callback(1)
+    expect(orig).toHaveBeenCalledWith(1)
+    expect(apply).not.toHaveBeenCalled()
+  })
+
+  it('onNodeConfigure stops calling back once detached, even if chained after', () => {
+    const cb = vi.fn()
+    const later = vi.fn()
+    const node = {} as unknown as LGraphNode
+    const detach = onNodeConfigure(node, cb)
+    onNodeConfigure(node, later)
+    detach()
+    ;(node as any).onConfigure({})
+    expect(cb).not.toHaveBeenCalled()
+    expect(later).toHaveBeenCalledTimes(1)
+  })
+
+  it('both hooks detach automatically when the surrounding scope is disposed', () => {
+    const cb = vi.fn()
+    const apply = vi.fn()
+    const w = { name: 'angle', value: 0 } as any
+    const node = { widgets: [w] } as unknown as LGraphNode
+    const scope = effectScope()
+    scope.run(() => {
+      onNodeConfigure(node, cb)
+      bindWidgetCallback(node, 'angle', apply)
+    })
+    scope.stop()
+    ;(node as any).onConfigure?.({})
+    w.callback?.(3)
+    expect(cb).not.toHaveBeenCalled()
+    expect(apply).not.toHaveBeenCalled()
+    expect((node as any).onConfigure).toBeUndefined()
   })
 })

@@ -1,4 +1,3 @@
-
 export interface PanZoomEls {
   viewport: HTMLElement
   container: HTMLElement
@@ -6,8 +5,10 @@ export interface PanZoomEls {
 
 export interface PanZoom {
   zoom: () => number
+  setZoom: (ratio: number) => void
   invalidate: () => void
   fit: (artW: number, artH: number) => void
+  setArtboardSize: (artW: number, artH: number) => void
   panBy: (dx: number, dy: number) => void
   handleWheel: (e: WheelEvent) => void
   screenToArtboard: (clientX: number, clientY: number) => { x: number; y: number }
@@ -49,9 +50,30 @@ export function createPanZoom(getEls: () => PanZoomEls | null): PanZoom {
     invalidate()
   }
 
+  function setArtboardSize(w: number, h: number): void {
+    if (artW === w && artH === h) return
+    artW = w
+    artH = h
+    invalidate()
+  }
+
   function panBy(dx: number, dy: number): void {
     panX += dx
     panY += dy
+    invalidate()
+  }
+
+  function setZoom(ratio: number): void {
+    const els = getEls()
+    if (!els) return
+    const newZoom = Math.max(0.05, Math.min(20, ratio))
+    if (newZoom === zoomRatio) return
+    const cx = els.viewport.clientWidth / 2
+    const cy = els.viewport.clientHeight / 2
+    const scale = newZoom / zoomRatio
+    panX = cx - (cx - panX) * scale
+    panY = cy - (cy - panY) * scale
+    zoomRatio = newZoom
     invalidate()
   }
 
@@ -83,8 +105,10 @@ export function createPanZoom(getEls: () => PanZoomEls | null): PanZoom {
 
   return {
     zoom: () => zoomRatio,
+    setZoom,
     invalidate,
     fit,
+    setArtboardSize,
     panBy,
     handleWheel,
     screenToArtboard,

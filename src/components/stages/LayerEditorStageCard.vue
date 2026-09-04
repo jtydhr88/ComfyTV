@@ -3,8 +3,8 @@
     <div
       class="ctv:flex ctv:flex-col ctv:gap-1 ctv:text-xs ctv:text-base-foreground ctv:outline-none"
       :class="fullscreen
-        ? 'ctv:fixed ctv:inset-0 ctv:z-[1400] ctv:bg-base-background ctv:p-2'
-        : 'ctv:size-full'"
+        ? 'comfytv-fs ctv:fixed ctv:inset-0 ctv:z-[1400] ctv:bg-base-background ctv:p-2'
+        : 'ctv:size-full ctv:min-h-0'"
       tabindex="0"
       @pointerdown.stop
       @mousedown.stop
@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref } from 'vue'
+import { nextTick, onBeforeUnmount, ref } from 'vue'
 import IconMaximize from '~icons/lucide/maximize-2'
 import IconMinimize from '~icons/lucide/minimize-2'
 
@@ -62,6 +62,7 @@ import {
   LayerEditorToolStrip,
   LayerListPanel,
   TextEditPopup,
+  createLayerEditorOps,
   useLayerEditorHotkeys,
 } from '@jtydhr88/pentrado'
 
@@ -99,6 +100,35 @@ function syncOutputSlots(): void {
 
 onNodeConfigure(props.node, syncOutputSlots)
 syncOutputSlots()
+
+{
+  const ops = createLayerEditorOps(editor)
+  const hostApi = ((props.node as any).__comfytvStageApi ??= {})
+  const layerEditor = {
+    getState: ops.getState,
+    resources: ops.resources,
+    applyOps: ops.applyOps,
+    isBusy: () => editor.capturing.value || editor.exportingPsd.value || editor.importingPsd.value,
+    capture: async () => {
+      const image = await editor.captureNow()
+      if (!image) throw new Error('capture produced no output — see the ComfyTV tab for details')
+      return { image }
+    },
+    captureBatch: async () => {
+      await editor.captureBatch()
+      return {
+        image: editor.capturedImageUrl.value,
+        images: readWidgetStr(props.node, 'captured_images', ''),
+      }
+    },
+  }
+  hostApi.layerEditor = layerEditor
+  onBeforeUnmount(() => {
+    if ((props.node as any).__comfytvStageApi?.layerEditor === layerEditor) {
+      delete (props.node as any).__comfytvStageApi.layerEditor
+    }
+  })
+}
 
 async function toggleFullscreen(): Promise<void> {
   fullscreen.value = !fullscreen.value

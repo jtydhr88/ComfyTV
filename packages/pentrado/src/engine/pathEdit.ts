@@ -166,7 +166,6 @@ export function hitAnchor(path: PathData, pt: Vec2, tolerance: number, includeCo
   return best
 }
 
-/** De Casteljau split: insert a new anchor triple at parameter t of a segment. */
 export function insertAnchorOnSegment(stroke: Stroke, segIndex: number, t: number): Stroke {
   const count = stroke.anchors.length / 3
   const i = segIndex
@@ -200,7 +199,6 @@ export function removeAnchorTriple(stroke: Stroke, tripleIndex: number): Stroke 
   return { ...stroke, anchors }
 }
 
-/** Move a whole anchor triple by a delta (anchor drags carry their handles). */
 export function moveAnchorTriple(stroke: Stroke, tripleIndex: number, dx: number, dy: number): Stroke {
   const anchors = stroke.anchors.map((x, i) => {
     if (Math.floor(i / 3) !== tripleIndex) return x
@@ -209,7 +207,6 @@ export function moveAnchorTriple(stroke: Stroke, tripleIndex: number, dx: number
   return { ...stroke, anchors }
 }
 
-/** Move one control handle; mirrors the opposite handle unless broken. */
 export function moveControl(
   stroke: Stroke,
   tripleIndex: number,

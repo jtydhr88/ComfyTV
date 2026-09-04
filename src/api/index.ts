@@ -1,5 +1,6 @@
 import type { z } from 'zod'
 
+import { AssetEnvelopeSchema, type Asset } from './schemas/asset'
 import { app } from '@/lib/comfyApp'
 
 import {
@@ -365,6 +366,12 @@ export function listRemoteJobs(status?: string): Promise<z.infer<typeof ListRemo
 
 export function cancelRemoteJob(jobId: string): Promise<z.infer<typeof OkSchema>> {
   return apiSend(`/comfytv/remote_jobs/${encodeURIComponent(jobId)}/cancel`, 'POST', OkSchema)
+}
+
+export function getAsset(id: number | string): Promise<Asset | null> {
+  return apiFetch(`/comfytv/assets/${encodeURIComponent(String(id))}`, AssetEnvelopeSchema)
+    .then((r) => r.asset)
+    .catch(() => null)
 }
 
 export function adoptAssets(): Promise<AdoptAssetsResult> {

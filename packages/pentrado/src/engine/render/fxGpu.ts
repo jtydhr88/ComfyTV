@@ -1,4 +1,5 @@
-import { blurBoxRadii, gaussianIsNoop, type LayerFxData } from './layerFx'
+import { blurBoxRadii, gaussianIsNoop } from './layerFxCpu'
+import type { LayerFxData } from './layerFxDefs'
 import type { Bitmap } from './place'
 
 const VERT = `#version 300 es
@@ -252,12 +253,16 @@ function loc(gl: WebGL2RenderingContext, prog: WebGLProgram, name: string): WebG
   return gl.getUniformLocation(prog, name)
 }
 
+const GPU_UNSUPPORTED = new Set([
+  'median-blur', 'stroke', 'outer-glow', 'inner-glow', 'inner-shadow', 'color-overlay', 'bevel',
+])
+
 export function applyLayerFxChainGpu(
   bitmap: Bitmap,
   active: LayerFxData[],
   pad: number
 ): HTMLCanvasElement | null {
-  if (active.some((f) => f.op === 'median-blur')) return null
+  if (active.some((f) => GPU_UNSUPPORTED.has(f.op))) return null
   if (instance === undefined) instance = setup()
   if (!instance) return null
   const fx = instance

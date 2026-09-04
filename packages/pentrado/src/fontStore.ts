@@ -23,7 +23,7 @@ function pickRegularInstance(fonts: TyprFont[]): TyprFont {
   return regular ?? fonts[0]
 }
 
-class FontStore {
+export class FontStore {
   constructor(private manifestUrl: string) {}
 
   private fonts = new Map<string, TyprFont>()

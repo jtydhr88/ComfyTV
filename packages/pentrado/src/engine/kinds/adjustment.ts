@@ -49,6 +49,7 @@ export const adjustmentKind: NodeKind<AdjustmentData> = {
       params: init.params ? normalizeParams(op, init.params) : defaultParams(op),
       curves: normalizeCurves(init.curves),
       mask: init.mask,
+      clip: init.clip,
     }
   },
 
@@ -73,6 +74,7 @@ export const adjustmentKind: NodeKind<AdjustmentData> = {
       params: normalizeParams(op, r.params),
       curves: normalizeCurves(r.curves),
       mask: r.mask as AdjustmentData['mask'],
+      clip: r.clip === true ? true : undefined,
     }
   },
 
@@ -90,6 +92,7 @@ export const adjustmentKind: NodeKind<AdjustmentData> = {
       params: node.params,
       curves: node.curves,
       mask: node.mask,
+      clip: node.clip,
     }
   },
 

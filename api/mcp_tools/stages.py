@@ -184,7 +184,34 @@ async def _get_stage(args: dict) -> dict:
         raise ValueError("node is required (stage uid or graph node id)")
     payload = _command_payload(args, ("project_id",))
     payload["node"] = str(node)
-    return await _shared.submit_command("get_stage", payload)
+    result = await _shared.submit_command("get_stage", payload)
+    if isinstance(result, dict):
+        result["latest_output"] = _latest_output_summary(
+            args.get("project_id") or result.get("project_id") or "default",
+            result.get("uid"), result.get("graph_node_id"))
+    return result
+
+def _latest_output_summary(project_id: str, uid, graph_node_id) -> dict | None:
+    row = None
+    if uid:
+        row = storage.latest_output_by_uid(project_id, str(uid))
+    if row is None and graph_node_id is not None:
+        row = storage.latest_output(project_id, str(graph_node_id))
+    if not row:
+        return None
+    payload = row.get("payload_json") or {}
+    images = payload.get("images") if isinstance(payload, dict) else None
+    return {
+        "id": row.get("id"),
+        "output_type": row.get("output_type"),
+        "created_at": row.get("created_at"),
+        "payload_url": row.get("payload_url") or None,
+        "picked_index": row.get("picked_index"),
+        "images": [
+            {"index": im.get("index"), "image_url": im.get("image_url") or im.get("url")}
+            for im in images
+        ] if isinstance(images, list) else [],
+    }
 
 async def _remove_stage(args: dict) -> dict:
     node = args.get("node")
@@ -346,8 +373,13 @@ TOOLS: dict[str, dict] = {
             "from actual values instead of guessing. String widget values "
             "over 16000 chars are shortened for display only (marked "
             "'[display truncated …]') — the stored value is never cut, so "
-            "do not write a truncated read-back over it. node is a stage uid or "
-            "graph node id. Requires an open ComfyTV page in Desktop or a browser."
+            "do not write a truncated read-back over it. Also returns "
+            "latest_output: the stage's most recent stored output (id, "
+            "output_type, payload_url, picked_index, images[{index, "
+            "image_url}]) or null — use its image_url / payload_url directly "
+            "in layer_edit add_image, asset_edit create or view_image without "
+            "a separate outputs call. node is a stage uid or graph node id. "
+            "Requires an open ComfyTV page in Desktop or a browser."
         ),
         "inputSchema": {
             "type": "object",

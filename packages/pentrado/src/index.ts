@@ -17,6 +17,14 @@ export {
   type UseLayerEditorStageOptions,
   type MaskInit,
 } from './ui/useLayerEditorStage'
+export {
+  createLayerEditorOps,
+  LAYER_OPS,
+  type LayerEditorOps,
+  type LayerOp,
+  type LayerOpName,
+  type LayerOpResult,
+} from './ui/layerEditorOps'
 export { useLayerEditorCanvas } from './ui/useLayerEditorCanvas'
 export { useLayerEditorHotkeys, isTextEditingTarget } from './ui/useLayerEditorHotkeys'
 export {

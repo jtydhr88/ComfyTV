@@ -11,7 +11,7 @@ import {
   type UseLayerEditorStageOptions,
 } from '@jtydhr88/pentrado'
 
-import { listResources } from '@/api'
+import { getAsset, listResources } from '@/api'
 import type { Asset } from '@/api/schemas'
 import PentradoAssetPicker from '@/components/stages/PentradoAssetPicker.vue'
 import { useLoaderFileDrop } from '@/composables/stages/useLoaderFileDrop'
@@ -46,6 +46,10 @@ export const pentradoHost: PentradoHost = {
   },
   t,
   fontManifestUrl: '/comfytv/fonts/manifest.json',
+  async resolveAsset(id) {
+    const asset = await getAsset(id)
+    return asset ? assetToMedia(asset) : null
+  },
   async listFonts() {
     const res = await listResources('font')
     return res.resources.filter((r) => !r.missing).map((r) => ({ name: r.name, url: r.url }))
@@ -74,15 +78,15 @@ export const pentradoHost: PentradoHost = {
   toolbarActions: [
     {
       id: 'capture',
-      label: t('pentradoActions.capture'),
-      title: t('pentradoActions.captureHint'),
+      get label() { return t('pentradoActions.capture') },
+      get title() { return t('pentradoActions.captureHint') },
       icon: markRaw(IconCamera),
       busy: (editor: LayerEditorController) => editor.capturing.value,
       run: (editor: LayerEditorController) => editor.captureBatch(),
     },
     {
       id: 'save-to-library',
-      title: t('pentradoActions.saveToLibraryHint'),
+      get title() { return t('pentradoActions.saveToLibraryHint') },
       icon: markRaw(IconLibrary),
       busy: (editor: LayerEditorController) => editor.exportingPsd.value,
       run: (editor: LayerEditorController) => editor.exportPsdToLibrary(),

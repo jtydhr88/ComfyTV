@@ -289,6 +289,18 @@ async def remove_asset_category(request: web.Request) -> web.Response:
     return web.json_response({"ok": True, "asset": row})
 
 
+@routes.get("/comfytv/assets/{aid}")
+async def get_asset(request: web.Request) -> web.Response:
+    try:
+        aid = int(request.match_info["aid"])
+    except ValueError:
+        return web.json_response({"error": "invalid asset id"}, status=400)
+    row = storage.get_asset(aid)
+    if not row:
+        return web.json_response({"error": "asset not found"}, status=404)
+    return web.json_response({"asset": _with_file_missing(row)})
+
+
 @routes.delete("/comfytv/assets/{aid}")
 async def delete_asset(request: web.Request) -> web.Response:
     try:

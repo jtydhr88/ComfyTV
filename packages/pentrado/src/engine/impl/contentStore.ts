@@ -46,4 +46,8 @@ export class DefaultContentStore implements ContentStore {
     for (const e of this.entries.values()) n += e.width * e.height * 4
     return n
   }
+
+  dispose(): void {
+    this.entries.clear()
+  }
 }

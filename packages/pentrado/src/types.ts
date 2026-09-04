@@ -16,7 +16,7 @@ export interface LayerRow {
 }
 
 export type ToolId =
-  | 'select' | 'transform'
+  | 'select' | 'transform' | 'crop'
   | 'marquee' | 'marquee-ellipse' | 'lasso' | 'wand'
   | 'brush' | 'eraser' | 'airbrush' | 'smudge' | 'clone' | 'dodge' | 'burn'
   | 'picker' | 'gradient' | 'bucket' | 'text' | 'shape' | 'warp' | 'pen'

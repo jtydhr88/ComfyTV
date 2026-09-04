@@ -64,6 +64,7 @@ export interface PentradoHost {
   fontManifestUrl?: string
   listFonts?(): Promise<PentradoFontResource[]>
   saveToLibrary?(item: PentradoLibraryExport): Promise<void>
+  resolveAsset?(id: number | string): Promise<PentradoMediaInput | null>
   components?: {
     AssetPicker?: Component
   }
@@ -172,6 +173,7 @@ export interface ResolvedPentradoHost {
   fontManifestUrl?: string
   listFonts?(): Promise<PentradoFontResource[]>
   saveToLibrary?(item: PentradoLibraryExport): Promise<void>
+  resolveAsset?(id: number | string): Promise<PentradoMediaInput | null>
   components: NonNullable<PentradoHost['components']>
   toolbarActions: PentradoToolbarAction[]
   createCanvasDropHandler(target: PentradoDropTarget): PentradoCanvasDropHandler
@@ -188,6 +190,7 @@ export function resolvePentradoHost(host?: PentradoHost | null): ResolvedPentrad
     t: h.t?.bind(h) ?? fallback.t,
     fontManifestUrl: h.fontManifestUrl,
     listFonts: h.listFonts?.bind(h),
+    resolveAsset: h.resolveAsset?.bind(h),
     saveToLibrary: h.saveToLibrary?.bind(h),
     components: h.components ?? {},
     toolbarActions: h.toolbarActions ?? [],

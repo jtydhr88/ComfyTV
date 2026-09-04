@@ -14,7 +14,6 @@ const MANIFEST_URL = '/pentrado/fonts/manifest.json'
 
 const fetchMock = vi.fn<typeof fetch>()
 
-/** The singleton lives at module scope, so re-import for an isolated store. */
 async function freshStore() {
   vi.resetModules()
   const mod = await import('./fontStore')
@@ -73,7 +72,6 @@ describe('ensureBuiltins', () => {
     expect(fetchMock).toHaveBeenCalledOnce()
     expect(fetchMock).toHaveBeenCalledWith(MANIFEST_URL)
 
-    // cached: no second fetch
     expect(await store.ensureBuiltins()).toEqual(MANIFEST)
     expect(fetchMock).toHaveBeenCalledOnce()
   })
@@ -140,7 +138,7 @@ describe('loadFont', () => {
 
     const again = await store.loadFont(builtinRef('roboto'))
     expect(again).toBe(font)
-    expect(fetchMock).toHaveBeenCalledTimes(2) // manifest + font, no refetch
+    expect(fetchMock).toHaveBeenCalledTimes(2)
   })
 
   it('falls back to the first builtin when the id is unknown', async () => {
@@ -211,7 +209,7 @@ describe('loadFont', () => {
     fetchMock.mockResolvedValue(fontResponse())
     expect(await store.loadFont({ kind: 'url', url: 'http://fonts/a.ttf' })).toBe(typoRegular)
 
-    const first = typrFont() // no name table at all
+    const first = typrFont()
     parseMock.mockReturnValue([first, typrFont('Bold')])
     expect(await store.loadFont({ kind: 'url', url: 'http://fonts/b.ttf' })).toBe(first)
   })
@@ -240,7 +238,7 @@ describe('getFontSync', () => {
     const ref: FontRef = { kind: 'url', url: 'http://fonts/x.ttf' }
 
     expect(store.getFontSync(ref)).toBeNull()
-    await store.loadFont(ref) // same pending promise; wait for it
+    await store.loadFont(ref)
     expect(store.getFontSync(ref)).toBe(font)
     expect(fetchMock).toHaveBeenCalledOnce()
   })
@@ -250,7 +248,6 @@ describe('getFontSync', () => {
     const store = await freshStore()
     const ref: FontRef = { kind: 'url', url: 'http://fonts/broken.ttf' }
 
-    // background load kicked off by getFontSync fails silently
     expect(store.getFontSync(ref)).toBeNull()
     await vi.waitFor(() => expect(store.hasFailed(ref)).toBe(true))
 

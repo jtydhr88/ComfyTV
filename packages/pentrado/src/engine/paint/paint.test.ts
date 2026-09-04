@@ -9,8 +9,6 @@ import { flattenCatmullRom, stepDabs, stepStroke, type StrokePoint } from './int
 import { registerBuiltinPaintCores } from './paintCore'
 import { clearStampCache, getStamp, stampCacheSize } from './stampCache'
 
-// happy-dom has no 2d context; finish() bails without one, so stub enough of
-// it for the stroke-lifecycle tests.
 let restoreGetContext: (() => void) | null = null
 beforeAll(() => {
   const proto = HTMLCanvasElement.prototype as { getContext: unknown }

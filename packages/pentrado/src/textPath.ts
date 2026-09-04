@@ -23,7 +23,6 @@ function finishContour(pts: TriplePoint[], out: Stroke[]): void {
   out.push({ id: generateId('stroke'), anchors, closed: true })
 }
 
-/** Convert a text layer's glyph outlines into cubic path strokes (text-local px). */
 export function textToPathData(style: TextStyle, font: TyprFont): PathData {
   const scale = style.fontSize / font.head.unitsPerEm
   const metrics = measureText(style, font)

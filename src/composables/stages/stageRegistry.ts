@@ -308,6 +308,7 @@ export const RICH_STAGE_CARDS: Record<string, any> = {
 }
 
 export const FLEX_FILL_STAGES = new Set([
+  'ComfyTV.LayerEditorStage',
   'ComfyTV.ScoreEditorStage',
   'ComfyTV.MidiEditorStage',
   'ComfyTV.ScoreStage',

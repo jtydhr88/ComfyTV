@@ -4,8 +4,6 @@ import { DefaultContentStore } from '../impl/contentStore'
 import { History } from '../history'
 import { SetContentCommand, SetContentRegionCommand, extractPatch } from './setContent'
 
-// happy-dom has no 2d context; the region command refuses to touch the slot
-// without one, so give it a minimal stub.
 let restoreGetContext: (() => void) | null = null
 beforeAll(() => {
   const proto = HTMLCanvasElement.prototype as { getContext: unknown }

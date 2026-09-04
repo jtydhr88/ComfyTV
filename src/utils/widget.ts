@@ -1,3 +1,5 @@
+import { getCurrentScope, onScopeDispose } from 'vue'
+
 import type { IBaseWidget, LGraphNode } from '@/lib/comfyApp'
 
 type MaybeNode = LGraphNode | null | undefined
@@ -44,22 +46,39 @@ export function bindWidgetCallback(
   node: MaybeNode,
   name: string,
   apply: (value: unknown) => void,
-): void {
+): () => void {
   const w = getWidget(node, name)
-  if (!w) return
+  if (!w) return () => {}
   const orig = w.callback
-  w.callback = (value: unknown) => {
+  let fn: ((value: unknown) => void) | null = apply
+  const wrapped = (value: unknown) => {
     orig?.call(w, value)
-    apply(value)
+    fn?.(value)
   }
+  w.callback = wrapped
+  return detachOnScopeDispose(() => {
+    fn = null
+    if (w.callback === wrapped) w.callback = orig
+  })
 }
 
-export function onNodeConfigure(node: MaybeNode, cb: () => void): void {
-  if (!node) return
+export function onNodeConfigure(node: MaybeNode, cb: () => void): () => void {
+  if (!node) return () => {}
   const n = node as { onConfigure?: (info: unknown) => void }
   const orig = n.onConfigure
-  n.onConfigure = function (this: unknown, info: unknown) {
+  let fn: (() => void) | null = cb
+  const wrapped = function (this: unknown, info: unknown) {
     orig?.call(this, info)
-    cb()
+    fn?.()
   }
+  n.onConfigure = wrapped
+  return detachOnScopeDispose(() => {
+    fn = null
+    if (n.onConfigure === wrapped) n.onConfigure = orig
+  })
+}
+
+function detachOnScopeDispose(detach: () => void): () => void {
+  if (getCurrentScope()) onScopeDispose(detach)
+  return detach
 }
