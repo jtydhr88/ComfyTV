@@ -398,6 +398,26 @@ describe('V2 shell smoke', () => {
     node.onRemoved?.()
   })
 
+  it('stacks preview cards by the real item count', async () => {
+    const pool = (n: number) => JSON.stringify({
+      images: Array.from({ length: n }, (_, i) => ({ image_url: `/view?filename=${i}.png` })),
+    })
+    const cases: Array<[string, StageKind, (state: any, json: string) => void]> = [
+      ['ComfyTV.ImagePickerStage', 'image-picker', (st, json) => { st.pool = json }],
+      ['ComfyTV.ImageStage', 'image-batch', (st, json) => { st.output = json }],
+    ]
+    for (const [cls, kind, feed] of cases) {
+      const node = makeNode(cls)
+      const api = V2_SHELLS[cls](node as any, kind, 'generator')!
+      const preview = node.widgets.find((w: any) => w.name === 'v2_shell').element.querySelector('.v2-preview') as HTMLElement
+      const stackFor = async (n: number) => { feed(api.state, pool(n)); await nextTick(); return preview.dataset.stack ?? '' }
+      expect(await stackFor(1), cls).toBe('')
+      expect(await stackFor(2), cls).toBe('1')
+      expect(await stackFor(5), cls).toBe('2')
+      node.onRemoved?.()
+    }
+  })
+
   for (const [cls, attach] of shellEntries) {
     it(`attaches and renders islands for ${cls}`, async () => {
       const meta = SHELL_META[cls]

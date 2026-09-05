@@ -71,7 +71,7 @@ function makeGeneratorShell(config: GeneratorConfig) {
     card.appendChild(handle)
     bindNodeDrag(node, handle)
 
-    const preview = el('div', 'v2-preview v2-preview--single')
+    const preview = el('div', 'v2-preview')
     const mediaAnchor = el('div', 'v2-mp-host')
     mediaAnchor.style.cssText = 'position:absolute;inset:0;'
     const busy = el('div', 'v2-preview__busy',

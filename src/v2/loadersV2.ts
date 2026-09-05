@@ -167,7 +167,7 @@ function makePlainLoader(cfg: PlainLoaderCfg) {
     card.appendChild(handle)
     bindNodeDrag(node, handle)
 
-    const preview = el('div', 'v2-preview v2-preview--single v2-loader-preview')
+    const preview = el('div', 'v2-preview v2-loader-preview')
     const mediaAnchor = el('div', 'v2-mp-host')
     mediaAnchor.style.cssText = 'position:absolute;inset:0;pointer-events:none;'
     const cornerAnchor = el('div', 'v2-corner-host')

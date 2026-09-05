@@ -198,6 +198,7 @@ function makeImageBatchShell(shellCfg: ImageBatchShellConfig = {}) {
     }
     chip.dataset.multi = n > 1 ? '1' : ''
     preview.dataset.multi = n > 1 ? '1' : ''
+    preview.dataset.stack = n >= 3 ? '2' : n === 2 ? '1' : ''
     renderStrip()
   }
 

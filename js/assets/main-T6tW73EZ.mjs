@@ -58420,7 +58420,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-B5sknLUI.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-D2kyjI6b.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -142662,7 +142662,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-BQXPSJin.mjs");
+    const { STLLoader } = await import("./STLLoader-BOYcrJpw.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -142670,7 +142670,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-Cwysenlp.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-B88WvR2m.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -228547,7 +228547,7 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const MediaCornerV2 = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["__scopeId", "data-v-3ec4153b"]]);
+const MediaCornerV2 = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["__scopeId", "data-v-ca7eca5e"]]);
 const _hoisted_1$f = { class: "v2-params__count" };
 const _hoisted_2$e = {
   key: 0,
@@ -229179,7 +229179,7 @@ const _sfc_main$e = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const MediaMetaV2 = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["__scopeId", "data-v-ae38efd0"]]);
+const MediaMetaV2 = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["__scopeId", "data-v-2873c4ed"]]);
 function bindShellChrome(node, opts) {
   var _a3, _b2, _c;
   const anyNode = node;
@@ -230071,6 +230071,7 @@ body[data-v2-toolbar] [data-testid="selection-toolbox"] { display: none; }
 .v2-preview::before,
 .v2-preview::after {
   content: '';
+  display: none;
   position: absolute;
   inset: 0;
   border-radius: 12px;
@@ -230080,8 +230081,9 @@ body[data-v2-toolbar] [data-testid="selection-toolbox"] { display: none; }
 }
 .v2-preview::before { transform: translate(7px, 4px) rotate(1.6deg); opacity: .8; }
 .v2-preview::after  { transform: translate(13px, 9px) rotate(3deg); opacity: .45; }
-.v2-preview--single::before,
-.v2-preview--single::after { display: none; }
+.v2-preview[data-stack="1"]::before,
+.v2-preview[data-stack="2"]::before,
+.v2-preview[data-stack="2"]::after { display: block; }
 .v2-checker {
   background: var(--v2-checker);
   background-size: 18px 18px;
@@ -230401,6 +230403,7 @@ function makeImageBatchShell(shellCfg = {}) {
       }
       chip.dataset.multi = n > 1 ? "1" : "";
       preview.dataset.multi = n > 1 ? "1" : "";
+      preview.dataset.stack = n >= 3 ? "2" : n === 2 ? "1" : "";
       renderStrip();
     };
     const applyPick = (idx) => {
@@ -230886,6 +230889,7 @@ function makePoolPicker(previewKind) {
       chip.dataset.show = n > 0 ? "1" : "";
       chip.dataset.multi = n > 1 ? "1" : "";
       preview.dataset.multi = n > 1 ? "1" : "";
+      preview.dataset.stack = n >= 3 ? "2" : n === 2 ? "1" : "";
       count2.textContent = t("v2.poolCount", { n });
       setConfirming(confirming);
       if (previewKind === "image" && n === 0) {
@@ -234514,7 +234518,7 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const AssetLoaderV2 = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-cec9d73f"]]);
+const AssetLoaderV2 = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-e873087f"]]);
 const _hoisted_1$2 = ["title"];
 const _sfc_main$2 = /* @__PURE__ */ defineComponent({
   __name: "LoaderActionsV2",
@@ -234675,7 +234679,7 @@ function makePlainLoader(cfg) {
     );
     card.appendChild(handle);
     bindNodeDrag(node, handle);
-    const preview = el$1("div", "v2-preview v2-preview--single v2-loader-preview");
+    const preview = el$1("div", "v2-preview v2-loader-preview");
     const mediaAnchor = el$1("div", "v2-mp-host");
     mediaAnchor.style.cssText = "position:absolute;inset:0;pointer-events:none;";
     const cornerAnchor = el$1("div", "v2-corner-host");
@@ -235132,7 +235136,7 @@ function makeGeneratorShell(config2) {
     const handle = el("div", "v2-label v2-handle", `${ICON_GRIP}${icon}<span>${title}</span>`);
     card.appendChild(handle);
     bindNodeDrag(node, handle);
-    const preview = el("div", "v2-preview v2-preview--single");
+    const preview = el("div", "v2-preview");
     const mediaAnchor = el("div", "v2-mp-host");
     mediaAnchor.style.cssText = "position:absolute;inset:0;";
     const busy = el(
@@ -235901,4 +235905,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-DsEN1o_S.mjs.map
+//# sourceMappingURL=main-T6tW73EZ.mjs.map

@@ -243,6 +243,7 @@ function makePoolPicker(previewKind: 'image' | 'video' | 'audio') {
       chip.dataset.show = n > 0 ? '1' : ''
       chip.dataset.multi = n > 1 ? '1' : ''
       preview.dataset.multi = n > 1 ? '1' : ''
+      preview.dataset.stack = n >= 3 ? '2' : n === 2 ? '1' : ''
       count.textContent = t('v2.poolCount', { n })
       setConfirming(confirming)
       if (previewKind === 'image' && n === 0) {
