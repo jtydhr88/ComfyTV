@@ -4,7 +4,7 @@ import { onScopeDispose, watch, type EffectScope } from 'vue'
 import { t } from '@/i18n'
 import { type ComfyNode } from '@/lib/comfyApp'
 import { useStageStore } from '@/stores/stageStore'
-import { bindClusterHoverIntent } from '@/v2/nodeDrag'
+import { bindClusterHoverIntent, nudgeSlotAnchors } from '@/v2/nodeDrag'
 import { observeProperty } from '@/v2/observeProps'
 import { el } from '@/v2/shellCommon'
 
@@ -152,6 +152,7 @@ export function bindShellChrome(node: ComfyNode, opts: {
   }
 
   let root: HTMLElement | null = null
+  let nudgedY = Number.NEGATIVE_INFINITY
 
   const syncSocketY = () => {
     if (!root) return
@@ -162,8 +163,12 @@ export function bindShellChrome(node: ComfyNode, opts: {
       const mid = socketY === 'center'
         ? box.height / 2
         : Math.min(box.height * socketY.frac, socketY.cap)
-      const y = (box.top + mid - rootBox.top) / (scale || 1)
-      root.style.setProperty('--v2-socket-y', `${Math.round(y)}px`)
+      const y = Math.round((box.top + mid - rootBox.top) / (scale || 1))
+      root.style.setProperty('--v2-socket-y', `${y}px`)
+      if (Math.abs(y - nudgedY) >= 2) {
+        nudgedY = y
+        nudgeSlotAnchors(root)
+      }
     }
   }
 

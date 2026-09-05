@@ -58401,7 +58401,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-DJTCgV97.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-F4xXHErR.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -66007,7 +66007,7 @@ const _sfc_main$4q = /* @__PURE__ */ defineComponent({
     const props = __props;
     const emit2 = __emit;
     const textareaEl = /* @__PURE__ */ ref(null);
-    function resize() {
+    function resize2() {
       const el2 = textareaEl.value;
       if (!el2) return;
       el2.style.height = "auto";
@@ -66018,13 +66018,13 @@ const _sfc_main$4q = /* @__PURE__ */ defineComponent({
     }
     function onTextareaInput(e) {
       emit2("update:modelValue", e.target.value);
-      resize();
+      resize2();
     }
     onMounted(() => {
-      if (props.multiline) nextTick(resize);
+      if (props.multiline) nextTick(resize2);
     });
     watch(() => props.modelValue, () => {
-      if (props.multiline) nextTick(resize);
+      if (props.multiline) nextTick(resize2);
     });
     return (_ctx, _cache2) => {
       return __props.multiline ? (openBlock(), createElementBlock("textarea", {
@@ -106614,7 +106614,7 @@ var passive = {
 };
 function effect(_ref2) {
   var state2 = _ref2.state, instance2 = _ref2.instance, options = _ref2.options;
-  var _options$scroll = options.scroll, scroll = _options$scroll === void 0 ? true : _options$scroll, _options$resize = options.resize, resize = _options$resize === void 0 ? true : _options$resize;
+  var _options$scroll = options.scroll, scroll = _options$scroll === void 0 ? true : _options$scroll, _options$resize = options.resize, resize2 = _options$resize === void 0 ? true : _options$resize;
   var window2 = getWindow(state2.elements.popper);
   var scrollParents = [].concat(state2.scrollParents.reference, state2.scrollParents.popper);
   if (scroll) {
@@ -106622,7 +106622,7 @@ function effect(_ref2) {
       scrollParent.addEventListener("scroll", instance2.update, passive);
     });
   }
-  if (resize) {
+  if (resize2) {
     window2.addEventListener("resize", instance2.update, passive);
   }
   return function() {
@@ -106631,7 +106631,7 @@ function effect(_ref2) {
         scrollParent.removeEventListener("scroll", instance2.update, passive);
       });
     }
-    if (resize) {
+    if (resize2) {
       window2.removeEventListener("resize", instance2.update, passive);
     }
   };
@@ -112440,7 +112440,7 @@ var inflt = function(dat, st2, buf, dict) {
   if (!sl || st2.f && !st2.l)
     return buf || new u8(0);
   var noBuf = !buf;
-  var resize = noBuf || st2.i != 2;
+  var resize2 = noBuf || st2.i != 2;
   var noSt = st2.i;
   if (noBuf)
     buf = new u8(sl * 3);
@@ -112466,7 +112466,7 @@ var inflt = function(dat, st2, buf, dict) {
             err(0);
           break;
         }
-        if (resize)
+        if (resize2)
           cbuf(bt2 + l3);
         buf.set(dat.subarray(s, t2), bt2);
         st2.b = bt2 += l3, st2.p = pos = t2 * 8, st2.f = final;
@@ -112516,7 +112516,7 @@ var inflt = function(dat, st2, buf, dict) {
         break;
       }
     }
-    if (resize)
+    if (resize2)
       cbuf(bt2 + 131072);
     var lms = (1 << lbt) - 1, dms = (1 << dbt) - 1;
     var lpos = pos;
@@ -112556,7 +112556,7 @@ var inflt = function(dat, st2, buf, dict) {
             err(0);
           break;
         }
-        if (resize)
+        if (resize2)
           cbuf(bt2 + 131072);
         var end2 = bt2 + add2;
         if (bt2 < dt2) {
@@ -142634,7 +142634,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-B-OCxuKi.mjs");
+    const { STLLoader } = await import("./STLLoader-D0X2h-xH.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -142642,7 +142642,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-D67PoZSB.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-DrOU55Fd.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -228449,22 +228449,38 @@ const _sfc_main$e = /* @__PURE__ */ defineComponent({
 });
 const ServerSelectV2 = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["__scopeId", "data-v-f737bbd3"]]);
 const nudgeScope = effectScope(true);
-let nudgeFlip = false;
-let nudgeRoot = null;
+const nudgePending = /* @__PURE__ */ new Set();
+let nudged = [];
+const resize = (nodes, delta) => {
+  var _a3;
+  for (const n of nodes) n.setSize([n.size[0], n.size[1] + delta]);
+  (_a3 = app.graph) == null ? void 0 : _a3.setDirtyCanvas(true, true);
+};
+const nudgeRevert = nudgeScope.run(() => useTimeoutFn(() => {
+  resize(nudged, -1);
+  nudged = [];
+}, 40, { immediate: false }));
 const nudgeTimer = nudgeScope.run(() => useTimeoutFn(() => {
   var _a3, _b2;
-  const root = nudgeRoot;
-  nudgeRoot = null;
-  const id = root == null ? void 0 : root.getAttribute("data-node-id");
-  if (id == null) return;
+  if (nudged.length) {
+    nudgeTimer.start();
+    return;
+  }
   const graph = app.graph;
-  const n = ((_a3 = graph == null ? void 0 : graph.getNodeById) == null ? void 0 : _a3.call(graph, id)) ?? ((_b2 = graph == null ? void 0 : graph.getNodeById) == null ? void 0 : _b2.call(graph, Number(id)));
-  if (!(n == null ? void 0 : n.setSize)) return;
-  nudgeFlip = !nudgeFlip;
-  n.setSize([n.size[0], n.size[1] + (nudgeFlip ? 0.01 : -0.01)]);
+  const nodes = [];
+  for (const root of nudgePending) {
+    const id = root.getAttribute("data-node-id");
+    const n = id == null ? null : ((_a3 = graph == null ? void 0 : graph.getNodeById) == null ? void 0 : _a3.call(graph, id)) ?? ((_b2 = graph == null ? void 0 : graph.getNodeById) == null ? void 0 : _b2.call(graph, Number(id)));
+    if (n == null ? void 0 : n.setSize) nodes.push(n);
+  }
+  nudgePending.clear();
+  if (!nodes.length) return;
+  nudged = nodes;
+  resize(nodes, 1);
+  nudgeRevert.start();
 }, 60, { immediate: false }));
 function nudgeSlotAnchors(root) {
-  nudgeRoot = root;
+  nudgePending.add(root);
   nudgeTimer.start();
 }
 function bindClusterHoverIntent(root, scope2) {
@@ -228806,6 +228822,7 @@ function bindShellChrome(node, opts) {
     syncSelected();
   };
   let root = null;
+  let nudgedY = Number.NEGATIVE_INFINITY;
   const syncSocketY = () => {
     if (!root) return;
     const rootBox = root.getBoundingClientRect();
@@ -228813,8 +228830,12 @@ function bindShellChrome(node, opts) {
     if (rootBox.height > 0 && box.height > 0) {
       const scale = rootBox.height / (root.offsetHeight || rootBox.height);
       const mid = socketY === "center" ? box.height / 2 : Math.min(box.height * socketY.frac, socketY.cap);
-      const y2 = (box.top + mid - rootBox.top) / (scale || 1);
-      root.style.setProperty("--v2-socket-y", `${Math.round(y2)}px`);
+      const y2 = Math.round((box.top + mid - rootBox.top) / (scale || 1));
+      root.style.setProperty("--v2-socket-y", `${y2}px`);
+      if (Math.abs(y2 - nudgedY) >= 2) {
+        nudgedY = y2;
+        nudgeSlotAnchors(root);
+      }
     }
   };
   const syncAll = () => {
@@ -235553,4 +235574,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-Db8wCy4B.mjs.map
+//# sourceMappingURL=main-CTYF2Q2x.mjs.map

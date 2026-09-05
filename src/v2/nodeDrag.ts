@@ -4,21 +4,33 @@ import { effectScope, type EffectScope } from 'vue'
 import { app, type ComfyNode } from '@/lib/comfyApp'
 
 const nudgeScope = effectScope(true)
-let nudgeFlip = false
-let nudgeRoot: HTMLElement | null = null
+const nudgePending = new Set<HTMLElement>()
+let nudged: any[] = []
+const resize = (nodes: any[], delta: number) => {
+  for (const n of nodes) n.setSize([n.size[0], n.size[1] + delta])
+  ;(app as any).graph?.setDirtyCanvas(true, true)
+}
+const nudgeRevert = nudgeScope.run(() => useTimeoutFn(() => {
+  resize(nudged, -1)
+  nudged = []
+}, 40, { immediate: false }))!
 const nudgeTimer = nudgeScope.run(() => useTimeoutFn(() => {
-  const root = nudgeRoot
-  nudgeRoot = null
-  const id = root?.getAttribute('data-node-id')
-  if (id == null) return
+  if (nudged.length) { nudgeTimer.start(); return }
   const graph: any = (app as any).graph
-  const n = graph?.getNodeById?.(id) ?? graph?.getNodeById?.(Number(id))
-  if (!n?.setSize) return
-  nudgeFlip = !nudgeFlip
-  n.setSize([n.size[0], n.size[1] + (nudgeFlip ? 0.01 : -0.01)])
+  const nodes: any[] = []
+  for (const root of nudgePending) {
+    const id = root.getAttribute('data-node-id')
+    const n = id == null ? null : graph?.getNodeById?.(id) ?? graph?.getNodeById?.(Number(id))
+    if (n?.setSize) nodes.push(n)
+  }
+  nudgePending.clear()
+  if (!nodes.length) return
+  nudged = nodes
+  resize(nodes, 1)
+  nudgeRevert.start()
 }, 60, { immediate: false }))!
-function nudgeSlotAnchors(root: HTMLElement) {
-  nudgeRoot = root
+export function nudgeSlotAnchors(root: HTMLElement) {
+  nudgePending.add(root)
   nudgeTimer.start()
 }
 
