@@ -82,6 +82,7 @@ import { askText } from '@/composables/dialog/useTextInputDialog'
 import { useOutputAssetTagging } from '@/composables/stages/useOutputAssetTagging'
 import { openLightbox } from '@/composables/useLightbox'
 import type { StageState } from '@/stores/stageStore'
+import { mediaItems, pickedMediaIndex, type MediaItem } from '@/v2/mediaItems'
 
 const { t } = useI18n()
 
@@ -109,26 +110,8 @@ const {
   createCategoryAndTag,
 } = useOutputAssetTagging()
 
-const items = computed<Array<{ url: string; label: string }>>(() => {
-  const raw = props.source === 'pool' ? props.state.pool : props.state.output
-  const str = String(raw ?? '')
-  try {
-    const data = JSON.parse(str)
-    const images = Array.isArray(data?.images) ? data.images : []
-    const cells = images
-      .map((im: any) => ({ url: String(im?.image_url ?? ''), label: String(im?.label ?? '') }))
-      .filter((c: any) => c.url)
-    if (cells.length) return cells
-  } catch { }
-  return props.source === 'batch' && str && !str.trim().startsWith('{')
-    ? [{ url: str, label: '' }]
-    : []
-})
-
-const idx = computed(() => {
-  const i = Number(props.state.pickedIndex)
-  return Math.min(Math.max(Number.isFinite(i) && i >= 1 ? i : 1, 1), Math.max(items.value.length, 1))
-})
+const items = computed<MediaItem[]>(() => mediaItems(props.state, props.source))
+const idx = computed(() => pickedMediaIndex(props.state, items.value.length))
 
 const current = computed(() => items.value[idx.value - 1] ?? null)
 const savedNow = computed(() => (current.value ? isSaved(current.value.url) : false))

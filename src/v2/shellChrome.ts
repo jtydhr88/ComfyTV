@@ -1,9 +1,12 @@
 import { useResizeObserver } from '@vueuse/core'
-import { onScopeDispose, watch, type EffectScope } from 'vue'
+import { h, onScopeDispose, watch, type EffectScope } from 'vue'
 
 import { t } from '@/i18n'
 import { app, type ComfyNode } from '@/lib/comfyApp'
-import { useStageStore } from '@/stores/stageStore'
+import { isPoolPickerKind, useStageStore, type StageState } from '@/stores/stageStore'
+import { createIslandGroup } from '@/v2/islands'
+import { pickedMediaItem, type MediaSource } from '@/v2/mediaItems'
+import MediaMetaV2 from '@/v2/MediaMetaV2.vue'
 import { bindClusterHoverIntent, nudgeSlotAnchors } from '@/v2/nodeDrag'
 import { observeProperty } from '@/v2/observeProps'
 import { el } from '@/v2/shellCommon'
@@ -13,7 +16,8 @@ export function bindShellChrome(node: ComfyNode, opts: {
   card: HTMLElement
   socketAnchor: HTMLElement
   socketY?: 'center' | { frac: number; cap: number }
-  state?: { error?: { message?: string; traceback?: string } | null; durationMs?: number | null; output?: string | null }
+  state?: StageState
+  media?: { source: MediaSource; host?: HTMLElement }
 }) {
   const anyNode = node as any
   const { scope, card, socketAnchor } = opts
@@ -61,27 +65,7 @@ export function bindShellChrome(node: ComfyNode, opts: {
         { immediate: true },
       )
     })
-
-    const dur = el('div', 'v2-duration')
-    socketAnchor.appendChild(dur)
-    scope.run(() => {
-      watch(
-        () => [state.durationMs, state.output] as const,
-        ([ms, output]) => {
-          if (ms == null || !Number.isFinite(ms) || ms <= 0 || !output) {
-            dur.dataset.show = ''
-            return
-          }
-          const secs = ms / 1000
-          dur.textContent = secs < 60
-            ? `${secs.toFixed(1)}s`
-            : `${Math.floor(secs / 60)}m ${Math.round(secs % 60)}s`
-          dur.title = t('stage.outputDurationHint')
-          dur.dataset.show = '1'
-        },
-        { immediate: true },
-      )
-    })
+    bindMediaMeta(state, opts.media, socketAnchor, scope)
   }
 
   const titleEl = card.querySelector<HTMLElement>('.v2-handle span')
@@ -225,4 +209,26 @@ export function bindShellChrome(node: ComfyNode, opts: {
   }
 
   queueMicrotask(syncAll)
+}
+
+function bindMediaMeta(
+  state: StageState,
+  media: { source: MediaSource; host?: HTMLElement } | undefined,
+  socketAnchor: HTMLElement,
+  scope: EffectScope,
+) {
+  let host = media?.host
+  if (!host) {
+    host = el('div', 'v2-meta-host')
+    socketAnchor.after(host)
+  }
+  const showGenTime = state.variant !== 'loader' && !isPoolPickerKind(state.kind)
+  const islands = createIslandGroup()
+  islands.mount(host, {
+    render: () => h(MediaMetaV2, {
+      url: media ? pickedMediaItem(state, media.source)?.url ?? null : null,
+      durationMs: showGenTime && state.output ? state.durationMs ?? null : null,
+    }),
+  })
+  scope.run(() => onScopeDispose(() => islands.unmountAll()))
 }

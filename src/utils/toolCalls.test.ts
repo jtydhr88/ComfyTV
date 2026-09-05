@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 
 import type { BotBlock } from '@/stores/botStore'
+import { formatDuration } from '@/utils/mediaFormat'
 import {
-  formatDuration,
   pairToolCalls,
   toolGlyph,
   toolLabel,

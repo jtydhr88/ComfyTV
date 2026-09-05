@@ -265,20 +265,7 @@ export const V2_CSS_PANELS = `
   padding: 0 2px;
 }
 .v2-error__x:hover { color: #fecaca; }
-.v2-duration {
-  display: none;
-  position: absolute;
-  left: 10px;
-  bottom: 10px;
-  z-index: 3;
-  padding: 3px 8px;
-  border-radius: 999px;
-  background: rgba(12, 12, 16, 0.65);
-  color: #b9b9c0;
-  font: 500 10px/1 system-ui, sans-serif;
-  pointer-events: none;
-}
-.v2-duration[data-show="1"] { display: block; }
+.v2-meta-host { flex: none; }
 .v2-handle .v2-id {
   display: none;
   flex: none;

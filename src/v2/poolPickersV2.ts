@@ -12,6 +12,7 @@ import { bindWheelCapture } from '@/v2/wheelCapture'
 import MediaCornerV2 from '@/v2/MediaCornerV2.vue'
 import MediaPreviewV2 from '@/v2/MediaPreviewV2.vue'
 import { createIslandGroup } from '@/v2/islands'
+import { mediaItems } from '@/v2/mediaItems'
 import { V2_SHELLS } from '@/v2/registry'
 import { attachOutputToolbar } from '@/v2/outputToolbar'
 import { usePinnedBatchStore } from '@/stores/pinnedBatchStore'
@@ -90,16 +91,7 @@ function el(tag: string, cls: string, html?: string) {
 }
 
 export function poolCells(poolJson: string | null | undefined): Array<{ url: string }> {
-  if (!poolJson) return []
-  try {
-    const data = JSON.parse(poolJson)
-    const images = Array.isArray(data?.images) ? data.images : []
-    return images
-      .map((im: any) => ({ url: String(im?.image_url ?? '') }))
-      .filter((c: any) => c.url)
-  } catch {
-    return []
-  }
+  return mediaItems({ pool: poolJson ?? null, output: null }, 'pool')
 }
 
 function makePoolPicker(previewKind: 'image' | 'video' | 'audio') {
@@ -367,7 +359,9 @@ function makePoolPicker(previewKind: 'image' | 'video' | 'audio') {
     })
 
     bindNodeDrag(node, preview)
-    bindShellChrome(node, { scope, card, socketAnchor: preview, state: stageState })
+    bindShellChrome(node, {
+      scope, card, socketAnchor: preview, state: stageState, media: { source: 'pool' },
+    })
 
     const prevRemoved = anyNode.onRemoved
     anyNode.onRemoved = function (...args: unknown[]) {

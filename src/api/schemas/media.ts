@@ -56,3 +56,18 @@ export const MidiEventsSchema = z.object({
   duration: z.number().optional(),
 })
 export type MidiEventsResult = z.infer<typeof MidiEventsSchema>
+export const MediaInfoSchema = z.object({
+  kind: z.enum(['image', 'video', 'audio', 'model', 'other']),
+  format: z.string(),
+  size_bytes: z.number(),
+  width: z.number().nullable().optional(),
+  height: z.number().nullable().optional(),
+  duration_s: z.number().nullable().optional(),
+  fps: z.number().nullable().optional(),
+  has_audio: z.boolean().nullable().optional(),
+  sample_rate: z.number().nullable().optional(),
+  channels: z.number().nullable().optional(),
+  codec: z.string().nullable().optional(),
+  frames: z.number().nullable().optional(),
+})
+export type MediaInfo = z.infer<typeof MediaInfoSchema>

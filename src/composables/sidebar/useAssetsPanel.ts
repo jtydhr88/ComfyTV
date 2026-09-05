@@ -15,6 +15,7 @@ import { askConfirm } from '@/composables/dialog/useConfirmDialog'
 import { askText } from '@/composables/dialog/useTextInputDialog'
 import { type AssetCategoryFilter, useAssetStore } from '@/stores/assetStore'
 import { type AssetMediaType, mediaTypeOf } from '@/utils/mediaFileTypes'
+import { formatBytes } from '@/utils/mediaFormat'
 
 export type AssetMediaFilter = 'all' | AssetMediaType
 export type AssetViewMode = 'grid' | 'list'
@@ -26,13 +27,6 @@ export { MODEL_FILE_EXTENSIONS } from '@/widgets/three/modelFormats'
 const ASSET_MENU_WIDTH = 192
 const TAG_EDITOR_WIDTH = 176
 const SETTINGS_MENU_WIDTH = 176
-
-function formatSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 ** 2) return `${(bytes / 1024).toFixed(1)} KB`
-  if (bytes < 1024 ** 3) return `${(bytes / 1024 ** 2).toFixed(1)} MB`
-  return `${(bytes / 1024 ** 3).toFixed(1)} GB`
-}
 
 export function useAssetsPanel(isActive: () => boolean | undefined) {
   const { t } = useI18n()
@@ -106,7 +100,7 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
   function assetMeta(asset: Asset): string {
     if (asset.media_type === 'image' && asset.width && asset.height)
       return `${asset.width}×${asset.height}`
-    if (asset.size_bytes) return formatSize(asset.size_bytes)
+    if (asset.size_bytes) return formatBytes(asset.size_bytes)
     return ''
   }
 

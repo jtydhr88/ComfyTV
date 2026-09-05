@@ -18,6 +18,7 @@ from . import expression_eval  # noqa: F401
 from . import score_editor  # noqa: F401
 from . import proxies    # noqa: F401
 from . import thumbs     # noqa: F401
+from . import media_info  # noqa: F401
 from . import midi       # noqa: F401
 from . import poster     # noqa: F401
 from . import settings   # noqa: F401

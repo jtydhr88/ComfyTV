@@ -98,8 +98,8 @@ import BotAskCard from '@/components/bot/BotAskCard.vue'
 import BotMarkdown from '@/components/bot/BotMarkdown.vue'
 import BotMediaGroup from '@/components/bot/BotMediaGroup.vue'
 import type { BotBlock, BotUsage } from '@/stores/botStore'
+import { formatDuration } from '@/utils/mediaFormat'
 import {
-  formatDuration,
   pairToolCalls,
   toolGlyph,
 } from '@/utils/toolCalls'

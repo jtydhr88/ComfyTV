@@ -10,6 +10,15 @@
     "close": "Close"
   },
   "v2": {
+    "meta": {
+      "fps": "{n} fps",
+      "silent": "no audio",
+      "mono": "mono",
+      "stereo": "stereo",
+      "channels": "{n} ch",
+      "frames": "{n} frames",
+      "genTime": "Generated in {t}"
+    },
     "genopt": {
       "resolution": "Resolution",
       "ratio": "Aspect ratio",

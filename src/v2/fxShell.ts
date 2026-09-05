@@ -285,6 +285,7 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant, config:
   let serverAnchor: HTMLElement | null = null
   let outputWrap: HTMLElement | null = null
   let outputMediaAnchor: HTMLElement | null = null
+  let outputMetaHost: HTMLElement | null = null
   let saveBtn: HTMLButtonElement | null = null
   if (config.hasRun && config.embed !== false && config.outputStrip !== false) {
     outputWrap = el('div', 'v2-fx-output')
@@ -303,7 +304,8 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant, config:
     outputMediaAnchor = el('div', 'v2-mp-host')
     outputMediaAnchor.style.cssText = 'position:absolute;inset:0;'
     box.appendChild(outputMediaAnchor)
-    outputWrap.append(head, box)
+    outputMetaHost = el('div', 'v2-meta-host')
+    outputWrap.append(head, box, outputMetaHost)
     card.appendChild(outputWrap)
 
     dlBtn.addEventListener('pointerdown', (e) => e.stopPropagation())
@@ -436,6 +438,7 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant, config:
 
   bindShellChrome(node, {
     scope, card, socketAnchor: embedAnchor, socketY: { frac: 0.3, cap: 160 }, state: stageState,
+    media: outputMetaHost ? { source: 'batch', host: outputMetaHost } : undefined,
   })
 
   if (promptAnchor) bindPromptResize(node, promptAnchor, scope)

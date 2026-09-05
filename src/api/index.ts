@@ -24,6 +24,7 @@ import {
   ListServerStatusSchema,
   ListServersSchema,
   ListStagePresetsSchema,
+  MediaInfoSchema,
   ListWorkflowOverviewSchema,
   MutateResourceSchema,
   MutateServerSchema,
@@ -54,6 +55,7 @@ import type {
   ImportWorkflowResult,
   LinkWorkflowResult,
   ListWorkflowOverview,
+  MediaInfo,
   MidiEnsureResult,
   MidiEventsResult,
   NativeWorkflow,
@@ -387,6 +389,10 @@ export function proxyEnsure(
     ...(opts.create ? { create: true } : {}),
     ...(opts.retry ? { retry: true } : {}),
   })
+}
+
+export function fetchMediaInfo(url: string): Promise<MediaInfo> {
+  return apiFetch(`/comfytv/media/info?url=${encodeURIComponent(url)}`, MediaInfoSchema)
 }
 
 export function midiEnsure(url: string): Promise<MidiEnsureResult> {

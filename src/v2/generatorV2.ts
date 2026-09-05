@@ -185,7 +185,10 @@ function makeGeneratorShell(config: GeneratorConfig) {
     })
 
     bindNodeDrag(node, preview)
-    bindShellChrome(node, { scope, card, socketAnchor: preview, state: stageState })
+    bindShellChrome(node, {
+      scope, card, socketAnchor: preview, state: stageState,
+      media: config.preview === 'text' ? undefined : { source: 'batch' },
+    })
     bindPromptResize(node, promptAnchor, scope)
     bindPanelCollapse(node, {
       scope, panel, footer, run,

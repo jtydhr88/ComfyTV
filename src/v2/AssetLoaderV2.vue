@@ -16,6 +16,7 @@
         :on-capture-view="mediaType === 'model' && onAction ? onModelCaptured : undefined"
       />
     </div>
+    <MediaMetaV2 v-if="mediaType !== 'text'" :url="selectedAsset?.payload_url ?? null" />
     <div class="v2-al__footer" @pointerdown.stop>
       <span v-if="selectedAsset?.file_missing" class="v2-al__name v2-al__name--missing">
         ⚠ {{ selectedAsset.name || '—' }}
@@ -50,6 +51,7 @@ import AssetPickerPopup from '@/components/stages/AssetPickerPopup.vue'
 import { useAssetLoaderCard } from '@/composables/stages/useAssetLoaderCard'
 import type { LGraphNode } from '@/lib/comfyApp'
 import { assetPreviewUrl } from '@/utils/assetMedia'
+import MediaMetaV2 from '@/v2/MediaMetaV2.vue'
 import MediaPreviewV2 from '@/v2/MediaPreviewV2.vue'
 import { TEXT_FILE_EXTENSIONS } from '@/utils/mediaFileTypes'
 import { MODEL_FILE_EXTENSIONS } from '@/widgets/three/modelFormats'

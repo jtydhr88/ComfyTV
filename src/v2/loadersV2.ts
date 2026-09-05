@@ -280,7 +280,9 @@ function makePlainLoader(cfg: PlainLoaderCfg) {
       prevRemoved?.apply(this, args)
     }
 
-    bindShellChrome(node, { scope, card, socketAnchor: preview, state: stageState })
+    bindShellChrome(node, {
+      scope, card, socketAnchor: preview, state: stageState, media: { source: 'batch' },
+    })
     return stageApi
   }
 }

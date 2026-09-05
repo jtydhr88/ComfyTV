@@ -10,6 +10,15 @@
     "close": "关闭"
   },
   "v2": {
+    "meta": {
+      "fps": "{n} fps",
+      "silent": "无音轨",
+      "mono": "单声道",
+      "stereo": "立体声",
+      "channels": "{n} 声道",
+      "frames": "{n} 帧",
+      "genTime": "生成耗时 {t}"
+    },
     "genopt": {
       "resolution": "清晰度",
       "ratio": "比例",
