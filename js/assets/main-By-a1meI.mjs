@@ -58401,7 +58401,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-pu15kb50.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-D9B87i61.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -142634,7 +142634,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-CoEy-BDD.mjs");
+    const { STLLoader } = await import("./STLLoader-CdQGPL1i.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -142642,7 +142642,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-PAHtOPKX.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-Dbs0zqmq.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -227750,7 +227750,7 @@ const _sfc_main$l = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const MediaToolbarV2 = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["__scopeId", "data-v-a2799fc9"]]);
+const MediaToolbarV2 = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["__scopeId", "data-v-a81c506c"]]);
 function isVideoOutputKind(kind) {
   return kind === "video" || kind === "video-picker";
 }
@@ -228989,7 +228989,7 @@ function bindPanelCollapse(node, opts) {
   apply2();
 }
 function bindShellChrome(node, opts) {
-  var _a3;
+  var _a3, _b2, _c;
   const anyNode = node;
   const { scope: scope2, card, socketAnchor } = opts;
   const socketY = opts.socketY ?? "center";
@@ -229102,6 +229102,21 @@ function bindShellChrome(node, opts) {
     titleEl.addEventListener("blur", () => commit(false));
     syncTitle();
   }
+  const ID_SETTING = "Comfy.NodeBadge.NodeIdBadgeMode";
+  const idEl = el$8("span", "v2-id");
+  (_b2 = titleEl == null ? void 0 : titleEl.parentElement) == null ? void 0 : _b2.appendChild(idEl);
+  const syncId = () => {
+    var _a4, _b3, _c3;
+    const mode = (_c3 = (_b3 = (_a4 = app.ui) == null ? void 0 : _a4.settings) == null ? void 0 : _b3.getSettingValue) == null ? void 0 : _c3.call(_b3, ID_SETTING);
+    const show = !!mode && mode !== "None" && anyNode.id != null && anyNode.id !== -1;
+    idEl.textContent = show ? `#${anyNode.id}` : "";
+    idEl.dataset.show = show ? "1" : "";
+  };
+  const settingsBus = (_c = app.ui) == null ? void 0 : _c.settings;
+  settingsBus == null ? void 0 : settingsBus.addEventListener(`${ID_SETTING}.change`, syncId);
+  scope2.run(() => {
+    onScopeDispose(() => settingsBus == null ? void 0 : settingsBus.removeEventListener(`${ID_SETTING}.change`, syncId));
+  });
   const syncSelected = () => {
     const root2 = card.closest("[data-node-id]");
     if (!root2) return;
@@ -229151,6 +229166,7 @@ function bindShellChrome(node, opts) {
     if (!root.hasAttribute("data-v2-shell")) root.setAttribute("data-v2-shell", "");
     syncSelected();
     syncTitle();
+    syncId();
     syncWarnings(root);
     syncSocketY();
   };
@@ -229161,6 +229177,7 @@ function bindShellChrome(node, opts) {
   const disposers = [
     observeProperty(anyNode, "selected", syncSelected),
     observeProperty(anyNode, "title", syncTitle),
+    observeProperty(anyNode, "id", syncId),
     observeProperty(anyNode, "_comfytvSlotWarnings", () => {
       if (root) syncWarnings(root);
     })
@@ -229458,6 +229475,18 @@ const V2_CSS_PANELS = `
   pointer-events: none;
 }
 .v2-duration[data-show="1"] { display: block; }
+.v2-handle .v2-id {
+  display: none;
+  flex: none;
+  margin-left: auto;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--v2-chip-bg);
+  color: var(--v2-text-faint);
+  font: 500 10px/1 ui-monospace, monospace;
+  overflow: visible;
+}
+.v2-handle .v2-id[data-show="1"] { display: inline-block; }
 .v2-run .v2-run__stop { display: none; }
 .v2-run[data-busy="1"] { background: #ef4444; color: #fff; }
 .v2-run[data-busy="1"]:hover { background: #f87171; }
@@ -234321,7 +234350,7 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const LoaderActionsV2 = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-205d1a9f"]]);
+const LoaderActionsV2 = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-81381f88"]]);
 const LOADER_CSS = `
 .v2-loader-preview { cursor: pointer; }
 .v2-loader-preview[data-drag="1"] {
@@ -235667,4 +235696,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-B7QY5rQ9.mjs.map
+//# sourceMappingURL=main-By-a1meI.mjs.map

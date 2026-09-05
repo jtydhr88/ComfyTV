@@ -279,6 +279,18 @@ export const V2_CSS_PANELS = `
   pointer-events: none;
 }
 .v2-duration[data-show="1"] { display: block; }
+.v2-handle .v2-id {
+  display: none;
+  flex: none;
+  margin-left: auto;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--v2-chip-bg);
+  color: var(--v2-text-faint);
+  font: 500 10px/1 ui-monospace, monospace;
+  overflow: visible;
+}
+.v2-handle .v2-id[data-show="1"] { display: inline-block; }
 .v2-run .v2-run__stop { display: none; }
 .v2-run[data-busy="1"] { background: #ef4444; color: #fff; }
 .v2-run[data-busy="1"]:hover { background: #f87171; }

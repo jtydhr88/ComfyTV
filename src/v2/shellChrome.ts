@@ -2,7 +2,7 @@ import { useResizeObserver } from '@vueuse/core'
 import { onScopeDispose, watch, type EffectScope } from 'vue'
 
 import { t } from '@/i18n'
-import { type ComfyNode } from '@/lib/comfyApp'
+import { app, type ComfyNode } from '@/lib/comfyApp'
 import { useStageStore } from '@/stores/stageStore'
 import { bindClusterHoverIntent, nudgeSlotAnchors } from '@/v2/nodeDrag'
 import { observeProperty } from '@/v2/observeProps'
@@ -129,6 +129,21 @@ export function bindShellChrome(node: ComfyNode, opts: {
     syncTitle()
   }
 
+  const ID_SETTING = 'Comfy.NodeBadge.NodeIdBadgeMode'
+  const idEl = el('span', 'v2-id')
+  titleEl?.parentElement?.appendChild(idEl)
+  const syncId = () => {
+    const mode = (app as any).ui?.settings?.getSettingValue?.(ID_SETTING)
+    const show = !!mode && mode !== 'None' && anyNode.id != null && anyNode.id !== -1
+    idEl.textContent = show ? `#${anyNode.id}` : ''
+    idEl.dataset.show = show ? '1' : ''
+  }
+  const settingsBus = (app as any).ui?.settings as EventTarget | undefined
+  settingsBus?.addEventListener(`${ID_SETTING}.change`, syncId)
+  scope.run(() => {
+    onScopeDispose(() => settingsBus?.removeEventListener(`${ID_SETTING}.change`, syncId))
+  })
+
   const syncSelected = () => {
     const root = card.closest('[data-node-id]') as HTMLElement | null
     if (!root) return
@@ -183,6 +198,7 @@ export function bindShellChrome(node: ComfyNode, opts: {
     if (!root.hasAttribute('data-v2-shell')) root.setAttribute('data-v2-shell', '')
     syncSelected()
     syncTitle()
+    syncId()
     syncWarnings(root)
     syncSocketY()
   }
@@ -195,6 +211,7 @@ export function bindShellChrome(node: ComfyNode, opts: {
   const disposers = [
     observeProperty(anyNode, 'selected', syncSelected),
     observeProperty(anyNode, 'title', syncTitle),
+    observeProperty(anyNode, 'id', syncId),
     observeProperty(anyNode, '_comfytvSlotWarnings', () => { if (root) syncWarnings(root) }),
   ]
   scope.run(() => {
