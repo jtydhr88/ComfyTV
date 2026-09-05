@@ -242,5 +242,5 @@ const CONFIGS: Record<string, FxShellConfig> = {
 }
 
 for (const [cls, config] of Object.entries(CONFIGS)) {
-  V2_SHELLS[cls] = (node, kind, variant) => attachFxShell(node, kind, variant, config)
+  V2_SHELLS[cls] = (node, kind, variant) => attachFxShell(node, kind, variant, { ...config, videoToolbar: 'vfx' })
 }

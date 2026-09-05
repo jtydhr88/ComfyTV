@@ -42,6 +42,7 @@ import { i18n } from '@/i18n'
 import { app } from '@/lib/comfyApp'
 import type { StageKind, StageVariant } from '@/stores/stageStore'
 import { V2_SHELLS } from '@/v2/registry'
+import { hasOutputToolbar } from '@/v2/outputToolbar'
 import '@/v2/imageBatchShell'
 import '@/v2/poolPickersV2'
 import '@/v2/cropV2'
@@ -413,6 +414,10 @@ describe('V2 shell smoke', () => {
         card.classList.contains('v2-card') || !!card.querySelector('.v2-card'),
         `${cls}: shell root missing v2-card`,
       ).toBe(true)
+
+      if (hasOutputToolbar(meta.kind)) {
+        expect(card.querySelector('.v2-toolbar'), `${cls}: output toolbar missing`).toBeTruthy()
+      }
 
       expect(mounts.length, `${cls}: shell registered no islands`).toBeGreaterThan(0)
       const registered = mounts.length

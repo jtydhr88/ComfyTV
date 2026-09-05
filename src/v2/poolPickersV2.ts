@@ -13,6 +13,7 @@ import MediaCornerV2 from '@/v2/MediaCornerV2.vue'
 import MediaPreviewV2 from '@/v2/MediaPreviewV2.vue'
 import { createIslandGroup } from '@/v2/islands'
 import { V2_SHELLS } from '@/v2/registry'
+import { attachOutputToolbar } from '@/v2/outputToolbar'
 import { usePinnedBatchStore } from '@/stores/pinnedBatchStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { toImagePoolJson, useStageStore, type StageKind, type StageVariant } from '@/stores/stageStore'
@@ -165,6 +166,7 @@ function makePoolPicker(previewKind: 'image' | 'video' | 'audio') {
     const { state: stageState, onAction } = stageApi
     const scope = createNodeScope(node)
     scope.run(() => bindProgressRing(card, stageState))
+    attachOutputToolbar(node, card, kind, stageState, onAction)
 
     let batchList: Array<{ url: string }> = []
     let pickedIdx = 1

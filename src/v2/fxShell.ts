@@ -8,6 +8,7 @@ import { t } from '@/i18n'
 import { app, type ComfyNode } from '@/lib/comfyApp'
 import CardEmbedV2 from '@/v2/CardEmbedV2.vue'
 import FooterSelectsV2 from '@/v2/FooterSelectsV2.vue'
+import { attachOutputToolbar, type VideoToolbarFlavor } from '@/v2/outputToolbar'
 import MediaPreviewV2 from '@/v2/MediaPreviewV2.vue'
 import ServerSelectV2 from '@/v2/ServerSelectV2.vue'
 import { createIslandGroup } from '@/v2/islands'
@@ -39,6 +40,7 @@ export interface FxShellConfig {
   minW?: number
   minH?: number
   hostClass?: string
+  videoToolbar?: VideoToolbarFlavor
 }
 
 const FX_CSS = `
@@ -343,6 +345,7 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant, config:
   const { state: stageState, onRunRequest, onCancelRequest, onDisconnect, onAction } = stageApi
   const scope = createNodeScope(node)
   scope.run(() => bindProgressRing(card, stageState))
+  attachOutputToolbar(node, card, kind, stageState, onAction, { video: config.videoToolbar })
 
   const islands = createIslandGroup()
   const mountApps = () => {

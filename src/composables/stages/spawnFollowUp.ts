@@ -1,6 +1,7 @@
 import { IMAGE_VARIANT_PRESETS, type ImagePreset } from '@/composables/stages/imagePresets'
 import { IMAGE_EDIT_PRESETS } from '@/composables/stages/imageEditPresets'
 import { VIDEO_CHANGE_PRESETS } from '@/composables/stages/videoChangePresets'
+import { AUDIO_CHANGE_PRESETS } from '@/composables/stages/audioChangePresets'
 import { useStageStore, type StageKind, type ImagePickContext } from '@/stores/stageStore'
 import { useAssetStore } from '@/stores/assetStore'
 import { createAssetLoaderNode } from '@/composables/stages/assetLoaderNode'
@@ -290,6 +291,23 @@ const PRODUCT_SHOT_PRESET: ImagePreset = {
   },
 }
 
+const videoActionHandlers: Record<string, SpawnHandler> = {
+  'extend': src => spawnExtendVideo(src),
+  ...Object.fromEntries(
+    VIDEO_CHANGE_PRESETS.map(p => [
+      `change:${p.id}`,
+      (src: any) => spawnImagePreset(src, p),
+    ]),
+  ),
+}
+
+const audioActionHandlers: Record<string, SpawnHandler> = Object.fromEntries(
+  AUDIO_CHANGE_PRESETS.map(p => [
+    `change:${p.id}`,
+    (src: any) => spawnImagePreset(src, p),
+  ]),
+)
+
 const SPAWN_HANDLERS: Partial<Record<StageKind, Record<string, SpawnHandler>>> = {
   image: imageActionHandlers,
   'image-picker': imageActionHandlers,
@@ -297,15 +315,10 @@ const SPAWN_HANDLERS: Partial<Record<StageKind, Record<string, SpawnHandler>>> =
   model: {
     'product-shot': src => spawnImagePreset(src, PRODUCT_SHOT_PRESET, 1),
   },
-  video: {
-    'extend': src => spawnExtendVideo(src),
-    ...Object.fromEntries(
-      VIDEO_CHANGE_PRESETS.map(p => [
-        `change:${p.id}`,
-        (src: any) => spawnImagePreset(src, p),
-      ]),
-    ),
-  },
+  video: videoActionHandlers,
+  'video-picker': videoActionHandlers,
+  audio: audioActionHandlers,
+  'audio-picker': audioActionHandlers,
   panorama: {
     'view-current': src => spawnPanoramaView(src, 'current'),
     'view-four':    src => spawnPanoramaView(src, 'four'),

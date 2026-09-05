@@ -10,6 +10,7 @@ import { installV2ShellCss } from '@/v2/shellCss'
 import { bindWheelCapture } from '@/v2/wheelCapture'
 import { createIslandGroup } from '@/v2/islands'
 import { V2_SHELLS } from '@/v2/registry'
+import { attachOutputToolbar } from '@/v2/outputToolbar'
 import CompareEditorV2 from '@/v2/CompareEditorV2.vue'
 import GradeEditorV2 from '@/v2/GradeEditorV2.vue'
 import GridSplitEditorV2 from '@/v2/GridSplitEditorV2.vue'
@@ -276,9 +277,10 @@ function makeEditorShell(config: EditorShellConfig) {
     ensureMinSize(node, config.minW ?? 320, config.minH ?? 360)
 
     const stageApi = useStageNode(node as any, kind, variant)
-    const { state: stageState } = stageApi
+    const { state: stageState, onAction } = stageApi
     const scope = createNodeScope(node)
     scope.run(() => bindProgressRing(card, stageState))
+    attachOutputToolbar(node, card, kind, stageState, onAction)
 
     const islands = createIslandGroup()
     const mountApps = () => {

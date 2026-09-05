@@ -12,6 +12,7 @@ import { installV2ShellCss } from '@/v2/shellCss'
 import { bindWheelCapture } from '@/v2/wheelCapture'
 import { createIslandGroup } from '@/v2/islands'
 import { V2_SHELLS } from '@/v2/registry'
+import { attachOutputToolbar } from '@/v2/outputToolbar'
 import CardEmbedV2 from '@/v2/CardEmbedV2.vue'
 import type { StageKind, StageVariant } from '@/stores/stageStore'
 
@@ -72,6 +73,7 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant) {
   const { state: stageState, onRunRequest, onCancelRequest, onDisconnect, onAction } = stageApi
   const scope = createNodeScope(node)
   scope.run(() => bindProgressRing(card, stageState))
+  attachOutputToolbar(node, card, kind, stageState, onAction)
 
   const islands = createIslandGroup()
   const mountApps = () => {

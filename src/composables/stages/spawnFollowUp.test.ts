@@ -333,6 +333,23 @@ describe('spawnFollowUpStage video handlers', () => {
     expect(src.connect).toHaveBeenCalledWith(0, created[0], 1)
   })
 
+  it('audio change preset spawns its target instead of a bare AudioStage', () => {
+    inputsByClass['ComfyTV.AudioClipStage'] = ['audio']
+    const src = makeNode()
+    spawnFollowUpStage(src, 'audio', 'change:clip')
+    expect(created[0].comfyClass).toBe('ComfyTV.AudioClipStage')
+    expect(src.connect).toHaveBeenCalledWith(0, created[0], 0)
+    spawnFollowUpStage(src, 'audio-picker', 'change:eq')
+    expect(created[1].comfyClass).toBe('ComfyTV.AudioEQStage')
+  })
+
+  it('video-picker shares the video handlers', () => {
+    const src = makeNode()
+    spawnFollowUpStage(src, 'video-picker', 'change:clip')
+    expect(created[0].comfyClass).toBe('ComfyTV.VideoClipStage')
+    expect(src.connect).toHaveBeenCalledWith(0, created[0], 1)
+  })
+
   it('autogrow preset wires the first group slot', () => {
     const src = makeNode()
     spawnFollowUpStage(src, 'video', 'change:concat')

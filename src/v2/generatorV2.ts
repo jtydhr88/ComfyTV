@@ -7,6 +7,7 @@ import { t } from '@/i18n'
 import { type ComfyNode } from '@/lib/comfyApp'
 import CustomParamsV2 from '@/v2/CustomParamsV2.vue'
 import FooterSelectsV2, { type FooterExtra } from '@/v2/FooterSelectsV2.vue'
+import { attachOutputToolbar } from '@/v2/outputToolbar'
 import { createIslandGroup } from '@/v2/islands'
 import { bindNodeDrag } from '@/v2/nodeDrag'
 import { bindPanelCollapse, stageInfoLine } from '@/v2/panelCollapse'
@@ -105,6 +106,7 @@ function makeGeneratorShell(config: GeneratorConfig) {
     const { state: stageState, onRunRequest, onCancelRequest, onAction } = stageApi
     const scope = createNodeScope(node)
     scope.run(() => bindProgressRing(card, stageState))
+    attachOutputToolbar(node, card, kind, stageState, onAction)
 
     const islands = createIslandGroup()
     const mountApps = () => {

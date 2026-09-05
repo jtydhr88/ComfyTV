@@ -4,8 +4,8 @@ import MainPromptInput from '@/components/stages/MainPromptInput.vue'
 import { useStageNode } from '@/composables/stages/useStageNode'
 import { uploadLoaderFiles } from '@/composables/stages/useStageLoaderDrop'
 import { t } from '@/i18n'
-import { app, type ComfyNode } from '@/lib/comfyApp'
-import { buildToolbar } from '@/v2/imageBatchShell'
+import { type ComfyNode } from '@/lib/comfyApp'
+import { attachOutputToolbar } from '@/v2/outputToolbar'
 import { bindNodeDrag } from '@/v2/nodeDrag'
 import { bindShellChrome } from '@/v2/shellChrome'
 import { createNodeScope, ensureMinSize, ICON_GRIP } from '@/v2/shellCommon'
@@ -129,39 +129,24 @@ function nodeTitle(node: ComfyNode): string {
   return String((node.constructor as any)?.title ?? node.comfyClass ?? '')
 }
 
-function downloadOutput(state: StageState) {
-  const url = String(state.output ?? '')
-  if (!url) return
-  const a = document.createElement('a')
-  a.href = (app as any).api.apiURL(url.replace(/^\/api/, ''))
-  a.download = decodeURIComponent(url.split('filename=')[1]?.split('&')[0] || url.split('/').pop() || 'media')
-  a.click()
-}
-
 function attachLoaderToolbar(opts: {
+  node: ComfyNode
   card: HTMLElement
   mediaKind: 'image' | 'video' | 'audio' | 'model' | 'text'
   state: StageState
   onAction: (id: string, context?: any) => void
   islands: ReturnType<typeof createIslandGroup>
 }) {
-  const { card, mediaKind, state, onAction, islands } = opts
+  const { node, card, mediaKind, state, onAction, islands } = opts
   if (mediaKind === 'text') return
-  if (mediaKind === 'image') {
-    const bar = buildToolbar((actionId) => {
-      if (actionId === 'download') {
-        downloadOutput(state)
-        return
-      }
-      onAction(actionId)
-    })
-    card.appendChild(bar)
+  if (mediaKind !== 'model') {
+    attachOutputToolbar(node, card, mediaKind, state, onAction)
     return
   }
   const bar = document.createElement('div')
   bar.className = 'v2-toolbar'
   card.appendChild(bar)
-  islands.mount(bar, LoaderActionsV2, { state, kind: mediaKind, onAction })
+  islands.mount(bar, LoaderActionsV2, { state, onAction })
 }
 
 interface PlainLoaderCfg {
@@ -225,7 +210,7 @@ function makePlainLoader(cfg: PlainLoaderCfg) {
     islands.mount(cornerAnchor, MediaCornerV2, {
       state: stageState, source: 'batch', mediaType: cfg.kind, onAction,
     })
-    attachLoaderToolbar({ card, mediaKind: cfg.kind, state: stageState, onAction, islands })
+    attachLoaderToolbar({ node, card, mediaKind: cfg.kind, state: stageState, onAction, islands })
 
     if (cfg.kind !== 'image') mediaAnchor.style.pointerEvents = 'auto'
 
@@ -345,7 +330,7 @@ function attachAssetLoader(node: ComfyNode, kind: StageKind, variant: StageVaria
 
   const mediaKind = ASSET_LOADER_MEDIA[node.comfyClass ?? ''] ?? 'image'
   attachLoaderToolbar({
-    card, mediaKind, state: stageState, onAction, islands: toolbarIslands,
+    node, card, mediaKind, state: stageState, onAction, islands: toolbarIslands,
   })
 
   const prevConfigure = anyNode.onConfigure

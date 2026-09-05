@@ -95,15 +95,15 @@ const ICON_SLITSCAN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor
 const CONFIGS: Record<string, FxShellConfig> = {
   'ComfyTV.VideoColorStage': {
     titleKey: 'v2.videoColorTitle', icon: ICON_COLOR,
-    card: markRaw(VideoColorStageCard), hasRun: false,
+    card: markRaw(VideoColorStageCard), hasRun: false, videoToolbar: 'vfx',
   },
   'ComfyTV.VideoCurvesStage': {
     titleKey: 'v2.videoCurvesTitle', icon: ICON_CURVE,
-    card: markRaw(VideoCurvesStageCard), hasRun: false,
+    card: markRaw(VideoCurvesStageCard), hasRun: false, videoToolbar: 'vfx',
   },
   'ComfyTV.FXChainStage': {
     titleKey: 'v2.fxChainTitle', icon: ICON_CHAIN,
-    card: markRaw(FxChainCardV2), hasRun: true, embed: false,
+    card: markRaw(FxChainCardV2), hasRun: true, embed: false, videoToolbar: 'vfx',
   },
   'ComfyTV.VideoClipStage': {
     titleKey: 'v2.fx.trim', icon: ICON_TRIM,

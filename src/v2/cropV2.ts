@@ -9,6 +9,7 @@ import { installV2ShellCss } from '@/v2/shellCss'
 import { bindWheelCapture } from '@/v2/wheelCapture'
 import { createIslandGroup } from '@/v2/islands'
 import { V2_SHELLS } from '@/v2/registry'
+import { attachOutputToolbar } from '@/v2/outputToolbar'
 import CropEditorV2 from '@/v2/CropEditorV2.vue'
 import type { StageKind, StageVariant } from '@/stores/stageStore'
 
@@ -61,9 +62,10 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant) {
   ensureMinSize(node, 320, 360)
 
   const stageApi = useStageNode(node as any, kind, variant)
-  const { state: stageState } = stageApi
+  const { state: stageState, onAction } = stageApi
   const scope = createNodeScope(node)
   scope.run(() => bindProgressRing(card, stageState))
+  attachOutputToolbar(node, card, kind, stageState, onAction)
 
   const islands = createIslandGroup()
   const mountApps = () => {
