@@ -103,6 +103,25 @@ def _parse_parts(parts_data: str) -> list[dict]:
     return out
 
 
+_PART_SOURCES = frozenset({"option:points_pos", "option:points_neg", "option:bboxes"})
+
+
+def _needs_parts(bindings: list[dict]) -> bool:
+    froms = {str(b.get("from") or "") for b in bindings or []}
+    return bool(froms & _PART_SOURCES)
+
+
+def _workflow_needs_parts(label: str) -> bool:
+    if not label:
+        return False
+    from ...runners import workflow_db
+    try:
+        cfg = workflow_db.get_workflow_config("split-part", label)
+    except Exception:
+        return False
+    return _needs_parts((cfg or {}).get("bindings") or [])
+
+
 def _part_invocations(parts: list[dict]) -> list[dict]:
     coords = lambda pts, label: json.dumps(
         [{"x": int(round(p["x"])), "y": int(round(p["y"]))}
@@ -177,6 +196,13 @@ class SplitPartStage(io.ComfyNode):
         parts = _parse_parts(parts_data)
         invocations = _part_invocations(parts)
         if not invocations:
+            if _workflow_needs_parts(workflow):
+                raise StageError(
+                    f"{workflow} needs at least one point or box — click or "
+                    "drag on the image in the stage card to add one, or switch "
+                    "to a text workflow (e.g. \"SAM3 Text Concept\") and "
+                    "describe the part in the prompt."
+                )
             if not (main_prompt or "").strip():
                 raise StageError(
                     "Split Parts needs a prompt: click/box the parts to "

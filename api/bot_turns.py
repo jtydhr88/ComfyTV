@@ -1,5 +1,6 @@
 import asyncio
 import json
+import re
 import logging
 import time
 from typing import Optional
@@ -96,7 +97,43 @@ def _blocks_text(content: str) -> str:
         elif kind in ("image", "video", "audio"):
             parts.append(f"[attached {kind}: asset #{b.get('asset_id')} "
                          f"{str(b.get('url') or '')}]")
+        elif kind == "notice" and b.get("text"):
+            parts.append(f"[notice: {b.get('text')}]")
     return "\n".join(p for p in parts if p.strip()).strip()
+
+
+_WRITE_TOOL_RE = re.compile(
+    r"\b(add_stage|set_stage|connect_stages|run_stage|remove_stage|graph_edit|"
+    r"arrange_canvas|workflow_edit|workflow_create|asset_edit|entries)\b")
+
+
+def _live_canvas_summary() -> str:
+    try:
+        from .canvas_state import get_canvas_state
+        snap = get_canvas_state(None)
+    except Exception:
+        return ""
+    if not snap.get("available"):
+        return ""
+    stages = snap.get("stages") or []
+    names = [str(s.get("title") or s.get("stage_class") or s.get("graph_node_id") or "?")
+             for s in stages]
+    shown = ", ".join(names[:8]) + (f" +{len(names) - 8}" if len(names) > 8 else "")
+    return f"Live canvas right now: {len(stages)} stage(s){' — ' + shown if shown else ''}."
+
+
+def unverified_write_notice(blocks: list[dict], canvas_summary: str = "") -> dict | None:
+    if any(b.get("type") == "tool_use" for b in blocks):
+        return None
+    text = "\n".join(str(b.get("text") or "") for b in blocks if b.get("type") == "text")
+    if not _WRITE_TOOL_RE.search(text):
+        return None
+    msg = ("This turn made no tool calls, so nothing it describes was actually "
+           "done — the canvas, workflows and library are unchanged. Treat any "
+           "node ids or results above as unverified.")
+    if canvas_summary:
+        msg += " " + canvas_summary
+    return {"type": "notice", "level": "warn", "text": msg}
 
 
 def _replay_history(chat_id: str, current_message_id: str) -> list[dict]:
@@ -211,6 +248,10 @@ async def _run_turn(chat: dict, text: str, state: _TurnState, *,
     usage = result.usage if result else None
     if error:
         state.blocks.append({"type": "notice", "level": "error", "text": error})
+    elif status == "done":
+        notice = unverified_write_notice(state.blocks, _live_canvas_summary())
+        if notice:
+            state.blocks.append(notice)
     storage.update_bot_message(
         state.message_id,
         content=json.dumps(state.blocks),

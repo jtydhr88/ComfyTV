@@ -94,6 +94,7 @@
               :blocks="msg.blocks"
               :streaming="msg.status === 'streaming'"
               :usage="msg.usage"
+              :done="msg.role === 'assistant' && msg.status === 'done'"
             />
             <button
               v-if="msg.status === 'done' && !store.busy"

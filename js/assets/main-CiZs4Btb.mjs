@@ -16952,7 +16952,7 @@ const _hoisted_12$1n = {
   key: 8,
   class: "ctv:absolute ctv:bottom-1.5 ctv:right-1.5 ctv:px-1 ctv:py-px ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:tracking-wide ctv:bg-black/65 ctv:text-muted-foreground ctv:pointer-events-none"
 };
-const _hoisted_13$1e = ["title"];
+const _hoisted_13$1f = ["title"];
 const _hoisted_14$16 = { class: "ctv-asset-actions ctv:absolute ctv:top-2 ctv:left-2 ctv:flex ctv:gap-1" };
 const _hoisted_15$_ = ["title"];
 const _hoisted_16$U = ["title"];
@@ -17092,7 +17092,7 @@ const _sfc_main$4D = /* @__PURE__ */ defineComponent({
             )),
             onPointerdown: _cache2[5] || (_cache2[5] = withModifiers(() => {
             }, ["stop"]))
-          }, toDisplayString$1(_ctx.$t("fx.makeProxy")), 41, _hoisted_13$1e)) : createCommentVNode("", true),
+          }, toDisplayString$1(_ctx.$t("fx.makeProxy")), 41, _hoisted_13$1f)) : createCommentVNode("", true),
           createBaseVNode("div", _hoisted_14$16, [
             createBaseVNode("button", {
               class: "ctv:flex ctv:size-6 ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none ctv:rounded-md ctv:border-none ctv:shadow-sm ctv:bg-white/90 ctv:text-black/80 ctv:hover:bg-white",
@@ -58582,7 +58582,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-BMGXIxjm.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-ku_RcVn4.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -59438,7 +59438,7 @@ const _hoisted_9$1S = ["onDrop", "onClick"];
 const _hoisted_10$1H = ["title", "onClick"];
 const _hoisted_11$1v = ["title", "onClick"];
 const _hoisted_12$1l = ["title"];
-const _hoisted_13$1d = { class: "ctv:shrink-0 ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle" };
+const _hoisted_13$1e = { class: "ctv:shrink-0 ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle" };
 const _hoisted_14$15 = ["onClick"];
 const _hoisted_15$Z = {
   key: 0,
@@ -59692,7 +59692,7 @@ const _sfc_main$4y = /* @__PURE__ */ defineComponent({
             createVNode(unref(IconPlus), { class: "ctv:size-3" })
           ], 10, _hoisted_12$1l)
         ]),
-        createBaseVNode("div", _hoisted_13$1d, [
+        createBaseVNode("div", _hoisted_13$1e, [
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(mediaFilters), (m2) => {
             return openBlock(), createElementBlock("button", {
               key: m2,
@@ -61160,7 +61160,8 @@ const scopes$1 = { "liveSampling": "Sampling the upstream preview live", "wireHi
 const optics$1 = { "needsDepth": "Wire a depth map (image or video) first" };
 const music$1 = { "scorePlaceholder": "Paste MusicXML here (score-partwise)…", "scoreFromInput": "Score comes from the wired text input.", "scoreHint": "MusicXML from an LLM, MuseScore export, or by hand. Run validates and passes it downstream.", "needsScore": "Wire a Score stage", "needsPerformance": "Wire Score Performer (or Click Track)", "swing": "Swing", "humanize": "Humanize", "downloadMidi": "Download .mid", "soundfont": "Soundfont", "builtinSynth": "Built-in synth (no soundfont)", "instrument": "Instrument", "gain": "Gain", "sfHint": "Rendering with the SF2/SF3 engine (own port, no fluidsynth).", "builtinHint": "No soundfont selected — using the additive fallback synth. Drop an .sf2/.sf3 (e.g. FluidR3Mono_GM) into the Resources panel for real instruments.", "beatsPerBar": "Beats / bar", "bars": "Bars", "clickFromLabels": "Clicks follow the wired labels (e.g. Audio Beats & Notes).", "clickHint": "Strong beat = GM woodblock high, weak = low. Wire beat labels to click along real music.", "engraving": "engraving…", "noScoreYet": "Paste or wire MusicXML to see the engraved score", "following": "following playback", "octave": "Octave", "velocity": "Velocity", "repeats": "Repeats", "chordHint": "Bars split by |, chords per bar split evenly. Slash bass (C/E), qualities: m, 7, maj7, m7, dim, aug, sus4, 6, 9, m7b5…", "channelPrograms": "Per-channel instruments", "channelProgramsHint": "Channels map to score parts in order (part 1 = ch 0). Unlisted channels use the Instrument above; drums (ch 9) are automatic.", "draw": "Draw", "select": "Select", "snap": "Snap", "tempo": "Tempo", "timeSig": "Time Sig", "part": "Part", "addPart": "Add part", "removePart": "Remove part", "importScore": "Import wired score", "importFailed": "Import failed", "clearPart": "Clear part", "undo": "Undo", "rollHint": "Draw: press and drag out a note · drag moves · right edge resizes · double-click deletes · Del removes selection · Ctrl+wheel zooms", "skippedPercussion": "Percussion parts were skipped on import", "step": "Step", "stepHint": "Step input: A-G enters a note at the cursor (nearest octave) · 7-2 picks duration · . dot · 0/space rest · Backspace steps back · Up/Down transposes (Shift = octave) · click sets the cursor", "percussion": "Drum part (GM keys)", "quantize": "Quantize selection", "renamePart": "Rename part (double-click)", "rollHint2": "Select: drag for marquee · Ctrl+A all · Ctrl+D duplicate · velocity lane below the grid", "channel": "Channel", "addChannel": "Add channel", "removeChannel": "Remove channel", "clearChannel": "Clear channel", "importMidi": "Import wired MIDI", "notMidi": "Wired input is not a MIDI payload", "solo": "Solo (mute everything else)", "muteChannel": "Mute channel", "unmuteChannel": "Unmute channel" };
 const pictorActions$1 = { "capture": "Capture", "captureHint": "Upload composite + one image per visible layer", "saveToLibraryHint": "Save layered PSD into the asset library" };
-const bot$1 = { "title": "ComfyTV Bot", "newChat": "New chat", "backToList": "All chats", "untitled": "New chat", "noChats": "No conversations yet. The bot can drive the canvas through the ComfyTV tools.", "startFirst": "Start a conversation", "emptyChat": "Ask anything - the bot can read and edit the canvas.", "inputPlaceholder": "Message the bot... (Enter to send, Shift+Enter for newline)", "send": "Send", "stop": "Stop", "thinking": "Working...", "aborted": "Stopped.", "turnError": "The turn failed. Check the server log for details.", "toolResult": "Tool result", "activitySteps": "Process · {n} tool calls", "rename": "Rename", "pin": "Pin", "unpin": "Unpin", "delete": "Delete", "deleteConfirm": 'Delete chat "{title}"? This cannot be undone.', "multiSelect": "Select chats", "selectAll": "Select all", "selectedCount": "{count} selected", "deleteSelected": "Delete selected", "cancelSelect": "Exit selection", "batchDeleteConfirm": "Delete the {count} selected chats? This cannot be undone.", "noProviderTitle": "No local agent CLI found", "noProviderBody": "The ComfyTV bot drives your canvas through a locally installed agent CLI (Claude Code). Install it, sign in once, then come back - no API key is ever stored.", "recheck": "Check again", "attachImage": "Attach media file", "removeAttachment": "Remove", "dropHint": "Drop images, videos or audio to attach", "attachFromLibrary": "Attach from asset library", "newChatWith": "New chat with:", "removeSkill": "Remove skill", "noResult": "(no result)", "copyCode": "Copy code", "runModeAuto": "Auto", "runModeAsk": "Ask", "runModeHint": "Auto runs stages immediately; Ask pauses for your approval before each run", "askSubmit": "Submit", "askOtherPlaceholder": "Or answer in your own words...", "askExpired": "Expired without an answer", "askCancelled": "Cancelled", "insertFromCanvas": "Reference the stages selected on the canvas", "removeRef": "Remove reference", "branch": "Branch", "branchFrom": "Start a new chat that continues from this reply", "queue": "Queue", "queuedHint": "Queued — sends when the current turn finishes" };
+const appMode$1 = { "hint": "This workflow contains ComfyTV stages — they only render in the Graph view, so App Mode shows nothing here.", "back": "Back to workflow" };
+const bot$1 = { "title": "ComfyTV Bot", "newChat": "New chat", "backToList": "All chats", "untitled": "New chat", "noChats": "No conversations yet. The bot can drive the canvas through the ComfyTV tools.", "startFirst": "Start a conversation", "emptyChat": "Ask anything - the bot can read and edit the canvas.", "inputPlaceholder": "Message the bot... (Enter to send, Shift+Enter for newline)", "send": "Send", "stop": "Stop", "thinking": "Working...", "aborted": "Stopped.", "turnError": "The turn failed. Check the server log for details.", "toolResult": "Tool result", "activitySteps": "Process · {n} tool calls", "noToolCalls": "0 tool calls — nothing on the canvas was touched this turn", "rename": "Rename", "pin": "Pin", "unpin": "Unpin", "delete": "Delete", "deleteConfirm": 'Delete chat "{title}"? This cannot be undone.', "multiSelect": "Select chats", "selectAll": "Select all", "selectedCount": "{count} selected", "deleteSelected": "Delete selected", "cancelSelect": "Exit selection", "batchDeleteConfirm": "Delete the {count} selected chats? This cannot be undone.", "noProviderTitle": "No local agent CLI found", "noProviderBody": "The ComfyTV bot drives your canvas through a locally installed agent CLI (Claude Code). Install it, sign in once, then come back - no API key is ever stored.", "recheck": "Check again", "attachImage": "Attach media file", "removeAttachment": "Remove", "dropHint": "Drop images, videos or audio to attach", "attachFromLibrary": "Attach from asset library", "newChatWith": "New chat with:", "removeSkill": "Remove skill", "noResult": "(no result)", "copyCode": "Copy code", "runModeAuto": "Auto", "runModeAsk": "Ask", "runModeHint": "Auto runs stages immediately; Ask pauses for your approval before each run", "askSubmit": "Submit", "askOtherPlaceholder": "Or answer in your own words...", "askExpired": "Expired without an answer", "askCancelled": "Cancelled", "insertFromCanvas": "Reference the stages selected on the canvas", "removeRef": "Remove reference", "branch": "Branch", "branchFrom": "Start a new chat that continues from this reply", "queue": "Queue", "queuedHint": "Queued — sends when the current turn finishes" };
 const en = {
   pentradoActions: pentradoActions$1,
   dialog: dialog$1,
@@ -61250,6 +61251,7 @@ const en = {
   optics: optics$1,
   music: music$1,
   pictorActions: pictorActions$1,
+  appMode: appMode$1,
   bot: bot$1
 };
 const pentradoActions = { "capture": "截图输出", "captureHint": "合成图层并输出到节点", "saveToLibraryHint": "导出 PSD 到资产库" };
@@ -61340,7 +61342,8 @@ const scopes = { "liveSampling": "实时采样上游预览", "wireHint": "连接
 const optics = { "needsDepth": "先接入深度图(图片或视频)" };
 const music = { "scorePlaceholder": "在此粘贴 MusicXML(score-partwise)…", "scoreFromInput": "乐谱来自接入的 text 输入。", "scoreHint": "可来自 LLM、MuseScore 导出或手写。Run 校验后传给下游。", "needsScore": "请接入乐谱节点", "needsPerformance": "请接入演奏引擎(或节拍器轨)", "swing": "摇摆", "humanize": "人性化", "downloadMidi": "下载 .mid", "soundfont": "音色库", "builtinSynth": "内置合成(无音色库)", "instrument": "乐器", "gain": "增益", "sfHint": "使用自研 SF2/SF3 引擎渲染(非 fluidsynth)。", "builtinHint": "未选音色库——使用内置加法合成兜底。把 .sf2/.sf3(如 FluidR3Mono_GM)拖进资源面板即可获得真实乐器音色。", "beatsPerBar": "每小节拍数", "bars": "小节", "clickFromLabels": "打点跟随接入的 labels(如节拍分析输出)。", "clickHint": "强拍=GM 高音梆子,弱拍=低音。接节拍分析的 labels 可跟真实音乐打点。", "engraving": "刻谱中…", "noScoreYet": "粘贴或接入 MusicXML 即可看到刻谱", "following": "跟随播放中", "octave": "八度", "velocity": "力度", "repeats": "循环次数", "chordHint": "小节用 | 分隔,小节内和弦均分拍。支持转位(C/E)与 m/7/maj7/m7/dim/aug/sus4/6/9/m7b5 等。", "channelPrograms": "分轨乐器", "channelProgramsHint": "通道按声部顺序对应(第 1 声部 = ch 0);未列出的通道用上面的乐器,鼓(通道 9)自动。", "draw": "画音符", "select": "选择", "snap": "对齐", "tempo": "速度", "timeSig": "拍号", "part": "声部", "addPart": "加声部", "removePart": "删声部", "importScore": "导入上游乐谱", "importFailed": "导入失败", "clearPart": "清空声部", "undo": "撤销", "rollHint": "画音符:按下拖出时值 · 拖动移动 · 右缘拉长短 · 双击删除 · Del 删选中 · Ctrl+滚轮缩放", "skippedPercussion": "打击乐声部导入时被跳过", "step": "键入", "stepHint": "键入模式:A-G 在光标处进音(就近八度) · 7-2 选时值 · . 附点 · 0/空格 休止 · Backspace 回退 · ↑↓ 移调(Shift=八度) · 点击网格定位光标", "percussion": "鼓声部(GM 鼓组)", "quantize": "量化选中", "renamePart": "重命名声部(双击)", "rollHint2": "选择模式:拖拽框选 · Ctrl+A 全选 · Ctrl+D 复制 · 网格下方是力度条", "channel": "通道", "addChannel": "加通道", "removeChannel": "删通道", "clearChannel": "清空通道", "importMidi": "导入上游 MIDI", "notMidi": "上游输入不是 MIDI", "solo": "独奏(静音其它通道)", "muteChannel": "静音通道", "unmuteChannel": "取消静音" };
 const pictorActions = { "capture": "截取", "captureHint": "上传合成图 + 每个可见图层一张", "saveToLibraryHint": "把分层 PSD 存入资产库" };
-const bot = { "title": "ComfyTV Bot", "newChat": "新对话", "backToList": "全部对话", "untitled": "新对话", "noChats": "还没有对话。Bot 可以通过 ComfyTV 工具直接操作画布。", "startFirst": "开始对话", "emptyChat": "随便聊聊——Bot 能读取并编辑画布。", "inputPlaceholder": "给 Bot 发消息…(Enter 发送,Shift+Enter 换行)", "send": "发送", "stop": "停止", "thinking": "工作中…", "aborted": "已停止。", "turnError": "本轮出错了,详情见服务器日志。", "toolResult": "工具结果", "activitySteps": "过程 · {n} 次工具调用", "rename": "重命名", "pin": "置顶", "unpin": "取消置顶", "delete": "删除", "deleteConfirm": "删除对话「{title}」?此操作不可撤销。", "multiSelect": "多选", "selectAll": "全选", "selectedCount": "已选 {count} 个对话", "deleteSelected": "删除所选", "cancelSelect": "退出多选", "batchDeleteConfirm": "删除所选的 {count} 个对话?此操作不可撤销。", "noProviderTitle": "未检测到本地 agent CLI", "noProviderBody": "ComfyTV Bot 通过本机安装的 agent CLI(Claude Code)驱动画布。安装并登录一次即可,全程不存任何 API key。", "recheck": "重新检测", "attachImage": "添加媒体文件", "removeAttachment": "移除", "dropHint": "拖入图片 / 视频 / 音频作为附件", "attachFromLibrary": "从资产库选择", "newChatWith": "选择对话引擎:", "removeSkill": "移除技能", "noResult": "(无结果)", "copyCode": "复制代码", "runModeAuto": "自动", "runModeAsk": "询问", "runModeHint": "自动模式立即执行;询问模式每次运行前先经你批准", "askSubmit": "提交", "askOtherPlaceholder": "或用自己的话回答…", "askExpired": "超时未回答", "askCancelled": "已取消", "insertFromCanvas": "引用画布上选中的 stage", "removeRef": "移除引用", "branch": "分支", "branchFrom": "从这条回复分支出新对话继续", "queue": "排队", "queuedHint": "已排队 — 当前轮结束后自动发送" };
+const appMode = { "hint": "此工作流包含 ComfyTV stage，它们只在 Graph 视图下显示，App Mode 里什么都看不到。", "back": "返回工作流" };
+const bot = { "title": "ComfyTV Bot", "newChat": "新对话", "backToList": "全部对话", "untitled": "新对话", "noChats": "还没有对话。Bot 可以通过 ComfyTV 工具直接操作画布。", "startFirst": "开始对话", "emptyChat": "随便聊聊——Bot 能读取并编辑画布。", "inputPlaceholder": "给 Bot 发消息…(Enter 发送,Shift+Enter 换行)", "send": "发送", "stop": "停止", "thinking": "工作中…", "aborted": "已停止。", "turnError": "本轮出错了,详情见服务器日志。", "toolResult": "工具结果", "activitySteps": "过程 · {n} 次工具调用", "noToolCalls": "0 次工具调用 — 本轮没有动过画布", "rename": "重命名", "pin": "置顶", "unpin": "取消置顶", "delete": "删除", "deleteConfirm": "删除对话「{title}」?此操作不可撤销。", "multiSelect": "多选", "selectAll": "全选", "selectedCount": "已选 {count} 个对话", "deleteSelected": "删除所选", "cancelSelect": "退出多选", "batchDeleteConfirm": "删除所选的 {count} 个对话?此操作不可撤销。", "noProviderTitle": "未检测到本地 agent CLI", "noProviderBody": "ComfyTV Bot 通过本机安装的 agent CLI(Claude Code)驱动画布。安装并登录一次即可,全程不存任何 API key。", "recheck": "重新检测", "attachImage": "添加媒体文件", "removeAttachment": "移除", "dropHint": "拖入图片 / 视频 / 音频作为附件", "attachFromLibrary": "从资产库选择", "newChatWith": "选择对话引擎:", "removeSkill": "移除技能", "noResult": "(无结果)", "copyCode": "复制代码", "runModeAuto": "自动", "runModeAsk": "询问", "runModeHint": "自动模式立即执行;询问模式每次运行前先经你批准", "askSubmit": "提交", "askOtherPlaceholder": "或用自己的话回答…", "askExpired": "超时未回答", "askCancelled": "已取消", "insertFromCanvas": "引用画布上选中的 stage", "removeRef": "移除引用", "branch": "分支", "branchFrom": "从这条回复分支出新对话继续", "queue": "排队", "queuedHint": "已排队 — 当前轮结束后自动发送" };
 const zh = {
   pentradoActions,
   dialog,
@@ -61430,6 +61433,7 @@ const zh = {
   optics,
   music,
   pictorActions,
+  appMode,
   bot
 };
 function pickLocale() {
@@ -62910,7 +62914,7 @@ const _hoisted_12$1k = {
   key: 3,
   class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:min-h-0"
 };
-const _hoisted_13$1c = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:mt-1" };
+const _hoisted_13$1d = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:mt-1" };
 const _hoisted_14$14 = {
   key: 0,
   class: "ctv:py-px ctv:px-1.5 ctv:rounded-lg ctv:bg-warning-background/30 ctv:text-2xs"
@@ -63039,7 +63043,7 @@ const _sfc_main$4x = /* @__PURE__ */ defineComponent({
             onClick: onMainButton
           }, toDisplayString$1(docAvailable.value ? _ctx.$t("collab.joinEdit") : _ctx.$t("collab.start")), 1)) : createCommentVNode("", true),
           !unref(store2).coEditing && canvas.value ? (openBlock(), createElementBlock("div", _hoisted_12$1k, [
-            createBaseVNode("div", _hoisted_13$1c, [
+            createBaseVNode("div", _hoisted_13$1d, [
               createBaseVNode("span", {
                 class: "ctv:font-semibold",
                 style: normalizeStyle({ color: sourceColor.value })
@@ -63349,7 +63353,7 @@ const _hoisted_11$1t = {
   class: "ctv:shrink-0 ctv:my-1.5 ctv:mx-2.5 ctv:py-1.5 ctv:px-2 ctv:rounded ctv:leading-relaxed ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-muted-foreground"
 };
 const _hoisted_12$1j = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-1.5 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle" };
-const _hoisted_13$1b = { class: "ctv:relative ctv:flex-1 ctv:min-w-0" };
+const _hoisted_13$1c = { class: "ctv:relative ctv:flex-1 ctv:min-w-0" };
 const _hoisted_14$13 = ["placeholder"];
 const _hoisted_15$X = ["title"];
 const _hoisted_16$R = { value: "" };
@@ -63540,7 +63544,7 @@ const _sfc_main$4w = /* @__PURE__ */ defineComponent({
             }, toDisplayString$1(unref(flushing) ? _ctx.$t("eagle.flushing") : _ctx.$t("eagle.flushNow")), 11, _hoisted_10$1F)
           ])) : unref(mode) !== "api" ? (openBlock(), createElementBlock("div", _hoisted_11$1t, toDisplayString$1(_ctx.$t(`eagle.hint.${unref(mode)}`)), 1)) : createCommentVNode("", true),
           createBaseVNode("div", _hoisted_12$1j, [
-            createBaseVNode("div", _hoisted_13$1b, [
+            createBaseVNode("div", _hoisted_13$1c, [
               createVNode(unref(IconSearch), { class: "ctv:absolute ctv:left-2 ctv:top-1/2 ctv:-translate-y-1/2 ctv:size-3.5 ctv:text-muted-foreground ctv:pointer-events-none" }),
               withDirectives(createBaseVNode("input", {
                 "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => /* @__PURE__ */ isRef(keyword) ? keyword.value = $event : null),
@@ -64617,7 +64621,7 @@ const _hoisted_10$1E = {
 };
 const _hoisted_11$1s = ["onClick"];
 const _hoisted_12$1i = { class: "ctv:py-0 ctv:px-1.5 ctv:rounded-lg ctv:text-2xs ctv:bg-base-foreground/10" };
-const _hoisted_13$1a = { class: "comfytv-entries-scroll ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5 ctv:flex ctv:flex-col ctv:gap-2" };
+const _hoisted_13$1b = { class: "comfytv-entries-scroll ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5 ctv:flex ctv:flex-col ctv:gap-2" };
 const _hoisted_14$12 = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
 const _hoisted_15$W = ["onUpdate:modelValue", "onBlur", "onKeydown"];
 const _hoisted_16$Q = ["title", "onClick"];
@@ -64780,7 +64784,7 @@ const _sfc_main$4v = /* @__PURE__ */ defineComponent({
             ], 10, _hoisted_11$1s);
           }), 128))
         ])) : createCommentVNode("", true),
-        createBaseVNode("div", _hoisted_13$1a, [
+        createBaseVNode("div", _hoisted_13$1b, [
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(activeRows), (entry) => {
             return openBlock(), createElementBlock("div", {
               key: entry.id,
@@ -65937,7 +65941,7 @@ const _hoisted_9$1O = { class: "ctv:mt-1.5 ctv:flex ctv:flex-col ctv:gap-1" };
 const _hoisted_10$1D = { class: "ctv:flex-1 ctv:min-w-0 ctv:truncate ctv:font-semibold" };
 const _hoisted_11$1r = ["title"];
 const _hoisted_12$1h = ["title", "onClick"];
-const _hoisted_13$19 = ["title", "onClick"];
+const _hoisted_13$1a = ["title", "onClick"];
 const sectionToggle$2 = "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:py-1 ctv:px-0 ctv:cursor-pointer ctv:[font-family:inherit] ctv:bg-transparent ctv:border-none ctv:text-inherit ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:font-semibold ctv:text-muted-foreground ctv:hover:text-base-foreground";
 const iconBtnClass$7 = "ctv:inline-flex ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:shrink-0 ctv:rounded-md ctv:border-none ctv:bg-transparent ctv:p-1 ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground ctv:disabled:opacity-50 ctv:disabled:pointer-events-none";
 const _sfc_main$4u = /* @__PURE__ */ defineComponent({
@@ -65997,7 +66001,7 @@ const _sfc_main$4u = /* @__PURE__ */ defineComponent({
                         onClick: ($event) => unref(onDelete)(p2)
                       }, [
                         createVNode(unref(IconTrash), { class: "ctv:size-3.5" })
-                      ], 10, _hoisted_13$19)
+                      ], 10, _hoisted_13$1a)
                     ], 64))
                   ]);
                 }), 128))
@@ -66144,7 +66148,7 @@ const _hoisted_12$1g = {
   key: 0,
   class: "ctv:py-2 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60"
 };
-const _hoisted_13$18 = ["title"];
+const _hoisted_13$19 = ["title"];
 const _hoisted_14$11 = {
   key: 0,
   class: "ctv:shrink-0 ctv:rounded ctv:px-1 ctv:py-0.5 ctv:text-2xs ctv:font-semibold ctv:bg-destructive-background/20 ctv:text-destructive-background"
@@ -66221,7 +66225,7 @@ const _sfc_main$4t = /* @__PURE__ */ defineComponent({
                     createBaseVNode("span", {
                       class: "ctv:flex-1 ctv:min-w-0 ctv:truncate ctv:font-semibold",
                       title: r.filename
-                    }, toDisplayString$1(r.name), 9, _hoisted_13$18),
+                    }, toDisplayString$1(r.name), 9, _hoisted_13$19),
                     r.missing ? (openBlock(), createElementBlock("span", _hoisted_14$11, toDisplayString$1(_ctx.$t("resources.missing")), 1)) : (openBlock(), createElementBlock("span", _hoisted_15$V, toDisplayString$1(unref(formatResourceSize)(r.size)), 1)),
                     createBaseVNode("button", {
                       class: normalizeClass(iconBtnClass$6),
@@ -66790,7 +66794,7 @@ const _hoisted_9$1M = { class: "ctv:flex ctv:gap-1.5" };
 const _hoisted_10$1B = { class: "ctv:flex-1 ctv:flex ctv:flex-col ctv:gap-0.5 ctv:min-w-0" };
 const _hoisted_11$1p = { class: "ctv:text-muted-foreground" };
 const _hoisted_12$1f = { class: "ctv:w-20 ctv:flex ctv:flex-col ctv:gap-0.5" };
-const _hoisted_13$17 = { class: "ctv:text-muted-foreground" };
+const _hoisted_13$18 = { class: "ctv:text-muted-foreground" };
 const _hoisted_14$10 = { class: "ctv:opacity-75" };
 const _hoisted_15$U = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
 const _hoisted_16$O = ["disabled"];
@@ -66897,7 +66901,7 @@ const _sfc_main$4r = /* @__PURE__ */ defineComponent({
                 }, null, 8, ["modelValue"])
               ]),
               createBaseVNode("label", _hoisted_12$1f, [
-                createBaseVNode("span", _hoisted_13$17, toDisplayString$1(_ctx.$t("servers.form.port")), 1),
+                createBaseVNode("span", _hoisted_13$18, toDisplayString$1(_ctx.$t("servers.form.port")), 1),
                 createVNode(_sfc_main$4s, {
                   modelValue: unref(form).port,
                   "onUpdate:modelValue": _cache2[3] || (_cache2[3] = ($event) => unref(form).port = $event),
@@ -76366,7 +76370,7 @@ const _hoisted_10$1A = {
 };
 const _hoisted_11$1o = { class: "ctv:flex ctv:items-center ctv:gap-2" };
 const _hoisted_12$1e = { class: "ctv:flex-1 ctv:min-w-0" };
-const _hoisted_13$16 = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_13$17 = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
 const _hoisted_14$$ = { class: "ctv:font-semibold ctv:truncate" };
 const _hoisted_15$T = { class: "ctv:shrink-0 ctv:rounded ctv:px-1 ctv:py-0.5 ctv:text-2xs ctv:bg-interface-menu-component-surface-hovered ctv:text-muted-foreground" };
 const _hoisted_16$N = ["title"];
@@ -76447,7 +76451,7 @@ const _sfc_main$4l = /* @__PURE__ */ defineComponent({
             }, [
               createBaseVNode("div", _hoisted_11$1o, [
                 createBaseVNode("div", _hoisted_12$1e, [
-                  createBaseVNode("div", _hoisted_13$16, [
+                  createBaseVNode("div", _hoisted_13$17, [
                     createBaseVNode("span", _hoisted_14$$, toDisplayString$1(skill.display_name || skill.name), 1),
                     createBaseVNode("span", _hoisted_15$T, toDisplayString$1(_ctx.$t(`skills.source.${skill.source}`)), 1)
                   ]),
@@ -76935,7 +76939,7 @@ const _hoisted_12$1d = {
   key: 0,
   class: "ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:flex ctv:items-center ctv:justify-center ctv:size-4 ctv:rounded-full ctv:text-3xs ctv:leading-none ctv:bg-primary-background ctv:text-white"
 };
-const _hoisted_13$15 = { class: "ctv:w-full ctv:truncate ctv:py-0.5 ctv:px-1 ctv:text-left ctv:text-3xs ctv:text-muted-foreground" };
+const _hoisted_13$16 = { class: "ctv:w-full ctv:truncate ctv:py-0.5 ctv:px-1 ctv:text-left ctv:text-3xs ctv:text-muted-foreground" };
 const _hoisted_14$_ = { class: "ctv:flex ctv:gap-1.5 ctv:items-center" };
 const _hoisted_15$S = ["placeholder"];
 const _hoisted_16$M = {
@@ -77152,7 +77156,7 @@ const _sfc_main$4j = /* @__PURE__ */ defineComponent({
                     isBatchAdded(group.id, i) ? (openBlock(), createElementBlock("span", _hoisted_12$1d, [..._cache2[17] || (_cache2[17] = [
                       createBaseVNode("i", { class: "pi pi-check" }, null, -1)
                     ])])) : createCommentVNode("", true),
-                    createBaseVNode("span", _hoisted_13$15, " #" + toDisplayString$1(i + 1), 1),
+                    createBaseVNode("span", _hoisted_13$16, " #" + toDisplayString$1(i + 1), 1),
                     createVNode(_sfc_main$4k, {
                       class: "ctv:top-0.5 ctv:left-0.5",
                       items: batchLightboxItems2(group),
@@ -77895,7 +77899,7 @@ const _hoisted_11$1m = {
   class: "ctv:flex ctv:flex-wrap ctv:gap-1.5"
 };
 const _hoisted_12$1c = ["title", "onClick"];
-const _hoisted_13$14 = {
+const _hoisted_13$15 = {
   key: 1,
   class: "ctv:flex ctv:flex-wrap ctv:gap-1.5"
 };
@@ -78092,7 +78096,7 @@ const _sfc_main$4i = /* @__PURE__ */ defineComponent({
               ]);
             }), 128))
           ])) : createCommentVNode("", true),
-          unref(selectedSkill) ? (openBlock(), createElementBlock("div", _hoisted_13$14, [
+          unref(selectedSkill) ? (openBlock(), createElementBlock("div", _hoisted_13$15, [
             createBaseVNode("span", _hoisted_14$Z, [
               _cache2[7] || (_cache2[7] = createBaseVNode("i", { class: "pi pi-bolt ctv:text-[9px]" }, null, -1)),
               createTextVNode(" /" + toDisplayString$1(unref(selectedSkill).name) + " ", 1),
@@ -81380,6 +81384,11 @@ const _hoisted_10$1w = {
 const _hoisted_11$1l = { class: "ctv:break-words ctv:whitespace-pre-wrap" };
 const _hoisted_12$1b = {
   key: 1,
+  "data-testid": "bot-no-tool-calls",
+  class: "ctv:font-mono ctv:text-[10px] ctv:text-muted-foreground ctv:opacity-70"
+};
+const _hoisted_13$14 = {
+  key: 2,
   class: "ctv:font-mono ctv:text-[10px] ctv:text-muted-foreground ctv:opacity-70"
 };
 const _sfc_main$4d = /* @__PURE__ */ defineComponent({
@@ -81387,7 +81396,8 @@ const _sfc_main$4d = /* @__PURE__ */ defineComponent({
   props: {
     blocks: {},
     streaming: { type: Boolean },
-    usage: {}
+    usage: {},
+    done: { type: Boolean }
   },
   setup(__props) {
     const props = __props;
@@ -81409,6 +81419,12 @@ const _sfc_main$4d = /* @__PURE__ */ defineComponent({
       const base2 = t2("bot.activitySteps", { n: all.length });
       const totalMs = all.reduce((sum, c2) => sum + (c2.durationMs ?? 0), 0);
       return totalMs > 0 ? `${base2} · ${formatDuration(totalMs)}` : base2;
+    });
+    const noToolCallsLabel = computed(() => {
+      if (!props.done || props.streaming) return "";
+      if (props.blocks.some((b2) => b2.type === "tool_use")) return "";
+      if (!props.blocks.some((b2) => b2.type === "text" && (b2.text ?? "").trim())) return "";
+      return t2("bot.noToolCalls");
     });
     const usageLabel = computed(() => {
       const usage = props.usage;
@@ -81505,7 +81521,8 @@ const _sfc_main$4d = /* @__PURE__ */ defineComponent({
             ], 2)) : createCommentVNode("", true)
           ], 64);
         }), 128)),
-        usageLabel.value ? (openBlock(), createElementBlock("div", _hoisted_12$1b, toDisplayString$1(usageLabel.value), 1)) : createCommentVNode("", true)
+        noToolCallsLabel.value ? (openBlock(), createElementBlock("div", _hoisted_12$1b, toDisplayString$1(noToolCallsLabel.value), 1)) : createCommentVNode("", true),
+        usageLabel.value ? (openBlock(), createElementBlock("div", _hoisted_13$14, toDisplayString$1(usageLabel.value), 1)) : createCommentVNode("", true)
       ]);
     };
   }
@@ -81683,8 +81700,9 @@ const _sfc_main$4c = /* @__PURE__ */ defineComponent({
                   createVNode(_sfc_main$4d, {
                     blocks: msg.blocks,
                     streaming: msg.status === "streaming",
-                    usage: msg.usage
-                  }, null, 8, ["blocks", "streaming", "usage"]),
+                    usage: msg.usage,
+                    done: msg.role === "assistant" && msg.status === "done"
+                  }, null, 8, ["blocks", "streaming", "usage", "done"]),
                   msg.status === "done" && !unref(store2).busy ? (openBlock(), createElementBlock("button", {
                     key: 0,
                     class: "ctv-bot-branch ctv:self-start ctv:flex ctv:cursor-pointer ctv:items-center ctv:gap-1 ctv:rounded-md ctv:border-none ctv:bg-transparent ctv:p-0.5 ctv:text-2xs ctv:text-muted-foreground ctv:opacity-0",
@@ -81712,7 +81730,7 @@ const _sfc_main$4c = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const BotChatView = /* @__PURE__ */ _export_sfc(_sfc_main$4c, [["__scopeId", "data-v-f92a9a6d"]]);
+const BotChatView = /* @__PURE__ */ _export_sfc(_sfc_main$4c, [["__scopeId", "data-v-f1b6b5d4"]]);
 const _hoisted_1$5Z = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:overflow-hidden ctv:text-base-foreground" };
 const _hoisted_2$3S = {
   key: 0,
@@ -113663,14 +113681,14 @@ class FBXTreeParser {
   // Materials are connected to texture maps in FBXTree.Objects.Textures
   // FBX format currently only supports Lambert and Phong shading models
   parseMaterial(materialNode, textureMap) {
-    const ID = materialNode.id;
+    const ID2 = materialNode.id;
     const name = materialNode.attrName;
     let type = materialNode.ShadingModel;
     if (typeof type === "object") {
       type = type.value;
     }
-    if (!connections.has(ID)) return null;
-    const parameters = this.parseParameters(materialNode, textureMap, ID);
+    if (!connections.has(ID2)) return null;
+    const parameters = this.parseParameters(materialNode, textureMap, ID2);
     let material;
     switch (type.toLowerCase()) {
       case "phong":
@@ -113690,7 +113708,7 @@ class FBXTreeParser {
   }
   // Parse FBX material and return parameters suitable for a three.js material
   // Also parse the texture map and return any textures associated with the material
-  parseParameters(materialNode, textureMap, ID) {
+  parseParameters(materialNode, textureMap, ID2) {
     const parameters = {};
     if (materialNode.BumpFactor) {
       parameters.bumpScale = materialNode.BumpFactor.value;
@@ -113733,7 +113751,7 @@ class FBXTreeParser {
       parameters.specular = ColorManagement.colorSpaceToWorking(new Color().fromArray(materialNode.SpecularColor.value), SRGBColorSpace);
     }
     const scope2 = this;
-    connections.get(ID).children.forEach(function(child) {
+    connections.get(ID2).children.forEach(function(child) {
       const type = child.relationship;
       switch (type) {
         case "Bump":
@@ -113912,9 +113930,9 @@ class FBXTreeParser {
     });
     const bindPoseMatrices = this.parsePoseNodes();
     const clusterBoneIDs = /* @__PURE__ */ new Set();
-    for (const ID in deformers.skeletons) {
-      deformers.skeletons[ID].rawBones.forEach(function(_2, i) {
-        const bone = deformers.skeletons[ID].bones[i];
+    for (const ID2 in deformers.skeletons) {
+      deformers.skeletons[ID2].rawBones.forEach(function(_2, i) {
+        const bone = deformers.skeletons[ID2].bones[i];
         if (bone) clusterBoneIDs.add(bone.ID);
       });
     }
@@ -113994,8 +114012,8 @@ class FBXTreeParser {
   buildSkeleton(relationships, skeletons, id, name) {
     let bone = null;
     relationships.parents.forEach(function(parent) {
-      for (const ID in skeletons) {
-        const skeleton = skeletons[ID];
+      for (const ID2 in skeletons) {
+        const skeleton = skeletons[ID2];
         skeleton.rawBones.forEach(function(rawBone, i) {
           if (rawBone.ID === parent.ID) {
             const subBone = bone;
@@ -114236,8 +114254,8 @@ class FBXTreeParser {
     }
   }
   bindSkeleton(skeletons, geometryMap, modelMap) {
-    for (const ID in skeletons) {
-      const skeleton = skeletons[ID];
+    for (const ID2 in skeletons) {
+      const skeleton = skeletons[ID2];
       const boneInverses = [];
       for (let i = 0, l3 = skeleton.bones.length; i < l3; i++) {
         const inverse = new Matrix4();
@@ -143189,7 +143207,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-BZ4bevdo.mjs");
+    const { STLLoader } = await import("./STLLoader-C1xAlvc_.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -143197,7 +143215,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-jYhyUCfN.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-CdHxELPo.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -228219,6 +228237,90 @@ function installMcpCommandBus(app2, deps) {
     app2.__comfytvMcpCommandBusInstalled = false;
   };
 }
+const ID = "comfytv-app-mode-hint";
+function hasStages(graph) {
+  return ((graph == null ? void 0 : graph._nodes) ?? []).some((n) => String((n == null ? void 0 : n.comfyClass) ?? (n == null ? void 0 : n.type) ?? "").startsWith("ComfyTV."));
+}
+function isAppMode(mode) {
+  return mode === "app" || mode === "builder:arrange";
+}
+function renderAppModeHint(app2, show) {
+  const existing = document.getElementById(ID);
+  if (!show) {
+    existing == null ? void 0 : existing.remove();
+    return null;
+  }
+  if (existing) return existing;
+  const el2 = document.createElement("div");
+  el2.id = ID;
+  el2.setAttribute("role", "status");
+  Object.assign(el2.style, {
+    position: "fixed",
+    left: "50%",
+    top: "72px",
+    transform: "translateX(-50%)",
+    zIndex: "1200",
+    display: "flex",
+    gap: "12px",
+    alignItems: "center",
+    padding: "10px 14px",
+    borderRadius: "10px",
+    fontSize: "13px",
+    background: "var(--comfy-menu-bg, #2b2b2b)",
+    color: "var(--fg-color, #ddd)",
+    border: "1px solid var(--border-color, #555)",
+    boxShadow: "0 4px 16px rgba(0,0,0,.35)"
+  });
+  const text2 = document.createElement("span");
+  text2.textContent = t("appMode.hint");
+  const btn2 = document.createElement("button");
+  btn2.type = "button";
+  btn2.textContent = t("appMode.back");
+  Object.assign(btn2.style, {
+    cursor: "pointer",
+    padding: "4px 10px",
+    borderRadius: "6px",
+    border: "1px solid var(--border-color, #555)",
+    background: "var(--comfy-input-bg, #1e1e1e)",
+    color: "inherit",
+    font: "inherit"
+  });
+  btn2.addEventListener("click", () => {
+    var _a3, _b2;
+    const wf = (_b2 = (_a3 = app2 == null ? void 0 : app2.extensionManager) == null ? void 0 : _a3.workflow) == null ? void 0 : _b2.activeWorkflow;
+    if (wf) wf.activeMode = "graph";
+  });
+  el2.append(text2, btn2);
+  document.body.appendChild(el2);
+  return el2;
+}
+function installAppModeHint(app2) {
+  var _a3;
+  const store2 = (_a3 = app2 == null ? void 0 : app2.extensionManager) == null ? void 0 : _a3.workflow;
+  const check = () => {
+    var _a4;
+    const mode = ((_a4 = store2 == null ? void 0 : store2.activeWorkflow) == null ? void 0 : _a4.activeMode) ?? "graph";
+    renderAppModeHint(app2, isAppMode(mode) && hasStages(app2 == null ? void 0 : app2.graph));
+  };
+  let stop;
+  if (typeof (store2 == null ? void 0 : store2.$subscribe) === "function") {
+    check();
+    stop = store2.$subscribe(() => check(), { detached: true });
+  } else {
+    const scope2 = effectScope(true);
+    scope2.run(() => {
+      watch(() => {
+        var _a4;
+        return ((_a4 = store2 == null ? void 0 : store2.activeWorkflow) == null ? void 0 : _a4.activeMode) ?? "graph";
+      }, check, { immediate: true });
+    });
+    stop = () => scope2.stop();
+  }
+  return () => {
+    stop();
+    renderAppModeHint(app2, false);
+  };
+}
 function applyWorkflowEvent(app2, detail) {
   var _a3, _b2, _c;
   const event = String((detail == null ? void 0 : detail.event) ?? "");
@@ -236648,6 +236750,7 @@ const extension = {
     }
     useEntryStore().installWebSocketSync();
     installWorkflowRegistrySync(a2);
+    installAppModeHint(a2);
     try {
       (_e2 = (_d = a2.api) == null ? void 0 : _d.addEventListener) == null ? void 0 : _e2.call(_d, "comfytv-toast", (event) => {
         var _a4, _b3, _c3;
@@ -236871,4 +236974,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-Bpg83evf.mjs.map
+//# sourceMappingURL=main-CiZs4Btb.mjs.map

@@ -124,8 +124,18 @@ def _render_view_image(url: str, max_px: int) -> dict:
 
 async def _view_image(args: dict) -> dict:
     url = str(args.get("url") or "")
+    aid = args.get("asset_id")
+    if not url and aid is not None:
+        from ... import storage
+        try:
+            asset = storage.get_asset(int(aid))
+        except (TypeError, ValueError):
+            asset = None
+        if asset is None:
+            raise ValueError(f"asset {aid!r} not found — list ids with the assets tool")
+        url = str(asset.get("payload_url") or "")
     if not url:
-        raise ValueError("url is required (a /view?… image URL)")
+        raise ValueError("url (a /view?… image URL) or asset_id is required")
     try:
         max_px = int(args.get("max_px", _VIEW_MAX_PX_DEFAULT))
     except (TypeError, ValueError):
@@ -287,7 +297,8 @@ TOOLS: dict[str, dict] = {
             "composition, identity and quality with your own eyes — the "
             "only tool that returns visual content rather than a URL. url "
             "is any /view?… image URL (asset payload_url, an output's "
-            "image, a media_frame result). For video QC: media_frame to "
+            "image, a media_frame result); or pass asset_id to view a "
+            "library asset directly. For video QC: media_frame to "
             "pull a frame, then view_image on it. Use this before judging "
             "or picking outputs — never guess what an image looks like "
             "from its filename."
@@ -296,9 +307,9 @@ TOOLS: dict[str, dict] = {
             "type": "object",
             "properties": {
                 "url": {"type": "string"},
+                "asset_id": {"type": "integer"},
                 "max_px": {"type": "integer"},
             },
-            "required": ["url"],
             "additionalProperties": False,
         },
         "handler": _view_image,

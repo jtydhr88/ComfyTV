@@ -82,6 +82,13 @@
       </div>
     </template>
     <div
+      v-if="noToolCallsLabel"
+      data-testid="bot-no-tool-calls"
+      class="ctv:font-mono ctv:text-[10px] ctv:text-muted-foreground ctv:opacity-70"
+    >
+      {{ noToolCallsLabel }}
+    </div>
+    <div
       v-if="usageLabel"
       class="ctv:font-mono ctv:text-[10px] ctv:text-muted-foreground ctv:opacity-70"
     >
@@ -108,6 +115,7 @@ const props = defineProps<{
   blocks: BotBlock[]
   streaming?: boolean
   usage?: BotUsage | null
+  done?: boolean
 }>()
 
 const { t } = useI18n()
@@ -135,6 +143,13 @@ const drawerLabel = computed(() => {
   const base = t('bot.activitySteps', { n: all.length })
   const totalMs = all.reduce((sum, c) => sum + (c.durationMs ?? 0), 0)
   return totalMs > 0 ? `${base} · ${formatDuration(totalMs)}` : base
+})
+
+const noToolCallsLabel = computed(() => {
+  if (!props.done || props.streaming) return ''
+  if (props.blocks.some(b => b.type === 'tool_use')) return ''
+  if (!props.blocks.some(b => b.type === 'text' && (b.text ?? '').trim())) return ''
+  return t('bot.noToolCalls')
 })
 
 const usageLabel = computed(() => {

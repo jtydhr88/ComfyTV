@@ -46,6 +46,7 @@ import { collabTopbarBadge } from '@/collab/topbarBadge'
 import { usePresenceStore } from '@/collab/presenceStore'
 import { execTopbarBadge, installExecBadge } from '@/composables/execBadge'
 import { installMcpCommandBus } from '@/composables/stages/useMcpCommandBus'
+import { installAppModeHint } from '@/composables/appModeHint'
 import { installWorkflowRegistrySync } from '@/composables/stages/workflowRegistrySync'
 import '@/v2/imageBatchShell'
 import '@/v2/poolPickersV2'
@@ -290,6 +291,7 @@ const extension: ComfyExtension = {
 
     useEntryStore().installWebSocketSync()
     installWorkflowRegistrySync(a)
+    installAppModeHint(a)
 
     try {
       a.api?.addEventListener?.('comfytv-toast', (event: any) => {

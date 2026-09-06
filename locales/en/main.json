@@ -2761,6 +2761,10 @@
     "captureHint": "Upload composite + one image per visible layer",
     "saveToLibraryHint": "Save layered PSD into the asset library"
   },
+  "appMode": {
+    "hint": "This workflow contains ComfyTV stages — they only render in the Graph view, so App Mode shows nothing here.",
+    "back": "Back to workflow"
+  },
   "bot": {
     "title": "ComfyTV Bot",
     "newChat": "New chat",
@@ -2777,6 +2781,7 @@
     "turnError": "The turn failed. Check the server log for details.",
     "toolResult": "Tool result",
     "activitySteps": "Process · {n} tool calls",
+    "noToolCalls": "0 tool calls — nothing on the canvas was touched this turn",
     "rename": "Rename",
     "pin": "Pin",
     "unpin": "Unpin",

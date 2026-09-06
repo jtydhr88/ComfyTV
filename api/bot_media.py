@@ -73,10 +73,12 @@ def _resolve_refs(raw) -> tuple[list[dict], list[str]]:
             media_type = asset.get("media_type") or ""
             items.append({"kind": "asset", "asset_id": aid, "name": name,
                           "media_type": media_type})
+            url = str(asset.get("payload_url") or "")
             lines.append(
-                f"[Referenced asset: #{aid} \"{name}\" ({media_type}) — pass "
-                f"asset_refs [{{\"asset_id\": {aid}}}] to a stage; preview "
-                f"images with view_image]")
+                f"[Referenced asset: #{aid} \"{name}\" ({media_type}) — "
+                f"payload_url {url}; pass asset_refs [{{\"asset_id\": {aid}}}] "
+                f"to a stage; look at it with view_image asset_id={aid} "
+                f"(or url={url})]")
             continue
         raise ValueError(f"refs[{i}]: kind must be 'stage' or 'asset'")
     return items, lines

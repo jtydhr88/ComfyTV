@@ -2761,6 +2761,10 @@
     "captureHint": "上传合成图 + 每个可见图层一张",
     "saveToLibraryHint": "把分层 PSD 存入资产库"
   },
+  "appMode": {
+    "hint": "此工作流包含 ComfyTV stage，它们只在 Graph 视图下显示，App Mode 里什么都看不到。",
+    "back": "返回工作流"
+  },
   "bot": {
     "title": "ComfyTV Bot",
     "newChat": "新对话",
@@ -2777,6 +2781,7 @@
     "turnError": "本轮出错了,详情见服务器日志。",
     "toolResult": "工具结果",
     "activitySteps": "过程 · {n} 次工具调用",
+    "noToolCalls": "0 次工具调用 — 本轮没有动过画布",
     "rename": "重命名",
     "pin": "置顶",
     "unpin": "取消置顶",

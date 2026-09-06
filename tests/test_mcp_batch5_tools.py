@@ -254,7 +254,7 @@ class TestViewImage:
 
     async def test_url_required(self, reset_db):
         from ComfyTV.api.mcp_tools import _view_image
-        with pytest.raises(ValueError, match="url is required"):
+        with pytest.raises(ValueError, match="or asset_id is required"):
             await _view_image({})
 
 

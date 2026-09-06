@@ -146,3 +146,28 @@ class TestMergeBatches:
         good = json.dumps({"images": [{"index": "1", "image_url": "/view?x=1"}]})
         merged = json.loads(m._merge_batches(["oops", good, ""]))
         assert len(merged["images"]) == 1
+
+
+class TestNeedsParts:
+    def test_points_workflow_bindings_need_parts(self):
+        sp = _mod()
+        assert sp._needs_parts([{"from": "upstream_image:annotated[0]"},
+                                {"from": "option:points_pos"},
+                                {"from": "option:bboxes"}]) is True
+        assert sp._needs_parts([{"from": "main_prompt"},
+                                {"from": "upstream_image:annotated[0]"}]) is False
+        assert sp._needs_parts([]) is False
+
+    def test_shipped_presets_agree(self):
+        import json
+        from pathlib import Path
+        sp = _mod()
+        root = Path(sp.__file__).resolve().parents[2] / "workflows" / "split-part"
+        needs = {}
+        for p in root.glob("*_preset.json"):
+            preset = json.loads(p.read_text(encoding="utf-8"))
+            bindings = [{"from": v.get("from")}
+                        for node in (preset.get("inputs") or {}).values()
+                        for v in node.values()]
+            needs[p.stem] = sp._needs_parts(bindings)
+        assert any(needs.values()) and not all(needs.values()), needs
