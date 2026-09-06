@@ -19,6 +19,7 @@ _UPSTREAM_PAT = re.compile(
 KEEP_ORIGINAL = object()
 
 _MEDIA_KINDS = ("image", "video", "audio", "model")
+_NUMERIC_CASTS = ("int", "float")
 
 
 _UPSTREAM_BUCKET_BY_KIND = {
@@ -217,9 +218,9 @@ class _Resolver:
                 raise RuntimeError(
                     spec.get("error") or f"{where}: required but empty"
                 )
-            if media_upstream:
+            if media_upstream or cast in _NUMERIC_CASTS:
                 _log.info(
-                    "[ComfyTV] %s: optional %s has nothing wired — "
+                    "[ComfyTV] %s: optional %s resolved empty — "
                     "keeping the workflow's own value", where, src,
                 )
                 return KEEP_ORIGINAL
@@ -230,4 +231,9 @@ class _Resolver:
         if (prefix or suffix) and isinstance(value, str):
             value = (str(prefix) if prefix else "") + value + (str(suffix) if suffix else "")
 
-        return _cast(value, cast)
+        try:
+            return _cast(value, cast)
+        except (ValueError, TypeError) as e:
+            raise RuntimeError(
+                f"{where}: cannot cast {value!r} (from {src}) to {cast}: {e}"
+            ) from e

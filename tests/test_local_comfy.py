@@ -9,6 +9,7 @@ import pytest
 
 from ComfyTV.runners import local_comfy as lc
 from ComfyTV.runners.base import RunnerContext
+from ComfyTV.runners._workflow_resolve import KEEP_ORIGINAL
 
 
 # ─── _cast ───────────────────────────────────────────────────────────────────
@@ -357,6 +358,22 @@ class TestResolver:
                                        "resolution": "1024", "duration_s": 4}))
         v = r.resolve("x.y", {"from": "option:lyrics", "default": "default text"})
         assert v == "default text"
+
+    def test_option_missing_numeric_cast_keeps_original(self):
+        r = self._r(self._ctx())
+        for cast in ("int", "float"):
+            v = r.resolve("x.y", {"from": "option:missing", "cast": cast})
+            assert v is KEEP_ORIGINAL
+
+    def test_option_missing_str_cast_writes_empty(self):
+        r = self._r(self._ctx())
+        assert r.resolve("x.y", {"from": "option:missing", "cast": "str"}) == ""
+        assert r.resolve("x.y", {"from": "option:missing"}) == ""
+
+    def test_cast_failure_carries_context(self):
+        r = self._r(self._ctx(options={"seed": "abc"}))
+        with pytest.raises(RuntimeError, match=r"x\.y: cannot cast 'abc' \(from option:seed\) to int"):
+            r.resolve("x.y", {"from": "option:seed", "cast": "int"})
 
     def test_computed_width_height(self):
         r = self._r(self._ctx())
