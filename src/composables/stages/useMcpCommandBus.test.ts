@@ -281,6 +281,34 @@ describe('installMcpCommandBus', () => {
     expect(node.properties.comfytv_image_refs).toEqual([])
   })
 
+  it('set_stage rejects values outside a widget\'s declared range or choices', async () => {
+    const node = makeNode({
+      widgets: [
+        { name: 'batch_size', value: 1, type: 'number', options: { min: 1, max: 8 } },
+        { name: 'aspect_ratio', value: '1:1', type: 'combo', options: { values: ['1:1', '16:9'] } },
+      ],
+    })
+    const { host, deps } = makeHost([node])
+    uninstall = installMcpCommandBus(host, deps)
+    const cases: Array<[Record<string, unknown>, string]> = [
+      [{ batch_size: 99 }, 'between 1 and 8'],
+      [{ batch_size: 'lots' }, 'needs a number'],
+      [{ aspect_ratio: '7:3' }, 'one of: 1:1, 16:9'],
+    ]
+    for (const [widgets, msg] of cases) {
+      await dispatch(host, { id: 'c1', action: 'set_stage', node: 'u1', widgets })
+      const results = postedResults()
+      expect(results[results.length - 1].error).toContain(msg)
+    }
+    expect(node.widgets[0].value).toBe(1)
+    expect(node.widgets[1].value).toBe('1:1')
+    await dispatch(host, { id: 'c2', action: 'set_stage', node: 'u1', widgets: { batch_size: 4, aspect_ratio: '16:9' } })
+    const results = postedResults()
+    expect(results[results.length - 1].ok).toBe(true)
+    expect(node.widgets[0].value).toBe(4)
+    expect(node.widgets[1].value).toBe('16:9')
+  })
+
   it('set_stage lists widget names on an unknown widget', async () => {
     const node = makeNode()
     const { host, deps } = makeHost([node])

@@ -1,3 +1,4 @@
+import mimetypes
 import time
 import urllib.parse
 from pathlib import Path
@@ -5,7 +6,7 @@ from pathlib import Path
 from aiohttp import web
 
 from .. import storage
-from ._common import routes, broadcast_asset_event
+from ._common import _log, routes, broadcast_asset_event
 
 MEDIA_SUBFOLDER = "comfytv/media"
 MEDIA_SETTLE_SECONDS = 10.0
@@ -62,8 +63,8 @@ def adopt_media_folder() -> list[dict]:
             name=p.stem,
             payload_url=url,
             media_type=media_type,
-            size_bytes=st.st_size,
             source="folder",
+            **fill_media_meta(url, {"size_bytes": st.st_size}),
         )
         if row is not None:
             adopted.append(row)
@@ -85,6 +86,29 @@ async def adopt_assets(request: web.Request) -> web.Response:
         "adopted": len(adopted),
         "dir": str(media_dir()),
     })
+
+
+_META_KEYS = ("mime_type", "width", "height", "size_bytes")
+
+
+def fill_media_meta(payload_url: str, given: dict | None = None) -> dict:
+    out = {k: (given or {}).get(k) for k in _META_KEYS}
+    if all(v is not None for v in out.values()):
+        return out
+    try:
+        from ..runners._media_paths import localize
+        from ..runners.media_info import probe_media
+        path = localize(payload_url)
+        info = probe_media(payload_url)
+    except Exception as e:
+        _log.info("[ComfyTV/assets] probe skipped for %s: %s", payload_url, e)
+        return out
+    for k in ("width", "height", "size_bytes"):
+        if out[k] is None and info.get(k) is not None:
+            out[k] = int(info[k])
+    if out["mime_type"] is None:
+        out["mime_type"] = mimetypes.guess_type(path.name)[0]
+    return out
 
 
 def _file_missing(url) -> bool:
@@ -215,11 +239,8 @@ async def create_asset(request: web.Request) -> web.Response:
         payload_url=payload_url,
         media_type=media_type,
         category_ids=category_ids,
-        mime_type=body.get("mime_type"),
-        width=body.get("width"),
-        height=body.get("height"),
-        size_bytes=body.get("size_bytes"),
         source=body.get("source"),
+        **fill_media_meta(payload_url, body),
         metadata=metadata if isinstance(metadata, dict) else None,
     )
     if row is None:

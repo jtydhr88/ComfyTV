@@ -58581,7 +58581,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-DzDnr-Y2.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-yFuiq3lX.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -143133,7 +143133,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-BuzKZ-Rh.mjs");
+    const { STLLoader } = await import("./STLLoader-C3bVE9Da.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -143141,7 +143141,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-uZhErPvC.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-hOprJQtr.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -227673,6 +227673,29 @@ function autoPos(graph) {
     ((_e2 = anchor2.pos) == null ? void 0 : _e2[1]) ?? 0
   ];
 }
+function checkWidgetValue(w2, name, value) {
+  const opts = (w2 == null ? void 0 : w2.options) ?? {};
+  const values = typeof opts.values === "function" ? opts.values() : opts.values;
+  if (Array.isArray(values) && values.length) {
+    if (!values.includes(value) && !values.includes(String(value))) {
+      throw new Error(
+        `widget '${name}' must be one of: ${values.join(", ")} (got ${JSON.stringify(value)})`
+      );
+    }
+    return;
+  }
+  const numeric = (w2 == null ? void 0 : w2.type) === "number" || (w2 == null ? void 0 : w2.type) === "slider" || typeof opts.min === "number" || typeof opts.max === "number";
+  if (!numeric) return;
+  const n = Number(value);
+  if (typeof value === "boolean" || value === "" || !Number.isFinite(n)) {
+    throw new Error(`widget '${name}' needs a number (got ${JSON.stringify(value)})`);
+  }
+  const lo = typeof opts.min === "number" ? opts.min : -Infinity;
+  const hi = typeof opts.max === "number" ? opts.max : Infinity;
+  if (n < lo || n > hi) {
+    throw new Error(`widget '${name}' must be between ${lo} and ${hi} (got ${n})`);
+  }
+}
 function applyStageFields(node, cmd) {
   const updated = [];
   if (cmd.workflow != null) {
@@ -227700,10 +227723,12 @@ function applyStageFields(node, cmd) {
       throw new Error("widgets must be an object mapping widget name -> value");
     }
     for (const [name, value] of Object.entries(cmd.widgets)) {
-      if (!getWidget(node, name)) {
-        const names = (node.widgets ?? []).map((w2) => String((w2 == null ? void 0 : w2.name) ?? "")).filter(Boolean).join(", ");
+      const w2 = getWidget(node, name);
+      if (!w2) {
+        const names = (node.widgets ?? []).map((w22) => String((w22 == null ? void 0 : w22.name) ?? "")).filter(Boolean).join(", ");
         throw new Error(`no widget '${name}' on this stage; widgets: ${names || "(none)"}`);
       }
+      checkWidgetValue(w2, name, value);
       writeWidget(node, name, value);
       updated.push(`widgets.${name}`);
     }
@@ -236625,4 +236650,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-76Qq55KZ.mjs.map
+//# sourceMappingURL=main-DdMuXhO4.mjs.map

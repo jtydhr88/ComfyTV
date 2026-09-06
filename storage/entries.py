@@ -75,6 +75,15 @@ def upsert_entry(
             row = s.get(Entry, entry_id)
             if row is None or row.project_id != project_id:
                 return None
+        else:
+            row = s.execute(
+                select(Entry).where(
+                    Entry.project_id == project_id,
+                    Entry.kind == kind,
+                    Entry.label == label,
+                ).order_by(Entry.id)
+            ).scalars().first()
+        if row is not None:
             row.kind = kind
             row.label = label
             row.content = content or ""

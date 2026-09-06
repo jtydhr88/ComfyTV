@@ -1,7 +1,7 @@
 from ... import storage
 from .._common import broadcast_asset_event
 from .._common import broadcast_entry_event
-from ..assets import _with_file_missing
+from ..assets import _with_file_missing, fill_media_meta
 
 
 async def _outputs(args: dict) -> dict:
@@ -37,6 +37,7 @@ async def _assets(args: dict) -> dict:
             cid = int(category)
         except ValueError:
             raise ValueError("category must be 'all', 'none' or a category id")
+        _require_category(cid)
         rows = storage.list_assets(category_id=cid, limit=limit, offset=offset)
     out = []
     for r in rows:
@@ -49,6 +50,34 @@ async def _assets(args: dict) -> dict:
         "categories": storage.list_asset_categories(),
     }
 
+def _require_category(cid: int) -> dict:
+    cats = storage.list_asset_categories()
+    for c in cats:
+        if int(c["id"]) == cid:
+            return c
+    raise ValueError(
+        f"category {cid} not found; existing: "
+        + ", ".join(f"{c['id']}={c['name']!r}" for c in cats) if cats
+        else f"category {cid} not found; there are no categories yet")
+
+def _resolve_category(args: dict) -> dict:
+    cid = args.get("category_id")
+    if cid is not None:
+        try:
+            n = None if isinstance(cid, bool) else float(cid)
+        except (TypeError, ValueError):
+            n = None
+        if n is None or n != int(n):
+            raise ValueError(f"category_id must be an integer (got {cid!r})")
+        return _require_category(int(n))
+    name = str(args.get("name") or "").strip()
+    if not name:
+        raise ValueError("category_id or name is required")
+    for c in storage.list_asset_categories():
+        if c["name"] == name:
+            return c
+    raise ValueError(f"category {name!r} not found")
+
 async def _asset_edit(args: dict) -> dict:
     action = str(args.get("action") or "")
     if action == "create_category":
@@ -59,6 +88,21 @@ async def _asset_edit(args: dict) -> dict:
         if row is None:
             raise ValueError(f"category {name!r} already exists")
         return {"category": row}
+    if action == "rename_category":
+        cat = _resolve_category(args)
+        new_name = str(args.get("new_name") or "").strip()
+        if not new_name:
+            raise ValueError("new_name is required")
+        row = storage.rename_asset_category(int(cat["id"]), new_name)
+        if row is None:
+            raise ValueError(f"category name {new_name!r} is already taken")
+        broadcast_asset_event("category-rename", {"category": row})
+        return {"category": row}
+    if action == "delete_category":
+        cat = _resolve_category(args)
+        storage.delete_asset_category(int(cat["id"]))
+        broadcast_asset_event("category-delete", {"id": cat["id"]})
+        return {"ok": True, "deleted": cat}
     if action == "create":
         payload_url = str(args.get("payload_url") or "").strip()
         if not payload_url:
@@ -75,6 +119,7 @@ async def _asset_edit(args: dict) -> dict:
             media_type=media_type,
             category_ids=_category_ids(args.get("categories")),
             source="mcp",
+            **fill_media_meta(payload_url),
         )
         if row is None:
             raise ValueError("invalid asset (bad category or payload)")
@@ -105,7 +150,7 @@ async def _asset_edit(args: dict) -> dict:
         broadcast_asset_event("delete", {"id": aid})
         return {"ok": True}
     raise ValueError(f"unknown action {action!r} — valid: create, update, "
-                     "delete, create_category")
+                     "delete, create_category, rename_category, delete_category")
 
 def _category_ids(raw) -> list[int]:
     if raw is None:
@@ -236,7 +281,11 @@ TOOLS: dict[str, dict] = {
             "fly — or ids). action 'update' renames an asset (name) and/or "
             "replaces its categories. action 'delete' removes the DB entry "
             "(the underlying file is never deleted). action 'create_category' "
-            "adds an empty category. Typical flow: run_stage → wait_stage → "
+            "adds an empty category; 'rename_category' (category_id or name, "
+            "plus new_name) and 'delete_category' (category_id or name — "
+            "assets in it are kept, just uncategorised) manage existing ones. "
+            "create probes the file server-side, so mime_type/width/height/"
+            "size_bytes are filled in. Typical flow: run_stage → wait_stage → "
             "asset_edit create with the output's payload_url so the result "
             "is reusable as @image_N references elsewhere."
         ),
@@ -245,9 +294,12 @@ TOOLS: dict[str, dict] = {
             "properties": {
                 "action": {"type": "string",
                            "enum": ["create", "update", "delete",
-                                    "create_category"]},
+                                    "create_category", "rename_category",
+                                    "delete_category"]},
                 "asset_id": {"type": "integer"},
+                "category_id": {"type": "integer"},
                 "name": {"type": "string"},
+                "new_name": {"type": "string"},
                 "payload_url": {"type": "string"},
                 "media_type": {"type": "string"},
                 "categories": {"type": "array"},
@@ -264,8 +316,9 @@ TOOLS: dict[str, dict] = {
             "'prompt' (full prompt templates; when inserted they expand, and "
             "should only @-mention media slots like @image_0 — not other "
             "entries). action 'list' (optional kind filter), 'upsert' (kind, "
-            "label, content, optional metadata and id for updates — labels "
-            "start with a letter/underscore, CJK fine), 'delete' (id). "
+            "label, content, optional metadata; an existing (kind, label) "
+            "is updated in place and keeps its id, pass id to rename one — "
+            "labels start with a letter/underscore, CJK fine), 'delete' (id). "
             "Entries are per-project (project_id, default 'default')."
         ),
         "inputSchema": {

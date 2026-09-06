@@ -60,6 +60,30 @@ function autoPos(graph: any): [number, number] {
   ]
 }
 
+function checkWidgetValue(w: any, name: string, value: unknown): void {
+  const opts = w?.options ?? {}
+  const values = typeof opts.values === 'function' ? opts.values() : opts.values
+  if (Array.isArray(values) && values.length) {
+    if (!values.includes(value) && !values.includes(String(value))) {
+      throw new Error(
+        `widget '${name}' must be one of: ${values.join(', ')} (got ${JSON.stringify(value)})`)
+    }
+    return
+  }
+  const numeric = w?.type === 'number' || w?.type === 'slider'
+    || typeof opts.min === 'number' || typeof opts.max === 'number'
+  if (!numeric) return
+  const n = Number(value)
+  if (typeof value === 'boolean' || value === '' || !Number.isFinite(n)) {
+    throw new Error(`widget '${name}' needs a number (got ${JSON.stringify(value)})`)
+  }
+  const lo = typeof opts.min === 'number' ? opts.min : -Infinity
+  const hi = typeof opts.max === 'number' ? opts.max : Infinity
+  if (n < lo || n > hi) {
+    throw new Error(`widget '${name}' must be between ${lo} and ${hi} (got ${n})`)
+  }
+}
+
 function applyStageFields(node: any, cmd: any): string[] {
   const updated: string[] = []
   if (cmd.workflow != null) {
@@ -87,11 +111,13 @@ function applyStageFields(node: any, cmd: any): string[] {
       throw new Error('widgets must be an object mapping widget name -> value')
     }
     for (const [name, value] of Object.entries(cmd.widgets)) {
-      if (!getWidget(node, name)) {
+      const w = getWidget(node, name)
+      if (!w) {
         const names = (node.widgets ?? [])
           .map((w: any) => String(w?.name ?? '')).filter(Boolean).join(', ')
         throw new Error(`no widget '${name}' on this stage; widgets: ${names || '(none)'}`)
       }
+      checkWidgetValue(w, name, value)
       writeWidget(node, name, value)
       updated.push(`widgets.${name}`)
     }
