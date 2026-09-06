@@ -5,6 +5,7 @@ from ...runners import refresh_registry
 from ...runners import workflow_db
 
 from .nodes import _validate_api_prompt
+from ._option_check import dangling_option_warnings
 
 
 _FROM_RE = re.compile(
@@ -89,6 +90,7 @@ async def _workflow_get(args: dict) -> dict:
         "bindings": cfg["bindings"],
         "exposed_widgets": cfg.get("exposed_widgets") or [],
         "nodes": _slim_api_nodes(cfg.get("api_json")),
+        "warnings": await dangling_option_warnings(cfg["kind"], cfg["bindings"]),
     }
 
 def _validate_bind_op(i: int, op: dict, api_nodes: dict | None) -> None:
@@ -193,8 +195,10 @@ async def _workflow_edit(args: dict) -> dict:
                 refresh_registry()
             results.append({"op": name, "ok": out is not None})
     fresh = workflow_db.get_workflow_config(cfg["kind"], cfg["label"])
+    bindings = (fresh or {}).get("bindings", [])
     return {"results": results,
-            "bindings": (fresh or {}).get("bindings", [])}
+            "bindings": bindings,
+            "warnings": await dangling_option_warnings(cfg["kind"], bindings)}
 
 async def _workflow_create(args: dict) -> dict:
     kind = str(args.get("kind") or "")
@@ -261,8 +265,9 @@ TOOLS: dict[str, dict] = {
             "Read a workflow's full ComfyTV configuration: input bindings, "
             "the API graph's node inventory (node_id, class_type, title, "
             "current input values — linked inputs shown as «linked»), exposed "
-            "widgets, sizing and meta. Use this before workflow_edit to see "
-            "which node inputs exist and what is already bound. kind + label "
+            "widgets, sizing, meta and warnings (option:<key> bindings that "
+            "would resolve empty at run time). Use this before workflow_edit to "
+            "see which node inputs exist and what is already bound. kind + label "
             "come from list_workflows. Server-side — no open page needed."
         ),
         "inputSchema": {
@@ -297,7 +302,9 @@ TOOLS: dict[str, dict] = {
             "{op:'reset_to_preset'} restores the shipped preset (undo "
             "button). bind ops are checked against the API graph — unknown "
             "node_id/input_name is rejected with the valid list. Returns "
-            "per-op results plus the workflow's bindings after the edit. "
+            "per-op results plus the workflow's bindings after the edit, and "
+            "warnings for option:<key> bindings that would resolve empty at "
+            "run time (no widget, no default) — fix those before running. "
             "Server-side — no open page needed."
         ),
         "inputSchema": {

@@ -116,6 +116,61 @@ class TestWorkflowEdit:
         out = await _workflow_get({"kind": "image", "label": "Test T2I"})
         assert out["bindings"] == []
 
+    async def test_dangling_option_warns_but_binds(self, workflow_row):
+        from ComfyTV import storage
+        from ComfyTV.api.mcp_tools import _workflow_edit, _workflow_get
+        storage.seed_system_stage_params()
+        out = await _workflow_edit({
+            "kind": "image", "label": "Test T2I",
+            "ops": [{"op": "bind", "node_id": "3", "input_name": "seed",
+                     "from": "option:seed", "cast": "int"}],
+        })
+        assert out["results"][0]["ok"] is True
+        assert len(out["warnings"]) == 1
+        assert "node 3 input 'seed'" in out["warnings"][0]
+        assert "option:seed is not a widget on image stages" in out["warnings"][0]
+        assert "random_int31" in out["warnings"][0]
+        got = await _workflow_get({"kind": "image", "label": "Test T2I"})
+        assert got["warnings"] == out["warnings"]
+
+    async def test_option_with_default_or_widget_no_warning(self, workflow_row):
+        from ComfyTV import storage
+        from ComfyTV.api.mcp_tools import _workflow_edit
+        storage.seed_system_stage_params()
+        out = await _workflow_edit({
+            "kind": "image", "label": "Test T2I",
+            "ops": [
+                {"op": "bind", "node_id": "3", "input_name": "seed",
+                 "from": "option:seed", "default": "random_int31", "cast": "int"},
+                {"op": "bind", "node_id": "3", "input_name": "steps",
+                 "from": "option:batch_size", "cast": "int"},
+            ],
+        })
+        assert out["warnings"] == []
+
+    async def test_stage_param_default_satisfies_option(self, workflow_row):
+        from ComfyTV import storage
+        from ComfyTV.api.mcp_tools import _workflow_edit
+        storage.create_stage_param(kind="image", label="Guidance",
+                                   type="float", default=5.0)
+        out = await _workflow_edit({
+            "kind": "image", "label": "Test T2I",
+            "ops": [{"op": "bind", "node_id": "3", "input_name": "steps",
+                     "from": "option:guidance", "cast": "float"}],
+        })
+        assert out["warnings"] == []
+
+    async def test_unknown_option_warns_with_known_list(self, workflow_row):
+        from ComfyTV.api.mcp_tools import _workflow_edit
+        out = await _workflow_edit({
+            "kind": "image", "label": "Test T2I",
+            "ops": [{"op": "bind", "node_id": "3", "input_name": "steps",
+                     "from": "option:bogus"}],
+        })
+        assert len(out["warnings"]) == 1
+        assert "option:bogus is not a known option for image stages" in out["warnings"][0]
+        assert "'batch_size'" in out["warnings"][0]
+
     async def test_set_meta(self, workflow_row):
         from ComfyTV.api.mcp_tools import _workflow_edit, _workflow_get
         await _workflow_edit({
