@@ -71,3 +71,6 @@ export const MediaInfoSchema = z.object({
   frames: z.number().nullable().optional(),
 })
 export type MediaInfo = z.infer<typeof MediaInfoSchema>
+export const MediaInfoBatchSchema = z.object({
+  infos: z.record(z.string(), MediaInfoSchema.nullable()),
+})

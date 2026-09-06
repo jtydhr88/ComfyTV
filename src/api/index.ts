@@ -25,6 +25,8 @@ import {
   ListServersSchema,
   ListStagePresetsSchema,
   MediaInfoSchema,
+  MediaInfoBatchSchema,
+  LatestOutputsBatchSchema,
   ListWorkflowOverviewSchema,
   MutateResourceSchema,
   MutateServerSchema,
@@ -393,6 +395,23 @@ export function proxyEnsure(
 
 export function fetchMediaInfo(url: string): Promise<MediaInfo> {
   return apiFetch(`/comfytv/media/info?url=${encodeURIComponent(url)}`, MediaInfoSchema)
+}
+
+export function fetchMediaInfoBatch(urls: string[]): Promise<Record<string, MediaInfo | null>> {
+  return apiSend('/comfytv/media/info_batch', 'POST', MediaInfoBatchSchema, { urls })
+    .then((d) => d.infos)
+}
+
+export function fetchLatestOutputsBatch(
+  projectId: string,
+  items: Array<{ stage_uid: string; output_type?: string | null }>,
+) {
+  return apiSend(
+    `/comfytv/projects/${encodeURIComponent(projectId)}/outputs/latest_batch`,
+    'POST',
+    LatestOutputsBatchSchema,
+    { items },
+  ).then((d) => d.outputs)
 }
 
 export function midiEnsure(url: string): Promise<MidiEnsureResult> {

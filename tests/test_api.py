@@ -600,3 +600,24 @@ class TestWorkflowConfigRoutes:
             data="x", headers={"Content-Type": "application/json"},
         )
         assert resp.status == 400
+
+
+class TestLatestOutputsBatchRoute:
+    async def test_batch_route(self, client):
+        from ComfyTV import storage
+        out = storage.persist_output(
+            project_id="default", stage_class="X", stage_node_id="9",
+            output_type="image", payload_url="/uid-x",
+        )
+        storage.set_output_stage_uid(out["id"], "uid-9")
+        resp = await client.post("/comfytv/projects/default/outputs/latest_batch",
+                                 json={"items": [{"stage_uid": "uid-9"}, {"stage_uid": "nope"}]})
+        assert resp.status == 200
+        data = await resp.json()
+        assert data["outputs"][0]["payload_url"] == "/uid-x"
+        assert data["outputs"][1] is None
+
+    async def test_batch_route_rejects_bad_body(self, client):
+        resp = await client.post("/comfytv/projects/default/outputs/latest_batch",
+                                 json={"items": "x"})
+        assert resp.status == 400

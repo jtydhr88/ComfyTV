@@ -76,7 +76,20 @@ def persist_output(
                 Output.id.notin_(referenced_parents),
             ).delete(synchronize_session=False)
             s.commit()
-        return _output_to_dict(out)
+        row = _output_to_dict(out)
+    _warm_output_thumbs(payload_url, payload_json)
+    return row
+
+
+def _warm_output_thumbs(payload_url: str, payload_json: Any) -> None:
+    urls = [payload_url]
+    if isinstance(payload_json, dict):
+        urls += [im.get("image_url") for im in payload_json.get("images") or [] if isinstance(im, dict)]
+    try:
+        from ..runners.thumbs import warm_thumbs
+        warm_thumbs(urls)
+    except Exception:
+        logger.debug("[ComfyTV] thumb warm-up skipped", exc_info=True)
 
 
 def list_outputs(project_id: str, stage_node_id: Optional[str] = None, limit: int = 50) -> list[dict]:
@@ -108,6 +121,30 @@ def latest_output_by_uid(
         q = q.order_by(desc(Output.id)).limit(1)
         out = s.execute(q).scalars().first()
         return _output_to_dict(out) if out is not None else None
+
+
+def latest_outputs_by_uids(
+    project_id: str, items: list[tuple[str, Optional[str]]]
+) -> list[Optional[dict]]:
+    uids = {str(uid) for uid, _ in items if uid}
+    if not uids:
+        return [None for _ in items]
+    with db.get_session() as s:
+        q = (
+            select(Output)
+            .where(Output.project_id == project_id, Output.stage_uid.in_(uids))
+            .order_by(desc(Output.id))
+        )
+        rows = s.execute(q).scalars().all()
+        found: dict[tuple[str, Optional[str]], dict] = {}
+        for o in rows:
+            for key in ((o.stage_uid, None), (o.stage_uid, o.output_type)):
+                if key not in found:
+                    found[key] = _output_to_dict(o)
+    return [
+        found.get((str(uid), str(otype) if otype else None)) if uid else None
+        for uid, otype in items
+    ]
 
 
 def set_output_stage_uid(output_id: int, stage_uid: str) -> Optional[dict]:

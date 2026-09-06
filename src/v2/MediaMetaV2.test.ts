@@ -5,7 +5,16 @@ import { makeI18n } from '@/__tests__/renderHelpers'
 import { resetMediaInfoCache } from '@/composables/stages/useMediaInfo'
 
 const fetchMediaInfo = vi.fn()
-vi.mock('@/api', () => ({ fetchMediaInfo: (url: string) => fetchMediaInfo(url) }))
+vi.mock('@/api', () => ({
+  ApiError: class ApiError extends Error { constructor(public path: string, public status: number, m: string) { super(m) } },
+  fetchMediaInfo: (url: string) => fetchMediaInfo(url),
+  fetchMediaInfoBatch: async (urls: string[]) => {
+    const out: Record<string, unknown> = {}
+    for (const u of urls) out[u] = await fetchMediaInfo(u).catch(() => null)
+    return out
+  },
+}))
+const settle = async () => { await new Promise(r => setTimeout(r, 30)); await flushPromises() }
 
 import MediaMetaV2 from './MediaMetaV2.vue'
 
@@ -31,7 +40,7 @@ describe('MediaMetaV2', () => {
       width: 1280, height: 720, fps: 24, duration_s: 4.2, has_audio: true, codec: 'h264',
     })
     const w = mountMeta({ url: '/view?filename=clip.mp4&type=output' })
-    await flushPromises()
+    await settle()
     expect(fetchMediaInfo).toHaveBeenCalledWith('/view?filename=clip.mp4&type=output')
     expect(w.find('.v2-meta__fmt').text()).toBe('MP4')
     const toks = w.findAll('.v2-meta__tok').map(x => x.text())
@@ -43,7 +52,7 @@ describe('MediaMetaV2', () => {
   it('shows generation time on the right and survives a failed probe', async () => {
     fetchMediaInfo.mockRejectedValue(new Error('404'))
     const w = mountMeta({ url: '/view?filename=x.png', durationMs: 12_400 })
-    await flushPromises()
+    await settle()
     expect(w.find('.v2-meta__fmt').exists()).toBe(false)
     expect(w.find('.v2-meta__gen').text()).toBe('12.4s')
     expect(w.find('.v2-meta__gen').attributes('title')).toBe('Generated in 12.4s')
@@ -52,11 +61,11 @@ describe('MediaMetaV2', () => {
   it('caches probes per url and refetches when the url changes', async () => {
     fetchMediaInfo.mockResolvedValue({ kind: 'image', format: 'PNG', size_bytes: 10, width: 4, height: 4 })
     const w = mountMeta({ url: '/view?filename=a.png' })
-    await flushPromises()
+    await settle()
     await w.setProps({ url: '/view?filename=b.png' })
-    await flushPromises()
+    await settle()
     await w.setProps({ url: '/view?filename=a.png' })
-    await flushPromises()
+    await settle()
     expect(fetchMediaInfo).toHaveBeenCalledTimes(2)
     expect(w.findAll('.v2-meta__tok').map(x => x.text())).toEqual(['4×4', '10 B'])
   })

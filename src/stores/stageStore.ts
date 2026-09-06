@@ -160,6 +160,8 @@ const KIND_TO_TYPE: Record<StageKind, TypedValueType> = {
 
 export const useStageStore = defineStore('comfytv-stage', () => {
   const stages = new WeakMap<object, StageState>()
+  const nodeOf = new WeakMap<StageState, any>()
+  const refreshers = new WeakMap<object, () => void>()
   const stateTick = ref(0)
 
   function registerStage(
@@ -178,11 +180,39 @@ export const useStageStore = defineStore('comfytv-stage', () => {
       mainPrompt: '',
     })
     stages.set(node, state)
+    nodeOf.set(state, node)
     return state
   }
 
   function unregisterStage(node: object) {
     stages.delete(node)
+    refreshers.delete(node)
+  }
+
+  function setRefresher(node: object, fn: () => void) {
+    refreshers.set(node, fn)
+  }
+
+  function notifyConsumers(state: StageState) {
+    const node = nodeOf.get(state)
+    const graph: any = node?.graph
+    if (!graph) { bumpStateTick(); return }
+    const seen = new Set<any>()
+    const visit = (n: any, depth: number) => {
+      for (const out of n.outputs ?? []) {
+        for (const linkId of out?.links ?? []) {
+          const link = typeof graph.links?.get === 'function'
+            ? graph.links.get(linkId)
+            : graph.links?.[linkId]
+          const target = link ? graph.getNodeById?.(link.target_id) : null
+          if (!target || seen.has(target)) continue
+          seen.add(target)
+          refreshers.get(target)?.()
+          if (depth < 16 && isChainableFx(target)) visit(target, depth + 1)
+        }
+      }
+    }
+    visit(node, 0)
   }
 
   function getStage(node: object): StageState | undefined {
@@ -277,7 +307,7 @@ export const useStageStore = defineStore('comfytv-stage', () => {
     state.durationMs = (durationRaw != null && durationRaw !== '' && Number.isFinite(Number(durationRaw)))
       ? Number(durationRaw)
       : null
-    bumpStateTick()
+    notifyConsumers(state)
   }
 
   function setPickerPool(node: any, state: StageState, poolJson: string) {
@@ -285,7 +315,7 @@ export const useStageStore = defineStore('comfytv-stage', () => {
     state.pool = poolJson
     const w = node?.widgets?.find((x: any) => x.name === 'pool')
     if (w) w.value = poolJson
-    bumpStateTick()
+    notifyConsumers(state)
   }
 
   function clearPickerPool(node: any, state: StageState) {
@@ -301,7 +331,7 @@ export const useStageStore = defineStore('comfytv-stage', () => {
     if (state.outputs[slot] === value) return
     state.outputs[slot] = value
     if (slot === 0) state.output = value
-    bumpStateTick()
+    notifyConsumers(state)
   }
 
   function applyExecutionError(
@@ -324,6 +354,8 @@ export const useStageStore = defineStore('comfytv-stage', () => {
     getStage,
     bumpStateTick,
     notifyDownstream,
+    notifyConsumers,
+    setRefresher,
     refreshStageInputs,
     resolveUpstreamValue,
     applyExecutedPayload,

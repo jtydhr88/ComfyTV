@@ -12,7 +12,19 @@
         class="ctv:inline-flex ctv:items-center ctv:justify-center ctv:touch-none ctv:select-none ctv:cursor-grab"
         @click.stop
       >
+        <video
+          v-if="isVideo"
+          :key="current.url"
+          :src="current.url"
+          class="ctv:block ctv:max-w-[80vw] ctv:max-h-[80vh] ctv:object-contain ctv:cursor-default
+                 ctv:shadow-[0_8px_40px_rgb(0_0_0/0.6)]"
+          controls
+          autoplay
+          playsinline
+          @pointerdown.stop
+        />
         <img
+          v-else
           ref="img"
           :src="current.url"
           class="ctv:block ctv:max-w-[60vw] ctv:max-h-[60vh] ctv:object-contain ctv:cursor-[inherit]
@@ -70,13 +82,14 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
 import { useImagePanZoom } from '@/composables/widgets/useImagePanZoom'
-import { useLightbox } from '@/composables/useLightbox'
+import { isVideoLightboxItem, useLightbox } from '@/composables/useLightbox'
 
 const { isOpen, current, count, index, hasPrev, hasNext, close, prev, next } =
   useLightbox()
+const isVideo = computed(() => !!current.value && isVideoLightboxItem(current.value))
 
 const container = ref<HTMLElement | null>(null)
 const img = ref<HTMLImageElement | null>(null)

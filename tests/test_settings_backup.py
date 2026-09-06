@@ -255,7 +255,7 @@ class TestSettingsApi:
         assert resp.status == 200
         rows = (await resp.json())["settings"]
         assert {r["key"] for r in rows} == {
-            "enable-v2",
+            "enable-v2", "v2-lod-scale", "v2-lod-fill",
             "enable-db-backup", "db-backup-max-count", "db-backup-path",
             "enable-mcp", "enable-bot",
             "bot-model-claude-code", "bot-model-codex", "bot-model-qwen-code",
@@ -270,7 +270,7 @@ class TestSettingsApi:
             "blender-bridge-url",
         }
         for r in rows:
-            assert set(r) == {"key", "type", "value", "default", "experimental"}
+            assert set(r) - {"options"} == {"key", "type", "value", "default", "experimental"}
         assert {r["key"] for r in rows if r["experimental"]} == {
             "enable-v2", "bot-model-comfyui-llm", "bot-comfyui-llm-thinking",
             "enable-collab", "blender-bridge-url",
@@ -299,3 +299,18 @@ class TestSettingsApi:
         body = await resp.json()
         assert body["ok"] is True
         assert Path(body["path"]).joinpath("data.db").is_file()
+
+
+class TestChoiceSettings:
+    def test_choice_coerce_and_default(self):
+        from ComfyTV import settings
+        assert settings.coerce("v2-lod-scale", "50") == "50"
+        assert settings.coerce("v2-lod-scale", "77") == "42"
+        assert settings.coerce("v2-lod-fill", None) == "checker"
+        assert settings.coerce("v2-lod-fill", " image ") == "image"
+
+    def test_choice_rows_expose_options(self, reset_db):
+        from ComfyTV import storage
+        rows = {r["key"]: r for r in storage.list_settings()}
+        assert rows["v2-lod-scale"]["options"] == ["30", "42", "50", "60"]
+        assert "options" not in rows["enable-v2"]

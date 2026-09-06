@@ -55,6 +55,13 @@
           :precision="0"
           @update:model-value="(v: number | null) => emit('update', v ?? row.default)"
         />
+        <ComfyTVSelect
+          v-else-if="row.type === 'choice'"
+          class="ctv:w-36"
+          :model-value="String(value ?? row.default)"
+          :options="choiceOptions"
+          @update:model-value="(v: string | number) => emit('update', String(v))"
+        />
         <ComfyTVText
           v-else
           class="ctv:w-full"
@@ -82,6 +89,7 @@ import { useI18n } from 'vue-i18n'
 
 import type { SettingRow, SettingValue } from '@/api'
 import ComfyTVNumber from '@/components/widgets/ComfyTVNumber.vue'
+import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
 import ComfyTVText from '@/components/widgets/ComfyTVText.vue'
 import ComfyTVToggle from '@/components/widgets/ComfyTVToggle.vue'
 
@@ -100,6 +108,8 @@ const emit = defineEmits<{ update: [value: SettingValue] }>()
 const { t, te } = useI18n()
 
 const label = computed(() => t(`settings.fields.${props.row.key}.label`))
+const choiceOptions = computed(() =>
+  (props.row.options ?? []).map((v) => ({ value: v, label: t(`settings.fields.${props.row.key}.options.${v}`) })))
 const placeholder = computed(() => {
   const k = `settings.fields.${props.row.key}.placeholder`
   return te(k) ? t(k) : ''

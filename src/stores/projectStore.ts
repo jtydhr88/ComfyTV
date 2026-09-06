@@ -1,10 +1,12 @@
+import { useTimeoutFn } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
-import { apiFetch, apiSend } from '@/api'
+import { ApiError, apiFetch, apiSend, fetchLatestOutputsBatch } from '@/api'
 import {
   DeleteProjectSchema,
   LatestOutputSchema,
+  type Output,
   ListProjectsSchema,
   MutateProjectSchema,
   type Project,
@@ -13,6 +15,9 @@ import {
 export type { Project } from '@/api/schemas'
 
 const DEFAULT_PROJECT_ID = 'default'
+const LATEST_BATCH_MS = 20
+const LATEST_BATCH_MAX = 200
+const LATEST_APPLY_SLICE = 8
 
 export const useProjectStore = defineStore('comfytv-project', () => {
   const projects = ref<Project[]>([])
@@ -71,22 +76,63 @@ export const useProjectStore = defineStore('comfytv-project', () => {
     currentProjectId.value = projectId || DEFAULT_PROJECT_ID
   }
 
-  async function fetchLatestOutput(
-    projectId: string,
-    stageUid: string,
-    outputType?: string,
-  ) {
-    if (!projectId || !stageUid) return null
+  type LatestReq = {
+    stage_uid: string
+    output_type: string | null
+    resolve: (o: Output | null) => void
+  }
+  const latestQueues = new Map<string, LatestReq[]>()
+  const flushLatest = async () => {
+    const queues = [...latestQueues.entries()]
+    latestQueues.clear()
+    for (const [projectId, reqs] of queues) {
+      for (let i = 0; i < reqs.length; i += LATEST_BATCH_MAX) {
+        const chunk = reqs.slice(i, i + LATEST_BATCH_MAX)
+        try {
+          const rows = await fetchLatestOutputsBatch(
+            projectId,
+            chunk.map(r => ({ stage_uid: r.stage_uid, output_type: r.output_type })),
+          )
+          for (let k = 0; k < chunk.length; k += LATEST_APPLY_SLICE) {
+            if (k > 0) await new Promise<void>(r => setTimeout(r, 0))
+            chunk.slice(k, k + LATEST_APPLY_SLICE).forEach((r, j) => r.resolve(rows[k + j] ?? null))
+          }
+        } catch (e) {
+          if (e instanceof ApiError && (e.status === 404 || e.status === 405)) {
+            await Promise.all(chunk.map(async r => r.resolve(await fetchLatestOutputLegacy(projectId, r))))
+            continue
+          }
+          console.warn('[ComfyTV/project] fetchLatestOutput batch failed', e)
+          chunk.forEach(r => r.resolve(null))
+        }
+      }
+    }
+  }
+  async function fetchLatestOutputLegacy(projectId: string, r: LatestReq): Promise<Output | null> {
     try {
       let url = `/comfytv/projects/${encodeURIComponent(projectId)}/outputs/latest`
-        + `?stage_uid=${encodeURIComponent(stageUid)}`
-      if (outputType) url += `&output_type=${encodeURIComponent(outputType)}`
-      const data = await apiFetch(url, LatestOutputSchema)
-      return data.output
+        + `?stage_uid=${encodeURIComponent(r.stage_uid)}`
+      if (r.output_type) url += `&output_type=${encodeURIComponent(r.output_type)}`
+      return (await apiFetch(url, LatestOutputSchema)).output
     } catch (e) {
       console.warn('[ComfyTV/project] fetchLatestOutput failed', e)
       return null
     }
+  }
+  const latestTimer = useTimeoutFn(() => { void flushLatest() }, LATEST_BATCH_MS, { immediate: false })
+
+  function fetchLatestOutput(
+    projectId: string,
+    stageUid: string,
+    outputType?: string,
+  ): Promise<Output | null> {
+    if (!projectId || !stageUid) return Promise.resolve(null)
+    return new Promise((resolve) => {
+      const q = latestQueues.get(projectId) ?? []
+      q.push({ stage_uid: stageUid, output_type: outputType ?? null, resolve })
+      latestQueues.set(projectId, q)
+      if (!latestTimer.isPending.value) latestTimer.start()
+    })
   }
 
   async function adoptOutputs(

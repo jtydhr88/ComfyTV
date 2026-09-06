@@ -31,6 +31,24 @@ async def get_latest_output(request: web.Request) -> web.Response:
     return web.json_response({"output": row})
 
 
+@routes.post("/comfytv/projects/{pid}/outputs/latest_batch")
+async def get_latest_outputs_batch(request: web.Request) -> web.Response:
+    pid = request.match_info["pid"]
+    try:
+        body = await request.json()
+    except Exception:
+        return web.json_response({"error": "invalid JSON body"}, status=400)
+    raw = body.get("items")
+    if not isinstance(raw, list) or len(raw) > 500:
+        return web.json_response({"error": "items must be a list of <=500"}, status=400)
+    items = [
+        (str(it.get("stage_uid") or ""), str(it.get("output_type") or "") or None)
+        for it in raw if isinstance(it, dict)
+    ]
+    rows = storage.latest_outputs_by_uids(pid, items)
+    return web.json_response({"outputs": rows})
+
+
 @routes.post("/comfytv/projects/{pid}/outputs/adopt")
 async def adopt_outputs(request: web.Request) -> web.Response:
     pid = request.match_info["pid"]

@@ -21,8 +21,6 @@ function copyNodeDocs() {
 
 export default defineConfig({
   base: './',
-  // Worker builds have separate output options from the main library build.
-  // ComfyUI auto-imports .js files under WEB_DIRECTORY, including worker assets.
   worker: {
     rollupOptions: {
       output: {

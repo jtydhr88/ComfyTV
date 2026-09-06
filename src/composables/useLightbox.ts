@@ -3,6 +3,14 @@ import { computed, reactive } from 'vue'
 export interface LightboxItem {
   url: string
   label?: string
+  kind?: 'image' | 'video'
+}
+
+const VIDEO_URL_RE = /\.(3g2|3gp|avi|m4v|mkv|mov|mp4|mpe?g|ogv|webm)(?=$|[?&#])/i
+
+export function isVideoLightboxItem(item: LightboxItem): boolean {
+  if (item.kind) return item.kind === 'video'
+  return VIDEO_URL_RE.test(decodeURIComponent(item.url))
 }
 
 const state = reactive<{ items: LightboxItem[]; index: number }>({

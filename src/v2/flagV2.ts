@@ -1,4 +1,5 @@
 import { fetchSettings } from '@/api'
+import { applyLodSettings } from '@/v2/lodV2'
 
 const LS_KEY = 'comfytv.v2Enabled'
 
@@ -16,6 +17,7 @@ export async function hydrateV2Flag(): Promise<void> {
     const rows = (await fetchSettings()).settings
     const row = rows.find((r) => r.key === 'enable-v2')
     enabled = row?.value === true
+    applyLodSettings(rows)
     try {
       localStorage.setItem(LS_KEY, enabled ? '1' : '0')
     } catch { }

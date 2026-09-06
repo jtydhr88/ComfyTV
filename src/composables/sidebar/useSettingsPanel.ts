@@ -4,6 +4,7 @@ import { computed, ref, watch } from 'vue'
 import { fetchSettings, runDbBackup, saveSettings } from '@/api'
 import type { BackupResult, SettingRow, SettingValue } from '@/api'
 import { fetchBlenderStatus } from '@/api/blender'
+import { applyLodSettings } from '@/v2/lodV2'
 import { fetchEagleStatus } from '@/api/eagle'
 import { syncBotTab } from '@/composables/sidebar/botTab'
 import { app } from '@/lib/comfyApp'
@@ -34,6 +35,8 @@ const MODEL_KEY_PREFIX = 'bot-model-'
 const COLLAPSED_STORAGE_KEY = 'comfytv:sidebar:settings:collapsed'
 
 const PARENT: Record<string, string> = {
+  'v2-lod-scale': 'enable-v2',
+  'v2-lod-fill': 'enable-v2',
   'enable-bot': 'enable-mcp',
   'enable-skills': 'enable-mcp',
   'bot-comfy-mcp-command': 'bot-enable-comfy-mcp',
@@ -236,6 +239,7 @@ export function useSettingsPanel(
     try {
       rows.value = (await saveSettings(changed)).settings
       syncValues()
+      applyLodSettings(rows.value)
       if (Object.keys(changed).some((k) => AGENT_TOGGLE_KEYS.has(k))) {
         const bot = useBotStore()
         await bot.refreshStatus()

@@ -74,9 +74,10 @@ const autoBuildInFlight = new Set<string>()
 
 export function useProxiedVideoUrl(
   source: Ref<string | null>,
-  opts: { autoBuild?: boolean } = {},
+  opts: { autoBuild?: boolean; lazy?: boolean } = {},
 ) {
   const autoBuild = opts.autoBuild === true
+  let awake = opts.lazy !== true
   const url = ref<string | null>(source.value)
   const isProxy = ref(false)
   const canProxy = ref(false)
@@ -149,7 +150,7 @@ export function useProxiedVideoUrl(
     void tick(src, generation)
   }
 
-  watch(source, (src) => {
+  const resolveSource = (src: string | null) => {
     generation++
     stop()
     isProxy.value = false
@@ -165,12 +166,21 @@ export function useProxiedVideoUrl(
       return
     }
     if (originalCache.has(src)) return
+    if (!awake) return
     if (candidateCache.has(src) && !requestedUrls.has(src) && !autoBuild) {
       canProxy.value = true
       return
     }
     void tick(src, generation)
-  }, { immediate: true })
+  }
+
+  function wake(): void {
+    if (awake) return
+    awake = true
+    resolveSource(source.value)
+  }
+
+  watch(source, resolveSource, { immediate: true })
 
   watch(() => source.value != null && requestedUrls.has(source.value), (req) => {
     const src = source.value
@@ -185,5 +195,5 @@ export function useProxiedVideoUrl(
     stop()
   })
 
-  return { url, isProxy, canProxy, building, pct, requestProxy }
+  return { url, isProxy, canProxy, building, pct, requestProxy, wake }
 }

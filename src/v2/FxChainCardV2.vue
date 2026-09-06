@@ -293,8 +293,7 @@ function onSave() {
   display: flex;
   padding: 2px;
   border-radius: 999px;
-  background: rgba(20, 20, 24, 0.72);
-  backdrop-filter: blur(4px);
+  background: rgba(20, 20, 24, 0.85);
 }
 .fxc__mode button {
   border: none;
@@ -329,8 +328,7 @@ function onSave() {
   height: 26px;
   border: none;
   border-radius: 999px;
-  background: rgba(20, 20, 24, 0.66);
-  backdrop-filter: blur(4px);
+  background: rgba(20, 20, 24, 0.82);
   color: #ececf1;
   display: flex;
   align-items: center;

@@ -6,7 +6,7 @@ import { t } from '@/i18n'
 import { app, type ComfyNode } from '@/lib/comfyApp'
 import { bindNodeDrag } from '@/v2/nodeDrag'
 import { bindShellChrome } from '@/v2/shellChrome'
-import { bindProgressRing, createNodeScope, ensureMinSize, ICON_GRIP } from '@/v2/shellCommon'
+import { bindProgressRing, createNodeScope, ensureMinSize, hideNativeWidgets, ICON_GRIP } from '@/v2/shellCommon'
 import { installV2ShellCss } from '@/v2/shellCss'
 import { bindWheelCapture } from '@/v2/wheelCapture'
 import MediaCornerV2 from '@/v2/MediaCornerV2.vue'
@@ -18,6 +18,7 @@ import { attachOutputToolbar } from '@/v2/outputToolbar'
 import { usePinnedBatchStore } from '@/stores/pinnedBatchStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { toImagePoolJson, useStageStore, type StageKind, type StageVariant } from '@/stores/stageStore'
+import { THUMB_TILE, thumbUrl } from '@/utils/thumbUrl'
 import { bindWidgetCallback } from '@/utils/widget'
 
 const PICKER_CSS = `
@@ -179,7 +180,7 @@ function makePoolPicker(previewKind: 'image' | 'video' | 'audio') {
         }),
       })
     }
-    islands.mount(cornerAnchor, MediaCornerV2, {
+    islands.mountWhenVisible(card, cornerAnchor, MediaCornerV2, {
       state: stageState, source: 'pool', mediaType: previewKind, onAction,
     })
 
@@ -188,18 +189,12 @@ function makePoolPicker(previewKind: 'image' | 'video' | 'audio') {
       for (let i = 0; i < batchList.length; i++) {
         const cell = el('button', 'v2-strip__cell') as HTMLButtonElement
         if (i + 1 === pickedIdx) cell.dataset.current = '1'
-        if (previewKind === 'image') {
+        if (previewKind === 'image' || previewKind === 'video') {
           const im = document.createElement('img')
-          im.src = (app as any).api.apiURL(batchList[i].url.replace(/^\/api/, ''))
+          im.src = thumbUrl((app as any).api.apiURL(batchList[i].url.replace(/^\/api/, '')), THUMB_TILE)
           im.loading = 'lazy'
+          im.decoding = 'async'
           cell.appendChild(im)
-        } else if (previewKind === 'video') {
-          const v = document.createElement('video')
-          v.src = (app as any).api.apiURL(batchList[i].url.replace(/^\/api/, ''))
-          v.muted = true
-          v.preload = 'metadata'
-          v.style.cssText = 'display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;'
-          cell.appendChild(v)
         } else {
           cell.textContent = `#${i + 1}`
           cell.style.cssText = 'display:flex;align-items:center;justify-content:center;color:#b9b9c0;font:600 11px system-ui,sans-serif;'
@@ -361,7 +356,7 @@ function makePoolPicker(previewKind: 'image' | 'video' | 'audio') {
 
     bindNodeDrag(node, preview)
     bindShellChrome(node, {
-      scope, card, socketAnchor: preview, state: stageState, media: { source: 'pool' },
+      scope, card, socketAnchor: preview, state: stageState, media: { source: 'pool' }, lod: true,
     })
 
     const prevRemoved = anyNode.onRemoved
@@ -370,6 +365,7 @@ function makePoolPicker(previewKind: 'image' | 'video' | 'audio') {
       prevRemoved?.apply(this, args)
     }
 
+    hideNativeWidgets(node)
     return stageApi
   }
 }

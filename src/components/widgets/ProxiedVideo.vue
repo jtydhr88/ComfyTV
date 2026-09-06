@@ -1,5 +1,11 @@
 <template>
-  <video :src="url ?? undefined" data-ctv-media :class="{ 'ctv-alpha-checker': isAlphaSource }" />
+  <video
+    :src="url ?? undefined"
+    data-ctv-media
+    :class="{ 'ctv-alpha-checker': isAlphaSource }"
+    @pointerenter="wake"
+    @play="wake"
+  />
 </template>
 
 <script setup lang="ts">
@@ -10,7 +16,10 @@ const props = defineProps<{
   src: string | null | undefined
 }>()
 
-const { url } = useProxiedVideoUrl(computed(() => props.src ?? null), { autoBuild: true })
+const { url, wake } = useProxiedVideoUrl(
+  computed(() => props.src ?? null),
+  { autoBuild: true, lazy: true },
+)
 
 const isAlphaSource = computed(() =>
   /\.webm([?&#]|$)/i.test(props.src ?? '')

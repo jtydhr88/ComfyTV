@@ -4,11 +4,12 @@
       <ProxiedVideo
         v-if="resolvedUrl"
         :src="url!"
+        :poster="posterUrl"
         class="v2-mp__video"
         controls
         muted
         playsinline
-        preload="metadata"
+        preload="none"
         @pointerdown.stop
       />
     </template>
@@ -29,7 +30,7 @@
       </div>
     </template>
     <template v-else>
-      <img v-if="resolvedUrl" class="v2-mp__img" :src="resolvedUrl" draggable="false" />
+      <ThumbImg v-if="resolvedUrl" class="v2-mp__img" :src="resolvedUrl" :thumb-max="THUMB_PREVIEW" draggable="false" />
       <span v-if="batchCount > 1" class="v2-mp__count">{{ batchCount }}</span>
     </template>
     <div v-if="!hasContent" class="v2-mp__hint">
@@ -49,8 +50,10 @@ import { computed, ref } from 'vue'
 
 import ModelPreview from '@/components/stages/ModelPreview.vue'
 import ProxiedVideo from '@/components/widgets/ProxiedVideo.vue'
+import ThumbImg from '@/components/widgets/ThumbImg.vue'
 import { useModelViewCapture } from '@/composables/stages/useModelViewCapture'
 import { app } from '@/lib/comfyApp'
+import { THUMB_CELL, THUMB_PREVIEW, thumbUrl } from '@/utils/thumbUrl'
 
 const props = defineProps<{
   kind: 'image' | 'video' | 'audio' | 'text' | 'model'
@@ -96,6 +99,13 @@ const resolvedUrl = computed(() => {
   const u = batchImages.value[0] ?? String(props.url ?? '')
   if (!u || u.trimStart().startsWith('{')) return ''
   return (app as any).api.apiURL(u.replace(/^\/api/, ''))
+})
+
+const posterUrl = computed(() => {
+  if (props.kind !== 'video' || !resolvedUrl.value) return undefined
+  const raw = String(props.url ?? '').replace(/^\/api/, '')
+  const t = thumbUrl(raw, THUMB_CELL)
+  return t === raw ? undefined : t
 })
 
 const hasContent = computed(() =>

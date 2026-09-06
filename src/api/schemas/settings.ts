@@ -5,10 +5,11 @@ export type SettingValue = z.infer<typeof SettingValueSchema>
 
 export const SettingRowSchema = z.object({
   key:     z.string(),
-  type:    z.enum(['boolean', 'int', 'string']),
+  type:    z.enum(['boolean', 'int', 'string', 'choice']),
   value:   SettingValueSchema,
   default: SettingValueSchema,
   experimental: z.boolean().optional(),
+  options: z.array(z.string()).optional(),
 })
 export type SettingRow = z.infer<typeof SettingRowSchema>
 

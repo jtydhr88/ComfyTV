@@ -28,6 +28,7 @@ import {
   createNodeScope,
   el,
   ensureMinSize,
+  hideNativeWidgets,
 } from '@/v2/shellCommon'
 import { type StageKind, type StageVariant } from '@/stores/stageStore'
 
@@ -118,7 +119,7 @@ function makeImageBatchShell(shellCfg: ImageBatchShellConfig = {}) {
       [MediaCornerV2, { state: stageState, source: 'batch', onAction }, cornerAnchor],
     ]
     for (const [comp, props, anchor] of specs) {
-      islands.mount(anchor, comp as any, props)
+      islands.mountWhenVisible(card, anchor, comp as any, props)
     }
   }
   mountApps()
@@ -283,7 +284,7 @@ function makeImageBatchShell(shellCfg: ImageBatchShellConfig = {}) {
   bindNodeDrag(node, preview)
 
   bindShellChrome(node, {
-    scope, card, socketAnchor: preview, state: stageState, media: { source: 'batch' },
+    scope, card, socketAnchor: preview, state: stageState, media: { source: 'batch' }, lod: true,
   })
   bindPromptResize(node, promptAnchor, scope)
   bindPanelCollapse(node, {
@@ -298,6 +299,7 @@ function makeImageBatchShell(shellCfg: ImageBatchShellConfig = {}) {
     prevRemoved?.apply(this, args)
   }
 
+  hideNativeWidgets(node)
   return stageApi
   }
 }

@@ -23,3 +23,27 @@ async def media_info(request: web.Request) -> web.Response:
         _log.exception('[ComfyTV/media_info] probe failed for %s', url)
         return web.json_response({'error': str(e)}, status=500)
     return web.json_response(info)
+
+
+@routes.post('/comfytv/media/info_batch')
+async def media_info_batch(request: web.Request) -> web.Response:
+    try:
+        body = await request.json()
+    except Exception:
+        return web.json_response({'error': 'invalid JSON body'}, status=400)
+    urls = body.get('urls')
+    if not isinstance(urls, list) or len(urls) > 200:
+        return web.json_response({'error': 'urls must be a list of <=200'}, status=400)
+    from ..runners.media_info import probe_media
+
+    def probe_one(url: str):
+        if not url or url.startswith(('http://', 'https://')):
+            return None
+        try:
+            return probe_media(url)
+        except Exception:
+            return None
+
+    clean = [str(u or '').strip() for u in urls]
+    infos = await asyncio.gather(*(asyncio.to_thread(probe_one, u) for u in clean))
+    return web.json_response({'infos': dict(zip(clean, infos))})

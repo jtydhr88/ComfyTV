@@ -23,7 +23,6 @@ export const V2_CSS_PANELS = `
   padding: 8px;
   border-radius: 12px;
   background: var(--v2-slab-bg);
-  backdrop-filter: blur(6px);
   border: 1px solid var(--v2-chip-border);
   box-shadow: var(--v2-slab-shadow);
   max-width: 262px;

@@ -323,3 +323,44 @@ class TestLatestByUidOutputTypeGate:
         found = storage.latest_output_by_uid("default", "uid-shared", output_type="images")
         assert found is not None
         assert found["output_type"] == "images"
+
+
+class TestLatestOutputsBatch:
+    def _row(self, uid, otype, url):
+        from ComfyTV import storage
+        out = storage.persist_output(
+            project_id="default", stage_class="X", stage_node_id="1",
+            output_type=otype, payload_url=url,
+        )
+        storage.set_output_stage_uid(out["id"], uid)
+        return out
+
+    def test_aligned_with_items_and_type_filter(self, reset_db):
+        from ComfyTV import storage
+        self._row("uid-a", "image", "/view?filename=a1.png")
+        self._row("uid-a", "image", "/view?filename=a2.png")
+        self._row("uid-b", "text", "hello")
+        rows = storage.latest_outputs_by_uids("default", [
+            ("uid-a", None), ("uid-b", "image"), ("uid-b", "text"), ("", None), ("uid-zzz", None),
+        ])
+        assert [r and r["payload_url"] for r in rows] == [
+            "/view?filename=a2.png", None, "hello", None, None,
+        ]
+
+    def test_empty_items(self, reset_db):
+        from ComfyTV import storage
+        assert storage.latest_outputs_by_uids("default", []) == []
+
+
+class TestThumbWarmup:
+    def test_persist_output_warms_thumbs(self, reset_db, monkeypatch):
+        from ComfyTV import storage
+        from ComfyTV.runners import thumbs as thumbs_mod
+        seen = []
+        monkeypatch.setattr(thumbs_mod, "warm_thumbs", lambda urls, sizes=(512, 1024): seen.append(list(urls)))
+        storage.persist_output(
+            project_id="default", stage_class="ImageStage", stage_node_id="1",
+            output_type="images", payload_url="/view?filename=a.png",
+            payload_json={"images": [{"index": "1", "image_url": "/view?filename=b.png"}]},
+        )
+        assert seen == [["/view?filename=a.png", "/view?filename=b.png"]]

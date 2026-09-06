@@ -1,7 +1,9 @@
-import { useResizeObserver } from '@vueuse/core'
+import { useResizeObserver, useTimeoutFn } from '@vueuse/core'
 import { effectScope, watch, type EffectScope } from 'vue'
 
 import { app, type ComfyNode } from '@/lib/comfyApp'
+
+const RING_FADE_MS = 400
 
 export const I = (d: string, sw = 1.7) =>
   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}">${d}</svg>`
@@ -35,6 +37,14 @@ export function bindPromptResize(node: ComfyNode, promptAnchor: HTMLElement, sco
   })
 }
 
+export function hideNativeWidgets(node: ComfyNode) {
+  for (const w of (node.widgets ?? []) as any[]) {
+    if (w.type === 'v2') continue
+    ;(w.options ??= {}).hidden = true
+    w.hidden = true
+  }
+}
+
 export function ensureMinSize(node: ComfyNode, minW: number, minH: number) {
   if ((node as any).__comfytvFromSave) return
   const [w0, h0] = node.size
@@ -56,20 +66,33 @@ export function bindProgressRing(
   card: HTMLElement,
   state: { running?: boolean; progress?: { value: number; max: number; text?: string } | null },
 ) {
-  const ring = document.createElement('div')
-  ring.className = 'v2-ring'
-  card.appendChild(ring)
+  let ring: HTMLDivElement | null = null
+  const remove = useTimeoutFn(() => {
+    ring?.remove()
+    ring = null
+    delete card.dataset.v2Running
+  }, RING_FADE_MS, { immediate: false })
   watch(
     () => [state.running, state.progress?.value, state.progress?.max] as const,
     ([running, v, m]) => {
+      if (!running) {
+        if (ring) { ring.dataset.on = ''; remove.start() }
+        return
+      }
+      remove.stop()
+      if (!ring) {
+        ring = document.createElement('div')
+        ring.className = 'v2-ring'
+        card.appendChild(ring)
+      }
+      card.dataset.v2Running = '1'
       const value = Number(v) || 0
       const max = Number(m) || 0
-      const p = running && max > 0 ? Math.min(1, Math.max(0, value / max)) : 0
+      const p = max > 0 ? Math.min(1, Math.max(0, value / max)) : 0
       ring.style.setProperty('--v2-p', p.toFixed(4))
-      ring.dataset.on = running ? '1' : ''
-      ring.dataset.indeterminate = running && p <= 0 ? '1' : ''
+      ring.dataset.on = '1'
+      ring.dataset.indeterminate = p <= 0 ? '1' : ''
     },
     { immediate: true },
   )
-  return ring
 }

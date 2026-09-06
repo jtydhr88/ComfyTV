@@ -170,8 +170,7 @@ const menuItemClass = 'ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:px-1
   height: 26px;
   border: none;
   border-radius: 999px;
-  background: rgba(20, 20, 24, 0.66);
-  backdrop-filter: blur(4px);
+  background: rgba(20, 20, 24, 0.82);
   color: #ececf1;
   display: flex;
   align-items: center;

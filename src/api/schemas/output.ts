@@ -21,6 +21,9 @@ export const ListOutputsSchema = z.object({
 export const LatestOutputSchema = z.object({
   output: OutputSchema.nullable(),
 })
+export const LatestOutputsBatchSchema = z.object({
+  outputs: z.array(OutputSchema.nullable()),
+})
 export const ExecutedPayloadSchema = z.object({
   output: z.union([z.string(), z.array(z.unknown())]).optional(),
   picked: z.union([z.string(), z.array(z.unknown())]).optional(),

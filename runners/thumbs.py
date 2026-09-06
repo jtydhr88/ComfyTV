@@ -109,3 +109,26 @@ def thumb_for_path(src: Path, max_edge: int) -> Path:
 __all__ = ['resolve_thumb', 'thumb_for_path', 'snap_size', 'thumb_dir', 'THUMB_SIZES',
            'THUMB_SUBFOLDER', 'THUMB_SKIP_FACTOR', 'THUMB_QUALITY',
            'IMAGE_EXTS', 'VIDEO_EXTS']
+
+
+_WARM_POOL = None
+
+
+def warm_thumbs(view_urls, sizes=(512, 1024)) -> None:
+    global _WARM_POOL
+    urls = [u for u in view_urls if isinstance(u, str) and u.startswith('/view')]
+    if not urls:
+        return
+    if _WARM_POOL is None:
+        from concurrent.futures import ThreadPoolExecutor
+        _WARM_POOL = ThreadPoolExecutor(max_workers=2, thread_name_prefix='ctv-thumb')
+
+    def one(url: str, size: int) -> None:
+        try:
+            resolve_thumb(url, size)
+        except Exception:
+            pass
+
+    for url in urls:
+        for size in sizes:
+            _WARM_POOL.submit(one, url, size)

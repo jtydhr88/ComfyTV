@@ -417,8 +417,7 @@ body[data-v2-toolbar] [data-testid="selection-toolbox"] { display: none; }
   align-items: center;
   justify-content: center;
   gap: 10px;
-  background: rgba(16,16,20,.45);
-  backdrop-filter: blur(2px);
+  background: rgba(16,16,20,.6);
   border-radius: 12px;
 }
 .v2-preview__busy[data-show="1"] { display: flex; }
@@ -458,8 +457,7 @@ body[data-v2-toolbar] [data-testid="selection-toolbox"] { display: none; }
   gap: 4px;
   padding: 4px 8px;
   border-radius: 999px;
-  background: rgba(20,20,24,.72);
-  backdrop-filter: blur(4px);
+  background: rgba(20,20,24,.85);
   color: #e6e6ea;
   font: 500 11px/1 system-ui, sans-serif;
 }
@@ -476,8 +474,7 @@ body[data-v2-toolbar] [data-testid="selection-toolbox"] { display: none; }
   height: 26px;
   border: none;
   border-radius: 999px;
-  background: rgba(20,20,24,.66);
-  backdrop-filter: blur(4px);
+  background: rgba(20,20,24,.82);
   color: #ececf1;
   display: none;
   align-items: center;

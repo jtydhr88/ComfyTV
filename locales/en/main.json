@@ -423,6 +423,16 @@
         "label": "Enable ComfyTV V2 nodes",
         "desc": "EXPERIMENTAL — expect rough edges. Renders migrated stages with the new content-first V2 shells. Requires ComfyUI's own Node 2.0 (Vue nodes) setting to be enabled first. Refresh the page after changing."
       },
+      "v2-lod-scale": {
+        "label": "Poster mode below zoom",
+        "desc": "Below this canvas zoom, V2 cards collapse to a thumbnail with a play/open button; panels come back once you zoom in past it again.",
+        "options": { "30": "30%", "42": "42%", "50": "50%", "60": "60%" }
+      },
+      "v2-lod-fill": {
+        "label": "Poster backdrop",
+        "desc": "What fills the card around a letterboxed thumbnail: the checkerboard used by image previews, or a dimmed copy of the same picture stretched to fill.",
+        "options": { "checker": "Checkerboard", "image": "Same picture, dimmed" }
+      },
       "enable-db-backup": {
         "label": "Automatic backup on startup",
         "desc": "Back up the ComfyTV data directory (database + workflows) every time the server starts, before any migration runs."

@@ -7,13 +7,16 @@ vi.mock('@/api', () => {
   return {
     apiFetch: vi.fn(),
     apiSend: vi.fn(),
+    fetchLatestOutputsBatch: vi.fn(),
+    ApiError: class ApiError extends Error { constructor(public path: string, public status: number, m: string) { super(m) } },
   }
 })
 
-import { apiFetch, apiSend } from '@/api'
+import { apiFetch, apiSend, fetchLatestOutputsBatch } from '@/api'
 
 const mockFetch = apiFetch as any
 const mockSend  = apiSend  as any
+const mockBatch = fetchLatestOutputsBatch as any
 
 
 describe('projectStore', () => {
@@ -21,6 +24,7 @@ describe('projectStore', () => {
     setActivePinia(createPinia())
     mockFetch.mockReset()
     mockSend.mockReset()
+    mockBatch.mockReset()
   })
 
   it('starts with default project id', () => {
@@ -128,27 +132,27 @@ describe('projectStore', () => {
   })
 
   it('fetchLatestOutput returns the output row', async () => {
-    mockFetch.mockResolvedValueOnce({ output: { id: 1, project_id: 'p1' } })
+    mockBatch.mockResolvedValueOnce([{ id: 1, project_id: 'p1' }])
     const store = useProjectStore()
     const row = await store.fetchLatestOutput('p1', '42')
     expect(row).toEqual({ id: 1, project_id: 'p1' })
   })
 
-  it('fetchLatestOutput appends output_type so a mismatched row is filtered out', async () => {
-    mockFetch.mockResolvedValueOnce({ output: null })
+  it('fetchLatestOutput coalesces concurrent lookups into one batch per project', async () => {
+    mockBatch.mockResolvedValueOnce([null, { id: 2, project_id: 'p1' }])
     const store = useProjectStore()
-    await store.fetchLatestOutput('p1', '42', 'text')
-    const url = mockFetch.mock.calls.at(-1)![0] as string
-    expect(url).toContain('stage_uid=42')
-    expect(url).toContain('output_type=text')
-  })
-
-  it('fetchLatestOutput omits output_type when not given (legacy callers)', async () => {
-    mockFetch.mockResolvedValueOnce({ output: null })
-    const store = useProjectStore()
-    await store.fetchLatestOutput('p1', '42')
-    const url = mockFetch.mock.calls.at(-1)![0] as string
-    expect(url).not.toContain('output_type')
+    const [a, b] = await Promise.all([
+      store.fetchLatestOutput('p1', '42', 'text'),
+      store.fetchLatestOutput('p1', '43'),
+    ])
+    expect(mockBatch).toHaveBeenCalledTimes(1)
+    expect(mockBatch.mock.calls[0][0]).toBe('p1')
+    expect(mockBatch.mock.calls[0][1]).toEqual([
+      { stage_uid: '42', output_type: 'text' },
+      { stage_uid: '43', output_type: null },
+    ])
+    expect(a).toBeNull()
+    expect(b).toEqual({ id: 2, project_id: 'p1' })
   })
 
   it('fetchLatestOutput returns null on empty args', async () => {
@@ -158,7 +162,7 @@ describe('projectStore', () => {
   })
 
   it('fetchLatestOutput returns null on error', async () => {
-    mockFetch.mockRejectedValueOnce(new Error('boom'))
+    mockBatch.mockRejectedValueOnce(new Error('boom'))
     const store = useProjectStore()
     expect(await store.fetchLatestOutput('p1', '42')).toBeNull()
   })

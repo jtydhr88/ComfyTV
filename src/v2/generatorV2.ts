@@ -17,6 +17,7 @@ import {
   bindPromptResize,
   createNodeScope,
   ensureMinSize,
+  hideNativeWidgets,
   ICON_GRIP,
   RUN_BUTTON_HTML,
 } from '@/v2/shellCommon'
@@ -117,15 +118,15 @@ function makeGeneratorShell(config: GeneratorConfig) {
         ...(config.footerExtra ?? []).map(x => x.name),
         ...(config.controls ?? []).map(c => c.name),
       ]
+      islands.mount(mediaAnchor, {
+        render: () => h(MediaPreviewV2, {
+          kind: config.preview,
+          url: config.preview === 'text' ? null : stageState.output,
+          text: config.preview === 'text' ? stageState.output : null,
+          hint,
+        }),
+      })
       const specs: Array<[unknown, Record<string, unknown> | null, HTMLElement]> = [
-        [{
-          render: () => h(MediaPreviewV2, {
-            kind: config.preview,
-            url: config.preview === 'text' ? null : stageState.output,
-            text: config.preview === 'text' ? stageState.output : null,
-            hint,
-          }),
-        }, null, mediaAnchor],
         [MainPromptInput, { node }, promptAnchor],
         [StagePresetBar, { node }, presetAnchor],
         [CustomParamsV2, { node, state: stageState }, customAnchor],
@@ -149,7 +150,7 @@ function makeGeneratorShell(config: GeneratorConfig) {
         specs.push([TextCornerV2, { state: stageState }, cornerAnchor])
       }
       for (const [comp, props, anchor] of specs) {
-        islands.mount(anchor, comp as any, props ?? {})
+        islands.mountWhenVisible(card, anchor, comp as any, props ?? {})
       }
     }
     mountApps()
@@ -188,6 +189,7 @@ function makeGeneratorShell(config: GeneratorConfig) {
     bindShellChrome(node, {
       scope, card, socketAnchor: preview, state: stageState,
       media: config.preview === 'text' ? undefined : { source: 'batch' },
+      lod: true,
     })
     bindPromptResize(node, promptAnchor, scope)
     bindPanelCollapse(node, {
@@ -201,6 +203,7 @@ function makeGeneratorShell(config: GeneratorConfig) {
       prevRemoved?.apply(this, args)
     }
 
+    hideNativeWidgets(node)
     return stageApi
   }
 }

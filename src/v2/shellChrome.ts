@@ -9,6 +9,8 @@ import { pickedMediaItem, type MediaSource } from '@/v2/mediaItems'
 import MediaMetaV2 from '@/v2/MediaMetaV2.vue'
 import { bindClusterHoverIntent, nudgeSlotAnchors } from '@/v2/nodeDrag'
 import { observeProperty } from '@/v2/observeProps'
+import { bindLodPoster, registerCull } from '@/v2/lodV2'
+import { cancelMeasure, scheduleMeasure } from '@/v2/measureBatch'
 import { el } from '@/v2/shellCommon'
 
 export function bindShellChrome(node: ComfyNode, opts: {
@@ -18,6 +20,7 @@ export function bindShellChrome(node: ComfyNode, opts: {
   socketY?: 'center' | { frac: number; cap: number }
   state?: StageState
   media?: { source: MediaSource; host?: HTMLElement }
+  lod?: boolean
 }) {
   const anyNode = node as any
   const { scope, card, socketAnchor } = opts
@@ -66,6 +69,7 @@ export function bindShellChrome(node: ComfyNode, opts: {
       )
     })
     bindMediaMeta(state, opts.media, socketAnchor, scope)
+    if (opts.lod && opts.media) bindLodPoster(card, socketAnchor, state, opts.media.source, scope)
   }
 
   const titleEl = card.querySelector<HTMLElement>('.v2-handle span')
@@ -151,24 +155,30 @@ export function bindShellChrome(node: ComfyNode, opts: {
   }
 
   let root: HTMLElement | null = null
+  let unregisterCull: (() => void) | null = null
   let nudgedY = Number.NEGATIVE_INFINITY
 
   const syncSocketY = () => {
     if (!root) return
-    const rootBox = root.getBoundingClientRect()
-    const box = socketAnchor.getBoundingClientRect()
-    if (rootBox.height > 0 && box.height > 0) {
-      const scale = rootBox.height / (root.offsetHeight || rootBox.height)
+    scheduleMeasure(card, () => {
+      const r = root
+      if (!r || !card.isConnected) return null
+      const rootBox = r.getBoundingClientRect()
+      const box = socketAnchor.getBoundingClientRect()
+      if (!(rootBox.height > 0 && box.height > 0)) return null
+      const scale = rootBox.height / (r.offsetHeight || rootBox.height)
       const mid = socketY === 'center'
         ? box.height / 2
         : Math.min(box.height * socketY.frac, socketY.cap)
       const y = Math.round((box.top + mid - rootBox.top) / (scale || 1))
-      root.style.setProperty('--v2-socket-y', `${y}px`)
-      if (Math.abs(y - nudgedY) >= 2) {
-        nudgedY = y
-        nudgeSlotAnchors(root)
+      return () => {
+        r.style.setProperty('--v2-socket-y', `${y}px`)
+        if (Math.abs(y - nudgedY) >= 2) {
+          nudgedY = y
+          nudgeSlotAnchors(r)
+        }
       }
-    }
+    })
   }
 
   const syncAll = () => {
@@ -178,6 +188,8 @@ export function bindShellChrome(node: ComfyNode, opts: {
     if (r !== root) {
       root = r
       bindClusterHoverIntent(root, scope)
+      unregisterCull?.()
+      unregisterCull = registerCull(node, root)
     }
     if (!root.hasAttribute('data-v2-shell')) root.setAttribute('data-v2-shell', '')
     syncSelected()
@@ -199,7 +211,11 @@ export function bindShellChrome(node: ComfyNode, opts: {
     observeProperty(anyNode, '_comfytvSlotWarnings', () => { if (root) syncWarnings(root) }),
   ]
   scope.run(() => {
-    onScopeDispose(() => { for (const d of disposers) d() })
+    onScopeDispose(() => {
+      cancelMeasure(card)
+      unregisterCull?.()
+      for (const d of disposers) d()
+    })
   })
 
   const prevConf = anyNode.onConfigure
