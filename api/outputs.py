@@ -27,7 +27,8 @@ async def get_latest_output(request: web.Request) -> web.Response:
     stage_node_id = request.query.get("stage_node_id")
     if not stage_node_id:
         return web.json_response({"error": "stage_uid or stage_node_id is required"}, status=400)
-    row = storage.latest_output(pid, stage_node_id)
+    row = storage.latest_output(
+        pid, stage_node_id, stage_class=request.query.get("stage_class") or None)
     return web.json_response({"output": row})
 
 
@@ -67,6 +68,7 @@ async def adopt_outputs(request: web.Request) -> web.Response:
     row = storage.adopt_outputs(
         pid, str(stage_node_id), str(stage_class), str(stage_uid),
         output_type=str(output_type) if output_type else None,
+        since=body.get("since"),
     )
     return web.json_response({"output": row})
 

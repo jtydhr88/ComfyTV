@@ -188,15 +188,19 @@ async def _get_stage(args: dict) -> dict:
     if isinstance(result, dict):
         result["latest_output"] = _latest_output_summary(
             args.get("project_id") or result.get("project_id") or "default",
-            result.get("uid"), result.get("graph_node_id"))
+            result.get("uid"), result.get("graph_node_id"),
+            result.get("node_class"))
     return result
 
-def _latest_output_summary(project_id: str, uid, graph_node_id) -> dict | None:
+def _latest_output_summary(project_id: str, uid, graph_node_id,
+                           node_class=None) -> dict | None:
     row = None
     if uid:
         row = storage.latest_output_by_uid(project_id, str(uid))
-    if row is None and graph_node_id is not None:
-        row = storage.latest_output(project_id, str(graph_node_id))
+    cls = str(node_class or "").removeprefix("ComfyTV.")
+    if row is None and graph_node_id is not None and cls:
+        row = storage.latest_output(project_id, str(graph_node_id),
+                                    stage_class=cls, orphans_only=True)
     if not row:
         return None
     payload = row.get("payload_json") or {}

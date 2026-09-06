@@ -58582,7 +58582,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-DqcvdhmM.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-BUbbhyJj.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -62206,6 +62206,7 @@ function installExecRelay(deps) {
   return { onPeerExec };
 }
 const PROP = "comfytv_stage_uid";
+const PROP_AT = "comfytv_stage_uid_at";
 function genUid() {
   const c2 = globalThis.crypto;
   if (c2 && typeof c2.randomUUID === "function") return c2.randomUUID();
@@ -62218,8 +62219,14 @@ function ensureStageUid(node) {
   if (typeof uid2 !== "string" || uid2.length === 0) {
     uid2 = genUid();
     node.properties[PROP] = uid2;
+    node.properties[PROP_AT] = (/* @__PURE__ */ new Date()).toISOString();
   }
   return uid2;
+}
+function getStageUidClaimedAt(node) {
+  var _a3;
+  const at2 = (_a3 = node == null ? void 0 : node.properties) == null ? void 0 : _a3[PROP_AT];
+  return typeof at2 === "string" && at2 ? at2 : null;
 }
 function getStageUid(node) {
   var _a3;
@@ -62236,6 +62243,7 @@ function claimStageUid(node) {
   if (owner && owner !== node) {
     uid2 = genUid();
     node.properties[PROP] = uid2;
+    node.properties[PROP_AT] = (/* @__PURE__ */ new Date()).toISOString();
     console.warn(
       `[ComfyTV/stage] node #${node.id}: stage uid already claimed by node #${owner.id} — regenerated`
     );
@@ -62815,14 +62823,20 @@ const useProjectStore = /* @__PURE__ */ defineStore("comfytv-project", () => {
       if (!latestTimer.isPending.value) latestTimer.start();
     });
   }
-  async function adoptOutputs(projectId, stageNodeId, stageClass, stageUid, outputType) {
+  async function adoptOutputs(projectId, stageNodeId, stageClass, stageUid, outputType, since) {
     if (!projectId || !stageNodeId || !stageClass || !stageUid) return null;
     try {
       const data = await apiSend(
         `/comfytv/projects/${encodeURIComponent(projectId)}/outputs/adopt`,
         "POST",
         LatestOutputSchema,
-        { stage_node_id: stageNodeId, stage_class: stageClass, stage_uid: stageUid, output_type: outputType }
+        {
+          stage_node_id: stageNodeId,
+          stage_class: stageClass,
+          stage_uid: stageUid,
+          output_type: outputType,
+          ...since ? { since } : {}
+        }
       );
       return data.output;
     } catch (e) {
@@ -143167,7 +143181,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-BLuVDvbx.mjs");
+    const { STLLoader } = await import("./STLLoader-DM21UjzD.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -143175,7 +143189,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-Bj8HaOkw.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-BzKqfg1E.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -225941,7 +225955,8 @@ function bindOutputRestore(opts) {
           String(node.id),
           stageClassName(node),
           uid2,
-          outputTypeForKind(kind)
+          outputTypeForKind(kind),
+          getStageUidClaimedAt(node)
         );
       }
       if (!latest) {
@@ -236840,4 +236855,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-sdAPHWpj.mjs.map
+//# sourceMappingURL=main-Dp-BUjwz.mjs.map

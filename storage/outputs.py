@@ -32,6 +32,7 @@ def persist_output(
     parent_output_id: Optional[int] = None,
     picked_index: Optional[int] = None,
     duration_ms: Optional[int] = None,
+    stage_uid: Optional[str] = None,
 ) -> Optional[dict]:
     pid = (project_id or "").strip() or DEFAULT_PROJECT_ID
     if pid == DEFAULT_PROJECT_ID:
@@ -47,6 +48,7 @@ def persist_output(
             project_id=pid,
             stage_class=stage_class,
             stage_node_id=str(stage_node_id) if stage_node_id is not None else None,
+            stage_uid=str(stage_uid) if stage_uid else None,
             output_type=output_type,
             payload_url=payload_url or "",
             payload_json=json.dumps(payload_json) if payload_json is not None else None,
@@ -92,17 +94,35 @@ def _warm_output_thumbs(payload_url: str, payload_json: Any) -> None:
         logger.debug("[ComfyTV] thumb warm-up skipped", exc_info=True)
 
 
-def list_outputs(project_id: str, stage_node_id: Optional[str] = None, limit: int = 50) -> list[dict]:
+def list_outputs(
+    project_id: str,
+    stage_node_id: Optional[str] = None,
+    limit: int = 50,
+    *,
+    stage_class: Optional[str] = None,
+    orphans_only: bool = False,
+) -> list[dict]:
     with db.get_session() as s:
         q = select(Output).where(Output.project_id == project_id)
         if stage_node_id is not None:
             q = q.where(Output.stage_node_id == str(stage_node_id))
+        if stage_class:
+            q = q.where(Output.stage_class == str(stage_class))
+        if orphans_only:
+            q = q.where(Output.stage_uid.is_(None))
         q = q.order_by(desc(Output.id)).limit(limit)
         return [_output_to_dict(o) for o in s.execute(q).scalars().all()]
 
 
-def latest_output(project_id: str, stage_node_id: str) -> Optional[dict]:
-    rows = list_outputs(project_id, stage_node_id=stage_node_id, limit=1)
+def latest_output(
+    project_id: str,
+    stage_node_id: str,
+    *,
+    stage_class: Optional[str] = None,
+    orphans_only: bool = False,
+) -> Optional[dict]:
+    rows = list_outputs(project_id, stage_node_id=stage_node_id, limit=1,
+                        stage_class=stage_class, orphans_only=orphans_only)
     return rows[0] if rows else None
 
 
@@ -165,9 +185,11 @@ def adopt_outputs(
     stage_class: str,
     stage_uid: str,
     output_type: Optional[str] = None,
+    since: Any = None,
 ) -> Optional[dict]:
     if not stage_uid or not stage_node_id or not stage_class:
         return None
+    since_dt = _parse_since(since)
     with db.get_session() as s:
         q = s.query(Output).filter(
             Output.project_id == project_id,
@@ -177,13 +199,30 @@ def adopt_outputs(
         )
         if output_type:
             q = q.filter(Output.output_type == str(output_type))
-        rows = q.order_by(desc(Output.id)).all()
-        if not rows:
+        if since_dt is not None:
+            q = q.filter(Output.created_at >= since_dt)
+        row = q.order_by(desc(Output.id)).first()
+        if row is None:
             return None
-        for r in rows:
-            r.stage_uid = str(stage_uid)
+        row.stage_uid = str(stage_uid)
         s.commit()
-        return _output_to_dict(rows[0])
+        return _output_to_dict(row)
+
+
+def _parse_since(value: Any):
+    from datetime import datetime, timezone
+    if value is None or value == "":
+        return None
+    if isinstance(value, datetime):
+        dt = value
+    else:
+        try:
+            dt = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+        except ValueError:
+            return None
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt
 
 
 def find_output_by_payload_url(payload_url: str) -> Optional[dict]:

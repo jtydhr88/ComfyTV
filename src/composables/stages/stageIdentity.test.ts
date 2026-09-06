@@ -1,12 +1,19 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import {
-  claimStageUid,
-  ensureStageUid,
-  getStageUid,
-  releaseStageUid,
-  stageClassName,
-} from './stageIdentity'
+import { claimStageUid, ensureStageUid, getStageUid, releaseStageUid, stageClassName, getStageUidClaimedAt } from './stageIdentity'
+
+describe('ensureStageUid (claim timestamp)', () => {
+  it('records when a uid was first minted', () => {
+    const node: any = { properties: {} }
+    ensureStageUid(node)
+    expect(typeof node.properties.comfytv_stage_uid_at).toBe('string')
+    expect(getStageUidClaimedAt(node)).toBe(node.properties.comfytv_stage_uid_at)
+    const at = node.properties.comfytv_stage_uid_at
+    ensureStageUid(node)
+    expect(node.properties.comfytv_stage_uid_at).toBe(at)
+    expect(getStageUidClaimedAt({ properties: { comfytv_stage_uid: 'legacy' } })).toBeNull()
+  })
+})
 
 describe('ensureStageUid', () => {
   it('returns empty string for a missing node', () => {

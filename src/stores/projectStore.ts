@@ -141,6 +141,7 @@ export const useProjectStore = defineStore('comfytv-project', () => {
     stageClass: string,
     stageUid: string,
     outputType?: string,
+    since?: string | null,
   ) {
     if (!projectId || !stageNodeId || !stageClass || !stageUid) return null
     try {
@@ -148,7 +149,10 @@ export const useProjectStore = defineStore('comfytv-project', () => {
         `/comfytv/projects/${encodeURIComponent(projectId)}/outputs/adopt`,
         'POST',
         LatestOutputSchema,
-        { stage_node_id: stageNodeId, stage_class: stageClass, stage_uid: stageUid, output_type: outputType },
+        {
+          stage_node_id: stageNodeId, stage_class: stageClass, stage_uid: stageUid,
+          output_type: outputType, ...(since ? { since } : {}),
+        },
       )
       return data.output
     } catch (e) {

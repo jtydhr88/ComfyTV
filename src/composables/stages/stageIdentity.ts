@@ -1,4 +1,5 @@
 const PROP = 'comfytv_stage_uid'
+const PROP_AT = 'comfytv_stage_uid_at'
 
 function genUid(): string {
   const c: any = (globalThis as any).crypto
@@ -17,8 +18,14 @@ export function ensureStageUid(node: any): string {
   if (typeof uid !== 'string' || uid.length === 0) {
     uid = genUid()
     node.properties[PROP] = uid
+    node.properties[PROP_AT] = new Date().toISOString()
   }
   return uid
+}
+
+export function getStageUidClaimedAt(node: any): string | null {
+  const at = node?.properties?.[PROP_AT]
+  return typeof at === 'string' && at ? at : null
 }
 
 export function getStageUid(node: any): string {
@@ -37,6 +44,7 @@ export function claimStageUid(node: any): string {
   if (owner && owner !== node) {
     uid = genUid()
     node.properties[PROP] = uid
+    node.properties[PROP_AT] = new Date().toISOString()
     console.warn(
       `[ComfyTV/stage] node #${node.id}: stage uid already claimed by node #${owner.id} — regenerated`,
     )

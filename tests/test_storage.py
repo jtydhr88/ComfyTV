@@ -233,7 +233,7 @@ class TestStageUidIdentity:
         from ComfyTV import storage
         assert storage.set_output_stage_uid(99999, "uid-A") is None
 
-    def test_adopt_claims_null_rows_by_node_and_class(self, reset_db):
+    def test_adopt_claims_only_the_newest_null_row_by_node_and_class(self, reset_db):
         from ComfyTV import storage
         for name in ("OLD1.png", "OLD2.png"):
             storage.persist_output(
@@ -244,8 +244,9 @@ class TestStageUidIdentity:
         assert adopted is not None
         assert adopted["payload_url"].endswith("OLD2.png")  # latest
 
-        rows = storage.list_outputs("default", stage_node_id="7")
-        assert all(r["stage_uid"] == "uid-crop" for r in rows)
+        rows = {r["payload_url"]: r["stage_uid"] for r in storage.list_outputs("default", stage_node_id="7")}
+        assert rows["/view?filename=OLD2.png"] == "uid-crop"
+        assert rows["/view?filename=OLD1.png"] is None
 
     def test_adopt_is_one_time_only(self, reset_db):
         from ComfyTV import storage

@@ -19,6 +19,23 @@ def _stage_name(cls) -> str:
     return name[:-5] if name.endswith('Clone') else name
 
 
+def _mirror_uid(project_id: str, node_id, stage_class: str):
+    if node_id is None:
+        return None
+    try:
+        from ....api.canvas_state import get_canvas_state
+        snap = get_canvas_state(project_id or None)
+    except Exception:
+        return None
+    if not snap.get("available"):
+        return None
+    for st in snap.get("stages") or []:
+        if str(st.get("graph_node_id")) == str(node_id) \
+                and str(st.get("stage_class") or "") == stage_class:
+            return str(st.get("uid") or "") or None
+    return None
+
+
 def _persist(
     *,
     cls,
@@ -41,6 +58,7 @@ def _persist(
             project_id=project_id or "",
             stage_class=_stage_name(cls),
             stage_node_id=str(node_id) if node_id is not None else None,
+            stage_uid=_mirror_uid(project_id or "", node_id, _stage_name(cls)),
             output_type=output_type,
             payload_url=payload_url,
             payload_json=payload_json,
