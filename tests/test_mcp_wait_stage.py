@@ -57,6 +57,19 @@ class TestWaitStage:
         await task
         assert out["status"] == "running"
 
+    async def test_editor_and_loader_stages_are_rejected_up_front(self, wait_tool):
+        from ComfyTV.api.canvas_state import store_canvas_state
+        store_canvas_state("default", [
+            dict(STAGE, uid="cccccccc-1234-5678-9abc-def012345678",
+                 graph_node_id="21", stage_class="CropStage"),
+            dict(STAGE, uid="dddddddd-1234-5678-9abc-def012345678",
+                 graph_node_id="22", stage_class="AssetImageLoaderStage"),
+        ], client_id="tab-1")
+        with pytest.raises(ValueError, match="CropStage is an editor stage.*set_stage"):
+            await wait_tool({"node": "21", "timeout_s": 2})
+        with pytest.raises(ValueError, match="loader stage"):
+            await wait_tool({"node": "22", "timeout_s": 2})
+
     async def test_default_timeout_is_90(self):
         from ComfyTV.api import mcp_tools
         assert mcp_tools.runs._WAIT_DEFAULT_S == 90.0

@@ -141,7 +141,9 @@ TOOLS: dict[str, dict] = {
     "stage_catalog": {
         "description": (
             "Catalog of INSTALLED ComfyTV stage node types (compile-time registry, "
-            "NOT the user's canvas — use get_canvas for that) plus, per workflow "
+            "NOT the user's canvas — use get_canvas for that; every entry can be "
+            "created with add_stage). runnable=false marks loader and editor "
+            "stages that never run — drive them with set_stage. Plus, per workflow "
             "kind, each configured workflow's input usage: which image/video/audio/"
             "text/model slots it uses or requires and its max input counts."
         ),

@@ -273,8 +273,13 @@ async function handleRunStage(app: any, cmd: any): Promise<CommandResult> {
   if (!stageApi?.onRunRequest) {
     throw new Error('stage card is not mounted yet — cannot run')
   }
-  if (stageApi.variant === 'loader') {
+  const variant = stageApi.variant ?? stageApi.state?.variant
+  if (variant === 'loader') {
     throw new Error('loader stages have nothing to run — they only hold media')
+  }
+  if (variant === 'transform') {
+    throw new Error(
+      'editor stage — its result is applied live downstream; set its widgets with set_stage instead of running it')
   }
   if (stageApi.state?.running) throw new Error('stage is already running')
   await until(() => !!stageApi.state?.preparingWorkflow)

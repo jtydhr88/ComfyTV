@@ -405,11 +405,12 @@ const extension: ComfyExtension = {
     if (isV2Enabled()) {
       const shell = V2_SHELLS[node.comfyClass]
       if (shell) {
+        const variant = (entry.variant ?? 'generator') as StageVariant
         const { state, onRunRequest, onCancelRequest, registerPreRun } =
-          shell(node, entry.kind, (entry.variant ?? 'generator') as StageVariant)
+          shell(node, entry.kind, variant)
         Object.assign(
           ((node as any).__comfytvStageApi ??= {}),
-          { state, onRunRequest, onCancelRequest, registerPreRun },
+          { state, onRunRequest, onCancelRequest, registerPreRun, variant },
         )
         node.onRemoved = useChainCallback(node.onRemoved, () => {
           delete (node as any).__comfytvStageApi

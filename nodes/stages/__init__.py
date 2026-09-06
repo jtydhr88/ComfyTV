@@ -1,4 +1,6 @@
+import logging
 from ._common import *  # noqa: F401, F403
+from .common.meta import NON_STAGE_NODES, PENDING_STAGES
 
 from .generators import (
     ProjectStage, TextStage, ImageStage, VideoStage, AudioStage, SpeechStage,
@@ -118,77 +120,97 @@ from .material import MaterialStage
 from .split_part import SplitPartStage, MaskCleanup
 
 
+def stage_classes() -> list:
+    return [
+        ProjectStage,
+        TextStage, ImageStage, VideoStage, AudioStage, SpeechStage,
+        DirectorStage,
+        ImagePickerStage, AudioPickerStage, VideoPickerStage,
+        PanoramaStage, PanoramaCurrentViewStage, PanoramaMultiViewStage,
+        MultiangleStage, RelightStage, ImageVariationsStage,
+        UpscaleStage, OutpaintStage, InpaintStage, ImageEditStage,
+        EraseStage, CutoutStage, CropStage,
+        RotateStage, MirrorStage, ColorGradeStage, CompareStage, GridSplitStage,
+        VideoExtractFrameStage, VideoFramesStage,
+        VideoClipStage, VideoCropStage, VideoConcatStage, VideoResizeStage,
+        VideoSpeedStage, VideoRotateStage, VideoSplitStage,
+        VideoVolumeStage, VideoMuxAudioStage, MakeProxyStage,
+        AudioVideoDemuxAudioStage, AudioVideoDemuxVideoStage,
+        VideoColorStage, VideoCurvesStage, VideoLUTStage,
+        VideoBlurSharpenStage, VideoDenoiseStage, VideoChromaKeyStage,
+        VideoTransitionStage, VideoLumaWipeStage,
+        VideoStabilizeStage, SceneDetectStage,
+        VideoInterpolateStage, VideoDeinterlaceStage, VideoStylizeStage,
+        VideoScopesStage,
+        FXChainStage,
+        AudioDynamicsStage, AudioEQStage, AudioLoudnessStage, AudioDenoiseStage,
+        AudioEchoStage, AudioModulationStage, AudioStereoStage,
+        AudioTimePitchStage, AudioRepairStage, AudioSaturateStage,
+        AudioCrossfadeStage, AudioAnalyzeStage, AudioVisualizeStage,
+        AudioMixStage, AudioSegmentExportStage, AudioConvolveStage,
+        AudioClipStage, AudioSplitStage,
+        AudioSweepStage, AudioDeconvolveStage,
+        VideoCompositeStage, VideoTransformStage, CornerPinStage,
+        RotoMaskStage, MotionTrackStage, TitleStage, SubtitleStage,
+        TimeRemapStage, SequenceStage, VideoStabilizeV2Stage, PaintStrokeStage,
+        STMapStage, MaskPropagateStage, SubtitleGenStage,
+        HueCorrectStage, GlowStage, GodRaysStage, PatternStage,
+        PIKStage, KeyerStage, DespillStage, ColorSuppressStage,
+        KeyMixStage, MatteMonitorStage, MatteMorphStage,
+        FrameBlendStage, KenBurnsStage, OldFilmStage,
+        SelectiveColorStage, ChromaShiftStage, PseudocolorStage,
+        PosterizeStage, GrayWorldStage,
+        CDLStage, HistogramEqStage, Video360Stage, AudioDuckStage,
+        ShapeMaskStage, LensDistortStage, ChromaticAberrationStage,
+        LensFlareStage, ZDefocusStage, FaceBlurStage, SpotRemoverStage,
+        ParticlesStage,
+        SlitScanStage, FeedbackFXStage, StrobeStage, ExpressionStage,
+        Select0rStage, ArtFXStage, GlitchFXStage, KaleidoscopeStage,
+        WaveWarpStage, WaterStage, LightGraffitiStage,
+        Video360StabilizeStage, Card3DStage, STMapGenStage,
+        RegrainStage, ContactSheetStage,
+        AudioStemSplitStage, AudioNoiseReductionStage, AudioMIRStage,
+        ScoreStage, ScoreEditorStage, MidiEditorStage, ScoreToMidiStage,
+        SF2SynthStage, ClickTrackStage, ChordAccompStage, MuseReverbStage,
+        AnnotateStage, AudioReactiveStage, AudioMeterStage,
+        TextLoaderStage,
+        ImageLoaderStage, VideoLoaderStage, AudioLoaderStage,
+        AssetImageLoaderStage, AssetVideoLoaderStage, AssetAudioLoaderStage,
+        AssetTextLoaderStage,
+        Model3DStage, ModelLoaderStage, AssetModelLoaderStage,
+        MeshOpStage, MeshPrimitiveStage, MeshBooleanStage, MeshBakeMapsStage,
+        LineArtStage,
+        Scene3DStage,
+        BlenderSceneStage, BlenderCameraStage, BlenderAnimationStage,
+        LayerEditorStage,
+        PosterStage,
+        StoryboardEditorStage,
+        MaterialStage,
+        SplitPartStage, MaskCleanup,
+        *_bridge_classes(),
+    ]
+
+
+def registered_stage_names() -> set[str]:
+    return {c.__name__ for c in stage_classes()}
+
+
+def _check_registry_drift(classes: list) -> None:
+    names = {c.__name__ for c in classes}
+    bridges = {c.__name__ for c in _bridge_classes()}
+    meta_only = sorted(set(STAGE_META) - names - PENDING_STAGES)
+    registry_only = sorted(names - set(STAGE_META) - bridges - NON_STAGE_NODES)
+    if meta_only or registry_only:
+        logging.getLogger(__name__).warning(
+            "[ComfyTV] stage registry drift — in STAGE_META but unregistered: %s; "
+            "registered but missing from STAGE_META: %s", meta_only, registry_only)
+
+
 class ComfyTVExtension(ComfyExtension):
     @override
     async def get_node_list(self) -> list[type[io.ComfyNode]]:
-        classes = [
-            ProjectStage,
-            TextStage, ImageStage, VideoStage, AudioStage, SpeechStage,
-            DirectorStage,
-            ImagePickerStage, AudioPickerStage, VideoPickerStage,
-            PanoramaStage, PanoramaCurrentViewStage, PanoramaMultiViewStage,
-            MultiangleStage, RelightStage, ImageVariationsStage,
-            UpscaleStage, OutpaintStage, InpaintStage, ImageEditStage,
-            EraseStage, CutoutStage, CropStage,
-            RotateStage, MirrorStage, ColorGradeStage, CompareStage, GridSplitStage,
-            VideoExtractFrameStage, VideoFramesStage,
-            VideoClipStage, VideoCropStage, VideoConcatStage, VideoResizeStage,
-            VideoSpeedStage, VideoRotateStage, VideoSplitStage,
-            VideoVolumeStage, VideoMuxAudioStage, MakeProxyStage,
-            AudioVideoDemuxAudioStage, AudioVideoDemuxVideoStage,
-            VideoColorStage, VideoCurvesStage, VideoLUTStage,
-            VideoBlurSharpenStage, VideoDenoiseStage, VideoChromaKeyStage,
-            VideoTransitionStage, VideoLumaWipeStage,
-            VideoStabilizeStage, SceneDetectStage,
-            VideoInterpolateStage, VideoDeinterlaceStage, VideoStylizeStage,
-            VideoScopesStage,
-            FXChainStage,
-            AudioDynamicsStage, AudioEQStage, AudioLoudnessStage, AudioDenoiseStage,
-            AudioEchoStage, AudioModulationStage, AudioStereoStage,
-            AudioTimePitchStage, AudioRepairStage, AudioSaturateStage,
-            AudioCrossfadeStage, AudioAnalyzeStage, AudioVisualizeStage,
-            AudioMixStage, AudioSegmentExportStage, AudioConvolveStage,
-            AudioClipStage, AudioSplitStage,
-            AudioSweepStage, AudioDeconvolveStage,
-            VideoCompositeStage, VideoTransformStage, CornerPinStage,
-            RotoMaskStage, MotionTrackStage, TitleStage, SubtitleStage,
-            TimeRemapStage, SequenceStage, VideoStabilizeV2Stage, PaintStrokeStage,
-            STMapStage, MaskPropagateStage, SubtitleGenStage,
-            HueCorrectStage, GlowStage, GodRaysStage, PatternStage,
-            PIKStage, KeyerStage, DespillStage, ColorSuppressStage,
-            KeyMixStage, MatteMonitorStage, MatteMorphStage,
-            FrameBlendStage, KenBurnsStage, OldFilmStage,
-            SelectiveColorStage, ChromaShiftStage, PseudocolorStage,
-            PosterizeStage, GrayWorldStage,
-            CDLStage, HistogramEqStage, Video360Stage, AudioDuckStage,
-            ShapeMaskStage, LensDistortStage, ChromaticAberrationStage,
-            LensFlareStage, ZDefocusStage, FaceBlurStage, SpotRemoverStage,
-            ParticlesStage,
-            SlitScanStage, FeedbackFXStage, StrobeStage, ExpressionStage,
-            Select0rStage, ArtFXStage, GlitchFXStage, KaleidoscopeStage,
-            WaveWarpStage, WaterStage, LightGraffitiStage,
-            Video360StabilizeStage, Card3DStage, STMapGenStage,
-            RegrainStage, ContactSheetStage,
-            AudioStemSplitStage, AudioNoiseReductionStage, AudioMIRStage,
-            ScoreStage, ScoreEditorStage, MidiEditorStage, ScoreToMidiStage,
-            SF2SynthStage, ClickTrackStage, ChordAccompStage, MuseReverbStage,
-            AnnotateStage, AudioReactiveStage, AudioMeterStage,
-            TextLoaderStage,
-            ImageLoaderStage, VideoLoaderStage, AudioLoaderStage,
-            AssetImageLoaderStage, AssetVideoLoaderStage, AssetAudioLoaderStage,
-            AssetTextLoaderStage,
-            Model3DStage, ModelLoaderStage, AssetModelLoaderStage,
-            MeshOpStage, MeshPrimitiveStage, MeshBooleanStage, MeshBakeMapsStage,
-            LineArtStage,
-            Scene3DStage,
-            BlenderSceneStage, BlenderCameraStage, BlenderAnimationStage,
-            LayerEditorStage,
-            PosterStage,
-            StoryboardEditorStage,
-            MaterialStage,
-            SplitPartStage, MaskCleanup,
-            *_bridge_classes(),
-        ]
+        classes = stage_classes()
+        _check_registry_drift(classes)
         from ...runners.exec_errors import install_exec_error_recorder
         for cls in classes:
             meta = STAGE_META.get(cls.__name__) or {}

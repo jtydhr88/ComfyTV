@@ -445,6 +445,20 @@ describe('installMcpCommandBus', () => {
     expect(node.__comfytvStageApi.onRunRequest).toHaveBeenCalledTimes(1)
   })
 
+  it('run_stage refuses editor (transform) stages up front', async () => {
+    const node = makeNode({
+      __comfytvStageApi: { state: { running: false }, variant: 'transform', onRunRequest: vi.fn() },
+    })
+    const { host, deps } = makeHost([node])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, { id: 'c1', action: 'run_stage', node: 'u1' })
+    const [result] = postedResults()
+    expect(result.ok).toBe(false)
+    expect(result.error).toContain('editor stage')
+    expect(result.error).toContain('set_stage')
+    expect(node.__comfytvStageApi.onRunRequest).not.toHaveBeenCalled()
+  })
+
   it('run_stage refuses loader stages up front', async () => {
     const node = makeNode({
       __comfytvStageApi: { state: { running: false }, variant: 'loader', onRunRequest: vi.fn() },

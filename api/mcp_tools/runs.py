@@ -2,6 +2,8 @@ import asyncio
 import re
 import time
 from ... import storage
+from ...nodes.stages import STAGE_META
+from ..stages import NOT_RUNNABLE_VARIANTS
 from ..canvas_state import get_canvas_state
 
 from . import _shared
@@ -56,6 +58,17 @@ def _mirror_stage(project_id, node_ref: str):
         f"pushes the mirror every ~5 s, so a stage added moments ago may "
         f"not be in it yet — retry in a few seconds)")
 
+def _reject_not_runnable(stage: dict) -> None:
+    cls = str(stage.get("stage_class") or "").removeprefix("ComfyTV.")
+    variant = (STAGE_META.get(cls) or {}).get("variant")
+    if variant in NOT_RUNNABLE_VARIANTS:
+        what = "a loader stage — it only holds media" if variant == "loader" \
+            else "an editor stage — its result is applied live downstream"
+        raise ValueError(
+            f"{cls} is {what}, so it never produces a run output and there is "
+            f"nothing to wait for; set its widgets with set_stage and run the "
+            f"downstream stage instead")
+
 async def _mirror_stage_wait(project_id, node_ref: str):
     deadline = time.monotonic() + _MIRROR_WAIT_S
     while True:
@@ -99,6 +112,7 @@ async def _wait_stage(args: dict) -> dict:
     timeout_s = max(2.0, min(timeout_s, _WAIT_MAX_S))
 
     pid, stage = await _mirror_stage_wait(args.get("project_id"), str(node))
+    _reject_not_runnable(stage)
     uid = str(stage.get("uid") or "")
     initial_run = dict(stage.get("last_run") or {})
     run_started = _RUN_STARTED.get(uid)
@@ -161,8 +175,13 @@ TOOLS: dict[str, dict] = {
             "Returns as soon as the run is queued — then call wait_stage on the "
             "same node to block until it finishes instead of polling. Safe to "
             "call right after add_stage: the page waits (up to 15 s) for the "
-            "stage's workflow preparation to finish before starting. node is a "
-            "stage uid or graph_node_id. Requires an open ComfyTV page in Desktop or a browser."
+            "stage's workflow preparation to finish before starting. Only "
+            "stages with runnable=true in stage_catalog can run: loader stages "
+            "(they hold media) and editor stages such as Crop / Rotate / "
+            "ColorGrade / Mirror (their result is applied live downstream) are "
+            "rejected — drive those with set_stage and run the downstream "
+            "stage. node is a stage uid or graph_node_id. Requires an open "
+            "ComfyTV page in Desktop or a browser."
         ),
         "inputSchema": {
             "type": "object",

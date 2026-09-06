@@ -1,6 +1,6 @@
 import time
 from ... import storage
-from ...nodes.stages import STAGE_META
+from ...nodes.stages import STAGE_META, registered_stage_names
 from ...runners import workflow_db
 
 from . import _shared
@@ -9,7 +9,7 @@ from ._shared import _command_payload
 
 def _normalize_stage_class(value: str) -> str:
     name = value.removeprefix("ComfyTV.")
-    if name not in STAGE_META:
+    if name not in STAGE_META or name not in registered_stage_names():
         raise ValueError(
             f"unknown stage class {value!r} — see stage_catalog for valid node_id values"
         )
@@ -280,7 +280,10 @@ TOOLS: dict[str, dict] = {
             "nodes, not runnable: set widgets {\"asset_id\": <id>} and the "
             "loader selects that library asset and emits its output "
             "immediately — do NOT run_stage them, just run the downstream "
-            "stage. Multi-candidate stages (Image/Audio/Video Picker pools "
+            "stage. Editor stages (Crop / Rotate / ColorGrade / Mirror / Compare "
+            "and the other transform-variant cards, runnable=false in stage_catalog) "
+            "work the same way: their widgets apply live downstream, so set_stage "
+            "is the whole interaction. Multi-candidate stages (Image/Audio/Video Picker pools "
             "and image-batch generators like ImageStage) select the same "
             "way: widgets {\"selected_index\": N} (1-BASED) picks that "
             "candidate on the live card and updates the downstream output. "

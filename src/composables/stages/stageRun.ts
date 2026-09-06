@@ -3,6 +3,7 @@ import { outputHasLinks, spawnConsumingNode } from '@/composables/stages/spawnFo
 import { ensureStageUid } from '@/composables/stages/stageIdentity'
 import { buildRunPrompt } from '@/composables/stages/stagePromptBuild'
 import { useRemotePreflight } from '@/composables/stages/useRemotePreflight'
+import { getStageMeta } from '@/composables/stages/stageMeta'
 import { t } from '@/i18n'
 import { app } from '@/lib/comfyApp'
 import { useExecutionStore } from '@/stores/executionStore'
@@ -55,6 +56,17 @@ export function createStageRun(opts: {
   const onRunRequest = async () => {
     if (state.running) return
     if (variant === 'loader') return
+    const wfWidget = node.widgets?.find((w: any) => w.name === 'workflow')
+    const wfOptions = wfWidget?.options?.values
+    if (wfWidget && Array.isArray(wfOptions) && wfOptions.length === 0) {
+      const wfKind = getStageMeta(node.comfyClass)?.workflow_kind ?? kind
+      const message = t('stage.noWorkflowInstalled', { kind: wfKind })
+      store.applyExecutionError(state, { message, type: 'no_workflow' })
+      ;(app as any)?.extensionManager?.toast?.add?.({
+        severity: 'warn', summary: message, life: 6000,
+      })
+      return
+    }
     if (state.preparingWorkflow) {
       ;(app as any)?.extensionManager?.toast?.add?.({
         severity: 'warn',

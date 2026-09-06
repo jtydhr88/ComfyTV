@@ -1,213 +1,57 @@
-"""Node registry contract — the full set of ComfyTV stage node_ids.
-
-Guards file reorganizations: if a stage class is dropped from
-ComfyTVExtension.get_node_list() (or its schema stops loading), this fails
-loudly. Update EXPECTED_NODE_IDS deliberately when adding/removing stages.
-"""
 import asyncio
 
-EXPECTED_NODE_IDS = [
-    'ComfyTV.AnnotateStage',
-    'ComfyTV.ArtFXStage',
-    'ComfyTV.AssetAudioLoaderStage',
-    'ComfyTV.AssetImageLoaderStage',
-    'ComfyTV.AssetModelLoaderStage',
-    'ComfyTV.AssetTextLoaderStage',
-    'ComfyTV.AssetVideoLoaderStage',
-    'ComfyTV.AudioAnalyzeStage',
-    'ComfyTV.AudioClipStage',
-    'ComfyTV.AudioConvolveStage',
-    'ComfyTV.AudioCrossfadeStage',
-    'ComfyTV.AudioDeconvolveStage',
-    'ComfyTV.AudioDenoiseStage',
-    'ComfyTV.AudioDuckStage',
-    'ComfyTV.AudioDynamicsStage',
-    'ComfyTV.AudioEQStage',
-    'ComfyTV.AudioEchoStage',
-    'ComfyTV.AudioLoaderStage',
-    'ComfyTV.AudioLoudnessStage',
-    'ComfyTV.AudioMIRStage',
-    'ComfyTV.AudioMeterStage',
-    'ComfyTV.AudioMixStage',
-    'ComfyTV.AudioModulationStage',
-    'ComfyTV.AudioNoiseReductionStage',
-    'ComfyTV.AudioPickerStage',
-    'ComfyTV.AudioReactiveStage',
-    'ComfyTV.AudioRepairStage',
-    'ComfyTV.AudioSaturateStage',
-    'ComfyTV.AudioSegmentExportStage',
-    'ComfyTV.AudioSplitStage',
-    'ComfyTV.AudioStage',
-    'ComfyTV.AudioStemSplitStage',
-    'ComfyTV.AudioStereoStage',
-    'ComfyTV.AudioSweepStage',
-    'ComfyTV.AudioTimePitchStage',
-    'ComfyTV.AudioVideoDemuxAudioStage',
-    'ComfyTV.AudioVideoDemuxVideoStage',
-    'ComfyTV.AudioVisualizeStage',
-    'ComfyTV.BlenderAnimationStage',
-    'ComfyTV.BlenderCameraStage',
-    'ComfyTV.BlenderSceneStage',
-    'ComfyTV.CDLStage',
-    'ComfyTV.Card3DStage',
-    'ComfyTV.ChordAccompStage',
-    'ComfyTV.ChromaShiftStage',
-    'ComfyTV.ChromaticAberrationStage',
-    'ComfyTV.ClickTrackStage',
-    'ComfyTV.ColorGradeStage',
-    'ComfyTV.ColorSuppressStage',
-    'ComfyTV.CompareStage',
-    'ComfyTV.ContactSheetStage',
-    'ComfyTV.CornerPinStage',
-    'ComfyTV.CropStage',
-    'ComfyTV.CutoutStage',
-    'ComfyTV.DespillStage',
-    'ComfyTV.DirectorStage',
-    'ComfyTV.EraseStage',
-    'ComfyTV.ExpressionStage',
-    'ComfyTV.FXChainStage',
-    'ComfyTV.FaceBlurStage',
-    'ComfyTV.FeedbackFXStage',
-    'ComfyTV.FrameBlendStage',
-    'ComfyTV.GlitchFXStage',
-    'ComfyTV.GlowStage',
-    'ComfyTV.GodRaysStage',
-    'ComfyTV.GrayWorldStage',
-    'ComfyTV.GridSplitStage',
-    'ComfyTV.HistogramEqStage',
-    'ComfyTV.HueCorrectStage',
-    'ComfyTV.ImageEditStage',
-    'ComfyTV.ImageLoaderStage',
-    'ComfyTV.ImagePickerStage',
-    'ComfyTV.ImageStage',
-    'ComfyTV.ImageVariationsStage',
-    'ComfyTV.InpaintStage',
-    'ComfyTV.KaleidoscopeStage',
-    'ComfyTV.KenBurnsStage',
-    'ComfyTV.KeyMixStage',
-    'ComfyTV.KeyerStage',
-    'ComfyTV.LayerEditorStage',
-    'ComfyTV.LensDistortStage',
-    'ComfyTV.LensFlareStage',
-    'ComfyTV.LightGraffitiStage',
-    'ComfyTV.LineArtStage',
-    'ComfyTV.MakeProxyStage',
-    'ComfyTV.MaskCleanup',
-    'ComfyTV.MaskPropagateStage',
-    'ComfyTV.MaterialStage',
-    'ComfyTV.MatteMonitorStage',
-    'ComfyTV.MatteMorphStage',
-    'ComfyTV.MeshBakeMapsStage',
-    'ComfyTV.MeshBooleanStage',
-    'ComfyTV.MeshOpStage',
-    'ComfyTV.MeshPrimitiveStage',
-    'ComfyTV.MidiEditorStage',
-    'ComfyTV.MirrorStage',
-    'ComfyTV.Model3DStage',
-    'ComfyTV.ModelLoaderStage',
-    'ComfyTV.MotionTrackStage',
-    'ComfyTV.MultiangleStage',
-    'ComfyTV.MuseReverbStage',
-    'ComfyTV.OldFilmStage',
-    'ComfyTV.OutpaintStage',
-    'ComfyTV.PIKStage',
-    'ComfyTV.PaintStrokeStage',
-    'ComfyTV.PanoramaCurrentViewStage',
-    'ComfyTV.PanoramaMultiViewStage',
-    'ComfyTV.PanoramaStage',
-    'ComfyTV.ParticlesStage',
-    'ComfyTV.PatternStage',
-    'ComfyTV.PosterStage',
-    'ComfyTV.PosterizeStage',
-    'ComfyTV.ProjectStage',
-    'ComfyTV.PseudocolorStage',
-    'ComfyTV.RegrainStage',
-    'ComfyTV.RelightStage',
-    'ComfyTV.RotateStage',
-    'ComfyTV.RotoMaskStage',
-    'ComfyTV.SF2SynthStage',
-    'ComfyTV.STMapGenStage',
-    'ComfyTV.STMapStage',
-    'ComfyTV.Scene3DStage',
-    'ComfyTV.SceneDetectStage',
-    'ComfyTV.ScoreEditorStage',
-    'ComfyTV.ScoreStage',
-    'ComfyTV.ScoreToMidiStage',
-    'ComfyTV.Select0rStage',
-    'ComfyTV.SelectiveColorStage',
-    'ComfyTV.SequenceStage',
-    'ComfyTV.ShapeMaskStage',
-    'ComfyTV.SlitScanStage',
-    'ComfyTV.SpeechStage',
-    'ComfyTV.SplitPartStage',
-    'ComfyTV.SpotRemoverStage',
-    'ComfyTV.StoryboardEditorStage',
-    'ComfyTV.StrobeStage',
-    'ComfyTV.SubtitleGenStage',
-    'ComfyTV.SubtitleStage',
-    'ComfyTV.TextLoaderStage',
-    'ComfyTV.TextStage',
-    'ComfyTV.TimeRemapStage',
-    'ComfyTV.TitleStage',
-    'ComfyTV.UpscaleStage',
-    'ComfyTV.Video360StabilizeStage',
-    'ComfyTV.Video360Stage',
-    'ComfyTV.VideoBlurSharpenStage',
-    'ComfyTV.VideoChromaKeyStage',
-    'ComfyTV.VideoClipStage',
-    'ComfyTV.VideoColorStage',
-    'ComfyTV.VideoCompositeStage',
-    'ComfyTV.VideoConcatStage',
-    'ComfyTV.VideoCropStage',
-    'ComfyTV.VideoCurvesStage',
-    'ComfyTV.VideoDeinterlaceStage',
-    'ComfyTV.VideoDenoiseStage',
-    'ComfyTV.VideoExtractFrameStage',
-    'ComfyTV.VideoFramesStage',
-    'ComfyTV.VideoInterpolateStage',
-    'ComfyTV.VideoLUTStage',
-    'ComfyTV.VideoLoaderStage',
-    'ComfyTV.VideoLumaWipeStage',
-    'ComfyTV.VideoMuxAudioStage',
-    'ComfyTV.VideoPickerStage',
-    'ComfyTV.VideoResizeStage',
-    'ComfyTV.VideoRotateStage',
-    'ComfyTV.VideoScopesStage',
-    'ComfyTV.VideoSpeedStage',
-    'ComfyTV.VideoSplitStage',
-    'ComfyTV.VideoStabilizeStage',
-    'ComfyTV.VideoStabilizeV2Stage',
-    'ComfyTV.VideoStage',
-    'ComfyTV.VideoStylizeStage',
-    'ComfyTV.VideoTransformStage',
-    'ComfyTV.VideoTransitionStage',
-    'ComfyTV.VideoVolumeStage',
-    'ComfyTV.WaterStage',
-    'ComfyTV.WaveWarpStage',
-    'ComfyTV.ZDefocusStage',
-]
+import pytest
 
 
-def _registry():
-    from ComfyTV.api.presets import _schema_field
+@pytest.fixture(scope="module")
+def registered():
     from ComfyTV.nodes.stages import ComfyTVExtension
     classes = asyncio.run(ComfyTVExtension().get_node_list())
-    out = {}
-    for cls in classes:
+    return {c.__name__: c for c in classes}
+
+
+def test_registry_and_stage_meta_only_differ_by_the_documented_sets(registered):
+    from ComfyTV.nodes.bridges import ALL_BRIDGES
+    from ComfyTV.nodes.stages.common.meta import (
+        NON_STAGE_NODES, PENDING_STAGES, STAGE_META,
+    )
+    bridge_names = {c.__name__ for c in ALL_BRIDGES}
+    assert set(STAGE_META) - set(registered) == set(PENDING_STAGES)
+    assert set(registered) - set(STAGE_META) - bridge_names == set(NON_STAGE_NODES)
+    assert not (set(PENDING_STAGES) & set(registered)), "a pending stage got registered — drop it from PENDING_STAGES"
+
+
+def test_every_registered_stage_builds_a_schema(registered):
+    from ComfyTV.nodes.bridges import ALL_BRIDGES
+    bridge_names = {c.__name__ for c in ALL_BRIDGES}
+    broken = {}
+    for name, cls in registered.items():
+        if name in bridge_names:
+            continue
         try:
             schema = cls.define_schema()
-        except Exception:
+        except Exception as e:  # noqa: BLE001
+            broken[name] = f"{type(e).__name__}: {e}"
             continue
-        out[str(_schema_field(schema, "node_id"))] = cls
-    return out
+        node_id = getattr(schema, "node_id", None) or getattr(schema, "kw", {}).get("node_id")
+        if node_id != f"ComfyTV.{name}":
+            broken[name] = f"node_id {node_id!r}"
+    assert broken == {}
 
 
-def test_all_stage_node_ids_registered():
-    ids = sorted(n for n in _registry() if not n.startswith("ComfyTV.Bridge"))
-    assert ids == EXPECTED_NODE_IDS
+def test_catalog_lists_only_registered_stages_with_runnable_flag(registered):
+    from ComfyTV.api.stages import stages_payload
+    from ComfyTV.nodes.stages.common.meta import PENDING_STAGES
+    rows = {r["node_id"].removeprefix("ComfyTV."): r for r in stages_payload()}
+    assert not (set(rows) & set(PENDING_STAGES))
+    assert set(rows) <= set(registered)
+    assert rows["ImageStage"]["runnable"] is True
+    assert rows["CropStage"]["runnable"] is False
+    assert rows["AssetImageLoaderStage"]["runnable"] is False
 
 
-def test_no_duplicate_registrations():
-    from ComfyTV.nodes.stages import ComfyTVExtension
-    classes = asyncio.run(ComfyTVExtension().get_node_list())
-    assert len(classes) == len(set(classes))
+async def test_add_stage_rejects_pending_catalog_entries():
+    from ComfyTV.api.mcp_tools.stages import _normalize_stage_class
+    with pytest.raises(ValueError, match="unknown stage class"):
+        _normalize_stage_class("ComfyTV.StoryboardStage")
+    assert _normalize_stage_class("ImageStage") == "ComfyTV.ImageStage"

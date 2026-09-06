@@ -1,3 +1,13 @@
+PENDING_STAGES: frozenset[str] = frozenset({
+    'AudioExtractBgStage', 'AudioExtractVocalStage',
+    'DirectorTimelineStage', 'TimelineVideoStage',
+    'ShotImagesStage', 'StoryboardStage',
+    'VideoSubtitleSelectEraseStage', 'VideoSubtitleSmartEraseStage',
+    'VideoUpscaleStage',
+})
+
+NON_STAGE_NODES: frozenset[str] = frozenset({'MaskCleanup', 'MakeProxyStage'})
+
 STAGE_META: dict[str, dict] = {
     'ProjectStage':                 {'kind': 'project'},
     'TextStage':                    {'kind': 'text',         'workflow_kind': 'text'},

@@ -1,10 +1,16 @@
 <template>
   <div class="v2-fsel" @pointerdown.stop>
-    <div v-if="has('workflow')" class="v2-fsel__item v2-fsel__item--grow">
-      <ComfyTVSelect :model-value="sv('workflow')" :options="optionsOf('workflow')" @update:model-value="v => writeVal('workflow', v)" />
+    <div v-if="has('workflow') || linkKind" class="v2-fsel__item v2-fsel__item--grow">
+      <ComfyTVSelect
+        :model-value="sv('workflow')"
+        :options="optionsOf('workflow')"
+        :disabled="optionsOf('workflow').length === 0"
+        :placeholder="optionsOf('workflow').length === 0 ? $t('stage.noWorkflowShort') : undefined"
+        @update:model-value="v => writeVal('workflow', v)"
+      />
     </div>
     <button
-      v-if="has('workflow') && linkKind"
+      v-if="linkKind"
       type="button"
       class="v2-fsel__link"
       :title="t('v2.linkWorkflow')"

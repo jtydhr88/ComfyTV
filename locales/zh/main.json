@@ -263,6 +263,8 @@
     "running": "运行中…",
     "cancel": "取消",
     "preparingWorkflow": "准备工作流中…",
+    "noWorkflowShort": "没有可用工作流 — 请上传 / 链接",
+    "noWorkflowInstalled": "没有可用的 {kind} 工作流 — 用卡片上的上传 / 链接按钮导入一个，或到侧栏 ComfyTV → Stages 里添加。",
     "outputDurationHint": "生成耗时",
     "section": {
       "context": "上游输入",

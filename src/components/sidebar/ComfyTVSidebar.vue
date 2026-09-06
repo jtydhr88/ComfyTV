@@ -1,23 +1,38 @@
 <template>
   <div class="ctv:flex ctv:flex-col ctv:size-full ctv:overflow-hidden ctv:text-base-foreground">
     <div
-      ref="tabBar"
       role="tablist"
-      class="ctv-sidebar-tabbar ctv:flex ctv:shrink-0 ctv:gap-1 ctv:p-1.5 ctv:border-b ctv:border-border-subtle ctv:bg-interface-panel-surface ctv:overflow-x-auto"
-      @wheel="onTabWheel"
+      class="ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1 ctv:p-1.5 ctv:border-b ctv:border-border-subtle ctv:bg-interface-panel-surface"
     >
-      <button
-        v-for="tab in TABS"
-        :key="tab.id"
-        role="tab"
-        :aria-selected="activeTab === tab.id"
-        :aria-label="$t(tab.labelKey)"
-        :title="compact ? $t(tab.labelKey) : undefined"
-        :class="tabClass(activeTab === tab.id)"
-        @click="activeTab = tab.id"
+      <div
+        ref="tabBar"
+        class="ctv-sidebar-tabbar ctv:flex ctv:min-w-0 ctv:flex-1 ctv:gap-1 ctv:overflow-x-auto"
+        @wheel="onTabWheel"
       >
-        <component :is="tab.icon" v-if="compact" class="ctv:size-4" />
-        <template v-else>{{ $t(tab.labelKey) }}</template>
+        <button
+          v-for="tab in TABS"
+          :key="tab.id"
+          role="tab"
+          :aria-selected="activeTab === tab.id"
+          :aria-label="$t(tab.labelKey)"
+          :title="compact ? $t(tab.labelKey) : undefined"
+          :class="tabClass(activeTab === tab.id)"
+          @click="activeTab = tab.id"
+        >
+          <component :is="tab.icon" v-if="compact" class="ctv:size-4" />
+          <template v-else>{{ $t(tab.labelKey) }}</template>
+        </button>
+      </div>
+      <button
+        role="tab"
+        data-testid="sidebar-tab-settings"
+        :aria-selected="activeTab === 'settings'"
+        :aria-label="$t(SETTINGS_TAB.labelKey)"
+        :title="$t(SETTINGS_TAB.labelKey)"
+        :class="tabClass(activeTab === 'settings')"
+        @click="activeTab = 'settings'"
+      >
+        <component :is="SETTINGS_TAB.icon" class="ctv:size-4" />
       </button>
     </div>
 
@@ -98,8 +113,9 @@ const ALL_TABS: Array<{ id: SidebarTab; labelKey: string; icon: Component }> = [
 ]
 
 const presence = usePresenceStore()
+const SETTINGS_TAB = ALL_TABS.find((t) => t.id === 'settings')!
 const TABS = computed(() =>
-  ALL_TABS.filter((t) => t.id !== 'collab' || presence.featureEnabled))
+  ALL_TABS.filter((t) => t.id !== 'settings' && (t.id !== 'collab' || presence.featureEnabled)))
 
 const activeTab = useStorage<SidebarTab>('comfytv:sidebar:active-tab', 'workflow')
 

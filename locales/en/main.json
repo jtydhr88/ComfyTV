@@ -263,6 +263,8 @@
     "running": "Running…",
     "cancel": "Cancel",
     "preparingWorkflow": "Preparing workflow…",
+    "noWorkflowShort": "No workflow installed — use Upload / Link",
+    "noWorkflowInstalled": "No {kind} workflow is installed — import one with the card's Upload / Link buttons, or under ComfyTV → Stages in the sidebar.",
     "outputDurationHint": "Generation time",
     "section": {
       "context": "Context",

@@ -2,21 +2,27 @@ import re
 
 from aiohttp import web
 
-from ..nodes.stages import STAGE_META
+from ..nodes.stages import STAGE_META, registered_stage_names
 from ..nodes.stages.common.caps import caps_payload
 from ..runners import RUNNER_REGISTRY, WORKFLOW_KINDS
 from ._common import routes
 
 
+NOT_RUNNABLE_VARIANTS = ("loader", "transform")
+
+
 def stages_payload() -> list[dict]:
+    registered = registered_stage_names()
     return [
         {
             "node_id": f"ComfyTV.{cls_name}",
             "kind": meta.get("kind", "image"),
             "variant": meta.get("variant"),
             "workflow_kind": meta.get("workflow_kind"),
+            "runnable": meta.get("variant") not in NOT_RUNNABLE_VARIANTS,
         }
         for cls_name, meta in STAGE_META.items()
+        if cls_name in registered
     ]
 
 
