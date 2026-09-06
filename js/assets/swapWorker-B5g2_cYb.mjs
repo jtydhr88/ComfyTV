@@ -48,8 +48,9 @@
     } catch {
     }
   }
-  self.onmessage = async (e) => {
+  async function onMessage(e) {
     const msg = e.data;
+    if (!msg || typeof msg !== "object" || !["init", "dispose", "write", "read", "free"].includes(msg.op)) return;
     if (msg.op === "init") {
       const ok = await init();
       self.postMessage({ reqId: msg.reqId, ok });
@@ -81,6 +82,10 @@
     } catch (err) {
       self.postMessage({ reqId: msg.reqId, error: String(err) });
     }
-  };
+  }
+  const WorkerScope = globalThis.DedicatedWorkerGlobalScope;
+  if (typeof WorkerScope === "function" && self instanceof WorkerScope) {
+    self.onmessage = onMessage;
+  }
 })();
-//# sourceMappingURL=swapWorker-D4EXzaxS.js.map
+//# sourceMappingURL=swapWorker-B5g2_cYb.mjs.map
