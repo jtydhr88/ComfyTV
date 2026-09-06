@@ -27,6 +27,16 @@ def broadcast_asset_event(event: str, payload: dict) -> None:
         _log.exception("[ComfyTV/assets] broadcast failed")
 
 
+def broadcast_workflow_event(event: str, payload: dict) -> None:
+    try:
+        PromptServer.instance.send_sync(
+            "comfytv-workflows",
+            {"event": event, **payload},
+        )
+    except Exception:
+        _log.exception("[ComfyTV/workflows] broadcast failed")
+
+
 def broadcast_stage_param_event(event: str, payload: dict) -> None:
     try:
         PromptServer.instance.send_sync(

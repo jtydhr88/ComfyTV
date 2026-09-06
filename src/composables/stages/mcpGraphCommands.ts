@@ -190,7 +190,15 @@ function opClone(graph: any, op: any): CommandResult {
   }
   const copy = node.clone()
   if (!copy) throw new Error(`cloning node ${node.id} failed`)
+  copy.id = -1
   graph.add(copy)
+  if (copy.id == null || copy.id === -1) {
+    const state = graph.state ?? graph
+    const key = 'lastNodeId' in state ? 'lastNodeId' : 'last_node_id'
+    copy.id = (Number(state[key]) || 0) + 1
+    state[key] = copy.id
+    if (graph._nodes_by_id) graph._nodes_by_id[copy.id] = copy
+  }
   copy.pos = Array.isArray(op.pos) && op.pos.length === 2
     ? [Number(op.pos[0]), Number(op.pos[1])]
     : [(Number(node.pos?.[0]) || 0) + 40, (Number(node.pos?.[1]) || 0) + 40]
@@ -311,16 +319,44 @@ function opUnpackSubgraph(graph: any, op: any): CommandResult {
   return { op: 'unpack_subgraph', node_id: String(node.id) }
 }
 
+export function withChangeScope<T>(app: any, graph: any, fn: () => T): T {
+  const canvas = app?.canvas
+  const viaCanvas = typeof canvas?.emitBeforeChange === 'function'
+    && typeof canvas?.emitAfterChange === 'function'
+  if (viaCanvas) canvas.emitBeforeChange()
+  else graph?.beforeChange?.()
+  let out: T
+  try {
+    out = fn()
+  } catch (e) {
+    if (viaCanvas) canvas.emitAfterChange()
+    else graph?.afterChange?.()
+    throw e
+  }
+  if (out instanceof Promise) {
+    return out.finally(() => {
+      if (viaCanvas) canvas.emitAfterChange()
+      else graph?.afterChange?.()
+    }) as T
+  }
+  if (viaCanvas) canvas.emitAfterChange()
+  else graph?.afterChange?.()
+  return out
+}
+
 export function handleGraphEdit(app: any, cmd: any): CommandResult {
   const graph = rootGraph(app)
   const ops = cmd?.ops
   if (!Array.isArray(ops) || ops.length === 0) {
     throw new Error('ops must be a non-empty array of {op, ...} objects')
   }
+  return withChangeScope(app, graph, () => applyGraphOps(app, graph, ops))
+}
+
+function applyGraphOps(app: any, graph: any, ops: any[]): CommandResult {
   const results: CommandResult[] = []
   const updated: string[] = []
-  graph.beforeChange?.()
-  try {
+  {
     for (let i = 0; i < ops.length; i++) {
       const op = ops[i]
       const name = String(op?.op ?? '')
@@ -380,8 +416,6 @@ export function handleGraphEdit(app: any, cmd: any): CommandResult {
           + (results.length ? ` — ${results.length} earlier op(s) already applied` : ''))
       }
     }
-  } finally {
-    graph.afterChange?.()
   }
   graph.setDirtyCanvas?.(true, true)
   return { applied: results, updated_widgets: updated }

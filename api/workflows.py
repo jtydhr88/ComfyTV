@@ -8,7 +8,7 @@ from ..runners import (
     workflow_db, refresh_registry, seed_workflows, last_scan_added, WORKFLOW_KINDS,
 )
 from ..runners.vendor.workflow_to_api import WorkflowConversionError
-from ._common import routes
+from ._common import routes, broadcast_workflow_event
 
 
 @routes.get("/comfytv/workflows")
@@ -27,6 +27,8 @@ async def workflow_list_overview(request: web.Request) -> web.Response:
 @routes.post("/comfytv/workflows/rescan")
 async def workflow_rescan(_request: web.Request) -> web.Response:
     result = seed_workflows()
+    if result.get("added"):
+        broadcast_workflow_event("rescan", {"added": result["added"]})
     return web.json_response({"ok": True, **result})
 
 
@@ -139,6 +141,7 @@ async def workflow_import(request: web.Request) -> web.Response:
         return web.json_response({"error": f"could not write workflow file: {e}"}, status=500)
 
     refresh_registry()
+    broadcast_workflow_event("import", {"kind": kind, "label": result.get("label")})
     return web.json_response({"ok": True, **result})
 
 
@@ -173,6 +176,7 @@ async def workflow_link(request: web.Request) -> web.Response:
         return web.json_response({"error": str(e)}, status=400)
 
     refresh_registry()
+    broadcast_workflow_event("import", {"kind": kind, "label": result.get("label")})
     return web.json_response({"ok": True, **result})
 
 
@@ -189,6 +193,9 @@ async def workflow_set_default(request: web.Request) -> web.Response:
     result = workflow_db.set_default_workflow(wid, bool(body.get("default", True)))
     if result is None:
         return web.json_response({"error": "workflow not found"}, status=404)
+    broadcast_workflow_event("default", {
+        "kind": result["kind"], "label": result["label"],
+        "default": bool(result.get("is_default"))})
     return web.json_response(result)
 
 
@@ -207,6 +214,9 @@ async def workflow_set_hidden(request: web.Request) -> web.Response:
         return web.json_response({"error": "workflow not found"}, status=404)
 
     refresh_registry()
+    broadcast_workflow_event("hidden", {
+        "kind": result["kind"], "label": result["label"],
+        "hidden": bool(result.get("is_hidden"))})
     return web.json_response(result)
 
 
@@ -224,6 +234,8 @@ async def workflow_unlink(request: web.Request) -> web.Response:
         return web.json_response({"error": "workflow not found"}, status=404)
 
     refresh_registry()
+    broadcast_workflow_event("unlink", {
+        "kind": result.get("kind"), "label": result.get("label")})
     return web.json_response(result)
 
 

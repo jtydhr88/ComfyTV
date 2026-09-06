@@ -42,11 +42,17 @@ def _compute_input_usage(bindings: list[dict]) -> dict:
     required_slots: dict[str, set[int]] = {k: set() for k in _KINDS}
     max_inputs: dict[str, int | None] = {k: 0 for k in _KINDS}
     uses_main_prompt = False
+    uses_computed = {"width": False, "height": False, "length": False}
 
     for cell in bindings or []:
         src = str(cell.get("from") or "")
         if src == "main_prompt":
             uses_main_prompt = True
+            continue
+        if src.startswith("computed:"):
+            key = src.split(":", 1)[1]
+            if key in uses_computed:
+                uses_computed[key] = True
             continue
         m = _UPSTREAM_PAT.match(src)
         if not m:
@@ -70,6 +76,7 @@ def _compute_input_usage(bindings: list[dict]) -> dict:
         "requires": requires,
         "required_slots": {k: sorted(v) for k, v in required_slots.items()},
         "max_inputs": max_inputs,
+        "uses_computed": uses_computed,
     }
 
 

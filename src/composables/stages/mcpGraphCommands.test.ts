@@ -196,6 +196,32 @@ describe('handleGraphEdit', () => {
     expect(graph.afterChange).toHaveBeenCalledTimes(2)
   })
 
+  it('prefers the canvas emitBeforeChange/emitAfterChange hooks when present', () => {
+    const node = makeNode()
+    const { app, graph } = makeApp([node]) as any
+    graph.beforeChange = vi.fn()
+    graph.afterChange = vi.fn()
+    app.canvas = { emitBeforeChange: vi.fn(), emitAfterChange: vi.fn() }
+    handleGraphEdit(app, { ops: [{ op: 'set_title', node: '4', title: 'x' }] })
+    expect(app.canvas.emitBeforeChange).toHaveBeenCalledTimes(1)
+    expect(app.canvas.emitAfterChange).toHaveBeenCalledTimes(1)
+    expect(graph.beforeChange).not.toHaveBeenCalled()
+    expect(() => handleGraphEdit(app, { ops: [{ op: 'explode' }] })).toThrow()
+    expect(app.canvas.emitAfterChange).toHaveBeenCalledTimes(2)
+  })
+
+  it('clone assigns an id itself when graph.add leaves it unset', () => {
+    const node = makeNode({ pos: [10, 10], clone: () => ({ id: 4, pos: [0, 0] }) })
+    const { app, graph } = makeApp([node]) as any
+    graph.add = vi.fn((n: any) => { graph._nodes.push(n) })
+    graph.state = { lastNodeId: 7 }
+    graph._nodes_by_id = {}
+    const out = handleGraphEdit(app, { ops: [{ op: 'clone', node: '4' }] })
+    expect(out.applied).toEqual([{ op: 'clone', node_id: '8', cloned_from: '4' }])
+    expect(graph.state.lastNodeId).toBe(8)
+    expect(graph._nodes_by_id[8]).toBeDefined()
+  })
+
   it('set_mode maps names to litegraph modes', () => {
     const node = makeNode()
     const { app } = makeApp([node])

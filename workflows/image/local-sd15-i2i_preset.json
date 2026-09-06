@@ -3,7 +3,7 @@
 
   "label":       "Local SD1.5 I2I",
   "order":       11,
-  "description": "Stable Diffusion 1.5 image-to-image. Wire a reference image into the stage's images input; write the prompt describing what you want changed. Denoise strength is fixed at 0.75 in the workflow; tweak by editing the KSampler widget directly if needed.",
+  "description": "Stable Diffusion 1.5 image-to-image. Wire a reference image into the stage's images input; write the prompt describing what you want changed. Denoise strength is fixed at 0.75 in the workflow; tweak by editing the KSampler widget directly if needed. Output size follows the input image; the stage's resolution / aspect_ratio settings do not apply to this workflow.",
 
   "result": { "type": "ui_save_batch", "node": "9" },
 

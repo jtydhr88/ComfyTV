@@ -16,7 +16,10 @@ import {
   handleGraphEdit,
   handleGraphGet,
   handleGraphRun,
+  withChangeScope,
 } from '@/composables/stages/mcpGraphCommands'
+import { installWorkflowRegistrySync } from '@/composables/stages/workflowRegistrySync'
+import { sizingWarnings } from '@/composables/stages/sizingWarnings'
 import { mentionSendOrders } from '@/composables/stages/imageSlotMentions'
 import { isStageNode, findStageNode } from '@/composables/stages/mcpStageLookup'
 import {
@@ -178,7 +181,14 @@ function withMentionWarnings(node: any, result: CommandResult): CommandResult {
   return warnings.length ? { ...result, warnings } : result
 }
 
-function handleAddStage(app: any, cmd: any): CommandResult {
+async function withSizingWarnings(node: any, cmd: any, result: CommandResult): Promise<CommandResult> {
+  const extra = await sizingWarnings(node, cmd.widgets)
+  if (!extra.length) return result
+  const prior = Array.isArray(result.warnings) ? result.warnings as string[] : []
+  return { ...result, warnings: [...prior, ...extra] }
+}
+
+async function handleAddStage(app: any, cmd: any): Promise<CommandResult> {
   const graph = app?.graph
   const pos: [number, number] =
     Array.isArray(cmd.pos) && cmd.pos.length === 2
@@ -189,19 +199,19 @@ function handleAddStage(app: any, cmd: any): CommandResult {
   claimStageUid(node)
   applyStageFields(node, cmd)
   graph?.setDirtyCanvas?.(true, true)
-  return withMentionWarnings(node, {
+  return withSizingWarnings(node, cmd, withMentionWarnings(node, {
     graph_node_id: String(node.id), uid: getStageUid(node),
-  })
+  }))
 }
 
-function handleSetStage(app: any, cmd: any): CommandResult {
+async function handleSetStage(app: any, cmd: any): Promise<CommandResult> {
   const node = findStageNode(app?.graph, String(cmd.node))
   if (!node) throw new Error(`stage ${cmd.node} not found on the canvas`)
   const updated = applyStageFields(node, cmd)
   app?.graph?.setDirtyCanvas?.(true, true)
-  return withMentionWarnings(node, {
+  return withSizingWarnings(node, cmd, withMentionWarnings(node, {
     graph_node_id: String(node.id), uid: getStageUid(node), updated,
-  })
+  }))
 }
 
 function inputNames(node: any): string {
@@ -365,7 +375,18 @@ function handleGetStage(app: any, cmd: any): CommandResult {
   return withMentionWarnings(node, result)
 }
 
+const UNDOABLE_ACTIONS = new Set([
+  'add_stage', 'set_stage', 'remove_stage', 'connect_stages', 'arrange_canvas',
+])
+
 async function executeCommand(app: any, cmd: any): Promise<CommandResult> {
+  if (UNDOABLE_ACTIONS.has(String(cmd.action))) {
+    return withChangeScope(app, app?.graph, () => dispatchCommand(app, cmd))
+  }
+  return dispatchCommand(app, cmd)
+}
+
+async function dispatchCommand(app: any, cmd: any): Promise<CommandResult> {
   switch (cmd.action) {
     case 'add_stage': return handleAddStage(app, cmd)
     case 'set_stage': return handleSetStage(app, cmd)

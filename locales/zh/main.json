@@ -276,9 +276,10 @@
       "confirmClear": "确认清空？",
       "confirm": "是",
       "cancel": "否",
-      "modeAppend": "追加",
-      "modeReplace": "覆盖",
-      "modeHint": "新结果进池方式。追加:保留已有并把新结果放到最前;覆盖:每次运行只保留最新一批。"
+      "modeAppend": "模式:追加",
+      "modeReplace": "模式:覆盖",
+      "modeHint": "新结果进池方式(点击切换)。追加:保留已有并把新结果放到最前;覆盖:每次运行只保留最新一批。相同图片只保留一份(按图片去重)。",
+      "dupSkipped": "跳过 {n} 张重复图片(池内每张图只保留一份)"
     },
     "empty": {
       "no_output": "暂无输出",

@@ -4,6 +4,7 @@ from ...runners import WORKFLOW_KINDS
 from ...runners import refresh_registry
 from ...runners import workflow_db
 
+from .._common import broadcast_workflow_event
 from .nodes import _validate_api_prompt
 from ._option_check import dangling_option_warnings
 
@@ -210,6 +211,10 @@ async def _workflow_edit(args: dict) -> dict:
         elif name == "set_default":
             out = workflow_db.set_default_workflow(
                 wid, bool(op.get("default", True)))
+            if out is not None:
+                broadcast_workflow_event("default", {
+                    "kind": out["kind"], "label": out["label"],
+                    "default": bool(out.get("is_default"))})
             results.append(_result(name, out is not None, "workflow row is gone"))
         elif name == "reset_to_preset":
             out = workflow_db.reset_workflow_to_preset(wid)
@@ -269,6 +274,7 @@ async def _workflow_create(args: dict) -> dict:
                 kwargs["result_type"] = str(result_type)
             workflow_db.update_workflow_meta(int(cfg["id"]), **kwargs)
     refresh_registry()
+    broadcast_workflow_event("import", {"kind": kind, "label": out["label"]})
     note = None
     if api_json is None:
         try:
