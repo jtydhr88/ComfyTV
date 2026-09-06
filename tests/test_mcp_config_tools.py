@@ -173,6 +173,32 @@ class TestWorkflowEdit:
         for infra in ("force_run_token", "project_id", "custom_params"):
             assert f"'{infra}'" not in out["warnings"][0]
 
+    async def test_set_meta_rejects_unknown_result_node(self, workflow_row):
+        from ComfyTV.api.mcp_tools import _workflow_edit
+        with pytest.raises(ValueError, match=r"result_node '999'.*nodes: \['3', '5'\]"):
+            await _workflow_edit({
+                "kind": "image", "label": "Test T2I",
+                "ops": [{"op": "set_meta", "result_node": "999"}],
+            })
+        out = await _workflow_edit({
+            "kind": "image", "label": "Test T2I",
+            "ops": [{"op": "set_meta", "result_node": "5"}],
+        })
+        assert out["results"][0] == {"op": "set_meta", "ok": True, "fields": ["result_node"]}
+
+    async def test_failed_ops_carry_a_reason(self, workflow_row):
+        from ComfyTV.api.mcp_tools import _workflow_edit
+        out = await _workflow_edit({
+            "kind": "image", "label": "Test T2I",
+            "ops": [{"op": "unbind", "node_id": "3", "input_name": "seed"},
+                    {"op": "reset_to_preset"}],
+        })
+        unbind, reset = out["results"]
+        assert unbind["ok"] is False
+        assert "no binding on node 3 input 'seed'" in unbind["reason"]
+        assert reset["ok"] is False
+        assert "no shipped preset" in reset["reason"]
+
     async def test_set_meta(self, workflow_row):
         from ComfyTV.api.mcp_tools import _workflow_edit, _workflow_get
         await _workflow_edit({

@@ -1,4 +1,5 @@
 import { createPinia, setActivePinia } from 'pinia'
+import { reactive } from 'vue'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { app } from '@/lib/comfyApp'
@@ -394,6 +395,39 @@ describe('installMcpCommandBus', () => {
     expect(result.ok).toBe(true)
     expect(result.result.started).toBe(true)
     expect(node.__comfytvStageApi.onRunRequest).toHaveBeenCalled()
+  })
+
+  it('run_stage waits for workflow preparation before running', async () => {
+    const state = reactive({ running: false, error: null, preparingWorkflow: true })
+    const node = makeNode({
+      __comfytvStageApi: {
+        state,
+        onRunRequest: vi.fn(async () => { state.running = true }),
+      },
+    })
+    const { host, deps } = makeHost([node])
+    uninstall = installMcpCommandBus(host, deps)
+    const pending = dispatch(host, { id: 'c1', action: 'run_stage', node: 'u1' })
+    await new Promise((r) => setTimeout(r, 20))
+    expect(node.__comfytvStageApi.onRunRequest).not.toHaveBeenCalled()
+    state.preparingWorkflow = false
+    await pending
+    const [result] = postedResults()
+    expect(result.ok).toBe(true)
+    expect(node.__comfytvStageApi.onRunRequest).toHaveBeenCalledTimes(1)
+  })
+
+  it('run_stage refuses loader stages up front', async () => {
+    const node = makeNode({
+      __comfytvStageApi: { state: { running: false }, variant: 'loader', onRunRequest: vi.fn() },
+    })
+    const { host, deps } = makeHost([node])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, { id: 'c1', action: 'run_stage', node: 'u1' })
+    const [result] = postedResults()
+    expect(result.ok).toBe(false)
+    expect(result.error).toContain('loader stages')
+    expect(node.__comfytvStageApi.onRunRequest).not.toHaveBeenCalled()
   })
 
   it('run_stage surfaces the stage error when the run does not start', async () => {

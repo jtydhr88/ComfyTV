@@ -26,6 +26,7 @@ def mirror(reset_db):
 def wait_tool(mirror, monkeypatch):
     from ComfyTV.api import mcp_tools
     monkeypatch.setattr(mcp_tools.runs, "_WAIT_POLL_S", 0.01)
+    monkeypatch.setattr(mcp_tools.runs, "_MIRROR_WAIT_S", 0.0)
     return mcp_tools._wait_stage
 
 
@@ -35,8 +36,30 @@ class TestWaitStage:
             await wait_tool({})
 
     async def test_unknown_stage(self, wait_tool):
-        with pytest.raises(ValueError, match="not found on the mirrored"):
+        with pytest.raises(ValueError, match="not found on the mirrored.*retry"):
             await wait_tool({"node": "nope-nope"})
+
+    async def test_waits_for_a_stage_the_mirror_has_not_seen_yet(
+            self, wait_tool, monkeypatch):
+        from ComfyTV.api import mcp_tools
+        from ComfyTV.api.canvas_state import store_canvas_state
+        monkeypatch.setattr(mcp_tools.runs, "_MIRROR_WAIT_S", 1.0)
+        monkeypatch.setattr(mcp_tools.runs, "_MIRROR_POLL_S", 0.01)
+
+        async def _appear():
+            await asyncio.sleep(0.05)
+            late = dict(STAGE, uid="ffffffff-1234-5678-9abc-def012345678",
+                        graph_node_id="9")
+            store_canvas_state("default", [dict(STAGE), late], client_id="tab-1")
+
+        task = asyncio.ensure_future(_appear())
+        out = await wait_tool({"node": "9", "timeout_s": 2})
+        await task
+        assert out["status"] == "running"
+
+    async def test_default_timeout_is_90(self):
+        from ComfyTV.api import mcp_tools
+        assert mcp_tools.runs._WAIT_DEFAULT_S == 90.0
 
     async def test_done_on_new_output(self, wait_tool):
         from ComfyTV import storage

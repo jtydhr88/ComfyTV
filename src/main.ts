@@ -150,7 +150,7 @@ function mountStage(node: ComfyNode, kind: StageKind, variant: StageVariant = 'g
   installTextPreviewCap(node)
 
   const { state, onRunRequest, onCancelRequest, onDisconnect, onAction, registerPreRun } = useStageNode(node, kind, variant)
-  ;(node as any).__comfytvStageApi = { state, onRunRequest, onCancelRequest, registerPreRun }
+  ;(node as any).__comfytvStageApi = { state, onRunRequest, onCancelRequest, registerPreRun, variant }
 
   const Card = RICH_STAGE_CARDS[node.comfyClass] ?? StageCard
   const props: any = {

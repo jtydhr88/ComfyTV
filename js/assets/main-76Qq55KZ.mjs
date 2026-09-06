@@ -8537,6 +8537,12 @@ function pausableFilter(extendFilter = bypassFilter, options = {}) {
     eventFilter
   };
 }
+function promiseTimeout(ms, throwOnTimeout = false, reason = "Timeout") {
+  return new Promise((resolve2, reject) => {
+    if (throwOnTimeout) setTimeout(reject, ms, reason);
+    else setTimeout(resolve2, ms);
+  });
+}
 function toArray(value) {
   return Array.isArray(value) ? value : [value];
 }
@@ -8660,6 +8666,102 @@ function tryOnMounted(fn3, sync = true, target) {
   if (getLifeCycleTarget()) onMounted(fn3, target);
   else if (sync) fn3();
   else nextTick(fn3);
+}
+function createUntil(r, isNot = false) {
+  function toMatch(condition, { flush: flush2 = "sync", deep = false, timeout, throwOnTimeout } = {}) {
+    let stop = null;
+    const promises = [new Promise((resolve2) => {
+      stop = watch(r, (v3) => {
+        if (condition(v3) !== isNot) {
+          if (stop) stop();
+          else nextTick(() => stop === null || stop === void 0 ? void 0 : stop());
+          resolve2(v3);
+        }
+      }, {
+        flush: flush2,
+        deep,
+        immediate: true
+      });
+    })];
+    if (timeout != null) promises.push(promiseTimeout(timeout, throwOnTimeout).then(() => toValue$1(r)).finally(() => stop === null || stop === void 0 ? void 0 : stop()));
+    return Promise.race(promises);
+  }
+  function toBe(value, options) {
+    if (!/* @__PURE__ */ isRef(value)) return toMatch((v3) => v3 === value, options);
+    const { flush: flush2 = "sync", deep = false, timeout, throwOnTimeout } = options !== null && options !== void 0 ? options : {};
+    let stop = null;
+    const promises = [new Promise((resolve2) => {
+      stop = watch([r, value], ([v1, v22]) => {
+        if (isNot !== (v1 === v22)) {
+          if (stop) stop();
+          else nextTick(() => stop === null || stop === void 0 ? void 0 : stop());
+          resolve2(v1);
+        }
+      }, {
+        flush: flush2,
+        deep,
+        immediate: true
+      });
+    })];
+    if (timeout != null) promises.push(promiseTimeout(timeout, throwOnTimeout).then(() => toValue$1(r)).finally(() => {
+      stop === null || stop === void 0 || stop();
+      return toValue$1(r);
+    }));
+    return Promise.race(promises);
+  }
+  function toBeTruthy(options) {
+    return toMatch((v3) => Boolean(v3), options);
+  }
+  function toBeNull(options) {
+    return toBe(null, options);
+  }
+  function toBeUndefined(options) {
+    return toBe(void 0, options);
+  }
+  function toBeNaN(options) {
+    return toMatch(Number.isNaN, options);
+  }
+  function toContains(value, options) {
+    return toMatch((v3) => {
+      const array2 = Array.from(v3);
+      return array2.includes(value) || array2.includes(toValue$1(value));
+    }, options);
+  }
+  function changed(options) {
+    return changedTimes(1, options);
+  }
+  function changedTimes(n = 1, options) {
+    let count2 = -1;
+    return toMatch(() => {
+      count2 += 1;
+      return count2 >= n;
+    }, options);
+  }
+  if (Array.isArray(toValue$1(r))) return {
+    toMatch,
+    toContains,
+    changed,
+    changedTimes,
+    get not() {
+      return createUntil(r, !isNot);
+    }
+  };
+  else return {
+    toMatch,
+    toBe,
+    toBeTruthy,
+    toBeNull,
+    toBeNaN,
+    toBeUndefined,
+    changed,
+    changedTimes,
+    get not() {
+      return createUntil(r, !isNot);
+    }
+  };
+}
+function until(r) {
+  return createUntil(r);
 }
 function useIntervalFn(cb, interval = 1e3, options = {}) {
   const { immediate = true, immediateCallback = false } = options;
@@ -58479,7 +58581,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-CaHJCERp.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-DzDnr-Y2.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -143031,7 +143133,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-T3V2wPtQ.mjs");
+    const { STLLoader } = await import("./STLLoader-BuzKZ-Rh.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -143039,7 +143141,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-DS_xMyvf.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-uZhErPvC.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -227451,9 +227553,6 @@ async function handleGraphRun(app2) {
   }
   return { queued: true, prompt_id: promptId };
 }
-const OkSchema = object({ ok: boolean() });
-const COMMAND_EVENT = "comfytv-mcp-command";
-const RESULT_PATH = "/comfytv/mcp_command_result";
 function isStageNode(node) {
   return String((node == null ? void 0 : node.comfyClass) ?? (node == null ? void 0 : node.type) ?? "").startsWith("ComfyTV.");
 }
@@ -227465,6 +227564,102 @@ function findStageNode(graph, ref2) {
   const byId = ((_a3 = graph == null ? void 0 : graph.getNodeById) == null ? void 0 : _a3.call(graph, Number(ref2))) ?? ((_b2 = graph == null ? void 0 : graph.getNodeById) == null ? void 0 : _b2.call(graph, ref2));
   return byId && isStageNode(byId) ? byId : null;
 }
+function stageSubApi(app2, cmd, key, label) {
+  var _a3;
+  const node = findStageNode(app2 == null ? void 0 : app2.graph, String(cmd.node));
+  if (!node) throw new Error(`stage ${cmd.node} not found on the canvas`);
+  const api = (_a3 = node.__comfytvStageApi) == null ? void 0 : _a3[key];
+  if (!api) {
+    throw new Error(
+      `stage ${cmd.node} is not a mounted ${label} stage — these tools need a ComfyTV.${label}Stage whose card is open in the tab`
+    );
+  }
+  return api;
+}
+function sceneApi(app2, cmd) {
+  return stageSubApi(app2, cmd, "scene3d", "Scene3D");
+}
+function layerApi(app2, cmd) {
+  return stageSubApi(app2, cmd, "layerEditor", "LayerEditor");
+}
+function directorApi(app2, cmd) {
+  return stageSubApi(app2, cmd, "director", "Director");
+}
+async function handleLayerGet(app2, cmd) {
+  const api = layerApi(app2, cmd);
+  const out = { document: api.getState(), busy: api.isBusy() };
+  if (cmd.resources !== false) out.resources = api.resources();
+  return out;
+}
+async function handleLayerEdit(app2, cmd) {
+  const api = layerApi(app2, cmd);
+  if (api.isBusy()) throw new Error("layer editor is busy capturing or importing/exporting — retry after it finishes");
+  const applied = await api.applyOps(cmd.ops);
+  return { applied, document: api.getState() };
+}
+async function handleLayerCapture(app2, cmd) {
+  const api = layerApi(app2, cmd);
+  if (api.isBusy()) throw new Error("layer editor is busy capturing or importing/exporting — retry after it finishes");
+  return cmd.mode === "batch" ? await api.captureBatch() : await api.capture();
+}
+async function handleDirectorGet(app2, cmd) {
+  return directorApi(app2, cmd).getState();
+}
+async function handleDirectorEdit(app2, cmd) {
+  const out = await directorApi(app2, cmd).applyOps(cmd.ops);
+  return { applied: out.results };
+}
+async function handleSceneGet(app2, cmd) {
+  const api = sceneApi(app2, cmd);
+  const scene = api.getState();
+  if (typeof api.clipNames === "function") {
+    const animated = [...scene.characters ?? [], ...scene.models ?? []];
+    for (const entry of animated) {
+      try {
+        entry.available_clips = await api.clipNames(entry.id);
+      } catch {
+        entry.available_clips = [];
+      }
+    }
+  }
+  return {
+    scene,
+    resources: api.resources(),
+    busy: api.isBusy(),
+    has_recordable_duration: api.hasRecordableDuration()
+  };
+}
+async function handleSceneEdit(app2, cmd) {
+  const api = sceneApi(app2, cmd);
+  if (api.isBusy()) throw new Error("scene is busy capturing/recording — retry after it finishes");
+  const results = await api.applyOps(cmd.ops);
+  return { applied: results };
+}
+async function handleSceneCapture(app2, cmd) {
+  const api = sceneApi(app2, cmd);
+  if (api.isBusy()) throw new Error("scene is busy capturing/recording — retry after it finishes");
+  api.configureOutput({
+    channel: cmd.channel,
+    width: cmd.width,
+    height: cmd.height,
+    layers: cmd.layers
+  });
+  return await api.capture();
+}
+async function handleSceneRecord(app2, cmd) {
+  const api = sceneApi(app2, cmd);
+  if (api.isBusy()) throw new Error("scene is busy capturing/recording — retry after it finishes");
+  api.configureOutput({
+    channel: cmd.channel,
+    width: cmd.width,
+    height: cmd.height,
+    layers: cmd.layers
+  });
+  return await api.record();
+}
+const OkSchema = object({ ok: boolean() });
+const COMMAND_EVENT = "comfytv-mcp-command";
+const RESULT_PATH = "/comfytv/mcp_command_result";
 function autoPos(graph) {
   var _a3, _b2, _c, _d, _e2;
   let anchor2 = null;
@@ -227636,17 +227831,30 @@ function handleConnectStages(app2, cmd) {
     input: String(((_e2 = (_d = dst.inputs) == null ? void 0 : _d[toSlot]) == null ? void 0 : _e2.name) ?? toSlot)
   });
 }
+const PREP_WAIT_MS = 15e3;
 async function handleRunStage(app2, cmd) {
-  var _a3, _b2, _c, _d;
+  var _a3, _b2, _c, _d, _e2;
   const node = findStageNode(app2 == null ? void 0 : app2.graph, String(cmd.node));
   if (!node) throw new Error(`stage ${cmd.node} not found on the canvas`);
   const stageApi = node.__comfytvStageApi;
   if (!(stageApi == null ? void 0 : stageApi.onRunRequest)) {
     throw new Error("stage card is not mounted yet — cannot run");
   }
+  if (stageApi.variant === "loader") {
+    throw new Error("loader stages have nothing to run — they only hold media");
+  }
   if ((_a3 = stageApi.state) == null ? void 0 : _a3.running) throw new Error("stage is already running");
+  await until(() => {
+    var _a4;
+    return !!((_a4 = stageApi.state) == null ? void 0 : _a4.preparingWorkflow);
+  }).toBe(false, { timeout: PREP_WAIT_MS, throwOnTimeout: false });
+  if ((_b2 = stageApi.state) == null ? void 0 : _b2.preparingWorkflow) {
+    throw new Error(
+      `workflow is still being prepared after ${PREP_WAIT_MS / 1e3}s — retry run_stage shortly`
+    );
+  }
   await stageApi.onRunRequest();
-  if ((_b2 = stageApi.state) == null ? void 0 : _b2.running) {
+  if ((_c = stageApi.state) == null ? void 0 : _c.running) {
     return withMentionWarnings(node, {
       started: true,
       graph_node_id: String(node.id),
@@ -227654,101 +227862,8 @@ async function handleRunStage(app2, cmd) {
     });
   }
   throw new Error(
-    ((_d = (_c = stageApi.state) == null ? void 0 : _c.error) == null ? void 0 : _d.message) || "run did not start (loader stage, workflow still preparing, or upstream outputs missing)"
+    ((_e2 = (_d = stageApi.state) == null ? void 0 : _d.error) == null ? void 0 : _e2.message) || "the stage declined the run — usually a required upstream input has no output yet; check the card"
   );
-}
-function stageSubApi(app2, cmd, key, label) {
-  var _a3;
-  const node = findStageNode(app2 == null ? void 0 : app2.graph, String(cmd.node));
-  if (!node) throw new Error(`stage ${cmd.node} not found on the canvas`);
-  const api = (_a3 = node.__comfytvStageApi) == null ? void 0 : _a3[key];
-  if (!api) {
-    throw new Error(
-      `stage ${cmd.node} is not a mounted ${label} stage — these tools need a ComfyTV.${label}Stage whose card is open in the tab`
-    );
-  }
-  return api;
-}
-function sceneApi(app2, cmd) {
-  return stageSubApi(app2, cmd, "scene3d", "Scene3D");
-}
-function layerApi(app2, cmd) {
-  return stageSubApi(app2, cmd, "layerEditor", "LayerEditor");
-}
-function directorApi(app2, cmd) {
-  return stageSubApi(app2, cmd, "director", "Director");
-}
-async function handleLayerGet(app2, cmd) {
-  const api = layerApi(app2, cmd);
-  const out = { document: api.getState(), busy: api.isBusy() };
-  if (cmd.resources !== false) out.resources = api.resources();
-  return out;
-}
-async function handleLayerEdit(app2, cmd) {
-  const api = layerApi(app2, cmd);
-  if (api.isBusy()) throw new Error("layer editor is busy capturing or importing/exporting — retry after it finishes");
-  const applied = await api.applyOps(cmd.ops);
-  return { applied, document: api.getState() };
-}
-async function handleLayerCapture(app2, cmd) {
-  const api = layerApi(app2, cmd);
-  if (api.isBusy()) throw new Error("layer editor is busy capturing or importing/exporting — retry after it finishes");
-  return cmd.mode === "batch" ? await api.captureBatch() : await api.capture();
-}
-async function handleDirectorGet(app2, cmd) {
-  return directorApi(app2, cmd).getState();
-}
-async function handleDirectorEdit(app2, cmd) {
-  const out = await directorApi(app2, cmd).applyOps(cmd.ops);
-  return { applied: out.results };
-}
-async function handleSceneGet(app2, cmd) {
-  const api = sceneApi(app2, cmd);
-  const scene = api.getState();
-  if (typeof api.clipNames === "function") {
-    const animated = [...scene.characters ?? [], ...scene.models ?? []];
-    for (const entry of animated) {
-      try {
-        entry.available_clips = await api.clipNames(entry.id);
-      } catch {
-        entry.available_clips = [];
-      }
-    }
-  }
-  return {
-    scene,
-    resources: api.resources(),
-    busy: api.isBusy(),
-    has_recordable_duration: api.hasRecordableDuration()
-  };
-}
-async function handleSceneEdit(app2, cmd) {
-  const api = sceneApi(app2, cmd);
-  if (api.isBusy()) throw new Error("scene is busy capturing/recording — retry after it finishes");
-  const results = await api.applyOps(cmd.ops);
-  return { applied: results };
-}
-async function handleSceneCapture(app2, cmd) {
-  const api = sceneApi(app2, cmd);
-  if (api.isBusy()) throw new Error("scene is busy capturing/recording — retry after it finishes");
-  api.configureOutput({
-    channel: cmd.channel,
-    width: cmd.width,
-    height: cmd.height,
-    layers: cmd.layers
-  });
-  return await api.capture();
-}
-async function handleSceneRecord(app2, cmd) {
-  const api = sceneApi(app2, cmd);
-  if (api.isBusy()) throw new Error("scene is busy capturing/recording — retry after it finishes");
-  api.configureOutput({
-    channel: cmd.channel,
-    width: cmd.width,
-    height: cmd.height,
-    layers: cmd.layers
-  });
-  return await api.record();
 }
 function handleRemoveStage(app2, cmd) {
   var _a3, _b2;
@@ -236162,7 +236277,7 @@ function mountStage(node, kind, variant = "generator") {
   });
   installTextPreviewCap(node);
   const { state: state2, onRunRequest, onCancelRequest, onDisconnect, onAction, registerPreRun } = useStageNode(node, kind, variant);
-  node.__comfytvStageApi = { state: state2, onRunRequest, onCancelRequest, registerPreRun };
+  node.__comfytvStageApi = { state: state2, onRunRequest, onCancelRequest, registerPreRun, variant };
   const Card = RICH_STAGE_CARDS[node.comfyClass] ?? StageCard;
   const props = {
     state: state2,
@@ -236510,4 +236625,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-8MAmRp-G.mjs.map
+//# sourceMappingURL=main-76Qq55KZ.mjs.map

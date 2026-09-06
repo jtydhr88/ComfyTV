@@ -121,6 +121,20 @@ def _validate_bind_op(i: int, op: dict, api_nodes: dict | None) -> None:
                 f"ops[{i}]: node {node_id} has no input {input_name!r} "
                 f"(inputs: {sorted(inputs)})")
 
+def _result(op: str, ok, reason: str) -> dict:
+    return {"op": op, "ok": True} if ok else {"op": op, "ok": False, "reason": reason}
+
+def _reset_reason(cfg: dict) -> str:
+    from pathlib import Path
+    from ...runners.workflow_db.seed import _read_preset
+    path = Path(str(cfg.get("file_path") or ""))
+    if not cfg.get("file_exists"):
+        return f"workflow file is missing on disk ({path})"
+    if not _read_preset(path):
+        return ("this workflow has no shipped preset next to its file "
+                "(imported or user-created workflows cannot be reset)")
+    return "reset failed — see the server log"
+
 async def _workflow_edit(args: dict) -> dict:
     cfg = _workflow_config(args.get("kind"), args.get("label"))
     ops = args.get("ops")
@@ -146,6 +160,12 @@ async def _workflow_edit(args: dict) -> dict:
                 _validate_result_type(op.get("result_type"))
             except ValueError as e:
                 raise ValueError(f"ops[{i}]: {e}")
+            rn = op.get("result_node")
+            if rn not in (None, "") and api_nodes is not None \
+                    and str(rn) not in api_nodes:
+                raise ValueError(
+                    f"ops[{i}]: result_node {rn!r} not in this workflow's "
+                    f"API graph (nodes: {sorted(api_nodes)})")
         elif name in ("set_default", "reset_to_preset"):
             pass
         else:
@@ -179,21 +199,23 @@ async def _workflow_edit(args: dict) -> dict:
                 node_id=str(op["node_id"]),
                 input_name=str(op["input_name"]),
             )
-            results.append({"op": name, "ok": bool(ok)})
+            results.append(_result(name, ok, (
+                f"no binding on node {op['node_id']} input "
+                f"{str(op['input_name'])!r} — nothing to remove")))
         elif name == "set_meta":
             kwargs = {k: op[k] for k in _META_KEYS if k in op}
             ok = workflow_db.update_workflow_meta(wid, **kwargs)
-            results.append({"op": name, "ok": bool(ok),
+            results.append({**_result(name, ok, "workflow row is gone"),
                             "fields": sorted(kwargs)})
         elif name == "set_default":
             out = workflow_db.set_default_workflow(
                 wid, bool(op.get("default", True)))
-            results.append({"op": name, "ok": out is not None})
+            results.append(_result(name, out is not None, "workflow row is gone"))
         elif name == "reset_to_preset":
             out = workflow_db.reset_workflow_to_preset(wid)
             if out is not None:
                 refresh_registry()
-            results.append({"op": name, "ok": out is not None})
+            results.append(_result(name, out is not None, _reset_reason(cfg)))
     fresh = workflow_db.get_workflow_config(cfg["kind"], cfg["label"])
     bindings = (fresh or {}).get("bindings", [])
     return {"results": results,

@@ -34,9 +34,13 @@ async def _run_stage(args: dict) -> dict:
 
 _WAIT_POLL_S = 1.0
 
-_WAIT_DEFAULT_S = 25.0
+_WAIT_DEFAULT_S = 90.0
 
 _WAIT_MAX_S = 170.0
+
+_MIRROR_WAIT_S = 6.0
+
+_MIRROR_POLL_S = 0.5
 
 def _mirror_stage(project_id, node_ref: str):
     snap = get_canvas_state(project_id)
@@ -47,7 +51,20 @@ def _mirror_stage(project_id, node_ref: str):
         if str(s.get("graph_node_id")) == node_ref or uid == node_ref \
                 or (len(node_ref) >= 8 and uid.startswith(node_ref)):
             return snap["project_id"], s
-    raise ValueError(f"stage {node_ref!r} not found on the mirrored canvas")
+    raise ValueError(
+        f"stage {node_ref!r} not found on the mirrored canvas (the page "
+        f"pushes the mirror every ~5 s, so a stage added moments ago may "
+        f"not be in it yet — retry in a few seconds)")
+
+async def _mirror_stage_wait(project_id, node_ref: str):
+    deadline = time.monotonic() + _MIRROR_WAIT_S
+    while True:
+        try:
+            return _mirror_stage(project_id, node_ref)
+        except ValueError:
+            if time.monotonic() >= deadline:
+                raise
+        await asyncio.sleep(_MIRROR_POLL_S)
 
 def _error_is_current(run: dict, initial_run: dict,
                       run_started: float | None) -> bool:
@@ -81,7 +98,7 @@ async def _wait_stage(args: dict) -> dict:
         raise ValueError("timeout_s must be a number")
     timeout_s = max(2.0, min(timeout_s, _WAIT_MAX_S))
 
-    pid, stage = _mirror_stage(args.get("project_id"), str(node))
+    pid, stage = await _mirror_stage_wait(args.get("project_id"), str(node))
     uid = str(stage.get("uid") or "")
     initial_run = dict(stage.get("last_run") or {})
     run_started = _RUN_STARTED.get(uid)
@@ -142,7 +159,9 @@ TOOLS: dict[str, dict] = {
             "Queue a run of a stage on the live canvas, exactly like clicking its "
             "Run button (upstream snapshots, @mentions and asset refs all apply). "
             "Returns as soon as the run is queued — then call wait_stage on the "
-            "same node to block until it finishes instead of polling. node is a "
+            "same node to block until it finishes instead of polling. Safe to "
+            "call right after add_stage: the page waits (up to 15 s) for the "
+            "stage's workflow preparation to finish before starting. node is a "
             "stage uid or graph_node_id. Requires an open ComfyTV page in Desktop or a browser."
         ),
         "inputSchema": {
@@ -160,14 +179,18 @@ TOOLS: dict[str, dict] = {
         "description": (
             "Block until a stage produces a new output or its run errors — the "
             "efficient way to wait after run_stage (no polling). Waits up to "
-            "timeout_s (default 25, max 170) and returns {status: 'done', "
+            "timeout_s (default 90, max 170) and returns {status: 'done', "
             "output} on success, {status: 'error', error} on failure, or "
             "{status: 'running', after_output_id} on timeout — in that case "
             "just call wait_stage again with the returned after_output_id to "
             "keep waiting (long renders can take many minutes; keep re-calling "
-            "until done). If your MCP client enforces its own per-call tool "
-            "timeout, pass a timeout_s safely below it (e.g. 20) and re-call "
-            "instead of one long wait. node is a stage uid or graph_node_id."
+            "until done). MCP clients enforce their own per-call limit — "
+            "Claude Code cuts calls off between 120 and 150 s by default — so "
+            "keep timeout_s <= 120 unless you know your client allows more; "
+            "a call cut off by the client can simply be re-issued. Right "
+            "after add_stage the mirror may lag a few seconds; this tool "
+            "waits up to 6 s for the stage to appear. node is a stage uid "
+            "or graph_node_id."
         ),
         "inputSchema": {
             "type": "object",

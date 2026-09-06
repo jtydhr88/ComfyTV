@@ -1,4 +1,6 @@
-﻿import { z } from 'zod'
+import { z } from 'zod'
+
+import { until } from '@vueuse/core'
 
 import { apiSend } from '@/api'
 import { handleArrangeCanvas } from '@/composables/stages/arrangeCanvas'
@@ -16,6 +18,18 @@ import {
   handleGraphRun,
 } from '@/composables/stages/mcpGraphCommands'
 import { mentionSendOrders } from '@/composables/stages/imageSlotMentions'
+import { isStageNode, findStageNode } from '@/composables/stages/mcpStageLookup'
+import {
+  handleDirectorEdit,
+  handleDirectorGet,
+  handleLayerCapture,
+  handleLayerEdit,
+  handleLayerGet,
+  handleSceneCapture,
+  handleSceneEdit,
+  handleSceneGet,
+  handleSceneRecord,
+} from '@/composables/stages/mcpSubApiCommands'
 import { claimStageUid, getStageUid } from '@/composables/stages/stageIdentity'
 import { useAssetStore } from '@/stores/assetStore'
 import { useStageStore } from '@/stores/stageStore'
@@ -26,21 +40,11 @@ const OkSchema = z.object({ ok: z.boolean() })
 const COMMAND_EVENT = 'comfytv-mcp-command'
 const RESULT_PATH = '/comfytv/mcp_command_result'
 
+export { findStageNode } from '@/composables/stages/mcpStageLookup'
+
 export interface McpCommandBusDeps {
   resolveApp: () => any
   resolveProjectId: () => string
-}
-
-function isStageNode(node: any): boolean {
-  return String(node?.comfyClass ?? node?.type ?? '').startsWith('ComfyTV.')
-}
-
-export function findStageNode(graph: any, ref: string): any | null {
-  for (const node of graph?._nodes ?? []) {
-    if (isStageNode(node) && getStageUid(node) === ref) return node
-  }
-  const byId = graph?.getNodeById?.(Number(ref)) ?? graph?.getNodeById?.(ref)
-  return byId && isStageNode(byId) ? byId : null
 }
 
 function autoPos(graph: any): [number, number] {
@@ -224,6 +228,8 @@ function handleConnectStages(app: any, cmd: any): CommandResult {
   })
 }
 
+const PREP_WAIT_MS = 15000
+
 async function handleRunStage(app: any, cmd: any): Promise<CommandResult> {
   const node = findStageNode(app?.graph, String(cmd.node))
   if (!node) throw new Error(`stage ${cmd.node} not found on the canvas`)
@@ -231,7 +237,16 @@ async function handleRunStage(app: any, cmd: any): Promise<CommandResult> {
   if (!stageApi?.onRunRequest) {
     throw new Error('stage card is not mounted yet — cannot run')
   }
+  if (stageApi.variant === 'loader') {
+    throw new Error('loader stages have nothing to run — they only hold media')
+  }
   if (stageApi.state?.running) throw new Error('stage is already running')
+  await until(() => !!stageApi.state?.preparingWorkflow)
+    .toBe(false, { timeout: PREP_WAIT_MS, throwOnTimeout: false })
+  if (stageApi.state?.preparingWorkflow) {
+    throw new Error(
+      `workflow is still being prepared after ${PREP_WAIT_MS / 1000}s — retry run_stage shortly`)
+  }
   await stageApi.onRunRequest()
   if (stageApi.state?.running) {
     return withMentionWarnings(node, {
@@ -240,112 +255,11 @@ async function handleRunStage(app: any, cmd: any): Promise<CommandResult> {
   }
   throw new Error(
     stageApi.state?.error?.message
-    || 'run did not start (loader stage, workflow still preparing, or upstream outputs missing)',
+    || 'the stage declined the run — usually a required upstream input has no output yet; check the card',
   )
 }
 
 type CommandResult = Record<string, unknown>
-
-function stageSubApi(app: any, cmd: any, key: string, label: string) {
-  const node = findStageNode(app?.graph, String(cmd.node))
-  if (!node) throw new Error(`stage ${cmd.node} not found on the canvas`)
-  const api = (node as any).__comfytvStageApi?.[key]
-  if (!api) {
-    throw new Error(
-      `stage ${cmd.node} is not a mounted ${label} stage — these tools need `
-      + `a ComfyTV.${label}Stage whose card is open in the tab`)
-  }
-  return api
-}
-
-function sceneApi(app: any, cmd: any) {
-  return stageSubApi(app, cmd, 'scene3d', 'Scene3D')
-}
-
-function layerApi(app: any, cmd: any) {
-  return stageSubApi(app, cmd, 'layerEditor', 'LayerEditor')
-}
-
-function directorApi(app: any, cmd: any) {
-  return stageSubApi(app, cmd, 'director', 'Director')
-}
-
-async function handleLayerGet(app: any, cmd: any): Promise<CommandResult> {
-  const api = layerApi(app, cmd)
-  const out: CommandResult = { document: api.getState(), busy: api.isBusy() }
-  if (cmd.resources !== false) out.resources = api.resources()
-  return out
-}
-
-async function handleLayerEdit(app: any, cmd: any): Promise<CommandResult> {
-  const api = layerApi(app, cmd)
-  if (api.isBusy()) throw new Error('layer editor is busy capturing or importing/exporting — retry after it finishes')
-  const applied = await api.applyOps(cmd.ops)
-  return { applied, document: api.getState() }
-}
-
-async function handleLayerCapture(app: any, cmd: any): Promise<CommandResult> {
-  const api = layerApi(app, cmd)
-  if (api.isBusy()) throw new Error('layer editor is busy capturing or importing/exporting — retry after it finishes')
-  return cmd.mode === 'batch' ? await api.captureBatch() : await api.capture()
-}
-
-async function handleDirectorGet(app: any, cmd: any): Promise<CommandResult> {
-  return directorApi(app, cmd).getState()
-}
-
-async function handleDirectorEdit(app: any, cmd: any): Promise<CommandResult> {
-  const out = await directorApi(app, cmd).applyOps(cmd.ops)
-  return { applied: out.results }
-}
-
-async function handleSceneGet(app: any, cmd: any): Promise<CommandResult> {
-  const api = sceneApi(app, cmd)
-  const scene = api.getState()
-  if (typeof api.clipNames === 'function') {
-    const animated = [...(scene.characters ?? []), ...(scene.models ?? [])]
-    for (const entry of animated) {
-      try {
-        entry.available_clips = await api.clipNames(entry.id)
-      } catch {
-        entry.available_clips = []
-      }
-    }
-  }
-  return {
-    scene,
-    resources: api.resources(),
-    busy: api.isBusy(),
-    has_recordable_duration: api.hasRecordableDuration(),
-  }
-}
-
-async function handleSceneEdit(app: any, cmd: any): Promise<CommandResult> {
-  const api = sceneApi(app, cmd)
-  if (api.isBusy()) throw new Error('scene is busy capturing/recording — retry after it finishes')
-  const results = await api.applyOps(cmd.ops)
-  return { applied: results }
-}
-
-async function handleSceneCapture(app: any, cmd: any): Promise<CommandResult> {
-  const api = sceneApi(app, cmd)
-  if (api.isBusy()) throw new Error('scene is busy capturing/recording — retry after it finishes')
-  api.configureOutput({
-    channel: cmd.channel, width: cmd.width, height: cmd.height,
-    layers: cmd.layers,
-  })
-  return await api.capture()
-}
-
-async function handleSceneRecord(app: any, cmd: any): Promise<CommandResult> {
-  const api = sceneApi(app, cmd)
-  if (api.isBusy()) throw new Error('scene is busy capturing/recording — retry after it finishes')
-  api.configureOutput({
-    channel: cmd.channel, width: cmd.width, height: cmd.height,
-    layers: cmd.layers,
-  })
-  return await api.record()
-}
 
 function handleRemoveStage(app: any, cmd: any): CommandResult {
   const node = findStageNode(app?.graph, String(cmd.node))
