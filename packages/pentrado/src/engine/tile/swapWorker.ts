@@ -64,8 +64,10 @@ async function dispose(): Promise<void> {
   }
 }
 
-self.onmessage = async (e: MessageEvent) => {
+async function onMessage(e: MessageEvent): Promise<void> {
   const msg = e.data
+  // Ignore unrelated messages and replies; never reply to our own error response.
+  if (!msg || typeof msg !== 'object' || !['init', 'dispose', 'write', 'read', 'free'].includes(msg.op)) return
   if (msg.op === 'init') {
     const ok = await init()
     ;(self as any).postMessage({ reqId: msg.reqId, ok })
@@ -97,4 +99,11 @@ self.onmessage = async (e: MessageEvent) => {
   } catch (err) {
     ;(self as any).postMessage({ reqId: msg.reqId, error: String(err) })
   }
+}
+
+// ComfyUI imports extension .js assets in Window as well as the worker entry.
+// Installing this handler in Window would create a self-postMessage loop.
+const WorkerScope = (globalThis as any).DedicatedWorkerGlobalScope
+if (typeof WorkerScope === 'function' && self instanceof WorkerScope) {
+  self.onmessage = onMessage
 }
