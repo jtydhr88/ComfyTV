@@ -12,7 +12,7 @@ from .bot_tools import _maybe_ask_run_approval
 async def _get_canvas(args: dict) -> dict:
     return get_canvas_state(args.get("project_id") or None)
 
-_GRAPH_OPS = ("add_node", "remove_node", "set_widget", "set_title",
+_GRAPH_OPS = ("add_node", "remove_node", "set_widget", "set_title", "move",
               "connect", "disconnect", "set_mode", "clone", "set_color",
               "set_review", "create_group", "collapse", "pin",
               "convert_to_subgraph", "unpack_subgraph")
@@ -149,9 +149,19 @@ async def _arrange_canvas(args: dict) -> dict:
             raise ValueError("margin must be a number")
     layout = args.get("layout")
     if layout is not None:
-        if layout not in ("horizontal", "vertical"):
-            raise ValueError("layout must be 'horizontal' or 'vertical'")
+        if layout not in ("horizontal", "vertical", "grid"):
+            raise ValueError("layout must be 'horizontal', 'vertical' or 'grid'")
         payload["layout"] = layout
+    columns = args.get("columns")
+    if columns is not None:
+        try:
+            c = None if isinstance(columns, bool) else float(columns)
+        except (TypeError, ValueError):
+            c = None
+        if c is None or c != int(c) or not 1 <= c <= 12:
+            raise ValueError(
+                f"columns must be an integer from 1 to 12 (got {columns!r})")
+        payload["columns"] = int(c)
     return await _shared.submit_command("arrange_canvas", payload, timeout=30.0)
 
 
@@ -221,21 +231,29 @@ TOOLS: dict[str, dict] = {
     },
     "arrange_canvas": {
         "description": (
-            "Tidy the whole canvas using litegraph's native arrange: nodes "
-            "are laid out in dependency order, column by column, sized to "
-            "their cards. Use after building a pipeline so nodes don't "
-            "overlap. CAUTION: repositions EVERY node on the canvas and "
-            "discards the user's manual layout — ask before arranging a "
-            "canvas the user laid out by hand. margin is the spacing in "
-            "pixels (default 100, 20-400); layout 'horizontal' (default) "
-            "or 'vertical'. Requires an open ComfyTV page in Desktop or a browser."
+            "Tidy the whole canvas. layout 'horizontal' (default) is "
+            "litegraph's native arrange with flow left-to-right: each "
+            "dependency level is a column, so N independent stage->picker "
+            "chains stack into N rows — very tall with ComfyTV's 400x500 "
+            "cards. 'vertical' is the same arrange with flow top-to-bottom: "
+            "levels are rows, chains are columns — usually the right pick "
+            "for stage cards. 'grid' ignores links and fills rows in "
+            "execution order with `columns` per row (default ceil(sqrt(n)), "
+            "1-12) — use it for unconnected stages, which native arrange "
+            "would pile into one column. CAUTION: repositions EVERY node "
+            "and discards the user's manual layout — ask before arranging a "
+            "canvas the user laid out by hand; to place individual nodes "
+            "use graph_edit {op:'move'} instead. margin is the spacing in "
+            "pixels (default 100, 20-400). Requires an open ComfyTV page in "
+            "Desktop or a browser."
         ),
         "inputSchema": {
             "type": "object",
             "properties": {
                 "margin": {"type": "number"},
                 "layout": {"type": "string",
-                           "enum": ["horizontal", "vertical"]},
+                           "enum": ["horizontal", "vertical", "grid"]},
+                "columns": {"type": "integer", "minimum": 1, "maximum": 12},
                 "project_id": {"type": "string"},
             },
             "additionalProperties": False,
@@ -267,7 +285,10 @@ TOOLS: dict[str, dict] = {
             "{op:'add_node', type, pos?, title?, widgets?} creates a node "
             "(type is a node class name — node_info can search them; "
             "returns the new node_id); {op:'set_widget', node, name, value} "
-            "writes a widget; {op:'set_title', node, title}; {op:'connect', "
+            "writes a widget; {op:'set_title', node, title}; {op:'move', "
+            "node, pos:[x,y]} repositions one node, or {op:'move', nodes:"
+            "[{node, pos}, ...]} several at once (goes through the node's "
+            "pos setter so Vue/V2 cards follow); {op:'connect', "
             "from_node, from_slot?, to_node, to_slot?} wires an output to "
             "an input (slots by name or index; to_slot omitted = first free "
             "type-compatible input); {op:'disconnect', node, input}; "

@@ -134,6 +134,37 @@ describe('setWidget', () => {
   })
 })
 
+describe('collision avoidance', () => {
+  afterEach(() => {
+    ;(app as any).graph._nodes = []
+  })
+
+  it('drops the new node below whatever already occupies the slot to the right', () => {
+    const src = makeNode({ pos: [100, 200], size: [400, 500] })
+    const blocker = makeNode({ pos: [520, 200], size: [400, 500] })
+    ;(app as any).graph._nodes = [src, blocker]
+    const node = spawnConsumingNode(src, 'ComfyTV.ImagePickerStage', 'image')
+    expect(node.pos).toEqual([560, 770])
+  })
+
+  it('keeps stepping down past a column of blockers', () => {
+    const src = makeNode({ pos: [100, 200], size: [400, 500] })
+    const a = makeNode({ pos: [520, 200], size: [400, 500] })
+    const b = makeNode({ pos: [520, 770], size: [400, 100] })
+    ;(app as any).graph._nodes = [src, a, b]
+    const node = spawnConsumingNode(src, 'ComfyTV.ImagePickerStage', 'image')
+    expect(node.pos).toEqual([560, 940])
+  })
+
+  it('leaves the ideal spot alone when nothing overlaps it', () => {
+    const src = makeNode({ pos: [100, 200], size: [400, 500] })
+    const far = makeNode({ pos: [2000, 200], size: [400, 500] })
+    ;(app as any).graph._nodes = [src, far]
+    const node = spawnConsumingNode(src, 'ComfyTV.ImagePickerStage', 'image')
+    expect(node.pos).toEqual([560, 200])
+  })
+})
+
 describe('spawnConsumingNode', () => {
   it('creates the target, positions it right of the source and wires the slot', () => {
     const src = makeNode()

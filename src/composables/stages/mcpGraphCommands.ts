@@ -124,6 +124,23 @@ function opAddNode(app: any, graph: any, op: any, updated: string[]): CommandRes
   return { op: 'add_node', node_id: String(node.id), type }
 }
 
+function opMove(graph: any, op: any): CommandResult {
+  const items: any[] = Array.isArray(op.nodes) ? op.nodes : [op]
+  if (!items.length) throw new Error('move needs node + pos, or nodes: [{node, pos}]')
+  const moved: string[] = []
+  for (const it of items) {
+    const node = requireNode(graph, it?.node)
+    const pos = it?.pos
+    if (!Array.isArray(pos) || pos.length !== 2
+        || !pos.every((v: any) => Number.isFinite(Number(v)))) {
+      throw new Error(`node ${node.id} needs pos [x, y]`)
+    }
+    node.pos = [Number(pos[0]), Number(pos[1])]
+    moved.push(String(node.id))
+  }
+  return { op: 'move', node_ids: moved }
+}
+
 function opConnect(graph: any, op: any): CommandResult {
   const src = requireNode(graph, op.from_node)
   const dst = requireNode(graph, op.to_node)
@@ -322,6 +339,8 @@ export function handleGraphEdit(app: any, cmd: any): CommandResult {
           const node = requireNode(graph, op.node)
           node.title = String(op.title ?? '')
           results.push({ op: name, node_id: String(node.id) })
+        } else if (name === 'move') {
+          results.push(opMove(graph, op))
         } else if (name === 'connect') {
           results.push(opConnect(graph, op))
         } else if (name === 'disconnect') {
@@ -350,7 +369,7 @@ export function handleGraphEdit(app: any, cmd: any): CommandResult {
         } else {
           throw new Error(
             `unknown op '${name}' — valid: add_node, remove_node, set_widget, `
-            + 'set_title, connect, disconnect, set_mode, clone, set_color, '
+            + 'set_title, move, connect, disconnect, set_mode, clone, set_color, '
             + 'set_review, create_group, collapse, pin, convert_to_subgraph, '
             + 'unpack_subgraph')
         }

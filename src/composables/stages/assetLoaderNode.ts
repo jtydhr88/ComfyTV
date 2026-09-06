@@ -1,5 +1,6 @@
 import type { Asset } from '@/api/schemas'
 import { app } from '@/lib/comfyApp'
+import { findFreePos } from '@/composables/stages/placeFree'
 
 const LOADER_CLASS_BY_MEDIA: Record<string, string> = {
   image: 'ComfyTV.AssetImageLoaderStage',
@@ -83,14 +84,15 @@ export function createAssetLoaderNode(
     console.error('[ComfyTV/asset-loader] createNode returned null for', asset.media_type)
     return null
   }
-  ;(app as any)?.graph?.add(node)
+  const graph = (app as any)?.graph
+  graph?.add(node)
 
+  const sw = node.size?.[0] || 280
+  const sh = node.size?.[1] || 200
   if (opts.anchor === 'center') {
-    const sw = node.size?.[0] || 280
-    const sh = node.size?.[1] || 200
     node.pos = [pos[0] - sw / 2, pos[1] - sh / 2]
   } else {
-    node.pos = pos
+    node.pos = findFreePos(graph, pos, [sw, sh], node)
   }
 
   const category = asset.category_ids.length > 0 ? String(asset.category_ids[0]) : 'none'

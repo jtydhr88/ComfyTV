@@ -320,3 +320,14 @@ class TestArrangeCanvas:
             await _arrange_canvas({"layout": "circle"})
         with pytest.raises(ValueError, match="margin"):
             await _arrange_canvas({"margin": "wide"})
+
+    async def test_grid_with_columns(self, reset_db, fake_submit):
+        from ComfyTV.api.mcp_tools import _arrange_canvas
+        await _arrange_canvas({"layout": "grid", "columns": 3})
+        assert fake_submit["payload"]["layout"] == "grid"
+        assert fake_submit["payload"]["columns"] == 3
+        await _arrange_canvas({"layout": "grid", "columns": 2.0})
+        assert fake_submit["payload"]["columns"] == 2
+        for bad in (0, 13, 2.5, "x", True):
+            with pytest.raises(ValueError, match="columns"):
+                await _arrange_canvas({"layout": "grid", "columns": bad})

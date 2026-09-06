@@ -1,6 +1,7 @@
 ﻿import { z } from 'zod'
 
 import { apiSend } from '@/api'
+import { handleArrangeCanvas } from '@/composables/stages/arrangeCanvas'
 import {
   createNodeAt,
   findFirstAutogrowSlot,
@@ -353,19 +354,6 @@ function handleRemoveStage(app: any, cmd: any): CommandResult {
   app.graph.remove(node)
   app?.graph?.setDirtyCanvas?.(true, true)
   return { removed: true, ...removed }
-}
-
-function handleArrangeCanvas(app: any, cmd: any): CommandResult {
-  const graph = app?.graph
-  if (typeof graph?.arrange !== 'function') {
-    throw new Error('the graph does not support arrange')
-  }
-  const margin = Math.max(20, Math.min(400, Number(cmd.margin) || 100))
-  const vertical = cmd.layout === 'vertical'
-  const lg = (window as any).LiteGraph
-  graph.arrange(margin, vertical ? lg?.VERTICAL_LAYOUT : undefined)
-  const count = Array.isArray(graph._nodes) ? graph._nodes.length : 0
-  return { arranged: count, margin, layout: vertical ? 'vertical' : 'horizontal' }
 }
 
 async function handleCancelStage(app: any, cmd: any): Promise<CommandResult> {

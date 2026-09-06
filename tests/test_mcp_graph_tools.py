@@ -67,7 +67,8 @@ class TestGraphGetEdit:
                {"op": "collapse", "node": "3"},
                {"op": "pin", "node": "3", "pinned": False},
                {"op": "convert_to_subgraph", "nodes": ["3", "17"]},
-               {"op": "unpack_subgraph", "node": "30"}]
+               {"op": "unpack_subgraph", "node": "30"},
+               {"op": "move", "node": "3", "pos": [10, 20]}]
         await _graph_edit({"ops": ops})
         assert bus["calls"][0][1]["ops"] == ops
 

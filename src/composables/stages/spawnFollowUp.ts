@@ -6,6 +6,7 @@ import { useStageStore, type StageKind, type ImagePickContext } from '@/stores/s
 import { useAssetStore } from '@/stores/assetStore'
 import { createAssetLoaderNode } from '@/composables/stages/assetLoaderNode'
 import { app } from '@/lib/comfyApp'
+import { findFreePos } from '@/composables/stages/placeFree'
 
 const STAGE_CLASS_BY_KIND: Record<StageKind, string> = {
   text:           'ComfyTV.TextStage',
@@ -72,8 +73,9 @@ export function createNodeAt(targetClass: string, pos: [number, number]): any | 
     console.error('[ComfyTV/action] createNode returned null for', targetClass)
     return null
   }
-  ;(app as any)?.graph?.add(node)
-  node.pos = pos
+  const graph = (app as any)?.graph
+  graph?.add(node)
+  node.pos = findFreePos(graph, pos, [node.size?.[0] || 280, node.size?.[1] || 260], node)
   return node
 }
 

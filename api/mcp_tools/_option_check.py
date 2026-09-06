@@ -1,8 +1,25 @@
+from comfy_api.latest import io
+
 from ... import storage
 from ...nodes.stages.common.meta import STAGE_META
-from ..presets import _input_name, _schema_field, _stage_class_map
+from ..presets import (
+    _infra_input_names, _input_name, _schema_field, _stage_class_map,
+)
 
 _WIDGETS_BY_KIND: dict[str, set[str]] | None = None
+_WIDGET_CLS = getattr(io, "WidgetInput", None)
+
+
+def _widget_names(cls) -> set[str]:
+    infra = _infra_input_names()
+    out: set[str] = set()
+    for inp in _schema_field(cls.define_schema(), "inputs") or []:
+        if _WIDGET_CLS is not None and not isinstance(inp, _WIDGET_CLS):
+            continue
+        name = _input_name(inp)
+        if name and name not in infra:
+            out.add(name)
+    return out
 
 
 async def widget_keys(kind: str) -> set[str]:
@@ -11,11 +28,8 @@ async def widget_keys(kind: str) -> set[str]:
         by_kind: dict[str, set[str]] = {}
         for cls in (await _stage_class_map()).values():
             wk = (STAGE_META.get(cls.__name__) or {}).get("workflow_kind")
-            if not wk:
-                continue
-            names = {n for n in (_input_name(i) for i in
-                     (_schema_field(cls.define_schema(), "inputs") or [])) if n}
-            by_kind.setdefault(wk, set()).update(names)
+            if wk:
+                by_kind.setdefault(wk, set()).update(_widget_names(cls))
         _WIDGETS_BY_KIND = by_kind
     return _WIDGETS_BY_KIND.get(kind, set())
 

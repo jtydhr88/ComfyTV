@@ -22361,6 +22361,29 @@ function useLightbox() {
     index: computed(() => state.index)
   };
 }
+const TITLE$1 = 30;
+const GAP = 40;
+const MAX_STEPS = 50;
+function bounds(node) {
+  const p2 = node == null ? void 0 : node.pos;
+  const s = node == null ? void 0 : node.size;
+  if (!p2 || !s) return null;
+  return [p2[0], p2[1] - TITLE$1, s[0], s[1] + TITLE$1];
+}
+function overlaps$2(a2, b2) {
+  return a2[0] < b2[0] + b2[2] && a2[0] + a2[2] > b2[0] && a2[1] < b2[1] + b2[3] && a2[1] + a2[3] > b2[1];
+}
+function findFreePos(graph, pos, size2, skip) {
+  const others = ((graph == null ? void 0 : graph._nodes) ?? []).filter((n) => n !== skip).map(bounds).filter((r) => r !== null);
+  let [x, y2] = pos;
+  for (let i = 0; i < MAX_STEPS; i++) {
+    const me2 = [x, y2 - TITLE$1, size2[0], size2[1] + TITLE$1];
+    const hit = others.filter((o) => overlaps$2(me2, o));
+    if (!hit.length) break;
+    y2 = Math.max(...hit.map((o) => o[1] + o[3])) + GAP + TITLE$1;
+  }
+  return [x, y2];
+}
 const LOADER_CLASS_BY_MEDIA = {
   image: "ComfyTV.AssetImageLoaderStage",
   video: "ComfyTV.AssetVideoLoaderStage",
@@ -22420,7 +22443,7 @@ function clientToCanvasPos(clientX, clientY) {
   }
 }
 function createAssetLoaderNode(asset, pos, opts = {}) {
-  var _a3, _b2, _c, _d, _e2, _f, _g, _h;
+  var _a3, _b2, _c, _d, _e2, _f, _g;
   const win = window;
   if (!((_a3 = win.LiteGraph) == null ? void 0 : _a3.createNode)) {
     console.error("[ComfyTV/asset-loader] LiteGraph.createNode not available");
@@ -22433,20 +22456,21 @@ function createAssetLoaderNode(asset, pos, opts = {}) {
     console.error("[ComfyTV/asset-loader] createNode returned null for", asset.media_type);
     return null;
   }
-  (_b2 = app == null ? void 0 : app.graph) == null ? void 0 : _b2.add(node);
+  const graph = app == null ? void 0 : app.graph;
+  graph == null ? void 0 : graph.add(node);
+  const sw = ((_b2 = node.size) == null ? void 0 : _b2[0]) || 280;
+  const sh = ((_c = node.size) == null ? void 0 : _c[1]) || 200;
   if (opts.anchor === "center") {
-    const sw = ((_c = node.size) == null ? void 0 : _c[0]) || 280;
-    const sh = ((_d = node.size) == null ? void 0 : _d[1]) || 200;
     node.pos = [pos[0] - sw / 2, pos[1] - sh / 2];
   } else {
-    node.pos = pos;
+    node.pos = findFreePos(graph, pos, [sw, sh], node);
   }
   const category = asset.category_ids.length > 0 ? String(asset.category_ids[0]) : "none";
   setWidget$1(node, "category", category);
   setWidget$1(node, "asset_url", asset.payload_url);
   setWidget$1(node, "asset_id", asset.id);
-  if (opts.select) (_f = (_e2 = app == null ? void 0 : app.canvas) == null ? void 0 : _e2.selectNode) == null ? void 0 : _f.call(_e2, node);
-  (_h = (_g = app == null ? void 0 : app.graph) == null ? void 0 : _g.setDirtyCanvas) == null ? void 0 : _h.call(_g, true, true);
+  if (opts.select) (_e2 = (_d = app == null ? void 0 : app.canvas) == null ? void 0 : _d.selectNode) == null ? void 0 : _e2.call(_d, node);
+  (_g = (_f = app == null ? void 0 : app.graph) == null ? void 0 : _f.setDirtyCanvas) == null ? void 0 : _g.call(_f, true, true);
   return node;
 }
 const PAGE_LIMIT = 500;
@@ -58455,7 +58479,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-Bgt_XRUw.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-CaHJCERp.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -119199,11 +119223,11 @@ const _sfc_main$3V = /* @__PURE__ */ defineComponent({
     }
     function frameModel(root) {
       if (!camera2 || !controls) return;
-      const bounds = new Box3().setFromObject(root);
+      const bounds2 = new Box3().setFromObject(root);
       const center2 = new Vector3();
       const size2 = new Vector3();
-      bounds.getCenter(center2);
-      bounds.getSize(size2);
+      bounds2.getCenter(center2);
+      bounds2.getSize(size2);
       let maxDim = Math.max(size2.x, size2.y, size2.z);
       if (!Number.isFinite(maxDim) || maxDim <= 0) {
         center2.set(0, 0, 0);
@@ -119500,7 +119524,7 @@ const _sfc_main$3T = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const ProxiedVideo = /* @__PURE__ */ _export_sfc(_sfc_main$3T, [["__scopeId", "data-v-2ffd7745"]]);
+const ProxiedVideo = /* @__PURE__ */ _export_sfc(_sfc_main$3T, [["__scopeId", "data-v-753e7c13"]]);
 function useImagePanZoom(containerEl, imgEl, options = {}) {
   const minZoom = options.minZoom ?? 1;
   const maxZoom = options.maxZoom ?? 6;
@@ -131598,9 +131622,9 @@ function useCropStage(node, state2) {
       height: readWidgetNum(node, WIDGETS.height, fallback.height)
     };
   }
-  const bounds = /* @__PURE__ */ ref(readBounds({ x: 0, y: 0, width: 0, height: 0 }));
+  const bounds2 = /* @__PURE__ */ ref(readBounds({ x: 0, y: 0, width: 0, height: 0 }));
   function setBounds(v3) {
-    bounds.value = v3;
+    bounds2.value = v3;
   }
   const { computing, requestRecompute } = useTransformPipeline({
     sourceImageUrl,
@@ -131608,9 +131632,9 @@ function useCropStage(node, state2) {
     nodeId: (node == null ? void 0 : node.id) ?? "unknown",
     filenamePrefix: "comfytv-crop",
     subfolder: "comfytv/cropper",
-    compute: (img) => cropToCanvas(img, bounds.value)
+    compute: (img) => cropToCanvas(img, bounds2.value)
   });
-  watch(bounds, (v3) => {
+  watch(bounds2, (v3) => {
     writeWidget(node, WIDGETS.x, v3.x);
     writeWidget(node, WIDGETS.y, v3.y);
     writeWidget(node, WIDGETS.width, v3.width);
@@ -131620,23 +131644,23 @@ function useCropStage(node, state2) {
   for (const key of Object.keys(WIDGETS)) {
     bindWidgetCallback(node, WIDGETS[key], (value) => {
       const v3 = Number(value);
-      if (v3 !== bounds.value[key]) bounds.value = { ...bounds.value, [key]: v3 };
+      if (v3 !== bounds2.value[key]) bounds2.value = { ...bounds2.value, [key]: v3 };
     });
   }
   onNodeConfigure(node, () => {
-    const restored = readBounds(bounds.value);
-    if (restored.x !== bounds.value.x || restored.y !== bounds.value.y || restored.width !== bounds.value.width || restored.height !== bounds.value.height) {
-      bounds.value = restored;
+    const restored = readBounds(bounds2.value);
+    if (restored.x !== bounds2.value.x || restored.y !== bounds2.value.y || restored.width !== bounds2.value.width || restored.height !== bounds2.value.height) {
+      bounds2.value = restored;
     }
   });
   watch(sourceImageUrl, (url) => {
-    if (url && bounds.value.width > 0 && bounds.value.height > 0) {
+    if (url && bounds2.value.width > 0 && bounds2.value.height > 0) {
       requestRecompute();
     }
   }, { immediate: true });
   return {
     sourceImageUrl,
-    bounds,
+    bounds: bounds2,
     setBounds,
     computing
   };
@@ -131671,7 +131695,7 @@ const _sfc_main$3I = /* @__PURE__ */ defineComponent({
   },
   setup(__props) {
     const props = __props;
-    const { sourceImageUrl, bounds, setBounds, computing } = useCropStage(props.node, props.state);
+    const { sourceImageUrl, bounds: bounds2, setBounds, computing } = useCropStage(props.node, props.state);
     function onBoundsUpdate(v3) {
       setBounds(v3);
     }
@@ -131679,7 +131703,7 @@ const _sfc_main$3I = /* @__PURE__ */ defineComponent({
       return openBlock(), createElementBlock("div", _hoisted_1$5t, [
         createVNode(CropCanvas, {
           "source-image-url": unref(sourceImageUrl),
-          bounds: unref(bounds),
+          bounds: unref(bounds2),
           "onUpdate:bounds": onBoundsUpdate
         }, null, 8, ["source-image-url", "bounds"]),
         createBaseVNode("div", _hoisted_2$3s, [
@@ -133000,16 +133024,16 @@ const _sfc_main$3E = /* @__PURE__ */ defineComponent({
   setup(__props) {
     const props = __props;
     const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, "video"));
-    const bounds = /* @__PURE__ */ ref({
+    const bounds2 = /* @__PURE__ */ ref({
       x: readWidgetNum(props.node, "x", 0),
       y: readWidgetNum(props.node, "y", 0),
       width: readWidgetNum(props.node, "w", 0),
       height: readWidgetNum(props.node, "h", 0)
     });
     function onBoundsUpdate(v3) {
-      bounds.value = v3;
+      bounds2.value = v3;
     }
-    watch(bounds, (v3) => {
+    watch(bounds2, (v3) => {
       writeWidget(props.node, "x", v3.x);
       writeWidget(props.node, "y", v3.y);
       writeWidget(props.node, "w", v3.width);
@@ -133018,8 +133042,8 @@ const _sfc_main$3E = /* @__PURE__ */ defineComponent({
     function bindBound(name, key) {
       bindWidgetCallback(props.node, name, (value) => {
         const v3 = Number(value);
-        if (Number.isFinite(v3) && v3 !== bounds.value[key]) {
-          bounds.value = { ...bounds.value, [key]: v3 };
+        if (Number.isFinite(v3) && v3 !== bounds2.value[key]) {
+          bounds2.value = { ...bounds2.value, [key]: v3 };
         }
       });
     }
@@ -133029,20 +133053,20 @@ const _sfc_main$3E = /* @__PURE__ */ defineComponent({
     bindBound("h", "height");
     onNodeConfigure(props.node, () => {
       const restored = {
-        x: readWidgetNum(props.node, "x", bounds.value.x),
-        y: readWidgetNum(props.node, "y", bounds.value.y),
-        width: readWidgetNum(props.node, "w", bounds.value.width),
-        height: readWidgetNum(props.node, "h", bounds.value.height)
+        x: readWidgetNum(props.node, "x", bounds2.value.x),
+        y: readWidgetNum(props.node, "y", bounds2.value.y),
+        width: readWidgetNum(props.node, "w", bounds2.value.width),
+        height: readWidgetNum(props.node, "h", bounds2.value.height)
       };
-      if (restored.x !== bounds.value.x || restored.y !== bounds.value.y || restored.width !== bounds.value.width || restored.height !== bounds.value.height) {
-        bounds.value = restored;
+      if (restored.x !== bounds2.value.x || restored.y !== bounds2.value.y || restored.width !== bounds2.value.width || restored.height !== bounds2.value.height) {
+        bounds2.value = restored;
       }
     });
     return (_ctx, _cache2) => {
       return openBlock(), createElementBlock("div", _hoisted_1$5p, [
         createVNode(VideoCropCanvas, {
           "source-video-url": sourceVideoUrl.value,
-          bounds: bounds.value,
+          bounds: bounds2.value,
           "onUpdate:bounds": onBoundsUpdate
         }, null, 8, ["source-video-url", "bounds"]),
         createBaseVNode("div", _hoisted_2$3o, [
@@ -143007,7 +143031,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-BQ6_p-Zu.mjs");
+    const { STLLoader } = await import("./STLLoader-T3V2wPtQ.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -143015,7 +143039,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-F7sW3bkA.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-DS_xMyvf.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -145461,13 +145485,13 @@ const _sfc_main$39 = /* @__PURE__ */ defineComponent({
     }
     function frameCamera() {
       if (!camera2 || !controls) return;
-      const bounds = new Box3();
+      const bounds2 = new Box3();
       const target = viewingResult.value ? groupResult : groupA;
-      bounds.expandByObject(target);
-      if (!viewingResult.value) bounds.expandByObject(groupB);
-      if (bounds.isEmpty()) return;
-      const center2 = bounds.getCenter(new Vector3());
-      const size2 = bounds.getSize(new Vector3());
+      bounds2.expandByObject(target);
+      if (!viewingResult.value) bounds2.expandByObject(groupB);
+      if (bounds2.isEmpty()) return;
+      const center2 = bounds2.getCenter(new Vector3());
+      const size2 = bounds2.getSize(new Vector3());
       const fit = computeFrameFit(center2, size2);
       camera2.position.set(fit.position.x, fit.position.y, fit.position.z);
       camera2.near = fit.near;
@@ -158987,9 +159011,9 @@ class PresetDriver {
   getPathBounds(samples = 32) {
     const points = this.samplePath(samples);
     if (!points.length) return null;
-    const bounds = new Box3();
-    for (const point of points) bounds.expandByPoint(point);
-    return bounds;
+    const bounds2 = new Box3();
+    for (const point of points) bounds2.expandByPoint(point);
+    return bounds2;
   }
   dispose() {
     this.action = null;
@@ -159206,14 +159230,14 @@ class SceneCameraManager {
   }
   getPathBounds() {
     var _a3;
-    let bounds = null;
+    let bounds2 = null;
     for (const runtime of this.runtimes.values()) {
       const box = ((_a3 = runtime.driver) == null ? void 0 : _a3.getPathBounds()) ?? null;
       if (!box) continue;
-      if (bounds) bounds.union(box);
-      else bounds = box;
+      if (bounds2) bounds2.union(box);
+      else bounds2 = box;
     }
-    return bounds;
+    return bounds2;
   }
   setSelected(id) {
     this.selectedId = id;
@@ -160018,20 +160042,20 @@ class CheckerRoom {
   attach(scene) {
     this.scene = scene;
   }
-  update(mode, bounds) {
+  update(mode, bounds2) {
     const resolved = typeof mode === "boolean" ? mode ? "full" : "off" : mode;
     const key = resolved !== "off" ? resolved + "|" + [
-      bounds.min.x,
-      bounds.min.y,
-      bounds.min.z,
-      bounds.max.x,
-      bounds.max.y,
-      bounds.max.z
+      bounds2.min.x,
+      bounds2.min.y,
+      bounds2.min.z,
+      bounds2.max.x,
+      bounds2.max.y,
+      bounds2.max.z
     ].map((v3) => Math.round(v3 * 10) / 10).join(",") : "";
     if (key === this.lastKey) return;
     this.lastKey = key;
     this.remove();
-    if (resolved !== "off") this.build(bounds, resolved);
+    if (resolved !== "off") this.build(bounds2, resolved);
   }
   setLayerVisibility(walls, floor2) {
     if (!this.group) return;
@@ -160091,9 +160115,9 @@ class CheckerRoom {
     tex.wrapT = RepeatWrapping;
     return tex;
   }
-  build(bounds, mode) {
+  build(bounds2, mode) {
     if (!this.scene) return;
-    const { min: min2, max: max2 } = bounds;
+    const { min: min2, max: max2 } = bounds2;
     const roomW = max2.x - min2.x;
     const roomH = max2.y - min2.y;
     const roomD = max2.z - min2.z;
@@ -161323,7 +161347,7 @@ class Scene3dViewport extends Viewport3d {
     );
   }
   computeRoomBounds() {
-    const bounds = new Box3(
+    const bounds2 = new Box3(
       new Vector3(-8, -0.01, -8),
       new Vector3(8, 8, 8)
     );
@@ -161337,15 +161361,15 @@ class Scene3dViewport extends Viewport3d {
     }
     if (!content.isEmpty()) {
       content.expandByScalar(2);
-      bounds.union(content);
+      bounds2.union(content);
     }
     const path = this.sceneCameraManager.getPathBounds();
     if (path && !path.isEmpty()) {
       path.expandByScalar(5);
-      bounds.union(path);
+      bounds2.union(path);
     }
-    bounds.min.y = Math.min(bounds.min.y, -0.01);
-    return bounds;
+    bounds2.min.y = Math.min(bounds2.min.y, -0.01);
+    return bounds2;
   }
   setGizmoMode(mode) {
     this.gizmoMode = mode;
@@ -163469,10 +163493,10 @@ const MODEL_FIT_TARGET_SIZE = 2;
 const MODEL_AUTO_FIT_MIN = 0.1;
 const MODEL_AUTO_FIT_MAX = 20;
 function computeModelFit(object2) {
-  const bounds = new Box3().setFromObject(object2);
-  if (bounds.isEmpty()) return null;
-  const size2 = bounds.getSize(new Vector3());
-  const center2 = bounds.getCenter(new Vector3());
+  const bounds2 = new Box3().setFromObject(object2);
+  if (bounds2.isEmpty()) return null;
+  const size2 = bounds2.getSize(new Vector3());
+  const center2 = bounds2.getCenter(new Vector3());
   const maxDim = Math.max(size2.x, size2.y, size2.z);
   if (!Number.isFinite(maxDim) || maxDim <= 0) return null;
   const scale = MODEL_FIT_TARGET_SIZE / maxDim;
@@ -163481,7 +163505,7 @@ function computeModelFit(object2) {
     transform: {
       position: {
         x: -center2.x * scale,
-        y: -bounds.min.y * scale,
+        y: -bounds2.min.y * scale,
         z: -center2.z * scale
       },
       quaternion: { x: 0, y: 0, z: 0, w: 1 },
@@ -176157,14 +176181,14 @@ function tracePath(g2, path) {
 }
 function rasterizeVector(node) {
   var _a3;
-  const bounds = pathBounds(node.path, strokeWidthOf(node));
-  if (!bounds) return null;
+  const bounds2 = pathBounds(node.path, strokeWidthOf(node));
+  if (!bounds2) return null;
   const canvas = document.createElement("canvas");
-  canvas.width = bounds.w;
-  canvas.height = bounds.h;
+  canvas.width = bounds2.w;
+  canvas.height = bounds2.h;
   const g2 = canvas.getContext("2d");
   if (!g2) return null;
-  g2.translate(-bounds.x, -bounds.y);
+  g2.translate(-bounds2.x, -bounds2.y);
   tracePath(g2, node.path);
   if (node.fill) {
     g2.globalAlpha = clamp01$2(node.fill.opacity ?? 1);
@@ -176181,7 +176205,7 @@ function rasterizeVector(node) {
     if ((_a3 = node.stroke.dash) == null ? void 0 : _a3.length) g2.setLineDash(node.stroke.dash);
     g2.stroke();
   }
-  return { canvas, bounds };
+  return { canvas, bounds: bounds2 };
 }
 function vectorStamp(node) {
   return JSON.stringify([
@@ -176434,28 +176458,28 @@ function drawPlacedInto(ctx, bitmap, t2, originX, originY) {
   ctx.restore();
 }
 function bakePlaced(bitmap, t2) {
-  const bounds = placedBounds(t2);
+  const bounds2 = placedBounds(t2);
   const canvas = document.createElement("canvas");
-  canvas.width = bounds.w;
-  canvas.height = bounds.h;
+  canvas.width = bounds2.w;
+  canvas.height = bounds2.h;
   const ctx = canvas.getContext("2d");
   if (!ctx) return null;
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
-  drawPlacedInto(ctx, bitmap, t2, bounds.x, bounds.y);
-  return { canvas, bounds };
+  drawPlacedInto(ctx, bitmap, t2, bounds2.x, bounds2.y);
+  return { canvas, bounds: bounds2 };
 }
-function bakeMaskInto(maskBitmap, oldTransform, bounds, fill) {
+function bakeMaskInto(maskBitmap, oldTransform, bounds2, fill) {
   const canvas = document.createElement("canvas");
-  canvas.width = bounds.w;
-  canvas.height = bounds.h;
+  canvas.width = bounds2.w;
+  canvas.height = bounds2.h;
   const ctx = canvas.getContext("2d");
   if (!ctx) return null;
   ctx.fillStyle = fill === "white" ? "#ffffff" : "#000000";
-  ctx.fillRect(0, 0, bounds.w, bounds.h);
+  ctx.fillRect(0, 0, bounds2.w, bounds2.h);
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
-  drawPlacedInto(ctx, maskBitmap, oldTransform, bounds.x, bounds.y);
+  drawPlacedInto(ctx, maskBitmap, oldTransform, bounds2.x, bounds2.y);
   return canvas;
 }
 function docRectToSourceRect(r, q2, srcW, srcH) {
@@ -177140,9 +177164,9 @@ class BakeRasterCommand {
 function clampNum$1(v3, lo, hi) {
   return Math.max(lo, Math.min(hi, v3));
 }
-function buildSnapTargets$1(otherRects, bounds, extras) {
-  const bw = (bounds == null ? void 0 : bounds.w) ?? 1;
-  const bh = (bounds == null ? void 0 : bounds.h) ?? 1;
+function buildSnapTargets$1(otherRects, bounds2, extras) {
+  const bw = (bounds2 == null ? void 0 : bounds2.w) ?? 1;
+  const bh = (bounds2 == null ? void 0 : bounds2.h) ?? 1;
   const xs = [0, bw / 2, bw];
   const ys = [0, bh / 2, bh];
   for (const r of otherRects) {
@@ -179078,25 +179102,25 @@ function pasteMask(sub, r, width, height) {
   }
   return out;
 }
-function withBounds(mask, bounds, pad, run3) {
-  if (!bounds) return run3(mask);
-  const x0 = Math.max(0, Math.floor(bounds.x - pad));
-  const y0 = Math.max(0, Math.floor(bounds.y - pad));
-  const x1 = Math.min(mask.width, Math.ceil(bounds.x + bounds.w + pad));
-  const y1 = Math.min(mask.height, Math.ceil(bounds.y + bounds.h + pad));
+function withBounds(mask, bounds2, pad, run3) {
+  if (!bounds2) return run3(mask);
+  const x0 = Math.max(0, Math.floor(bounds2.x - pad));
+  const y0 = Math.max(0, Math.floor(bounds2.y - pad));
+  const x1 = Math.min(mask.width, Math.ceil(bounds2.x + bounds2.w + pad));
+  const y1 = Math.min(mask.height, Math.ceil(bounds2.y + bounds2.h + pad));
   if (x1 <= x0 || y1 <= y0) return emptyMask(mask.width, mask.height);
   const rect = { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
   if (rect.x === 0 && rect.y === 0 && rect.w === mask.width && rect.h === mask.height) return run3(mask);
   return pasteMask(run3(cropMask(mask, rect)), rect, mask.width, mask.height);
 }
-function growMask(mask, radius, bounds = null) {
-  return withBounds(mask, bounds, Math.round(radius) + 1, (m2) => ellipticalFilter(m2, radius, Math.max, 0));
+function growMask(mask, radius, bounds2 = null) {
+  return withBounds(mask, bounds2, Math.round(radius) + 1, (m2) => ellipticalFilter(m2, radius, Math.max, 0));
 }
-function shrinkMask(mask, radius, bounds = null) {
-  return withBounds(mask, bounds, Math.round(radius) + 1, (m2) => ellipticalFilter(m2, radius, Math.min, 0));
+function shrinkMask(mask, radius, bounds2 = null) {
+  return withBounds(mask, bounds2, Math.round(radius) + 1, (m2) => ellipticalFilter(m2, radius, Math.min, 0));
 }
-function borderMask(mask, radius, bounds = null) {
-  return withBounds(mask, bounds, Math.round(radius) + 1, (m2) => {
+function borderMask(mask, radius, bounds2 = null) {
+  return withBounds(mask, bounds2, Math.round(radius) + 1, (m2) => {
     const grown = ellipticalFilter(m2, radius, Math.max, 0);
     const shrunk = ellipticalFilter(m2, radius, Math.min, 0);
     const out = emptyMask(m2.width, m2.height);
@@ -179140,8 +179164,8 @@ function boxesForGauss(sigma, n) {
   for (let i = 0; i < n; i++) sizes.push(i < m2 ? wl : wu);
   return sizes;
 }
-function featherMask(mask, radius, bounds = null) {
-  return withBounds(mask, bounds, Math.ceil(radius) + 2, (m2) => featherMaskFull(m2, radius));
+function featherMask(mask, radius, bounds2 = null) {
+  return withBounds(mask, bounds2, Math.ceil(radius) + 2, (m2) => featherMaskFull(m2, radius));
 }
 function smallGaussian(mask, sigma) {
   const r = 2;
@@ -179596,10 +179620,10 @@ function drawTriangle(ctx, bitmap, sx0, sy0, sx1, sy1, sx2, sy2, dx0, dy0, dx1, 
   ctx.drawImage(bitmap, 0, 0);
   ctx.restore();
 }
-function renderWarp(bitmap, srcW, srcH, grid, side, bounds) {
+function renderWarp(bitmap, srcW, srcH, grid, side, bounds2) {
   const out = document.createElement("canvas");
-  out.width = bounds.w;
-  out.height = bounds.h;
+  out.width = bounds2.w;
+  out.height = bounds2.h;
   const ctx = out.getContext("2d");
   if (!ctx) return null;
   ctx.imageSmoothingEnabled = true;
@@ -179625,12 +179649,12 @@ function renderWarp(bitmap, srcW, srcH, grid, side, bounds) {
         sy0,
         sx0,
         sy1,
-        p00.x - bounds.x,
-        p00.y - bounds.y,
-        p10.x - bounds.x,
-        p10.y - bounds.y,
-        p01.x - bounds.x,
-        p01.y - bounds.y
+        p00.x - bounds2.x,
+        p00.y - bounds2.y,
+        p10.x - bounds2.x,
+        p10.y - bounds2.y,
+        p01.x - bounds2.x,
+        p01.y - bounds2.y
       );
       drawTriangle(
         ctx,
@@ -179641,12 +179665,12 @@ function renderWarp(bitmap, srcW, srcH, grid, side, bounds) {
         sy1,
         sx0,
         sy1,
-        p10.x - bounds.x,
-        p10.y - bounds.y,
-        p11.x - bounds.x,
-        p11.y - bounds.y,
-        p01.x - bounds.x,
-        p01.y - bounds.y
+        p10.x - bounds2.x,
+        p10.y - bounds2.y,
+        p11.x - bounds2.x,
+        p11.y - bounds2.y,
+        p01.x - bounds2.x,
+        p01.y - bounds2.y
       );
     }
   }
@@ -179736,28 +179760,28 @@ class WarpTool {
     const entry = this.ctx.content.get(node.contentId);
     if (!entry) return;
     const { grid, side } = sampleWarpMesh(s.pts, s.n, WARP_SUBDIV);
-    const bounds = warpMeshBounds(grid);
-    const warped = renderWarp(entry.canvas, s.naturalW, s.naturalH, grid, side, bounds);
+    const bounds2 = warpMeshBounds(grid);
+    const warped = renderWarp(entry.canvas, s.naturalW, s.naturalH, grid, side, bounds2);
     if (!warped) return;
     this.ctx.setPaintPreview(`content:${node.id}`, warped);
     if (node.mask) {
       const maskEntry = this.ctx.content.get(node.mask.contentId);
       if (maskEntry) {
-        const warpedMask = renderWarp(maskEntry.canvas, s.naturalW, s.naturalH, grid, side, bounds);
+        const warpedMask = renderWarp(maskEntry.canvas, s.naturalW, s.naturalH, grid, side, bounds2);
         if (warpedMask) this.ctx.setPaintPreview(`mask:${node.id}`, warpedMask);
       }
     }
-    node.transform = this.placedTransform(bounds);
+    node.transform = this.placedTransform(bounds2);
     this.ctx.requestRender();
   }
-  placedTransform(bounds) {
+  placedTransform(bounds2) {
     const s = this.session;
     const t2 = s.baseTransform;
     const sx = t2.w / (s.naturalW || 1);
     const sy = t2.h / (s.naturalH || 1);
-    const w2 = bounds.w * sx;
-    const h2 = bounds.h * sy;
-    const center2 = this.localToDoc({ x: bounds.x + bounds.w / 2, y: bounds.y + bounds.h / 2 });
+    const w2 = bounds2.w * sx;
+    const h2 = bounds2.h * sy;
+    const center2 = this.localToDoc({ x: bounds2.x + bounds2.w / 2, y: bounds2.y + bounds2.h / 2 });
     return { x: center2.x - w2 / 2, y: center2.y - h2 / 2, w: w2, h: h2, rotation: t2.rotation };
   }
   clearPreview() {
@@ -179772,19 +179796,19 @@ class WarpTool {
     const entry = this.ctx.content.get(node.contentId);
     if (!entry) return false;
     const { grid, side } = sampleWarpMesh(s.pts, s.n, WARP_SUBDIV);
-    const bounds = warpMeshBounds(grid);
-    const warped = renderWarp(entry.canvas, s.naturalW, s.naturalH, grid, side, bounds);
+    const bounds2 = warpMeshBounds(grid);
+    const warped = renderWarp(entry.canvas, s.naturalW, s.naturalH, grid, side, bounds2);
     if (!warped) return false;
     node.transform = { ...s.baseTransform };
     const before = snapshotRaster(node);
     node.contentId = this.ctx.content.register(warped);
     node.url = void 0;
-    node.naturalWidth = bounds.w;
-    node.naturalHeight = bounds.h;
-    node.transform = this.placedTransform(bounds);
+    node.naturalWidth = bounds2.w;
+    node.naturalHeight = bounds2.h;
+    node.transform = this.placedTransform(bounds2);
     if (node.mask) {
       const maskEntry = this.ctx.content.get(node.mask.contentId);
-      const warpedMask = maskEntry ? renderWarp(maskEntry.canvas, s.naturalW, s.naturalH, grid, side, bounds) : null;
+      const warpedMask = maskEntry ? renderWarp(maskEntry.canvas, s.naturalW, s.naturalH, grid, side, bounds2) : null;
       if (warpedMask) {
         node.mask = { ...node.mask, contentId: this.ctx.content.register(warpedMask), url: void 0 };
       }
@@ -180116,22 +180140,22 @@ function createEditorCore(env) {
       const base2 = currentSelectionMask() ?? emptyMask(st2.doc.width, st2.doc.height);
       result = combineMasks(base2, shapeMask, op);
     }
-    const bounds = maskBounds(result);
-    if (!bounds) return commitSelection(label, null, null);
+    const bounds2 = maskBounds(result);
+    if (!bounds2) return commitSelection(label, null, null);
     const canvas = maskToCanvas(result);
     if (!canvas) return false;
-    return commitSelection(label, canvas, bounds);
+    return commitSelection(label, canvas, bounds2);
   }
-  function commitSelection(label, canvas, bounds) {
+  function commitSelection(label, canvas, bounds2) {
     const before = snapshotSelection(st2.doc);
     st2.doc.channels = st2.doc.channels.filter((ch) => ch.role !== "selection");
-    if (canvas && bounds) {
+    if (canvas && bounds2) {
       const channel = {
         id: generateId("sel"),
         role: "selection",
         contentId: content.register(canvas, { transient: true }),
         enabled: true,
-        bounds
+        bounds: bounds2
       };
       st2.doc.channels.push(channel);
       st2.doc.selectionId = channel.id;
@@ -180894,12 +180918,12 @@ function createEditorSelectionOps(env, core, anchorFloatingImpl) {
       const r = Math.max(1, Math.round(radius));
       const selBounds = ((_a3 = selectionChannel()) == null ? void 0 : _a3.bounds) ?? null;
       const next = kind === "feather" ? featherMask(mask, r, selBounds) : kind === "grow" ? growMask(mask, r, selBounds) : kind === "shrink" ? shrinkMask(mask, r, selBounds) : borderMask(mask, r, selBounds);
-      const bounds = maskBounds(next);
-      if (!bounds) return commitSelection("Select None", null, null);
+      const bounds2 = maskBounds(next);
+      if (!bounds2) return commitSelection("Select None", null, null);
       const canvas = maskToCanvas(next);
       if (!canvas) return false;
       const labels = { feather: "Feather Selection", grow: "Grow Selection", shrink: "Shrink Selection", border: "Border Selection" };
-      return commitSelection(labels[kind], canvas, bounds);
+      return commitSelection(labels[kind], canvas, bounds2);
     },
     pathToSelection(id, op) {
       var _a3;
@@ -180984,9 +181008,9 @@ function createEditorSelectionOps(env, core, anchorFloatingImpl) {
       g2.fillRect(0, 0, st2.doc.width, st2.doc.height);
       const tf = node.transform.w > 0 && node.transform.h > 0 ? node.transform : { x: 0, y: 0, w: entry.width, h: entry.height, rotation: 0 };
       drawPlacedInto(g2, entry.canvas, tf, 0, 0);
-      const bounds = lumaBBox(canvas);
-      if (!bounds) return commitSelection("Select None", null, null);
-      return commitSelection("Mask to Selection", canvas, bounds);
+      const bounds2 = lumaBBox(canvas);
+      if (!bounds2) return commitSelection("Select None", null, null);
+      return commitSelection("Mask to Selection", canvas, bounds2);
     },
     invertSelection() {
       const sel2 = selectionChannel();
@@ -180995,9 +181019,9 @@ function createEditorSelectionOps(env, core, anchorFloatingImpl) {
       if (!entry) return false;
       const inverted = invertSelectionCanvas(entry.canvas);
       if (!inverted) return false;
-      const bounds = lumaBBox(inverted);
-      if (!bounds) return commitSelection("Select None", null, null);
-      return commitSelection("Invert Selection", inverted, bounds);
+      const bounds2 = lumaBBox(inverted);
+      if (!bounds2) return commitSelection("Select None", null, null);
+      return commitSelection("Invert Selection", inverted, bounds2);
     }
   };
 }
@@ -184430,7 +184454,7 @@ function leafPlacedBounds(t2, doc2) {
   };
 }
 function rasterizeLeafPlaced(node, doc2, content) {
-  const bounds = leafPlacedBounds(node.transform, doc2);
+  const bounds2 = leafPlacedBounds(node.transform, doc2);
   let captured = null;
   const ctx = {
     compositor: null,
@@ -184439,13 +184463,13 @@ function rasterizeLeafPlaced(node, doc2, content) {
     placed: (_key2, _stamp, bitmap, tf, linear) => {
       captured = placeBitmap(
         bitmap,
-        { ...tf, x: tf.x - bounds.x, y: tf.y - bounds.y },
-        bounds.w,
-        bounds.h
+        { ...tf, x: tf.x - bounds2.x, y: tf.y - bounds2.y },
+        bounds2.w,
+        bounds2.h
       );
-      return captured ? { source: captured, rect: bounds, linear: !!linear } : null;
+      return captured ? { source: captured, rect: bounds2, linear: !!linear } : null;
     },
-    region: { x: 0, y: 0, w: bounds.w, h: bounds.h },
+    region: { x: 0, y: 0, w: bounds2.w, h: bounds2.h },
     devicePixelRatio: 1
   };
   try {
@@ -184453,26 +184477,26 @@ function rasterizeLeafPlaced(node, doc2, content) {
   } catch {
     return null;
   }
-  return captured ? { canvas: captured, left: bounds.x, top: bounds.y } : null;
+  return captured ? { canvas: captured, left: bounds2.x, top: bounds2.y } : null;
 }
 function maskToPlacedCanvas(node, doc2, content) {
   const m2 = node.mask;
   if (!m2) return null;
   const entry = content.get(m2.contentId);
   if (!entry) return null;
-  const bounds = leafPlacedBounds(node.transform, doc2);
+  const bounds2 = leafPlacedBounds(node.transform, doc2);
   const c2 = document.createElement("canvas");
-  c2.width = bounds.w;
-  c2.height = bounds.h;
+  c2.width = bounds2.w;
+  c2.height = bounds2.h;
   const ctx = c2.getContext("2d");
   if (!ctx) return null;
   ctx.fillStyle = "#000000";
-  ctx.fillRect(0, 0, bounds.w, bounds.h);
+  ctx.fillRect(0, 0, bounds2.w, bounds2.h);
   const tf = node.transform.w > 0 && node.transform.h > 0 ? node.transform : { x: 0, y: 0, w: doc2.width, h: doc2.height, rotation: 0 };
-  ctx.translate(tf.x - bounds.x + tf.w / 2, tf.y - bounds.y + tf.h / 2);
+  ctx.translate(tf.x - bounds2.x + tf.w / 2, tf.y - bounds2.y + tf.h / 2);
   ctx.rotate(tf.rotation);
   ctx.drawImage(entry.canvas, -tf.w / 2, -tf.h / 2, tf.w, tf.h);
-  return { canvas: c2, left: bounds.x, top: bounds.y };
+  return { canvas: c2, left: bounds2.x, top: bounds2.y };
 }
 async function canvasPngBytes(canvas) {
   const blob = await new Promise(
@@ -194014,9 +194038,9 @@ function hitTest(px2, py2, rects, activeIdx, handle) {
 function clampNum(v3, lo, hi) {
   return Math.max(lo, Math.min(hi, v3));
 }
-function buildSnapTargets(otherRects, bounds, extras) {
-  const bw = (bounds == null ? void 0 : bounds.w) ?? 1;
-  const bh = (bounds == null ? void 0 : bounds.h) ?? 1;
+function buildSnapTargets(otherRects, bounds2, extras) {
+  const bw = (bounds2 == null ? void 0 : bounds2.w) ?? 1;
+  const bh = (bounds2 == null ? void 0 : bounds2.h) ?? 1;
   const xs = [0, bw / 2, bw];
   const ys = [0, bh / 2, bh];
   for (const r of otherRects) {
@@ -224831,7 +224855,7 @@ function outputHasLinks(node, idx) {
   return !!((out == null ? void 0 : out.links) && out.links.length > 0);
 }
 function createNodeAt(targetClass, pos) {
-  var _a3, _b2;
+  var _a3, _b2, _c;
   const win = window;
   if (!((_a3 = win.LiteGraph) == null ? void 0 : _a3.createNode)) {
     console.error("[ComfyTV/action] LiteGraph.createNode not available");
@@ -224842,8 +224866,9 @@ function createNodeAt(targetClass, pos) {
     console.error("[ComfyTV/action] createNode returned null for", targetClass);
     return null;
   }
-  (_b2 = app == null ? void 0 : app.graph) == null ? void 0 : _b2.add(node);
-  node.pos = pos;
+  const graph = app == null ? void 0 : app.graph;
+  graph == null ? void 0 : graph.add(node);
+  node.pos = findFreePos(graph, pos, [((_b2 = node.size) == null ? void 0 : _b2[0]) || 280, ((_c = node.size) == null ? void 0 : _c[1]) || 260], node);
   return node;
 }
 function posRightOf(srcNode, dx = 60) {
@@ -226917,6 +226942,52 @@ function installExecBadge() {
   });
   return () => scope2.stop();
 }
+const TITLE = 30;
+function arrangeGrid(graph, margin, columns) {
+  var _a3;
+  const ordered = typeof (graph == null ? void 0 : graph.computeExecutionOrder) === "function" ? graph.computeExecutionOrder(false, true) : [];
+  const nodes = ordered.length ? ordered : (graph == null ? void 0 : graph._nodes) ?? [];
+  if (!nodes.length) return 0;
+  const cols = Math.max(1, Math.min(
+    12,
+    Math.floor(columns || Math.ceil(Math.sqrt(nodes.length)))
+  ));
+  const pitch = Math.max(...nodes.map((n) => {
+    var _a4;
+    return Number((_a4 = n.size) == null ? void 0 : _a4[0]) || 200;
+  })) + margin;
+  let y2 = margin + TITLE;
+  for (let i = 0; i < nodes.length; i += cols) {
+    const row = nodes.slice(i, i + cols);
+    row.forEach((n, j2) => {
+      n.pos = [margin + j2 * pitch, y2];
+    });
+    y2 += Math.max(...row.map((n) => {
+      var _a4;
+      return Number((_a4 = n.size) == null ? void 0 : _a4[1]) || 100;
+    })) + margin + TITLE;
+  }
+  (_a3 = graph.setDirtyCanvas) == null ? void 0 : _a3.call(graph, true, true);
+  return nodes.length;
+}
+function handleArrangeCanvas(app2, cmd) {
+  const graph = app2 == null ? void 0 : app2.graph;
+  if (!graph) throw new Error("no graph available in this tab");
+  const margin = Math.max(20, Math.min(400, Number(cmd.margin) || 100));
+  if (cmd.layout === "grid") {
+    const columns = Number(cmd.columns) || void 0;
+    const arranged = arrangeGrid(graph, margin, columns);
+    return { arranged, margin, layout: "grid" };
+  }
+  if (typeof graph.arrange !== "function") {
+    throw new Error("the graph does not support arrange");
+  }
+  const vertical = cmd.layout === "vertical";
+  const lg = window.LiteGraph;
+  graph.arrange(margin, vertical ? lg == null ? void 0 : lg.VERTICAL_LAYOUT : void 0);
+  const count2 = Array.isArray(graph._nodes) ? graph._nodes.length : 0;
+  return { arranged: count2, margin, layout: vertical ? "vertical" : "horizontal" };
+}
 const WIDGET_VALUE_CAP = 2e3;
 const NODE_ERRORS_CAP = 1500;
 function rootGraph(app2) {
@@ -227025,6 +227096,21 @@ function opAddNode(app2, graph, op, updated) {
   if (op.title != null) node.title = String(op.title);
   applyWidgets(node, op.widgets, updated);
   return { op: "add_node", node_id: String(node.id), type };
+}
+function opMove(graph, op) {
+  const items = Array.isArray(op.nodes) ? op.nodes : [op];
+  if (!items.length) throw new Error("move needs node + pos, or nodes: [{node, pos}]");
+  const moved = [];
+  for (const it2 of items) {
+    const node = requireNode(graph, it2 == null ? void 0 : it2.node);
+    const pos = it2 == null ? void 0 : it2.pos;
+    if (!Array.isArray(pos) || pos.length !== 2 || !pos.every((v3) => Number.isFinite(Number(v3)))) {
+      throw new Error(`node ${node.id} needs pos [x, y]`);
+    }
+    node.pos = [Number(pos[0]), Number(pos[1])];
+    moved.push(String(node.id));
+  }
+  return { op: "move", node_ids: moved };
 }
 function opConnect(graph, op) {
   var _a3, _b2, _c;
@@ -227224,6 +227310,8 @@ function handleGraphEdit(app2, cmd) {
           const node = requireNode(graph, op.node);
           node.title = String(op.title ?? "");
           results.push({ op: name, node_id: String(node.id) });
+        } else if (name === "move") {
+          results.push(opMove(graph, op));
         } else if (name === "connect") {
           results.push(opConnect(graph, op));
         } else if (name === "disconnect") {
@@ -227251,7 +227339,7 @@ function handleGraphEdit(app2, cmd) {
           results.push(opUnpackSubgraph(graph, op));
         } else {
           throw new Error(
-            `unknown op '${name}' — valid: add_node, remove_node, set_widget, set_title, connect, disconnect, set_mode, clone, set_color, set_review, create_group, collapse, pin, convert_to_subgraph, unpack_subgraph`
+            `unknown op '${name}' — valid: add_node, remove_node, set_widget, set_title, move, connect, disconnect, set_mode, clone, set_color, set_review, create_group, collapse, pin, convert_to_subgraph, unpack_subgraph`
           );
         }
       } catch (e) {
@@ -227670,18 +227758,6 @@ function handleRemoveStage(app2, cmd) {
   app2.graph.remove(node);
   (_b2 = (_a3 = app2 == null ? void 0 : app2.graph) == null ? void 0 : _a3.setDirtyCanvas) == null ? void 0 : _b2.call(_a3, true, true);
   return { removed: true, ...removed };
-}
-function handleArrangeCanvas(app2, cmd) {
-  const graph = app2 == null ? void 0 : app2.graph;
-  if (typeof (graph == null ? void 0 : graph.arrange) !== "function") {
-    throw new Error("the graph does not support arrange");
-  }
-  const margin = Math.max(20, Math.min(400, Number(cmd.margin) || 100));
-  const vertical = cmd.layout === "vertical";
-  const lg = window.LiteGraph;
-  graph.arrange(margin, vertical ? lg == null ? void 0 : lg.VERTICAL_LAYOUT : void 0);
-  const count2 = Array.isArray(graph._nodes) ? graph._nodes.length : 0;
-  return { arranged: count2, margin, layout: vertical ? "vertical" : "horizontal" };
 }
 async function handleCancelStage(app2, cmd) {
   var _a3;
@@ -229000,7 +229076,7 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const MediaCornerV2 = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["__scopeId", "data-v-a1cae10f"]]);
+const MediaCornerV2 = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["__scopeId", "data-v-57424a1e"]]);
 const _hoisted_1$f = { class: "v2-params__count" };
 const _hoisted_2$e = {
   key: 0,
@@ -231202,7 +231278,7 @@ const _sfc_main$d = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const MediaPreviewV2 = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["__scopeId", "data-v-a8618759"]]);
+const MediaPreviewV2 = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["__scopeId", "data-v-538ea160"]]);
 const PICKER_CSS = `
 .v2-picker-footer {
   flex: none;
@@ -231571,9 +231647,9 @@ const _sfc_main$c = /* @__PURE__ */ defineComponent({
   },
   setup(__props) {
     const props = __props;
-    const { sourceImageUrl, bounds, setBounds, computing } = useCropStage(props.node, props.state);
+    const { sourceImageUrl, bounds: bounds2, setBounds, computing } = useCropStage(props.node, props.state);
     const dims2 = computed(() => {
-      const b2 = bounds.value;
+      const b2 = bounds2.value;
       return b2.width > 0 && b2.height > 0 ? `${Math.round(b2.width)} × ${Math.round(b2.height)}` : "—";
     });
     return (_ctx, _cache2) => {
@@ -231585,7 +231661,7 @@ const _sfc_main$c = /* @__PURE__ */ defineComponent({
         createBaseVNode("div", _hoisted_1$b, [
           createVNode(CropCanvas, {
             "source-image-url": unref(sourceImageUrl),
-            bounds: unref(bounds),
+            bounds: unref(bounds2),
             "onUpdate:bounds": unref(setBounds)
           }, null, 8, ["source-image-url", "bounds", "onUpdate:bounds"]),
           !unref(sourceImageUrl) ? (openBlock(), createElementBlock("div", _hoisted_2$a, toDisplayString$1(_ctx.$t("v2.cropHint")), 1)) : createCommentVNode("", true)
@@ -233748,7 +233824,7 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const FxChainCardV2 = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["__scopeId", "data-v-0daaaa23"]]);
+const FxChainCardV2 = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["__scopeId", "data-v-9016d1f4"]]);
 const ICON_COLOR = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 010 18c-1.5 0-2-1-1.3-2.2.8-1.4-.2-2.8-1.9-2.8H7a4 4 0 01-4-4"/><circle cx="8" cy="9" r="1.2" fill="currentColor" stroke="none"/><circle cx="13" cy="7" r="1.2" fill="currentColor" stroke="none"/><circle cx="17" cy="11" r="1.2" fill="currentColor" stroke="none"/></svg>`;
 const ICON_CURVE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20C10 20 14 4 20 4"/><path d="M4 20V4M4 20h16"/></svg>`;
 const ICON_CHAIN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="5" height="5" rx="1.2"/><rect x="16" y="6" width="5" height="5" rx="1.2"/><rect x="9.5" y="14" width="5" height="5" rx="1.2"/><path d="M8 8.5h8M5.5 11v3.5a2 2 0 002 2h2M18.5 11v3.5a2 2 0 01-2 2h-2"/></svg>`;
@@ -235634,7 +235710,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const TextCornerV2 = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-23417f1a"]]);
+const TextCornerV2 = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-8a37d902"]]);
 const KIND_ICONS = {
   image: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="M4 18l5.2-5.2 3.4 3.4 3.2-3.2L21 18"/></svg>`,
   video: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M10 9.5l5 2.5-5 2.5z"/></svg>`,
@@ -236434,4 +236510,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-C2pbiX7F.mjs.map
+//# sourceMappingURL=main-8MAmRp-G.mjs.map

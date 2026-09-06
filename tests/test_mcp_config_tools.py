@@ -170,6 +170,8 @@ class TestWorkflowEdit:
         assert len(out["warnings"]) == 1
         assert "option:bogus is not a known option for image stages" in out["warnings"][0]
         assert "'batch_size'" in out["warnings"][0]
+        for infra in ("force_run_token", "project_id", "custom_params"):
+            assert f"'{infra}'" not in out["warnings"][0]
 
     async def test_set_meta(self, workflow_row):
         from ComfyTV.api.mcp_tools import _workflow_edit, _workflow_get

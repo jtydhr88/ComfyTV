@@ -106,6 +106,32 @@ describe('handleGraphEdit', () => {
     })).toThrow(/no widget 'nope'.*ckpt_name/)
   })
 
+  it('move sets pos through the setter, singly and in batch', () => {
+    const a = makeNode({ id: 4, pos: [0, 0] })
+    const b = makeNode({ id: 5, pos: [0, 0] })
+    const { app } = makeApp([a, b])
+    const setter = vi.fn()
+    Object.defineProperty(a, 'pos', { set: setter, get: () => [0, 0], configurable: true })
+    const out = handleGraphEdit(app, { ops: [
+      { op: 'move', node: '4', pos: [160, '756'] },
+      { op: 'move', nodes: [{ node: 5, pos: [640, 160] }] },
+    ] })
+    expect(setter).toHaveBeenCalledWith([160, 756])
+    expect((b as any).pos).toEqual([640, 160])
+    expect(out.applied).toEqual([
+      { op: 'move', node_ids: ['4'] },
+      { op: 'move', node_ids: ['5'] },
+    ])
+  })
+
+  it('move rejects a malformed pos and unknown nodes', () => {
+    const { app } = makeApp([makeNode()])
+    expect(() => handleGraphEdit(app, { ops: [{ op: 'move', node: '4', pos: [1] }] }))
+      .toThrow(/needs pos \[x, y\]/)
+    expect(() => handleGraphEdit(app, { ops: [{ op: 'move', node: '9', pos: [1, 2] }] }))
+      .toThrow(/9/)
+  })
+
   it('connect resolves slots by name and by free-compatible fallback', () => {
     const src = makeNode()
     const dst = makeNode({
