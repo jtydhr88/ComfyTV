@@ -16,7 +16,7 @@ class TestAdopt:
         from ComfyTV import storage
         old = _persist("7", url="/old")
         new = _persist("7", url="/new")
-        row = storage.adopt_outputs("default", "7", "ImageStage", "uid-a")
+        row = storage.adopt_outputs("default", "7", "ImageStage", "uid-a", since="2000-01-01")
         assert row["id"] == new["id"] and row["stage_uid"] == "uid-a"
         assert storage.latest_output("default", "7", orphans_only=True)["id"] == old["id"]
 
@@ -27,13 +27,16 @@ class TestAdopt:
         assert storage.adopt_outputs("default", "255", "ImageStage", "uid-b", since=later) is None
         earlier = (datetime.now(timezone.utc) - timedelta(minutes=5)).isoformat()
         assert storage.adopt_outputs("default", "255", "ImageStage", "uid-b", since=earlier) is not None
-        assert storage.adopt_outputs("default", "255", "ImageStage", "uid-c") is None
+        assert storage.adopt_outputs("default", "255", "ImageStage", "uid-c", since="2000-01-01") is None
+        _persist("256", url="/no-since")
+        assert storage.adopt_outputs("default", "256", "ImageStage", "uid-e") is None
+        assert storage.adopt_outputs("default", "256", "ImageStage", "uid-e", since="garbage") is None
 
     def test_class_and_owned_rows_are_never_adopted(self, reset_db):
         from ComfyTV import storage
         _persist("3", stage_class="PanoramaStage")
         _persist("3", stage_class="ImageStage", uid="someone-else")
-        assert storage.adopt_outputs("default", "3", "ImageStage", "uid-d") is None
+        assert storage.adopt_outputs("default", "3", "ImageStage", "uid-d", since="2000-01-01") is None
 
 
 class TestPersistWithUid:

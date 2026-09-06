@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { claimStageUid, ensureStageUid, getStageUid, releaseStageUid, stageClassName, getStageUidClaimedAt } from './stageIdentity'
+import { claimStageUid, ensureStageUid, getStageUid, releaseStageUid, stageClassName, getStageUidClaimedAt, ensureStageUidClaimedAt } from './stageIdentity'
 
 describe('ensureStageUid (claim timestamp)', () => {
   it('records when a uid was first minted', () => {
@@ -11,7 +11,11 @@ describe('ensureStageUid (claim timestamp)', () => {
     const at = node.properties.comfytv_stage_uid_at
     ensureStageUid(node)
     expect(node.properties.comfytv_stage_uid_at).toBe(at)
-    expect(getStageUidClaimedAt({ properties: { comfytv_stage_uid: 'legacy' } })).toBeNull()
+    const legacy: any = { properties: { comfytv_stage_uid: 'legacy' } }
+    expect(getStageUidClaimedAt(legacy)).toBeNull()
+    const minted = ensureStageUidClaimedAt(legacy)
+    expect(legacy.properties.comfytv_stage_uid_at).toBe(minted)
+    expect(ensureStageUidClaimedAt(legacy)).toBe(minted)
   })
 })
 

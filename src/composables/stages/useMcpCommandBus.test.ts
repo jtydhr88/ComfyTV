@@ -309,6 +309,24 @@ describe('installMcpCommandBus', () => {
     expect(node.widgets[1].value).toBe('16:9')
   })
 
+  it('set_stage refuses a workflow the combo does not offer (hidden or unknown)', async () => {
+    const node = makeNode({
+      widgets: [{ name: 'workflow', value: 'A', options: { values: ['A', 'B'] } }],
+    })
+    const { host, deps } = makeHost([node])
+    uninstall = installMcpCommandBus(host, deps)
+    await dispatch(host, { id: 'c1', action: 'set_stage', node: 'u1', workflow: 'Ghost' })
+    let results = postedResults()
+    expect(results[results.length - 1].ok).toBe(false)
+    expect(results[results.length - 1].error).toContain("'Ghost' is not selectable")
+    expect(results[results.length - 1].error).toContain('selectable: A, B')
+    expect(node.widgets[0].value).toBe('A')
+    await dispatch(host, { id: 'c2', action: 'set_stage', node: 'u1', workflow: 'B' })
+    results = postedResults()
+    expect(results[results.length - 1].ok).toBe(true)
+    expect(node.widgets[0].value).toBe('B')
+  })
+
   it('set_stage lists widget names on an unknown widget', async () => {
     const node = makeNode()
     const { host, deps } = makeHost([node])

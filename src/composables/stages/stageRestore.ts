@@ -1,6 +1,6 @@
 import { watch } from 'vue'
 
-import { ensureStageUid, getStageUidClaimedAt, stageClassName } from '@/composables/stages/stageIdentity'
+import { ensureStageUid, ensureStageUidClaimedAt, stageClassName } from '@/composables/stages/stageIdentity'
 import { outputTypeForKind } from '@/composables/stages/stageOutputType'
 import { useProjectStore } from '@/stores/projectStore'
 import {
@@ -88,7 +88,7 @@ export function bindOutputRestore(opts: {
         adoptionTried = true
         latest = await projectStore.adoptOutputs(
           projectId, String(node.id), stageClassName(node), uid, outputTypeForKind(kind),
-          getStageUidClaimedAt(node),
+          ensureStageUidClaimedAt(node),
         )
       }
       if (!latest) {

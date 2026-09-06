@@ -90,8 +90,15 @@ function checkWidgetValue(w: any, name: string, value: unknown): void {
 function applyStageFields(node: any, cmd: any): string[] {
   const updated: string[] = []
   if (cmd.workflow != null) {
-    if (!getWidget(node, 'workflow')) {
+    const wf = getWidget(node, 'workflow')
+    if (!wf) {
       throw new Error('this stage has no workflow selector')
+    }
+    const choices = (wf as any).options?.values
+    if (Array.isArray(choices) && !choices.map(String).includes(String(cmd.workflow))) {
+      throw new Error(
+        `workflow '${String(cmd.workflow)}' is not selectable on this stage — it is hidden or not `
+        + `installed for this kind; selectable: ${choices.map(String).join(', ') || '(none)'}`)
     }
     writeWidget(node, 'workflow', String(cmd.workflow))
     updated.push('workflow')

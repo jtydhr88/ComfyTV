@@ -113,6 +113,12 @@ def _probe_av(src: Path, prefer_audio: bool) -> dict | None:
                 }
                 if v.frames:
                     out['frames'] = int(v.frames)
+                if a is not None:
+                    out['audio'] = {
+                        'sample_rate': int(a.sample_rate or 0) or None,
+                        'channels': int(getattr(a, 'channels', 0) or 0) or None,
+                        'codec': getattr(a.codec_context, 'name', None),
+                    }
                 return out
             if a is not None:
                 return {

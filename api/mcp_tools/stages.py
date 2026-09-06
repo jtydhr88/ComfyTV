@@ -21,11 +21,19 @@ def _validate_workflow_label(stage_class: str, label: str) -> None:
         raise ValueError(
             f"{stage_class} has no workflow selector — drop the 'workflow' argument"
         )
-    labels = [w["label"] for w in workflow_db.list_workflows_overview(kind)]
-    if label not in labels:
+    rows = workflow_db.list_workflows_overview(kind)
+    visible = [w["label"] for w in rows if not w.get("is_hidden")]
+    hidden = [w["label"] for w in rows if w.get("is_hidden")]
+    if label in hidden:
+        raise ValueError(
+            f"workflow {label!r} is hidden for kind {kind!r} — the stage's "
+            f"combo omits hidden workflows so the run would fail; unhide it in "
+            f"the Stages panel, or pick one of: {', '.join(visible) or '(none)'}"
+        )
+    if label not in visible:
         raise ValueError(
             f"workflow {label!r} not found for kind {kind!r} — "
-            f"valid labels: {', '.join(labels) or '(none)'}"
+            f"valid labels: {', '.join(visible) or '(none)'}"
         )
 
 def _validate_widgets(args: dict) -> None:
@@ -93,11 +101,27 @@ async def _set_stage(args: dict) -> dict:
     _validate_widgets(args)
     _validate_server(args)
     _validate_asset_refs(args)
+    if args.get("workflow"):
+        cls = _mirrored_stage_class(args.get("project_id"), str(node))
+        if cls:
+            _validate_workflow_label(cls, str(args["workflow"]))
     payload = _command_payload(
         args, ("prompt", "workflow", "title", "widgets", "server",
                "asset_refs", "project_id"))
     payload["node"] = str(node)
     return await _shared.submit_command("set_stage", payload)
+
+def _mirrored_stage_class(project_id, node_ref: str) -> str | None:
+    from ..canvas_state import get_canvas_state
+    snap = get_canvas_state(project_id)
+    if not snap.get("available"):
+        return None
+    for s in snap.get("stages", []):
+        uid = str(s.get("uid") or "")
+        if str(s.get("graph_node_id")) == node_ref or uid == node_ref                 or (len(node_ref) >= 8 and uid.startswith(node_ref)):
+            cls = str(s.get("stage_class") or "")
+            return f"ComfyTV.{cls}" if cls else None
+    return None
 
 async def _connect_stages(args: dict) -> dict:
     from_node = args.get("from_node")

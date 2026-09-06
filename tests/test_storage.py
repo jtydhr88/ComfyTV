@@ -240,7 +240,8 @@ class TestStageUidIdentity:
                 project_id="default", stage_class="CropStage", stage_node_id="7",
                 output_type="image", payload_url=f"/view?filename={name}",
             )
-        adopted = storage.adopt_outputs("default", "7", "CropStage", "uid-crop")
+        adopted = storage.adopt_outputs("default", "7", "CropStage", "uid-crop",
+                                        since="2000-01-01T00:00:00+00:00")
         assert adopted is not None
         assert adopted["payload_url"].endswith("OLD2.png")  # latest
 
@@ -254,9 +255,11 @@ class TestStageUidIdentity:
             project_id="default", stage_class="CropStage", stage_node_id="7",
             output_type="image", payload_url="/view?filename=a.png",
         )
-        assert storage.adopt_outputs("default", "7", "CropStage", "uid-1") is not None
+        since = "2000-01-01T00:00:00+00:00"
+        assert storage.adopt_outputs("default", "7", "CropStage", "uid-1", since=since) is not None
 
-        assert storage.adopt_outputs("default", "7", "CropStage", "uid-2") is None
+        assert storage.adopt_outputs("default", "7", "CropStage", "uid-2", since=since) is None
+        assert storage.adopt_outputs("default", "7", "CropStage", "uid-3", since="2000-01-01") is None
 
     def test_adopt_requires_class_match(self, reset_db):
         from ComfyTV import storage
@@ -265,7 +268,7 @@ class TestStageUidIdentity:
             output_type="image", payload_url="/view?filename=a.png",
         )
 
-        assert storage.adopt_outputs("default", "2", "CropStage", "uid-x") is None
+        assert storage.adopt_outputs("default", "2", "CropStage", "uid-x", since="2000-01-01") is None
 
     def test_adopt_rejects_output_type_mismatch(self, reset_db):
         from ComfyTV import storage
@@ -273,7 +276,7 @@ class TestStageUidIdentity:
             project_id="default", stage_class="TextStage", stage_node_id="1",
             output_type="image", payload_url="a text payload, not a url",
         )
-        assert storage.adopt_outputs("default", "1", "TextStage", "uid-t", output_type="text") is None
+        assert storage.adopt_outputs("default", "1", "TextStage", "uid-t", output_type="text", since="2000-01-01") is None
         assert storage.list_outputs("default", stage_node_id="1")[0]["stage_uid"] is None
 
     def test_adopt_claims_matching_output_type(self, reset_db):
@@ -282,7 +285,7 @@ class TestStageUidIdentity:
             project_id="default", stage_class="TextStage", stage_node_id="1",
             output_type="text", payload_url="hello",
         )
-        adopted = storage.adopt_outputs("default", "1", "TextStage", "uid-t", output_type="text")
+        adopted = storage.adopt_outputs("default", "1", "TextStage", "uid-t", output_type="text", since="2000-01-01")
         assert adopted is not None
         assert adopted["payload_url"] == "hello"
 

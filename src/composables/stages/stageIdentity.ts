@@ -28,6 +28,15 @@ export function getStageUidClaimedAt(node: any): string | null {
   return typeof at === 'string' && at ? at : null
 }
 
+export function ensureStageUidClaimedAt(node: any): string {
+  const at = getStageUidClaimedAt(node)
+  if (at) return at
+  if (!node.properties || typeof node.properties !== 'object') node.properties = {}
+  const now = new Date().toISOString()
+  node.properties[PROP_AT] = now
+  return now
+}
+
 export function getStageUid(node: any): string {
   const uid = node?.properties?.[PROP]
   return typeof uid === 'string' ? uid : ''

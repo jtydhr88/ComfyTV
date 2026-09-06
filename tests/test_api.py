@@ -291,14 +291,27 @@ class TestOutputsRoutes:
         )
         resp = await client.post("/comfytv/projects/default/outputs/adopt",
                                  json={"stage_node_id": "7", "stage_class": "CropStage",
-                                       "stage_uid": "uid-crop"})
+                                       "stage_uid": "uid-crop", "since": "2000-01-01T00:00:00+00:00"})
         data = await resp.json()
         assert data["output"]["payload_url"] == "/old"
         # idempotent / one-time: a different uid can't re-claim
         resp2 = await client.post("/comfytv/projects/default/outputs/adopt",
                                   json={"stage_node_id": "7", "stage_class": "CropStage",
-                                        "stage_uid": "uid-other"})
+                                        "stage_uid": "uid-other", "since": "2000-01-01T00:00:00+00:00"})
         assert (await resp2.json())["output"] is None
+
+    async def test_adopt_without_since_fails_closed(self, client):
+        from ComfyTV import storage
+        storage.persist_output(
+            project_id="default", stage_class="CropStage", stage_node_id="8",
+            output_type="image", payload_url="/orphan",
+        )
+        resp = await client.post("/comfytv/projects/default/outputs/adopt",
+                                 json={"stage_node_id": "8", "stage_class": "CropStage",
+                                       "stage_uid": "deadbeef"})
+        assert resp.status == 400
+        assert "since" in (await resp.json())["error"]
+        assert storage.latest_output("default", "8")["stage_uid"] is None
 
     async def test_adopt_outputs_requires_fields(self, client):
         resp = await client.post("/comfytv/projects/default/outputs/adopt",

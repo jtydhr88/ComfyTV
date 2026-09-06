@@ -143,7 +143,7 @@ export const useProjectStore = defineStore('comfytv-project', () => {
     outputType?: string,
     since?: string | null,
   ) {
-    if (!projectId || !stageNodeId || !stageClass || !stageUid) return null
+    if (!projectId || !stageNodeId || !stageClass || !stageUid || !since) return null
     try {
       const data = await apiSend(
         `/comfytv/projects/${encodeURIComponent(projectId)}/outputs/adopt`,
@@ -151,7 +151,7 @@ export const useProjectStore = defineStore('comfytv-project', () => {
         LatestOutputSchema,
         {
           stage_node_id: stageNodeId, stage_class: stageClass, stage_uid: stageUid,
-          output_type: outputType, ...(since ? { since } : {}),
+          output_type: outputType, since,
         },
       )
       return data.output

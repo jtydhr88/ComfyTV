@@ -23,6 +23,33 @@ def _get_nested_lock() -> asyncio.Lock:
     return _NESTED_LOCK
 
 
+class NestedWorkflowError(RuntimeError):
+    def __init__(self, sub_prompt_id: str, detail: dict | None = None):
+        self.sub_prompt_id = sub_prompt_id
+        self.detail = dict(detail or {})
+        d = self.detail
+        if d:
+            head = (
+                f"Local workflow failed — {d.get('node_type') or 'node'} "
+                f"#{d.get('node_id')} raised {d.get('exception_type') or 'Exception'}"
+            )
+            msg = str(d.get('exception_message') or '').strip()
+            if msg:
+                head += f": {msg}"
+        else:
+            head = "Local workflow failed"
+        super().__init__(f"{head} (sub_prompt_id={sub_prompt_id})")
+        tb = d.get('traceback')
+        self.inner_traceback = ''.join(tb) if isinstance(tb, list) else (tb or None)
+
+
+def last_execution_error(executor) -> dict | None:
+    for event, data in reversed(list(getattr(executor, 'status_messages', None) or [])):
+        if event == 'execution_error' and isinstance(data, dict):
+            return data
+    return None
+
+
 def _get_nested_executor():
     global _NESTED_EXECUTOR
     if _NESTED_EXECUTOR is not None:
@@ -157,9 +184,7 @@ async def _run_subprompt(sub_prompt: dict, sub_prompt_id: str,
                 _progress_mod.global_progress_registry = outer_registry
 
         if not executor.success:
-            raise RuntimeError(
-                f"Local workflow failed (sub_prompt_id={sub_prompt_id})"
-            )
+            raise NestedWorkflowError(sub_prompt_id, last_execution_error(executor))
         return executor
 
 

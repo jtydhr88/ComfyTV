@@ -48,14 +48,18 @@ class TestMediaTools:
 
     async def test_probe_delegates(self, reset_db, monkeypatch):
         from ComfyTV.api import mcp_tools
-        from ComfyTV.runners import media
-        monkeypatch.setattr(media, "get_video_info", lambda url: {
-            "duration": 4.0, "fps": 24.0, "width": 1280, "height": 720,
-            "has_audio": True, "_url": url,
+        from ComfyTV.runners import media_info
+        seen = {}
+        monkeypatch.setattr(media_info, "probe_media", lambda url: seen.setdefault("url", url) and {
+            "kind": "video", "format": "MP4", "size_bytes": 10, "duration_s": 4.0, "fps": 24.0,
+            "width": 1280, "height": 720, "has_audio": True, "codec": "h264",
+            "audio": {"sample_rate": 48000, "channels": 2, "codec": "aac"},
         })
         out = await mcp_tools._media_probe({"url": "/view?x"})
-        assert out["duration"] == 4.0
-        assert out["_url"] == "/view?x"
+        assert seen["url"] == "/view?x"
+        assert out["kind"] == "video" and out["duration"] == 4.0 and out["fps"] == 24.0
+        assert (out["width"], out["height"], out["has_audio"]) == (1280, 720, True)
+        assert out["audio"] == {"sample_rate": 48000, "channels": 2, "codec": "aac"}
 
     async def test_frame_delegates_with_position(self, reset_db, monkeypatch):
         from ComfyTV.api import mcp_tools

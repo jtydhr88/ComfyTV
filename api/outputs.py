@@ -65,10 +65,17 @@ async def adopt_outputs(request: web.Request) -> web.Response:
         return web.json_response(
             {"error": "stage_node_id, stage_class and stage_uid are required"}, status=400
         )
+    since = body.get("since")
+    if storage.parse_output_since(since) is None:
+        return web.json_response(
+            {"error": "since (ISO timestamp of when this stage claimed its uid) is "
+                      "required — adoption is bounded to the stage's own lifetime"},
+            status=400,
+        )
     row = storage.adopt_outputs(
         pid, str(stage_node_id), str(stage_class), str(stage_uid),
         output_type=str(output_type) if output_type else None,
-        since=body.get("since"),
+        since=since,
     )
     return web.json_response({"output": row})
 

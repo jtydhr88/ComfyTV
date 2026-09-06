@@ -189,7 +189,9 @@ def adopt_outputs(
 ) -> Optional[dict]:
     if not stage_uid or not stage_node_id or not stage_class:
         return None
-    since_dt = _parse_since(since)
+    since_dt = parse_output_since(since)
+    if since_dt is None:
+        return None
     with db.get_session() as s:
         q = s.query(Output).filter(
             Output.project_id == project_id,
@@ -209,7 +211,7 @@ def adopt_outputs(
         return _output_to_dict(row)
 
 
-def _parse_since(value: Any):
+def parse_output_since(value: Any):
     from datetime import datetime, timezone
     if value is None or value == "":
         return None

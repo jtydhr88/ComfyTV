@@ -170,7 +170,7 @@ describe('projectStore', () => {
   it('adoptOutputs posts stage identity and returns the adopted row', async () => {
     mockSend.mockResolvedValueOnce({ output: { id: 9, project_id: 'p1' } })
     const store = useProjectStore()
-    const row = await store.adoptOutputs('p1', '12', 'ComfyTVImageStage', 'uid-1', 'image')
+    const row = await store.adoptOutputs('p1', '12', 'ComfyTVImageStage', 'uid-1', 'image', '2026-09-06T00:00:00Z')
     expect(row).toEqual({ id: 9, project_id: 'p1' })
     const [url, method, , body] = mockSend.mock.calls.at(-1)!
     expect(url).toBe('/comfytv/projects/p1/outputs/adopt')
@@ -180,7 +180,15 @@ describe('projectStore', () => {
       stage_class: 'ComfyTVImageStage',
       stage_uid: 'uid-1',
       output_type: 'image',
+      since: '2026-09-06T00:00:00Z',
     })
+  })
+
+  it('adoptOutputs refuses to call without a since bound', async () => {
+    const store = useProjectStore()
+    expect(await store.adoptOutputs('p1', '12', 'C', 'u', 'image')).toBeNull()
+    expect(await store.adoptOutputs('p1', '12', 'C', 'u', 'image', '')).toBeNull()
+    expect(mockSend).not.toHaveBeenCalled()
   })
 
   it('adoptOutputs returns null when any identity arg is blank', async () => {
@@ -196,7 +204,7 @@ describe('projectStore', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     mockSend.mockRejectedValueOnce(new Error('boom'))
     const store = useProjectStore()
-    expect(await store.adoptOutputs('p1', '12', 'C', 'u')).toBeNull()
+    expect(await store.adoptOutputs('p1', '12', 'C', 'u', 'image', '2026-09-06T00:00:00Z')).toBeNull()
     expect(warn).toHaveBeenCalled()
     warn.mockRestore()
   })

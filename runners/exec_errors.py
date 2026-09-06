@@ -19,7 +19,12 @@ def record_exec_error(*, kind: str, label: str, error: BaseException,
     except AttributeError:
         pass
     tb = traceback.format_exc()
-    if len(tb) > _TRACEBACK_TAIL_CHARS:
+    inner = getattr(error, "inner_traceback", None)
+    if inner:
+        inner_budget = _TRACEBACK_TAIL_CHARS * 7 // 10
+        tb = (f"{inner[-inner_budget:]}\n--- ComfyTV wrapper ---\n"
+              f"{tb[-(_TRACEBACK_TAIL_CHARS - inner_budget):]}")
+    elif len(tb) > _TRACEBACK_TAIL_CHARS:
         tb = tb[-_TRACEBACK_TAIL_CHARS:]
     _errors.append({
         "ts": time.time(),

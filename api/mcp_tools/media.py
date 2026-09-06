@@ -8,8 +8,35 @@ async def _media_probe(args: dict) -> dict:
     url = str(args.get("url") or "")
     if not url:
         raise ValueError("url is required (a /view?… payload_url)")
-    from ...runners import media
-    return await asyncio.to_thread(media.get_video_info, url)
+    from ...runners.media_info import probe_media
+    info = await asyncio.to_thread(probe_media, url)
+    return _shape_probe(info)
+
+
+def _shape_probe(info: dict) -> dict:
+    kind = str(info.get("kind") or "other")
+    out: dict = {"kind": kind, "format": info.get("format"),
+                 "size_bytes": info.get("size_bytes")}
+    if kind == "video":
+        out.update({
+            "duration": info.get("duration_s"), "fps": info.get("fps"),
+            "width": info.get("width"), "height": info.get("height"),
+            "has_audio": bool(info.get("has_audio")), "codec": info.get("codec"),
+        })
+        if info.get("frames"):
+            out["frames"] = info["frames"]
+        if info.get("audio"):
+            out["audio"] = info["audio"]
+    elif kind == "audio":
+        out.update({
+            "duration": info.get("duration_s"), "sample_rate": info.get("sample_rate"),
+            "channels": info.get("channels"), "codec": info.get("codec"),
+        })
+    elif kind == "image":
+        out.update({"width": info.get("width"), "height": info.get("height")})
+        if info.get("frames"):
+            out["frames"] = info["frames"]
+    return out
 
 async def _media_frame(args: dict) -> dict:
     url = str(args.get("url") or "")
@@ -168,10 +195,15 @@ async def _fx_preview(args: dict) -> dict:
 TOOLS: dict[str, dict] = {
     "media_probe": {
         "description": (
-            "Probe a video file's metadata: duration (seconds), fps, width, "
-            "height, has_audio. url is a /view?… payload_url from outputs, "
-            "assets or wait_stage results. Use to verify a render's length "
-            "and resolution before wiring it downstream."
+            "Probe a media file's metadata. Video: kind='video', duration "
+            "(seconds), fps, width, height, has_audio, codec and, when a "
+            "soundtrack exists, audio {sample_rate, channels, codec}. Audio: "
+            "kind='audio', duration, sample_rate, channels, codec. Image: "
+            "kind='image', width, height (frames for animations). 3D files "
+            "report kind='model'. Every answer carries format and size_bytes. "
+            "url is a /view?… payload_url from outputs, assets or wait_stage "
+            "results. Use it to verify a render's length, resolution or "
+            "sample rate before wiring it downstream."
         ),
         "inputSchema": {
             "type": "object",

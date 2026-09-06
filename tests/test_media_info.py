@@ -144,3 +144,27 @@ class TestEndpoint:
         body = await r.json()
         assert body['kind'] == 'image'
         assert body['width'] == 640
+
+
+class TestMcpProbe:
+    async def test_audio_is_probed_not_rejected(self, audio_path):
+        from ComfyTV.api.mcp_tools.media import _media_probe
+        out = await _media_probe({"url": _url(audio_path)})
+        assert out["kind"] == "audio"
+        assert out["sample_rate"] == 16000 and out["channels"] == 1
+        assert out["duration"] == pytest.approx(1.0, abs=0.05)
+        assert out["format"] == "WAV" and out["size_bytes"] == audio_path.stat().st_size
+
+    async def test_video_keeps_the_old_keys(self, video_path):
+        from ComfyTV.api.mcp_tools.media import _media_probe
+        out = await _media_probe({"url": _url(video_path)})
+        assert out["kind"] == "video"
+        assert (out["width"], out["height"]) == (320, 240)
+        assert out["fps"] == pytest.approx(8.0, abs=0.01)
+        assert out["duration"] == pytest.approx(1.0, abs=0.2)
+        assert out["has_audio"] is False and "audio" not in out
+
+    async def test_image(self, image_path):
+        from ComfyTV.api.mcp_tools.media import _media_probe
+        out = await _media_probe({"url": _url(image_path)})
+        assert out["kind"] == "image" and (out["width"], out["height"]) == (640, 360)

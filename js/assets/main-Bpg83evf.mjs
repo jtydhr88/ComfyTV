@@ -58582,7 +58582,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-BUbbhyJj.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-BMGXIxjm.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -62228,6 +62228,14 @@ function getStageUidClaimedAt(node) {
   const at2 = (_a3 = node == null ? void 0 : node.properties) == null ? void 0 : _a3[PROP_AT];
   return typeof at2 === "string" && at2 ? at2 : null;
 }
+function ensureStageUidClaimedAt(node) {
+  const at2 = getStageUidClaimedAt(node);
+  if (at2) return at2;
+  if (!node.properties || typeof node.properties !== "object") node.properties = {};
+  const now2 = (/* @__PURE__ */ new Date()).toISOString();
+  node.properties[PROP_AT] = now2;
+  return now2;
+}
 function getStageUid(node) {
   var _a3;
   const uid2 = (_a3 = node == null ? void 0 : node.properties) == null ? void 0 : _a3[PROP];
@@ -62824,7 +62832,7 @@ const useProjectStore = /* @__PURE__ */ defineStore("comfytv-project", () => {
     });
   }
   async function adoptOutputs(projectId, stageNodeId, stageClass, stageUid, outputType, since) {
-    if (!projectId || !stageNodeId || !stageClass || !stageUid) return null;
+    if (!projectId || !stageNodeId || !stageClass || !stageUid || !since) return null;
     try {
       const data = await apiSend(
         `/comfytv/projects/${encodeURIComponent(projectId)}/outputs/adopt`,
@@ -62835,7 +62843,7 @@ const useProjectStore = /* @__PURE__ */ defineStore("comfytv-project", () => {
           stage_class: stageClass,
           stage_uid: stageUid,
           output_type: outputType,
-          ...since ? { since } : {}
+          since
         }
       );
       return data.output;
@@ -143181,7 +143189,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-DM21UjzD.mjs");
+    const { STLLoader } = await import("./STLLoader-BZ4bevdo.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -143189,7 +143197,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-BzKqfg1E.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-jYhyUCfN.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -225956,7 +225964,7 @@ function bindOutputRestore(opts) {
           stageClassName(node),
           uid2,
           outputTypeForKind(kind),
-          getStageUidClaimedAt(node)
+          ensureStageUidClaimedAt(node)
         );
       }
       if (!latest) {
@@ -227827,10 +227835,18 @@ function checkWidgetValue(w2, name, value) {
   }
 }
 function applyStageFields(node, cmd) {
+  var _a3;
   const updated = [];
   if (cmd.workflow != null) {
-    if (!getWidget(node, "workflow")) {
+    const wf = getWidget(node, "workflow");
+    if (!wf) {
       throw new Error("this stage has no workflow selector");
+    }
+    const choices = (_a3 = wf.options) == null ? void 0 : _a3.values;
+    if (Array.isArray(choices) && !choices.map(String).includes(String(cmd.workflow))) {
+      throw new Error(
+        `workflow '${String(cmd.workflow)}' is not selectable on this stage — it is hidden or not installed for this kind; selectable: ${choices.map(String).join(", ") || "(none)"}`
+      );
     }
     writeWidget(node, "workflow", String(cmd.workflow));
     updated.push("workflow");
@@ -236855,4 +236871,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-Dp-BUjwz.mjs.map
+//# sourceMappingURL=main-Bpg83evf.mjs.map
