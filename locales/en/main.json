@@ -280,8 +280,7 @@
       "cancel": "No",
       "modeAppend": "Mode: Append",
       "modeReplace": "Mode: Replace",
-      "modeHint": "How new run results enter the pool (click to switch). Append: keep existing items and add new ones on top. Replace: keep only the latest batch. Identical images are kept once — the pool dedupes by image.",
-      "dupSkipped": "{n} duplicate image(s) skipped — the pool keeps each image once"
+      "modeHint": "How new run results enter the pool (click to switch). Append: keep existing items and add new ones on top. Replace: keep only the latest batch. Identical images are kept once — the pool dedupes by image."
     },
     "empty": {
       "no_output": "no output yet",

@@ -1,6 +1,5 @@
 import { watch } from 'vue'
 
-import { t } from '@/i18n'
 
 import { useChainCallback } from '@/composables/functional/useChainCallback'
 import { setWidget } from '@/composables/stages/spawnFollowUp'
@@ -134,45 +133,28 @@ export function useStageNode(
   )
 
   let lastMergedBatch = ''
-  let lastMergedOutputId: number | null = null
-  const toastDupSkipped = (n: number) => {
-    ;(app as any)?.extensionManager?.toast?.add?.({
-      severity: 'info', summary: t('stage.pool.dupSkipped', { n }), life: 4000,
-    })
-  }
   const stopPickerWatch = isPoolPickerKind(kind)
     ? watch(
         () => {
           const inp = state.inputs.find(i => i.slot === 'batch')
-          return [inp?.source ?? '', inp?.content ?? '', state.pickedIndex ?? 0, inp?.outputId ?? null] as const
+          return [inp?.source ?? '', inp?.content ?? '', state.pickedIndex ?? 0] as const
         },
         () => {
           const inp = state.inputs.find(i => i.slot === 'batch')
 
-          if (inp && inp.source === 'upstream' && inp.content) {
+          if (inp && inp.source === 'upstream' && inp.content && inp.content !== lastMergedBatch) {
+            lastMergedBatch = inp.content
             const appendW = node.widgets?.find((w: any) => w.name === 'append_results')
             const append = !appendW || appendW.value !== false
-            const newRun = inp.outputId != null && lastMergedOutputId != null
-              && inp.outputId !== lastMergedOutputId
-            if (inp.content !== lastMergedBatch) {
-              lastMergedBatch = inp.content
-              lastMergedOutputId = inp.outputId ?? null
-              const before = imagePoolCount(state.pool)
-              const incoming = toImagePoolJson(inp.content)
-              const merged = nextPickerPool(state.pool, incoming, append)
-              store.setPickerPool(node, state, merged)
-              const added = imagePoolCount(merged) - before
-              const skipped = append ? imagePoolCount(incoming) - added : 0
-              if (skipped > 0) toastDupSkipped(skipped)
+            const before = imagePoolCount(state.pool)
+            const merged = nextPickerPool(state.pool, toImagePoolJson(inp.content), append)
+            store.setPickerPool(node, state, merged)
+            const added = imagePoolCount(merged) - before
 
-              if (!append || added > 0) {
-                state.pickedIndex = 1
-                setWidget(node, 'selected_index', 1)
-              }
-            } else if (append && newRun) {
-              toastDupSkipped(imagePoolCount(toImagePoolJson(inp.content)))
+            if (!append || added > 0) {
+              state.pickedIndex = 1
+              setWidget(node, 'selected_index', 1)
             }
-            if (inp.outputId != null) lastMergedOutputId = inp.outputId
           }
           const after: string | null = state.pool
             ? computePickedImageUrl(state)

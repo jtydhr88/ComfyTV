@@ -54,7 +54,6 @@ export interface ResolvedInput {
   type: TypedValueType
   source: InputSource
   content: string | null
-  outputId?: number | null
 }
 
 export interface StageState {
@@ -250,16 +249,6 @@ export const useStageStore = defineStore('comfytv-stage', () => {
     return null
   }
 
-  function upstreamOutputId(app: any, linkId: unknown): number | null {
-    const linksMap: any = app?.graph?.links
-    const link = (linksMap && typeof linksMap.get === 'function')
-      ? linksMap.get(linkId)
-      : (linksMap?.[linkId as any] ?? app?.graph?.getLink?.(linkId))
-    const srcNode = link ? app?.graph?.getNodeById?.(link.origin_id) : null
-    const id = srcNode ? stages.get(srcNode)?.outputId : null
-    return id == null ? null : Number(id)
-  }
-
   function refreshStageInputs(node: any, state: StageState, app: any) {
     const out: ResolvedInput[] = []
     const inputs = node.inputs || []
@@ -274,9 +263,7 @@ export const useStageStore = defineStore('comfytv-stage', () => {
 
       const upstream = resolveUpstreamValue(app, inp.link)
       if (upstream != null) {
-        const outputId = upstreamOutputId(app, inp.link)
-        out.push({ slot, type, source: 'upstream', content: upstream,
-                   ...(outputId != null ? { outputId } : {}) })
+        out.push({ slot, type, source: 'upstream', content: upstream })
       } else {
         out.push({ slot, type, source: 'upstream-pending', content: null })
       }
