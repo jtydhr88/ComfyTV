@@ -1,6 +1,6 @@
 import { watch } from 'vue'
 
-import { ensureStageUid, ensureStageUidClaimedAt, stageClassName } from '@/composables/stages/stageIdentity'
+import { ensureStageUid, getStageUidClaimedAt, stageClassName } from '@/composables/stages/stageIdentity'
 import { outputTypeForKind } from '@/composables/stages/stageOutputType'
 import { useProjectStore } from '@/stores/projectStore'
 import {
@@ -84,12 +84,13 @@ export function bindOutputRestore(opts: {
     try {
       let latest = await projectStore.fetchLatestOutput(projectId, uid, outputTypeForKind(kind))
 
-      if (!latest && node.__comfytvFromSave && !adoptionTried) {
+      if (node.__comfytvFromSave && !adoptionTried) {
         adoptionTried = true
-        latest = await projectStore.adoptOutputs(
+        const adopted = await projectStore.adoptOutputs(
           projectId, String(node.id), stageClassName(node), uid, outputTypeForKind(kind),
-          ensureStageUidClaimedAt(node),
+          getStageUidClaimedAt(node),
         )
+        if (adopted && (!latest || Number(adopted.id) > Number(latest.id))) latest = adopted
       }
       if (!latest) {
         if (state.output != null) {

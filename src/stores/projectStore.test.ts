@@ -184,11 +184,12 @@ describe('projectStore', () => {
     })
   })
 
-  it('adoptOutputs refuses to call without a since bound', async () => {
+  it('adoptOutputs omits since for legacy stages that never recorded a claim time', async () => {
+    mockSend.mockResolvedValueOnce({ output: null })
     const store = useProjectStore()
-    expect(await store.adoptOutputs('p1', '12', 'C', 'u', 'image')).toBeNull()
-    expect(await store.adoptOutputs('p1', '12', 'C', 'u', 'image', '')).toBeNull()
-    expect(mockSend).not.toHaveBeenCalled()
+    await store.adoptOutputs('p1', '12', 'C', 'u', 'image', null)
+    const [, , , body] = mockSend.mock.calls.at(-1)!
+    expect(body).toEqual({ stage_node_id: '12', stage_class: 'C', stage_uid: 'u', output_type: 'image' })
   })
 
   it('adoptOutputs returns null when any identity arg is blank', async () => {

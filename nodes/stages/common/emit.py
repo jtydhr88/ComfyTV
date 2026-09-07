@@ -19,6 +19,20 @@ def _stage_name(cls) -> str:
     return name[:-5] if name.endswith('Clone') else name
 
 
+def _pnginfo_uid(cls, node_id):
+    """The stage's uid straight from the queued prompt's workflow (node.properties)."""
+    if node_id is None:
+        return None
+    info = getattr(getattr(cls, "hidden", None), "extra_pnginfo", None)
+    workflow = info.get("workflow") if isinstance(info, dict) else None
+    nodes = workflow.get("nodes") if isinstance(workflow, dict) else None
+    for n in nodes or []:
+        if str(n.get("id")) == str(node_id):
+            uid = (n.get("properties") or {}).get("comfytv_stage_uid")
+            return str(uid) if uid else None
+    return None
+
+
 def _mirror_uid(project_id: str, node_id, stage_class: str):
     if node_id is None:
         return None
@@ -58,7 +72,8 @@ def _persist(
             project_id=project_id or "",
             stage_class=_stage_name(cls),
             stage_node_id=str(node_id) if node_id is not None else None,
-            stage_uid=_mirror_uid(project_id or "", node_id, _stage_name(cls)),
+            stage_uid=(_pnginfo_uid(cls, node_id)
+                       or _mirror_uid(project_id or "", node_id, _stage_name(cls))),
             output_type=output_type,
             payload_url=payload_url,
             payload_json=payload_json,

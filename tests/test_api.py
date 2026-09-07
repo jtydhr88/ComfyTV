@@ -300,18 +300,30 @@ class TestOutputsRoutes:
                                         "stage_uid": "uid-other", "since": "2000-01-01T00:00:00+00:00"})
         assert (await resp2.json())["output"] is None
 
-    async def test_adopt_without_since_fails_closed(self, client):
+    async def test_adopt_without_since_is_bounded_by_the_stage_s_own_history(self, client):
         from ComfyTV import storage
+        old = storage.persist_output(
+            project_id="default", stage_class="VideoStage", stage_node_id="8",
+            output_type="video", payload_url="/dead-stage-orphan",
+        )
         storage.persist_output(
-            project_id="default", stage_class="CropStage", stage_node_id="8",
-            output_type="image", payload_url="/orphan",
+            project_id="default", stage_class="VideoStage", stage_node_id="8",
+            output_type="video", payload_url="/own-first", stage_uid="uid-8",
+        )
+        newest = storage.persist_output(
+            project_id="default", stage_class="VideoStage", stage_node_id="8",
+            output_type="video", payload_url="/latest-run-untagged",
         )
         resp = await client.post("/comfytv/projects/default/outputs/adopt",
-                                 json={"stage_node_id": "8", "stage_class": "CropStage",
-                                       "stage_uid": "deadbeef"})
+                                 json={"stage_node_id": "8", "stage_class": "VideoStage",
+                                       "stage_uid": "uid-8"})
+        data = await resp.json()
+        assert resp.status == 200 and data["output"]["id"] == newest["id"]
+        assert storage.latest_output("default", "8", orphans_only=True)["id"] == old["id"]
+        resp = await client.post("/comfytv/projects/default/outputs/adopt",
+                                 json={"stage_node_id": "8", "stage_class": "VideoStage",
+                                       "stage_uid": "uid-8", "since": "garbage"})
         assert resp.status == 400
-        assert "since" in (await resp.json())["error"]
-        assert storage.latest_output("default", "8")["stage_uid"] is None
 
     async def test_adopt_outputs_requires_fields(self, client):
         resp = await client.post("/comfytv/projects/default/outputs/adopt",

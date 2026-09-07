@@ -195,6 +195,27 @@ def registered_stage_names() -> set[str]:
     return {c.__name__ for c in stage_classes()}
 
 
+def _ensure_hidden_pnginfo(cls) -> None:
+    if getattr(cls, "_comfytv_pnginfo_hidden", False):
+        return
+    orig = cls.define_schema
+
+    def define_schema(cls_, _orig=orig):
+        schema = _orig()
+        hidden = getattr(schema, "hidden", None)
+        if hidden is None and isinstance(getattr(schema, "kw", None), dict):
+            hidden = schema.kw.setdefault("hidden", [])
+        if isinstance(hidden, list):
+            for name in ("unique_id", "extra_pnginfo"):
+                h = getattr(io.Hidden, name, None)
+                if h is not None and h not in hidden:
+                    hidden.append(h)
+        return schema
+
+    cls.define_schema = classmethod(define_schema)
+    cls._comfytv_pnginfo_hidden = True
+
+
 def _check_registry_drift(classes: list) -> None:
     names = {c.__name__ for c in classes}
     bridges = {c.__name__ for c in _bridge_classes()}
@@ -215,6 +236,7 @@ class ComfyTVExtension(ComfyExtension):
         for cls in classes:
             meta = STAGE_META.get(cls.__name__) or {}
             install_exec_error_recorder(cls, meta.get("kind", "stage"))
+            _ensure_hidden_pnginfo(cls)
         return classes
 
 

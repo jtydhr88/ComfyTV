@@ -5,7 +5,7 @@ import re as _re
 import uuid
 from typing import Any, Optional
 
-from sqlalchemy import desc, select
+from sqlalchemy import desc, func, select
 
 from .. import db
 from ..db import (
@@ -190,9 +190,12 @@ def adopt_outputs(
     if not stage_uid or not stage_node_id or not stage_class:
         return None
     since_dt = parse_output_since(since)
-    if since_dt is None:
-        return None
     with db.get_session() as s:
+        if since_dt is None:
+            since_dt = s.query(func.min(Output.created_at)).filter(
+                Output.project_id == project_id,
+                Output.stage_uid == str(stage_uid),
+            ).scalar()
         q = s.query(Output).filter(
             Output.project_id == project_id,
             Output.stage_node_id == str(stage_node_id),

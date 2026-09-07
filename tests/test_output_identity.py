@@ -28,9 +28,20 @@ class TestAdopt:
         earlier = (datetime.now(timezone.utc) - timedelta(minutes=5)).isoformat()
         assert storage.adopt_outputs("default", "255", "ImageStage", "uid-b", since=earlier) is not None
         assert storage.adopt_outputs("default", "255", "ImageStage", "uid-c", since="2000-01-01") is None
-        _persist("256", url="/no-since")
-        assert storage.adopt_outputs("default", "256", "ImageStage", "uid-e") is None
-        assert storage.adopt_outputs("default", "256", "ImageStage", "uid-e", since="garbage") is None
+
+    def test_missing_since_falls_back_to_the_uid_s_earliest_output(self, reset_db):
+        from ComfyTV import storage
+        dead = _persist("256", url="/dead")            # orphan from a stage that no longer exists
+        _persist("256", uid="uid-e", url="/mine-1")    # this stage's first (tagged) run
+        fresh = _persist("256", url="/mine-2-untagged")
+        row = storage.adopt_outputs("default", "256", "ImageStage", "uid-e")
+        assert row["id"] == fresh["id"]
+        assert storage.latest_output("default", "256", orphans_only=True)["id"] == dead["id"]
+
+    def test_missing_since_with_no_history_still_adopts_the_newest(self, reset_db):
+        from ComfyTV import storage
+        legacy = _persist("257", url="/legacy")
+        assert storage.adopt_outputs("default", "257", "ImageStage", "uid-legacy")["id"] == legacy["id"]
 
     def test_class_and_owned_rows_are_never_adopted(self, reset_db):
         from ComfyTV import storage
@@ -80,3 +91,39 @@ class TestReadFallback:
         assert out["id"] == orphan["id"]
         own = _persist("273", stage_class="ImageStage", uid="acd9f439", url="/own")
         assert _latest_output_summary("default", "acd9f439", "273", "ComfyTV.ImageStage")["id"] == own["id"]
+
+
+class TestPromptUid:
+    def test_uid_is_read_from_the_prompt_workflow(self):
+        from ComfyTV.nodes.stages.common import emit
+
+        class Hidden:
+            extra_pnginfo = {"workflow": {"nodes": [
+                {"id": 5, "properties": {"comfytv_stage_uid": "uid-from-prompt"}},
+                {"id": 6, "properties": {}},
+            ]}}
+
+        class Cls:
+            hidden = Hidden()
+
+        assert emit._pnginfo_uid(Cls, "5") == "uid-from-prompt"
+        assert emit._pnginfo_uid(Cls, 5) == "uid-from-prompt"
+        assert emit._pnginfo_uid(Cls, "6") is None
+        assert emit._pnginfo_uid(Cls, "9") is None
+        assert emit._pnginfo_uid(object(), "5") is None
+
+    def test_every_registered_stage_declares_extra_pnginfo(self):
+        import asyncio
+        from comfy_api.latest import io
+        from ComfyTV.nodes.stages import ComfyTVExtension
+        from ComfyTV.nodes.bridges import ALL_BRIDGES
+        bridges = {c.__name__ for c in ALL_BRIDGES}
+        missing = []
+        for cls in asyncio.run(ComfyTVExtension().get_node_list()):
+            if cls.__name__ in bridges:
+                continue
+            from ComfyTV.api.presets import _schema_field
+            hidden = _schema_field(cls.define_schema(), "hidden")
+            if not isinstance(hidden, list) or io.Hidden.extra_pnginfo not in hidden:
+                missing.append(cls.__name__)
+        assert missing == []

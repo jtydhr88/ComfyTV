@@ -58582,7 +58582,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-EmKNHgSC.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-DGuzqNd0.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -62232,14 +62232,6 @@ function getStageUidClaimedAt(node) {
   const at2 = (_a3 = node == null ? void 0 : node.properties) == null ? void 0 : _a3[PROP_AT];
   return typeof at2 === "string" && at2 ? at2 : null;
 }
-function ensureStageUidClaimedAt(node) {
-  const at2 = getStageUidClaimedAt(node);
-  if (at2) return at2;
-  if (!node.properties || typeof node.properties !== "object") node.properties = {};
-  const now2 = (/* @__PURE__ */ new Date()).toISOString();
-  node.properties[PROP_AT] = now2;
-  return now2;
-}
 function getStageUid(node) {
   var _a3;
   const uid2 = (_a3 = node == null ? void 0 : node.properties) == null ? void 0 : _a3[PROP];
@@ -62836,7 +62828,7 @@ const useProjectStore = /* @__PURE__ */ defineStore("comfytv-project", () => {
     });
   }
   async function adoptOutputs(projectId, stageNodeId, stageClass, stageUid, outputType, since) {
-    if (!projectId || !stageNodeId || !stageClass || !stageUid || !since) return null;
+    if (!projectId || !stageNodeId || !stageClass || !stageUid) return null;
     try {
       const data = await apiSend(
         `/comfytv/projects/${encodeURIComponent(projectId)}/outputs/adopt`,
@@ -62847,7 +62839,7 @@ const useProjectStore = /* @__PURE__ */ defineStore("comfytv-project", () => {
           stage_class: stageClass,
           stage_uid: stageUid,
           output_type: outputType,
-          since
+          ...since ? { since } : {}
         }
       );
       return data.output;
@@ -143207,7 +143199,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-C0Ejf9-O.mjs");
+    const { STLLoader } = await import("./STLLoader-BoEDasFC.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -143215,7 +143207,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-Dnw-3lgr.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-Dx7VE1cU.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -225977,16 +225969,17 @@ function bindOutputRestore(opts) {
     const uid2 = ensureStageUid(node);
     try {
       let latest = await projectStore.fetchLatestOutput(projectId, uid2, outputTypeForKind(kind));
-      if (!latest && node.__comfytvFromSave && !adoptionTried) {
+      if (node.__comfytvFromSave && !adoptionTried) {
         adoptionTried = true;
-        latest = await projectStore.adoptOutputs(
+        const adopted = await projectStore.adoptOutputs(
           projectId,
           String(node.id),
           stageClassName(node),
           uid2,
           outputTypeForKind(kind),
-          ensureStageUidClaimedAt(node)
+          getStageUidClaimedAt(node)
         );
+        if (adopted && (!latest || Number(adopted.id) > Number(latest.id))) latest = adopted;
       }
       if (!latest) {
         if (state2.output != null) {
@@ -237027,4 +237020,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-CKWzppkQ.mjs.map
+//# sourceMappingURL=main-CDQMdhJ1.mjs.map
