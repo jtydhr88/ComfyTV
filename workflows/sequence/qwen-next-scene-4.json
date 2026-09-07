@@ -169,7 +169,7 @@
         "Node name for S&R": "UNETLoader"
       },
       "widgets_values": [
-        "qwen_image_edit_2509_bf16.safetensors",
+        "qwen_image_edit_2509_fp8mixed.safetensors",
         "default"
       ]
     },
@@ -210,7 +210,7 @@
         "Node name for S&R": "LoraLoaderModelOnly"
       },
       "widgets_values": [
-        "next-scene-qwen-image-lora-2509.safetensors",
+        "next-scene_lora-v2-3000.safetensors",
         0.75
       ]
     },

@@ -378,11 +378,19 @@ class TestRunApprovals:
         cancelled = bot_asks.cancel_chat_asks("c9")
         assert [a.id for a in cancelled] == [plain.id]
         assert ask.id in bot_asks.PENDING
-        # the tool already gave up waiting; the human answers later
-        ask.future.set_result({"status": "pending"})
+        # the tool gave up waiting (future still pending under the shield); the human answers later
+        bot_asks.abandon_ask(ask.id)
+        assert not ask.future.done()
         bot_asks.resolve_ask(ask.id, "answered", ["run"], "")
         assert bot_asks.take_run_approval_answer("c9", "Run stage 4?") == {"status": "answered", "selected": ["run"]}
         assert bot_asks.take_run_approval_answer("c9", "Run stage 4?") is None
+
+    async def test_live_waiter_consumes_the_answer_without_a_replay_entry(self):
+        spec = {**bot_asks.validate_spec(SPEC_ARGS), "kind": "run_approval", "prompt": "Run stage 5?"}
+        ask = bot_asks.create_ask("c7", "m7", spec)
+        bot_asks.resolve_ask(ask.id, "answered", ["run"], "")
+        assert (await ask.future)["selected"] == ["run"]
+        assert bot_asks.take_run_approval_answer("c7", "Run stage 5?") is None
 
     async def test_new_run_approval_replaces_the_previous_pending_one(self):
         spec = {**bot_asks.validate_spec(SPEC_ARGS), "kind": "run_approval", "prompt": "Run stage 1?"}

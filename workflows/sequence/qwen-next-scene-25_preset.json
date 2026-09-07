@@ -17,7 +17,7 @@
     },
     "2": {
       "unet_name": {
-        "from": "literal:qwen_image_edit_2509_bf16.safetensors"
+        "from": "literal:qwen_image_edit_2509_fp8mixed.safetensors"
       }
     },
     "7": {

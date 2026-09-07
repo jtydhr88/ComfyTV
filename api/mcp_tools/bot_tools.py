@@ -32,6 +32,7 @@ async def _await_ask(chat_id: str, state, spec: dict, *,
             timeout=bot_asks.ASK_TIMEOUT_S if timeout is None else timeout)
     except asyncio.TimeoutError:
         if keep_pending_on_timeout:
+            bot_asks.abandon_ask(ask.id)
             return {"status": "pending", "ask_id": ask.id}
         bot_asks.resolve_ask(ask.id, "expired")
         outcome = {"status": "expired"}

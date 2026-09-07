@@ -23,7 +23,7 @@ To add your own workflow see [docs/custom-workflows.md](../../docs/custom-workfl
 
 ## What's here today
 
-Both use Qwen-Image-Edit 2511 + **Next-Scene LoRA**:
+Both use Qwen-Image-Edit 2509 + **Next-Scene LoRA**:
 
 | Label | File | Frames |
 |---|---|---|
@@ -32,8 +32,8 @@ Both use Qwen-Image-Edit 2511 + **Next-Scene LoRA**:
 
 ## Models referenced
 
-- `qwen_image_edit_2511_fp8mixed.safetensors` → `models/diffusion_models/`
+- `qwen_image_edit_2509_fp8mixed.safetensors` → `models/diffusion_models/`
 - `qwen_2.5_vl_7b_fp8_scaled.safetensors` → `models/clip/`
 - `qwen_image_vae.safetensors` → `models/vae/`
 - `next-scene_lora-v2-3000.safetensors` → `models/loras/`
-- `Qwen-Image-Edit-2511-Lightning-4steps-V1.0-bf16.safetensors` → `models/loras/`
+- `Qwen-Image-Edit-2509-Lightning-4steps-V1.0-bf16.safetensors` → `models/loras/`

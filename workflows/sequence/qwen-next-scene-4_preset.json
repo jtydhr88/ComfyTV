@@ -2,7 +2,7 @@
   "_comment": "Ported from V1 backup api-format workflow. Per-branch positive encoders use `from: main_prompt` + `prefix:` to bake the angle keyword in front of the user's subject description. The shared UNet/CLIP/VAE/LoRAs are pinned with literal: bindings to the V1-era filenames; edit via the sidebar if you have different versions installed.",
   "label": "Story 4",
   "order": 10,
-  "description": "Qwen-Image-Edit 2509 + Next-Scene LoRA (@0.75) + Lightning 4-step. One workflow, 4 frames produced sequentially - each frame N+1 is generated from frame N as the reference image. The user's main_prompt is prefixed with the LoRA's canonical 'Next Scene:' trigger. Requires the 2509 base UNet + Next-Scene LoRA in models/loras/.",
+  "description": "Qwen-Image-Edit 2509 + Next-Scene LoRA (@0.75) + Lightning 4-step. One workflow, 4 frames produced sequentially - each frame N+1 is generated from frame N as the reference image. The user's main_prompt is prefixed with the LoRA's canonical 'Next Scene:' trigger. Requires qwen_image_edit_2509_fp8mixed (~19 GB; the bf16 works too but is 38 GB) in models/diffusion_models/ + Next-Scene LoRA in models/loras/.",
   "result": {
     "type": "ui_save_batch",
     "node": "20"
@@ -17,7 +17,7 @@
     },
     "2": {
       "unet_name": {
-        "from": "literal:qwen_image_edit_2509_bf16.safetensors"
+        "from": "literal:qwen_image_edit_2509_fp8mixed.safetensors"
       }
     },
     "7": {

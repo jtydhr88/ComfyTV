@@ -15,24 +15,31 @@ def _normalize_stage_class(value: str) -> str:
         )
     return f"ComfyTV.{name}"
 
+def _workflow_kinds_of(stage_class: str) -> list[str]:
+    meta = STAGE_META.get(stage_class.removeprefix("ComfyTV."), {})
+    kinds = meta.get("workflow_kinds") or ([meta["workflow_kind"]] if meta.get("workflow_kind") else [])
+    return [str(k) for k in kinds]
+
+
 def _validate_workflow_label(stage_class: str, label: str) -> None:
-    kind = STAGE_META.get(stage_class.removeprefix("ComfyTV."), {}).get("workflow_kind")
-    if not kind:
+    kinds = _workflow_kinds_of(stage_class)
+    if not kinds:
         raise ValueError(
             f"{stage_class} has no workflow selector — drop the 'workflow' argument"
         )
-    rows = workflow_db.list_workflows_overview(kind)
+    rows = [w for kind in kinds for w in workflow_db.list_workflows_overview(kind)]
     visible = [w["label"] for w in rows if not w.get("is_hidden")]
     hidden = [w["label"] for w in rows if w.get("is_hidden")]
+    kinds_txt = " / ".join(repr(k) for k in kinds)
     if label in hidden:
         raise ValueError(
-            f"workflow {label!r} is hidden for kind {kind!r} — the stage's "
+            f"workflow {label!r} is hidden for kind {kinds_txt} — the stage's "
             f"combo omits hidden workflows so the run would fail; unhide it in "
             f"the Stages panel, or pick one of: {', '.join(visible) or '(none)'}"
         )
     if label not in visible:
         raise ValueError(
-            f"workflow {label!r} not found for kind {kind!r} — "
+            f"workflow {label!r} not found for kind {kinds_txt} — "
             f"valid labels: {', '.join(visible) or '(none)'}"
         )
 

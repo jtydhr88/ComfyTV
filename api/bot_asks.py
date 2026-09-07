@@ -15,6 +15,7 @@ class PendingAsk:
         self.chat_id = chat_id
         self.message_id = message_id
         self.spec = spec
+        self.abandoned = False
         self.future: asyncio.Future = asyncio.get_event_loop().create_future()
 
 
@@ -76,6 +77,12 @@ def take_run_approval_answer(chat_id: str, prompt: str) -> Optional[dict]:
     return ANSWERED_RUN_APPROVALS.pop((chat_id, prompt), None)
 
 
+def abandon_ask(ask_id: str) -> None:
+    ask = PENDING.get(ask_id)
+    if ask is not None:
+        ask.abandoned = True
+
+
 def resolve_ask(ask_id: str, status: str,
                 selected: Optional[list[str]] = None,
                 other_text: Optional[str] = None) -> Optional[PendingAsk]:
@@ -87,10 +94,10 @@ def resolve_ask(ask_id: str, status: str,
         outcome["selected"] = selected
     if other_text:
         outcome["other_text"] = other_text
-    if ask.future.done():
-        if status == "answered" and is_run_approval(ask.spec):
-            ANSWERED_RUN_APPROVALS[(ask.chat_id, str(ask.spec.get("prompt") or ""))] = outcome
-    else:
+    nobody_waiting = ask.future.done() or ask.abandoned
+    if nobody_waiting and status == "answered" and is_run_approval(ask.spec):
+        ANSWERED_RUN_APPROVALS[(ask.chat_id, str(ask.spec.get("prompt") or ""))] = outcome
+    if not ask.future.done():
         ask.future.set_result(outcome)
     return ask
 
