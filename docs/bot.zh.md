@@ -42,6 +42,12 @@ Bot 不直接调用任何云端模型 API,ComfyTV 也永远不存 key。它驱�
 
 Local LLM 完全不需要 agent CLI:ComfyTV 自己跑 agent 循环,对接任何 OpenAI 兼容端点 — LM Studio、llama.cpp 的 `llama-server`、vLLM、Ollama 都行。把 **设置 → Agent 与 MCP → Local LLM 端点** 指向服务的 base URL(如 `http://127.0.0.1:1234/v1`),模型建议直接来自端点的 `/models` 真实列表。仅限免 key 的本地端点 — 与"不存 key"的铁律一致(局域网服务非要 token 的话,认 `COMFYTV_LOCAL_LLM_API_KEY` 环境变量,但永远不落库)。
 
+如需托管的 OpenAI-compatible 服务，可选择 **Atlas Cloud**，并在启动
+ComfyTV 的环境中设置 `ATLASCLOUD_API_KEY`。该 provider 默认使用
+`https://api.atlascloud.ai/v1`，从实时 `/models` 端点加载模型下拉列表，且不会
+存储密钥。可用 `ATLASCLOUD_API_BASE` 覆盖端点，也兼容
+`ATLAS_CLOUD_API_KEY` 这一密钥变量名。
+
 几个值得知道的细节:
 
 - 对话历史由 ComfyTV 自己的记录重放(端点不持有会话),重启服务器也不丢上下文。

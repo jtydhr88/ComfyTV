@@ -42,6 +42,12 @@ Provider isolation is per-engine: Claude Code runs with a strict per-turn MCP co
 
 The Local LLM provider needs no agent CLI at all: ComfyTV runs the agent loop itself against any OpenAI-compatible endpoint — LM Studio, llama.cpp's `llama-server`, vLLM, Ollama and friends. Point **Settings → Agent & MCP → Local LLM endpoint** at the server's base URL (e.g. `http://127.0.0.1:1234/v1`); the model dropdown suggestions come straight from the endpoint's `/models` list. Keyless local endpoints only — consistent with the no-stored-keys rule (a `COMFYTV_LOCAL_LLM_API_KEY` environment variable is honoured for LAN servers that insist on a token, but nothing is ever stored).
 
+For a hosted OpenAI-compatible option, select **Atlas Cloud** and set
+`ATLASCLOUD_API_KEY` in the environment that starts ComfyTV. The provider uses
+`https://api.atlascloud.ai/v1` by default, fetches the model dropdown from the
+live `/models` endpoint, and never stores the key. Set `ATLASCLOUD_API_BASE` to
+override the endpoint; `ATLAS_CLOUD_API_KEY` is accepted as a key alias.
+
 Details worth knowing:
 
 - Conversations replay from ComfyTV's own transcript (the endpoint holds no session), so history survives server restarts.
