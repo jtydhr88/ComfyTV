@@ -32,13 +32,10 @@ export function bindStageWidgets(opts: {
 }): void {
   const { node, state, store, kind, variant, applyPickedIndex } = opts
 
-  const usesStageUid = variant !== 'loader' && !isPoolPickerKind(kind)
-  if (usesStageUid) {
+  claimStageUid(node)
+  node.onConfigure = useChainCallback(node.onConfigure, () => {
     claimStageUid(node)
-    node.onConfigure = useChainCallback(node.onConfigure, () => {
-      claimStageUid(node)
-    })
-  }
+  })
 
   if (variant === 'generator') {
     const promptWidget = node.widgets?.find((w: any) => w.name === 'main_prompt')
