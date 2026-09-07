@@ -98,3 +98,13 @@ class TestCategories:
         await _asset_edit({"action": "create_category", "name": "real"})
         with pytest.raises(ValueError, match=r"category 9999 not found; existing: \d+='real'"):
             await _assets({"category": "9999"})
+
+
+def test_ui_and_rest_upserts_never_overwrite_a_same_label_entry(reset_db):
+    from ComfyTV import storage
+    storage.ensure_default_project()
+    a = storage.upsert_entry("default", kind="fragment", label="same", content="first")
+    b = storage.upsert_entry("default", kind="fragment", label="same", content="second")
+    assert a["id"] != b["id"]
+    rows = [r for r in storage.list_entries("default") if r["label"] == "same"]
+    assert sorted(r["content"] for r in rows) == ["first", "second"]

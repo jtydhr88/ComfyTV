@@ -63,6 +63,7 @@ def upsert_entry(
     content: str,
     metadata: Optional[dict] = None,
     entry_id: Optional[int] = None,
+    match_label: bool = False,
 ) -> Optional[dict]:
     label = (label or "").strip()
     if not _ENTRY_LABEL_RE.match(label):
@@ -75,7 +76,7 @@ def upsert_entry(
             row = s.get(Entry, entry_id)
             if row is None or row.project_id != project_id:
                 return None
-        else:
+        elif match_label:
             row = s.execute(
                 select(Entry).where(
                     Entry.project_id == project_id,
@@ -83,6 +84,8 @@ def upsert_entry(
                     Entry.label == label,
                 ).order_by(Entry.id)
             ).scalars().first()
+        else:
+            row = None
         if row is not None:
             row.kind = kind
             row.label = label

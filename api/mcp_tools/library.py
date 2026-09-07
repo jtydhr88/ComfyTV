@@ -201,6 +201,7 @@ async def _entries(args: dict) -> dict:
             metadata=args.get("metadata")
             if isinstance(args.get("metadata"), dict) else None,
             entry_id=int(entry_id) if entry_id is not None else None,
+            match_label=True,
         )
         if row is None:
             raise ValueError(
