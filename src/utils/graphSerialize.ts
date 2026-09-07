@@ -94,11 +94,18 @@ export async function buildScopedPrompt(
   reachable: Set<number>,
 ): Promise<{ output: Record<string, any>; workflow: any }> {
   const output: Record<string, any> = {}
+  const nodes: Array<{ id: unknown; type: string; properties: Record<string, unknown> }> = []
   for (const n of app?.graph?._nodes ?? []) {
     if (!reachable.has(n.id)) continue
     if (n.mode === LG_MODE_NEVER || n.mode === LG_MODE_BYPASS) continue
     if (n.isVirtualNode) continue
     output[String(n.id)] = await serializeNodeEntry(n)
+    const uid = n.properties?.comfytv_stage_uid
+    nodes.push({
+      id: n.id,
+      type: String(n.comfyClass ?? n.type ?? ''),
+      properties: typeof uid === 'string' && uid ? { comfytv_stage_uid: uid } : {},
+    })
   }
-  return { output, workflow: { nodes: [], links: [], version: 0.4 } }
+  return { output, workflow: { nodes, links: [], version: 0.4 } }
 }

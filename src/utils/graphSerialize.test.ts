@@ -158,6 +158,15 @@ describe('buildScopedPrompt', () => {
     const reachable = new Set([1, 2, 3])
     const pm = await buildScopedPrompt(app, reachable)
     expect(Object.keys(pm.output)).toEqual(['1'])
-    expect(pm.workflow).toEqual({ nodes: [], links: [], version: 0.4 })
+    expect(pm.workflow).toEqual({ nodes: [{ id: 1, type: 'A', properties: {} }], links: [], version: 0.4 })
+  })
+
+  it('carries each included stage uid so the server can stamp outputs without the page', async () => {
+    const nodes = [
+      { id: 7, comfyClass: 'ComfyTV.ImageStage', properties: { comfytv_stage_uid: 'uid-7', other: 1 },
+        graph: { links: new Map() }, widgets: [], inputs: [] },
+    ]
+    const pm = await buildScopedPrompt({ graph: { _nodes: nodes } }, new Set([7]))
+    expect(pm.workflow.nodes).toEqual([{ id: 7, type: 'ComfyTV.ImageStage', properties: { comfytv_stage_uid: 'uid-7' } }])
   })
 })

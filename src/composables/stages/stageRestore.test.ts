@@ -18,7 +18,7 @@ const store: any = {
 
 import { bindOutputRestore } from './stageRestore'
 
-function makeState() {
+function makeState(): any {
   return reactive({ outputId: null as number | null, output: null as string | null, outputs: [null, null] as any[], durationMs: null, pickedIndex: 1, inputs: [] })
 }
 

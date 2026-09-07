@@ -58582,7 +58582,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-DGuzqNd0.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-BDIpXpHP.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -143199,7 +143199,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-BoEDasFC.mjs");
+    const { STLLoader } = await import("./STLLoader-Cxuy4pvs.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -143207,7 +143207,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-Dx7VE1cU.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-QFUKvxKT.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -226079,15 +226079,22 @@ async function serializeNodeEntry(node) {
   };
 }
 async function buildScopedPrompt(app2, reachable) {
-  var _a3;
+  var _a3, _b2;
   const output = {};
+  const nodes = [];
   for (const n of ((_a3 = app2 == null ? void 0 : app2.graph) == null ? void 0 : _a3._nodes) ?? []) {
     if (!reachable.has(n.id)) continue;
     if (n.mode === LG_MODE_NEVER || n.mode === LG_MODE_BYPASS) continue;
     if (n.isVirtualNode) continue;
     output[String(n.id)] = await serializeNodeEntry(n);
+    const uid2 = (_b2 = n.properties) == null ? void 0 : _b2.comfytv_stage_uid;
+    nodes.push({
+      id: n.id,
+      type: String(n.comfyClass ?? n.type ?? ""),
+      properties: typeof uid2 === "string" && uid2 ? { comfytv_stage_uid: uid2 } : {}
+    });
   }
-  return { output, workflow: { nodes: [], links: [], version: 0.4 } };
+  return { output, workflow: { nodes, links: [], version: 0.4 } };
 }
 async function buildRunPrompt(node, store2) {
   var _a3, _b2, _c, _d, _e2, _f, _g, _h, _i, _j, _k, _l, _m2, _n2, _o, _p, _q, _r2, _s, _t2, _u, _v4, _w, _x2, _y2, _z2, _A, _B, _C, _D, _E, _F;
@@ -237020,4 +237027,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-CDQMdhJ1.mjs.map
+//# sourceMappingURL=main-DuEt6m5d.mjs.map
