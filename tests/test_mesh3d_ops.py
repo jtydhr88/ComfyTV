@@ -94,3 +94,15 @@ def test_apply_trs_matches_three_compose():
     assert torch.allclose(p, torch.tensor([[0.0, 2.0, 1.0]]), atol=1e-5)
     ident = ops.apply_trs(torch.tensor([[1.0, 2.0, 3.0]]), {})
     assert torch.allclose(ident, torch.tensor([[1.0, 2.0, 3.0]]))
+
+
+def test_non_manifold_edges_are_counted():
+    v = torch.tensor([[0., 0, 0], [1., 0, 0], [0., 1, 0], [0., 0, 1], [0., -1, 0]])
+    fan = torch.tensor([[0, 1, 2], [0, 1, 3], [0, 1, 4]])  # three faces share edge 0-1
+    assert ops.non_manifold_edge_count(fan) == 1
+    assert ops.non_manifold_edge_count(torch.tensor([[0, 1, 2]])) == 0
+
+
+def test_decimate_reports_when_it_lands_far_below_target():
+    out, st = ops.decimate(CUBE, target_face_count=100)
+    assert 'warning' not in st and st['non_manifold_edges'] == 0

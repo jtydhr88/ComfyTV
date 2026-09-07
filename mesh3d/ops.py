@@ -98,6 +98,18 @@ def _map_batch(mesh: MESH, per_item_fn) -> MESH:
     return mesh
 
 
+def non_manifold_edge_count(faces) -> int:
+    """Edges shared by more than two faces (a QEM collapse can then drop many faces at once)."""
+    import torch
+    if faces is None or faces.numel() == 0:
+        return 0
+    f = faces.reshape(-1, 3).long()
+    e = torch.cat([f[:, [0, 1]], f[:, [1, 2]], f[:, [2, 0]]], dim=0)
+    e, _ = torch.sort(e, dim=1)
+    _, counts = torch.unique(e, dim=0, return_counts=True)
+    return int((counts > 2).sum().item())
+
+
 def decimate(mesh: MESH, target_face_count: int, placement_mode: str = "midpoint",
              line_quadric_weight: float = 0.0, feature_edge_quadric_weight: float = 0.0,
              feature_edge_min_dihedral_deg: float = 30.0, clamp_v_to_edge: bool = True):
@@ -114,11 +126,12 @@ def decimate(mesh: MESH, target_face_count: int, placement_mode: str = "midpoint
         cfg = QEMConfig()  # midpoint defaults (cumesh-faithful)
 
     compute_device = comfy.model_management.get_torch_device()
-    counts = {"in": 0, "out": 0}
+    counts = {"in": 0, "out": 0, "non_manifold": 0}
 
     def _fn(v, f, c):
         counts["in"] += int(f.shape[0])
         if target_face_count > 0 and f.shape[0] > target_face_count:
+            counts["non_manifold"] += non_manifold_edge_count(f)
             try:
                 src_device = v.device
                 rv, rf, rc, _rn, _rs = qem_decimate_simplify(
@@ -136,7 +149,17 @@ def decimate(mesh: MESH, target_face_count: int, placement_mode: str = "midpoint
         return v, f, c
 
     out = _map_batch(mesh, _fn)
-    return out, {'faces_in': counts["in"], 'faces_out': counts["out"]}
+    stats = {'faces_in': counts["in"], 'faces_out': counts["out"],
+             'non_manifold_edges': counts["non_manifold"]}
+    if 0 < target_face_count < counts["in"] and counts["out"] < 0.5 * target_face_count:
+        stats['warning'] = (
+            f"asked for {target_face_count:,} faces, got {counts['out']:,}"
+            + (f" — the input has {counts['non_manifold']:,} non-manifold edges "
+               f"(edges shared by 3+ faces), which QEM collapses overshoot on; "
+               f"run remesh first, then decimate"
+               if counts["non_manifold"] else
+               " — far below target; check the input mesh"))
+    return out, stats
 
 
 def remesh(mesh: MESH, resolution: int = 512, sign_mode: str = "udf", qef=None,

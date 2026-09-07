@@ -17,10 +17,18 @@ async def storyboard_animatic(request: web.Request) -> web.Response:
         return web.json_response({"error": "invalid json"}, status=400)
 
     boards = body.get("boards")
-    if not isinstance(boards, list) or not boards:
+    if boards is None:
+        return web.json_response({"error": "boards required"}, status=400)
+    if not isinstance(boards, list):
+        return web.json_response({"error": "boards must be an array"}, status=400)
+    if not boards:
         return web.json_response({"error": "boards required"}, status=400)
     if not all(isinstance(b, dict) for b in boards):
         return web.json_response({"error": "boards must be objects"}, status=400)
+    from ..runners.animatic import MAX_BOARDS
+    if len(boards) > MAX_BOARDS:
+        return web.json_response(
+            {"error": f"too many boards ({len(boards)} > {MAX_BOARDS})"}, status=400)
 
     width = int(body.get("width") or 1280)
     height = int(body.get("height") or 720)
@@ -44,6 +52,8 @@ async def storyboard_animatic(request: web.Request) -> web.Response:
             lambda: boards_to_animatic(boards, width=width, height=height,
                                        fps=fps, burn_captions=burn_captions),
         )
+    except ValueError as e:
+        return web.json_response({"error": str(e)}, status=400)
     except Exception as e:
         _log.exception("animatic export failed")
         return web.json_response({"error": str(e)}, status=500)

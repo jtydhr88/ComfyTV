@@ -50,6 +50,11 @@ class PanoramaStage(io.ComfyNode):
                     upstream={'images': [image] if image else []},
                     options={},
                 )
+                from ...runners.panorama_ingest import ensure_equirect
+                payload, note = ensure_equirect(payload)
+                if note:
+                    from ...runners.notify import notify_toast
+                    notify_toast("warn", "Panorama is not 2:1", note)
                 return _stage_emit_auto(cls, project_id=project_id,
                                         payload_str=payload,
                                         parent_output_id=parent_output_id)

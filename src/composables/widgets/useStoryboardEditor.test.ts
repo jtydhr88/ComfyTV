@@ -36,6 +36,7 @@ vi.mock('@/utils/uploadCanvas', async (importOriginal) => ({
 
 import { useStoryboardEditor, type StoryboardEditorController } from './useStoryboardEditor'
 import type { StageState } from '@/stores/stageStore'
+import { writeWidget } from '@/utils/widget'
 
 class FakeImage {
   onload: (() => void) | null = null
@@ -591,5 +592,20 @@ describe('playback', () => {
     sb.play()
     sb.selectBoard(sb.boards.value[1].uid)
     expect(sb.playing.value).toBe(false)
+  })
+})
+
+
+describe('external board_state writes (set_stage)', () => {
+  it('re-parses the document when another writer changes the widget', async () => {
+    const { node, sb } = setup()
+    await flushMicro()
+    const before = sb!.boards.value.length
+    const doc = JSON.parse(JSON.stringify(sb!.doc.value))
+    const extra = doc.boards.map((b: any, i: number) => ({ ...b, uid: `ext-${i}` }))
+    doc.boards = [...doc.boards, ...extra]
+    writeWidget(node, 'board_state', JSON.stringify(doc))
+    await flushMicro()
+    expect(sb!.boards.value.length).toBe(before * 2)
   })
 })

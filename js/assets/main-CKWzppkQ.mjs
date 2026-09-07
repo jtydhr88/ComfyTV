@@ -58582,7 +58582,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-B9BST8HB.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-EmKNHgSC.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -143207,7 +143207,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-D2SQjO7p.mjs");
+    const { STLLoader } = await import("./STLLoader-C0Ejf9-O.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -143215,7 +143215,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-BpkY3Qlp.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-Dnw-3lgr.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -197268,6 +197268,9 @@ function useStoryboardEditor(node, state2, opts) {
     restore();
     stopPlayback();
   });
+  bindWidgetCallback(node, STATE_WIDGET, (value) => {
+    if (typeof value === "string" && value !== lastWritten) restore();
+  });
   const storage = {
     subfolder: SUBFOLDER,
     readState: () => {
@@ -237024,4 +237027,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-DLq6XHxw.mjs.map
+//# sourceMappingURL=main-CKWzppkQ.mjs.map

@@ -3,7 +3,7 @@
 
   "label":       "Qwen-Image-Edit 2511 Image-to-Panorama",
   "order":       20,
-  "description": "Image-to-panorama via Qwen-Image-Edit 2511 + Lightning 4-step LoRA. Takes a regular photo as the central front view and extrapolates the full 360° around it (~2048x1024 equirectangular). Geometry consistency is best on wide landscapes / interiors — close-up subjects tend to warp. Reuses the same Qwen-Image-Edit 2511 weights used by Image Edit / Multiangle / Relight; no new model downloads.",
+  "description": "Image-to-panorama via Qwen-Image-Edit 2511 + Lightning 4-step LoRA. Takes a regular photo as the central front view and extrapolates the full 360° around it. The model keeps the input photo's aspect (a 16:9 photo gives ~1.85:1), so the stage letterboxes the result to a 2:1 equirectangular frame for the sphere viewer; feed a 2:1 photo to avoid the black band. Geometry consistency is best on wide landscapes / interiors — close-up subjects tend to warp. Reuses the same Qwen-Image-Edit 2511 weights used by Image Edit / Multiangle / Relight; no new model downloads.",
 
   "result": { "type": "ui_save_url", "node": "9" },
 

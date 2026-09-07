@@ -2,7 +2,7 @@
 
 import { app, type LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
-import { onNodeConfigure, readWidgetStr, writeWidget } from '@/utils/widget'
+import { bindWidgetCallback, onNodeConfigure, readWidgetStr, writeWidget } from '@/utils/widget'
 import {
   boardDurationMs,
   boardImageUrl,
@@ -123,6 +123,9 @@ export function useStoryboardEditor(node: LGraphNode, state: StageState, opts?: 
   onNodeConfigure(node, () => {
     restore()
     stopPlayback()
+  })
+  bindWidgetCallback(node, STATE_WIDGET, (value) => {
+    if (typeof value === 'string' && value !== lastWritten) restore()
   })
 
   const storage: LayerEditorStorage = {

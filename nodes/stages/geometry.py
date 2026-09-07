@@ -34,7 +34,9 @@ class MeshOpStage(io.ComfyNode):
                                tooltip="Which mesh operation to run; the card shows its parameters."),
                 io.Int.Input("target_face_count", default=50_000, min=100, max=5_000_000,
                              socketless=True, extra_dict={"hidden": True},
-                             tooltip="decimate — target max face count (QEM edge collapse)."),
+                             tooltip="decimate — target max face count (QEM edge collapse). "
+                                     "Non-manifold input (e.g. Hunyuan3D output) lands far below "
+                                     "target — run remesh first, then decimate."),
                 io.Combo.Input("placement_mode", options=['midpoint', 'qem'], default='midpoint',
                                socketless=True, extra_dict={"hidden": True},
                                tooltip="decimate — midpoint: robust, preserves thin features. "
@@ -111,6 +113,9 @@ class MeshOpStage(io.ComfyNode):
                 model, int(target_face_count), placement_mode=placement_mode,
                 feature_edge_quadric_weight=float(feature_edge_quadric_weight),
                 feature_edge_min_dihedral_deg=float(feature_edge_min_dihedral_deg))
+            if stats.get('warning'):
+                from ...runners.notify import notify_toast
+                notify_toast("warn", "Decimate missed its target", str(stats['warning']))
         elif operation == 'remesh':
             payload, stats = remesh_model(
                 model, resolution=int(resolution), sign_mode=sign_mode,
