@@ -3,6 +3,8 @@ import uuid
 from typing import Optional
 
 ASK_TIMEOUT_S = 540.0
+RUN_APPROVAL_WAIT_S = 45.0
+RUN_APPROVAL_KIND = "run_approval"
 
 _MAX_OPTIONS = 12
 
@@ -17,6 +19,7 @@ class PendingAsk:
 
 
 PENDING: dict[str, PendingAsk] = {}
+ANSWERED_RUN_APPROVALS: dict[tuple[str, str], dict] = {}
 
 
 def validate_spec(args: dict) -> dict:
@@ -55,10 +58,22 @@ def validate_spec(args: dict) -> dict:
     }
 
 
+def is_run_approval(spec: dict) -> bool:
+    return (spec or {}).get("kind") == RUN_APPROVAL_KIND
+
+
 def create_ask(chat_id: str, message_id: str, spec: dict) -> PendingAsk:
+    if is_run_approval(spec):
+        for stale in [a for a in PENDING.values()
+                      if a.chat_id == chat_id and is_run_approval(a.spec)]:
+            resolve_ask(stale.id, "cancelled")
     ask = PendingAsk(chat_id, message_id, spec)
     PENDING[ask.id] = ask
     return ask
+
+
+def take_run_approval_answer(chat_id: str, prompt: str) -> Optional[dict]:
+    return ANSWERED_RUN_APPROVALS.pop((chat_id, prompt), None)
 
 
 def resolve_ask(ask_id: str, status: str,
@@ -72,13 +87,17 @@ def resolve_ask(ask_id: str, status: str,
         outcome["selected"] = selected
     if other_text:
         outcome["other_text"] = other_text
-    if not ask.future.done():
+    if ask.future.done():
+        if status == "answered" and is_run_approval(ask.spec):
+            ANSWERED_RUN_APPROVALS[(ask.chat_id, str(ask.spec.get("prompt") or ""))] = outcome
+    else:
         ask.future.set_result(outcome)
     return ask
 
 
 def cancel_chat_asks(chat_id: str) -> list[PendingAsk]:
-    stale = [a for a in PENDING.values() if a.chat_id == chat_id]
+    stale = [a for a in PENDING.values()
+             if a.chat_id == chat_id and not is_run_approval(a.spec)]
     return [ask for a in stale
             if (ask := resolve_ask(a.id, "cancelled")) is not None]
 

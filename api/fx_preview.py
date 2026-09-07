@@ -15,6 +15,61 @@ _SCALE_ARGS = (f"w='min({_MAX_DIM},iw)':h='min({_MAX_DIM},ih)':"
                f"force_original_aspect_ratio=decrease:force_divisible_by=2")
 
 
+_SPEC_MARKERS = ('_fx_spec_only(', '_fx_passthrough(', '_fx_identity(',
+                 'build_fx_spec(', 'build_torch_fx_spec(', '_emit_audio_fx(')
+
+
+class PreviewRejected(ValueError):
+    pass
+
+
+def preview_kind(stage_cls) -> str:
+    try:
+        sig = inspect.signature(stage_cls.execute)
+    except (TypeError, ValueError):
+        return 'renders'
+    if 'video' not in sig.parameters:
+        return 'multi_input'
+    try:
+        src = inspect.getsource(stage_cls.execute)
+    except (OSError, TypeError):
+        src = ''
+    return 'spec' if any(m in src for m in _SPEC_MARKERS) else 'renders'
+
+
+def _reject_unpreviewable(node_id: str, stage_cls) -> None:
+    kind = preview_kind(stage_cls)
+    if kind == 'multi_input':
+        raise PreviewRejected(
+            f"{node_id} takes several sources (or none), so a single-clip "
+            f"preview does not apply — preview supports single-source FX only")
+    if kind == 'renders':
+        raise PreviewRejected(
+            f"{node_id} renders its result directly instead of describing a "
+            f"filter, so there is nothing cheap to preview — run the stage instead")
+
+
+def _validate_combo_params(stage_cls, params: dict) -> None:
+    from .presets import _input_field, _input_name, _schema_field
+    try:
+        inputs = _schema_field(stage_cls.define_schema(), 'inputs') or []
+    except Exception:
+        return
+    for inp in inputs:
+        name = _input_name(inp)
+        if not name or name not in params:
+            continue
+        options = _input_field(inp, 'options')
+        if not isinstance(options, (list, tuple)) or not options:
+            continue
+        value = params[name]
+        if value in options or str(value) in [str(o) for o in options]:
+            continue
+        raise PreviewRejected(
+            f"{name} must be one of: {', '.join(str(o) for o in options)} "
+            f"(got {value!r})")
+
+
 def _filtered_exec_kwargs(stage_cls, params: dict) -> dict:
     sig = inspect.signature(stage_cls.execute)
     known = {
@@ -50,7 +105,10 @@ def _spec_from_stage(node_id: str, stage_cls, params: dict,
             return entry
     if len(args) >= 2 and isinstance(args[1], str) and args[1].strip():
         return parse_fx_spec(args[1], node_id)
-    raise RuntimeError("stage did not return an fx spec")
+    raise PreviewRejected(
+        f"{node_id} produced no adjustment with these params, so there is "
+        f"nothing to preview — pass params that change something (its "
+        f"defaults are a no-op)")
 
 
 def _render_preview(video: str, data: dict, t: float, window: float) -> dict:
@@ -115,7 +173,11 @@ async def fx_preview(request: web.Request) -> web.Response:
         return web.json_response(
             {'error': f'unknown node_id {node_id!r}'}, status=404)
     try:
+        _reject_unpreviewable(node_id, stage_cls)
+        _validate_combo_params(stage_cls, params)
         data = _spec_from_stage(node_id, stage_cls, params, video)
+    except PreviewRejected as e:
+        return web.json_response({'error': str(e)}, status=400)
     except Exception as e:
         return web.json_response(
             {'error': f'{node_id} does not support clip preview: {e}'},

@@ -177,13 +177,20 @@ async def _fx_preview(args: dict) -> dict:
     window = max(_FX_PREVIEW_WINDOW_MIN,
                  min(_FX_PREVIEW_WINDOW_MAX, window))
 
-    from ..fx_preview import _render_preview, _spec_from_stage
+    from ..fx_preview import (
+        PreviewRejected, _reject_unpreviewable, _render_preview, _spec_from_stage,
+        _validate_combo_params,
+    )
     from ..presets import _stage_class_map
     stage_cls = (await _stage_class_map()).get(node_class)
     if stage_cls is None:
         raise ValueError(f"unknown node_class {node_class!r}")
     try:
+        _reject_unpreviewable(node_class, stage_cls)
+        _validate_combo_params(stage_cls, params)
         data = _spec_from_stage(node_class, stage_cls, params, url)
+    except PreviewRejected as e:
+        raise ValueError(str(e))
     except Exception as e:
         raise ValueError(f"{node_class} does not support fx preview: {e}")
     result = await asyncio.to_thread(_render_preview, url, data, t, window)

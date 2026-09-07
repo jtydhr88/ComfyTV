@@ -11,7 +11,9 @@ def _bot_turn_state():
     from ..bot import ACTIVE_TURNS
     return chat_id, ACTIVE_TURNS.get(chat_id)
 
-async def _await_ask(chat_id: str, state, spec: dict) -> dict:
+async def _await_ask(chat_id: str, state, spec: dict, *,
+                     timeout: float | None = None,
+                     keep_pending_on_timeout: bool = False) -> dict:
     from .. import bot_asks
     from ..bot_turns import _broadcast
 
@@ -25,9 +27,12 @@ async def _await_ask(chat_id: str, state, spec: dict) -> dict:
         "ask_id": ask.id, **spec,
     })
     try:
-        outcome = await asyncio.wait_for(ask.future,
-                                         timeout=bot_asks.ASK_TIMEOUT_S)
+        outcome = await asyncio.wait_for(
+            asyncio.shield(ask.future),
+            timeout=bot_asks.ASK_TIMEOUT_S if timeout is None else timeout)
     except asyncio.TimeoutError:
+        if keep_pending_on_timeout:
+            return {"status": "pending", "ask_id": ask.id}
         bot_asks.resolve_ask(ask.id, "expired")
         outcome = {"status": "expired"}
 
@@ -97,28 +102,44 @@ async def _maybe_ask_run_approval(action: str) -> dict | None:
     chat = storage.get_bot_chat(chat_id)
     if not chat or (chat.get("run_mode") or "auto") != "ask":
         return None
-    outcome = await _await_ask(chat_id, state, {
-        "prompt": action,
-        "options": [
-            {"id": "run", "label": "Run"},
-            {"id": "always", "label": "Always run",
-             "description": "run this and switch the chat back to Auto"},
-            {"id": "cancel", "label": "Cancel"},
-        ],
-        "min_selections": 1,
-        "max_selections": 1,
-        "allow_other": False,
-        "kind": "run_approval",
-    })
+    from .. import bot_asks
+    outcome = bot_asks.take_run_approval_answer(chat_id, action)
+    if outcome is None:
+        outcome = await _await_ask(chat_id, state, {
+            "prompt": action,
+            "options": [
+                {"id": "run", "label": "Run"},
+                {"id": "always", "label": "Always run",
+                 "description": "run this and switch the chat back to Auto"},
+                {"id": "cancel", "label": "Cancel"},
+            ],
+            "min_selections": 1,
+            "max_selections": 1,
+            "allow_other": False,
+            "kind": bot_asks.RUN_APPROVAL_KIND,
+        }, timeout=bot_asks.RUN_APPROVAL_WAIT_S, keep_pending_on_timeout=True)
     selected = outcome.get("selected") or []
     if outcome["status"] == "answered" and "always" in selected:
         storage.update_bot_chat(chat_id, run_mode="auto")
         return None
     if outcome["status"] == "answered" and "run" in selected:
         return None
+    if outcome["status"] == "pending":
+        return {"started": False, "pending_approval": True,
+                "ask_id": outcome.get("ask_id"),
+                "note": f"the user has not answered '{action}' yet — the "
+                        "question stays open in the chat panel. Nothing ran. "
+                        "Tell the user it is waiting for their approval; once "
+                        "they answer, call this tool again for the same "
+                        "target and it will proceed without asking twice."}
+    if outcome["status"] == "answered":
+        return {"cancelled": True, "status": "declined",
+                "note": "the user declined this run; do not retry it without "
+                        "new instructions"}
     return {"cancelled": True, "status": outcome["status"],
-            "note": "the user declined this run; do not retry it without "
-                    "new instructions"}
+            "note": f"the run approval was {outcome['status']} before the user "
+                    "answered — nothing ran and the ComfyTV page is fine; ask "
+                    "the user whether to run it"}
 
 
 TOOLS: dict[str, dict] = {

@@ -328,6 +328,7 @@
     "cancelled": "Cancelled",
     "upstreamNotReady": "Upstream not ready",
     "upstreamNotReadyDetail": "Upstream not ready: {list}. Run those stage(s) first so they produce a snapshot, then Run this stage again.",
+    "droppedFromQueue": "Removed from the queue before it ran — the queue was cleared or the prompt was deleted.",
     "workerDied": "Backend stopped without sending a result. The prompt worker likely died (CUDA OOM during cleanup is the usual cause). Restart ComfyUI to recover."
   },
   "eagle": {

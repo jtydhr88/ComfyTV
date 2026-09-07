@@ -3,6 +3,7 @@ import { outputHasLinks, spawnConsumingNode } from '@/composables/stages/spawnFo
 import { ensureStageUid } from '@/composables/stages/stageIdentity'
 import { buildRunPrompt } from '@/composables/stages/stagePromptBuild'
 import { useRemotePreflight } from '@/composables/stages/useRemotePreflight'
+import { cancelPrompt, promptInQueue } from '@/composables/stages/queueControl'
 import { getStageMeta } from '@/composables/stages/stageMeta'
 import { t } from '@/i18n'
 import { app } from '@/lib/comfyApp'
@@ -162,16 +163,23 @@ export function createStageRun(opts: {
       }
       return
     }
-    try {
-      const a = app as any
-      if (typeof a.api.interrupt === 'function') {
-        await a.api.interrupt()
-      } else {
-        await a.api.fetchApi('/interrupt', { method: 'POST' })
-      }
-    } catch (e) {
-      console.error('[ComfyTV/stage] interrupt failed', e)
+    const pid = runningPromptId
+    if (!pid) {
+      markDropped(t('error.cancelled'))
+      return
     }
+    try {
+      const outcome = await cancelPrompt((app as any).api, pid)
+      if (outcome !== 'interrupted' && outcome !== 'unknown') markDropped(t('error.cancelled'))
+    } catch (e) {
+      console.error('[ComfyTV/stage] cancel failed', e)
+    }
+  }
+
+  const markDropped = (message: string) => {
+    store.applyExecutionError(state, { message, type: 'Cancelled' })
+    runningPromptId = null
+    clearWatchdog()
   }
 
   const onProgress = (d: any) => {
@@ -224,21 +232,26 @@ export function createStageRun(opts: {
     if (state.running) state.running = false
   }
 
-  const onStatus = (d: any) => {
+  const onStatus = async (d: any) => {
     const remaining = Number(d?.status?.exec_info?.queue_remaining ?? d?.exec_info?.queue_remaining)
-    if (!Number.isFinite(remaining) || remaining !== 0) return
-    if (!runningPromptId || !state.running) return
+    if (!Number.isFinite(remaining)) return
+    if (!runningPromptId || !state.running || runningJobId) return
     if (watchdogTimer) return
     const pid = runningPromptId
+    const queued = remaining === 0 ? false : await promptInQueue((app as any).api, pid)
+    if (queued !== false) return
+    if (runningPromptId !== pid || !state.running || watchdogTimer) return
     watchdogTimer = setTimeout(() => {
       watchdogTimer = null
       if (runningPromptId !== pid || !state.running) return
-      console.warn(`[ComfyTV/stage] watchdog firing on node ${node.id} — queue empty but no execution_success/error for prompt ${pid}`)
-      store.applyExecutionError(state, {
-        message: t('error.workerDied'),
-        type: 'WorkerDied',
-      })
-      runningPromptId = null
+      if (remaining === 0) {
+        console.warn(`[ComfyTV/stage] watchdog firing on node ${node.id} — queue empty but no execution_success/error for prompt ${pid}`)
+        store.applyExecutionError(state, { message: t('error.workerDied'), type: 'WorkerDied' })
+        runningPromptId = null
+        return
+      }
+      console.warn(`[ComfyTV/stage] prompt ${pid} left the queue without running (node ${node.id})`)
+      markDropped(t('error.droppedFromQueue'))
     }, 3000)
   }
 

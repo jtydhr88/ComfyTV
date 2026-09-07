@@ -328,6 +328,7 @@
     "cancelled": "已取消",
     "upstreamNotReady": "上游未就绪",
     "upstreamNotReadyDetail": "上游未就绪:{list}。请先运行这些 stage 生成快照,然后再运行此 stage。",
+    "droppedFromQueue": "尚未运行就被移出队列 — 队列被清空或该任务被删除。",
     "workerDied": "后端未返回结果就停止了。prompt worker 可能已崩溃(通常是清理阶段 CUDA OOM)。重启 ComfyUI 后恢复。"
   },
   "eagle": {

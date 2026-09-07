@@ -138,7 +138,7 @@ class TestFxPreviewEndpoint:
         for node_id in ('ComfyTV.VideoTransitionStage', 'ComfyTV.FXChainStage'):
             r = await _post(client, noise_clip, node_id=node_id)
             assert r.status == 400
-            assert 'does not support clip preview' in (await r.json())['error']
+            assert node_id in (await r.json())['error']
 
     async def test_missing_fields_400(self, client, noise_clip):
         r = await _post(client, '')

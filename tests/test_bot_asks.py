@@ -368,3 +368,29 @@ class TestAnswerEndpoint:
         bad = await client.patch(f"/comfytv/bot/chats/{chat['id']}",
                                  json={"run_mode": "yolo"})
         assert bad.status == 400
+
+
+class TestRunApprovals:
+    async def test_run_approvals_survive_turn_end_and_are_replayed(self):
+        spec = {**bot_asks.validate_spec(SPEC_ARGS), "kind": "run_approval", "prompt": "Run stage 4?"}
+        ask = bot_asks.create_ask("c9", "m9", spec)
+        plain = bot_asks.create_ask("c9", "m9", bot_asks.validate_spec(SPEC_ARGS))
+        cancelled = bot_asks.cancel_chat_asks("c9")
+        assert [a.id for a in cancelled] == [plain.id]
+        assert ask.id in bot_asks.PENDING
+        # the tool already gave up waiting; the human answers later
+        ask.future.set_result({"status": "pending"})
+        bot_asks.resolve_ask(ask.id, "answered", ["run"], "")
+        assert bot_asks.take_run_approval_answer("c9", "Run stage 4?") == {"status": "answered", "selected": ["run"]}
+        assert bot_asks.take_run_approval_answer("c9", "Run stage 4?") is None
+
+    async def test_new_run_approval_replaces_the_previous_pending_one(self):
+        spec = {**bot_asks.validate_spec(SPEC_ARGS), "kind": "run_approval", "prompt": "Run stage 1?"}
+        first = bot_asks.create_ask("c8", "m8", spec)
+        second = bot_asks.create_ask("c8", "m8", {**spec, "prompt": "Run stage 2?"})
+        assert first.id not in bot_asks.PENDING and second.id in bot_asks.PENDING
+        assert (await first.future)["status"] == "cancelled"
+        bot_asks.resolve_ask(second.id, "cancelled")
+
+    def test_wait_is_bounded_below_typical_client_timeouts(self):
+        assert bot_asks.RUN_APPROVAL_WAIT_S <= 60
