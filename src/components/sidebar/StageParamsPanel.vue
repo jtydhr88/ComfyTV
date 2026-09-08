@@ -25,7 +25,10 @@
           <i :class="['pi', paramsCollapsed ? 'pi-chevron-right' : 'pi-chevron-down', 'ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground']" />
           <span class="ctv:flex-1 ctv:text-left">{{ $t('stageManager.section.params') }}</span>
         </button>
-      <div v-show="!paramsCollapsed" class="ctv:mt-1.5 ctv:flex ctv:flex-col ctv:gap-2.5">
+      <p v-if="activeKind === 'custom'" v-show="!paramsCollapsed" class="ctv:m-0 ctv:mt-1.5 ctv:text-2xs ctv:italic ctv:text-muted-foreground/70">
+        {{ $t('stageParams.sidebar.customKindNote') }}
+      </p>
+      <div v-else v-show="!paramsCollapsed" class="ctv:mt-1.5 ctv:flex ctv:flex-col ctv:gap-2.5">
       <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2 ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-secondary-background/40">
         <div class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:opacity-60">{{ $t('stageParams.sidebar.new') }}</div>
 

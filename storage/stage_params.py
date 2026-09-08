@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 STAGE_PARAM_TYPES: tuple[str, ...] = ("boolean", "int", "float", "string", "combo")
+STAGE_PARAM_BLOCKED_KINDS: tuple[str, ...] = ("custom",)
 
 
 _UNSET = object()
@@ -86,7 +87,7 @@ def create_stage_param(
 ) -> Optional[dict]:
     kind = (kind or "").strip()
     label = (label or "").strip()
-    if not kind or not label:
+    if not kind or not label or kind in STAGE_PARAM_BLOCKED_KINDS:
         return None
     if type not in STAGE_PARAM_TYPES:
         return None

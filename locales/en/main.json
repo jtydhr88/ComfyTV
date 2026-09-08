@@ -757,6 +757,7 @@
       "title": "Stage Parameters",
       "kind": "Stage",
       "empty": "No parameters defined for this stage yet.",
+      "customKindNote": "Custom Stage workflows do not use stage parameters — expose the workflow's own widgets from the card's Expose I/O panel instead.",
       "new": "New parameter",
       "label": "Label",
       "type": "Type",

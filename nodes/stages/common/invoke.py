@@ -72,7 +72,7 @@ def _merge_custom_params(kind: str, custom_params, options: dict | None,
     merged: dict = dict(option_defaults) if option_defaults else {}
     try:
         from .... import storage
-        for d in storage.list_stage_params(kind):
+        for d in ([] if kind in storage.STAGE_PARAM_BLOCKED_KINDS else storage.list_stage_params(kind)):
             if d.get("default") is not None:
                 merged[d["key"]] = d["default"]
     except Exception as e:

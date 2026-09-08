@@ -111,6 +111,8 @@ def caps_payload() -> dict:
 
     for p in storage.list_stage_params():
         kind = p["kind"]
+        if kind in storage.STAGE_PARAM_BLOCKED_KINDS:
+            continue
         key = f"option:{p['key']}"
         entry = by_kind.get(kind)
         if entry is None:

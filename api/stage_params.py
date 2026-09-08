@@ -22,6 +22,8 @@ async def create_stage_param(request: web.Request) -> web.Response:
     type_ = (body.get("type") or "").strip()
     if not kind:
         return web.json_response({"error": "kind is required"}, status=400)
+    if kind in storage.STAGE_PARAM_BLOCKED_KINDS:
+        return web.json_response({"error": "stage params are not available for kind 'custom' — expose the workflow's own widgets from the Custom Stage card instead"}, status=400)
     if not label:
         return web.json_response({"error": "label is required"}, status=400)
     if type_ not in storage.STAGE_PARAM_TYPES:

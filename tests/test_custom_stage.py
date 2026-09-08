@@ -312,3 +312,23 @@ async def test_mcp_duplicate_op(reset_db, tmp_path, monkeypatch):
     assert again["results"][0]["ok"] is False and "already exists" in again["results"][0]["reason"]
     with pytest.raises(ValueError):
         await _workflow_edit({"kind": "custom", "label": "wf", "ops": [{"op": "duplicate", "label": " "}]})
+
+
+def test_stage_params_blocked_for_custom(reset_db):
+    from ComfyTV import storage
+    from ComfyTV.nodes.stages.common.caps import caps_payload
+    from ComfyTV.nodes.stages.common.invoke import _merge_custom_params
+    assert storage.create_stage_param(kind="custom", label="Steps", type="int", default=4) is None
+    assert storage.create_stage_param(kind="image", label="Steps", type="int", default=4) is not None
+    assert "custom" not in {p["kind"] for p in storage.list_stage_params()}
+    assert caps_payload()["caps_by_kind"]["custom"]["option_keys"] == []
+    assert _merge_custom_params("custom", '{"items":[{"key":"cio_3_seed","value":7}]}', {"x": 1}) == {"cio_3_seed": 7, "x": 1}
+
+
+@pytest.mark.asyncio
+async def test_stage_param_routes_block_custom(client):
+    resp = await client.post("/comfytv/stage_params", json={"kind": "custom", "label": "Steps", "type": "int"})
+    assert resp.status == 400 and "custom" in (await resp.json())["error"]
+    from ComfyTV.api.mcp_tools.stages import _stage_params_tool
+    with pytest.raises(ValueError, match="custom"):
+        await _stage_params_tool({"action": "create", "kind": "custom", "label": "Steps", "type": "int"})

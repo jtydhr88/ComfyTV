@@ -150,6 +150,8 @@ async def _stage_params_tool(args: dict) -> dict:
         type_ = str(args.get("type") or "").strip()
         if not kind:
             raise ValueError("kind is required (a stage kind like 'video')")
+        if kind in storage.STAGE_PARAM_BLOCKED_KINDS:
+            raise ValueError("stage params are not available for kind 'custom' — expose the workflow's own widgets from the Custom Stage card instead")
         if not label:
             raise ValueError("label is required")
         if type_ not in storage.STAGE_PARAM_TYPES:
