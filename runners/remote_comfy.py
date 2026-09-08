@@ -374,7 +374,7 @@ class RemoteComfyUIRunner(Runner):
 
         if rtype == "ui_save_batch":
             files: list[dict] = []
-            ordered_ids = [node_id] + [k for k in outputs.keys() if k != node_id]
+            ordered_ids = [node_id] if result_meta.get("only_node") else                 [node_id] + [k for k in outputs.keys() if k != node_id]
             for nid in ordered_ids:
                 files.extend(_save_files_from(outputs.get(nid) or {}))
             if not files:
@@ -389,6 +389,13 @@ class RemoteComfyUIRunner(Runner):
                     "image_url": url,
                 })
             return json.dumps({"images": images})
+
+        if rtype == "multi":
+            multi: dict[str, str] = {}
+            for sub in result_meta.get("outputs") or []:
+                key = str(sub.get("id") or sub.get("kind") or sub.get("node"))
+                multi[key] = await self._extract_result(session, entry, sub)
+            return json.dumps({"multi": multi})
 
         if rtype == "graph_output_first":
             out = outputs.get(node_id) or {}

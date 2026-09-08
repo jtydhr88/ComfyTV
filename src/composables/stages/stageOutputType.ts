@@ -3,6 +3,7 @@ const KIND_TO_OUTPUT_TYPE: Record<string, string> = {
   'image-picker': 'image',
   'audio-picker': 'audio',
   'video-picker': 'video',
+  custom: '',
 }
 
 export function outputTypeForKind(kind: string): string {

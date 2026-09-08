@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { reactive, ref } from 'vue'
 import { autoProxyOutput } from '@/composables/widgets/useProxiedVideoUrl'
+import { OUTPUT_SLOTS, parseMultiOutputs } from '@/v2/customIo'
 
 export type StageKind =
   | 'text'
@@ -16,6 +17,7 @@ export type StageKind =
   | 'timeline'
   | 'model'
   | 'material'
+  | 'custom'
 
 export const POOL_PICKER_KINDS = ['image-picker', 'audio-picker', 'video-picker'] as const
 export type PoolPickerKind = (typeof POOL_PICKER_KINDS)[number]
@@ -156,6 +158,7 @@ const KIND_TO_TYPE: Record<StageKind, TypedValueType> = {
   timeline:       'COMFYTV_TIMELINE',
   model:          'COMFYTV_MODEL',
   material:       'COMFYTV_MATERIAL',
+  custom:         'COMFYTV_IMAGE',
 }
 
 export const useStageStore = defineStore('comfytv-stage', () => {
@@ -299,6 +302,8 @@ export const useStageStore = defineStore('comfytv-stage', () => {
       const idx = Number(pickedIdxRaw)
       if (Number.isFinite(idx) && idx >= 1) state.pickedIndex = idx
     }
+    const customRaw = Array.isArray(msg?.custom_outputs) ? msg.custom_outputs[0] : msg?.custom_outputs
+    if (customRaw != null) applyCustomOutputs(state, customRaw)
     const directorClips = Array.isArray(msg?.director_clips)
       ? msg.director_clips[0]
       : msg?.director_clips
@@ -308,6 +313,14 @@ export const useStageStore = defineStore('comfytv-stage', () => {
       ? Number(durationRaw)
       : null
     notifyConsumers(state)
+  }
+
+  function applyCustomOutputs(state: StageState, raw: unknown) {
+    const multi = parseMultiOutputs(raw)
+    OUTPUT_SLOTS.forEach((k, i) => {
+      while (state.outputs.length <= i) state.outputs.push(null)
+      state.outputs[i] = multi[k] ?? null
+    })
   }
 
   function setPickerPool(node: any, state: StageState, poolJson: string) {
@@ -359,6 +372,7 @@ export const useStageStore = defineStore('comfytv-stage', () => {
     refreshStageInputs,
     resolveUpstreamValue,
     applyExecutedPayload,
+    applyCustomOutputs,
     applyExecutionError,
     clearError,
     setOutputSlot,

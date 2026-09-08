@@ -307,6 +307,42 @@ async def workflow_update_meta(request: web.Request) -> web.Response:
     return web.json_response({"ok": True})
 
 
+@routes.post("/comfytv/workflows/config/custom_io")
+async def workflow_set_custom_io(request: web.Request) -> web.Response:
+    try:
+        body = await request.json()
+    except Exception:
+        return web.json_response({"error": "json body required"}, status=400)
+    try:
+        wid = int(body["workflow_id"])
+    except (KeyError, ValueError, TypeError) as e:
+        return web.json_response({"error": f"bad payload: {e}"}, status=400)
+    cfg = workflow_db.set_custom_io(
+        wid, {"inputs": body.get("inputs") or [], "outputs": body.get("outputs") or []},
+    )
+    if cfg is None:
+        return web.json_response({"error": "workflow not found"}, status=404)
+    return web.json_response({"ok": True, "config": cfg})
+
+
+@routes.post("/comfytv/workflows/{wid}/duplicate")
+async def workflow_duplicate(request: web.Request) -> web.Response:
+    try:
+        wid = int(request.match_info["wid"])
+        body = await request.json()
+    except Exception:
+        return web.json_response({"error": "json body required"}, status=400)
+    try:
+        cfg = workflow_db.duplicate_workflow(wid, str(body.get("label") or ""))
+    except ValueError as e:
+        return web.json_response({"error": str(e)}, status=400)
+    if cfg is None:
+        return web.json_response({"error": "workflow not found"}, status=404)
+    refresh_registry()
+    broadcast_workflow_event("import", {"kind": cfg["kind"], "label": cfg["label"]})
+    return web.json_response({"ok": True, "config": cfg})
+
+
 @routes.post("/comfytv/workflows/convert")
 async def workflow_convert(request: web.Request) -> web.Response:
     try:

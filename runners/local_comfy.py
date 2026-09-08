@@ -57,7 +57,7 @@ def prepare_workflow(runner_id: str, kinds, ctx: RunnerContext) -> tuple[dict, d
     resolver = _Resolver(config, ctx)
     _apply_overrides(workflow, config, resolver, pruned_nodes)
 
-    result_meta = config.get("result") or {}
+    result_meta = _custom_multi_result(config) or config.get("result") or {}
     if not result_meta.get("node"):
         result_meta = _auto_detect_result(workflow, ctx.kind)
     result_node = result_meta.get("node")
@@ -70,6 +70,21 @@ def prepare_workflow(runner_id: str, kinds, ctx: RunnerContext) -> tuple[dict, d
     return workflow, result_meta
 
 
+def _custom_multi_result(config: dict) -> dict:
+    from .custom_io import normalize_custom_io, result_meta_for
+    custom_io = (config.get("meta") or {}).get("custom_io")
+    if not custom_io:
+        return {}
+    return result_meta_for(normalize_custom_io(custom_io))
+
+
+def _execute_node_ids(workflow: dict, result_meta: dict) -> list[str]:
+    if result_meta.get("type") == "multi":
+        ids = [str(o.get("node") or "") for o in result_meta.get("outputs") or []]
+        return [nid for nid in ids if nid and nid in workflow]
+    return _output_node_ids(workflow, result_meta.get("node"))
+
+
 class LocalComfyUIRunner(Runner):
 
     async def invoke(self, ctx: RunnerContext):
@@ -79,7 +94,7 @@ class LocalComfyUIRunner(Runner):
         sub_prompt_id = f"comfytv-{uuid.uuid4().hex[:8]}"
         _log.info("[ComfyTV/%s] %s  nodes=%d", self.id, sub_prompt_id, len(workflow))
 
-        execute_outputs = _output_node_ids(workflow, result_node)
+        execute_outputs = _execute_node_ids(workflow, result_meta)
         executor = await _run_subprompt(workflow, sub_prompt_id,
                                         execute_outputs=execute_outputs)
         return await _extract_result(executor, result_meta)

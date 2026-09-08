@@ -44,8 +44,12 @@ import {
   StageDefaultsSchema,
   TestServerResultSchema,
   UnlinkWorkflowResultSchema,
+  WorkflowConfigSchema,
+  CustomIoSaveResultSchema,
 } from './schemas'
 import type {
+  WorkflowConfig,
+  CustomIoSaveResult,
   AdoptAssetsResult,
   ApiSidecarResult,
   BackupResult,
@@ -446,6 +450,26 @@ export function fxClipPreview(
     t,
     ...(window !== undefined ? { window } : {}),
   })
+}
+
+export function fetchWorkflowConfig(kind: string, label: string): Promise<WorkflowConfig> {
+  return apiFetch(
+    `/comfytv/workflows/config?kind=${encodeURIComponent(kind)}&label=${encodeURIComponent(label)}`,
+    WorkflowConfigSchema,
+  )
+}
+
+export function saveCustomIo(
+  workflowId: number,
+  io: { inputs: unknown[]; outputs: unknown[] },
+): Promise<CustomIoSaveResult> {
+  return apiSend('/comfytv/workflows/config/custom_io', 'POST', CustomIoSaveResultSchema, {
+    workflow_id: workflowId, ...io,
+  })
+}
+
+export function duplicateWorkflow(workflowId: number, label: string): Promise<CustomIoSaveResult> {
+  return apiSend(`/comfytv/workflows/${workflowId}/duplicate`, 'POST', CustomIoSaveResultSchema, { label })
 }
 
 export * from './schemas'

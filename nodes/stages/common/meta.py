@@ -200,6 +200,7 @@ STAGE_META: dict[str, dict] = {
     'BlenderSceneStage':            {'kind': 'image',       'variant': 'loader'},
     'BlenderCameraStage':           {'kind': 'image'},
     'BlenderAnimationStage':        {'kind': 'video'},
+    'CustomStage':                  {'kind': 'custom',      'workflow_kind': 'custom'},
 }
 
 

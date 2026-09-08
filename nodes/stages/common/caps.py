@@ -49,6 +49,8 @@ CAPS_BY_KIND: dict[str, dict] = {
                            []),
     'model':         _caps(['model', 'image', 'text'],     ['option:seed'],
                            []),
+    'custom':        _caps(['image', 'video', 'audio', 'text', 'model'], [],
+                           []),
 }
 
 

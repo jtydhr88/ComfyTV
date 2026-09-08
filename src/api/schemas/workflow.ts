@@ -159,6 +159,11 @@ export const WorkflowConfigSchema = z.object({
   meta: z.record(z.string(), z.unknown()).optional(),
 }).passthrough()
 export type WorkflowConfig = z.infer<typeof WorkflowConfigSchema>
+export const CustomIoSaveResultSchema = z.object({
+  ok: z.boolean(),
+  config: WorkflowConfigSchema,
+})
+export type CustomIoSaveResult = z.infer<typeof CustomIoSaveResultSchema>
 const WorkflowUsageEntrySchema = z.object({
   uses: z.record(z.string(), z.boolean()),
   requires: z.record(z.string(), z.boolean()),

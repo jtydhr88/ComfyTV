@@ -1,4 +1,4 @@
-from . import seed, config, bindings, convert, link, pull  # noqa: F401 — for test monkeypatching
+from . import seed, config, bindings, convert, link, pull, custom_io  # noqa: F401 — for test monkeypatching
 from .convert import (
     build_object_info,
     convert_gui_to_api,
@@ -28,6 +28,7 @@ from .config import (
     _bindings_to_inputs_dict, _node_widget_meta,
     _exposed_widgets, _extract_gui_view,
 )
+from .custom_io import set_custom_io, duplicate_workflow
 from .bindings import (
     upsert_input_binding,
     delete_input_binding,
@@ -57,6 +58,8 @@ __all__ = [
     "build_preset",
     "get_workflow_for_invoke",
     "get_workflow_config",
+    "set_custom_io",
+    "duplicate_workflow",
     "upsert_input_binding",
     "delete_input_binding",
     "update_workflow_meta",

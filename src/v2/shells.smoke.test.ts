@@ -66,6 +66,7 @@ const SHELL_META: Record<string, Meta> = {
   'ComfyTV.ShotImagesStage': { kind: 'image-batch' },
   'ComfyTV.ImageVariationsStage': { kind: 'image-batch' },
   'ComfyTV.ImagePickerStage': { kind: 'image-picker' },
+  'ComfyTV.CustomStage': { kind: 'custom' },
   'ComfyTV.VideoPickerStage': { kind: 'video-picker' },
   'ComfyTV.AudioPickerStage': { kind: 'audio-picker' },
   'ComfyTV.CropStage': { kind: 'image', variant: 'transform' },

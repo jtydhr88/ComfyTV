@@ -88,6 +88,7 @@ async def _workflow_get(args: dict) -> dict:
         "result_node": cfg["result_node"],
         "sizing": cfg["sizing"],
         "meta": cfg["meta"],
+        "custom_io": (cfg["meta"] or {}).get("custom_io"),
         "bindings": cfg["bindings"],
         "exposed_widgets": cfg.get("exposed_widgets") or [],
         "nodes": _slim_api_nodes(cfg.get("api_json")),
@@ -121,6 +122,47 @@ def _validate_bind_op(i: int, op: dict, api_nodes: dict | None) -> None:
             raise ValueError(
                 f"ops[{i}]: node {node_id} has no input {input_name!r} "
                 f"(inputs: {sorted(inputs)})")
+
+_CUSTOM_IO_INPUT_KINDS = ("image", "video", "audio", "model", "text", "param")
+_CUSTOM_IO_OUTPUT_KINDS = ("image", "images", "video", "audio", "text", "model")
+
+
+def _validate_custom_io_op(i: int, op: dict, api_nodes: dict | None) -> None:
+    inputs, outputs = op.get("inputs"), op.get("outputs")
+    if not isinstance(inputs, list) or not isinstance(outputs, list):
+        raise ValueError(f"ops[{i}]: set_custom_io needs inputs[] and outputs[]")
+    if not outputs:
+        raise ValueError(f"ops[{i}]: set_custom_io needs at least one output")
+    for j, it in enumerate(inputs):
+        if not isinstance(it, dict) or not it.get("node") or not it.get("input"):
+            raise ValueError(f"ops[{i}].inputs[{j}] needs node and input")
+        if it.get("kind") not in _CUSTOM_IO_INPUT_KINDS:
+            raise ValueError(
+                f"ops[{i}].inputs[{j}]: kind must be one of {_CUSTOM_IO_INPUT_KINDS}")
+        node = api_nodes.get(str(it["node"])) if api_nodes is not None else None
+        if api_nodes is not None and node is None:
+            raise ValueError(
+                f"ops[{i}].inputs[{j}]: node {it['node']!r} not in this workflow's "
+                f"API graph (nodes: {sorted(api_nodes)})")
+        if node is not None and str(it["input"]) not in (node.get("inputs") or {}):
+            raise ValueError(
+                f"ops[{i}].inputs[{j}]: node {it['node']!r} has no input "
+                f"{it['input']!r} (inputs: {sorted(node.get('inputs') or {})})")
+        if node is not None and it["kind"] in ("text", "param") and it.get("default") is None:
+            cur = (node.get("inputs") or {}).get(str(it["input"]))
+            if not isinstance(cur, list):
+                it["default"] = cur
+    for j, it in enumerate(outputs):
+        if not isinstance(it, dict) or not it.get("node"):
+            raise ValueError(f"ops[{i}].outputs[{j}] needs node")
+        if it.get("kind") not in _CUSTOM_IO_OUTPUT_KINDS:
+            raise ValueError(
+                f"ops[{i}].outputs[{j}]: kind must be one of {_CUSTOM_IO_OUTPUT_KINDS}")
+        if api_nodes is not None and str(it["node"]) not in api_nodes:
+            raise ValueError(
+                f"ops[{i}].outputs[{j}]: node {it['node']!r} not in this workflow's "
+                f"API graph (nodes: {sorted(api_nodes)})")
+
 
 def _result(op: str, ok, reason: str) -> dict:
     return {"op": op, "ok": True} if ok else {"op": op, "ok": False, "reason": reason}
@@ -167,12 +209,17 @@ async def _workflow_edit(args: dict) -> dict:
                 raise ValueError(
                     f"ops[{i}]: result_node {rn!r} not in this workflow's "
                     f"API graph (nodes: {sorted(api_nodes)})")
+        elif name == "set_custom_io":
+            _validate_custom_io_op(i, op, api_nodes)
+        elif name == "duplicate":
+            if not str(op.get("label") or "").strip():
+                raise ValueError(f"ops[{i}]: duplicate needs a non-empty label")
         elif name in ("set_default", "reset_to_preset"):
             pass
         else:
             raise ValueError(
                 f"ops[{i}]: unknown op {name!r} — valid: bind, unbind, "
-                "set_meta, set_default, reset_to_preset")
+                "set_meta, set_custom_io, duplicate, set_default, reset_to_preset")
 
     wid = int(cfg["id"])
     results = []
@@ -208,6 +255,25 @@ async def _workflow_edit(args: dict) -> dict:
             ok = workflow_db.update_workflow_meta(wid, **kwargs)
             results.append({**_result(name, ok, "workflow row is gone"),
                             "fields": sorted(kwargs)})
+        elif name == "set_custom_io":
+            out = workflow_db.set_custom_io(
+                wid, {"inputs": op["inputs"], "outputs": op["outputs"]})
+            cio = ((out or {}).get("meta") or {}).get("custom_io") or {}
+            results.append({**_result(name, out is not None, "workflow row is gone"),
+                            "inputs": len(cio.get("inputs") or []),
+                            "outputs": len(cio.get("outputs") or [])})
+        elif name == "duplicate":
+            try:
+                out = workflow_db.duplicate_workflow(wid, str(op["label"]))
+            except ValueError as e:
+                results.append({"op": name, "ok": False, "reason": str(e)})
+                continue
+            if out is not None:
+                refresh_registry()
+                broadcast_workflow_event("import", {"kind": out["kind"], "label": out["label"]})
+            results.append({**_result(name, out is not None, "workflow row is gone"),
+                            "label": (out or {}).get("label"),
+                            "id": (out or {}).get("id")})
         elif name == "set_default":
             out = workflow_db.set_default_workflow(
                 wid, bool(op.get("default", True)))
@@ -326,7 +392,22 @@ TOOLS: dict[str, dict] = {
             "int/float/str. {op:'unbind', node_id, input_name} removes a "
             "binding. {op:'set_meta', description?/result_type?/result_node?/"
             "sizing?/prune_when_missing?/meta?} updates workflow meta. "
-            "{op:'set_default', default?} stars it for its kind. "
+            "{op:'set_custom_io', inputs:[{node, input, kind:image|video|"
+            "audio|model|text|param, label?, required?, prompt?, ptype?, "
+            "default?}], outputs:[{node, kind:image|images|video|audio|text|"
+            "model, label?}]} defines what a ComfyTV.CustomStage exposes for a "
+            "kind='custom' workflow (media kinds become sockets, text/param "
+            "become on-card editors, prompt:true feeds a text input from the "
+            "stage's main_prompt; first output is the card preview; one output "
+            "per kind, image+images allowed together) — it rewrites the "
+            "matching bindings and meta.custom_io, replacing any previous "
+            "set. {op:'duplicate', label} copies this workflow (file, "
+            "bindings, custom_io) into a new entry of the same kind under "
+            "that label — use it before set_custom_io when other cards "
+            "already share this workflow and must keep their exposure; "
+            "later ops in the same call still target the original, so "
+            "edit the copy in a second workflow_edit call with the new "
+            "label. {op:'set_default', default?} stars it for its kind. "
             "{op:'reset_to_preset'} restores the shipped preset (undo "
             "button). bind ops are checked against the API graph — unknown "
             "node_id/input_name is rejected with the valid list. Returns "

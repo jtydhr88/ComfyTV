@@ -61,6 +61,10 @@ export function bindOutputRestore(opts: {
     if (restored && restored !== state.output) {
       store.setOutputSlot(state, 0, restored)
     }
+    if (kind === 'custom' && pj && typeof pj === 'object' && (pj as any).multi) {
+      store.applyCustomOutputs(state, (pj as any).multi)
+      store.notifyConsumers(state)
+    }
     if (kind === 'image-batch' && restored) {
       const widget = node.widgets?.find((wi: any) => wi.name === 'selected_index')
       const fromDb = Number(latest.picked_index)
@@ -82,12 +86,12 @@ export function bindOutputRestore(opts: {
     if (!node.id || node.id < 0) return
     const uid = ensureStageUid(node)
     try {
-      let latest = await projectStore.fetchLatestOutput(projectId, uid, outputTypeForKind(kind))
+      let latest = await projectStore.fetchLatestOutput(projectId, uid, outputTypeForKind(kind) || undefined)
 
       if (node.__comfytvFromSave && !adoptionTried) {
         adoptionTried = true
         const adopted = await projectStore.adoptOutputs(
-          projectId, String(node.id), stageClassName(node), uid, outputTypeForKind(kind),
+          projectId, String(node.id), stageClassName(node), uid, outputTypeForKind(kind) || undefined,
           getStageUidClaimedAt(node),
         )
         if (adopted && (!latest || Number(adopted.id) > Number(latest.id))) latest = adopted

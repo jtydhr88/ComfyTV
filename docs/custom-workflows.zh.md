@@ -36,12 +36,12 @@ user/comfytv/workflows/
   cutout/   multiview/   sequence/   speech/
   video/   text/   audio/   audio-vocal/   audio-bg/
   shot-images/  storyboard/  panorama/  timeline/  model/
-  split-part/   material-estimate/   speech-to-text/
+  split-part/   material-estimate/   speech-to-text/   custom/  ← 自定义节点（自选暴露的输入输出）
 ```
 
 **目录决定 kind。** 把 JSON 拷进去，重启 ComfyUI（或在侧边栏触发 rescan），它就会出现在对应 stage 的下拉框里。自带工作流在启动时会播种到这个目录；随 ComfyTV 发布的条目带 **builtin** 徽章，你改过的文件永远不会被更新覆盖。
 
-kind 全集：`text, image, shot-images, video, audio, speech, storyboard, panorama, timeline, upscale, outpaint, inpaint, erase, image-edit, multiangle, cutout, multiview, sequence, audio-vocal, audio-bg, model, split-part, material-estimate, speech-to-text`。
+kind 全集：`text, image, shot-images, video, audio, speech, storyboard, panorama, timeline, upscale, outpaint, inpaint, erase, image-edit, multiangle, cutout, multiview, sequence, audio-vocal, audio-bg, model, split-part, material-estimate, speech-to-text, custom`。
 
 每个自带 kind 的 JSON 旁都有一个 `README.md`，写明运行时输入和工作流通常需要的节点。先读对应 kind 的 README：
 

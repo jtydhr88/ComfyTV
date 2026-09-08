@@ -22,6 +22,17 @@
         <path d="M13.5 10.5a4 4 0 00-5.7 0l-3.3 3.3a4 4 0 105.7 5.7l1.6-1.6" />
       </svg>
     </button>
+    <button
+      v-for="a in actions ?? []"
+      :key="a.id"
+      type="button"
+      class="v2-fsel__link"
+      :data-on="a.active?.() ? '1' : ''"
+      :title="a.title"
+      @pointerdown.stop
+      @click.stop="a.onClick()"
+      v-html="a.icon"
+    />
     <div v-if="has('aspect_ratio') || has('resolution') || has('batch_size')" class="v2-fsel__item">
       <GenOptionsV2
         :ratio="has('aspect_ratio') ? sv('aspect_ratio') : null"
@@ -57,6 +68,14 @@ export interface FooterExtra {
   type?: 'combo' | 'number'
   titleKey?: string
 }
+
+export interface FooterAction {
+  id: string
+  title: string
+  icon: string
+  active?: () => boolean
+  onClick: () => void
+}
 </script>
 
 <script setup lang="ts">
@@ -75,6 +94,7 @@ const props = defineProps<{
   getNode: () => LGraphNode | undefined
   linkKind?: string | null
   extra?: FooterExtra[]
+  actions?: FooterAction[]
 }>()
 
 const { values, widgetOf, write } = useWidgetValues(
@@ -180,4 +200,9 @@ function onLinkWorkflow() {
   color: var(--v2-text-strong);
 }
 .v2-fsel__link svg { width: 13px; height: 13px; }
+.v2-fsel__link[data-on="1"] {
+  background: var(--v2-accent-soft);
+  border-color: var(--v2-accent-border);
+  color: var(--v2-accent-text);
+}
 </style>

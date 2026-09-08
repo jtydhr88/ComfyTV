@@ -118,6 +118,7 @@ from .poster import PosterStage
 from .storyboard_editor import StoryboardEditorStage
 from .material import MaterialStage
 from .split_part import SplitPartStage, MaskCleanup
+from .custom_stage import CustomStage
 
 
 def stage_classes() -> list:
@@ -187,6 +188,7 @@ def stage_classes() -> list:
         StoryboardEditorStage,
         MaterialStage,
         SplitPartStage, MaskCleanup,
+        CustomStage,
         *_bridge_classes(),
     ]
 
