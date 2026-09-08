@@ -23,7 +23,8 @@ const CSS = `
   content-visibility: auto;
   contain-intrinsic-size: auto 320px auto 460px;
 }
-.v2-card[data-v2-running] { content-visibility: visible; }
+.v2-card[data-v2-running],
+.lg-node[data-v2-selected] .v2-card { content-visibility: visible; }
 .v2-lod-poster,
 .v2-lod-poster-bg {
   display: none;

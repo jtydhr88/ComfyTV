@@ -58582,7 +58582,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-BuD4tn3O.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-CVuu7OL7.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -76539,7 +76539,8 @@ const CSS$2 = `
   content-visibility: auto;
   contain-intrinsic-size: auto 320px auto 460px;
 }
-.v2-card[data-v2-running] { content-visibility: visible; }
+.v2-card[data-v2-running],
+.lg-node[data-v2-selected] .v2-card { content-visibility: visible; }
 .v2-lod-poster,
 .v2-lod-poster-bg {
   display: none;
@@ -143184,7 +143185,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-9FkFtGNd.mjs");
+    const { STLLoader } = await import("./STLLoader-ErFqt5Bt.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -143192,7 +143193,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-DCW8lW7F.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-CCj0Huay.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -236990,4 +236991,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-Bp1wa15A.mjs.map
+//# sourceMappingURL=main-BoEYSDza.mjs.map
