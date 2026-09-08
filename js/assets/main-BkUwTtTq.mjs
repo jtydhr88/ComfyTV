@@ -58605,7 +58605,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-BnZQbbNm.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-D3n59Nhw.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -61113,7 +61113,7 @@ const promptHelper$1 = { "open": "Prompt helper — quick starters & enhancement
 const cameraPrompt$1 = { "open": "Cinematic camera — compile camera/lens/aperture into the prompt", "camera": "Camera", "lens": "Lens", "focal": "Focal length", "aperture": "Aperture", "empty": "Pick a camera, lens, focal length or aperture to build a cinematic suffix.", "insert": "Insert into prompt", "clear": "Clear" };
 const imageRefs$1 = { "title": "Asset references", "empty": "No reference assets — click + to pin one from the library.", "add": "Add reference asset", "batchItem": "Batch image #{n}", "pinBatch": "Pin this batch — it appears in every Asset references panel without wiring", "pinnedToast": "Batch pinned ({n} images)", "pinEmpty": "Nothing to pin — the batch is empty.", "refreshBatch": "Re-snapshot from the source stage's current output", "unpinBatch": "Unpin this batch", "refreshFailed": "Refresh failed — source stage not found or has no batch output.", "remove": "Remove", "warnDuplicate": "Reference slot #{n} is pinned by multiple images — only the last one applies at run.", "warnOverride": "Reference slot #{n} already has an upstream connection — the pinned image overrides it at run.", "warnOverflow": "The workflow binds only {total} reference slot(s) — {count} pinned image(s) won't be consumed.", "warnNoSlots": "This workflow has no image input that can receive reference images — they'll be ignored at run." };
 const promptAssets$1 = { "addTooltip": "Insert an image asset from the library — it will be sent as a reference image at run", "search": "Search assets…", "upload": "Upload images into the library and use them here", "tabBatch": "Batch", "tabLibrary": "Library", "close": "Close", "empty": "No matching assets — add some in the sidebar Assets tab.", "missing": "asset #{id} was removed from the library — this chip is ignored at run", "slotTitle": "Reference image slot", "slotShort": "→ reference slot #{n}", "slotWired": "wired", "slotClaimed": "taken", "slotEmpty": 'This workflow has no reference-image slots bound yet — bind a LoadImage to "Upstream image #N" in the sidebar workflow config first.' };
-const configSidebar$1 = { "title": "Workflow Config", "empty": "Select a stage node on the canvas to edit its workflow config. Imported workflows are picked from the node's workflow dropdown — see the Stages tab for the full list.", "noWorkflowPicked": "This stage's workflow combo is empty — pick one first.", "loading": "Loading…", "noExposedWidgets": "This workflow has no editable widgets, or hasn't been prepared yet — pick it on any stage first so the browser can analyze it.", "pickWorkflowFirst": "Pick this workflow on any stage first to populate widget metadata (the browser-side graphToPrompt has to run).", "bindTo": "Bind to:", "exportPreset": "Export preset.json", "exportPresetTooltip": "Download the current bindings as a *_preset.json file. Drop it next to the workflow JSON in workflows/<kind>/ to ship these defaults to other users.", "exportPresetFailed": "Export failed: {detail}", "resetToPreset": "↻ Reset to shipped preset", "resetToPresetTooltip": "Wipe all bindings + meta for this workflow and re-apply its shipped _preset.json from disk. Your own edits will be lost.", "resetToPresetConfirm": "Reset all bindings for this workflow to the shipped preset? Your edits will be lost.", "resetToPresetFailed": "Reset failed: {detail}", "conversionMayHaveFailed": "ComfyTV may have failed to convert this workflow. Export an API-format JSON from ComfyUI (Save (API Format)) and upload it here — name it as the matching .api.json next to the workflow.", "uploadApi": "Upload API JSON", "uploadApiTooltip": "Attach a Save (API Format) export to this workflow. It's stored as <name>.api.json next to the workflow and used directly, skipping conversion.", "uploadApiOk": "API prompt saved ({n} nodes) — workflow ready.", "uploadApiFailed": "Upload failed: {detail}", "uploadApiNotJson": "Not valid JSON.", "resultNode": "Node", "resultAutoDetect": "(auto-detect)", "resultHintAuto": "Auto-detected from save / preview nodes. Pick a node to override which one produces this stage's output.", "resultHintSet": "This node's output is used as the stage result.", "resultType": { "label": "As", "text": "Text / value (slot 0)", "file": "Saved file (image / video / audio)", "batch": "Saved image batch" }, "bindingRequired": "Required", "mentionStyle": { "label": "Refs", "natural": "Natural text (image 1)", "minimaxTags": "<Picture n> tags (MiniMax H3)", "hint": "How image mentions in the stage prompt are rendered for this workflow's model." }, "section": { "widgets": "Widgets", "notes": "Workflow notes", "description": "Description", "result": "Result", "properties": "Workflow properties" }, "linkedSource": "Linked from ComfyUI", "linkedSourceHint": "This workflow lives in ComfyUI's own library. Edit it there and save — changes sync automatically.", "linkBroken": "Link broken", "linkBrokenHint": "The source workflow is missing from ComfyUI's library (moved, renamed, or deleted). Re-create it or unlink.", "unlink": "Unlink", "unlinkConfirm": 'Unlink "{label}"? The ComfyUI workflow file is kept — only the ComfyTV reference is removed.', "unlinkFailed": "Unlink failed: {detail}", "searchNodes": "Search nodes…", "groupAll": "All", "groupUngrouped": "Ungrouped", "noMatchingNodes": "No nodes match the current filter." };
+const configSidebar$1 = { "title": "Workflow Config", "empty": "Select a stage node on the canvas to edit its workflow config. Imported workflows are picked from the node's workflow dropdown — see the Stages tab for the full list.", "noWorkflowPicked": "This stage's workflow combo is empty — pick one first.", "loading": "Loading…", "noExposedWidgets": "This workflow has no editable widgets, or hasn't been prepared yet — pick it on any stage first so the browser can analyze it.", "pickWorkflowFirst": "Pick this workflow on any stage first to populate widget metadata (the browser-side graphToPrompt has to run).", "customExposed": "Exposed by the card as", "customExposedPrompt": "main prompt", "customOutputsHint": "Outputs are chosen in the card's Expose I/O panel.", "bindTo": "Bind to:", "exportPreset": "Export preset.json", "exportPresetTooltip": "Download the current bindings as a *_preset.json file. Drop it next to the workflow JSON in workflows/<kind>/ to ship these defaults to other users.", "exportPresetFailed": "Export failed: {detail}", "resetToPreset": "↻ Reset to shipped preset", "resetToPresetTooltip": "Wipe all bindings + meta for this workflow and re-apply its shipped _preset.json from disk. Your own edits will be lost.", "resetToPresetConfirm": "Reset all bindings for this workflow to the shipped preset? Your edits will be lost.", "resetToPresetFailed": "Reset failed: {detail}", "conversionMayHaveFailed": "ComfyTV may have failed to convert this workflow. Export an API-format JSON from ComfyUI (Save (API Format)) and upload it here — name it as the matching .api.json next to the workflow.", "uploadApi": "Upload API JSON", "uploadApiTooltip": "Attach a Save (API Format) export to this workflow. It's stored as <name>.api.json next to the workflow and used directly, skipping conversion.", "uploadApiOk": "API prompt saved ({n} nodes) — workflow ready.", "uploadApiFailed": "Upload failed: {detail}", "uploadApiNotJson": "Not valid JSON.", "resultNode": "Node", "resultAutoDetect": "(auto-detect)", "resultHintAuto": "Auto-detected from save / preview nodes. Pick a node to override which one produces this stage's output.", "resultHintSet": "This node's output is used as the stage result.", "resultType": { "label": "As", "text": "Text / value (slot 0)", "file": "Saved file (image / video / audio)", "batch": "Saved image batch" }, "bindingRequired": "Required", "mentionStyle": { "label": "Refs", "natural": "Natural text (image 1)", "minimaxTags": "<Picture n> tags (MiniMax H3)", "hint": "How image mentions in the stage prompt are rendered for this workflow's model." }, "section": { "widgets": "Widgets", "notes": "Workflow notes", "description": "Description", "result": "Result", "properties": "Workflow properties" }, "linkedSource": "Linked from ComfyUI", "linkedSourceHint": "This workflow lives in ComfyUI's own library. Edit it there and save — changes sync automatically.", "linkBroken": "Link broken", "linkBrokenHint": "The source workflow is missing from ComfyUI's library (moved, renamed, or deleted). Re-create it or unlink.", "unlink": "Unlink", "unlinkConfirm": 'Unlink "{label}"? The ComfyUI workflow file is kept — only the ComfyTV reference is removed.', "unlinkFailed": "Unlink failed: {detail}", "searchNodes": "Search nodes…", "groupAll": "All", "groupUngrouped": "Ungrouped", "noMatchingNodes": "No nodes match the current filter." };
 const project$1 = { "label": "Current Project", "shared_suffix": "(shared)", "id_prefix": "id:", "refresh": "Refresh project list", "create": "New project", "delete": "Delete this project (files on disk stay)", "delete_confirm": "Delete this project? DB rows will be cleared; files on disk stay.", "create_prompt": "New project name:", "create_default": "Project {n}", "status": { "refreshing": "refreshing…", "refresh_failed": "refresh failed", "create_failed": "create failed", "deleted": "deleted", "delete_failed": "delete failed", "load_failed": "Failed to load project list" } };
 const execution$1 = { "running": "running: node #{nodeId}", "queued": "queued" };
 const actions$1 = { "image": { "edit": { "label": "Edit Image", "tooltip": "Edits that change size or need rich UI (HD / outpaint / inpaint / erase / cutout / crop)" }, "panorama": { "label": "Panorama", "tooltip": "Turn this image into a panorama and explore viewpoints" }, "multiangle": { "label": "Multi-angle", "tooltip": "Re-render this image from a different camera angle" }, "relight": { "label": "Relight", "tooltip": "Spawn a Relight light-source node plus an image stage preset to the relight workflow — place 3D lights or pick a reference image, then run the image stage" }, "material": { "label": "Material", "tooltip": "Spawn a Material node wired to this image — Run estimates PBR parameters (color, roughness, transparency…) from the picture via a local VLM" }, "preset": { "label": "Presets", "tooltip": "Size-preserving, no-rich-UI preset transforms (multi-view / grid / scene progression)" } }, "video": { "extend": { "label": "Extend", "tooltip": "Extract this clip's last frame and spawn a new VideoStage using it as the I2V start frame — write a prompt for the continuation" }, "change": { "label": "Edit Video", "tooltip": "Modify an existing video: clip / HD / subtitle erase / audio separation" } }, "audio": { "change": { "label": "Edit Audio", "tooltip": "Process this audio: trim / dynamics / EQ / denoise / mix / analysis" } }, "text": { "refine": { "label": "Refine", "tooltip": "Continue rewriting in a new TextStage" } }, "panorama": { "view-current": { "label": "Current View", "tooltip": "Extract the current viewport as a single image" }, "view-four": { "label": "4 Views", "tooltip": "Extract 4 viewpoints as an image batch" }, "view-twelve": { "label": "12 Views", "tooltip": "Extract 12 viewpoints as an image batch" } }, "storyboard": { "gen-shots": { "label": "Generate Shot Images", "tooltip": "Spawn a Shot Images stage wired to this storyboard — iterates the shot list and renders one image per shot" } }, "model": { "product-shot": { "label": "Product Shot", "tooltip": "Spawn an image-edit stage preset to Qwen Edit 2511, wired to this 3D capture — keeps the subject's colors and materials while turning the render into a studio product photo; edit the prompt to taste" } } };
@@ -61295,7 +61295,7 @@ const promptHelper = { "open": "提示词助手 —— 快速起步 & 增强标�
 const cameraPrompt = { "open": "电影感相机 —— 把相机/镜头/光圈编译进提示词", "camera": "相机", "lens": "镜头", "focal": "焦段", "aperture": "光圈", "empty": "选择相机 / 镜头 / 焦段 / 光圈，自动拼出一段电影感后缀。", "insert": "插入提示词", "clear": "清空" };
 const imageRefs = { "title": "素材引用", "empty": "暂无参考素材 —— 点 + 从资产库选一个。", "add": "添加参考素材", "batchItem": "批次图 #{n}", "pinBatch": "钉住此批次 —— 无需连线即可在所有素材引用面板中使用", "pinnedToast": "批次已钉住({n} 张)", "pinEmpty": "没有可钉住的内容 —— 批次为空。", "refreshBatch": "从来源 stage 的当前输出重新快照", "unpinBatch": "取消钉住", "refreshFailed": "刷新失败 —— 找不到来源 stage 或其没有批次输出。", "remove": "移除", "warnDuplicate": "参考槽位 #{n} 被多张图片绑定 —— 运行时只有最后一张生效。", "warnOverride": "参考槽位 #{n} 已有上游连接 —— 绑定的图片会在运行时覆盖它。", "warnOverflow": "该工作流只绑定了 {total} 个参考槽位 —— 有 {count} 张图片不会被使用。", "warnNoSlots": "该工作流没有可接收参考图的图片输入 —— 运行时这些图会被忽略。" };
 const promptAssets = { "addTooltip": "从资产库插入图片 —— 运行时会作为参考图传给工作流", "search": "搜索资产…", "upload": "上传图片到资产库并直接使用", "tabBatch": "批次", "tabLibrary": "资产库", "close": "关闭", "empty": "没有匹配的资产 —— 先在侧边栏「资产库」里添加。", "missing": "资产 #{id} 已从资产库移除 —— 运行时会忽略这个标记", "slotTitle": "参考图槽位", "slotShort": "→ 参考图槽位 #{n}", "slotWired": "已连线", "slotClaimed": "已占用", "slotEmpty": "这个工作流还没绑定参考图槽位 —— 先在侧边栏工作流配置里把 LoadImage 绑到「Upstream image #N」。" };
-const configSidebar = { "title": "工作流配置", "empty": "在画布上选中某个 Stage 节点以编辑它的工作流配置。导入的工作流在节点的 workflow 下拉框中选用 —— 全部清单见「Stage 管理」页。", "noWorkflowPicked": "该 Stage 还没选工作流 —— 先在下拉里挑一个。", "loading": "加载中…", "noExposedWidgets": "这个工作流没有可编辑的 widget，或者还没准备过 —— 先在画布上任一 Stage 选中它，浏览器侧 graphToPrompt 跑一遍后才有 widget 元数据。", "pickWorkflowFirst": "先在画布上任一 Stage 上选中这个工作流 —— 浏览器侧 graphToPrompt 跑过一遍才有 widget 元数据。", "bindTo": "绑定到：", "exportPreset": "导出 preset.json", "exportPresetTooltip": "把当前绑定导出为 *_preset.json 文件，丢进 workflows/<kind>/ 和工作流 JSON 同目录，其他用户首次启动时会自动应用这套默认。", "exportPresetFailed": "导出失败: {detail}", "resetToPreset": "↻ 重置为内置 preset", "resetToPresetTooltip": "清空该工作流的所有绑定和元数据，重新读取磁盘上的 _preset.json 文件。你自己改过的内容会丢失。", "resetToPresetConfirm": "把这个工作流的所有绑定重置成内置 preset？你自己改过的会丢失。", "resetToPresetFailed": "重置失败: {detail}", "conversionMayHaveFailed": "可能是 ComfyTV 转换失败。请在 ComfyUI 里手动导出一份 API 的 json（Save (API Format)），在这里上传，注意以同名 .api.json 命名。", "uploadApi": "上传 API JSON", "uploadApiTooltip": "把 Save (API Format) 导出的 json 附加到这个工作流。会存成工作流旁边的 <name>.api.json 并直接使用、跳过转换。", "uploadApiOk": "API prompt 已保存（{n} 个节点）——工作流就绪。", "uploadApiFailed": "上传失败: {detail}", "uploadApiNotJson": "不是合法的 JSON。", "resultNode": "节点", "resultAutoDetect": "(自动检测)", "resultHintAuto": "默认从 save / preview 节点自动检测。选择一个节点可手动指定由哪个节点产出本阶段的输出。", "resultHintSet": "该节点的输出将作为本阶段的结果。", "resultType": { "label": "类型", "text": "文本 / 值 (slot 0)", "file": "保存的文件 (图片 / 视频 / 音频)", "batch": "保存的图片批次" }, "bindingRequired": "必填", "mentionStyle": { "label": "引用", "natural": "自然文本（图1）", "minimaxTags": "<Picture n> 标签（MiniMax H3）", "hint": "提示词里的图片提及在本工作流的模型下如何展开。" }, "section": { "widgets": "Widget 列表", "notes": "工作流笔记", "description": "说明", "result": "结果输出", "properties": "工作流属性" }, "linkedSource": "链接自 ComfyUI", "linkedSourceHint": "该工作流位于 ComfyUI 自带库中。在那里编辑并保存，修改会自动同步。", "linkBroken": "链接已失效", "linkBrokenHint": "ComfyUI 库中的源工作流已缺失（被移动、改名或删除）。请重新创建或解除链接。", "unlink": "解除链接", "unlinkConfirm": "解除「{label}」的链接？ComfyUI 里的工作流文件会保留，仅移除 ComfyTV 的引用。", "unlinkFailed": "解除链接失败：{detail}", "searchNodes": "搜索节点…", "groupAll": "全部", "groupUngrouped": "未分组", "noMatchingNodes": "没有匹配当前筛选的节点。" };
+const configSidebar = { "title": "工作流配置", "empty": "在画布上选中某个 Stage 节点以编辑它的工作流配置。导入的工作流在节点的 workflow 下拉框中选用 —— 全部清单见「Stage 管理」页。", "noWorkflowPicked": "该 Stage 还没选工作流 —— 先在下拉里挑一个。", "loading": "加载中…", "noExposedWidgets": "这个工作流没有可编辑的 widget，或者还没准备过 —— 先在画布上任一 Stage 选中它，浏览器侧 graphToPrompt 跑一遍后才有 widget 元数据。", "pickWorkflowFirst": "先在画布上任一 Stage 上选中这个工作流 —— 浏览器侧 graphToPrompt 跑过一遍才有 widget 元数据。", "customExposed": "已由卡片暴露为", "customExposedPrompt": "主提示词", "customOutputsHint": "输出在卡片的“暴露输入输出”面板里选择。", "bindTo": "绑定到：", "exportPreset": "导出 preset.json", "exportPresetTooltip": "把当前绑定导出为 *_preset.json 文件，丢进 workflows/<kind>/ 和工作流 JSON 同目录，其他用户首次启动时会自动应用这套默认。", "exportPresetFailed": "导出失败: {detail}", "resetToPreset": "↻ 重置为内置 preset", "resetToPresetTooltip": "清空该工作流的所有绑定和元数据，重新读取磁盘上的 _preset.json 文件。你自己改过的内容会丢失。", "resetToPresetConfirm": "把这个工作流的所有绑定重置成内置 preset？你自己改过的会丢失。", "resetToPresetFailed": "重置失败: {detail}", "conversionMayHaveFailed": "可能是 ComfyTV 转换失败。请在 ComfyUI 里手动导出一份 API 的 json（Save (API Format)），在这里上传，注意以同名 .api.json 命名。", "uploadApi": "上传 API JSON", "uploadApiTooltip": "把 Save (API Format) 导出的 json 附加到这个工作流。会存成工作流旁边的 <name>.api.json 并直接使用、跳过转换。", "uploadApiOk": "API prompt 已保存（{n} 个节点）——工作流就绪。", "uploadApiFailed": "上传失败: {detail}", "uploadApiNotJson": "不是合法的 JSON。", "resultNode": "节点", "resultAutoDetect": "(自动检测)", "resultHintAuto": "默认从 save / preview 节点自动检测。选择一个节点可手动指定由哪个节点产出本阶段的输出。", "resultHintSet": "该节点的输出将作为本阶段的结果。", "resultType": { "label": "类型", "text": "文本 / 值 (slot 0)", "file": "保存的文件 (图片 / 视频 / 音频)", "batch": "保存的图片批次" }, "bindingRequired": "必填", "mentionStyle": { "label": "引用", "natural": "自然文本（图1）", "minimaxTags": "<Picture n> 标签（MiniMax H3）", "hint": "提示词里的图片提及在本工作流的模型下如何展开。" }, "section": { "widgets": "Widget 列表", "notes": "工作流笔记", "description": "说明", "result": "结果输出", "properties": "工作流属性" }, "linkedSource": "链接自 ComfyUI", "linkedSourceHint": "该工作流位于 ComfyUI 自带库中。在那里编辑并保存，修改会自动同步。", "linkBroken": "链接已失效", "linkBrokenHint": "ComfyUI 库中的源工作流已缺失（被移动、改名或删除）。请重新创建或解除链接。", "unlink": "解除链接", "unlinkConfirm": "解除「{label}」的链接？ComfyUI 里的工作流文件会保留，仅移除 ComfyTV 的引用。", "unlinkFailed": "解除链接失败：{detail}", "searchNodes": "搜索节点…", "groupAll": "全部", "groupUngrouped": "未分组", "noMatchingNodes": "没有匹配当前筛选的节点。" };
 const project = { "label": "当前项目", "shared_suffix": "(共享)", "id_prefix": "id:", "refresh": "刷新项目列表", "create": "新建项目", "delete": "删除该项目（不会删磁盘文件）", "delete_confirm": "确定删除该项目？数据库会清空，磁盘上的生成文件保留。", "create_prompt": "新项目名称：", "create_default": "项目 {n}", "status": { "refreshing": "刷新中…", "refresh_failed": "刷新失败", "create_failed": "创建失败", "deleted": "已删除", "delete_failed": "删除失败", "load_failed": "加载项目列表失败" } };
 const execution = { "running": "运行中：节点 #{nodeId}", "queued": "排队中" };
 const actions = { "image": { "edit": { "label": "修改图片", "tooltip": "改变尺寸或需要交互 UI 的图像编辑（高清 / 扩图 / 重绘 / 擦除 / 抠图 / 裁剪）" }, "panorama": { "label": "全景图", "tooltip": "把当前图变为全景，进入视角操作" }, "multiangle": { "label": "多角度", "tooltip": "从不同相机角度重新渲染该图" }, "relight": { "label": "打光", "tooltip": "生成一个打光光源节点 + 预选打光工作流的图像 stage —— 摆 3D 灯光或选参考图,然后运行图像 stage" }, "material": { "label": "提取材质", "tooltip": "生成一个接好线的材质球节点 —— Run 时用本地视觉模型从图片估计 PBR 参数（颜色/粗糙度/透明度…）" }, "preset": { "label": "预设", "tooltip": "保持尺寸、无需复杂 UI 的预设变换（多视图 / 宫格 / 画面推演 ...）" } }, "video": { "extend": { "label": "延伸", "tooltip": "抽出本段末帧,派生新 VideoStage 用作 I2V 起始帧 —— 写个 prompt 描述接下来要发生什么" }, "change": { "label": "修改视频", "tooltip": "对已上传/已生成的视频做修改：剪辑 / 高清 / 去字幕 / 音频分离" } }, "audio": { "change": { "label": "修改音频", "tooltip": "处理这段音频：修剪 / 动态 / 均衡 / 降噪 / 混音 / 分析" } }, "text": { "refine": { "label": "改写", "tooltip": "在新 TextStage 中继续改写" } }, "panorama": { "view-current": { "label": "当前视角截图", "tooltip": "提取当前视角为单张图" }, "view-four": { "label": "四大视角截图", "tooltip": "提取 4 个视角组成图集" }, "view-twelve": { "label": "12 视角截图", "tooltip": "提取 12 个视角组成图集" } }, "storyboard": { "gen-shots": { "label": "生成分镜图", "tooltip": "派生一个 Shot Images 节点接到这个分镜板上 —— 按镜头列表逐个出图" } }, "model": { "product-shot": { "label": "生成产品图", "tooltip": "派生一个预选 Qwen Edit 2511 工作流的图像编辑 stage，接到当前 3D 截图上 —— 保留主体颜色和材质，把渲染图变成摄影棚产品照；提示词可改" } } };
@@ -82797,6 +82797,27 @@ function useCollapsedFlag(workflowId, keyPrefix, defaultValue = false) {
   return { collapsed, toggle };
 }
 const AUTO_RESULT_NODE = "__AUTO__";
+function customExposureIndex(config2) {
+  var _a3, _b2;
+  const out = /* @__PURE__ */ new Map();
+  if ((config2 == null ? void 0 : config2.kind) !== "custom") return out;
+  const raw = (_b2 = (_a3 = config2.meta) == null ? void 0 : _a3.custom_io) == null ? void 0 : _b2.inputs;
+  for (const it2 of Array.isArray(raw) ? raw : []) {
+    if (!(it2 == null ? void 0 : it2.node) || !(it2 == null ? void 0 : it2.input)) continue;
+    out.set(`${it2.node}/${it2.input}`, {
+      kind: String(it2.kind ?? ""),
+      label: String(it2.label ?? it2.input),
+      prompt: Boolean(it2.prompt)
+    });
+  }
+  return out;
+}
+function customExposedOutputs(config2) {
+  var _a3, _b2;
+  if ((config2 == null ? void 0 : config2.kind) !== "custom") return [];
+  const raw = (_b2 = (_a3 = config2.meta) == null ? void 0 : _a3.custom_io) == null ? void 0 : _b2.outputs;
+  return (Array.isArray(raw) ? raw : []).filter((o) => o == null ? void 0 : o.node).map((o) => ({ kind: String(o.kind ?? ""), label: String(o.label ?? o.kind ?? "") }));
+}
 const TEXT_RESULT_KINDS = /* @__PURE__ */ new Set(["text", "storyboard"]);
 const BATCH_RESULT_KINDS = /* @__PURE__ */ new Set(["image", "shot-images", "multiview", "sequence"]);
 function resultTypesForKind(kind) {
@@ -83803,50 +83824,63 @@ const _hoisted_32$a = {
 };
 const _hoisted_33$8 = { class: "ctv:text-2xs" };
 const _hoisted_34$7 = { class: "ctv:font-mono ctv:text-muted-foreground" };
-const _hoisted_35$7 = { class: "ctv:grid ctv:grid-cols-[60px_1fr] ctv:items-center ctv:gap-1.5 ctv:mt-0.5" };
-const _hoisted_36$7 = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_37$6 = {
+const _hoisted_35$7 = {
   key: 0,
+  class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:mt-0.5 ctv:text-3xs ctv:text-muted-foreground"
+};
+const _hoisted_36$7 = { class: "ctv:uppercase ctv:tracking-wide" };
+const _hoisted_37$6 = { class: "ctv:py-px ctv:px-1.5 ctv:rounded-lg ctv:bg-base-foreground/5 ctv:text-base-foreground" };
+const _hoisted_38$6 = {
+  key: 1,
+  class: "ctv:grid ctv:grid-cols-[60px_1fr] ctv:items-center ctv:gap-1.5 ctv:mt-0.5"
+};
+const _hoisted_39$6 = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_40$5 = {
+  key: 2,
   class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:mt-0.5 ctv:cursor-pointer ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground"
 };
-const _hoisted_38$6 = ["checked", "onChange"];
-const _hoisted_39$6 = {
+const _hoisted_41$5 = ["checked", "onChange"];
+const _hoisted_42$5 = {
   key: 3,
   class: "ctv:p-2 ctv:text-xs ctv:text-left ctv:flex ctv:flex-col ctv:gap-2"
 };
-const _hoisted_40$5 = { class: "ctv:m-0 ctv:italic ctv:text-muted-foreground/60" };
-const _hoisted_41$5 = { class: "ctv:m-0 ctv:text-muted-foreground/80" };
-const _hoisted_42$5 = ["disabled", "title"];
-const _hoisted_43$5 = {
+const _hoisted_43$5 = { class: "ctv:m-0 ctv:italic ctv:text-muted-foreground/60" };
+const _hoisted_44$5 = { class: "ctv:m-0 ctv:text-muted-foreground/80" };
+const _hoisted_45$5 = ["disabled", "title"];
+const _hoisted_46$5 = {
   key: 0,
   class: "ctv:text-destructive-background"
 };
-const _hoisted_44$5 = { key: 4 };
-const _hoisted_45$5 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:px-1" };
-const _hoisted_46$5 = { class: "ctv:grid ctv:grid-cols-[42px_1fr] ctv:items-center ctv:gap-1.5" };
-const _hoisted_47$5 = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_48$5 = {
-  key: 0,
-  class: "ctv:grid ctv:grid-cols-[42px_1fr] ctv:items-center ctv:gap-1.5"
-};
-const _hoisted_49$4 = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_47$5 = { key: 4 };
+const _hoisted_48$5 = { class: "ctv:flex ctv:flex-col ctv:gap-1 ctv:px-1 ctv:text-2xs" };
+const _hoisted_49$4 = { class: "ctv:font-mono ctv:text-3xs ctv:py-px ctv:px-1.5 ctv:rounded-lg ctv:bg-base-foreground/5 ctv:text-muted-foreground" };
 const _hoisted_50$3 = { class: "ctv:m-0 ctv:text-2xs ctv:italic ctv:text-muted-foreground/60" };
 const _hoisted_51$3 = { key: 5 };
 const _hoisted_52$2 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:px-1" };
 const _hoisted_53$2 = { class: "ctv:grid ctv:grid-cols-[42px_1fr] ctv:items-center ctv:gap-1.5" };
 const _hoisted_54$2 = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_55$2 = { class: "ctv:m-0 ctv:text-2xs ctv:italic ctv:text-muted-foreground/60" };
-const _hoisted_56$2 = { key: 6 };
-const _hoisted_57$2 = { class: "ctv:m-0 ctv:text-xs ctv:whitespace-pre-wrap ctv:text-muted-foreground" };
-const _hoisted_58$2 = { class: "ctv:mt-4 ctv:pt-2.5 ctv:pb-3.5 ctv:px-3 ctv:flex ctv:flex-col ctv:gap-1 ctv:border-t ctv:border-border-subtle" };
-const _hoisted_59$2 = ["disabled", "title"];
-const _hoisted_60$2 = ["disabled", "title"];
-const _hoisted_61$1 = ["disabled", "title"];
-const _hoisted_62$1 = {
+const _hoisted_55$2 = {
+  key: 0,
+  class: "ctv:grid ctv:grid-cols-[42px_1fr] ctv:items-center ctv:gap-1.5"
+};
+const _hoisted_56$2 = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_57$2 = { class: "ctv:m-0 ctv:text-2xs ctv:italic ctv:text-muted-foreground/60" };
+const _hoisted_58$2 = { key: 6 };
+const _hoisted_59$2 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:px-1" };
+const _hoisted_60$2 = { class: "ctv:grid ctv:grid-cols-[42px_1fr] ctv:items-center ctv:gap-1.5" };
+const _hoisted_61$1 = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_62$1 = { class: "ctv:m-0 ctv:text-2xs ctv:italic ctv:text-muted-foreground/60" };
+const _hoisted_63$1 = { key: 7 };
+const _hoisted_64$1 = { class: "ctv:m-0 ctv:text-xs ctv:whitespace-pre-wrap ctv:text-muted-foreground" };
+const _hoisted_65$1 = { class: "ctv:mt-4 ctv:pt-2.5 ctv:pb-3.5 ctv:px-3 ctv:flex ctv:flex-col ctv:gap-1 ctv:border-t ctv:border-border-subtle" };
+const _hoisted_66$1 = ["disabled", "title"];
+const _hoisted_67$1 = ["disabled", "title"];
+const _hoisted_68$1 = ["disabled", "title"];
+const _hoisted_69 = {
   key: 0,
   class: "ctv:text-xs ctv:text-destructive-background"
 };
-const _hoisted_63$1 = {
+const _hoisted_70 = {
   key: 1,
   class: "ctv:text-xs ctv:text-destructive-background"
 };
@@ -83897,6 +83931,15 @@ const _sfc_main$4a = /* @__PURE__ */ defineComponent({
       onResultNodeChange,
       onResultTypeChange
     } = useResultMeta(config2, postMeta, t2);
+    const isCustom = computed(() => {
+      var _a3;
+      return ((_a3 = config2.value) == null ? void 0 : _a3.kind) === "custom";
+    });
+    const exposureIndex = computed(() => customExposureIndex(config2.value));
+    const customOutputs = computed(() => customExposedOutputs(config2.value));
+    function exposedOf(w2) {
+      return exposureIndex.value.get(`${w2.node_id}/${w2.widget_name}`);
+    }
     const workflowId = computed(() => {
       var _a3;
       return ((_a3 = config2.value) == null ? void 0 : _a3.id) ?? null;
@@ -84137,24 +84180,27 @@ const _sfc_main$4a = /* @__PURE__ */ defineComponent({
                             step: unref(numProp)(w2, "step"),
                             precision: unref(numProp)(w2, "precision"),
                             multiline: !!((_a4 = w2.widget_props) == null ? void 0 : _a4.multiline),
-                            disabled: unref(isStageBound)(w2),
+                            disabled: unref(isStageBound)(w2) || !!exposedOf(w2),
                             "onUpdate:modelValue": ($event) => unref(onValueChange)(w2, $event)
                           }, null, 8, ["kind", "model-value", "options", "min", "max", "step", "precision", "multiline", "disabled", "onUpdate:modelValue"]),
-                          createBaseVNode("div", _hoisted_35$7, [
-                            createBaseVNode("span", _hoisted_36$7, toDisplayString$1(_ctx.$t("configSidebar.bindTo")), 1),
+                          exposedOf(w2) ? (openBlock(), createElementBlock("div", _hoisted_35$7, [
+                            createBaseVNode("span", _hoisted_36$7, toDisplayString$1(_ctx.$t("configSidebar.customExposed")), 1),
+                            createBaseVNode("span", _hoisted_37$6, toDisplayString$1(exposedOf(w2).label) + " · " + toDisplayString$1(exposedOf(w2).prompt ? _ctx.$t("configSidebar.customExposedPrompt") : exposedOf(w2).kind), 1)
+                          ])) : (openBlock(), createElementBlock("div", _hoisted_38$6, [
+                            createBaseVNode("span", _hoisted_39$6, toDisplayString$1(_ctx.$t("configSidebar.bindTo")), 1),
                             createVNode(_sfc_main$4r, {
                               "model-value": unref(dropdownValueFor)(w2),
                               options: bindingOptions.value,
                               "onUpdate:modelValue": ($event) => unref(onBindingChange)(w2, $event)
                             }, null, 8, ["model-value", "options", "onUpdate:modelValue"])
-                          ]),
-                          unref(isUpstreamBound)(w2) ? (openBlock(), createElementBlock("label", _hoisted_37$6, [
+                          ])),
+                          !exposedOf(w2) && unref(isUpstreamBound)(w2) ? (openBlock(), createElementBlock("label", _hoisted_40$5, [
                             createBaseVNode("input", {
                               type: "checkbox",
                               checked: w2.required !== false,
                               class: "ctv:m-0 ctv:cursor-pointer",
                               onChange: ($event) => unref(onRequiredToggle)(w2, $event.target.checked)
-                            }, null, 40, _hoisted_38$6),
+                            }, null, 40, _hoisted_41$5),
                             createTextVNode(" " + toDisplayString$1(_ctx.$t("configSidebar.bindingRequired")), 1)
                           ])) : createCommentVNode("", true)
                         ]);
@@ -84164,10 +84210,10 @@ const _sfc_main$4a = /* @__PURE__ */ defineComponent({
                 }), 128))
               ]);
             }), 128))
-          ])) : (openBlock(), createElementBlock("div", _hoisted_39$6, [
-            createBaseVNode("p", _hoisted_40$5, toDisplayString$1(_ctx.$t("configSidebar.noExposedWidgets")), 1),
+          ])) : (openBlock(), createElementBlock("div", _hoisted_42$5, [
+            createBaseVNode("p", _hoisted_43$5, toDisplayString$1(_ctx.$t("configSidebar.noExposedWidgets")), 1),
             unref(config2) && !unref(config2).has_api ? (openBlock(), createElementBlock(Fragment$1, { key: 0 }, [
-              createBaseVNode("p", _hoisted_41$5, toDisplayString$1(_ctx.$t("configSidebar.conversionMayHaveFailed")), 1),
+              createBaseVNode("p", _hoisted_44$5, toDisplayString$1(_ctx.$t("configSidebar.conversionMayHaveFailed")), 1),
               createBaseVNode("button", {
                 class: normalizeClass(exportBtn),
                 disabled: unref(uploadApiBusy),
@@ -84177,57 +84223,74 @@ const _sfc_main$4a = /* @__PURE__ */ defineComponent({
               }, [
                 _cache2[13] || (_cache2[13] = createBaseVNode("i", { class: "pi pi-upload" }, null, -1)),
                 createTextVNode(" " + toDisplayString$1(_ctx.$t("configSidebar.uploadApi")), 1)
-              ], 8, _hoisted_42$5),
-              unref(uploadApiError) ? (openBlock(), createElementBlock("span", _hoisted_43$5, toDisplayString$1(unref(uploadApiError)), 1)) : createCommentVNode("", true)
+              ], 8, _hoisted_45$5),
+              unref(uploadApiError) ? (openBlock(), createElementBlock("span", _hoisted_46$5, toDisplayString$1(unref(uploadApiError)), 1)) : createCommentVNode("", true)
             ], 64)) : createCommentVNode("", true)
           ])),
-          unref(config2).has_api ? (openBlock(), createElementBlock("section", _hoisted_44$5, [
+          unref(config2).has_api && isCustom.value ? (openBlock(), createElementBlock("section", _hoisted_47$5, [
             createBaseVNode("h3", {
               class: normalizeClass(sectionHeading)
             }, toDisplayString$1(_ctx.$t("configSidebar.section.result")), 1),
-            createBaseVNode("div", _hoisted_45$5, [
-              createBaseVNode("div", _hoisted_46$5, [
-                createBaseVNode("span", _hoisted_47$5, toDisplayString$1(_ctx.$t("configSidebar.resultNode")), 1),
+            createBaseVNode("div", _hoisted_48$5, [
+              (openBlock(true), createElementBlock(Fragment$1, null, renderList(customOutputs.value, (o, i) => {
+                return openBlock(), createElementBlock("div", {
+                  key: i,
+                  class: "ctv:flex ctv:items-center ctv:gap-1.5"
+                }, [
+                  createBaseVNode("span", _hoisted_49$4, toDisplayString$1(o.kind), 1),
+                  createBaseVNode("span", null, toDisplayString$1(o.label), 1)
+                ]);
+              }), 128)),
+              createBaseVNode("p", _hoisted_50$3, toDisplayString$1(_ctx.$t("configSidebar.customOutputsHint")), 1)
+            ])
+          ])) : createCommentVNode("", true),
+          unref(config2).has_api && !isCustom.value ? (openBlock(), createElementBlock("section", _hoisted_51$3, [
+            createBaseVNode("h3", {
+              class: normalizeClass(sectionHeading)
+            }, toDisplayString$1(_ctx.$t("configSidebar.section.result")), 1),
+            createBaseVNode("div", _hoisted_52$2, [
+              createBaseVNode("div", _hoisted_53$2, [
+                createBaseVNode("span", _hoisted_54$2, toDisplayString$1(_ctx.$t("configSidebar.resultNode")), 1),
                 createVNode(_sfc_main$4r, {
                   "model-value": unref(resultNodeModel),
                   options: unref(resultNodeOptions),
                   "onUpdate:modelValue": _cache2[5] || (_cache2[5] = ($event) => unref(onResultNodeChange)($event))
                 }, null, 8, ["model-value", "options"])
               ]),
-              unref(hasResultNode) && unref(resultTypeOptions).length > 1 ? (openBlock(), createElementBlock("div", _hoisted_48$5, [
-                createBaseVNode("span", _hoisted_49$4, toDisplayString$1(_ctx.$t("configSidebar.resultType.label")), 1),
+              unref(hasResultNode) && unref(resultTypeOptions).length > 1 ? (openBlock(), createElementBlock("div", _hoisted_55$2, [
+                createBaseVNode("span", _hoisted_56$2, toDisplayString$1(_ctx.$t("configSidebar.resultType.label")), 1),
                 createVNode(_sfc_main$4r, {
                   "model-value": unref(resultType),
                   options: unref(resultTypeOptions),
                   "onUpdate:modelValue": _cache2[6] || (_cache2[6] = ($event) => unref(onResultTypeChange)($event))
                 }, null, 8, ["model-value", "options"])
               ])) : createCommentVNode("", true),
-              createBaseVNode("p", _hoisted_50$3, toDisplayString$1(unref(hasResultNode) ? _ctx.$t("configSidebar.resultHintSet") : _ctx.$t("configSidebar.resultHintAuto")), 1)
+              createBaseVNode("p", _hoisted_57$2, toDisplayString$1(unref(hasResultNode) ? _ctx.$t("configSidebar.resultHintSet") : _ctx.$t("configSidebar.resultHintAuto")), 1)
             ])
           ])) : createCommentVNode("", true),
-          unref(config2).has_api ? (openBlock(), createElementBlock("section", _hoisted_51$3, [
+          unref(config2).has_api ? (openBlock(), createElementBlock("section", _hoisted_58$2, [
             createBaseVNode("h3", {
               class: normalizeClass(sectionHeading)
             }, toDisplayString$1(_ctx.$t("configSidebar.section.properties")), 1),
-            createBaseVNode("div", _hoisted_52$2, [
-              createBaseVNode("div", _hoisted_53$2, [
-                createBaseVNode("span", _hoisted_54$2, toDisplayString$1(_ctx.$t("configSidebar.mentionStyle.label")), 1),
+            createBaseVNode("div", _hoisted_59$2, [
+              createBaseVNode("div", _hoisted_60$2, [
+                createBaseVNode("span", _hoisted_61$1, toDisplayString$1(_ctx.$t("configSidebar.mentionStyle.label")), 1),
                 createVNode(_sfc_main$4r, {
                   "model-value": mentionStyleModel.value,
                   options: mentionStyleOptions.value,
                   "onUpdate:modelValue": _cache2[7] || (_cache2[7] = ($event) => onMentionStyleChange($event))
                 }, null, 8, ["model-value", "options"])
               ]),
-              createBaseVNode("p", _hoisted_55$2, toDisplayString$1(_ctx.$t("configSidebar.mentionStyle.hint")), 1)
+              createBaseVNode("p", _hoisted_62$1, toDisplayString$1(_ctx.$t("configSidebar.mentionStyle.hint")), 1)
             ])
           ])) : createCommentVNode("", true),
-          unref(config2).description ? (openBlock(), createElementBlock("section", _hoisted_56$2, [
+          unref(config2).description ? (openBlock(), createElementBlock("section", _hoisted_63$1, [
             createBaseVNode("h3", {
               class: normalizeClass(sectionHeading)
             }, toDisplayString$1(_ctx.$t("configSidebar.section.description")), 1),
-            createBaseVNode("p", _hoisted_57$2, toDisplayString$1(unref(config2).description), 1)
+            createBaseVNode("p", _hoisted_64$1, toDisplayString$1(unref(config2).description), 1)
           ])) : createCommentVNode("", true),
-          createBaseVNode("div", _hoisted_58$2, [
+          createBaseVNode("div", _hoisted_65$1, [
             createBaseVNode("button", {
               class: normalizeClass(exportBtn),
               disabled: !unref(config2).has_api || unref(exportBusy),
@@ -84237,7 +84300,7 @@ const _sfc_main$4a = /* @__PURE__ */ defineComponent({
             }, [
               _cache2[14] || (_cache2[14] = createBaseVNode("i", { class: "pi pi-download" }, null, -1)),
               createTextVNode(" " + toDisplayString$1(_ctx.$t("configSidebar.exportPreset")), 1)
-            ], 8, _hoisted_59$2),
+            ], 8, _hoisted_66$1),
             createBaseVNode("button", {
               class: normalizeClass(exportBtn),
               disabled: unref(config2).file_exists === false || unref(openInComfyBusy),
@@ -84247,16 +84310,16 @@ const _sfc_main$4a = /* @__PURE__ */ defineComponent({
             }, [
               _cache2[15] || (_cache2[15] = createBaseVNode("i", { class: "pi pi-external-link" }, null, -1)),
               createTextVNode(" " + toDisplayString$1(_ctx.$t("openInComfy.open")), 1)
-            ], 8, _hoisted_60$2),
+            ], 8, _hoisted_67$1),
             createBaseVNode("button", {
               class: normalizeClass(resetBtn),
               disabled: unref(resetBusy),
               title: _ctx.$t("configSidebar.resetToPresetTooltip"),
               onClick: _cache2[10] || (_cache2[10] = //@ts-ignore
               (...args) => unref(onResetToPreset) && unref(onResetToPreset)(...args))
-            }, toDisplayString$1(_ctx.$t("configSidebar.resetToPreset")), 9, _hoisted_61$1),
-            unref(exportError) ? (openBlock(), createElementBlock("span", _hoisted_62$1, toDisplayString$1(unref(exportError)), 1)) : createCommentVNode("", true),
-            unref(resetError) ? (openBlock(), createElementBlock("span", _hoisted_63$1, toDisplayString$1(unref(resetError)), 1)) : createCommentVNode("", true)
+            }, toDisplayString$1(_ctx.$t("configSidebar.resetToPreset")), 9, _hoisted_68$1),
+            unref(exportError) ? (openBlock(), createElementBlock("span", _hoisted_69, toDisplayString$1(unref(exportError)), 1)) : createCommentVNode("", true),
+            unref(resetError) ? (openBlock(), createElementBlock("span", _hoisted_70, toDisplayString$1(unref(resetError)), 1)) : createCommentVNode("", true)
           ])
         ])) : (openBlock(), createElementBlock("div", {
           key: 4,
@@ -143421,7 +143484,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-DL6JOO0p.mjs");
+    const { STLLoader } = await import("./STLLoader-D7k-yV3b.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -143429,7 +143492,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-Xbvru_7z.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-S4T0GoBn.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -238251,4 +238314,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-yef3A_cQ.mjs.map
+//# sourceMappingURL=main-BkUwTtTq.mjs.map

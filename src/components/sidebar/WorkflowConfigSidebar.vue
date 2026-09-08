@@ -175,10 +175,16 @@
                   :step="numProp(w, 'step')"
                   :precision="numProp(w, 'precision')"
                   :multiline="!!w.widget_props?.multiline"
-                  :disabled="isStageBound(w)"
+                  :disabled="isStageBound(w) || !!exposedOf(w)"
                   @update:model-value="onValueChange(w, $event)"
                 />
-                <div class="ctv:grid ctv:grid-cols-[60px_1fr] ctv:items-center ctv:gap-1.5 ctv:mt-0.5">
+                <div v-if="exposedOf(w)" class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:mt-0.5 ctv:text-3xs ctv:text-muted-foreground">
+                  <span class="ctv:uppercase ctv:tracking-wide">{{ $t('configSidebar.customExposed') }}</span>
+                  <span class="ctv:py-px ctv:px-1.5 ctv:rounded-lg ctv:bg-base-foreground/5 ctv:text-base-foreground">
+                    {{ exposedOf(w)!.label }} · {{ exposedOf(w)!.prompt ? $t('configSidebar.customExposedPrompt') : exposedOf(w)!.kind }}
+                  </span>
+                </div>
+                <div v-else class="ctv:grid ctv:grid-cols-[60px_1fr] ctv:items-center ctv:gap-1.5 ctv:mt-0.5">
                   <span class="ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('configSidebar.bindTo') }}</span>
                   <ComfyTVSelect
                     :model-value="dropdownValueFor(w)"
@@ -186,7 +192,7 @@
                     @update:model-value="onBindingChange(w, $event as string)"
                   />
                 </div>
-                <label v-if="isUpstreamBound(w)"
+                <label v-if="!exposedOf(w) && isUpstreamBound(w)"
                        class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:mt-0.5 ctv:cursor-pointer
                               ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">
                   <input
@@ -221,7 +227,18 @@
         </template>
       </div>
 
-      <section v-if="config.has_api">
+      <section v-if="config.has_api && isCustom">
+        <h3 :class="sectionHeading">{{ $t('configSidebar.section.result') }}</h3>
+        <div class="ctv:flex ctv:flex-col ctv:gap-1 ctv:px-1 ctv:text-2xs">
+          <div v-for="(o, i) in customOutputs" :key="i" class="ctv:flex ctv:items-center ctv:gap-1.5">
+            <span class="ctv:font-mono ctv:text-3xs ctv:py-px ctv:px-1.5 ctv:rounded-lg ctv:bg-base-foreground/5 ctv:text-muted-foreground">{{ o.kind }}</span>
+            <span>{{ o.label }}</span>
+          </div>
+          <p class="ctv:m-0 ctv:text-2xs ctv:italic ctv:text-muted-foreground/60">{{ $t('configSidebar.customOutputsHint') }}</p>
+        </div>
+      </section>
+
+      <section v-if="config.has_api && !isCustom">
         <h3 :class="sectionHeading">{{ $t('configSidebar.section.result') }}</h3>
         <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:px-1">
           <div class="ctv:grid ctv:grid-cols-[42px_1fr] ctv:items-center ctv:gap-1.5">
@@ -318,6 +335,9 @@ import { LINK_TYPE_NATIVE } from '@/api'
 import {
   ALL_GROUPS,
   buildBindingOptions,
+  customExposedOutputs,
+  customExposureIndex,
+  type ExposedWidget,
   type NodeBlock,
 } from '@/composables/sidebar/workflowConfigCatalog'
 
@@ -355,6 +375,13 @@ const {
   onResultNodeChange,
   onResultTypeChange,
 } = useResultMeta(config, postMeta, t)
+
+const isCustom = computed(() => config.value?.kind === 'custom')
+const exposureIndex = computed(() => customExposureIndex(config.value))
+const customOutputs = computed(() => customExposedOutputs(config.value))
+function exposedOf(w: ExposedWidget) {
+  return exposureIndex.value.get(`${w.node_id}/${w.widget_name}`)
+}
 
 const workflowId = computed(() => config.value?.id ?? null)
 const { isCollapsed, toggle: toggleCollapsed } = useCollapsedNodeIds(workflowId)

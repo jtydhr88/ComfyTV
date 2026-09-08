@@ -39,6 +39,33 @@ export interface ConfigPayload {
 
 export const AUTO_RESULT_NODE = '__AUTO__'
 
+export interface CustomExposure {
+  kind: string
+  label: string
+  prompt: boolean
+}
+
+export function customExposureIndex(config: Pick<ConfigPayload, 'kind' | 'meta'> | null | undefined): Map<string, CustomExposure> {
+  const out = new Map<string, CustomExposure>()
+  if (config?.kind !== 'custom') return out
+  const raw = (config.meta as any)?.custom_io?.inputs
+  for (const it of Array.isArray(raw) ? raw : []) {
+    if (!it?.node || !it?.input) continue
+    out.set(`${it.node}/${it.input}`, {
+      kind: String(it.kind ?? ''), label: String(it.label ?? it.input), prompt: Boolean(it.prompt),
+    })
+  }
+  return out
+}
+
+export function customExposedOutputs(config: Pick<ConfigPayload, 'kind' | 'meta'> | null | undefined): Array<{ kind: string; label: string }> {
+  if (config?.kind !== 'custom') return []
+  const raw = (config.meta as any)?.custom_io?.outputs
+  return (Array.isArray(raw) ? raw : [])
+    .filter((o: any) => o?.node)
+    .map((o: any) => ({ kind: String(o.kind ?? ''), label: String(o.label ?? o.kind ?? '') }))
+}
+
 export type ResultType = 'graph_output_first' | 'ui_save_batch' | 'ui_save_url'
 
 const TEXT_RESULT_KINDS = new Set(['text', 'storyboard'])

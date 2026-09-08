@@ -333,3 +333,23 @@ describe('resultTypesForKind', () => {
     expect(resultTypesForKind('')).toHaveLength(3)
   })
 })
+
+import { customExposedOutputs, customExposureIndex } from '@/composables/sidebar/workflowConfigCatalog'
+
+describe('custom exposure index', () => {
+  const meta = { custom_io: {
+    inputs: [{ node: '1', input: 'image', kind: 'image', label: 'Source' }, { node: '7', input: 'value', kind: 'text', label: 'Caption', prompt: true }],
+    outputs: [{ node: '3', kind: 'image', label: 'Original' }],
+  } }
+  it('indexes exposed widgets for custom workflows only', () => {
+    const idx = customExposureIndex({ kind: 'custom', meta })
+    expect(idx.get('1/image')).toEqual({ kind: 'image', label: 'Source', prompt: false })
+    expect(idx.get('7/value')?.prompt).toBe(true)
+    expect(customExposureIndex({ kind: 'image', meta }).size).toBe(0)
+    expect(customExposureIndex(null).size).toBe(0)
+  })
+  it('lists exposed outputs', () => {
+    expect(customExposedOutputs({ kind: 'custom', meta })).toEqual([{ kind: 'image', label: 'Original' }])
+    expect(customExposedOutputs({ kind: 'video', meta })).toEqual([])
+  })
+})
