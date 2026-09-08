@@ -2,6 +2,7 @@ import { watch } from 'vue'
 
 import { ensureStageUid, getStageUidClaimedAt, stageClassName } from '@/composables/stages/stageIdentity'
 import { outputTypeForKind } from '@/composables/stages/stageOutputType'
+import { readWidgetStr } from '@/utils/widget'
 import { useProjectStore } from '@/stores/projectStore'
 import {
   computePickedFromBatch,
@@ -79,6 +80,12 @@ export function bindOutputRestore(opts: {
     }
   }
 
+  function outputMatchesWorkflow(latest: any): boolean {
+    const ran = (latest?.params_json as { workflow?: unknown } | null)?.workflow
+    if (typeof ran !== 'string' || !ran) return true
+    return ran === readWidgetStr(node, 'workflow', '')
+  }
+
   let adoptionTried = false
   async function restoreLatestOutput(projectId: string) {
     if (variant === 'loader') return
@@ -96,6 +103,7 @@ export function bindOutputRestore(opts: {
         )
         if (adopted && (!latest || Number(adopted.id) > Number(latest.id))) latest = adopted
       }
+      if (latest && kind === 'custom' && !outputMatchesWorkflow(latest)) latest = null
       if (!latest) {
         if (state.output != null) {
           store.setOutputSlot(state, 0, null)

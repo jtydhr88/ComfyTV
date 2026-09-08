@@ -4,7 +4,7 @@ import { spawnFollowUpStage } from '@/composables/stages/spawnFollowUp'
 import { useStageNode } from '@/composables/stages/useStageNode'
 import { t } from '@/i18n'
 import { type ComfyNode } from '@/lib/comfyApp'
-import { batchImageUrls, type StageKind, type StageVariant, type TypedValueType } from '@/stores/stageStore'
+import { batchImageUrls, type StageKind, type StageVariant, type TypedValueType, useStageStore } from '@/stores/stageStore'
 import { useCustomIoStore } from '@/stores/customIoStore'
 import MainPromptInput from '@/components/stages/MainPromptInput.vue'
 import { addOptionEverywhere } from '@/composables/stages/workflowCombo'
@@ -160,8 +160,19 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant) {
     anyNode.setDirtyCanvas?.(true, true)
   }
 
+  const clearOutputs = () => {
+    const store = useStageStore()
+    for (let i = 0; i < stageState.outputs.length; i++) stageState.outputs[i] = null
+    stageState.output = null
+    stageState.outputId = null
+    stageState.durationMs = null
+    store.notifyConsumers(stageState)
+  }
+  let lastLabel = label.value
   const reload = async () => {
     const next = readWidgetStr(node, 'workflow', '')
+    if (lastLabel && next !== lastLabel) clearOutputs()
+    lastLabel = next
     label.value = next
     if (!next) { applyIo(emptyCustomIo()); return }
     const e = await ioStore.load(next)

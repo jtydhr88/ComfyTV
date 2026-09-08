@@ -58605,7 +58605,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-DPl-MwJk.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-BnZQbbNm.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -143421,7 +143421,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-BcHsSMDY.mjs");
+    const { STLLoader } = await import("./STLLoader-DL6JOO0p.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -143429,7 +143429,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-BNc5Z3eC.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-Xbvru_7z.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -226190,6 +226190,12 @@ function bindOutputRestore(opts) {
       store2.setOutputSlot(state2, 1, picked ?? null);
     }
   }
+  function outputMatchesWorkflow(latest) {
+    var _a4;
+    const ran = (_a4 = latest == null ? void 0 : latest.params_json) == null ? void 0 : _a4.workflow;
+    if (typeof ran !== "string" || !ran) return true;
+    return ran === readWidgetStr(node, "workflow", "");
+  }
   let adoptionTried = false;
   async function restoreLatestOutput(projectId) {
     if (variant === "loader") return;
@@ -226210,6 +226216,7 @@ function bindOutputRestore(opts) {
         );
         if (adopted && (!latest || Number(adopted.id) > Number(latest.id))) latest = adopted;
       }
+      if (latest && kind === "custom" && !outputMatchesWorkflow(latest)) latest = null;
       if (!latest) {
         if (state2.output != null) {
           store2.setOutputSlot(state2, 0, null);
@@ -229598,7 +229605,7 @@ const _sfc_main$l = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const FooterSelectsV2 = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["__scopeId", "data-v-98e97b33"]]);
+const FooterSelectsV2 = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["__scopeId", "data-v-378d1834"]]);
 const _hoisted_1$i = ["title"];
 const _hoisted_2$h = ["data-done", "title"];
 const _hoisted_3$g = ["fill"];
@@ -236924,7 +236931,7 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const CustomInputsV2 = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["__scopeId", "data-v-ed871e17"]]);
+const CustomInputsV2 = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["__scopeId", "data-v-09a2b33f"]]);
 const _hoisted_1 = { class: "v2-cio__head" };
 const _hoisted_2 = { class: "v2-cio__title" };
 const _hoisted_3 = ["title"];
@@ -237370,7 +237377,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const CustomIoPanelV2 = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-96687d34"]]);
+const CustomIoPanelV2 = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-2149a707"]]);
 const ICON_CUSTOM = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 10h18M9 10v10"/><circle cx="6" cy="7" r=".9" fill="currentColor"/></svg>`;
 const ICON_EXPOSE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 7h10M18 7h2M4 12h3M11 12h9M4 17h12M20 17h0"/><circle cx="16" cy="7" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="18" cy="17" r="2"/></svg>`;
 const OUTPUT_TYPE = {
@@ -237491,8 +237498,19 @@ function attach(node, kind, variant) {
     syncToolbar();
     (_b2 = anyNode.setDirtyCanvas) == null ? void 0 : _b2.call(anyNode, true, true);
   };
+  const clearOutputs = () => {
+    const store2 = useStageStore();
+    for (let i = 0; i < stageState.outputs.length; i++) stageState.outputs[i] = null;
+    stageState.output = null;
+    stageState.outputId = null;
+    stageState.durationMs = null;
+    store2.notifyConsumers(stageState);
+  };
+  let lastLabel = label.value;
   const reload = async () => {
     const next = readWidgetStr(node, "workflow", "");
+    if (lastLabel && next !== lastLabel) clearOutputs();
+    lastLabel = next;
     label.value = next;
     if (!next) {
       applyIo(emptyCustomIo());
@@ -238233,4 +238251,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-DdZ6hl-6.mjs.map
+//# sourceMappingURL=main-yef3A_cQ.mjs.map
