@@ -69,6 +69,8 @@ def normalize_custom_io(raw: Any) -> dict:
             entry['ptype'] = str(it.get('ptype') or 'STRING').upper()
             entry['props'] = it.get('props') if isinstance(it.get('props'), dict) else {}
             entry['default'] = it.get('default')
+        if kind == 'param':
+            entry['random'] = bool(it.get('random')) and entry['ptype'] == 'INT'
         if kind == 'text':
             entry['prompt'] = bool(it.get('prompt'))
         inputs.append(entry)
@@ -112,7 +114,7 @@ def bindings_for(custom_io: dict) -> list[dict]:
             'node_id': it['node'], 'input_name': it['input'],
             'from': 'main_prompt' if it.get('prompt') else f"option:{it['key']}",
             'required': False,
-            'default': None if default is None else str(default),
+            'default': 'random_int31' if it.get('random') else (None if default is None else str(default)),
             'cast': PARAM_CASTS.get(str(it.get('ptype') or '').upper()),
         }
         out.append(spec)
@@ -197,6 +199,22 @@ def split_multi_payload(payload: Any, custom_io: dict) -> tuple[dict[str, str], 
         by_kind[outputs[0]['kind']] = payload
     primary_kind = outputs[0]['kind'] if outputs else 'image'
     return by_kind, primary_kind, by_kind.get(primary_kind, '')
+
+
+def random_param_keys(custom_io: dict) -> set[str]:
+    return {it['key'] for it in custom_io.get('inputs') or [] if it.get('random')}
+
+
+def strip_random_params(custom_io: dict, custom_params: Any) -> Any:
+    keys = random_param_keys(custom_io)
+    if not keys or not custom_params:
+        return custom_params
+    try:
+        data = json.loads(custom_params) if isinstance(custom_params, str) else dict(custom_params)
+    except (ValueError, TypeError):
+        return custom_params
+    items = [it for it in (data.get('items') or []) if it.get('key') not in keys]
+    return json.dumps({**data, 'items': items})
 
 
 def slot_values(by_kind: dict[str, str]) -> list[str]:

@@ -4,7 +4,7 @@ import logging
 from ._common import *  # noqa: F401, F403
 from ...runners.custom_io import (
     OUTPUT_SLOTS, build_upstream, linked_text_options, normalize_custom_io,
-    slot_values, split_multi_payload,
+    slot_values, split_multi_payload, strip_random_params,
 )
 from .common.timing import consume_invoke_duration
 
@@ -72,7 +72,7 @@ class CustomStage(io.ComfyNode):
             main_prompt=main_prompt,
             upstream=upstream,
             options=linked_text_options(custom_io, upstream),
-            custom_params=custom_params,
+            custom_params=strip_random_params(custom_io, custom_params),
         )
         by_kind, primary_kind, primary = split_multi_payload(payload, custom_io)
         if not primary:

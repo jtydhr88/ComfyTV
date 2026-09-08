@@ -4,6 +4,7 @@ import type { ExposedWidget, GuiNode } from '@/composables/sidebar/workflowConfi
 import {
   applySlotLabels,
   classifyWidget,
+  defaultInputLabel,
   exposedRefTypes,
   hasPromptInput,
   inputBySlot,
@@ -110,6 +111,18 @@ describe('customIo', () => {
     expect(exposedRefTypes(io)).toEqual(['image'])
     expect(previewKindOf(io.outputs[0].kind)).toBe('video')
     expect(previewKindOf('images')).toBe('image')
+  })
+
+  it('names media inputs by kind and index unless the node has a custom title', () => {
+    let io = parseCustomIo({})
+    const w1 = widget({ node_id: '1', node_title: 'LoadImage', widget_props: { image_upload: true } })
+    expect(defaultInputLabel(io, w1, 'image', 'Image')).toBe('Image 1')
+    io = toggleInput(io, w1, 'image', defaultInputLabel(io, w1, 'image', 'Image'))
+    const w2 = widget({ node_id: '2', node_title: 'LoadImage', widget_props: { image_upload: true } })
+    expect(defaultInputLabel(io, w2, 'image', 'Image')).toBe('Image 2')
+    expect(defaultInputLabel(io, widget({ node_id: '3', node_title: 'Hero shot', widget_props: { image_upload: true } }), 'image', 'Image')).toBe('Hero shot')
+    expect(defaultInputLabel(io, widget({ node_id: '4', node_title: 'KSampler', node_type: 'KSampler', widget_name: 'seed', widget_type: 'INT' }), 'param')).toBe('KSampler.seed')
+    expect(parseCustomIo({ custom_io: { inputs: [{ node: '4', input: 'seed', kind: 'param', ptype: 'INT', random: true }], outputs: [] } }).inputs[0].random).toBe(true)
   })
 
   it('parses multi outputs and moves items', () => {

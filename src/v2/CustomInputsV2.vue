@@ -3,10 +3,22 @@
     <div v-if="!io.outputs.length && !io.inputs.length" class="v2-cin__hint">
       {{ hasWorkflow ? t('v2.custom.hint') : t('v2.custom.noWorkflow') }}
     </div>
-    <div v-for="it in visibleInputs" :key="it.key ?? it.node + '/' + it.input" class="v2-cin__row" :data-wide="it.kind === 'text' ? '1' : ''">
+    <div v-if="mediaInputs.length" class="v2-cin__chips">
+      <span
+        v-for="it in mediaInputs"
+        :key="it.key ?? it.node + '/' + it.input"
+        class="v2-cin__chip"
+        :data-wired="isWired(it) || isRefCovered(it) ? '1' : ''"
+        :title="`${it.label} · ${mediaStatus(it)}`"
+      >
+        <span class="v2-cin__dot" :data-kind="it.kind" :data-wired="isWired(it) || isRefCovered(it) ? '1' : ''" />
+        {{ it.label }}<span v-if="it.required" class="v2-cin__req">*</span>
+      </span>
+    </div>
+    <div v-for="it in editorInputs" :key="it.key ?? it.node + '/' + it.input" class="v2-cin__row" :data-wide="it.kind === 'text' ? '1' : ''">
       <span class="v2-cin__label" :title="`${it.node}.${it.input}`">
         <span class="v2-cin__dot" :data-kind="it.kind" :data-wired="isWired(it) ? '1' : ''" />
-        {{ it.label }}<span v-if="it.required && it.kind !== 'param' && it.kind !== 'text'" class="v2-cin__req">*</span>
+        {{ it.label }}
       </span>
       <div v-if="it.kind === 'text'" class="v2-cin__control">
         <ComfyTVText
@@ -17,6 +29,9 @@
           :placeholder="isWired(it) ? t('v2.custom.linked') : undefined"
           @update:model-value="setVal(it, $event)"
         />
+      </div>
+      <div v-else-if="it.kind === 'param' && it.random" class="v2-cin__control v2-cin__random">
+        🎲 {{ t('v2.custom.randomEachRun') }}
       </div>
       <div v-else-if="it.kind === 'param'" class="v2-cin__control">
         <ComfyTVToggle
@@ -55,9 +70,6 @@
           @update:model-value="setVal(it, $event)"
         />
       </div>
-      <span v-else class="v2-cin__status" :data-wired="isWired(it) || isRefCovered(it) ? '1' : ''">
-        {{ isWired(it) ? t('v2.custom.linked') : isRefCovered(it) ? t('v2.custom.viaRef') : t('v2.custom.unlinked') }}
-      </span>
     </div>
   </div>
 </template>
@@ -76,7 +88,7 @@ import { type ParamItem, parseParamItems, serializeParamItems } from '@/composab
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import { bindWidgetCallback, readWidgetStr, writeWidget } from '@/utils/widget'
-import { type CustomIo, type CustomIoInput, slotName } from '@/v2/customIo'
+import { type CustomIo, type CustomIoInput, isMediaKind, slotName } from '@/v2/customIo'
 
 const props = defineProps<{
   node: LGraphNode
@@ -107,7 +119,11 @@ function isRefCovered(it: CustomIoInput): boolean {
 }
 
 const byKey = computed(() => new Map(items.value.map(it => [it.key, it.value])))
-const visibleInputs = computed(() => props.io.inputs.filter(it => !(it.kind === 'text' && it.prompt)))
+const mediaInputs = computed(() => props.io.inputs.filter(it => isMediaKind(it.kind)))
+const editorInputs = computed(() => props.io.inputs.filter(it => !isMediaKind(it.kind) && !(it.kind === 'text' && it.prompt)))
+function mediaStatus(it: CustomIoInput): string {
+  return isWired(it) ? t('v2.custom.linked') : isRefCovered(it) ? t('v2.custom.viaRef') : t('v2.custom.unlinked')
+}
 
 function val(it: CustomIoInput): unknown {
   const key = it.key ?? ''
@@ -215,10 +231,33 @@ function wiredText(it: CustomIoInput): string {
   border-color: var(--v2-chip-border);
 }
 .v2-cin__control :deep(button:not(.ctv-toggle):hover) { background: var(--v2-hover-bg); }
-.v2-cin__status {
-  flex: 1;
-  color: var(--v2-text-faint);
-  font: 500 10px/1 system-ui, sans-serif;
+.v2-cin__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
 }
-.v2-cin__status[data-wired="1"] { color: var(--v2-accent-text); }
+.v2-cin__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 100%;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  border: 1px solid var(--v2-chip-border);
+  background: var(--v2-chip-bg);
+  color: var(--v2-text-muted);
+  font: 500 10px/1 system-ui, sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.v2-cin__chip[data-wired="1"] {
+  border-color: var(--v2-accent-border);
+  color: var(--v2-text-strong);
+}
+.v2-cin__random {
+  color: var(--v2-text-muted);
+  font: 500 11px/26px system-ui, sans-serif;
+}
 </style>

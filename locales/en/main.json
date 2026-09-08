@@ -254,6 +254,8 @@
       "saveAs": "Save as…",
       "saveAsHint": "Save these choices as a separate configuration of the same workflow",
       "saveAsPrompt": "Name of the new configuration",
+      "asRandom": "Draw a fresh random value on every run (seed)",
+      "randomEachRun": "random on every run",
       "moveDown": "Move down"
     },
     "ctl": {

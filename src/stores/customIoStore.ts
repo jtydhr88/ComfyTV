@@ -62,6 +62,7 @@ export const useCustomIoStore = defineStore('comfytv-custom-io', () => {
         node: it.node, input: it.input, kind: it.kind, label: it.label,
         required: it.required, ptype: it.ptype, props: it.props, default: it.default,
         prompt: it.prompt,
+        random: it.random,
       })),
       outputs: io.outputs.map(o => ({ node: o.node, kind: o.kind, label: o.label })),
     })

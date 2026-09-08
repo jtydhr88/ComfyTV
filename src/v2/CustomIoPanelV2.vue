@@ -48,6 +48,14 @@
               :title="t('v2.custom.asPrompt')"
               @click.stop="togglePrompt(i)"
             >@</button>
+            <button
+              v-if="it.kind === 'param' && it.ptype === 'INT'"
+              type="button"
+              class="v2-cio__req"
+              :data-on="it.random ? '1' : ''"
+              :title="t('v2.custom.asRandom')"
+              @click.stop="toggleRandom(i)"
+            >🎲</button>
             <button type="button" class="v2-cio__mv" :disabled="i === 0" :title="t('v2.custom.moveUp')" @click.stop="moveInput(i, -1)">↑</button>
             <button type="button" class="v2-cio__mv" :disabled="i === draft.inputs.length - 1" :title="t('v2.custom.moveDown')" @click.stop="moveInput(i, 1)">↓</button>
             <button type="button" class="v2-cio__rm" @click.stop="removeInput(i)">×</button>
@@ -149,6 +157,7 @@ import {
   type InputKind,
   type OutputKind,
   classifyWidget,
+  defaultInputLabel,
   isInputExposed,
   isOutputExposed,
   moveItem,
@@ -206,7 +215,14 @@ function kindLabel(kind: InputKind | OutputKind): string {
 function onToggleInput(w: ExposedWidget) {
   const kind = kindOf(w)
   if (!kind) return
-  draft.value = toggleInput(draft.value, w, kind)
+  const label = w.node_title && w.node_title !== w.node_type
+    ? undefined
+    : defaultInputLabel(draft.value, w, kind, kindLabel(kind))
+  draft.value = toggleInput(draft.value, w, kind, label)
+}
+function toggleRandom(i: number) {
+  const it = draft.value.inputs[i]
+  it.random = !it.random
 }
 function onToggleOutput(n: GuiNode) {
   const kind = outputKindOf(n)

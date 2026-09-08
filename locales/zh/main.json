@@ -254,6 +254,8 @@
       "saveAs": "另存为…",
       "saveAsHint": "把这组选择另存为同一工作流的一份新配置",
       "saveAsPrompt": "新配置名称",
+      "asRandom": "每次运行随机取值（用于 seed）",
+      "randomEachRun": "每次运行随机",
       "moveDown": "下移"
     },
     "ctl": {

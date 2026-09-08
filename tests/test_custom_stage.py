@@ -332,3 +332,17 @@ async def test_stage_param_routes_block_custom(client):
     from ComfyTV.api.mcp_tools.stages import _stage_params_tool
     with pytest.raises(ValueError, match="custom"):
         await _stage_params_tool({"action": "create", "kind": "custom", "label": "Steps", "type": "int"})
+
+
+def test_random_param_binding_and_strip():
+    n = cio.normalize_custom_io({"inputs": [
+        {"node": "3", "input": "seed", "kind": "param", "ptype": "INT", "default": 5, "random": True},
+        {"node": "3", "input": "cfg", "kind": "param", "ptype": "FLOAT", "default": 7, "random": True},
+    ], "outputs": [{"node": "9", "kind": "image"}]})
+    assert n["inputs"][0]["random"] is True and n["inputs"][1]["random"] is False
+    by = {b["input_name"]: b for b in cio.bindings_for(n)}
+    assert by["seed"]["default"] == "random_int31" and by["seed"]["cast"] == "int"
+    assert by["cfg"]["default"] == "7"
+    raw = json.dumps({"items": [{"key": "cio_3_seed", "value": 42}, {"key": "cio_3_cfg", "value": 3}]})
+    assert json.loads(cio.strip_random_params(n, raw))["items"] == [{"key": "cio_3_cfg", "value": 3}]
+    assert cio.strip_random_params({"inputs": []}, raw) == raw

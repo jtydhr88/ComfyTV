@@ -16,6 +16,7 @@ export interface CustomIoInput {
   props?: Record<string, unknown>
   default?: unknown
   prompt?: boolean
+  random?: boolean
 }
 
 export interface CustomIoOutput {
@@ -108,6 +109,7 @@ export function parseCustomIo(meta: unknown): CustomIo {
       props: it.props && typeof it.props === 'object' ? it.props : {},
       default: it.default,
       prompt: it.kind === 'text' ? Boolean(it.prompt) : undefined,
+      random: it.kind === 'param' ? Boolean(it.random) : undefined,
     })
   }
   for (const it of Array.isArray(raw.outputs) ? raw.outputs : []) {
@@ -160,13 +162,28 @@ export function applySlotLabels(node: { inputs?: SlotLike[]; outputs?: SlotLike[
   }
 }
 
-export function toggleInput(io: CustomIo, w: ExposedWidget, kind: InputKind): CustomIo {
+export function isMediaKind(kind: InputKind): kind is MediaKind {
+  return kind === 'image' || kind === 'video' || kind === 'audio' || kind === 'model'
+}
+
+export function defaultInputLabel(
+  io: CustomIo, w: ExposedWidget, kind: InputKind, kindName?: string,
+): string {
+  if (w.node_title && w.node_title !== w.node_type) return w.node_title
+  if (isMediaKind(kind)) {
+    const n = io.inputs.filter(it => it.kind === kind).length + 1
+    return `${kindName ?? kind} ${n}`
+  }
+  return `${w.node_title}.${w.widget_name}`
+}
+
+export function toggleInput(io: CustomIo, w: ExposedWidget, kind: InputKind, label?: string): CustomIo {
   const idx = io.inputs.findIndex(it => it.node === w.node_id && it.input === w.widget_name)
   const inputs = [...io.inputs]
   if (idx >= 0) inputs.splice(idx, 1)
   else inputs.push({
     node: w.node_id, input: w.widget_name, kind,
-    label: w.node_title && w.node_title !== w.node_type ? w.node_title : `${w.node_title}.${w.widget_name}`,
+    label: label ?? defaultInputLabel(io, w, kind),
     required: kind === 'param' || kind === 'text' ? undefined : true,
     ptype: kind === 'param' || kind === 'text' ? String(w.widget_type).toUpperCase() : undefined,
     props: kind === 'param' ? pickProps(w.widget_props) : {},
