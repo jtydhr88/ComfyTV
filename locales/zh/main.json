@@ -828,10 +828,12 @@
     "unpinBatch": "取消钉住",
     "refreshFailed": "刷新失败 —— 找不到来源 stage 或其没有批次输出。",
     "remove": "移除",
-    "warnDuplicate": "参考槽位 #{n} 被多张图片绑定 —— 运行时只有最后一张生效。",
-    "warnOverride": "参考槽位 #{n} 已有上游连接 —— 绑定的图片会在运行时覆盖它。",
-    "warnOverflow": "该工作流只绑定了 {total} 个参考槽位 —— 有 {count} 张图片不会被使用。",
+    "warnOverflow": "该工作流只绑定了 {total} 张参考图 —— 本节点最后 {count} 张不会被使用。",
     "warnNoSlots": "该工作流没有可接收参考图的图片输入 —— 运行时这些图会被忽略。"
+  },
+  "mediaStrip": {
+    "wired": "连线输入",
+    "wiredFrom": "来自「{title}」的连线"
   },
   "promptAssets": {
     "addTooltip": "从资产库插入图片 —— 运行时会作为参考图传给工作流",
@@ -1985,14 +1987,14 @@
     "parse": "识别粘贴的引用（如 {'@'}图片#0 / {'@'}image #0）并转换为标签",
     "promptBadge": "插入即展开",
     "imageSlots": "已连接的输入",
-    "imageChip": "图片#{n}",
+    "imageChip": "图{n}",
     "imageExpand": "图{n}",
-    "videoChip": "视频#{n}",
+    "videoChip": "视频{n}",
     "videoExpand": "视频{n}",
-    "audioChip": "音频#{n}",
+    "audioChip": "音频{n}",
     "audioExpand": "音频{n}",
-    "imageItemTitle": "槽位 #{n} —— 运行时展开为「{text}」(按实际发送顺序)",
-    "imageTooltipMissing": "槽位 #{n} 当前为空 —— 运行时此标记会被移除"
+    "imageItemTitle": "运行时发送为「{text}」· {note}",
+    "imageTooltipMissing": "第 {n} 位当前为空 —— 运行时此标记会被移除"
   },
   "entries": {
     "title": "条目",

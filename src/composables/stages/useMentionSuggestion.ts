@@ -4,55 +4,53 @@ import tippy, { type Instance as TippyInstance } from 'tippy.js'
 import { type Component, type Ref } from 'vue'
 
 import {
-  imageSendOrder,
-  mentionSendOrderOf,
+  mentionSendOrders,
   mentionSlotLabel,
   slotColor,
   type MentionOrders,
   type MentionSlotType,
 } from '@/composables/stages/imageSlotMentions'
-import { readImageRefs } from '@/composables/stages/imageRefs'
+import { readMediaTable } from '@/composables/stages/mediaOrder'
+import { mediaEntrySourceNode, mediaEntryUrl } from '@/composables/stages/mediaOrderSync'
 import { modulesForSurface } from '@/composables/stages/promptModules/catalog'
 import type { PromptModule } from '@/composables/stages/promptModules/types'
 import { t } from '@/i18n'
 import type { LGraphNode } from '@/lib/comfyApp'
 import { useAssetStore } from '@/stores/assetStore'
 import { useEntryStore } from '@/stores/entryStore'
-import { useStageStore } from '@/stores/stageStore'
 
 export type MentionSuggestionItem =
   | { type: 'snippet'; module: PromptModule }
-  | { type: 'imageSlot'; slotType: MentionSlotType; slot: number; ordinal: number; url: string | null; color: string }
+  | { type: 'imageSlot'; slotType: MentionSlotType; slot: number; ordinal: number; url: string | null; color: string; note: string }
 
 export interface MentionSource {
   orders(): MentionOrders
   previewUrl(type: MentionSlotType, slot: number): string | null
+  note?(type: MentionSlotType, slot: number): string
 }
 
 export function nodeMentionSource(getNode: () => LGraphNode | undefined): MentionSource {
   const assetStore = useAssetStore()
-  const stageStore = useStageStore()
   return {
     orders() {
-      const node = getNode()
-      return {
-        image: imageSendOrder(node),
-        video: mentionSendOrderOf(node, 'video'),
-        audio: mentionSendOrderOf(node, 'audio'),
-      }
+      return mentionSendOrders(getNode())
     },
-    previewUrl(type, slot) {
-      if (type !== 'image') return null
+    previewUrl(type, position) {
       const node = getNode()
-      if (!node) return null
-      const pinned = readImageRefs(node).filter(r => r.slot === slot).at(-1)
-      if (pinned) {
-        return pinned.asset_id != null
-          ? assetStore.byId(pinned.asset_id)?.payload_url ?? null
-          : null
+      const entry = readMediaTable(node)[type][position - 1]
+      if (!entry || type !== 'image') return null
+      return mediaEntryUrl(node, entry)
+    },
+    note(type, position) {
+      const node = getNode()
+      const entry = readMediaTable(node)[type][position - 1]
+      if (!entry) return ''
+      if (entry.src === 'link') {
+        const src = mediaEntrySourceNode(node, entry)
+        return String(src?.title || src?.comfyClass || t('mediaStrip.wired'))
       }
-      const inputs = stageStore.getStage(node)?.inputs ?? []
-      return inputs.find(inp => inp.slot === `images.image${slot}`)?.content ?? null
+      if (entry.src === 'batch') return t('imageRefs.batchItem', { n: entry.batch_index! + 1 })
+      return assetStore.byId(entry.asset_id!)?.name || `asset:${entry.asset_id}`
     },
   }
 }
@@ -81,6 +79,7 @@ export function useMentionSuggestionFromSource(
           ordinal: i + 1,
           url: source.previewUrl(slotType, slot),
           color: slotColor(slot),
+          note: source.note?.(slotType, slot) ?? '',
         }
         if (slotItemMatches(item, q)) out.push(item)
       })
@@ -95,6 +94,7 @@ export function useMentionSuggestionFromSource(
     if (!q) return true
     const chip = t(`mention.${item.slotType}Chip`, { n: item.slot }).toLowerCase()
     return mentionSlotLabel(item.slotType, item.slot).includes(q) || chip.includes(q)
+      || item.note.toLowerCase().includes(q)
   }
 
   return {

@@ -28,7 +28,7 @@
           <i v-else-if="item.slotType === 'audio'" class="pi pi-volume-up ctv:text-2xs" :style="{ color: item.color }" />
         </span>
         <span class="ctv:font-mono ctv:shrink-0" :style="{ color: item.color }">@{{ $t(`mention.${item.slotType}Chip`, { n: item.slot }) }}</span>
-        <span class="ctv:ml-auto ctv:text-muted-foreground ctv:whitespace-nowrap">→ {{ $t(`mention.${item.slotType}Expand`, { n: item.ordinal }) }}</span>
+        <span class="ctv:ml-auto ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap">{{ item.note }}</span>
       </div>
       <div
         v-for="(item, j) in snippetItems"
@@ -157,8 +157,8 @@ const {
 function itemTitle(item: MentionSuggestionItem): string {
   if (item.type === 'imageSlot') {
     return t('mention.imageItemTitle', {
-      n: item.slot,
       text: t(`mention.${item.slotType}Expand`, { n: item.ordinal }),
+      note: item.note,
     })
   }
   return item.module.body

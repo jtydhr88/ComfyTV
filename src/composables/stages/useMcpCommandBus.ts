@@ -9,7 +9,23 @@ import {
   findFirstAutogrowSlot,
   findNamedSlot,
 } from '@/composables/stages/spawnFollowUp'
-import { writeImageRefs, type ImageRef } from '@/composables/stages/imageRefs'
+import {
+  assetEntry,
+  AUTOGROW_KEY_RE,
+  type MediaEntry,
+  type MediaType,
+  MEDIA_TYPES,
+  positionOfLink,
+  readMediaTable,
+} from '@/composables/stages/mediaOrder'
+import {
+  linkInputName,
+  mediaEntrySourceNode,
+  mediaEntryUrl,
+  replaceAssetEntries,
+  setMediaPositions,
+  syncMediaTable,
+} from '@/composables/stages/mediaOrderSync'
 import {
   handleCanvasCommand,
   handleCanvasFocus,
@@ -87,7 +103,7 @@ function checkWidgetValue(w: any, name: string, value: unknown): void {
   }
 }
 
-function applyStageFields(node: any, cmd: any): string[] {
+function applyStageFields(node: any, cmd: any, graph?: any): string[] {
   const updated: string[] = []
   if (cmd.workflow != null) {
     const wf = getWidget(node, 'workflow')
@@ -140,22 +156,72 @@ function applyStageFields(node: any, cmd: any): string[] {
   }
   if (cmd.asset_refs != null) {
     if (!Array.isArray(cmd.asset_refs)) {
-      throw new Error('asset_refs must be an array of {asset_id, slot?, type?} objects')
+      throw new Error('asset_refs must be an array of {asset_id, type?} objects')
     }
-    const nextSlot = { image: 0, video: 0, audio: 0 }
-    const refs: ImageRef[] = cmd.asset_refs.map((r: any, i: number) => {
+    const entries: Array<{ type: MediaType; entry: MediaEntry }> = cmd.asset_refs.map((r: any, i: number) => {
       const id = Number(r?.asset_id)
       if (!Number.isInteger(id)) throw new Error(`asset_refs[${i}] needs a numeric asset_id`)
-      const type = r?.type === 'video' || r?.type === 'audio' ? r.type : undefined
-      const typeKey = (type ?? 'image') as 'image' | 'video' | 'audio'
-      const slot = Number.isInteger(Number(r?.slot)) ? Number(r.slot) : nextSlot[typeKey]++
-      return type ? { asset_id: id, slot, type } : { asset_id: id, slot }
+      const type: MediaType = r?.type === 'video' || r?.type === 'audio' ? r.type : 'image'
+      return { type, entry: assetEntry(id) }
     })
-    writeImageRefs(node, refs)
+    syncMediaTable(node, graph)
+    replaceAssetEntries(node, entries)
     void useAssetStore().refresh()
     updated.push('asset_refs')
   }
+  if (cmd.media_order != null) {
+    if (typeof cmd.media_order !== 'object' || Array.isArray(cmd.media_order)) {
+      throw new Error('media_order must be an object like {"image": [2, 1, 3]}')
+    }
+    syncMediaTable(node, graph)
+    for (const [type, positions] of Object.entries(cmd.media_order)) {
+      if (!MEDIA_TYPES.includes(type as MediaType)) {
+        throw new Error(`media_order keys must be image / video / audio, got '${type}'`)
+      }
+      if (!Array.isArray(positions)) throw new Error(`media_order.${type} must be an array of positions`)
+      try {
+        setMediaPositions(node, type as MediaType, positions.map(Number))
+      } catch (e: any) {
+        throw new Error(`media_order.${type}: ${e?.message ?? e}`)
+      }
+      updated.push(`media_order.${type}`)
+    }
+  }
   return updated
+}
+
+function mediaTypeOfInput(name: string): MediaType | null {
+  for (const type of MEDIA_TYPES) {
+    if (AUTOGROW_KEY_RE[type].test(name) || (type === 'audio' && name === 'audio')) return type
+  }
+  return null
+}
+
+function mediaSummary(node: any, graph: any): Record<string, unknown[]> {
+  const table = readMediaTable(node)
+  const out: Record<string, unknown[]> = {}
+  for (const type of MEDIA_TYPES) {
+    out[type] = table[type].map((e, i) => {
+      const row: Record<string, unknown> = {
+        position: i + 1, mention: `@${type}_${i + 1}`, source: e.src,
+      }
+      if (e.src === 'link') {
+        const srcNode = mediaEntrySourceNode(node, e, graph)
+        if (srcNode) row.from_node = String(srcNode.id)
+        const input = linkInputName(node, e)
+        if (input) row.input = input
+      } else if (e.src === 'asset') {
+        row.asset_id = e.asset_id
+      } else {
+        row.batch_id = e.batch_id
+        row.batch_index = e.batch_index
+      }
+      const url = mediaEntryUrl(node, e)
+      if (url) row.url = url
+      return row
+    })
+  }
+  return out
 }
 
 const MENTION_TOKEN_RE = /@(image|video|audio)_(\d+)(?![0-9a-zA-Z_-])/g
@@ -173,10 +239,10 @@ export function danglingMentionWarnings(node: any): string[] {
     if (seen.has(key)) continue
     seen.add(key)
     if (!orders[type].includes(slot)) {
+      const n = orders[type].length
       warnings.push(
-        `@${key} won't resolve and will expand to nothing — sendable ${type} `
-        + `slots on this stage are [${orders[type].join(', ')}] (zero-based; `
-        + 'wired inputs and asset_refs occupy slots in order)',
+        `@${key} won't resolve and will expand to nothing — this stage has ${n} sendable ${type}${n === 1 ? '' : 's'}`
+        + (n ? ` (@${type}_1 … @${type}_${n}, 1-based, in the order listed by get_stage media)` : ''),
       )
     }
   }
@@ -204,7 +270,7 @@ async function handleAddStage(app: any, cmd: any): Promise<CommandResult> {
   const node = createNodeAt(String(cmd.node_class), pos)
   if (!node) throw new Error(`could not create node ${cmd.node_class}`)
   claimStageUid(node)
-  applyStageFields(node, cmd)
+  applyStageFields(node, cmd, app?.graph)
   graph?.setDirtyCanvas?.(true, true)
   return withSizingWarnings(node, cmd, withMentionWarnings(node, {
     graph_node_id: String(node.id), uid: getStageUid(node),
@@ -214,7 +280,7 @@ async function handleAddStage(app: any, cmd: any): Promise<CommandResult> {
 async function handleSetStage(app: any, cmd: any): Promise<CommandResult> {
   const node = findStageNode(app?.graph, String(cmd.node))
   if (!node) throw new Error(`stage ${cmd.node} not found on the canvas`)
-  const updated = applyStageFields(node, cmd)
+  const updated = applyStageFields(node, cmd, app?.graph)
   app?.graph?.setDirtyCanvas?.(true, true)
   return withSizingWarnings(node, cmd, withMentionWarnings(node, {
     graph_node_id: String(node.id), uid: getStageUid(node), updated,
@@ -264,11 +330,19 @@ function handleConnectStages(app: any, cmd: any): CommandResult {
   const link = src.connect(fromSlot, dst, toSlot)
   if (!link) throw new Error('the graph rejected the connection (type mismatch?)')
   graph?.setDirtyCanvas?.(true, true)
-  return withMentionWarnings(dst, {
-    from: String(src.id),
-    to: String(dst.id),
-    input: String(dst.inputs?.[toSlot]?.name ?? toSlot),
-  })
+  syncMediaTable(dst, graph)
+  const inputName = String(dst.inputs?.[toSlot]?.name ?? toSlot)
+  const result: CommandResult = { from: String(src.id), to: String(dst.id), input: inputName }
+  const type = mediaTypeOfInput(inputName)
+  const linkId = dst.inputs?.[toSlot]?.link
+  if (type && linkId != null) {
+    const pos = positionOfLink(readMediaTable(dst), type, Number(linkId))
+    if (pos != null) {
+      result.position = pos
+      result.mention = `@${type}_${pos}`
+    }
+  }
+  return withMentionWarnings(dst, result)
 }
 
 const PREP_WAIT_MS = 15000
@@ -335,6 +409,7 @@ const _WIDGET_VALUE_CAP = 16000
 function handleGetStage(app: any, cmd: any): CommandResult {
   const node = findStageNode(app?.graph, String(cmd.node))
   if (!node) throw new Error(`stage ${cmd.node} not found on the canvas`)
+  syncMediaTable(node, app?.graph)
   const links = app?.graph?.links ?? {}
 
   const widgets: Record<string, unknown> = {}
@@ -380,7 +455,7 @@ function handleGetStage(app: any, cmd: any): CommandResult {
     widgets,
     inputs,
     outputs,
-    asset_refs: node.properties?.comfytv_image_refs ?? [],
+    media: mediaSummary(node, app?.graph),
     running: stageApi?.state?.running === true,
     pos: Array.isArray(node.pos) ? [Number(node.pos[0]), Number(node.pos[1])] : null,
   }

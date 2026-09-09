@@ -26,7 +26,7 @@ import { bindWheelCapture } from '@/v2/wheelCapture'
 import MediaCornerV2 from '@/v2/MediaCornerV2.vue'
 import MediaPreviewV2 from '@/v2/MediaPreviewV2.vue'
 import ParamsPanelV2 from '@/v2/ParamsPanelV2.vue'
-import RefChipsV2 from '@/v2/RefChipsV2.vue'
+import MediaStripV2 from '@/v2/MediaStripV2.vue'
 import { V2_SHELLS } from '@/v2/registry'
 import ServerSelectV2 from '@/v2/ServerSelectV2.vue'
 import StageControlsV2, { type ControlSpec } from '@/v2/StageControlsV2.vue'
@@ -142,7 +142,7 @@ function makeGeneratorShell(config: GeneratorConfig) {
         specs.push([StageControlsV2, { getNode: () => node, controls: config.controls }, controlsAnchor])
       }
       if (config.refTypes?.length) {
-        specs.push([RefChipsV2, { getNode: () => node, types: config.refTypes }, refsAnchor])
+        specs.push([MediaStripV2, { getNode: () => node, types: config.refTypes }, refsAnchor])
       }
       if (config.corner) {
         specs.push([MediaCornerV2, { state: stageState, source: 'batch', onAction }, cornerAnchor])

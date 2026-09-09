@@ -14,7 +14,7 @@
   >
     <div class="ctv:flex ctv:items-center ctv:gap-2">
       <span class="ctv:text-[11px] ctv:font-semibold">{{ $t('imageRefs.title') }}</span>
-      <span class="ctv:text-3xs ctv:text-muted-foreground ctv:font-mono">{{ refs.length || '' }}</span>
+      <span class="ctv:text-3xs ctv:text-muted-foreground ctv:font-mono">{{ pinned.length || '' }}</span>
       <button
         type="button"
         :class="['ctv:ml-auto', plusBtnClass]"
@@ -25,11 +25,10 @@
 
     <AssetPickerPopup
       v-if="pickerOpen"
-      :added-ids="refs.map(r => r.asset_id).filter((id): id is number => id != null)"
+      :added-ids="addedIds"
       :media-types="acceptedMediaTypes"
       :batch-groups="batchGroups"
-      :added-batch-keys="refs.filter(r => r.batch_index != null)
-        .map(r => `${r.batch_id}:${r.batch_index}`)"
+      :added-batch-keys="addedBatchKeys"
       @select="onAddAsset"
       @select-batch="onAddBatchImage"
       @refresh-batch="onRefreshBatch"
@@ -37,41 +36,32 @@
       @close="pickerOpen = false"
     />
 
-    <div v-if="refs.length" class="ctv:flex ctv:flex-wrap ctv:gap-1.5">
+    <div v-if="pinned.length" class="ctv:flex ctv:flex-wrap ctv:gap-1.5">
       <div
-        v-for="(ref, i) in refs"
-        :key="`${refType(ref)}-${refKey(ref)}`"
-        class="imgref-tile ctv-hover-host ctv:relative ctv:w-[76px] ctv:h-[76px] ctv:rounded-sm ctv:overflow-hidden ctv:cursor-pointer
+        v-for="it in pinned"
+        :key="`${it.type}-${it.entry.key}`"
+        class="imgref-tile ctv-hover-host ctv:relative ctv:w-[76px] ctv:h-[76px] ctv:rounded-sm ctv:overflow-hidden
                ctv:bg-black/30 ctv:border"
-        :style="{ borderColor: slotColor(ref.slot) }"
-        :title="tileTooltip(ref)"
-        @click="openSlotPicker(i, $event)"
+        :style="{ borderColor: it.color }"
+        :title="it.label"
       >
-        <ThumbImg
-          v-if="batchUrlOf(ref)"
-          :src="batchUrlOf(ref)!"
-          :thumb-max="THUMB_TILE"
-          class="ctv:block ctv:size-full ctv:object-cover"
-          draggable="false"
-        />
-        <template v-else-if="assetOf(ref)">
+        <template v-if="it.url">
           <video
-            v-if="refType(ref) === 'video'"
-            :src="assetOf(ref)!.payload_url"
+            v-if="it.type === 'video'"
+            :src="it.url"
             muted
             playsinline
             preload="metadata"
             class="ctv:block ctv:size-full ctv:object-cover ctv:bg-black ctv:pointer-events-none"
           />
           <div
-            v-else-if="refType(ref) === 'audio'"
+            v-else-if="it.type === 'audio'"
             class="ctv:flex ctv:items-center ctv:justify-center ctv:size-full ctv:text-muted-foreground"
           ><i class="pi pi-volume-up ctv:text-lg" /></div>
           <ThumbImg
             v-else
-            :src="assetOf(ref)!.payload_url"
+            :src="it.url"
             :thumb-max="THUMB_TILE"
-            :alt="assetOf(ref)!.name"
             class="ctv:block ctv:size-full ctv:object-cover"
             draggable="false"
           />
@@ -80,25 +70,25 @@
           v-else
           class="ctv:flex ctv:items-center ctv:justify-center ctv:size-full ctv:p-1 ctv:text-center ctv:text-3xs ctv:italic ctv:text-muted-foreground/60"
         >
-          {{ $t('promptAssets.missing', { id: ref.asset_id }) }}
+          {{ $t('promptAssets.missing', { id: it.entry.asset_id }) }}
         </div>
         <span
           class="ctv:absolute ctv:bottom-0 ctv:inset-x-0 ctv:py-0.5 ctv:px-1 ctv:text-3xs ctv:font-semibold
                  ctv:overflow-hidden ctv:whitespace-nowrap ctv:text-ellipsis ctv:pointer-events-none
                  ctv:bg-linear-to-b ctv:from-transparent ctv:to-black/75"
-          :style="{ color: slotColor(ref.slot) }"
-        >{{ refType(ref) === 'video' ? `V${ref.slot}` : refType(ref) === 'audio' ? 'A' : `#${ref.slot}` }}</span>
+          :style="{ color: it.color }"
+        >{{ $t(`mention.${it.type}Expand`, { n: it.position }) }}</span>
         <button
           type="button"
           :class="removeBtn"
           :title="$t('imageRefs.remove')"
-          @click.stop="removeRef(i)"
+          @click.stop="remove(it)"
         ><i class="pi pi-times" /></button>
         <ViewFullButton
-          v-if="tileImageUrl(ref)"
+          v-if="it.type === 'image' && it.url"
           class="ctv:top-0.5 ctv:left-0.5"
           :items="imageLightboxItems"
-          :index="imageLightboxIndex(ref)"
+          :index="imageLightboxIndex(it)"
         />
       </div>
     </div>
@@ -107,26 +97,12 @@
     </div>
 
     <div
-      v-if="slotWarnings.length"
+      v-if="warnings.length"
       class="ctv:flex ctv:flex-col ctv:gap-0.5 ctv:py-1 ctv:px-1.5 ctv:rounded ctv:text-2xs
              ctv:bg-warning-background/10 ctv:border ctv:border-warning-background/40 ctv:text-warning-background"
     >
-      <div v-for="(w, i) in slotWarnings" :key="i"><i class="pi pi-exclamation-triangle" /> {{ w }}</div>
+      <div v-for="(w, i) in warnings" :key="i"><i class="pi pi-exclamation-triangle" /> {{ w }}</div>
     </div>
-
-    <MentionSlotPopover
-      v-if="slotPicker"
-      :x="slotPicker.x"
-      :y="slotPicker.y"
-      :loading="slotPicker.loading"
-      :error="slotPicker.error"
-      :options="slotPicker.options"
-      :current-slot="slotPicker.currentSlot"
-      :wired-slots="slotPicker.wiredSlots"
-      :claimed-slots="slotPicker.claimedSlots"
-      @pick="onSlotPick"
-      @close="closeSlotPicker"
-    />
   </section>
 </template>
 
@@ -134,62 +110,48 @@
 import { computed, onMounted, ref } from 'vue'
 
 import AssetPickerPopup from '@/components/stages/AssetPickerPopup.vue'
-import MentionSlotPopover from '@/components/stages/MentionSlotPopover.vue'
 import ThumbImg from '@/components/widgets/ThumbImg.vue'
 import ViewFullButton from '@/components/ViewFullButton.vue'
-import { refKey, refType } from '@/composables/stages/imageRefs'
-import { slotColor } from '@/composables/stages/imageSlotMentions'
-import { useImageReferences } from '@/composables/stages/useImageReferences'
+import type { MediaType } from '@/composables/stages/mediaOrder'
+import { type StripItem, useMediaStrip } from '@/composables/stages/useMediaStrip'
 import { THUMB_TILE } from '@/utils/thumbUrl'
 import type { LGraphNode } from '@/lib/comfyApp'
 
 const props = defineProps<{
   node?: LGraphNode
-  forceTypes?: Array<'image' | 'video' | 'audio'>
+  forceTypes?: MediaType[]
 }>()
 
 const rootEl = ref<HTMLElement | null>(null)
+const pickerOpen = ref(false)
 
 const {
-  refs,
+  items,
   accepts,
   acceptedMediaTypes,
+  addedIds,
+  addedBatchKeys,
   batchGroups,
-  batchUrlOf,
   onRefreshBatch,
   onUnpinBatch,
-  pickerOpen,
-  slotPicker,
-  slotWarnings,
-  assetOf,
-  tileTooltip,
   onAddAsset,
   onAddBatchImage,
   fileDrop,
-  removeRef,
-  openSlotPicker,
-  onSlotPick,
-  closeSlotPicker,
+  remove,
+  warnings,
   init,
-} = useImageReferences(() => props.node, rootEl,
-  props.forceTypes ? { forceTypes: props.forceTypes } : undefined)
+} = useMediaStrip(() => props.node, props.forceTypes ? { types: props.forceTypes } : undefined)
 
 onMounted(init)
 
-function tileImageUrl(r: (typeof refs.value)[number]): string | undefined {
-  const batchUrl = batchUrlOf(r)
-  if (batchUrl) return batchUrl
-  if (refType(r) !== 'image') return undefined
-  return assetOf(r)?.payload_url
-}
+const pinned = computed(() => items.value.filter(it => it.entry.src !== 'link'))
 
-const imageLightboxItems = computed(() => refs.value
-  .map((r) => ({ url: tileImageUrl(r), label: `#${r.slot}` }))
-  .filter((it): it is { url: string; label: string } => !!it.url))
+const imageLightboxItems = computed(() => pinned.value
+  .filter(it => it.type === 'image' && it.url)
+  .map(it => ({ url: it.url!, label: `#${it.position}` })))
 
-function imageLightboxIndex(r: (typeof refs.value)[number]): number {
-  const url = tileImageUrl(r)
-  return Math.max(0, imageLightboxItems.value.findIndex((it) => it.url === url))
+function imageLightboxIndex(it: StripItem): number {
+  return Math.max(0, imageLightboxItems.value.findIndex(x => x.url === it.url))
 }
 
 const plusBtnClass = [

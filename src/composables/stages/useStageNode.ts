@@ -33,8 +33,10 @@ import { bindOutputRestore } from '@/composables/stages/stageRestore'
 import { createStageRun } from '@/composables/stages/stageRun'
 import { bindStageWidgets } from '@/composables/stages/stageWidgetSync'
 import { postPickedIndex } from '@/composables/stages/stageApi'
+import { syncMediaTable } from '@/composables/stages/mediaOrderSync'
 import { useSelectionStore } from '@/stores/selectionStore'
 import { app } from '@/lib/comfyApp'
+import { onNodeConfigure } from '@/utils/widget'
 
 export interface UseStageNodeResult {
   state: ReturnType<ReturnType<typeof useStageStore>['registerStage']>
@@ -118,12 +120,16 @@ export function useStageNode(
   }
 
   store.setRefresher(node, refresh)
+  const syncMedia = () => { syncMediaTable(node) }
+  onNodeConfigure(node, () => queueMicrotask(syncMedia))
   node.onConnectionsChange = useChainCallback(node.onConnectionsChange, () => {
+    queueMicrotask(syncMedia)
     queueMicrotask(refresh)
     queueMicrotask(() => store.notifyConsumers(state))
     if (variant === 'generator') queueMicrotask(reValidate)
   })
 
+  queueMicrotask(syncMedia)
   queueMicrotask(refresh)
   if (variant === 'generator') queueMicrotask(reValidate)
 

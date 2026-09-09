@@ -119,10 +119,11 @@ TOOLS: dict[str, dict] = {
             "{op:'move_clip', id, index}; {op:'reroll', id?} re-seeds one "
             "clip (or all without id) to force a fresh take; "
             "{op:'set_chain', chain: off/prepend/replace}. Clip prompts may "
-            "@-mention media: ordinals are ZERO-BASED per type over the "
+
+            "@-mention media: positions are 1-BASED per type over the "
             "MERGED pool — the director node's shared asset_refs (set via "
             "set_stage, the whole-film cast) come first, then the clip's "
-            "own refs; @image_0 is the first shared image. No mentions = "
+            "own refs; @image_1 is the first shared image. No mentions = "
             "send all refs; mentioning = only the mentioned ones are sent. "
             "Rejected while the director is running."
         ),
@@ -176,7 +177,8 @@ TOOLS: dict[str, dict] = {
             "rotation_deg?|quaternion?|look_at?, scale?}, set_color (on a "
             "character it tints the mannequin — use distinct colors in "
             "multi-character scenes so prompts can bind identity, e.g. "
-            "'@image_0 is the red figure'; '' clears), "
+
+            "'@image_1 is the red figure'; '' clears), "
             "patch_light, set_animation {id, clip (an available_clips name "
             "from scene_get — required for a character/model to actually "
             "move), speed?, loop?}, rename, "

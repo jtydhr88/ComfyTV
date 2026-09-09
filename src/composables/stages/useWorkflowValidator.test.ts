@@ -127,7 +127,7 @@ describe('validateNode', () => {
     })
     const w = await validateNode(node, 'image')
     expect(w['images.image1']?.status).toBe('required_but_missing')
-    expect(w['images.image1']?.message).toContain('slot #1')
+    expect(w['images.image1']?.message).toContain('image 2')
     expect(w['images.image1']?.message).toContain('1/2')
     expect(w['images.image0']).toBeUndefined()
   })
@@ -142,7 +142,7 @@ describe('validateNode', () => {
       ],
     })
     const w = await validateNode(node, 'image', {
-      imageRefs: [{ asset_id: 7, slot: 1 }],
+      imageEntries: [{ key: 'l1', src: 'link', link: 1 }, { key: 'a7', src: 'asset', asset_id: 7 }],
       assetExists: () => true,
     })
     expect(w).toEqual({})
@@ -158,7 +158,7 @@ describe('validateNode', () => {
       ],
     })
     const w = await validateNode(node, 'image', {
-      imageRefs: [{ asset_id: 7, slot: 1 }],
+      imageEntries: [{ key: 'l1', src: 'link', link: 1 }, { key: 'a7', src: 'asset', asset_id: 7 }],
       assetExists: () => false,
     })
     expect(w['images.image1']?.status).toBe('required_but_missing')

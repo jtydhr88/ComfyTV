@@ -133,7 +133,7 @@ The sidebar's libraries plug directly into every stage's prompt box.
 
 Type **`@`** in a prompt to open the mention popup:
 
-- **`@image_N`** — reference one of the stage's wired image slots inline ("make @image_0's character wear @image_1's outfit"). Chips are color-coded to match the input slots, so you can see at a glance which image is which. At run time each token expands to the image's actual ordinal in the batch that gets sent.
+- **`@image_N`** — reference the stage's N-th image inline, counting from 1 ("make @image_1's character wear @image_2's outfit"). The media strip above the prompt shows every image the stage will send — wired inputs and pinned assets alike — with its position, and chips share the same color, so you can see at a glance which image is which. Drag the strip to reorder; the tokens in the prompt renumber themselves, and a token whose image was removed is dropped.
 - **`@fragment`** — insert an [Entries](#entries--reusable-prompt-fragments) fragment by label. Type a label that doesn't exist yet and the popup offers to **create it inline**.
 - **Asset images** — insert an image straight from the asset library; it's sent as a **reference image** at run and claims one of the workflow's reference slots.
 

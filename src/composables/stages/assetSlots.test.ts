@@ -22,19 +22,9 @@ import {
   fetchImageSlotOptionsCached,
   imageSlotsFromConfig,
   type ImageSlotOption,
-  injectAssetRefs,
-  injectImageRefs,
-  missingRequiredImageSlots,
-  nodeAcceptsAudioInput,
-  nodeAcceptsAutogrowImages,
-  nodeAcceptsAutogrowVideos,
-  refCoveredImageSlots,
-  refSlotWarnings,
-  type ResolvedImageRef,
-  wiredAudioSlots,
-  wiredImageSlots,
-  wiredVideoSlots,
+  mediaBindingWarnings,
   mentionWorkflowRef,
+  missingRequiredPositions,
   workflowRefOfNode,
 } from './assetSlots'
 
@@ -53,10 +43,6 @@ function opt(slot: number): ImageSlotOption {
   return { slot, nodeTitles: [`LoadImage ${slot}`] }
 }
 
-function ref(over: Partial<ResolvedImageRef> = {}): ResolvedImageRef {
-  return { id: 1, url: '/view?a.png', slot: 0, ...over }
-}
-
 describe('assetChipLabel', () => {
   it('prefers the asset name, falls back to a stable id label', () => {
     expect(assetChipLabel({ name: 'hero' } as any, 7)).toBe('hero')
@@ -65,215 +51,31 @@ describe('assetChipLabel', () => {
   })
 })
 
-describe('nodeAcceptsAutogrowImages', () => {
-  it('detects an images autogrow group', () => {
-    expect(nodeAcceptsAutogrowImages({ inputs: [{ name: 'images.image0' }] })).toBe(true)
-    expect(nodeAcceptsAutogrowImages({ inputs: [{ name: 'texts.text0' }] })).toBe(false)
-    expect(nodeAcceptsAutogrowImages({ inputs: [] })).toBe(false)
-    expect(nodeAcceptsAutogrowImages(null)).toBe(false)
-    expect(nodeAcceptsAutogrowImages({})).toBe(false)
+describe('missingRequiredPositions', () => {
+  it('flags required binding indexes beyond the media count', () => {
+    expect(missingRequiredPositions([0, 1, 2], 1)).toEqual([1, 2])
+    expect(missingRequiredPositions([0, 2], 2)).toEqual([2])
+  })
+
+  it('returns nothing when every required index is covered', () => {
+    expect(missingRequiredPositions([0, 1], 2)).toEqual([])
+    expect(missingRequiredPositions([], 0)).toEqual([])
   })
 })
 
-describe('wiredImageSlots', () => {
-  it('returns only the connected image slots', () => {
-    const node = {
-      inputs: [
-        { name: 'images.image0', link: 12 },
-        { name: 'images.image1', link: null },
-        { name: 'images.image2', link: 3 },
-        { name: 'texts.text0', link: 5 },
-      ],
-    }
-    expect(wiredImageSlots(node)).toEqual([0, 2])
-    expect(wiredImageSlots(null)).toEqual([])
-  })
-})
-
-describe('injectImageRefs', () => {
-  it('does nothing for an empty ref list', () => {
-    const inputs: Record<string, unknown> = {}
-    expect(injectImageRefs(inputs, [])).toEqual([])
-    expect(inputs).toEqual({})
+describe('mediaBindingWarnings', () => {
+  it('returns nothing for no media or unknown bindings', () => {
+    expect(mediaBindingWarnings(0, [opt(0)])).toEqual([])
+    expect(mediaBindingWarnings(2, null)).toEqual([])
   })
 
-  it('writes each reference to its pinned slot', () => {
-    const inputs: Record<string, unknown> = {}
-    injectImageRefs(inputs, [ref({ url: '/a', slot: 0 }), ref({ url: '/b', slot: 1 })])
-    expect(inputs).toEqual({ 'images.image0': '/a', 'images.image1': '/b' })
+  it('warns noSlots when the workflow binds no image slot but media exist', () => {
+    expect(mediaBindingWarnings(1, [])).toEqual([{ kind: 'noSlots' }])
   })
 
-  it('writes a reference to its slot regardless of which other slots are wired', () => {
-    const inputs: Record<string, unknown> = { 'images.image0': '/wired' }
-    injectImageRefs(inputs, [ref({ url: '/a', slot: 1 })])
-    expect(inputs['images.image1']).toBe('/a')
-    expect(inputs['images.image0']).toBe('/wired')
-  })
-
-  it('a pinned ref overrides an upstream connection and warns', () => {
-    const inputs: Record<string, unknown> = { 'images.image0': '/wired' }
-    const warnings = injectImageRefs(inputs, [ref({ url: '/pin', slot: 0 })])
-    expect(inputs['images.image0']).toBe('/pin')
-    expect(warnings).toHaveLength(1)
-    expect(warnings[0]).toMatch(/override/i)
-  })
-
-  it('two refs pinned to the same slot warn, last one wins', () => {
-    const inputs: Record<string, unknown> = {}
-    const warnings = injectImageRefs(inputs, [
-      ref({ url: '/first', slot: 0 }),
-      ref({ url: '/second', slot: 0 }),
-    ])
-    expect(inputs['images.image0']).toBe('/second')
-    expect(warnings.some(w => /later one wins/i.test(w))).toBe(true)
-  })
-})
-
-describe('injectAssetRefs (video / audio)', () => {
-  it('routes each ref type to its own input namespace', () => {
-    const inputs: Record<string, unknown> = {}
-    injectAssetRefs(inputs, [
-      ref({ url: '/img', slot: 0 }),
-      ref({ url: '/vid', slot: 1, type: 'video' }),
-      ref({ url: '/aud', slot: 0, type: 'audio' }),
-    ])
-    expect(inputs).toEqual({
-      'images.image0': '/img',
-      'videos.video1': '/vid',
-      'audio.audio0': '/aud',
-    })
-  })
-
-  it('multiple audio refs land in their own autogrow slots', () => {
-    const inputs: Record<string, unknown> = {}
-    const warnings = injectAssetRefs(inputs, [
-      ref({ url: '/a0', slot: 0, type: 'audio' }),
-      ref({ url: '/a2', slot: 2, type: 'audio' }),
-    ])
-    expect(warnings).toEqual([])
-    expect(inputs['audio.audio0']).toBe('/a0')
-    expect(inputs['audio.audio2']).toBe('/a2')
-  })
-
-  it('legacy single audio input still receives the ref by name', () => {
-    const inputs: Record<string, unknown> = { audio: '' }
-    injectAssetRefs(inputs, [ref({ url: '/pin', slot: 0, type: 'audio' })])
-    expect(inputs['audio']).toBe('/pin')
-    expect('audio.audio0' in inputs).toBe(false)
-  })
-
-  it('same slot number across types does not collide', () => {
-    const inputs: Record<string, unknown> = {}
-    const warnings = injectAssetRefs(inputs, [
-      ref({ url: '/img', slot: 0 }),
-      ref({ url: '/vid', slot: 0, type: 'video' }),
-    ])
-    expect(warnings).toEqual([])
-    expect(inputs['images.image0']).toBe('/img')
-    expect(inputs['videos.video0']).toBe('/vid')
-  })
-
-  it('audio ref overriding a wired audio input warns', () => {
-    const inputs: Record<string, unknown> = { audio: '/wired' }
-    const warnings = injectAssetRefs(inputs, [ref({ url: '/pin', slot: 0, type: 'audio' })])
-    expect(inputs['audio']).toBe('/pin')
-    expect(warnings.some(w => /override/i.test(w))).toBe(true)
-  })
-})
-
-describe('nodeAccepts helpers for video / audio', () => {
-  it('detects videos autogrow and audio inputs', () => {
-    const node = { inputs: [{ name: 'videos.video0' }, { name: 'audio' }] }
-    expect(nodeAcceptsAutogrowVideos(node)).toBe(true)
-    expect(nodeAcceptsAudioInput(node)).toBe(true)
-    expect(nodeAcceptsAutogrowVideos({ inputs: [{ name: 'audio' }] })).toBe(false)
-    expect(nodeAcceptsAudioInput({ inputs: [{ name: 'images.image0' }] })).toBe(false)
-  })
-
-  it('detects autogrow audio inputs', () => {
-    expect(nodeAcceptsAudioInput({ inputs: [{ name: 'audio.audio0' }] })).toBe(true)
-  })
-
-  it('wiredAudioSlots merges plain and autogrow forms', () => {
-    expect(wiredAudioSlots({ inputs: [
-      { name: 'audio.audio0', link: 1 },
-      { name: 'audio.audio2', link: 2 },
-      { name: 'audio.audio1', link: null },
-    ] })).toEqual([0, 2])
-    expect(wiredAudioSlots({ inputs: [{ name: 'audio', link: 5 }] })).toEqual([0])
-    expect(wiredAudioSlots({ inputs: [{ name: 'audio', link: null }] })).toEqual([])
-  })
-
-  it('wiredVideoSlots returns only wired slots', () => {
-    expect(wiredVideoSlots({ inputs: [
-      { name: 'videos.video0', link: 1 },
-      { name: 'videos.video2', link: null },
-      { name: 'videos.video1', link: 3 },
-    ] })).toEqual([0, 1])
-  })
-})
-
-describe('refCoveredImageSlots', () => {
-  it('returns the slots the references are pinned to', () => {
-    expect([...refCoveredImageSlots([{ slot: 2 }, { slot: 0 }, { slot: 1 }])].sort())
-      .toEqual([0, 1, 2])
-  })
-
-  it('is empty for no refs', () => {
-    expect([...refCoveredImageSlots([])]).toEqual([])
-  })
-})
-
-describe('missingRequiredImageSlots', () => {
-  it('flags required slots covered by neither a wire nor a ref', () => {
-    expect(missingRequiredImageSlots([0, 1, 2], [0], [2])).toEqual([1])
-  })
-
-  it('returns nothing when every required slot has a source', () => {
-    expect(missingRequiredImageSlots([0, 1], [0], [1])).toEqual([])
-  })
-
-  it('honors non-contiguous required slots', () => {
-    expect(missingRequiredImageSlots([0, 2], [0], [])).toEqual([2])
-  })
-
-  it('is empty when nothing is required', () => {
-    expect(missingRequiredImageSlots([], [], [])).toEqual([])
-  })
-})
-
-describe('refSlotWarnings', () => {
-  it('returns nothing for no refs', () => {
-    expect(refSlotWarnings([], [], [opt(0)])).toEqual([])
-  })
-
-  it('flags a slot pinned by two refs', () => {
-    const w = refSlotWarnings([{ slot: 0 }, { slot: 0 }], [], null)
-    expect(w).toContainEqual({ kind: 'duplicate', slot: 0 })
-  })
-
-  it('flags a pinned ref that overrides a wired slot', () => {
-    const w = refSlotWarnings([{ slot: 1 }], [1], null)
-    expect(w).toContainEqual({ kind: 'override', slot: 1 })
-  })
-
-  it('skips consumability checks when options are unknown (null)', () => {
-    expect(refSlotWarnings([{ slot: 0 }], [], null)).toEqual([])
-  })
-
-  it('warns noSlots when the workflow binds no image slot but refs exist', () => {
-    expect(refSlotWarnings([{ slot: 0 }], [], [])).toEqual([{ kind: 'noSlots' }])
-  })
-
-  it('warns overflow when a ref sits on a slot the workflow does not bind', () => {
-    const w = refSlotWarnings([{ slot: 0 }, { slot: 1 }], [], [opt(0)])
-    expect(w).toContainEqual({ kind: 'overflow', count: 1, total: 1 })
-  })
-
-  it('no overflow when every ref lands on a bound slot', () => {
-    const w = refSlotWarnings([{ slot: 0 }, { slot: 1 }], [], [opt(0), opt(1)])
-    expect(w.some(x => x.kind === 'overflow')).toBe(false)
-    expect(w.some(x => x.kind === 'noSlots')).toBe(false)
+  it('warns overflow when more media than bound slots', () => {
+    expect(mediaBindingWarnings(3, [opt(0)])).toEqual([{ kind: 'overflow', count: 2, total: 1 }])
+    expect(mediaBindingWarnings(2, [opt(0), opt(1)])).toEqual([])
   })
 })
 
@@ -281,7 +83,7 @@ describe('imageSlotsFromConfig', () => {
   it('groups binding widgets by slot and dedups node titles, sorted by slot', () => {
     const widgets = [
       bw('upstream_image:value[0]', 'Load A'),
-      bw('upstream_image:annotated[0]', ''), // empty title falls back to node_type
+      bw('upstream_image:annotated[0]', ''),
       bw('upstream_image:masked[2]', 'Load B'),
       bw(null, 'ignored'),
       bw('not-a-binding', 'ignored'),
@@ -339,12 +141,6 @@ describe('mentionWorkflowRef', () => {
       .toEqual({ kind: 'image', label: 'Own' })
     getStageMeta.mockReturnValue(undefined)
     expect(mentionWorkflowRef({ comfyClass: 'X', outputs: [{ links: [1] }] }, undefined)).toBeNull()
-  })
-})
-
-describe('wiredImageSlots edge cases', () => {
-  it('skips inputs whose name is not a string', () => {
-    expect(wiredImageSlots({ inputs: [{ link: 3 }, { name: 42, link: 1 }] })).toEqual([])
   })
 })
 

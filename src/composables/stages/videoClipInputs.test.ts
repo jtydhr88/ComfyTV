@@ -14,7 +14,7 @@ describe('videoClipsFromInputs', () => {
       input('videos.video2', 'upstream', '/b.mp4'),
     ])
     expect(clips).toEqual([
-      { key: 'video0', url: '/a.mp4', color: slotColor(0) },
+      { key: 'video0', url: '/a.mp4', color: slotColor(1) },
       { key: 'video2', url: '/b.mp4', color: slotColor(2) },
     ])
   })

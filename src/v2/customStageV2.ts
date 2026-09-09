@@ -9,7 +9,7 @@ import { useCustomIoStore } from '@/stores/customIoStore'
 import MainPromptInput from '@/components/stages/MainPromptInput.vue'
 import { addOptionEverywhere } from '@/composables/stages/workflowCombo'
 import { writeWidget } from '@/utils/widget'
-import RefChipsV2 from '@/v2/RefChipsV2.vue'
+import MediaStripV2 from '@/v2/MediaStripV2.vue'
 import { bindWidgetCallback, readWidgetStr } from '@/utils/widget'
 import CustomInputsV2 from '@/v2/CustomInputsV2.vue'
 import CustomIoPanelV2 from '@/v2/CustomIoPanelV2.vue'
@@ -245,7 +245,7 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant) {
     islands.mount(refsAnchor, {
       render: () => {
         const types = exposedRefTypes(io.value)
-        return types.length ? h(RefChipsV2, { key: types.join('+'), getNode: () => node, types }) : null
+        return types.length ? h(MediaStripV2, { key: types.join('+'), getNode: () => node, types }) : null
       },
     })
     islands.mountWhenVisible(card, wfAnchor, FooterSelectsV2 as any, {

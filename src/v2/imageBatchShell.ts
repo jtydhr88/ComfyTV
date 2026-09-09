@@ -1,7 +1,8 @@
-import { watch } from 'vue'
+import { onScopeDispose, watch } from 'vue'
 
 import MainPromptInput from '@/components/stages/MainPromptInput.vue'
 import StagePresetBar from '@/components/stages/StagePresetBar.vue'
+import { readMediaTable, subscribeMediaTable } from '@/composables/stages/mediaOrder'
 import { useStageNode } from '@/composables/stages/useStageNode'
 import { t } from '@/i18n'
 import { attachOutputToolbar } from '@/v2/outputToolbar'
@@ -12,7 +13,7 @@ import CustomParamsV2 from '@/v2/CustomParamsV2.vue'
 import FooterSelectsV2, { type FooterExtra } from '@/v2/FooterSelectsV2.vue'
 import MediaCornerV2 from '@/v2/MediaCornerV2.vue'
 import ParamsPanelV2 from '@/v2/ParamsPanelV2.vue'
-import RefChipsV2 from '@/v2/RefChipsV2.vue'
+import MediaStripV2 from '@/v2/MediaStripV2.vue'
 import ServerSelectV2 from '@/v2/ServerSelectV2.vue'
 import { bindNodeDrag } from '@/v2/nodeDrag'
 import { bindPanelCollapse, stageInfoLine } from '@/v2/panelCollapse'
@@ -32,14 +33,16 @@ import {
 } from '@/v2/shellCommon'
 import { type StageKind, type StageVariant } from '@/stores/stageStore'
 
-const REF_RE = /^(images\.image|texts\.text|videos\.video)\d+$/
+const TEXT_REF_RE = /^texts\.text\d+$/
 
 const ICON_IMAGE = I(`<rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="M4 18l5.2-5.2 3.4 3.4 3.2-3.2L21 18"/>`, 1.8)
 
 function refCount(node: ComfyNode): number {
-  return (node.inputs ?? []).filter(
-    (i: any) => typeof i?.name === 'string' && REF_RE.test(i.name) && i.link != null,
+  const texts = (node.inputs ?? []).filter(
+    (i: any) => typeof i?.name === 'string' && TEXT_REF_RE.test(i.name) && i.link != null,
   ).length
+  const table = readMediaTable(node)
+  return texts + table.image.length + table.video.length
 }
 
 interface ImageBatchShellConfig {
@@ -102,7 +105,7 @@ function makeImageBatchShell(shellCfg: ImageBatchShellConfig = {}) {
   const mountApps = () => {
     islands.unmountAll()
     const specs: Array<[unknown, Record<string, unknown>, HTMLElement]> = [
-      [RefChipsV2, { getNode: () => node, types: ['image'] }, refsAnchor],
+      [MediaStripV2, { getNode: () => node, types: ['image'] }, refsAnchor],
       [MainPromptInput, { node }, promptAnchor],
       [StagePresetBar, { node }, presetAnchor],
       [FooterSelectsV2, {
@@ -160,11 +163,13 @@ function makeImageBatchShell(shellCfg: ImageBatchShellConfig = {}) {
     count.textContent = t('v2.refsCount', { n: refCount(node) })
   }
   refreshCount()
+  const stopCount = subscribeMediaTable(node, refreshCount)
+  scope.run(() => onScopeDispose(stopCount))
 
   const prevConn = anyNode.onConnectionsChange
   anyNode.onConnectionsChange = function (...args: unknown[]) {
     prevConn?.apply(this, args)
-    refreshCount()
+    queueMicrotask(refreshCount)
   }
 
   let batchList: Array<{ index: string; url: string }> = []

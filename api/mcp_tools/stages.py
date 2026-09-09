@@ -80,7 +80,7 @@ def _validate_asset_refs(args: dict) -> None:
         return
     if not isinstance(refs, list):
         raise ValueError(
-            "asset_refs must be an array of {asset_id, slot?, type?} objects")
+            "asset_refs must be an array of {asset_id, type?} objects")
     for r in refs:
         if not isinstance(r, dict) or "asset_id" not in r:
             raise ValueError("each asset_refs entry needs an asset_id")
@@ -95,26 +95,44 @@ def _validate_asset_refs(args: dict) -> None:
         if rtype is not None and rtype not in ("image", "video", "audio"):
             raise ValueError(f"asset_refs type must be image/video/audio, got {rtype!r}")
 
+def _validate_media_order(args: dict) -> None:
+    order = args.get("media_order")
+    if order is None:
+        return
+    if not isinstance(order, dict):
+        raise ValueError(
+            "media_order must be an object like {\"image\": [2, 1, 3]}")
+    for key, positions in order.items():
+        if key not in ("image", "video", "audio"):
+            raise ValueError(
+                f"media_order keys must be image/video/audio, got {key!r}")
+        if not isinstance(positions, list) or not all(
+                isinstance(p, int) and not isinstance(p, bool) and p >= 1
+                for p in positions):
+            raise ValueError(
+                f"media_order.{key} must be a list of 1-based positions")
+
 async def _set_stage(args: dict) -> dict:
     node = args.get("node")
     if not node:
         raise ValueError("node is required (stage uid or graph node id)")
     if not any(args.get(k) is not None
                for k in ("prompt", "workflow", "title", "widgets", "server",
-                         "asset_refs")):
+                         "asset_refs", "media_order")):
         raise ValueError(
-            "nothing to set — pass prompt, workflow, title, widgets, server "
-            "and/or asset_refs")
+            "nothing to set — pass prompt, workflow, title, widgets, server, "
+            "asset_refs and/or media_order")
     _validate_widgets(args)
     _validate_server(args)
     _validate_asset_refs(args)
+    _validate_media_order(args)
     if args.get("workflow"):
         cls = _mirrored_stage_class(args.get("project_id"), str(node))
         if cls:
             _validate_workflow_label(cls, str(args["workflow"]))
     payload = _command_payload(
         args, ("prompt", "workflow", "title", "widgets", "server",
-               "asset_refs", "project_id"))
+               "asset_refs", "media_order", "project_id"))
     payload["node"] = str(node)
     return await _shared.submit_command("set_stage", payload)
 
@@ -269,15 +287,16 @@ TOOLS: dict[str, dict] = {
             "title, prompt, workflow (a list_workflows label for the stage's "
             "kind), widgets (an object setting any stage widget by name, e.g. "
             "{\"duration\": 5, \"end_zoom\": 1.3}) and asset_refs (asset-library "
-            "references: [{asset_id, slot?, type?}] with ids from the assets "
-            "tool; they are sent as the stage's reference media at run time "
-            "and addressable as @image_N / @video_N / @audio_N in the prompt) "
-            "in the same call. Mention ordinals are ZERO-BASED per media type: "
-            "the first sendable image is @image_0 (wired stage inputs and "
-            "asset_refs occupy slots in order; a token past the sendable range "
-            "expands to nothing and the result carries a warning). Returns the "
-            "new node's graph_node_id and uid. Placement is automatic unless "
-            "pos [x, y] is given."
+            "references: [{asset_id, type?}] with ids from the assets tool, "
+            "appended in the given order; they are sent as the stage's "
+            "reference media at run time) in the same call. Every stage keeps "
+            "one ordered media list per type (wired inputs and asset_refs "
+            "together, see get_stage media); prompts address it with "
+            "@image_N / @video_N / @audio_N where N is the 1-BASED position "
+            "in that list (@image_1 = the first image). A token past the "
+            "list expands to nothing and the result carries a warning. "
+            "Returns the new node's graph_node_id and uid. Placement is "
+            "automatic unless pos [x, y] is given."
         ),
         "inputSchema": {
             "type": "object",
@@ -304,13 +323,18 @@ TOOLS: dict[str, dict] = {
             "setting any stage widget by name; on an unknown name the error "
             "lists the stage's widget names), server (a server id from the "
             "servers tool to route this stage's runs to that machine, or "
-            "'local') and/or asset_refs (asset-library references replacing "
-            "the stage's current set: [{asset_id, slot?, type?}] with ids "
-            "from the assets tool, addressable as @image_N / @video_N / "
-            "@audio_N in the prompt; pass [] to clear). Mention ordinals are "
-            "ZERO-BASED per media type (first image = @image_0; wired inputs "
-            "and asset_refs occupy slots in order; out-of-range tokens expand "
-            "to nothing and the result carries a warning). Asset loader "
+            "'local'), asset_refs (asset-library references replacing the "
+            "stage's current set: [{asset_id, type?}] with ids from the "
+            "assets tool, appended after the wired inputs in the given "
+            "order; pass [] to clear) and/or media_order (reorder one "
+            "type's media list: {\"image\": [3, 1, 2]} lists the CURRENT "
+            "1-based positions in their new order — a full permutation, "
+            "wired inputs included). Prompts address media as @image_N / "
+            "@video_N / @audio_N where N is the 1-BASED position in the "
+            "list get_stage reports under media (first image = @image_1); "
+            "removing or reordering media renumbers the tokens in the "
+            "stage's prompt automatically, and an out-of-range token expands "
+            "to nothing with a warning in the result. Asset loader "
             "stages (AssetImageLoaderStage / AssetVideoLoaderStage / "
             "AssetAudioLoaderStage / AssetTextLoaderStage / "
             "AssetModelLoaderStage) are selection "
@@ -337,6 +361,7 @@ TOOLS: dict[str, dict] = {
                 "widgets": {"type": "object"},
                 "server": {"type": "string"},
                 "asset_refs": {"type": "array", "items": {"type": "object"}},
+                "media_order": {"type": "object"},
                 "project_id": {"type": "string"},
             },
             "required": ["node"],
@@ -349,8 +374,11 @@ TOOLS: dict[str, dict] = {
             "Wire one stage's output into another stage's input on the live "
             "canvas. from_node/to_node are stage uids or graph_node_ids. "
             "from_slot is the source output index (default 0). to_slot is the "
-            "target input name (e.g. 'images.0'); omit it to auto-pick the first "
-            "free type-compatible input. Requires an open ComfyTV page in Desktop or a browser."
+            "target input name (e.g. 'images.image0'); omit it to auto-pick the "
+            "first free type-compatible input. A media connection is appended to "
+            "the end of the target's media list; the result reports its 1-based "
+            "position and the @-mention token for it. Requires an open ComfyTV "
+            "page in Desktop or a browser."
         ),
         "inputSchema": {
             "type": "object",
@@ -408,8 +436,11 @@ TOOLS: dict[str, dict] = {
             "Read one stage in full detail from the live canvas: every "
             "widget value (get_canvas only mirrors prompt/workflow), input "
             "connections with source nodes, output connections with target "
-            "nodes, asset_refs, running state, position and any dangling "
-            "@mention warnings. Call before set_stage widgets so you edit "
+
+            "nodes, media (the ordered image/video/audio lists — wired "
+            "inputs and asset refs together, each with its 1-based position, "
+            "@-mention token, source and url), running state, position and "
+            "any dangling @mention warnings. Call before set_stage widgets so you edit "
             "from actual values instead of guessing. String widget values "
             "over 16000 chars are shortened for display only (marked "
             "'[display truncated …]') — the stored value is never cut, so "

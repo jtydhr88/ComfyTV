@@ -18,6 +18,7 @@ import {
   normalizeMentionText,
   slotColor,
   type MentionOrders,
+  type MentionSlotType,
 } from '@/composables/stages/imageSlotMentions'
 import {
   nodeMentionSource,
@@ -97,14 +98,15 @@ export function entryTooltipTextFromOrders(
   orders: MentionOrders,
   entries: EntryLike[],
   t: (key: string, args?: Record<string, unknown>) => string,
+  note: (type: MentionSlotType, position: number) => string = () => '',
 ): string {
   const parsed = mentionSlotFromLabel(label)
   if (parsed != null) {
     const pos = orders[parsed.type].indexOf(parsed.slot)
     if (pos < 0) return t('mention.imageTooltipMissing', { n: parsed.slot })
     return t('mention.imageItemTitle', {
-      n: parsed.slot,
       text: t(`mention.${parsed.type}Expand`, { n: pos + 1 }),
+      note: note(parsed.type, parsed.slot),
     })
   }
   const matches = entries.filter(e => e.label === label)
@@ -225,8 +227,10 @@ export function usePromptEditorCore(opts: PromptEditorCoreOpts) {
   }
 
   function entryTooltip(label: string): string {
+    const source = opts.source()
     return entryTooltipTextFromOrders(
-      label, opts.source().orders(), entryStore.list(projectId.value), t)
+      label, source.orders(), entryStore.list(projectId.value), t,
+      (type, position) => source.note?.(type, position) ?? '')
   }
 
   let chipTooltips: any = null

@@ -369,7 +369,8 @@ import {
 } from '@/composables/stages/assetSlots'
 import { citedSlots, clipMentionSource } from '@/composables/stages/directorMentions'
 import { useDirectorPlayback } from '@/composables/stages/useDirectorPlayback'
-import { readImageRefs, refType } from '@/composables/stages/imageRefs'
+import { MEDIA_TYPES, readMediaTable } from '@/composables/stages/mediaOrder'
+import { mediaEntryUrl } from '@/composables/stages/mediaOrderSync'
 import { slotColor } from '@/composables/stages/imageSlotMentions'
 import {
   CHAIN_MODES,
@@ -565,7 +566,7 @@ watchEffect(() => {
 
 function slotAnnotation(kind: 'images' | 'videos' | 'audio', i: number): string {
   if (kind !== 'images') return ''
-  return imageSlotOptions.value.find(o => o.slot === i)?.nodeTitles.join(', ') ?? ''
+  return imageSlotOptions.value.find(o => o.slot === i - 1)?.nodeTitles.join(', ') ?? ''
 }
 
 function refTooltip(kind: 'images' | 'videos' | 'audio', i: number): string {
@@ -578,11 +579,13 @@ const sharedUrls = computed(() => {
   void selectionStore.bindingsVersion
   const out = { images: [] as string[], videos: [] as string[], audio: [] as string[] }
   const bucket = { image: 'images', video: 'videos', audio: 'audio' } as const
-  for (const r of [...readImageRefs(props.node)].sort((a, b) => a.slot - b.slot)) {
-    const url = r.batch_index != null
-      ? (r.batch_id ? pinnedStore.byId(projectId.value, r.batch_id)?.urls[r.batch_index] : undefined)
-      : (r.asset_id != null ? assetStore.byId(r.asset_id)?.payload_url : undefined)
-    if (url) out[bucket[refType(r)]].push(url)
+  const table = readMediaTable(props.node)
+  for (const type of MEDIA_TYPES) {
+    for (const e of table[type]) {
+      if (e.src === 'link') continue
+      const url = mediaEntryUrl(props.node, e)
+      if (url) out[bucket[type]].push(url)
+    }
   }
   return out
 })
@@ -590,7 +593,8 @@ const sharedUrls = computed(() => {
 const sharedCounts = computed<Record<'image' | 'video' | 'audio', number>>(() => {
   void selectionStore.bindingsVersion
   const out = { image: 0, video: 0, audio: 0 }
-  for (const r of readImageRefs(props.node)) out[refType(r)] += 1
+  const table = readMediaTable(props.node)
+  for (const type of MEDIA_TYPES) out[type] = table[type].filter(e => e.src !== 'link').length
   return out
 })
 
@@ -609,7 +613,7 @@ const refWarnings = computed<string[]>(() => {
     const media = k.media as 'image' | 'video' | 'audio'
     const poolCount = clip[k.key].length + sharedCounts.value[media]
     const count = manual
-      ? cited[media].filter(slot => slot < poolCount).length
+      ? cited[media].filter(slot => slot >= 1 && slot <= poolCount).length
       : poolCount
     if (count === 0) continue
     const max = usage.max_inputs?.[k.info]
@@ -658,7 +662,7 @@ const allRefs = computed<ClipRefEntry[]>(() => {
   return REF_KINDS.flatMap(k =>
     clip[k.key].map((url, i) => ({
       kind: k.key, url, i,
-      m: i + sharedUrls.value[k.key].length,
+      m: i + sharedUrls.value[k.key].length + 1,
     })))
 })
 
@@ -717,7 +721,7 @@ function openRefSlotPicker(entry: ClipRefEntry, e: MouseEvent) {
     x: Math.max(0, Math.min(tile.left - rootRect.left, rootRect.width - 260)),
     y: tile.bottom - rootRect.top + 4,
     options: Array.from({ length: count }, (_, own) => ({
-      slot: base + own,
+      slot: base + own + 1,
       nodeTitles: entry.kind === 'images'
         ? imageSlotOptions.value.find(o => o.slot === base + own)?.nodeTitles ?? []
         : [],
@@ -730,7 +734,7 @@ function onRefSlotPick(slot: number) {
   refSlotPicker.value = null
   if (!picker || !selectedClip.value) return
   const base = sharedUrls.value[picker.entry.kind].length
-  moveRefTo(selectedClip.value.id, picker.entry.kind, picker.entry.i, slot - base)
+  moveRefTo(selectedClip.value.id, picker.entry.kind, picker.entry.i, slot - base - 1)
 }
 
 function onPickBatchImage(groupId: string, index: number) {

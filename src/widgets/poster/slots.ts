@@ -1,4 +1,4 @@
-import { AUTOGROW_IMAGE_KEY_RE } from '@/composables/stages/assetSlots'
+import { AUTOGROW_KEY_RE } from '@/composables/stages/mediaOrder'
 
 export interface SlotEl { slot?: number; bind?: string }
 export interface SlotOverride { slot?: number }
@@ -18,7 +18,7 @@ export function curSlot(el: SlotEl, override?: SlotOverride | null): number {
 export function connectedImageCount(inputs: NodeInput[]): number {
   let maxIdx = -1
   for (const inp of inputs || []) {
-    const m = AUTOGROW_IMAGE_KEY_RE.exec(inp.name || '')
+    const m = AUTOGROW_KEY_RE.image.exec(inp.name || '')
     if (m && inp.link != null) maxIdx = Math.max(maxIdx, parseInt(m[1]!, 10))
   }
   return maxIdx + 1

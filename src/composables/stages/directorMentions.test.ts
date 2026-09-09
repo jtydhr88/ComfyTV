@@ -30,16 +30,16 @@ describe('mergedMentionOrders / clipMentionSource', () => {
   it('orders span shared then own refs', () => {
     const c = clip({ images: ['/a', '/b'], videos: ['/v'], audio: [] })
     expect(mergedMentionOrders(c, { images: ['/h'], videos: [], audio: ['/s'] }))
-      .toEqual({ image: [0, 1, 2], video: [0], audio: [0] })
+      .toEqual({ image: [1, 2, 3], video: [1], audio: [1] })
   })
 
   it('source previews shared first, then clip images', () => {
     const c = clip({ images: ['/own.png'] })
     const src = clipMentionSource(() => c,
       () => ({ images: ['/hero.png'], videos: [], audio: [] }))
-    expect(src.previewUrl('image', 0)).toBe('/hero.png')
-    expect(src.previewUrl('image', 1)).toBe('/own.png')
-    expect(src.previewUrl('video', 0)).toBeNull()
+    expect(src.previewUrl('image', 1)).toBe('/hero.png')
+    expect(src.previewUrl('image', 2)).toBe('/own.png')
+    expect(src.previewUrl('video', 1)).toBeNull()
     const empty = clipMentionSource(() => null)
     expect(empty.orders()).toEqual({ image: [], video: [], audio: [] })
   })
@@ -48,7 +48,7 @@ describe('mergedMentionOrders / clipMentionSource', () => {
 describe('expandDirectorTimeline (selection model)', () => {
   it('cited refs only are sent, ordinals follow the sent list', async () => {
     const out = await expand(timeline([
-      clip({ prompt: '@image_0 @image_2 @video_1 @audio_1',
+      clip({ prompt: '@image_1 @image_3 @video_2 @audio_2',
              images: ['/i'], videos: ['/v'], audio: ['/a'] }),
     ]), {
       shared: { images: ['/h1', '/h2'], videos: ['/hv'], audio: ['/ha'] },
@@ -72,7 +72,7 @@ describe('expandDirectorTimeline (selection model)', () => {
 
   it('minimax audio ordinal counts sent videos first', async () => {
     const out = await expand(timeline([
-      clip({ prompt: '动作学 @video_0，声音学 @audio_0',
+      clip({ prompt: '动作学 @video_1，声音学 @audio_1',
              videos: ['/v'], audio: ['/a'] }),
     ]))
     expect(out.clips[0].prompt).toBe('动作学 <Video 1>，声音学 <Audio 2>')
@@ -80,15 +80,15 @@ describe('expandDirectorTimeline (selection model)', () => {
 
   it('natural audio ordinal ignores videos', async () => {
     const out = await expand(timeline([
-      clip({ prompt: '@video_0 @audio_0', videos: ['/v'], audio: ['/a'] }),
+      clip({ prompt: '@video_1 @audio_1', videos: ['/v'], audio: ['/a'] }),
     ]), { styleFor: async () => 'natural' })
     expect(out.clips[0].prompt).toBe('video 1 audio 1')
   })
 
   it('chain prepend shifts image ordinals on later clips', async () => {
     const out = await expand(timeline([
-      clip({ id: 'a', prompt: '@image_0', images: ['/a'] }),
-      clip({ id: 'b', prompt: '@image_0', images: ['/b'] }),
+      clip({ id: 'a', prompt: '@image_1', images: ['/a'] }),
+      clip({ id: 'b', prompt: '@image_1', images: ['/b'] }),
     ], 'prepend'))
     expect(out.clips[0].prompt).toBe('<Picture 1>')
     expect(out.clips[1].prompt).toBe('<Picture 2>')
@@ -98,7 +98,7 @@ describe('expandDirectorTimeline (selection model)', () => {
     const missing: string[] = []
     const out = await expand(timeline([
       clip({ id: 'a', prompt: 'x' }),
-      clip({ id: 'b', prompt: 'see @image_0 hear @audio_0',
+      clip({ id: 'b', prompt: 'see @image_1 hear @audio_1',
              images: ['/b'], audio: ['/s'] }),
     ], 'replace'), {
       onMissing: (cid: string, type: string, slot: number) =>
@@ -106,13 +106,13 @@ describe('expandDirectorTimeline (selection model)', () => {
     })
     expect(out.clips[1].prompt).toBe('see  hear <Audio 1>')
     expect(out.clips[1].images).toEqual([])
-    expect(missing).toEqual(['b:image_0'])
+    expect(missing).toEqual(['b:image_1'])
   })
 
   it('entries expansion can introduce mentions and flips manual mode', async () => {
     const out = await expand(timeline([
       clip({ prompt: '@myentry', images: ['/a', '/b'] }),
-    ]), { expandEntries: (s: string) => s.replace('@myentry', 'hero @image_1') })
+    ]), { expandEntries: (s: string) => s.replace('@myentry', 'hero @image_2') })
     expect(out.clips[0].prompt).toBe('hero <Picture 1>')
     expect(out.clips[0].images).toEqual(['/b'])
   })
@@ -120,22 +120,22 @@ describe('expandDirectorTimeline (selection model)', () => {
   it('disabled clips untouched, out-of-pool tokens dropped', async () => {
     const missing: string[] = []
     const out = await expand(timeline([
-      clip({ id: 'a', enabled: false, prompt: '@image_0', images: ['/a'] }),
-      clip({ id: 'b', prompt: '@image_3', images: ['/b'] }),
+      clip({ id: 'a', enabled: false, prompt: '@image_1', images: ['/a'] }),
+      clip({ id: 'b', prompt: '@image_4', images: ['/b'] }),
     ]), {
       onMissing: (cid: string, type: string, slot: number) =>
         missing.push(`${cid}:${type}_${slot}`),
     })
-    expect(out.clips[0].prompt).toBe('@image_0')
+    expect(out.clips[0].prompt).toBe('@image_1')
     expect(out.clips[1].prompt).toBe('')
-    expect(missing).toEqual(['b:image_3'])
+    expect(missing).toEqual(['b:image_4'])
   })
 
   it('resolves style per clip workflow with node default fallback', async () => {
     const seen: string[] = []
     await expand(timeline([
-      clip({ id: 'a', prompt: '@image_0', images: ['/a'], workflow: 'Special' }),
-      clip({ id: 'b', prompt: '@image_0', images: ['/b'] }),
+      clip({ id: 'a', prompt: '@image_1', images: ['/a'], workflow: 'Special' }),
+      clip({ id: 'b', prompt: '@image_1', images: ['/b'] }),
     ]), {
       styleFor: async (label: string) => { seen.push(label); return 'minimax_tags' },
     })

@@ -105,7 +105,7 @@ url = "http://127.0.0.1:8188/comfytv/mcp"
 
 **不轮询的等待。**`wait_stage` 在服务器侧阻塞(单次默认 25 秒,上限 170 秒),结果一落地立即返回。超时返回 `after_output_id` — 带着它再调就继续等。总时长无上限,长渲染多续调几次而已。
 
-**@ 序数从 0 起。**`@image_0` / `@video_0` 这类 token 按*类型*寻址节点的可发送媒体,从 0 开始,槽位序(连线输入在前,`asset_refs` 在后)。越界 token 展开为空 — 工具结果会带警告提醒。
+**@ 序数是从 1 起的位置。**每个节点按类型维护一张有序媒体表 — 连线输入和 `asset_refs` 在同一张表里,顺序以 `get_stage` 返回的 `media` 为准。`@image_1` / `@video_1` 这类 token 按位置寻址(`@image_1` 就是第一张图)。删除或重排媒体时,节点 prompt 里的 token 会自动重新编号;`set_stage` 的 `media_order` 用来重排,`connect_stages` 会返回这根线落在第几位。越界 token 展开为空 — 工具结果会带警告提醒。
 
 **真视觉。**`view_image` 是唯一返回像素的工具。视频质检:先 `media_frame` 抽帧,再 `view_image` 亲眼看。别靠文件名猜图。
 

@@ -1,6 +1,6 @@
 import {
+  citedPositions,
   expandMentionTokens,
-  MENTION_TOKEN_RE,
   mentionOrdinalText,
   type MentionOrders,
   type MentionSlotType,
@@ -22,7 +22,7 @@ export interface SharedRefs {
 export const EMPTY_SHARED: SharedRefs = { images: [], videos: [], audio: [] }
 
 function positions(n: number): number[] {
-  return Array.from({ length: n }, (_, i) => i)
+  return Array.from({ length: n }, (_, i) => i + 1)
 }
 
 export function mergedMentionOrders(clip: DirectorClip, shared: SharedRefs): MentionOrders {
@@ -47,9 +47,11 @@ export function clipMentionSource(
       const clip = getClip()
       if (!clip || type !== 'image') return null
       const shared = getShared().images
-      return slot < shared.length
-        ? shared[slot] ?? null
-        : clip.images[slot - shared.length] ?? null
+      const i = slot - 1
+      if (i < 0) return null
+      return i < shared.length
+        ? shared[i] ?? null
+        : clip.images[i - shared.length] ?? null
     },
   }
 }
@@ -64,11 +66,7 @@ export interface ExpandTimelineOpts {
 }
 
 export function citedSlots(text: string, type: MentionSlotType): number[] {
-  const out = new Set<number>()
-  for (const m of text.matchAll(MENTION_TOKEN_RE)) {
-    if (m[1] === type) out.add(Number(m[2]))
-  }
-  return [...out].sort((a, b) => a - b)
+  return citedPositions(text, type)
 }
 
 const TYPES: MentionSlotType[] = ['image', 'video', 'audio']
@@ -106,9 +104,9 @@ export async function expandDirectorTimeline(
     const orders: MentionOrders = { image: [], video: [], audio: [] }
     for (const t of TYPES) {
       orders[t] = manual
-        ? cited[t].filter(slot => slot < pool[t].length)
+        ? cited[t].filter(slot => slot >= 1 && slot <= pool[t].length)
         : positions(pool[t].length)
-      clip[CLIP_KEY[t]] = orders[t].map(slot => pool[t][slot])
+      clip[CLIP_KEY[t]] = orders[t].map(slot => pool[t][slot - 1])
     }
     if (chained && chain === 'replace') {
       orders.image = []

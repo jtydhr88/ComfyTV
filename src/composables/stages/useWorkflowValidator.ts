@@ -1,11 +1,6 @@
 import { apiFetch, WorkflowInfoSchema } from '@/api'
-import {
-  missingRequiredImageSlots,
-  nodeAcceptsAutogrowImages,
-  refCoveredImageSlots,
-  wiredImageSlots,
-} from '@/composables/stages/assetSlots'
-import { type ImageRef, readImageRefs, refType } from '@/composables/stages/imageRefs'
+import { missingRequiredPositions } from '@/composables/stages/assetSlots'
+import { currentMediaTable, type MediaEntry, nodeAcceptsMedia } from '@/composables/stages/mediaOrder'
 
 export type SlotWarningStatus = 'wired_but_unused' | 'required_but_missing'
 
@@ -17,7 +12,7 @@ export interface SlotWarning {
 export type SlotWarningMap = Record<string, SlotWarning>
 
 export interface ValidateOpts {
-  imageRefs?: ImageRef[]
+  imageEntries?: MediaEntry[]
   assetExists?: (id: number) => boolean
 }
 
@@ -101,7 +96,7 @@ export async function validateNode(
   }
   if (!entry) return out
 
-  const imageRefs = opts.imageRefs ?? readImageRefs(node)
+  const imageEntries = opts.imageEntries ?? currentMediaTable(node).image
   const assetExists = opts.assetExists ?? (() => true)
 
   const wiredCount: Record<Kind, number> = { image: 0, video: 0, audio: 0, text: 0, model: 0 }
@@ -129,27 +124,24 @@ export async function validateNode(
     }
   }
 
-  if (nodeAcceptsAutogrowImages(node)) {
+  if (nodeAcceptsMedia(node, 'image')) {
     const required = requiredSlotsOf(entry, 'image')
     if (required.length) {
-      const wired = wiredImageSlots(node)
-      const resolvedRefs = imageRefs.filter(r =>
-        refType(r) === 'image'
-        && (r.batch_index != null || (r.asset_id != null && assetExists(r.asset_id))))
-      const refCovered = refCoveredImageSlots(resolvedRefs)
-      const missing = missingRequiredImageSlots(required, wired, refCovered)
+      const count = imageEntries.filter(e =>
+        e.src !== 'asset' || (e.asset_id != null && assetExists(e.asset_id))).length
+      const missing = missingRequiredPositions(required, count)
       const total = required.length
       for (const idx of missing) {
         const msg = total === 1
           ? `"${label}" requires an image — wire one into this slot or add an image reference.`
-          : `"${label}" image slot #${idx} has no source — wire one in or add an image ` +
+          : `"${label}" needs image ${idx + 1} — wire one in or add an image ` +
             `reference (${total - missing.length}/${total} ready).`
         out[`images.image${idx}`] = { status: 'required_but_missing', message: msg }
       }
     }
   }
 
-  const otherKinds = nodeAcceptsAutogrowImages(node)
+  const otherKinds = nodeAcceptsMedia(node, 'image')
     ? (['video', 'audio', 'text', 'model'] as const)
     : (['image', 'video', 'audio', 'text', 'model'] as const)
   for (const kind of otherKinds) {

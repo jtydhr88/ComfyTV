@@ -315,7 +315,8 @@ TOOLS: dict[str, dict] = {
             "Read/write the project's entry library (reusable prompt "
             "snippets). Kinds: 'fragment' (plain text fragments) and "
             "'prompt' (full prompt templates; when inserted they expand, and "
-            "should only @-mention media slots like @image_0 — not other "
+
+            "should only @-mention media positions like @image_1 — not other "
             "entries). action 'list' (optional kind filter), 'upsert' (kind, "
             "label, content, optional metadata; an existing (kind, label) "
             "is updated in place and keeps its id, pass id to rename one — "

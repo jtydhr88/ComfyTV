@@ -1,175 +1,127 @@
 import { describe, expect, it } from 'vitest'
 
-import { IMAGE_REFS_PROP } from './imageRefs'
+import { MEDIA_PROP } from './mediaOrder'
 import {
-  audioSendOrder,
-  expandImageTokens,
+  citedPositions,
   expandMentionTokens,
   hasRawMentionTokens,
   nonSlotMentionLabels,
-  imageInputSlotIndex,
-  imageSendOrder,
-  imageSlotFromLabel,
-  imageSlotLabel,
   mentionOrdinalText,
+  mentionSendOrderOf,
+  mentionSendOrders,
   minimaxAudioOffset,
   mentionSlotFromLabel,
   mentionSlotLabel,
   normalizeMentionStyle,
   normalizeMentionText,
+  remapMentionTokens,
   slotColor,
-  videoSendOrder,
   SLOT_COLORS,
 } from './imageSlotMentions'
 
-describe('imageSlot labels', () => {
-  it('round-trips slot ↔ label', () => {
-    expect(imageSlotLabel(0)).toBe('image_0')
-    expect(imageSlotFromLabel('image_0')).toBe(0)
-    expect(imageSlotFromLabel('image_12')).toBe(12)
+describe('mention slot labels', () => {
+  it('round-trips typed labels', () => {
+    expect(mentionSlotLabel('image', 1)).toBe('image_1')
+    expect(mentionSlotLabel('video', 1)).toBe('video_1')
+    expect(mentionSlotFromLabel('video_1')).toEqual({ type: 'video', slot: 1 })
+    expect(mentionSlotFromLabel('audio_0')).toEqual({ type: 'audio', slot: 0 })
+    expect(mentionSlotFromLabel('image_12')).toEqual({ type: 'image', slot: 12 })
   })
 
   it('rejects non-slot labels', () => {
-    expect(imageSlotFromLabel('image_')).toBeNull()
-    expect(imageSlotFromLabel('image_1x')).toBeNull()
-    expect(imageSlotFromLabel('style')).toBeNull()
-  })
-
-  it('maps autogrow input names to slot indices', () => {
-    expect(imageInputSlotIndex('images.image0')).toBe(0)
-    expect(imageInputSlotIndex('images.image10')).toBe(10)
-    expect(imageInputSlotIndex('texts.text0')).toBeNull()
-    expect(imageInputSlotIndex('batch')).toBeNull()
+    expect(mentionSlotFromLabel('image_')).toBeNull()
+    expect(mentionSlotFromLabel('image_1x')).toBeNull()
+    expect(mentionSlotFromLabel('model_0')).toBeNull()
+    expect(mentionSlotFromLabel('style')).toBeNull()
   })
 })
 
 describe('slotColor', () => {
-  it('cycles the palette', () => {
-    expect(slotColor(0)).toBe(SLOT_COLORS[0])
-    expect(slotColor(SLOT_COLORS.length)).toBe(SLOT_COLORS[0])
-    expect(slotColor(3)).toBe(SLOT_COLORS[3])
+  it('cycles the palette from position 1', () => {
+    expect(slotColor(1)).toBe(SLOT_COLORS[0])
+    expect(slotColor(SLOT_COLORS.length + 1)).toBe(SLOT_COLORS[0])
+    expect(slotColor(4)).toBe(SLOT_COLORS[3])
   })
 })
 
-function fakeNode(wired: number[], refSlots: number[] = []): any {
-  return {
-    inputs: [
-      ...wired.map(n => ({ name: `images.image${n}`, link: 1 })),
-      { name: 'images.image99', link: null },
-      { name: 'batch', link: 2 },
-    ],
-    properties: {
-      [IMAGE_REFS_PROP]: refSlots.map((slot, i) => ({ asset_id: i + 1, slot })),
-    },
-  }
+function tableNode(image: number, video = 0, audio = 0): any {
+  const entries = (n: number) => Array.from({ length: n }, (_, i) => ({ src: 'asset', asset_id: i + 1 }))
+  return { properties: { [MEDIA_PROP]: { image: entries(image), video: entries(video), audio: entries(audio) } } }
 }
 
-describe('imageSendOrder', () => {
-  it('unions wired slots and pinned refs, ascending', () => {
-    expect(imageSendOrder(fakeNode([2, 0], [5, 0]))).toEqual([0, 2, 5])
+describe('mentionSendOrders', () => {
+  it('lists 1-based positions per type from the media table', () => {
+    expect(mentionSendOrders(tableNode(3, 1, 2))).toEqual({ image: [1, 2, 3], video: [1], audio: [1, 2] })
+    expect(mentionSendOrderOf(tableNode(2), 'image')).toEqual([1, 2])
   })
 
   it('is empty for a bare node', () => {
-    expect(imageSendOrder(fakeNode([]))).toEqual([])
-    expect(imageSendOrder(null)).toEqual([])
-  })
-})
-
-describe('expandImageTokens', () => {
-  const zh = (n: number) => `图${n}`
-
-  it('expands by ordinal position in the send order, not slot number', () => {
-    const r = expandImageTokens('以@image_0 为动作参考，以@image_2 为风格参考', [0, 2], zh)
-    expect(r.text).toBe('以图1 为动作参考，以图2 为风格参考')
-    expect(r.missing).toEqual([])
-  })
-
-  it('drops tokens whose slot carries no image and reports them', () => {
-    const r = expandImageTokens('用@image_3 的风格', [0], zh)
-    expect(r.text).toBe('用 的风格')
-    expect(r.missing).toEqual([3])
-  })
-
-  it('does not touch longer labels or plain text', () => {
-    const r = expandImageTokens('@image_1x @imagery image_0 @image_0', [0], zh)
-    expect(r.text).toBe('@image_1x @imagery image_0 图1')
-  })
-
-  it('handles multi-digit slots without prefix collisions', () => {
-    const order = Array.from({ length: 11 }, (_, i) => i)
-    const r = expandImageTokens('@image_10 vs @image_1', order, n => `image ${n}`)
-    expect(r.text).toBe('image 11 vs image 2')
+    expect(mentionSendOrders({})).toEqual({ image: [], video: [], audio: [] })
+    expect(mentionSendOrderOf(null, 'image')).toEqual([])
   })
 })
 
 describe('normalizeMentionText', () => {
   it('converts the zh chip display format', () => {
-    expect(normalizeMentionText('以@图片#0 为主体，背景来自@图片#13'))
-      .toBe('以@image_0 为主体，背景来自@image_13')
+    expect(normalizeMentionText('用@图片#1 做参考')).toBe('用@image_1 做参考')
+    expect(normalizeMentionText('用@图片1 做参考')).toBe('用@image_1 做参考')
   })
 
   it('converts en chip formats with space and hash', () => {
-    expect(normalizeMentionText('use @image #2 and @Image_3 and @IMAGE4'))
-      .toBe('use @image_2 and @image_3 and @image_4')
+    expect(normalizeMentionText('use @image #2 here')).toBe('use @image_2 here')
+    expect(normalizeMentionText('use @image 2 here')).toBe('use @image_2 here')
+    expect(normalizeMentionText('use @Image#2 here')).toBe('use @image_2 here')
   })
 
   it('converts video and audio in both languages', () => {
-    expect(normalizeMentionText('动作学@视频#0，配音用@音频 1，also @video#1 @audio 0'))
-      .toBe('动作学@video_0，配音用@audio_1，also @video_1 @audio_0')
+    expect(normalizeMentionText('@视频#1 @音频 2 @video 1 @Audio#3'))
+      .toBe('@video_1 @audio_2 @video_1 @audio_3')
   })
 
   it('handles full-width at, hash and digits', () => {
-    expect(normalizeMentionText('＠图片＃３ 站在中间')).toBe('@image_3 站在中间')
+    expect(normalizeMentionText('＠图片＃１２')).toBe('@image_12')
   })
 
   it('strips leading zeros', () => {
-    expect(normalizeMentionText('@图片#007')).toBe('@image_7')
+    expect(normalizeMentionText('@image 007')).toBe('@image_7')
   })
 
   it('is idempotent on canonical tokens', () => {
-    const s = 'person from @image_0 with @video_1 and @audio_0'
-    expect(normalizeMentionText(s)).toBe(s)
+    expect(normalizeMentionText('@image_1 @video_2')).toBe('@image_1 @video_2')
   })
 
   it('matches tokens glued to CJK prose (real LLM output)', () => {
-    expect(normalizeMentionText('@图片#0入夜月色清冷，冷白光铺满石板庭院'))
-      .toBe('@image_0入夜月色清冷，冷白光铺满石板庭院')
-    expect(normalizeMentionText('@图片#13肩扛同款大号纸箱紧随其后'))
-      .toBe('@image_13肩扛同款大号纸箱紧随其后')
-    expect(normalizeMentionText('@图片#4说:"哟，大半夜扛啥宝贝?"'))
-      .toBe('@image_4说:"哟，大半夜扛啥宝贝?"')
-    expect(normalizeMentionText('二人视线同时锁定@图片#3与@图片#13。'))
-      .toBe('二人视线同时锁定@image_3与@image_13。')
+    expect(normalizeMentionText('@图片1入夜月色，@图片2肩扛纸箱'))
+      .toBe('@image_1入夜月色，@image_2肩扛纸箱')
   })
 
   it('leaves non-slot mentions and lookalikes alone', () => {
-    const s = '@imagery @style @图1 email@example.com @image_2x @劳拉'
-    expect(normalizeMentionText(s)).toBe(s)
+    expect(normalizeMentionText('@style @imagery @image_1x')).toBe('@style @imagery @image_1x')
   })
 })
 
 describe('hasRawMentionTokens', () => {
   it('detects raw forms and not canonical ones', () => {
-    expect(hasRawMentionTokens('看@图片#0')).toBe(true)
-    expect(hasRawMentionTokens('看@image_0')).toBe(false)
-    expect(hasRawMentionTokens('plain text')).toBe(false)
+    expect(hasRawMentionTokens('@图片#1')).toBe(true)
+    expect(hasRawMentionTokens('@image_1')).toBe(false)
+    expect(hasRawMentionTokens('plain')).toBe(false)
   })
 })
 
-describe('nonSlotMentionLabels', () => {
+describe('nonSlotMentionLabels / citedPositions', () => {
   it('returns entry labels but not slot tokens', () => {
-    expect(nonSlotMentionLabels('a @image_0 and @style plus @video_1 and @劳拉'))
-      .toEqual(['style', '劳拉'])
+    expect(nonSlotMentionLabels('@style and @image_1 with @hero-2')).toEqual(['style', 'hero-2'])
   })
 
   it('dedupes and returns empty for slot-only or plain text', () => {
-    expect(nonSlotMentionLabels('@style twice @style')).toEqual(['style'])
-    expect(nonSlotMentionLabels('@image_0 @audio_2 中文正文')).toEqual([])
-    expect(nonSlotMentionLabels('no tokens')).toEqual([])
+    expect(nonSlotMentionLabels('@a @a @b')).toEqual(['a', 'b'])
+    expect(nonSlotMentionLabels('@image_1 plain')).toEqual([])
   })
 
-  it('treats slot lookalikes with trailing chars as entry labels', () => {
-    expect(nonSlotMentionLabels('@image_2x')).toEqual(['image_2x'])
+  it('collects cited positions per type, sorted and unique', () => {
+    expect(citedPositions('@image_3 @image_1 @image_3 @video_2', 'image')).toEqual([1, 3])
+    expect(citedPositions('@image_3 @video_2', 'video')).toEqual([2])
+    expect(citedPositions('@image_3', 'audio')).toEqual([])
   })
 })
 
@@ -183,88 +135,21 @@ describe('mention style', () => {
   })
 
   it('natural style keeps the locale text', () => {
-    const f = mentionOrdinalText('natural', zh)
-    expect(f(1)).toBe('图1')
+    expect(mentionOrdinalText('natural', zh)(1)).toBe('图1')
   })
 
-  it('minimax_tags emits literal <Picture n> tags', () => {
-    const f = mentionOrdinalText('minimax_tags', zh)
-    expect(f(1)).toBe('<Picture 1>')
-    expect(f(9)).toBe('<Picture 9>')
-  })
-
-  it('minimax_tags emits per-type tags for video and audio', () => {
+  it('minimax_tags emits literal per-type tags', () => {
+    expect(mentionOrdinalText('minimax_tags', zh)(1)).toBe('<Picture 1>')
+    expect(mentionOrdinalText('minimax_tags', zh)(9)).toBe('<Picture 9>')
     expect(mentionOrdinalText('minimax_tags', zh, 'video')(2)).toBe('<Video 2>')
     expect(mentionOrdinalText('minimax_tags', zh, 'audio')(1)).toBe('<Audio 1>')
-  })
-
-  it('expands to H3 tags by send-order ordinal', () => {
-    const f = mentionOrdinalText('minimax_tags', zh)
-    const r = expandImageTokens('person from @image_0 in the scene of @image_4', [0, 2, 4], f)
-    expect(r.text).toBe('person from <Picture 1> in the scene of <Picture 3>')
-    expect(r.missing).toEqual([])
-  })
-})
-
-describe('mention slot labels (typed)', () => {
-  it('round-trips typed labels', () => {
-    expect(mentionSlotLabel('video', 1)).toBe('video_1')
-    expect(mentionSlotFromLabel('video_1')).toEqual({ type: 'video', slot: 1 })
-    expect(mentionSlotFromLabel('audio_0')).toEqual({ type: 'audio', slot: 0 })
-    expect(mentionSlotFromLabel('image_3')).toEqual({ type: 'image', slot: 3 })
-    expect(mentionSlotFromLabel('model_0')).toBeNull()
-    expect(mentionSlotFromLabel('video_')).toBeNull()
-  })
-})
-
-describe('videoSendOrder / audioSendOrder', () => {
-  function node(names: Array<[string, boolean]>, refs: any[] = []): any {
-    return {
-      inputs: names.map(([name, wired]) => ({ name, link: wired ? 1 : null })),
-      properties: { [IMAGE_REFS_PROP]: refs },
-    }
-  }
-
-  it('collects wired videos.videoN slots ascending', () => {
-    expect(videoSendOrder(node([
-      ['videos.video2', true], ['videos.video0', true], ['videos.video1', false],
-    ]))).toEqual([0, 2])
-    expect(videoSendOrder(null)).toEqual([])
-  })
-
-  it('audio is slot 0 when the single audio input is wired', () => {
-    expect(audioSendOrder(node([['audio', true]]))).toEqual([0])
-    expect(audioSendOrder(node([['audio', false]]))).toEqual([])
-    expect(audioSendOrder(null)).toEqual([])
-  })
-
-  it('pinned video/audio asset refs count into their send orders', () => {
-    const refs = [
-      { asset_id: 1, slot: 1, type: 'video' },
-      { asset_id: 2, slot: 0, type: 'audio' },
-      { asset_id: 3, slot: 5 },
-    ]
-    expect(videoSendOrder(node([['videos.video0', true]], refs))).toEqual([0, 1])
-    expect(audioSendOrder(node([['audio', false]], refs))).toEqual([0])
-    expect(imageSendOrder(node([], refs))).toEqual([5])
-  })
-
-  it('collects wired audio.audioN autogrow slots ascending', () => {
-    expect(audioSendOrder(node([
-      ['audio.audio2', true], ['audio.audio0', true], ['audio.audio1', false],
-    ]))).toEqual([0, 2])
-  })
-
-  it('audio refs merge with autogrow wiring', () => {
-    const refs = [{ asset_id: 2, slot: 1, type: 'audio' }]
-    expect(audioSendOrder(node([['audio.audio0', true]], refs))).toEqual([0, 1])
   })
 })
 
 describe('minimaxAudioOffset', () => {
   it('equals the number of videos being sent', () => {
-    expect(minimaxAudioOffset({ image: [0], video: [0, 1], audio: [0] })).toBe(2)
-    expect(minimaxAudioOffset({ image: [], video: [], audio: [0] })).toBe(0)
+    expect(minimaxAudioOffset({ image: [1], video: [1, 2], audio: [1] })).toBe(2)
+    expect(minimaxAudioOffset({ image: [], video: [], audio: [1] })).toBe(0)
   })
 
   it('mentionOrdinalText applies the offset in both styles', () => {
@@ -281,11 +166,12 @@ describe('expandMentionTokens', () => {
     video: (n: number) => `<Video ${n}>`,
     audio: (n: number) => `<Audio ${n}>`,
   }
+  const orders = (image: number, video = 0, audio = 0) => mentionSendOrders(tableNode(image, video, audio))
 
-  it('expands all three token types by per-type send order', () => {
+  it('expands all three token types by position', () => {
     const r = expandMentionTokens(
-      'copy @image_2 style, motion of @video_0 and @video_3, voice from @audio_0',
-      { image: [0, 2], video: [0, 3], audio: [0] },
+      'copy @image_2 style, motion of @video_1 and @video_2, voice from @audio_1',
+      orders(2, 2, 1),
       texts,
     )
     expect(r.text).toBe('copy <Picture 2> style, motion of <Video 1> and <Video 2>, voice from <Audio 1>')
@@ -293,35 +179,56 @@ describe('expandMentionTokens', () => {
   })
 
   it('reports missing tokens with their type and drops them', () => {
-    const r = expandMentionTokens(
-      '@video_1 then @audio_2 with @image_0',
-      { image: [0], video: [], audio: [] },
-      texts,
-    )
-    expect(r.text).toBe(' then  with <Picture 1>')
+    const r = expandMentionTokens('@video_1 then @audio_2 with @image_1 or @image_0', orders(1), texts)
+    expect(r.text).toBe(' then  with <Picture 1> or ')
     expect(r.missing).toEqual([
+      { type: 'image', slot: 0 },
       { type: 'video', slot: 1 },
       { type: 'audio', slot: 2 },
     ])
   })
 
   it('does not cross-match between types or longer labels', () => {
-    const r = expandMentionTokens(
-      '@video_0x @videos @image_0 @audio_5',
-      { image: [0], video: [0], audio: [0] },
-      texts,
-    )
-    expect(r.text).toBe('@video_0x @videos <Picture 1> ')
+    const r = expandMentionTokens('@video_1x @videos @image_1 @audio_5', orders(1, 1, 1), texts)
+    expect(r.text).toBe('@video_1x @videos <Picture 1> ')
     expect(r.missing).toEqual([{ type: 'audio', slot: 5 }])
   })
 
-  it('expands tokens glued to CJK prose', () => {
+  it('handles multi-digit positions and CJK prose', () => {
     const r = expandMentionTokens(
-      '@image_0入夜月色，@image_13肩扛纸箱，动作学@video_0结尾',
-      { image: [0, 13], video: [0], audio: [] },
+      '@image_1入夜月色，@image_11肩扛纸箱，动作学@video_1结尾',
+      orders(11, 1),
       texts,
     )
-    expect(r.text).toBe('<Picture 1>入夜月色，<Picture 2>肩扛纸箱，动作学<Video 1>结尾')
+    expect(r.text).toBe('<Picture 1>入夜月色，<Picture 11>肩扛纸箱，动作学<Video 1>结尾')
     expect(r.missing).toEqual([])
+  })
+})
+
+describe('remapMentionTokens', () => {
+  it('renumbers tokens by the position map and leaves others alone', () => {
+    const r = remapMentionTokens('@image_1 wears @image_3 on @image_2, @video_1 stays', {
+      image: new Map([[1, 2], [2, 3], [3, 1]]),
+    })
+    expect(r.text).toBe('@image_2 wears @image_1 on @image_3, @video_1 stays')
+    expect(r.removed).toEqual([])
+  })
+
+  it('drops removed positions together with one trailing space', () => {
+    const r = remapMentionTokens('use @image_2 and @image_1 for the look', {
+      image: new Map([[1, null], [2, 1]]),
+    })
+    expect(r.text).toBe('use @image_1 and for the look')
+    expect(r.removed).toEqual([{ type: 'image', position: 1 }])
+  })
+
+  it('does not chain replacements', () => {
+    const r = remapMentionTokens('@image_1 @image_2', { image: new Map([[1, 2], [2, 1]]) })
+    expect(r.text).toBe('@image_2 @image_1')
+  })
+
+  it('is a no-op for empty maps and untouched types', () => {
+    expect(remapMentionTokens('@image_1 @audio_1', {}).text).toBe('@image_1 @audio_1')
+    expect(remapMentionTokens('@image_5', { image: new Map([[1, 2]]) }).text).toBe('@image_5')
   })
 })

@@ -109,7 +109,7 @@ accordingly.
 
 **Waiting without polling.** `wait_stage` blocks server-side (default 25 s per call, max 170 s) and returns the new output the second it lands. On timeout it returns `after_output_id` — call again with it to keep waiting. Total wait is unbounded; long renders just take a few re-calls.
 
-**Mentions are zero-based.** Prompt tokens like `@image_0` / `@video_0` address a stage's sendable media *per type*, starting at 0, in slot order (wired inputs first, then `asset_refs`). Out-of-range tokens expand to nothing — and the tools warn you when that happens.
+**Mentions are 1-based positions.** Every stage keeps one ordered media list per type — wired inputs and `asset_refs` together, in the order `get_stage` reports under `media`. Prompt tokens like `@image_1` / `@video_1` address that list by position (`@image_1` is the first image). Removing or reordering media renumbers the tokens in the stage's prompt for you; `set_stage` `media_order` reorders a list, and `connect_stages` reports the position of the connection it made. Out-of-range tokens expand to nothing — and the tools warn you when that happens.
 
 **Real vision.** `view_image` is the only tool that returns pixels. For video QC: `media_frame` to pull a frame, then `view_image` to actually look at it. Never judge an image by its filename.
 

@@ -299,8 +299,8 @@ import CustomParamsSection from './CustomParamsSection.vue'
 import StagePresetBar from './StagePresetBar.vue'
 import { t } from '@/i18n'
 import ValuePreview from './ValuePreview.vue'
-import { nodeAcceptsAutogrowImages } from '@/composables/stages/assetSlots'
-import { imageInputSlotIndex, slotColor } from '@/composables/stages/imageSlotMentions'
+import { slotColor } from '@/composables/stages/imageSlotMentions'
+import { nodeAcceptsMedia, positionOfLink, readMediaTable } from '@/composables/stages/mediaOrder'
 import { useActionsCollapsed, useContextCollapsed, useTextOutputCollapsed, useVideoOutputCollapsed } from '@/composables/stages/useContextCollapsed'
 import { useTextOutputActions } from '@/composables/stages/useTextOutputActions'
 import { formatSlot, progressFallbackOf, useStageCard } from '@/composables/stages/useStageCard'
@@ -370,7 +370,7 @@ function togglePoolAppend() {
   syncPoolAppend()
 }
 
-const acceptsContextMedia = computed(() => nodeAcceptsAutogrowImages(props.node))
+const acceptsContextMedia = computed(() => nodeAcceptsMedia(props.node, 'image'))
 
 const pinnedBatchStore = usePinnedBatchStore()
 const projectStoreForPin = useProjectStore()
@@ -484,9 +484,11 @@ function sourceLabel(s: InputSource): string {
 }
 
 function tileSlotColor(inp: { slot: string; source: InputSource }): string | null {
-  if (inp.source !== 'upstream') return null
-  const idx = imageInputSlotIndex(inp.slot)
-  return idx == null ? null : slotColor(idx)
+  if (inp.source !== 'upstream' || !props.node) return null
+  const link = (props.node.inputs ?? []).find((i: any) => i?.name === inp.slot)?.link
+  if (link == null) return null
+  const pos = positionOfLink(readMediaTable(props.node), 'image', Number(link))
+  return pos == null ? null : slotColor(pos)
 }
 
 function onRun() { if (canRun.value) props.onRunRequest() }

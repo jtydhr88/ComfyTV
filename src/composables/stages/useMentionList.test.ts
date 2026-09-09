@@ -13,10 +13,10 @@ import type { MentionSuggestionItem } from '@/composables/stages/useMentionSugge
 import { mentionItemKey, useMentionList } from './useMentionList'
 
 const IMG: MentionSuggestionItem = {
-  type: 'imageSlot', slotType: 'image', slot: 2, ordinal: 1, url: null, color: '#fff',
+  type: 'imageSlot', slotType: 'image', slot: 2, ordinal: 1, url: null, color: '#fff', note: '',
 }
 const VID: MentionSuggestionItem = {
-  type: 'imageSlot', slotType: 'video', slot: 0, ordinal: 1, url: null, color: '#fff',
+  type: 'imageSlot', slotType: 'video', slot: 0, ordinal: 1, url: null, color: '#fff', note: '',
 }
 const SNIP: MentionSuggestionItem = {
   type: 'snippet',

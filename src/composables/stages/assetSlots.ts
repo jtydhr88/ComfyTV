@@ -115,185 +115,27 @@ export function fetchWorkflowMetaCached(
   return hit
 }
 
-
-export const AUTOGROW_IMAGE_KEY_RE = /^images\.image(\d+)$/
-export const AUTOGROW_VIDEO_KEY_RE = /^videos\.video(\d+)$/
-export const AUTOGROW_AUDIO_KEY_RE = /^audio\.audio(\d+)$/
-
-export interface ResolvedImageRef {
-  id: number
-  url: string
-  slot: number
-  type?: 'image' | 'video' | 'audio'
-}
-
 export function assetChipLabel(asset: Asset | undefined, id: number): string {
   return asset?.name || `asset:${id}`
 }
 
-export function nodeAcceptsAutogrowImages(node: unknown): boolean {
-  const inputs = (node as { inputs?: Array<{ name?: unknown }> } | null)?.inputs
-  if (!Array.isArray(inputs)) return false
-  return inputs.some(
-    i => typeof i?.name === 'string' && AUTOGROW_IMAGE_KEY_RE.test(i.name),
-  )
-}
-
-export function nodeAcceptsAutogrowVideos(node: unknown): boolean {
-  const inputs = (node as { inputs?: Array<{ name?: unknown }> } | null)?.inputs
-  if (!Array.isArray(inputs)) return false
-  return inputs.some(
-    i => typeof i?.name === 'string' && AUTOGROW_VIDEO_KEY_RE.test(i.name),
-  )
-}
-
-export function nodeAcceptsAudioInput(node: unknown): boolean {
-  const inputs = (node as { inputs?: Array<{ name?: unknown; type?: unknown }> } | null)?.inputs
-  if (!Array.isArray(inputs)) return false
-  return inputs.some(i => typeof i?.name === 'string'
-    && (i.name === 'audio' || AUTOGROW_AUDIO_KEY_RE.test(i.name)))
-}
-
-export function wiredImageSlots(node: unknown): number[] {
-  const inputs = (node as { inputs?: Array<{ name?: unknown; link?: unknown }> } | null)?.inputs
-  if (!Array.isArray(inputs)) return []
-  const out: number[] = []
-  for (const i of inputs) {
-    if (typeof i?.name !== 'string') continue
-    const m = AUTOGROW_IMAGE_KEY_RE.exec(i.name)
-    if (m && i.link != null) out.push(Number(m[1]))
-  }
-  return out
-}
-
-export function wiredVideoSlots(node: unknown): number[] {
-  const inputs = (node as { inputs?: Array<{ name?: unknown; link?: unknown }> } | null)?.inputs
-  if (!Array.isArray(inputs)) return []
-  const out: number[] = []
-  for (const i of inputs) {
-    if (typeof i?.name !== 'string') continue
-    const m = AUTOGROW_VIDEO_KEY_RE.exec(i.name)
-    if (m && i.link != null) out.push(Number(m[1]))
-  }
-  return out
-}
-
-export function wiredAudioSlots(node: unknown): number[] {
-  const inputs = (node as { inputs?: Array<{ name?: unknown; link?: unknown }> } | null)?.inputs
-  if (!Array.isArray(inputs)) return []
-  const out: number[] = []
-  for (const i of inputs) {
-    if (typeof i?.name !== 'string') continue
-    if (i.name === 'audio' && i.link != null) { out.push(0); continue }
-    const m = AUTOGROW_AUDIO_KEY_RE.exec(i.name)
-    if (m && i.link != null) out.push(Number(m[1]))
-  }
-  return [...new Set(out)].sort((a, b) => a - b)
-}
-
-export function refCoveredImageSlots(
-  refs: Array<{ slot: number }>,
-): Set<number> {
-  return new Set(refs.map(r => r.slot))
-}
-
-export function missingRequiredImageSlots(
-  requiredSlots: Iterable<number>,
-  wired: Iterable<number>,
-  refCovered: Iterable<number>,
+export function missingRequiredPositions(
+  requiredIndexes: Iterable<number>,
+  count: number,
 ): number[] {
-  const have = new Set<number>([...wired, ...refCovered])
-  return [...requiredSlots].filter(idx => !have.has(idx))
+  return [...requiredIndexes].filter(idx => idx >= count)
 }
 
-export type RefSlotWarning =
-  | { kind: 'duplicate'; slot: number }
-  | { kind: 'override'; slot: number }
+export type MediaBindingWarning =
   | { kind: 'overflow'; count: number; total: number }
   | { kind: 'noSlots' }
 
-export function refSlotWarnings(
-  refs: Array<{ slot: number }>,
-  wired: number[],
+export function mediaBindingWarnings(
+  count: number,
   options: ImageSlotOption[] | null,
-): RefSlotWarning[] {
-  const out: RefSlotWarning[] = []
-  if (refs.length === 0) return out
-
-  const pinCounts = new Map<number, number>()
-  for (const r of refs) pinCounts.set(r.slot, (pinCounts.get(r.slot) ?? 0) + 1)
-  const wiredSet = new Set(wired)
-  for (const [slot, count] of [...pinCounts.entries()].sort((a, b) => a[0] - b[0])) {
-    if (count > 1) out.push({ kind: 'duplicate', slot })
-    if (wiredSet.has(slot)) out.push({ kind: 'override', slot })
-  }
-
-  if (options != null) {
-    if (options.length === 0) {
-      out.push({ kind: 'noSlots' })
-    } else {
-      const bound = new Set(options.map(o => o.slot))
-      const unused = refs.filter(r => !bound.has(r.slot)).length
-      if (unused > 0) out.push({ kind: 'overflow', count: unused, total: options.length })
-    }
-  }
-  return out
-}
-
-export function injectAssetRefs(
-  inputs: Record<string, unknown>,
-  refs: ResolvedImageRef[],
-): string[] {
-  if (refs.length === 0) return []
-
-  const wiredOf = (re: RegExp) => {
-    const out = new Set<number>()
-    for (const key of Object.keys(inputs)) {
-      const m = re.exec(key)
-      if (m) out.add(Number(m[1]))
-    }
-    return out
-  }
-  const wired: Record<string, Set<number>> = {
-    image: wiredOf(AUTOGROW_IMAGE_KEY_RE),
-    video: wiredOf(AUTOGROW_VIDEO_KEY_RE),
-    audio: new Set([
-      ...wiredOf(AUTOGROW_AUDIO_KEY_RE),
-      ...('audio' in inputs ? [0] : []),
-    ]),
-  }
-
-  const warnings: string[] = []
-  const seen: Record<string, Set<number>> = {
-    image: new Set(), video: new Set(), audio: new Set(),
-  }
-  for (const ref of refs) {
-    const type = ref.type ?? 'image'
-    if (seen[type].has(ref.slot)) {
-      warnings.push(`${type} reference slot #${ref.slot} pinned twice — the later one wins`)
-    } else if (wired[type].has(ref.slot)) {
-      warnings.push(`${type} reference slot #${ref.slot} had an upstream connection — the pinned asset overrides it`)
-    }
-    seen[type].add(ref.slot)
-  }
-
-  for (const ref of refs) {
-    const type = ref.type ?? 'image'
-    if (type === 'video') {
-      inputs[`videos.video${ref.slot}`] = ref.url
-    } else if (type === 'audio') {
-      if ('audio' in inputs) inputs['audio'] = ref.url
-      else inputs[`audio.audio${ref.slot}`] = ref.url
-    } else {
-      inputs[`images.image${ref.slot}`] = ref.url
-    }
-  }
-  return warnings
-}
-
-export function injectImageRefs(
-  inputs: Record<string, unknown>,
-  refs: ResolvedImageRef[],
-): string[] {
-  return injectAssetRefs(inputs, refs)
+): MediaBindingWarning[] {
+  if (count === 0 || options == null) return []
+  if (options.length === 0) return [{ kind: 'noSlots' }]
+  const unused = count - options.length
+  return unused > 0 ? [{ kind: 'overflow', count: unused, total: options.length }] : []
 }

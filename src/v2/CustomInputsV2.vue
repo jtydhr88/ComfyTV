@@ -83,7 +83,8 @@ import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
 import ComfyTVSlider from '@/components/widgets/ComfyTVSlider.vue'
 import ComfyTVText from '@/components/widgets/ComfyTVText.vue'
 import ComfyTVToggle from '@/components/widgets/ComfyTVToggle.vue'
-import { type ImageRef, readImageRefs, refType, subscribeImageRefs } from '@/composables/stages/imageRefs'
+import { type MediaTable, readMediaTable, subscribeMediaTable } from '@/composables/stages/mediaOrder'
+import { mediaEntryUrl } from '@/composables/stages/mediaOrderSync'
 import { type ParamItem, parseParamItems, serializeParamItems } from '@/composables/stages/useCustomParams'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
@@ -103,19 +104,23 @@ const items = ref<ParamItem[]>([])
 function readItems(): ParamItem[] {
   return parseParamItems(readWidgetStr(props.node, 'custom_params', '{}'))
 }
-const refs = ref<ImageRef[]>([])
-let unsubRefs: (() => void) | null = null
+const media = ref<MediaTable>(readMediaTable(props.node))
+let unsubMedia: (() => void) | null = null
 onMounted(() => {
   items.value = readItems()
   bindWidgetCallback(props.node, 'custom_params', () => { items.value = readItems() })
-  refs.value = readImageRefs(props.node)
-  unsubRefs = subscribeImageRefs(props.node, () => { refs.value = readImageRefs(props.node) })
+  media.value = readMediaTable(props.node)
+  unsubMedia = subscribeMediaTable(props.node, () => { media.value = readMediaTable(props.node) })
 })
-onBeforeUnmount(() => { unsubRefs?.() })
+onBeforeUnmount(() => { unsubMedia?.() })
 
+function mediaEntryOf(it: CustomIoInput) {
+  if (it.kind !== 'image' && it.kind !== 'video' && it.kind !== 'audio') return null
+  return media.value[it.kind][it.slot ?? 0] ?? null
+}
 function isRefCovered(it: CustomIoInput): boolean {
-  if (it.kind !== 'image' && it.kind !== 'video' && it.kind !== 'audio') return false
-  return refs.value.some(r => refType(r) === it.kind && r.slot === (it.slot ?? 0))
+  const e = mediaEntryOf(it)
+  return !!e && e.src !== 'link'
 }
 
 const byKey = computed(() => new Map(items.value.map(it => [it.key, it.value])))
@@ -162,12 +167,16 @@ function slotOf(it: CustomIoInput): string | null {
   return it.kind === 'param' ? null : slotName(it.kind, it.slot ?? 0)
 }
 function isWired(it: CustomIoInput): boolean {
+  if (isMediaKind(it.kind)) return mediaEntryOf(it)?.src === 'link'
   const slot = slotOf(it)
   if (!slot) return false
   const inp = props.state.inputs.find(i => i.slot === slot)
   return !!inp && inp.source !== 'empty'
 }
 function wiredText(it: CustomIoInput): string {
+  void props.state.inputs
+  const e = mediaEntryOf(it)
+  if (e) return mediaEntryUrl(props.node, e) ?? ''
   const slot = slotOf(it)
   const inp = slot ? props.state.inputs.find(i => i.slot === slot) : null
   return inp?.content ?? ''

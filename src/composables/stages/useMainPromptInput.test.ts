@@ -207,12 +207,14 @@ describe('chipifyFragment', () => {
 describe('entryTooltipText', () => {
   const t = (key: string, args?: Record<string, unknown>) =>
     `${key}${args ? ':' + JSON.stringify(args) : ''}`
-  const nodeWithSlot2 = { inputs: [{ name: 'images.image2', link: 1 }] } as any
+  const nodeWithSlot2 = { properties: { comfytv_media: { image: [
+    { src: 'link', link: 1 }, { src: 'asset', asset_id: 3 },
+  ] } } } as any
 
   it('describes a wired image slot with its send ordinal', () => {
     const s = entryTooltipText('image_2', nodeWithSlot2, [], t)
     expect(s).toContain('mention.imageItemTitle')
-    expect(s).toContain('"n":2')
+    expect(s).toContain('n\\":2')
     expect(s).toContain('mention.imageExpand')
   })
 

@@ -182,7 +182,7 @@ describe('installMcpCommandBus', () => {
     expect(results[1].ok).toBe(true)
   })
 
-  it('set_stage writes asset refs with slot autofill', async () => {
+  it('set_stage writes asset refs into the media table in the given order', async () => {
     const node = makeNode()
     const { host, deps } = makeHost([node])
     uninstall = installMcpCommandBus(host, deps)
@@ -193,31 +193,40 @@ describe('installMcpCommandBus', () => {
     const [result] = postedResults()
     expect(result.ok).toBe(true)
     expect(result.result.updated).toEqual(['asset_refs'])
-    expect(node.properties.comfytv_image_refs).toEqual([
-      { asset_id: 5, slot: 0 },
-      { asset_id: 9, slot: 0, type: 'video' },
-      { asset_id: 7, slot: 6 },
-    ])
+    expect(node.properties.comfytv_media).toEqual({
+      image: [{ src: 'asset', asset_id: 5 }, { src: 'asset', asset_id: 7 }],
+      video: [{ src: 'asset', asset_id: 9 }],
+      audio: [],
+    })
   })
 
-  it('set_stage autofills slots per type namespace', async () => {
-    const node = makeNode()
+  it('set_stage keeps wired entries and reorders with media_order', async () => {
+    const node = makeNode({
+      inputs: [{ name: 'images.image0', type: 'COMFYTV_IMAGE', link: 21 }],
+      widgets: [{ name: 'main_prompt', value: 'a @image_1 b @image_2 c @image_3' }],
+    })
     const { host, deps } = makeHost([node])
     uninstall = installMcpCommandBus(host, deps)
     await dispatch(host, {
       id: 'c1', action: 'set_stage', node: 'u1',
-      asset_refs: [
-        { asset_id: 1 }, { asset_id: 2 }, { asset_id: 3, type: 'video' },
-        { asset_id: 4, type: 'audio' }, { asset_id: 5, type: 'video' },
-      ],
+      asset_refs: [{ asset_id: 1 }, { asset_id: 2 }],
     })
-    expect(node.properties.comfytv_image_refs).toEqual([
-      { asset_id: 1, slot: 0 },
-      { asset_id: 2, slot: 1 },
-      { asset_id: 3, slot: 0, type: 'video' },
-      { asset_id: 4, slot: 0, type: 'audio' },
-      { asset_id: 5, slot: 1, type: 'video' },
+    expect(node.properties.comfytv_media.image.map((e: any) => e.src)).toEqual(['link', 'asset', 'asset'])
+    await dispatch(host, {
+      id: 'c2', action: 'set_stage', node: 'u1', media_order: { image: [3, 1, 2] },
+    })
+    const results = postedResults()
+    expect(results[1].ok).toBe(true)
+    expect(results[1].result.updated).toEqual(['media_order.image'])
+    expect(node.properties.comfytv_media.image).toEqual([
+      { src: 'asset', asset_id: 2 }, { src: 'link', link: 21 }, { src: 'asset', asset_id: 1 },
     ])
+    expect(node.widgets[0].value).toBe('a @image_2 b @image_3 c @image_1')
+    await dispatch(host, {
+      id: 'c3', action: 'set_stage', node: 'u1', media_order: { image: [1, 1, 2] },
+    })
+    expect(postedResults()[2].ok).toBe(false)
+    expect(postedResults()[2].error).toContain('permutation')
   })
 
   it('set_stage warns on dangling prompt mentions', async () => {
@@ -226,14 +235,14 @@ describe('installMcpCommandBus', () => {
     uninstall = installMcpCommandBus(host, deps)
     await dispatch(host, {
       id: 'c1', action: 'set_stage', node: 'u1',
-      prompt: 'Animate @image_1 gently, keep @image_1 style',
+      prompt: 'Animate @image_2 gently, keep @image_2 style',
       asset_refs: [{ asset_id: 5 }],
     })
     const [result] = postedResults()
     expect(result.ok).toBe(true)
     expect(result.result.warnings).toHaveLength(1)
-    expect(result.result.warnings[0]).toContain('@image_1')
-    expect(result.result.warnings[0]).toContain('[0]')
+    expect(result.result.warnings[0]).toContain('@image_2')
+    expect(result.result.warnings[0]).toContain('1 sendable image')
   })
 
   it('set_stage stays silent when mentions resolve', async () => {
@@ -242,7 +251,7 @@ describe('installMcpCommandBus', () => {
     uninstall = installMcpCommandBus(host, deps)
     await dispatch(host, {
       id: 'c1', action: 'set_stage', node: 'u1',
-      prompt: 'Use @image_0 with @video_0 as motion',
+      prompt: 'Use @image_1 with @video_1 as motion',
       asset_refs: [{ asset_id: 5 }, { asset_id: 9, type: 'video' }],
     })
     const [result] = postedResults()
@@ -254,7 +263,7 @@ describe('installMcpCommandBus', () => {
     const dst = makeNode({
       id: 4,
       properties: { comfytv_stage_uid: 'u2' },
-      widgets: [{ name: 'main_prompt', value: 'animate @image_1 softly' }],
+      widgets: [{ name: 'main_prompt', value: 'animate @image_2 softly' }],
       inputs: [{ name: 'images.image0', type: 'COMFYTV_IMAGE', link: null }],
     })
     const src = makeNode({
@@ -267,18 +276,21 @@ describe('installMcpCommandBus', () => {
     })
     const [result] = postedResults()
     expect(result.ok).toBe(true)
+    expect(result.result.position).toBe(1)
+    expect(result.result.mention).toBe('@image_1')
     expect(result.result.warnings).toHaveLength(1)
-    expect(result.result.warnings[0]).toContain('@image_1')
+    expect(result.result.warnings[0]).toContain('@image_2')
   })
 
-  it('set_stage clears asset refs with an empty array', async () => {
+  it('set_stage clears asset refs with an empty array and migrates legacy refs', async () => {
     const node = makeNode({
       properties: { comfytv_stage_uid: 'u1', comfytv_image_refs: [{ asset_id: 1, slot: 0 }] },
     })
     const { host, deps } = makeHost([node])
     uninstall = installMcpCommandBus(host, deps)
     await dispatch(host, { id: 'c1', action: 'set_stage', node: 'u1', asset_refs: [] })
-    expect(node.properties.comfytv_image_refs).toEqual([])
+    expect(node.properties.comfytv_image_refs).toBeUndefined()
+    expect(node.properties.comfytv_media.image).toEqual([])
   })
 
   it('set_stage rejects values outside a widget\'s declared range or choices', async () => {
@@ -574,7 +586,7 @@ describe('installMcpCommandBus', () => {
         comfytv_image_refs: [{ asset_id: 9, slot: 0 }],
       },
       widgets: [
-        { name: 'main_prompt', value: 'use @image_2' },
+        { name: 'main_prompt', value: 'use @image_3' },
         { name: 'duration_s', value: 4 },
         { name: 'long', value: 'y'.repeat(5000) },
         { name: 'huge', value: 'z'.repeat(20000) },
@@ -605,10 +617,14 @@ describe('installMcpCommandBus', () => {
       connected: true, from_node: '3',
     })
     expect(detail.outputs[0].to_nodes).toEqual(['8'])
-    expect(detail.asset_refs).toEqual([{ asset_id: 9, slot: 0 }])
+    expect(detail.media.image).toEqual([
+      { position: 1, mention: '@image_1', source: 'link', from_node: '3', input: 'images.image0' },
+      { position: 2, mention: '@image_2', source: 'asset', asset_id: 9 },
+    ])
+    expect(detail.media.video).toEqual([])
     expect(detail.running).toBe(false)
     expect(detail.pos).toEqual([100, 200])
-    expect(detail.warnings?.[0]).toContain('@image_2')
+    expect(detail.warnings?.[0]).toContain('@image_3')
   })
 
   it('remove_stage removes the node from the graph', async () => {

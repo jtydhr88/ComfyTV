@@ -1,14 +1,5 @@
-import {
-  injectAssetRefs,
-  nodeAcceptsAudioInput,
-  nodeAcceptsAutogrowImages,
-  nodeAcceptsAutogrowVideos,
-  fetchWorkflowMetaCached,
-  mentionWorkflowRef,
-  type ResolvedImageRef,
-} from '@/composables/stages/assetSlots'
+import { fetchWorkflowMetaCached, mentionWorkflowRef } from '@/composables/stages/assetSlots'
 import { expandDirectorTimeline } from '@/composables/stages/directorMentions'
-import { readImageRefs, refType } from '@/composables/stages/imageRefs'
 import {
   expandMentionTokens,
   mentionOrdinalText,
@@ -16,6 +7,13 @@ import {
   mentionSendOrders,
   normalizeMentionStyle,
 } from '@/composables/stages/imageSlotMentions'
+import {
+  materializeMedia,
+  type MediaEntry,
+  type MediaType,
+  MEDIA_TYPES,
+  readMediaTable,
+} from '@/composables/stages/mediaOrder'
 import { t } from '@/i18n'
 import { app } from '@/lib/comfyApp'
 import { useAssetStore } from '@/stores/assetStore'
@@ -100,7 +98,7 @@ export async function buildRunPrompt(node: any, store: Store): Promise<BuiltRunP
             ordinalTexts(runStyle, upstreamOrders),
           )
           for (const m of missing) {
-            console.warn(`[ComfyTV/stage] upstream #${upstreamId}: @${m.type}_${m.slot} references an empty slot — dropped from prompt`)
+            console.warn(`[ComfyTV/stage] upstream #${upstreamId}: @${m.type}_${m.slot} references an empty position — dropped from prompt`)
           }
           snapshot = text
         }
@@ -130,51 +128,41 @@ export async function buildRunPrompt(node: any, store: Store): Promise<BuiltRunP
   const assetStore = useAssetStore()
   const pinnedBatches = usePinnedBatchStore()
 
-  const refsByNode = new Map<string, ReturnType<typeof readImageRefs>>()
+  const graphNodeOf = (nid: string) =>
+    a.graph?.getNodeById?.(Number(nid)) ?? a.graph?.getNodeById?.(String(nid))
+
+  const tablesByNode = new Map<string, ReturnType<typeof readMediaTable>>()
+  let needsAssets = false
   for (const nid of Object.keys(pm?.output ?? {})) {
-    const gn = a.graph?.getNodeById?.(Number(nid)) ?? a.graph?.getNodeById?.(String(nid))
-    const refs = readImageRefs(gn)
-    if (refs.length) refsByNode.set(String(nid), refs)
+    const table = readMediaTable(graphNodeOf(nid))
+    if (MEDIA_TYPES.some(tp => table[tp].length > 0)) tablesByNode.set(String(nid), table)
+    if (MEDIA_TYPES.some(tp => table[tp].some(e => e.src === 'asset'))) needsAssets = true
   }
-  if (refsByNode.size > 0) await assetStore.hydrate()
+  if (needsAssets) await assetStore.hydrate()
+
+  const resolveUrl = (e: MediaEntry, _type: MediaType): string | null => {
+    if (e.src === 'batch') {
+      const urls = pinnedBatches.byId(pid, e.batch_id!)?.urls ?? []
+      return urls[e.batch_index!] ?? null
+    }
+    if (e.src === 'asset') return assetStore.byId(e.asset_id!)?.payload_url ?? null
+    return null
+  }
 
   for (const [nid, inputs] of Object.entries(pm?.output ?? {})) {
     const obj = (inputs as any)?.inputs
     if (!obj) continue
+    const graphNode = graphNodeOf(nid)
 
-    const refs = refsByNode.get(String(nid))
-    if (refs?.length) {
-      const graphNode = a.graph?.getNodeById?.(Number(nid))
-                     ?? a.graph?.getNodeById?.(String(nid))
-      const acceptsType = {
-        image: nodeAcceptsAutogrowImages(graphNode),
-        video: nodeAcceptsAutogrowVideos(graphNode),
-        audio: nodeAcceptsAudioInput(graphNode),
-      }
-      const resolved: ResolvedImageRef[] = []
-      for (const r of refs) {
-        const type = refType(r)
-        if (!acceptsType[type]) continue
-        if (r.batch_index != null) {
-          const urls = r.batch_id ? pinnedBatches.byId(pid, r.batch_id)?.urls ?? [] : []
-          const url = urls[r.batch_index]
-          if (url) resolved.push({ id: -1, url, slot: r.slot, type: 'image' })
-          else console.warn(`[ComfyTV/stage] node #${nid}: pinned batch ref #${r.batch_index + 1} has no image (batch ${r.batch_id ?? 'unknown'})`)
-          continue
-        }
-        const asset = r.asset_id != null ? assetStore.byId(r.asset_id) : undefined
-        if (asset) resolved.push({ id: r.asset_id!, url: asset.payload_url, slot: r.slot, type })
-        else console.warn(`[ComfyTV/stage] node #${nid}: ${type} ref ${r.asset_id} missing from library`)
-      }
-      for (const w of injectAssetRefs(obj, resolved)) {
+    const table = tablesByNode.get(String(nid))
+    if (table) {
+      for (const w of materializeMedia(obj, graphNode, table, resolveUrl)) {
         console.warn(`[ComfyTV/stage] node #${nid}: ${w}`)
       }
     }
 
     const mp = obj.main_prompt
     if (typeof mp === 'string' && mp.includes('@')) {
-      const graphNode = a.graph?.getNodeById?.(Number(nid))
-                     ?? a.graph?.getNodeById?.(String(nid))
       const mentionStyle = String(nid) === targetId
         ? runStyle
         : await resolveStyle(graphNode)
@@ -185,7 +173,7 @@ export async function buildRunPrompt(node: any, store: Store): Promise<BuiltRunP
         ordinalTexts(mentionStyle, nodeOrders),
       )
       for (const m of missing) {
-        console.warn(`[ComfyTV/stage] node #${nid}: @${m.type}_${m.slot} references an empty slot — dropped from prompt`)
+        console.warn(`[ComfyTV/stage] node #${nid}: @${m.type}_${m.slot} references an empty position — dropped from prompt`)
       }
       obj.main_prompt = text
     }
@@ -193,23 +181,16 @@ export async function buildRunPrompt(node: any, store: Store): Promise<BuiltRunP
     const tl = obj.timeline_data
     if (typeof tl === 'string'
         && (pm?.output?.[nid] as any)?.class_type === 'ComfyTV.DirectorStage') {
-      const graphNode = a.graph?.getNodeById?.(Number(nid))
-                     ?? a.graph?.getNodeById?.(String(nid))
       const sharedRefs = { images: [] as string[], videos: [] as string[], audio: [] as string[] }
-      const nodeRefs = readImageRefs(graphNode)
-      if (nodeRefs.length) await assetStore.hydrate()
       const bucketOf = { image: 'images', video: 'videos', audio: 'audio' } as const
-      for (const r of [...nodeRefs].sort((x, y) => x.slot - y.slot)) {
-        let url: string | undefined
-        if (r.batch_index != null) {
-          url = r.batch_id
-            ? pinnedBatches.byId(pid, r.batch_id)?.urls[r.batch_index]
-            : undefined
-        } else if (r.asset_id != null) {
-          url = assetStore.byId(r.asset_id)?.payload_url
+      const nodeTable = readMediaTable(graphNode)
+      for (const type of MEDIA_TYPES) {
+        for (const e of nodeTable[type]) {
+          if (e.src === 'link') continue
+          const url = resolveUrl(e, type)
+          if (url) sharedRefs[bucketOf[type]].push(url)
+          else console.warn(`[ComfyTV/stage] director #${nid}: shared ref ${e.key} could not be resolved — skipped`)
         }
-        if (url) sharedRefs[bucketOf[refType(r)]].push(url)
-        else console.warn(`[ComfyTV/stage] director #${nid}: shared ref (slot ${r.slot}) could not be resolved — skipped`)
       }
       obj.timeline_data = await expandDirectorTimeline(tl, {
         defaultWorkflow: String(obj.workflow ?? ''),

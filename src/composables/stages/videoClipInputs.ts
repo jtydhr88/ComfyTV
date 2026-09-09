@@ -12,9 +12,8 @@ const SLOT_RE = /^videos\.video(\d+)$/
 export function videoClipsFromInputs(inputs: ResolvedInput[]): VideoClip[] {
   return inputs
     .filter(i => SLOT_RE.test(i.slot) && i.source === 'upstream' && i.content)
-    .map(i => {
+    .map((i, index) => {
       const key = i.slot.split('.').pop()!
-      const slot = Number(SLOT_RE.exec(i.slot)![1])
-      return { key, url: i.content!, color: slotColor(slot) }
+      return { key, url: i.content!, color: slotColor(index + 1) }
     })
 }

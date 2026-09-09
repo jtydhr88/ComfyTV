@@ -23,7 +23,7 @@ The key economy is the **content-addressed cache**: every clip's render is keyed
 ## How ComfyTV designed this
 
 - **One timeline widget**: the whole edit lives in a single `timeline_data` JSON value, so undo, copy/paste and workflow saves carry the full film.
-- **Shared cast + per-clip references**: asset references attached to the node itself act as the film-wide cast (stable ordinals across every clip); each clip can stack its own references on top. Mention ordinals merge: shared references come first, then the clip's own — `@image_0` means the same first cast member in every clip.
+- **Shared cast + per-clip references**: asset references attached to the node itself act as the film-wide cast (stable ordinals across every clip); each clip can stack its own references on top. Mention ordinals merge: shared references come first, then the clip's own — `@image_1` means the same first cast member in every clip.
 - **@mention = selection**: with no mentions a clip sends all of its reference pool; mentioning specific ordinals sends only those, in mention order.
 - **Chain modes**: `off` renders clips independently; `prepend` feeds each clip the previous clip's last frame as an extra leading reference; `replace` swaps the clip's image references for that last frame — for strict visual continuity.
 - **Adaptive Run**: edited clips → incremental render; a failed run with no edits → resume from the failure; a successful run with no edits → fresh seeds for the whole film (a new take).
@@ -62,7 +62,7 @@ Clips are added, dragged to reorder, and edge-dragged to resize (1–120 s each)
 ## Step by step
 
 1. Add **Director**, pick a video **workflow** (e.g. an image-to-video or reference-to-video workflow).
-2. Attach your cast as asset references on the node — these are `@image_0`, `@image_1`, … in every clip.
+2. Attach your cast as asset references on the node — these are `@image_1`, `@image_2`, … in every clip.
 3. Add clips; give each a prompt, duration and transition.
 4. **▶ Run** — watch per-clip progress on the timeline.
 5. Unhappy with one shot? Select it, tweak the prompt or press regenerate. Only that clip re-renders.
@@ -89,7 +89,7 @@ Clips are added, dragged to reorder, and edge-dragged to resize (1–120 s each)
 A: Running again with zero edits is treated as "give me a new take" — all seeds reroll. Edit any clip (or nothing at all before the first run) for incremental behavior.
 
 **Q: Do shared and clip references collide in numbering?**  
-A: No. The pool is merged with shared references first, so `@image_0` is the first shared reference in every clip; clip-local references continue the numbering.
+A: No. The pool is merged with shared references first, so `@image_1` is the first shared reference in every clip; clip-local references continue the numbering.
 
 **Q: Where did the seed field go?**  
 A: Seeds are managed per clip behind the regenerate button — press it for a fresh take of that clip.
