@@ -7,6 +7,14 @@ from ..nodes import poster as poster_lib
 
 _log = logging.getLogger(__name__)
 
+_LOCAL_ADDRESSES = {"127.0.0.1", "::1", "localhost"}
+
+
+def _require_local(request: web.Request) -> None:
+    """Reject requests that did not originate from the local machine."""
+    if request.remote not in _LOCAL_ADDRESSES:
+        raise web.HTTPForbidden(reason="Local access only")
+
 
 @routes.get("/comfytv/poster/templates")
 async def poster_templates(request: web.Request) -> web.Response:
@@ -15,6 +23,7 @@ async def poster_templates(request: web.Request) -> web.Response:
 
 @routes.post("/comfytv/poster/elements")
 async def poster_elements(request: web.Request) -> web.Response:
+    _require_local(request)
     try:
         data = await request.json()
     except Exception:
@@ -29,6 +38,7 @@ async def poster_elements(request: web.Request) -> web.Response:
 
 @routes.post("/comfytv/poster/html")
 async def poster_html(request: web.Request) -> web.Response:
+    _require_local(request)
     try:
         data = await request.json()
     except Exception:
