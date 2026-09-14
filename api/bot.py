@@ -1,6 +1,7 @@
 import asyncio
 import json
 import logging
+import time
 from typing import Optional
 
 from aiohttp import web
@@ -34,6 +35,25 @@ def _disabled_response() -> web.Response:
                   "enable-bot in the ComfyTV sidebar under Settings"},
         status=403,
     )
+
+
+_SEND_RATE_LIMIT = 10  # max /send requests
+_SEND_RATE_WINDOW = 60.0  # per rolling window (seconds)
+_send_hits: dict[str, list[float]] = {}
+
+
+def _send_rate_limited(request: web.Request) -> bool:
+    """Cheap per-client sliding-window limiter for the LLM-triggering /send
+    endpoint, to blunt resource-exhaustion floods."""
+    client = request.remote or "unknown"
+    now = time.monotonic()
+    hits = [t for t in _send_hits.get(client, []) if now - t < _SEND_RATE_WINDOW]
+    if len(hits) >= _SEND_RATE_LIMIT:
+        _send_hits[client] = hits
+        return True
+    hits.append(now)
+    _send_hits[client] = hits
+    return False
 
 
 
@@ -169,6 +189,9 @@ async def bot_delete_chat(request: web.Request) -> web.Response:
 async def bot_send(request: web.Request) -> web.Response:
     if not bot_enabled():
         return _disabled_response()
+    if _send_rate_limited(request):
+        return web.json_response(
+            {"error": "rate limit exceeded, slow down"}, status=429)
     chat, err = _chat_or_response(request)
     if err is not None:
         return err
