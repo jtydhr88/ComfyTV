@@ -486,5 +486,5 @@ defineExpose({
 </script>
 
 <template>
-  <div ref="host" />
+  <div ref="host" @copy.stop @cut.stop @paste.stop />
 </template>

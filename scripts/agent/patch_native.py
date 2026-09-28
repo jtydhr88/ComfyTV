@@ -296,6 +296,12 @@ def message_feedback(s):
 rw("AgentPanelRoot.vue", panel_root)
 rw("components/agent/AgentPanel.vue", agent_panel)
 rw("components/agent/Composer.vue", composer)
+rw(
+    "components/agent/composer/InlinePromptEditor.vue",
+    lambda s: replace_once(
+        s, '<div ref="host" />', '<div ref="host" @copy.stop @cut.stop @paste.stop />'
+    ),
+)
 rw("components/agent/message/MessageFeedback.vue", message_feedback)
 rw("services/agent/agentTranscript.ts", transcript)
 rw("schemas/agentApiSchema.ts", api_schema)

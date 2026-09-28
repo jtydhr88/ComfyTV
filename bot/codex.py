@@ -47,6 +47,7 @@ def resolve_codex_command() -> Optional[list[str]]:
     if found:
         return [found]
     candidates = [
+        "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex",
         "/Applications/ChatGPT.app/Contents/Resources/codex",
         str(Path.home() / ".local" / "bin" / "codex"),
         str(Path.home() / ".codex" / "bin" / "codex"),

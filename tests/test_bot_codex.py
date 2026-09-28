@@ -3,6 +3,8 @@ from __future__ import annotations
 import base64
 import json
 
+import pytest
+
 from ComfyTV.bot.codex import (
     CodexCodeProvider,
     _CodexStreamParser,
@@ -13,6 +15,34 @@ from ComfyTV.bot.providers import TurnRequest
 
 def _line(obj) -> str:
     return json.dumps(obj)
+
+
+class TestResolveCodexCommand:
+    def test_path_takes_priority(self, monkeypatch):
+        from ComfyTV.bot import codex
+        monkeypatch.setattr(codex.sys, "platform", "darwin")
+        monkeypatch.setattr(codex.shutil, "which", lambda name: "/bin/codex")
+        assert codex.resolve_codex_command() == ["/bin/codex"]
+
+    @pytest.mark.parametrize("candidate", [
+        "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex",
+        "/Applications/ChatGPT.app/Contents/Resources/codex",
+    ])
+    def test_app_bundle_without_shell_path(self, monkeypatch, candidate):
+        from ComfyTV.bot import codex
+        monkeypatch.setattr(codex.sys, "platform", "darwin")
+        monkeypatch.setattr(codex.shutil, "which", lambda name: None)
+        monkeypatch.setattr(codex.os.path, "isfile", lambda path: path == candidate)
+        monkeypatch.setattr(codex.os, "access", lambda path, mode: path == candidate)
+        assert codex.resolve_codex_command() == [candidate]
+
+    def test_non_executable_candidates_are_rejected(self, monkeypatch):
+        from ComfyTV.bot import codex
+        monkeypatch.setattr(codex.sys, "platform", "darwin")
+        monkeypatch.setattr(codex.shutil, "which", lambda name: None)
+        monkeypatch.setattr(codex.os.path, "isfile", lambda path: True)
+        monkeypatch.setattr(codex.os, "access", lambda path, mode: False)
+        assert codex.resolve_codex_command() is None
 
 
 class TestCodexParser:
