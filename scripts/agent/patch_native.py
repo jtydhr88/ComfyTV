@@ -299,7 +299,7 @@ rw("components/agent/Composer.vue", composer)
 rw(
     "components/agent/composer/InlinePromptEditor.vue",
     lambda s: replace_once(
-        s, '<div ref="host" />', '<div ref="host" @copy.stop @cut.stop @paste.stop />'
+        s, '<div ref="host"', '<div ref="host" @copy.stop @cut.stop @paste.stop'
     ),
 )
 rw("components/agent/message/MessageFeedback.vue", message_feedback)
