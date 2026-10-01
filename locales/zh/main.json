@@ -436,6 +436,10 @@
   "settings": {
     "title": "设置",
     "hint": "默认值来自 ComfyTV 目录下的 comfytv.properties。此处保存的值写入数据库,并优先生效。",
+    "modelRoutes": {
+      "desktop-account": "桌面账号",
+      "api-key": "API Key"
+    },
     "loading": "加载中…",
     "save": "保存",
     "saving": "保存中…",
@@ -535,7 +539,7 @@
       },
       "bot-enable-comfy-mcp": {
         "label": "挂载 comfy-mcp",
-        "desc": "在 bot 会话中同时挂载官方 comfy-mcp(只读工具集:节点目录、工作流校验、模型/模板搜索)。仅 Claude Code 和 Qwen Code — Codex 与 Local LLM 保持只挂 comfytv。"
+        "desc": "在 bot 会话中同时挂载官方 comfy-mcp(只读工具集:节点目录、工作流校验、模型/模板搜索)。仅 Claude Code 和 Qwen Code — Codex、DeepSeek Harness、Local LLM 与 ComfyUI LLM 保持只挂 comfytv。"
       },
       "bot-comfy-mcp-command": {
         "label": "comfy-mcp 命令",
@@ -545,6 +549,11 @@
       "bot-always-allow-runs": {
         "label": "总是允许 bot 运行",
         "desc": "不弹运行审批卡,bot 直接执行(默认行为)。关闭后,切到询问模式的会话才会在每次运行前等你批准。"
+      },
+      "bot-model-deepseek-harness": {
+        "label": "DeepSeek Harness 模型",
+        "desc": "模型同时决定计费方式：桌面账号或 API Key。留空 = 桌面账号下的第一个模型，不会自动改用 API Key。",
+        "placeholder": "桌面账号默认"
       },
       "enable-skills": {
         "label": "启用 Agent Skills",

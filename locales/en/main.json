@@ -436,6 +436,10 @@
   "settings": {
     "title": "Settings",
     "hint": "Defaults come from comfytv.properties in the ComfyTV directory. Values saved here are stored in the database and take precedence.",
+    "modelRoutes": {
+      "desktop-account": "Desktop account",
+      "api-key": "API key"
+    },
     "loading": "Loading…",
     "save": "Save",
     "saving": "Saving…",
@@ -535,7 +539,7 @@
       },
       "bot-enable-comfy-mcp": {
         "label": "Mount comfy-mcp",
-        "desc": "Also mount the official comfy-mcp server (read-only tool set: node catalog, workflow validation, model/template search) in bot sessions. Claude Code and Qwen Code only — Codex and Local LLM stay comfytv-only."
+        "desc": "Also mount the official comfy-mcp server (read-only tool set: node catalog, workflow validation, model/template search) in bot sessions. Claude Code and Qwen Code only — Codex, DeepSeek Harness, Local LLM and ComfyUI LLM stay comfytv-only."
       },
       "bot-comfy-mcp-command": {
         "label": "comfy-mcp command",
@@ -545,6 +549,11 @@
       "bot-always-allow-runs": {
         "label": "Always allow bot runs",
         "desc": "Run stages immediately without an approval card (the default). Disable this to let chats switched to Ask mode pause for your approval before each run."
+      },
+      "bot-model-deepseek-harness": {
+        "label": "DeepSeek Harness model",
+        "desc": "The model also picks who pays: the desktop account or the API key. Blank = the first desktop-account model; it never falls back to the API key.",
+        "placeholder": "Desktop account default"
       },
       "enable-skills": {
         "label": "Enable Agent Skills",

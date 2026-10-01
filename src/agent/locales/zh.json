@@ -233,6 +233,8 @@
     "ready": "就绪",
     "apply": "应用",
     "loading": "加载中…",
+    "routeAccount": "桌面账号",
+    "routeApiKey": "API Key",
     "entry": "ComfyTV Bot"
   }
 }

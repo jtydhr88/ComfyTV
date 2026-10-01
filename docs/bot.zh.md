@@ -19,13 +19,14 @@
 
 ## 不碰 API key,这是设计
 
-Bot 不直接调用任何云端模型 API,ComfyTV 也永远不存 key。它驱动的是**你机器上已经装好的 agent CLI**(用 CLI 自己的登录态),或者通过 Local LLM / ComfyUI LLM provider 驱动**你自己硬件上跑的模型**。当前内置五个:
+Bot 不直接调用任何云端模型 API,ComfyTV 也永远不存 key。它驱动的是**你机器上已经装好的 agent CLI**(用 CLI 自己的登录态),或者通过 Local LLM / ComfyUI LLM provider 驱动**你自己硬件上跑的模型**。当前内置六个:
 
 | Provider | 安装 | 登录 | 附件 |
 | --- | --- | --- | --- |
 | [Claude Code](https://claude.com/claude-code) | `npm install -g @anthropic-ai/claude-code` | 运行 `claude` 登录一次 | 图片/视频/音频 |
 | [Codex](https://developers.openai.com/codex) | `npm install -g @openai/codex` | `codex login` | 图片/视频/音频 |
 | [Qwen Code](https://qwenlm.github.io/qwen-code-docs/zh/) | 官方安装脚本(见其文档) | 运行 `qwen` 后 `/auth` | 暂不支持 |
+| DeepSeek Harness | `dsh`(DeepSeek Harness 命令行) | 在 DeepSeek Harness 应用内登录 | 图片(需视觉模型) |
 | Local LLM | 任意 OpenAI 兼容的本地模型服务 | 无 — 在设置里填端点 URL 即可 | 暂不支持 |
 | ComfyUI LLM | 往 `models/text_encoders` 放一个 Qwen3 或 Gemma 系权重 | 无 | 暂不支持 |
 
@@ -36,7 +37,7 @@ Bot 不直接调用任何云端模型 API,ComfyTV 也永远不存 key。它驱�
 
 聊天上方的工具条选择新对话用哪个引擎(以及每个引擎用哪个模型);对话固定用它开始时的引擎,切换引擎就会开一个新对话。引擎 chip 上的红点表示没装或没登录 — 悬停可看原因。
 
-隔离策略按引擎各自落实:Claude Code 走每轮独立的严格 MCP 配置+工具白名单;Codex 的 `codex exec` 沙箱限定在 bot 工作目录,shell 和联网搜索关闭,该回合只保留 ComfyTV 一个 MCP 服务,审批请求交给 Codex 自带的自动审察(headless 无法弹批准框);Qwen Code 走 bot 工作目录内的项目级 `.qwen/settings.json`(只挂 ComfyTV MCP,内置 shell/文件工具全部排除)— 你的全局 CLI 配置永远不被碰。
+隔离策略按引擎各自落实:Claude Code 走每轮独立的严格 MCP 配置+工具白名单;Codex 的 `codex exec` 沙箱限定在 bot 工作目录,shell 和联网搜索关闭,该回合只保留 ComfyTV 一个 MCP 服务,审批请求交给 Codex 自带的自动审察(headless 无法弹批准框);Qwen Code 走 bot 工作目录内的项目级 `.qwen/settings.json`(只挂 ComfyTV MCP,内置 shell/文件工具全部排除);DeepSeek Harness 以 ACP 模式运行 `dsh`,使用专用 profile,内置工具全部关闭 — 你的全局 CLI 配置和应用自身设置永远不被改动。
 
 ## Local LLM provider
 
@@ -60,6 +61,21 @@ ComfyUI LLM 更进一步:连外部服务也不需要 — 推理直接跑在 **Co
 - 工具调用走 Qwen3 训练所用的 Hermes 约定(`<tool_call>` 块),由 ComfyTV 负责渲染与解析。
 - 回合经由 `/comfytv/llm/v1` 的 OpenAI 兼容 shim 逐个处理(不支持流式)— bot 开启期间,本机其他应用也可以指向这个端点复用同一模型。
 
+## DeepSeek Harness provider
+
+每轮以 ACP 模式启动一次 `dsh`(DeepSeek Harness 命令行),复用它自己的登录,ComfyTV 不读也不存任何凭据。
+
+准备:
+
+1. 安装 DeepSeek Harness 桌面应用并登录 DeepSeek 账号。
+2. 把 `dsh` 放到 PATH 上:在应用菜单里点 **Manage dsh Command…**,或运行 `npm install -g @deepseek-ai/dsh`。
+
+- **模型与计费**:模型菜单里每一项都标明走 **桌面账号** 还是 **API Key**。留空用桌面账号下的第一个模型,不会自动改用 API Key。模型列表在第一次对话后出现。
+- **工具**:关闭 Harness 的全部内置工具(shell、文件、联网、子代理等),只能调用 ComfyTV MCP 工具。
+- **会话**:每个对话对应一个 Harness 会话,ComfyTV 重启后仍可继续。ACP 不支持 fork,所以不能分支对话。删除 ComfyTV 对话不会删除 Harness 侧的会话。
+- **附件**:只发送图片,且仅当所选模型支持图片输入;目前 DeepSeek 模型都不支持,会在发送前报错。
+- **文件位置**:工作目录在 ComfyUI 用户目录 `comfytv/bot-home-deepseek-harness/chats/<chat id>`;首次使用时在 `~/.dsh/profiles/comfytv-acp` 创建专用 profile。
+
 ## 面板用法
 
 - **画布**:Bot 永远操作当前屏幕上的标签页,切换标签页它就跟着切。
@@ -74,7 +90,7 @@ ComfyUI LLM 更进一步:连外部服务也不需要 — 推理直接跑在 **Co
 
 ## 简述原理
 
-每个回合都以 headless 模式启动一个全新 CLI 进程,锁死在 ComfyTV 的 MCP 服务上(`--strict-mcp-config`,工具白名单 `mcp__comfytv__*`),并恢复该对话的会话保证连续性。对话状态由 CLI 持有;ComfyTV 数据库只存一份用于显示的记录镜像。画布写操作仍遵循 MCP 规则——由打开着的 ComfyTV 页面执行，Comfy Desktop 与浏览器都可以。
+CLI provider 每回合启动一个新的 headless 进程并恢复对话会话。DeepSeek Harness 每回合以 ACP 模式启动 `dsh` 并恢复会话。ComfyTV 数据库保存一份用于显示的记录镜像。画布写操作仍遵循 MCP 规则——由打开着的 ComfyTV 页面执行，Comfy Desktop 与浏览器都可以。
 
 ## 排障
 

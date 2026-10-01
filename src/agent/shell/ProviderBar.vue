@@ -13,7 +13,7 @@ import {
   TooltipRoot,
   TooltipTrigger,
 } from 'reka-ui'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { cn } from '@comfyorg/tailwind-utils'
@@ -25,6 +25,13 @@ import {
 import { agentBusy, requestNewChat } from '@agent/comfytv/actions'
 import { api } from '@agent/scripts/api'
 import { app } from '@agent/scripts/app'
+import { agentProviders } from '@/agent/status'
+
+interface ModelOption {
+  value: string
+  label: string
+  group?: string
+}
 
 interface ProviderInfo {
   id: string
@@ -33,6 +40,7 @@ interface ProviderInfo {
   detail: string
   version: string
   models: string[]
+  model_options?: ModelOption[]
   model: string
 }
 
@@ -48,10 +56,25 @@ const modelDraft = ref('')
 
 const LABELS: Record<string, string> = {
   'local-llm': 'Local LLM', 'claude-code': 'Claude Code', codex: 'Codex', 'qwen-code': 'Qwen Code',
+  'deepseek-harness': 'DeepSeek Harness',
+}
+const ROUTES: Record<string, string> = {
+  'deepseek-account': 'agentBar.routeAccount',
+  'deepseek-official': 'agentBar.routeApiKey',
 }
 const current = computed(() => providers.value.find((p) => p.id === provider.value))
 const providerLabel = computed(() => current.value?.label ?? LABELS[provider.value] ?? t('agentBar.provider'))
 const models = computed(() => current.value?.models ?? [])
+const modelRows = computed(() => current.value?.model_options ?? [])
+const modelLabel = computed(() => {
+  const row = modelRows.value.find((r) => r.value === model.value)
+  return row?.label ?? model.value
+})
+function routeLabel(group?: string): string {
+  if (!group) return ''
+  const key = ROUTES[group]
+  return key ? t(key) : group
+}
 const statusText = computed(() => {
   const p = current.value
   if (!p) return ''
@@ -114,7 +137,9 @@ async function setModel(selected: unknown): Promise<void> {
 
 function onModelOpen(next: boolean): void {
   modelOpen.value = next
-  if (next) modelDraft.value = model.value
+  if (!next) return
+  modelDraft.value = model.value
+  void load()
 }
 
 async function commitModelDraft(): Promise<void> {
@@ -128,6 +153,7 @@ function openSettings(): void {
 }
 
 onMounted(() => void load())
+watch(agentProviders, () => void load())
 </script>
 
 <template>
@@ -181,13 +207,30 @@ onMounted(() => void load())
     <DropdownMenuRoot :open="modelOpen" @update:open="onModelOpen">
       <DropdownMenuTrigger as-child>
         <button type="button" :class="cn(chipClass, 'ctv:text-agent-fg-muted ctv:hover:text-agent-fg', modelOpen && 'ctv:bg-agent-surface-hover ctv:text-agent-fg')">
-          <span class="ctv:min-w-0 ctv:truncate">{{ model || t('agentBar.defaultModel') }}</span>
+          <span class="ctv:min-w-0 ctv:truncate">{{ modelLabel || t('agentBar.defaultModel') }}</span>
           <span class="ctv:icon-[lucide--chevron-down] ctv:size-3 ctv:shrink-0" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent side="bottom" align="start" :side-offset="8" :class="menuClass" @keydown.stop>
-          <template v-if="models.length">
+          <template v-if="modelRows.length">
+            <DropdownMenuRadioGroup :model-value="model" @update:model-value="setModel">
+              <DropdownMenuRadioItem value="" :class="itemClass">
+                <span class="ctv:truncate">{{ t('agentBar.defaultModel') }}</span>
+                <span class="ctv:ml-auto ctv:flex ctv:size-4 ctv:shrink-0 ctv:items-center ctv:justify-center">
+                  <DropdownMenuItemIndicator><span class="ctv:icon-[lucide--check] ctv:size-4" /></DropdownMenuItemIndicator>
+                </span>
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem v-for="row in modelRows" :key="row.value" :value="row.value" :class="itemClass">
+                <span class="ctv:truncate">{{ row.label }}</span>
+                <span v-if="row.group" class="ctv:text-agent-fg-muted ctv:ml-1 ctv:shrink-0 ctv:text-xs/4">{{ routeLabel(row.group) }}</span>
+                <span class="ctv:ml-auto ctv:flex ctv:size-4 ctv:shrink-0 ctv:items-center ctv:justify-center">
+                  <DropdownMenuItemIndicator><span class="ctv:icon-[lucide--check] ctv:size-4" /></DropdownMenuItemIndicator>
+                </span>
+              </DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </template>
+          <template v-else-if="models.length">
             <DropdownMenuRadioGroup :model-value="model" @update:model-value="setModel">
               <DropdownMenuRadioItem value="" :class="itemClass">
                 <span class="ctv:truncate">{{ t('agentBar.defaultModel') }}</span>

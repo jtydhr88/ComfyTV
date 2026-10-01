@@ -200,6 +200,15 @@ async def _run_turn(chat: dict, text: str, state: _TurnState, *,
     await asyncio.sleep(0.1)
 
     async def emit(ev: BotEvent) -> None:
+        if ev.t == "session":
+            if not ev.id:
+                return
+            if storage.update_bot_message(state.message_id,
+                                          resume_token_after=ev.id) is None:
+                raise RuntimeError("bot message no longer exists")
+            if storage.update_bot_chat(chat_id, resume_token=ev.id) is None:
+                raise RuntimeError("bot chat no longer exists")
+            return
         payload = _apply_event(state, ev)
         if payload is None:
             return

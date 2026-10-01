@@ -74,10 +74,14 @@
     <div v-if="suggestions.length" class="ctv:flex ctv:flex-wrap ctv:gap-1">
       <button
         v-for="m in suggestions"
-        :key="m"
-        :class="[suggestionBtnClass, value === m ? 'ctv:border-node-component-border' : '']"
-        @click="emit('update', m)"
-      >{{ m }}</button>
+        :key="m.value"
+        :class="[suggestionBtnClass, value === m.value ? 'ctv:border-node-component-border' : '']"
+        :title="m.value"
+        @click="emit('update', m.value)"
+      ><span class="ctv:font-sans">{{ m.label }}</span><span
+        v-if="routeHint(m.group)"
+        class="ctv:ml-1 ctv:font-sans ctv:text-muted-foreground/70"
+      >{{ routeHint(m.group) }}</span></button>
     </div>
   </div>
 </template>
@@ -88,6 +92,7 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import type { SettingRow, SettingValue } from '@/api'
+import type { ModelSuggestion } from '@/composables/sidebar/useSettingsPanel'
 import ComfyTVNumber from '@/components/widgets/ComfyTVNumber.vue'
 import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
 import ComfyTVText from '@/components/widgets/ComfyTVText.vue'
@@ -100,7 +105,7 @@ const props = withDefaults(defineProps<{
   row: SettingRow
   value: SettingValue | undefined
   depth?: number
-  suggestions?: string[]
+  suggestions?: ModelSuggestion[]
 }>(), { depth: 0, suggestions: () => [] })
 
 const emit = defineEmits<{ update: [value: SettingValue] }>()
@@ -114,6 +119,17 @@ const placeholder = computed(() => {
   const k = `settings.fields.${props.row.key}.placeholder`
   return te(k) ? t(k) : ''
 })
+
+const ROUTE_KEYS: Record<string, string> = {
+  'deepseek-account': 'settings.modelRoutes.desktop-account',
+  'deepseek-official': 'settings.modelRoutes.api-key',
+}
+function routeHint(group?: string): string {
+  if (!group) return ''
+  const key = ROUTE_KEYS[group]
+  if (!key) return group
+  return te(key) ? t(key) : group
+}
 
 const chipClass = 'ctv:shrink-0 ctv:rounded ctv:px-1 ctv:py-px ctv:text-3xs ctv:uppercase ctv:tracking-wide '
   + 'ctv:bg-amber-400/15 ctv:text-amber-400'

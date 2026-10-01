@@ -233,6 +233,8 @@
     "ready": "ready",
     "apply": "Apply",
     "loading": "loading…",
+    "routeAccount": "account",
+    "routeApiKey": "API key",
     "entry": "ComfyTV Bot"
   }
 }

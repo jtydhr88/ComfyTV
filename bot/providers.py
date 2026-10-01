@@ -62,6 +62,7 @@ EmitFn = Callable[[BotEvent], Awaitable[None]]
 class AgentProvider(ABC):
     id: str = ""
     label: str = ""
+    supports_branch: bool = True
 
     @abstractmethod
     async def probe(self) -> ProviderStatus: ...
@@ -70,6 +71,9 @@ class AgentProvider(ABC):
     def capabilities(self) -> ProviderCaps: ...
 
     async def list_models(self) -> list[str]:
+        return []
+
+    def model_options(self) -> list[dict]:
         return []
 
     @abstractmethod

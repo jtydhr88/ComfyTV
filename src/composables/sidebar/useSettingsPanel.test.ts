@@ -40,6 +40,8 @@ function fullRows(): any[] {
     row('bot-comfy-mcp-command', 'string', ''),
     row('enable-skills', 'boolean', true),
     row('skills-disabled', 'string', '[]'),
+    row('bot-provider', 'string', 'claude-code'),
+    row('bot-run-mode', 'string', 'ask_approval'),
     row('enable-collab', 'boolean', false, { experimental: true }),
     row('enable-eagle', 'boolean', false),
     row('eagle-api-url', 'string', 'http://127.0.0.1:41595'),
@@ -172,7 +174,10 @@ describe('useSettingsPanel', () => {
     expect(s.find((x) => x.id === 'collab')!.master?.key).toBe('enable-collab')
     expect(s.find((x) => x.id === 'collab')!.experimental).toBe(true)
     expect(s.find((x) => x.id === 'general')!.experimental).toBe(false)
-    expect(s.flatMap((x) => x.rows.map((r) => r.key))).not.toContain('skills-disabled')
+    const keys = s.flatMap((x) => x.rows.map((r) => r.key))
+    expect(keys).not.toContain('skills-disabled')
+    expect(keys).not.toContain('bot-provider')
+    expect(keys).not.toContain('bot-run-mode')
     expect(s.flatMap((x) => x.rows.map((r) => r.key))).not.toContain('enable-mcp')
   })
 

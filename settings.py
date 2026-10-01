@@ -25,6 +25,7 @@ SETTINGS_SPEC: dict[str, dict[str, Any]] = {
     "bot-model-local-llm": {"type": "string", "default": ""},
     "bot-model-comfyui-llm": {"type": "string", "default": "", "experimental": True},
     "bot-comfyui-llm-thinking": {"type": "boolean", "default": True, "experimental": True},
+    "bot-model-deepseek-harness": {"type": "string", "default": ""},
     "bot-enable-comfy-mcp": {"type": "boolean", "default": False},
     "bot-comfy-mcp-command": {"type": "string", "default": ""},
     "bot-always-allow-runs": {"type": "boolean", "default": True},

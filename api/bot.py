@@ -53,7 +53,7 @@ async def bot_status(request: web.Request) -> web.Response:
             _log.exception("[ComfyTV/bot] list_models failed for %s",
                            provider.id)
             models = []
-        out.append({
+        entry = {
             "id": provider.id,
             "label": provider.label,
             "available": st.available,
@@ -63,7 +63,11 @@ async def bot_status(request: web.Request) -> web.Response:
             "stateful": caps.stateful,
             "attachments": caps.attachments,
             "models": models,
-        })
+        }
+        options = provider.model_options()
+        if options:
+            entry["model_options"] = options
+        out.append(entry)
     return web.json_response({"enabled": True, "providers": out})
 
 
@@ -258,6 +262,12 @@ async def bot_branch_chat(request: web.Request) -> web.Response:
     message_id = str(body.get("message_id") or "")
     if not message_id:
         return web.json_response({"error": "message_id required"}, status=400)
+    provider = get_provider(chat["provider"])
+    if provider is not None and not provider.supports_branch:
+        return web.json_response({
+            "error": f"{provider.label} sessions cannot be forked, so this chat "
+                     "cannot be branched. Start a new chat instead.",
+        }, status=400)
     branch = storage.branch_bot_chat(chat["id"], message_id)
     if branch is None:
         return web.json_response({"error": "message not found"}, status=404)
