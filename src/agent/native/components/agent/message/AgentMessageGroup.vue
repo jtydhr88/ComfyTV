@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import HermesQuestionCard from './HermesQuestionCard.vue'
+import HermesApprovalCard from './HermesApprovalCard.vue'
+import type { InteractionResponse } from '../../../schemas/hermesInteractionSchema'
 import { cn } from '@comfyorg/tailwind-utils'
 
 import type { ActivityPart } from '../../../services/agent/agentMessageParts'
@@ -23,6 +26,7 @@ const { group } = defineProps<{
 }>()
 
 const emit = defineEmits<{
+  respondInteraction: [response: InteractionResponse]
   answer: [askId: string, selection: 'run' | 'cancel']
   openWorkflow: [workflowId: string, workflowName?: string]
   paywallAction: [action: AgentPaywallAction]
@@ -48,6 +52,16 @@ const emit = defineEmits<{
       :name="link.name"
     />
   </div>
+  <HermesApprovalCard
+    v-else-if="group.kind === 'hermes_interaction' && group.part.interaction.kind === 'hermes_approval'"
+    :interaction="group.part.interaction"
+    @respond="emit('respondInteraction', $event)"
+  />
+  <HermesQuestionCard
+    v-else-if="group.kind === 'hermes_interaction' && group.part.interaction.kind === 'hermes_question'"
+    :interaction="group.part.interaction"
+    @respond="emit('respondInteraction', $event)"
+  />
   <RunApprovalCard
     v-else-if="group.kind === 'runApproval'"
     :part="group.part"
@@ -65,7 +79,7 @@ const emit = defineEmits<{
     @paywall-action="emit('paywallAction', $event)"
   />
   <div
-    v-else
+    v-else-if="group.kind === 'notice'"
     :role="group.part.level === 'error' ? 'alert' : 'status'"
     :class="
       cn(

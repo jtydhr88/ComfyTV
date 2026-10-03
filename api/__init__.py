@@ -22,6 +22,7 @@ from . import media_info  # noqa: F401
 from . import midi       # noqa: F401
 from . import poster     # noqa: F401
 from . import settings   # noqa: F401
+from . import hermes_connection  # noqa: F401
 from . import skills     # noqa: F401
 from . import canvas_state  # noqa: F401
 from . import collab     # noqa: F401
@@ -37,3 +38,10 @@ from . import llm        # noqa: F401
 from . import view_patch  # noqa: F401
 
 from .stages import _compute_input_usage  # noqa: F401
+
+# ComfyUI owns the aiohttp app; task cache lifecycle follows that app, not a
+# daemon thread. Test/minimal hosts without an app initialize lazily.
+from server import PromptServer
+from .task_context_store import cache_lifecycle
+if getattr(PromptServer.instance, 'app', None) is not None:
+    PromptServer.instance.app.cleanup_ctx.append(cache_lifecycle)

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { interactionViewKey } from './services/agent/agentInteractions'
 import './agentPanel.css'
 
 import { useClipboard } from '@vueuse/core'
@@ -29,7 +30,10 @@ import {
   hasVideoType
 } from '@agent/utils/eventUtils'
 import { useAssetsStore } from '@agent/stores/assetsStore'
-import { AGENT_ATTACH_ACCEPT, isAgentAttachable } from './utils/attachableFiles'
+import { getMediaTypeFromFilename } from '@agent/utils/formatUtil'
+import { attachmentPolicy, isAgentAttachable, type AttachmentCapability } from './utils/attachableFiles'
+import { useAssetStore } from '@/stores/assetStore'
+import type { ComposerAttachment } from './composables/agent/useComposer'
 import { getNodeByLocatorId } from '@agent/utils/graphTraversalUtil'
 import { useCanvasStore } from '@agent/renderer/core/canvas/canvasStore'
 import { registerMinimapDecorationLayer } from '@agent/platform/canvas/minimapDecorationRegistry'
@@ -37,6 +41,7 @@ import { api } from '@agent/scripts/api'
 import { app } from '@agent/scripts/app'
 import {
   assetIdOf,
+  closeAssetPicker,
   droppedComfyTVAssets,
   isComfyTVAssetDrag,
   openAssetPicker,
@@ -460,12 +465,16 @@ const {
   boundWorkflowId,
   bindWorkflow,
   answerAsk,
+  interactionView,
+  respondInteraction,
   answeringAskIds
 } = useAgentSession({
   rest,
   events,
+  attachmentCapability: () => attachmentCapability.value,
   workflow: {
     current: targetWorkflowTurnContext,
+    identity: originWorkflow,
     adopted: onWorkflowAdopted,
     restored: onWorkflowRestored,
     prepare: async () => {
@@ -477,6 +486,8 @@ const {
     draft: targetWorkflowDraft
   }
 })
+
+if (interactionView) provide(interactionViewKey, interactionView)
 
 const isSending = computed(
   () => sessionIsSending.value || composerStore.submission?.phase === 'pending'
@@ -752,9 +763,10 @@ watch(threadId, (id) => history.setActive(id), { immediate: true })
 void refreshHistory()
 
 async function onSelectHistory(id: string): Promise<void> {
+  invalidateEaglePicker()
   composerStore.invalidateSubmission()
   cancelWorkflowSelection()
-  agentPanelStore.resetWorkflowTarget()
+  // Loading history must not silently undo an explicit unlink.
   exitNodeSelectionMode()
   await loadThread(id)
   void refreshHistory()
@@ -808,6 +820,7 @@ const coachSteps = computed<CoachStep[]>(() => [
 
 const { submit: onSend } = useAgentDraftSubmission({
   canSubmit: () => !workflowSelecting.value && !isSending.value,
+  captureMixedContext: () => imagePolicy.value.mixedContext,
   target: () => selectedTarget.value,
   editableWorkflowId: () => editableWorkflowId.value,
   selection: {
@@ -845,16 +858,28 @@ function onDeleteHistory(id: string): void {
   if (id === threadId.value) onNewChat()
 }
 
+function onToggleWorkflowLink(): void {
+  if (isSending.value || isStreaming.value || workflowSelecting.value) return
+  // Changing target clears node scope elsewhere. Require explicit removal
+  // rather than letting unlink silently discard staged node references.
+  if (selectionTags.value.length > 0) {
+    toast.add({ severity: 'warn', detail: t('agent.unlinkWorkflowNodes'), life: 5000 })
+    return
+  }
+  cancelWorkflowSelection()
+  if (workflowDetached.value) agentPanelStore.resetWorkflowTarget()
+  else agentPanelStore.setWorkflowTarget(null)
+}
+
 function onNewChat(): void {
+  invalidateEaglePicker()
   composerStore.invalidateSubmission()
   cancelWorkflowSelection()
   exitNodeSelectionMode()
   composerStore.setWorkflowReferences([])
   composerStore.resetPromptHistory()
-  // A new chat targets whatever tab is on screen right now, not the previous
-  // chat's target - unlike onSelectHistory(), which resets to 'uninitialized'
-  // so restoreTarget() can re-apply the loaded thread's own binding.
-  agentPanelStore.setWorkflowTarget(workflowStore.activeWorkflow)
+  // Linked mode already follows the current tab. Preserve an explicit unlink
+  // across chats; only the visible Link current workflow action opts back in.
   newChat()
 }
 
@@ -961,7 +986,38 @@ function onSelectNodes(): void {
 
 const assetsStore = useAssetsStore()
 
+const attachmentCapability = ref<AttachmentCapability>({ attachments: false })
+const imagePolicy = computed(() => attachmentPolicy(attachmentCapability.value))
+let eaglePickerGeneration = 0
+function invalidateEaglePicker(): void {
+  eaglePickerGeneration++
+  closeEaglePicker()
+  closeAssetPicker()
+}
+watch([threadId, newChatRequests, imagePolicy], invalidateEaglePicker, { flush: 'sync' })
+watch([threadId, newChatRequests], async ([id], _, onCleanup) => {
+  let current = true
+  onCleanup(() => { current = false })
+  attachmentCapability.value = { attachments: false }
+  try {
+    const response = await api.fetchApi(`/comfytv/agent/threads/${encodeURIComponent(id ?? 'new')}/attachment-capability`)
+    const capability = response.ok ? await response.json() : { attachments: false }
+    if (current) attachmentCapability.value = capability
+  } catch { /* Fail closed; the server remains the authority. */ }
+}, { immediate: true, flush: 'sync' })
+
+function addPolicyAttachment(item: ComposerAttachment): void {
+  const asset = useAssetStore().byId(assetIdOf(item.ref) ?? -1)
+  if (!imagePolicy.value.allows(asset?.media_type ?? 'other')) {
+    toast.add({ severity: 'warn', detail: imagePolicy.value.label, life: 5000 })
+    return
+  }
+  panelRef.value?.addAttachment(item)
+}
+
 const attachment = useAttachment({
+  allowDeferred: () => imagePolicy.value.allowsDeferred,
+  allowed: (file) => imagePolicy.value.allows(getMediaTypeFromFilename(file.name)),
   upload: (file) => uploadToLibrary(file),
   maxBytes: (file) => {
     const serverLimit = api.getServerFeature(
@@ -984,7 +1040,7 @@ const attachment = useAttachment({
 function onAttach(): void {
   exitNodeSelectionMode()
   useTelemetry()?.trackAgentAttachButtonClicked()
-  fileInput.value?.click()
+  if (imagePolicy.value.enabled) fileInput.value?.click()
 }
 
 const attachedAssetIds = (): number[] =>
@@ -993,22 +1049,38 @@ const attachedAssetIds = (): number[] =>
     return id === null ? [] : [id]
   })
 
+function allowEagleImport(): boolean {
+  if (imagePolicy.value.allowsDeferred) return true
+  toast.add({ severity: 'warn', detail: 'Eagle attachment import unavailable for this provider. Import images through the library first, then attach an existing image asset when enabled.', life: 5000 })
+  return false
+}
+
 function onOpenEagle(): void {
+  if (!allowEagleImport()) return
   exitNodeSelectionMode()
+  const generation = ++eaglePickerGeneration
+  const id = threadId.value
+  const canPick = () => generation === eaglePickerGeneration
+    && id === threadId.value && imagePolicy.value.allowsDeferred
   openEaglePicker({
+    canPick,
     addedIds: attachedAssetIds,
-    select: (asset) => panelRef.value?.addAttachment(toAttachment(asset)),
-    deselect: (asset) => composerStore.removeAttachment(toAttachment(asset).id)
+    select: (asset) => { if (canPick()) addPolicyAttachment(toAttachment(asset)) },
+    deselect: (asset) => { if (canPick()) composerStore.removeAttachment(toAttachment(asset).id) }
   })
 }
 
 function onOpenAssets(): void {
   exitNodeSelectionMode()
   closeEaglePicker()
+  const generation = ++eaglePickerGeneration
+  const id = threadId.value
+  const canPick = () => generation === eaglePickerGeneration
+    && id === threadId.value && imagePolicy.value.enabled
   openAssetPicker({
     addedIds: attachedAssetIds,
-    select: (asset) => panelRef.value?.addAttachment(toAttachment(asset)),
-    deselect: (asset) => composerStore.removeAttachment(toAttachment(asset).id)
+    select: (asset) => { if (canPick()) addPolicyAttachment(toAttachment(asset)) },
+    deselect: (asset) => { if (canPick()) composerStore.removeAttachment(toAttachment(asset).id) }
   })
 }
 
@@ -1072,13 +1144,14 @@ function onPanelDragLeave(): void {
 
 async function attachDroppedAsset(event: DragEvent): Promise<void> {
   if (event.dataTransfer && isEagleDrag(event.dataTransfer)) {
+    if (!allowEagleImport()) return
     for (const item of await droppedEagleAssets(event.dataTransfer))
-      panelRef.value?.addAttachment(item)
+      addPolicyAttachment(item)
     return
   }
   if (event.dataTransfer && isComfyTVAssetDrag(event.dataTransfer)) {
     for (const item of droppedComfyTVAssets(event.dataTransfer))
-      panelRef.value?.addAttachment(item)
+      addPolicyAttachment(item)
     return
   }
   const asset = event.dataTransfer && getDroppedAsset(event.dataTransfer)
@@ -1092,7 +1165,7 @@ async function attachDroppedAsset(event: DragEvent): Promise<void> {
   }
 
   if (asset.ref && asset.kind !== 'other') {
-    panelRef.value?.addAttachment({
+    addPolicyAttachment({
       id: `asset:${asset.ref}`,
       name: asset.name,
       ref: asset.ref,
@@ -1150,7 +1223,7 @@ function onPanelDrop(event: DragEvent): void {
     <input
       ref="fileInput"
       type="file"
-      :accept="AGENT_ATTACH_ACCEPT"
+      :accept="imagePolicy.accept"
       multiple
       class="ctv:hidden"
       data-testid="agent-file-input"
@@ -1183,6 +1256,7 @@ function onPanelDrop(event: DragEvent): void {
       :selecting-tab-path="selectingTarget?.path ?? null"
       :select-tab="onSelectWorkflowTarget"
       :workflow-detached="workflowDetached"
+      @toggle-workflow-link="onToggleWorkflowLink"
       :get-mention-nodes="mentionableNodes"
       :paywall-presentation="paywallPresentation"
       @send="onSend"
@@ -1196,6 +1270,7 @@ function onPanelDrop(event: DragEvent): void {
       @request-workflow-references="onRequestWorkflowReferences"
       @remove-workflow-reference="composerStore.removeWorkflowReference"
       @feedback="onFeedback"
+      @respond-interaction="respondInteraction"
       @answer-ask="answerAsk"
       @open-workflow="onOpenApprovalWorkflow"
       @open-reference-workflow="onNavigateToReferenceWorkflow"

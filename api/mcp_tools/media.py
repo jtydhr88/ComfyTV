@@ -209,7 +209,35 @@ async def _fx_preview(args: dict) -> dict:
     }
 
 
+async def _inspect_image_asset(args):
+    from ..image_refs import preview
+    return await asyncio.to_thread(preview, args)
+
+
+async def _inspect_media_asset(args):
+    from ..media_refs import preview
+    return await asyncio.to_thread(preview, args)
+
+
 TOOLS: dict[str, dict] = {
+    "inspect_media_asset": {
+        "description": "Inspect a managed library asset by asset_id and optional sha256 revision. Metadata for image/video/audio; frame or 2..4 sampled-frame timeline for video; waveform for audio. Returns bounded JPEG ImageContent in memory, no derivative files. Use inspect_image_asset for image previews. Call vision_analyze on returned MEDIA preview before visual claims. A waveform is not listening: no speech, transcription, lyrics, language, emotion or music semantic understanding. Video samples are not continuous video or soundtrack understanding. No client URLs/paths, no fetching, no per-chat authorization.",
+        "inputSchema": {"type": "object", "properties": {
+            "asset_id": {"type": "integer", "minimum": 1, "maximum": 9007199254740991},
+            "revision": {"type": "string"},
+            "mode": {"type": "string", "enum": ["metadata", "frame", "timeline", "waveform"], "default": "metadata"},
+            "time_seconds": {"type": "number", "minimum": 0, "maximum": 300},
+            "frames": {"type": "integer", "minimum": 2, "maximum": 4}},
+            "required": ["asset_id"], "additionalProperties": False},
+        "handler": _inspect_media_asset,
+    },
+    "inspect_image_asset": {
+        "description": "Read a managed global-library image by asset_id and optional sha256 revision. Returns a bounded JPEG preview, not visual analysis. Metadata is not sight. Hermes must call vision_analyze on the returned MEDIA path before describing image contents. No URLs, network fetching or per-chat sandbox. Originals remain unchanged.",
+        "inputSchema": {"type": "object", "properties": {
+            "asset_id": {"type": "integer", "minimum": 1, "maximum": 9007199254740991},
+            "revision": {"type": "string"}}, "required": ["asset_id"], "additionalProperties": False},
+        "handler": _inspect_image_asset,
+    },
     "media_probe": {
         "description": (
             "Probe a media file's metadata. Video: kind='video', duration "

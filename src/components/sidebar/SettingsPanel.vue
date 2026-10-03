@@ -47,6 +47,10 @@
           @toggle="toggleCollapsed(s.id)"
           @master="(v) => s.master && setValue(s.master.key, v)"
         >
+          <template #diagnostics>
+            <ProviderDiagnostics v-if="s.id === 'agent'" :dirty="s.dirty" />
+            <HermesConnection v-if="s.id === 'agent'" :active="props.active" :model="String(values['bot-model-hermes'] ?? '')" @changed="refreshConnectionSettings" />
+          </template>
           <SettingItem
             v-for="row in s.rows"
             :key="row.key"
@@ -106,6 +110,8 @@
 import { TooltipProvider } from 'reka-ui'
 import { useI18n } from 'vue-i18n'
 
+import ProviderDiagnostics from '@/agent/shell/ProviderDiagnostics.vue'
+import HermesConnection from '@/components/sidebar/HermesConnection.vue'
 import SettingItem from '@/components/sidebar/SettingItem.vue'
 import SettingsSection from '@/components/sidebar/SettingsSection.vue'
 import SkillsSection from '@/components/sidebar/SkillsSection.vue'
@@ -137,9 +143,11 @@ const {
   save,
   backupNow,
   modelSuggestions,
+  refreshConnectionSettings,
 } = useSettingsPanel(
   () => props.active,
   (key) => `${t(`settings.fields.${key}.label`)} ${t(`settings.fields.${key}.desc`)}`,
+  () => t('hermesConnection.refreshFailed'),
 )
 
 const primaryBtnClass = 'ctv:shrink-0 ctv:inline-flex ctv:items-center ctv:gap-1 ctv:cursor-pointer ctv:[font-family:inherit] '

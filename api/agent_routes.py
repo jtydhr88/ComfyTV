@@ -5,7 +5,7 @@ from aiohttp import web
 
 from .. import storage
 from ..bot import get_provider, list_providers
-from . import agent_messages, agent_workflows, bot_send, bot_turns
+from . import agent_messages, agent_workflows, bot_send, bot_turns, hermes_interactions
 from ._common import routes
 from .bot import ACTIVE_TURNS, _disabled_response, bot_enabled
 from .bot_media import _resolve_refs
@@ -20,7 +20,8 @@ def _error(message: str, status: int = 400) -> web.Response:
 
 async def _json(request: web.Request) -> dict | web.Response:
     try:
-        body = await request.json()
+        from .task_context import read_request
+        body = await read_request(request)
     except Exception as e:
         return _error(f"invalid json: {e}")
     return body if isinstance(body, dict) else _error("body must be an object")
@@ -51,6 +52,22 @@ def run_mode() -> dict:
 
 def _chat_run_mode() -> str:
     return "ask" if run_mode()["mode"] == "ask_approval" else "auto"
+
+
+@routes.get('/comfytv/agent/threads/{tid}/attachment-capability')
+async def agent_attachment_capability(request):
+    tid = request.match_info['tid']
+    chat = storage.get_bot_chat(tid) if tid != 'new' else None
+    if tid != 'new' and chat is None:
+        return _error('thread not found', 404)
+    provider = get_provider(chat['provider'] if chat else default_provider())
+    if provider is None:
+        return _error('provider unavailable', 404)
+    caps = provider.capabilities()
+    return web.json_response({'attachments': caps.attachments,
+                              'attachment_transport': caps.attachment_transport,
+                              'attachment_mixed_context': caps.attachment_mixed_context,
+                              'attachment_media_types': caps.attachment_media_types})
 
 
 @routes.get("/comfytv/agent/threads")
@@ -124,6 +141,46 @@ async def agent_post_message(request: web.Request) -> web.Response:
     body = await _json(request)
     if isinstance(body, web.Response):
         return body
+    if set(body) & {'interaction_mode','interaction_binding','channel_id','csrf_token','run_id','session_id'}:
+        return _error('interaction authority is server-owned')
+    try:
+        interaction_binding = hermes_interactions.CHANNELS.validate(request)
+    except ValueError:
+        interaction_binding = None # LAN and legacy native chat remain noninteractive.
+    candidate = (storage.get_bot_chat(thread_id) if thread_id != 'new' else
+                 {'provider': str(body.get('provider') or default_provider())})
+    provider = get_provider(candidate['provider']) if candidate else None
+    if provider and provider.capabilities().attachment_transport == 'asset_refs' and body.get('attachments'):
+        try:
+            bot_send.validate_image_ref_context(candidate, body, body.get('content', ''))
+        except ValueError as exc:
+            return _error(str(exc))
+        if thread_id != 'new' and thread_id in ACTIVE_TURNS:
+            return _error('a turn is already running on this thread', 409)
+        prepared, chat = None, None
+        try:
+            prepared = await bot_send.prepare_image_refs(candidate, body['attachments'],
+                                                         body.get('content', ''), native=True, body=body)
+            chat = candidate if thread_id != 'new' else storage.create_bot_chat(provider=candidate['provider'])
+            _, assistant = bot_send.admit_image_refs({**chat, 'run_mode': _chat_run_mode()}, prepared, native=True)
+        except BaseException as exc:
+            if prepared:
+                bot_send.release_prepared(prepared)
+            if thread_id == 'new' and chat:
+                storage.delete_bot_chat(chat['id'])
+            if isinstance(exc, ValueError):
+                return _error(str(exc))
+            raise
+        if assistant is None:
+            return _error('a turn is already running on this thread', 409)
+        ACTIVE_TURNS[chat['id']].handle._interaction_binding = interaction_binding
+        chat = storage.update_bot_chat(chat['id'], run_mode=_chat_run_mode()) or chat
+        if thread_id == 'new':
+            bot_turns._broadcast('chat_created', {'chat': chat})
+        ack = {'thread_id': chat['id'], 'message_id': assistant['id']}
+        if body.get('workflow_id'):
+            ack['workflow_id'] = body['workflow_id']
+        return web.json_response(ack, status=202)
     skill_name, text = _split_skill(str(body.get("content") or "").strip())
     try:
         attachment_assets, input_files = bot_send.split_attachment_refs(body.get("attachments"))
@@ -169,6 +226,7 @@ async def agent_post_message(request: web.Request) -> web.Response:
         attachments=attachments, display_blocks=display)
     if assistant is None:
         return _error("a turn is already running on this thread", 409)
+    ACTIVE_TURNS[chat["id"]].handle._interaction_binding = interaction_binding
     ack: dict[str, Any] = {"thread_id": chat["id"], "message_id": assistant["id"]}
     if body.get("workflow_id"):
         ack["workflow_id"] = str(body["workflow_id"])

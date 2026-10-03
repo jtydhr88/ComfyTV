@@ -1,13 +1,14 @@
 import { useStorage } from '@vueuse/core'
 import { computed, ref, watch } from 'vue'
 
+
 import { fetchSettings, runDbBackup, saveSettings } from '@/api'
 import type { BackupResult, SettingRow, SettingValue } from '@/api'
 import { fetchBlenderStatus } from '@/api/blender'
 import { applyAutoPickerSetting } from '@/composables/stages/autoPicker'
 import { applyLodSettings } from '@/v2/lodV2'
 import { fetchEagleStatus } from '@/api/eagle'
-import { agentProviders, refreshAgentStatus } from '@/agent/status'
+import { agentProviders, ensureAgentStatus, invalidateAgentStatus } from '@/agent/status'
 
 type Values = Record<string, SettingValue>
 export type ProbeState = 'checking' | 'online' | 'offline'
@@ -34,7 +35,7 @@ const MASTER: Record<string, string> = {
   collab: 'enable-collab',
 }
 const MASTER_KEYS = new Set(Object.values(MASTER))
-const HIDDEN_KEYS = new Set(['skills-disabled', 'bot-provider', 'bot-run-mode'])
+const HIDDEN_KEYS = new Set(['skills-disabled', 'bot-provider', 'bot-run-mode', 'bot-hermes-url', 'bot-hermes-mcp-server', 'bot-model-hermes'])
 const AGENT_TOGGLE_KEYS = new Set(['enable-mcp', 'enable-bot'])
 const MODEL_KEY_PREFIX = 'bot-model-'
 const COLLAPSED_STORAGE_KEY = 'comfytv:sidebar:settings:collapsed'
@@ -46,6 +47,8 @@ const PARENT: Record<string, string> = {
   'enable-skills': 'enable-mcp',
   'bot-comfy-mcp-command': 'bot-enable-comfy-mcp',
   'bot-model-local-llm': 'bot-local-llm-url',
+  'bot-model-hermes': 'bot-hermes-url',
+  'bot-hermes-mcp-server': 'bot-hermes-url',
 }
 
 const PROBES: Record<string, () => Promise<boolean>> = {
@@ -97,6 +100,7 @@ function message(e: unknown): string {
 export function useSettingsPanel(
   isActive: () => boolean | undefined,
   textOf: (key: string) => string = () => '',
+  refreshError: () => string = () => 'hermesConnection.refreshFailed',
 ) {
   const rows = ref<SettingRow[]>([])
   const values = ref<Values>({})
@@ -231,6 +235,19 @@ export function useSettingsPanel(
     values.value = next
   }
 
+  async function refreshConnectionSettings(): Promise<void> {
+    try {
+      const fresh = (await fetchSettings()).settings
+      // Preserve unrelated unsaved drafts, including edits made during this read.
+      const drafts = Object.fromEntries(changedKeys.value.filter(k => !HIDDEN_KEYS.has(k)).map(k => [k, values.value[k]!]))
+      rows.value = fresh
+      syncValues()
+      values.value = { ...values.value, ...drafts }
+    } catch {
+      error.value = refreshError()
+    }
+  }
+
   function resetToDefault(key: string): void {
     const row = rows.value.find((r) => r.key === key)
     if (row) setValue(key, row.default)
@@ -248,7 +265,7 @@ export function useSettingsPanel(
       applyLodSettings(rows.value)
       applyAutoPickerSetting(rows.value)
       if (Object.keys(changed).some((k) => AGENT_TOGGLE_KEYS.has(k) || k.startsWith('bot-'))) {
-        await refreshAgentStatus()
+        await invalidateAgentStatus()
       }
       void refreshProbes()
     } catch (e) {
@@ -274,7 +291,7 @@ export function useSettingsPanel(
   watch(isActive, (active) => {
     if (active) {
       void load()
-      void refreshAgentStatus()
+      void ensureAgentStatus()
     }
   }, { immediate: true })
 
@@ -295,6 +312,7 @@ export function useSettingsPanel(
     isCollapsed,
     toggleCollapsed,
     load,
+    refreshConnectionSettings,
     refreshProbes,
     setValue,
     resetToDefault,

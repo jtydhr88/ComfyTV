@@ -9,11 +9,13 @@ PREFIX = "comfytv_"
 EVENT_TYPES = (
     "agent_thinking",
     "agent_tool_call",
+    "agent_notice",
     "agent_message_delta",
     "agent_message_done",
     "agent_active_tab",
     "agent_ask",
     "agent_ask_resolved",
+    "agent_interaction",
 )
 
 
@@ -68,7 +70,16 @@ def ask_resolved(thread_id: str, message_id: str, ask_id: str, status: str,
 
 
 def from_bot_event(thread_id: str, message_id: str, ev, payload: dict) -> None:
-    if ev.t == "delta":
+    if ev.t == "notice":
+        data = {
+            "thread_id": thread_id, "message_id": message_id,
+            "text": ev.text,
+            "level": payload.get("level", "error" if ev.is_error else "info"),
+        }
+        if ev.detail:
+            data["detail"] = ev.detail
+        emit("agent_notice", data)
+    elif ev.t == "delta":
         message_delta(thread_id, message_id, ev.text)
     elif ev.t == "thinking":
         thinking(thread_id, message_id, ev.text)

@@ -24,6 +24,14 @@ def _enable(**flags):
 
 
 class TestDefaults:
+    def test_hermes_config_is_opt_in_and_does_not_store_a_key(self, reset_db):
+        from ComfyTV import storage
+        from ComfyTV.settings import SETTINGS_SPEC
+        assert storage.get_setting("bot-hermes-url") == ""
+        assert storage.get_setting("bot-model-hermes") == ""
+        assert storage.get_setting("bot-hermes-mcp-server") == "comfytv"
+        assert "bot-hermes-api-key" not in SETTINGS_SPEC
+
     def test_specs_default_off(self, reset_db):
         from ComfyTV import storage
         assert storage.get_setting("enable-mcp") is False

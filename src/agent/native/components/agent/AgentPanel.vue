@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { InteractionResponse } from '../../schemas/hermesInteractionSchema'
 import {
   DropdownMenuContent,
   DropdownMenuItem,
@@ -114,6 +115,7 @@ const emit = defineEmits<{
   removeWorkflowReference: [id: string]
   feedback: [turnId: string, vote: 'up' | 'down' | null]
   paywallAction: [action: AgentPaywallAction]
+  toggleWorkflowLink: []
   newChat: []
   toggleSize: []
   close: []
@@ -123,6 +125,7 @@ const emit = defineEmits<{
   copyHistory: [id: string]
   renameHistory: [id: string, title: string]
   renameChat: [title: string]
+  respondInteraction: [response: InteractionResponse]
   answerAsk: [askId: string, selection: 'run' | 'cancel']
   openWorkflow: [workflowId: string, workflowName?: string]
   openReferenceWorkflow: [workflowId: string, workflowName: string]
@@ -144,7 +147,6 @@ function onSelectHistory(id: string): void {
 }
 
 const composerRef = ref<InstanceType<typeof Composer>>()
-function onWorkflowTargetRequired(): void {}
 
 const { t } = useI18n()
 
@@ -350,6 +352,7 @@ defineExpose({ addAttachment, updateAttachment, removeAttachment })
           :paywall-presentation
           @edit-prompt="composerRef?.replaceDraft($event)"
           @feedback="(id, vote) => emit('feedback', id, vote)"
+          @respond-interaction="emit('respondInteraction', $event)"
           @answer-ask="
             (askId, selection) => emit('answerAsk', askId, selection)
           "
@@ -370,6 +373,21 @@ defineExpose({ addAttachment, updateAttachment, removeAttachment })
       <slot name="instrument" />
       <footer class="ctv:shrink-0 ctv:py-3">
         <div class="ctv:mx-auto ctv:flex ctv:w-full ctv:max-w-[640px] ctv:flex-col ctv:gap-4 ctv:px-4">
+          <div class="ctv:flex ctv:items-center ctv:justify-between ctv:gap-2 ctv:text-xs">
+            <span role="status" class="ctv:min-w-0 ctv:truncate">{{
+              workflowDetached
+                ? t('agent.noWorkflowLinked')
+                : t('agent.workflowLinked', { name: activeTab?.name ?? '' })
+            }}</span>
+            <Button
+              type="button"
+              variant="muted-textonly"
+              size="sm"
+              :disabled="streaming || submitting || selectingTabPath !== null || savingReference || (workflowDetached && visibleTabPath === null)"
+              :aria-label="t(workflowDetached ? 'agent.linkCurrentWorkflow' : 'agent.unlinkWorkflow')"
+              @click="emit('toggleWorkflowLink')"
+            >{{ t(workflowDetached ? 'agent.linkCurrentWorkflow' : 'agent.unlinkWorkflow') }}</Button>
+          </div>
           <Composer
             ref="composerRef"
             :streaming
@@ -382,7 +400,6 @@ defineExpose({ addAttachment, updateAttachment, removeAttachment })
             :select-workflow-reference
             :available-workflows
             :editable-workflow-id
-            :has-workflow-target="!workflowDetached"
             :workflow-selecting="selectingTabPath !== null || savingReference"
             :get-mention-nodes
             @send="onComposerSend"
@@ -399,7 +416,6 @@ defineExpose({ addAttachment, updateAttachment, removeAttachment })
               (workflowId, workflowName) =>
                 emit('openReferenceWorkflow', workflowId, workflowName)
             "
-            @workflow-target-required="onWorkflowTargetRequired"
           >
           </Composer>
           <AgentFeedbackCaption />

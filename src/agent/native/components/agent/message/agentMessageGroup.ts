@@ -1,4 +1,5 @@
 import type {
+  HermesInteractionPart,
   NoticePart,
   PaywallPart,
   RunApprovalPart,
@@ -7,6 +8,7 @@ import type {
 } from '../../../services/agent/agentMessageParts'
 
 export type AgentMessageGroup =
+  | { kind: 'hermes_interaction'; part: HermesInteractionPart }
   | { kind: 'text'; part: TextPart }
   | { kind: 'notice'; part: NoticePart }
   | { kind: 'paywall'; part: PaywallPart }

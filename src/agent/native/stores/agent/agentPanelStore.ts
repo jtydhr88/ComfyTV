@@ -41,18 +41,27 @@ export const useAgentPanelStore = defineStore('agentPanel', () => {
   )
 
   const workflowStore = useWorkflowStore()
+  // Native chat follows the current tab unless the user explicitly unlinks it.
+  // Keep the choice in Pinia across panel remounts, not in the source workflow.
+  const workflowDetached = ref(false)
   const selectedWorkflow = computed<ComfyWorkflow | null>(
-    () => workflowStore.activeWorkflow,
+    () => workflowDetached.value ? null : workflowStore.activeWorkflow,
   )
   const workflowTargetSelection = computed<WorkflowTargetSelection>(() =>
     selectedWorkflow.value
       ? { status: 'selected', workflow: selectedWorkflow.value }
       : { status: 'cleared' },
   )
+  // Native mode follows the visible tab, not a historical thread binding.
+  // In particular, hydration must never undo the user's explicit unlink.
   const canRestoreWorkflow = computed(() => false)
 
-  function resetWorkflowTarget(): void {}
-  function setWorkflowTarget(_workflow: ComfyWorkflow | null): void {}
+  function resetWorkflowTarget(): void {
+    workflowDetached.value = false
+  }
+  function setWorkflowTarget(workflow: ComfyWorkflow | null): void {
+    workflowDetached.value = workflow === null
+  }
 
   const isMaximized = computed(() => width.value === PANEL_MAX_WIDTH)
 

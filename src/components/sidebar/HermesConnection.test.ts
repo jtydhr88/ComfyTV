@@ -1,0 +1,212 @@
+import { mount, flushPromises } from '@vue/test-utils'
+import { createI18n } from 'vue-i18n'
+import { beforeEach, afterEach, expect, it, vi } from 'vitest'
+import main from '../../../locales/en/main.json'
+const { fetchApi, invalidate } = vi.hoisted(() => ({ fetchApi: vi.fn(), invalidate: vi.fn() }))
+vi.mock('@agent/scripts/api', () => ({ api: { fetchApi } }))
+vi.mock('@/agent/status', () => ({ invalidateAgentStatus: invalidate }))
+const base = '/comfytv/hermes/connection'
+const publicStatus = (extra = {}) => ({ schema_version: 1, source: 'environment', configured: true, endpoint: 'https://broker.example', mcp_server: 'comfytv', credential_id: null, secure_storage: { available: true, backend: 'keyring', reason: null }, migration: { legacy_dpapi: true, environment: true }, can_manage: false, ...extra })
+const response = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status })
+const lease = { schema_version: 1, channel_id: 'test-channel', csrf_token: 'test-csrf', expires_at: '2099-01-01T00:00:00Z', can_respond: true }
+let wrapper: ReturnType<typeof mount> | undefined
+async function render() {
+  const { default: Component } = await import('./HermesConnection.vue')
+  wrapper = mount(Component, { props: { active: true }, global: { plugins: [createI18n({ legacy: false, locale: 'en', messages: { en: main } })] } })
+  await flushPromises()
+  return wrapper
+}
+beforeEach(() => {
+  vi.clearAllMocks()
+  ;(window as unknown as { happyDOM: { setURL(url: string): void } }).happyDOM.setURL('http://localhost:8188')
+  fetchApi.mockImplementation(async (route: string, init: RequestInit) => route.endsWith('/channel') ? response(lease) : response(publicStatus({ can_manage: Boolean((init.headers as Record<string, string>)?.['X-ComfyTV-Interaction-CSRF']) })))
+})
+afterEach(() => { wrapper?.unmount(); wrapper = undefined })
+async function post(w: ReturnType<typeof mount>, id: string, result: unknown, http = 200) {
+  fetchApi.mockResolvedValueOnce(response(result, http))
+  await w.get(`[data-testid="${id}"]`).trigger('click')
+  await flushPromises()
+}
+it.each([
+  { schema_version: 1, status: 'ok', authenticated: false },
+  { schema_version: 1, status: 'ok', authenticated: true, client_token: 'fixture-unexpected-secret' },
+  { schema_version: 2, status: 'ok', authenticated: true },
+])('rejects invalid test success without green status or leaked details', async payload => {
+  const w = await render()
+  await post(w, 'test', payload)
+  expect(w.get('[data-testid="result"]').text()).toBe(main.hermesConnection.pending)
+  expect(invalidate).not.toHaveBeenCalled()
+  expect(w.text()).not.toContain('fixture-unexpected-secret')
+})
+it('honors unavailable secure storage while leaving current environment testing available', async () => {
+  fetchApi.mockImplementation(async (route: string, init: RequestInit) => route.endsWith('/channel') ? response(lease) : response(publicStatus({ secure_storage: { available: false, backend: 'none', reason: 'unavailable' }, can_manage: Boolean((init.headers as Record<string, string>)?.['X-ComfyTV-Interaction-CSRF']) })))
+  const w = await render()
+  for (const id of ['pair', 'import', 'migrate-environment', 'migrate-legacy_dpapi']) expect(w.get(`[data-testid="${id}"]`).attributes('disabled')).toBeDefined()
+  expect(w.get('[data-testid="test"]').attributes('disabled')).toBeUndefined()
+  expect(w.text()).toContain(main.hermesConnection.storageUnavailable)
+})
+it('clears masked DOM values synchronously on unmount', async () => {
+  const w = await render()
+  await w.get('[data-testid="pairing-code"]').setValue('fixture-unmount-code')
+  await w.get('[data-testid="client-token"]').setValue('fixture-unmount-token')
+  const code = w.get('[data-testid="pairing-code"]').element as HTMLInputElement
+  const token = w.get('[data-testid="client-token"]').element as HTMLInputElement
+  w.unmount(); wrapper = undefined
+  expect(code.value).toBe('')
+  expect(token.value).toBe('')
+})
+it('blocks management on LAN even when the public payload claims can_manage', async () => {
+  ;(window as unknown as { happyDOM: { setURL(url: string): void } }).happyDOM.setURL('http://192.168.1.10:8188')
+  fetchApi.mockResolvedValue(response(publicStatus({ can_manage: true })))
+  const w = await render()
+  expect(fetchApi.mock.calls.map(c => c[0])).toEqual([base])
+  for (const id of ['pair', 'import', 'test', 'disconnect', 'migrate-environment']) expect(w.get(`[data-testid="${id}"]`).attributes('disabled')).toBeDefined()
+  expect(w.find('[data-testid="readonly"]').exists()).toBe(true)
+})
+it('rejects a secret-bearing unexpected public field without logging or showing it', async () => {
+  fetchApi.mockResolvedValue(response(publicStatus({ client_token: 'fixture-leaked-secret' })))
+  const log = vi.spyOn(console, 'error')
+  const w = await render()
+  expect(w.find('[data-testid="source"]').exists()).toBe(false)
+  expect(w.text()).not.toContain('fixture-leaked-secret')
+  expect(log).not.toHaveBeenCalled()
+  log.mockRestore()
+})
+it('does not restore stale status or open a lease after inactive/unmounted reads', async () => {
+  const w = await render()
+  let finish!: (r: Response) => void
+  fetchApi.mockImplementationOnce(() => new Promise<Response>(r => { finish = r }))
+  await w.get('[data-testid="refresh"]').trigger('click')
+  await w.setProps({ active: false })
+  const count = fetchApi.mock.calls.length
+  finish(response(publicStatus({ can_manage: true })))
+  await flushPromises()
+  expect(fetchApi.mock.calls).toHaveLength(count)
+  expect(w.find('[data-testid="source"]').exists()).toBe(false)
+})
+it('clears both secret fields on deactivate and keeps management serialized across reactivation', async () => {
+  const w = await render()
+  await w.get('[data-testid="pairing-code"]').setValue('fixture-code')
+  let finish!: (r: Response) => void
+  fetchApi.mockImplementationOnce(() => new Promise<Response>(r => { finish = r }))
+  await w.get('[data-testid="pair"]').trigger('click')
+  await w.setProps({ active: false })
+  await w.setProps({ active: true })
+  await flushPromises()
+  expect(w.get('[data-testid="pair"]').attributes('disabled')).toBeDefined()
+  finish(response({ schema_version: 1, status: 'configured', connection: publicStatus({ can_manage: true }) }))
+  await flushPromises()
+  expect(invalidate).not.toHaveBeenCalled()
+  expect(w.find('[data-testid="result"]').exists()).toBe(false)
+  await w.get('[data-testid="pairing-code"]').setValue('discard-code')
+  await w.get('[data-testid="client-token"]').setValue('discard-token')
+  await w.setProps({ active: false })
+  expect((w.get('[data-testid="pairing-code"]').element as HTMLInputElement).value).toBe('')
+  expect((w.get('[data-testid="client-token"]').element as HTMLInputElement).value).toBe('')
+})
+it('does not show saved success when readback still disagrees with successful mutation', async () => {
+  const w = await render()
+  fetchApi.mockResolvedValueOnce(response({ schema_version: 1, status: 'configured', connection: publicStatus({ source: 'secure_store', can_manage: true }) }))
+  fetchApi.mockResolvedValueOnce(response(publicStatus({ source: 'environment', can_manage: true })))
+  await w.get('[data-testid="pair"]').trigger('click')
+  await flushPromises()
+  expect(w.get('[data-testid="result"]').text()).toContain('pending')
+  expect(invalidate).not.toHaveBeenCalled()
+})
+it.each([true, false])('requires explicit disconnect confirmation, revoke_remote=%s and exact readback', async revoke => {
+  const w = await render()
+  expect(w.get('[data-testid="disconnect"]').attributes('disabled')).toBeDefined()
+  expect((w.get('[data-testid="revoke-remote"]').element as HTMLInputElement).checked).toBe(true)
+  await w.get('[data-testid="revoke-remote"]').setValue(revoke)
+  await w.get('[data-testid="confirm-disconnect"]').setValue(true)
+  const disabled = publicStatus({ source: 'disabled', configured: false, can_manage: true })
+  fetchApi.mockResolvedValueOnce(response({ schema_version: 1, status: 'disconnected', connection: disabled })).mockResolvedValueOnce(response(disabled))
+  await w.get('[data-testid="disconnect"]').trigger('click')
+  await flushPromises()
+  expect(JSON.parse(fetchApi.mock.calls.find(c => c[0] === base + '/disconnect')![1].body)).toEqual({ schema_version: 1, revoke_remote: revoke })
+  expect(w.get('[data-testid="source"]').text()).toContain('disabled')
+  expect(w.get('[data-testid="result"]').text()).toContain(revoke ? 'revoked' : 'localOnly')
+  expect((w.get('[data-testid="confirm-disconnect"]').element as HTMLInputElement).checked).toBe(false)
+})
+it('never claims revocation on unknown delivery or retries side effects automatically', async () => {
+  const w = await render()
+  await w.get('[data-testid="confirm-disconnect"]').setValue(true)
+  fetchApi.mockRejectedValueOnce(new Error('fixture-private-token'))
+  await w.get('[data-testid="disconnect"]').trigger('click')
+  await flushPromises()
+  expect(w.get('[data-testid="result"]').text()).toContain('pending')
+  expect(w.text()).not.toContain('fixture-private-token')
+  expect(fetchApi.mock.calls.filter(c => c[0] === base + '/disconnect')).toHaveLength(1)
+  expect(invalidate).not.toHaveBeenCalled()
+})
+it.each(['legacy_dpapi', 'environment'] as const)('migrates %s without exposing or submitting its existing secret', async from => {
+  const w = await render()
+  const saved = publicStatus({ source: 'secure_store', can_manage: true })
+  fetchApi.mockResolvedValueOnce(response({ schema_version: 1, status: 'configured', connection: saved })).mockResolvedValueOnce(response(saved))
+  await w.get(`[data-testid="migrate-${from}"]`).trigger('click')
+  await flushPromises()
+  const call = fetchApi.mock.calls.find(c => c[0] === base + '/migrate')!
+  expect(JSON.parse(call[1].body)).toEqual({ schema_version: 1, from })
+  expect(invalidate).toHaveBeenCalledTimes(1)
+})
+it('tests only the current effective connection, never the draft URL or token', async () => {
+  const w = await render()
+  await w.get('[data-testid="draft-endpoint"]').setValue('https://edited.example')
+  await w.get('[data-testid="client-token"]').setValue('unsubmitted-secret')
+  await post(w, 'test', { schema_version: 1, status: 'ok', authenticated: true })
+  expect(JSON.parse(fetchApi.mock.calls.find(c => c[0] === base + '/test')![1].body)).toEqual({ schema_version: 1 })
+  expect(w.get('[data-testid="result"]').text()).toContain('tested')
+  expect((w.get('[data-testid="client-token"]').element as HTMLInputElement).value).toBe('')
+  expect(invalidate).toHaveBeenCalledTimes(1)
+})
+it('imports an existing dedicated token without persistence; redacts backend errors and permits explicit pending retry', async () => {
+  const w = await render()
+  await w.get('[data-testid="draft-endpoint"]').setValue('https://broker.example')
+  await w.get('[data-testid="client-token"]').setValue('fixture-import-secret')
+  await w.get('[data-testid="draft-mcp"]').setValue('comfytv')
+  expect(w.get('[data-testid="client-token"]').attributes('type')).toBe('password')
+  await post(w, 'import', { error: 'fixture-import-secret' }, 502)
+  const call = fetchApi.mock.calls.find(c => c[0] === base + '/import')!
+  expect(JSON.parse(call[1].body)).toEqual({ schema_version: 1, endpoint: 'https://broker.example', client_token: 'fixture-import-secret', mcp_server: 'comfytv' })
+  expect((w.get('[data-testid="client-token"]').element as HTMLInputElement).value).toBe('')
+  expect(w.text()).not.toContain('fixture-import-secret')
+  expect(invalidate).not.toHaveBeenCalled()
+  await w.get('[data-testid="pairing-code"]').setValue('fixture-pending-code')
+  await post(w, 'pair', { error: 'setup_pending' }, 409)
+  expect(w.get('[data-testid="result"]').text()).toContain('pending')
+  expect(w.get('[data-testid="pair"]').attributes('disabled')).toBeUndefined()
+  expect(fetchApi.mock.calls.filter(c => c[0] === base + '/pair')).toHaveLength(1)
+})
+it('loads public status first, then validates local management through the existing lease', async () => {
+  const w = await render()
+  expect(fetchApi.mock.calls.map(c => c[0])).toEqual([base, '/comfytv/agent/interactions/channel', base])
+  expect(fetchApi.mock.calls[0][1]).toMatchObject({ method: 'GET', credentials: 'same-origin', redirect: 'error', headers: {} })
+  expect(fetchApi.mock.calls[2][1].headers['X-ComfyTV-Interaction-CSRF']).toBe('test-csrf')
+  expect(w.get('[data-testid="source"]').text()).toContain('environment')
+  expect(w.get('[data-testid="endpoint"]').text()).toBe('https://broker.example')
+  expect(w.get('[data-testid="pair"]').attributes('disabled')).toBeUndefined()
+})
+it('pairs once using a masked memory-only code, clears immediately and reads back saved status', async () => {
+  const w = await render()
+  const persistent = vi.spyOn(Storage.prototype, 'setItem')
+  await w.get('[data-testid="draft-endpoint"]').setValue('https://broker.example')
+  await w.get('[data-testid="pairing-code"]').setValue('fixture-pair-secret')
+  expect(w.get('[data-testid="pairing-code"]').attributes('type')).toBe('password')
+  let resolve!: (r: Response) => void
+  fetchApi.mockImplementationOnce(() => new Promise<Response>(r => { resolve = r }))
+  await w.get('[data-testid="pair"]').trigger('click')
+  await w.get('[data-testid="pair"]').trigger('click')
+  expect((w.get('[data-testid="pairing-code"]').element as HTMLInputElement).value).toBe('')
+  const posts = fetchApi.mock.calls.filter(c => c[1].method === 'POST' && c[0] === base + '/pair')
+  expect(posts).toHaveLength(1)
+  expect(posts[0][1]).toMatchObject({ credentials: 'same-origin', redirect: 'error', headers: { 'X-ComfyTV-Interaction-CSRF': 'test-csrf' } })
+  expect(JSON.parse(posts[0][1].body)).toEqual({ schema_version: 1, endpoint: 'https://broker.example', pairing_code: 'fixture-pair-secret' })
+  resolve(response({ schema_version: 1, status: 'configured', connection: publicStatus({ source: 'secure_store', can_manage: true }) }))
+  fetchApi.mockResolvedValueOnce(response(publicStatus({ source: 'secure_store', can_manage: true })))
+  await flushPromises()
+  expect(w.get('[data-testid="source"]').text()).toContain('secure_store')
+  expect(invalidate).toHaveBeenCalledTimes(1)
+  expect(w.emitted('changed')).toHaveLength(1)
+  expect(persistent).not.toHaveBeenCalled()
+  persistent.mockRestore()
+})

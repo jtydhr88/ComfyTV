@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import type { InteractionResponse } from '../../../schemas/hermesInteractionSchema'
 import { useI18n } from 'vue-i18n'
 
 import type {
@@ -32,6 +33,7 @@ const {
 const { t } = useI18n()
 
 const emit = defineEmits<{
+  respondInteraction: [response: InteractionResponse]
   feedback: [vote: 'up' | 'down' | null]
   answerAsk: [askId: string, selection: 'run' | 'cancel']
   openWorkflow: [workflowId: string, workflowName?: string]
@@ -61,6 +63,8 @@ const groups = computed<Group[]>(() => {
       const prev = out.at(-1)
       if (prev?.kind === 'tabLinks') prev.parts.push(part)
       else out.push({ kind: 'tabLinks', parts: [part] })
+    } else if (part.type === 'hermes_interaction') {
+      out.push({ kind: 'hermes_interaction', part })
     } else if (part.type === 'runApproval') {
       out.push({ kind: 'runApproval', part })
     } else if (part.type === 'paywall') {
@@ -95,7 +99,7 @@ const composing = computed(
     message.parts.length > 0 &&
     message.parts.every(
       (part) =>
-        part.type !== 'runApproval' &&
+        part.type !== 'hermes_interaction' && part.type !== 'runApproval' &&
         (!('state' in part) || part.state === 'done')
     )
 )
@@ -126,6 +130,7 @@ const status = computed(() => {
     <template v-for="(group, index) in groups" :key="index">
       <AgentMessageGroup
         :group
+        @respond-interaction="emit('respondInteraction', $event)"
         :streaming="message.streaming"
         :activity-parts="activityParts"
         :answering-ask-ids="answeringAskIds"

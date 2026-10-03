@@ -140,4 +140,6 @@ TOOLS.update(library.TOOLS)
 TOOLS.update(media.TOOLS)
 TOOLS.update(director_scene.TOOLS)
 TOOLS.update(layer_editor.TOOLS)
+from . import task_context
+TOOLS.update(task_context.TOOLS)
 TOOLS["skill"] = SKILL_TOOL

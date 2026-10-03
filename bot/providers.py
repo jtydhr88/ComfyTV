@@ -9,6 +9,7 @@ class ProviderStatus:
     version: str = ""
     logged_in: Optional[bool] = None
     detail: str = ""
+    health: Optional[dict] = None
 
 
 @dataclass
@@ -16,6 +17,9 @@ class ProviderCaps:
     stateful: bool = True
     tools: str = "mcp"
     attachments: bool = True
+    attachment_transport: str = "inline"
+    attachment_mixed_context: bool = False
+    attachment_media_types: list[str] = field(default_factory=lambda: ["image", "video", "audio"])
 
 
 @dataclass
@@ -27,8 +31,13 @@ class TurnRequest:
     mcp_endpoint: str = ""
     allowed_tools: list[str] = field(default_factory=list)
     attachments: list[dict] = field(default_factory=list)
+    attachment_manifest: dict = field(default_factory=dict)
+    task_input_json: str | None = None
+    config_fingerprint: str = ""
     model: str = ""
     comfy_mcp_argv: list[str] = field(default_factory=list)
+    message_id: str = ""  # Stable persisted message identity for remote idempotency.
+    interaction_binding: Any = None  # Server-issued object; never deserialized browser input.
 
 
 @dataclass
@@ -48,6 +57,8 @@ class TurnResult:
     error: str = ""
     aborted: bool = False
     usage: Optional[dict] = None
+    # False when events may be missing; absence of receipts is not no execution.
+    tool_telemetry_complete: bool = True
 
 
 class TurnHandle:

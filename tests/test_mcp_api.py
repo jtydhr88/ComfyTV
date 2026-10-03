@@ -153,6 +153,7 @@ class TestProtocol:
         data = await _rpc(client, "tools/list")
         tools = {t["name"]: t for t in data["result"]["tools"]}
         assert set(tools) == {
+            "task_context_read",
             "server_info", "projects", "stage_catalog", "list_workflows",
             "get_canvas", "outputs", "assets", "jobs", "exec_errors",
             "add_stage", "set_stage", "connect_stages", "run_stage", "servers",

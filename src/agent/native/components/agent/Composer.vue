@@ -48,7 +48,6 @@ const {
   availableWorkflows = [],
   selectWorkflowReference = async () => undefined,
   editableWorkflowId,
-  hasWorkflowTarget = false,
   workflowSelecting = false,
   getMentionNodes = () => []
 } = defineProps<{
@@ -64,7 +63,6 @@ const {
     workflow: WorkflowReferenceOption
   ) => Promise<WorkflowReferenceMetadata | undefined>
   editableWorkflowId?: string
-  hasWorkflowTarget?: boolean
   workflowSelecting?: boolean
   getMentionNodes?: () => SelectedNode[]
 }>()
@@ -84,7 +82,6 @@ const emit = defineEmits<{
   requestWorkflowReferences: []
   removeWorkflowReference: [id: string]
   openReferenceWorkflow: [workflowId: string, workflowName: string]
-  workflowTargetRequired: []
 }>()
 const { t } = useI18n()
 
@@ -101,10 +98,6 @@ const running = computed(() => streaming || submitting)
 const composer = useComposer({
   onSend: (text, attachments) => {
     if (workflowSelecting || submitting) return
-    if (!hasWorkflowTarget) {
-      emit('workflowTargetRequired')
-      return
-    }
     if (workflowReferences.value.length > 0) {
       const { text: draft, workflowReferences: references } =
         composerPromptForSend(composer.prompt.value)

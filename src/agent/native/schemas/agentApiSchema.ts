@@ -17,6 +17,7 @@ import type {
   AgentTurnAccepted as GeneratedAgentTurnAccepted
 } from '@comfyorg/ingest-types'
 import { z } from 'zod'
+import { zInteractionEvent } from './hermesInteractionSchema'
 
 import { isNodeLocatorId } from '@agent/types/nodeIdentification'
 
@@ -240,6 +241,17 @@ const zAgentAskResolvedEvent = z.object({
 })
 
 export const zAgentWsEvent = z.discriminatedUnion('type', [
+  z.object({
+    type: z.literal('agent_notice'),
+    data: z.object({
+      thread_id: z.string(),
+      message_id: z.string(),
+      text: z.string(),
+      level: z.enum(['info', 'warn', 'error']),
+      detail: z.string().optional()
+    })
+  }),
+  zInteractionEvent,
   zAgentThinkingEvent,
   zAgentToolCallEvent,
   zAgentMessageDeltaEvent,

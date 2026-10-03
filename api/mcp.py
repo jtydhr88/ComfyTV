@@ -85,6 +85,9 @@ def _initialize(params: dict) -> dict:
 
 
 def _tool_visible(name: str) -> bool:
+    if name in {'inspect_image_asset', 'inspect_media_asset'}:
+        from .. import storage
+        return storage.get_setting('bot-hermes-image-attachments') is True
     if name in ("ask_user", "remember"):
         return bool(BOT_CHAT_ID.get())
     if name != "skill":

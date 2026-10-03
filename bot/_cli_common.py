@@ -19,6 +19,7 @@ PROBE_CACHE_S = 60
 MCP_TOOL_TIMEOUT_MS = 600_000
 
 CORE_MCP_TOOLS = [
+    "task_context_read",
     "server_info",
     "projects",
     "stage_catalog",

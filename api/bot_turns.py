@@ -123,8 +123,16 @@ def _live_canvas_summary() -> str:
     return f"Live canvas right now: {len(stages)} stage(s){' — ' + shown if shown else ''}."
 
 
-def unverified_write_notice(blocks: list[dict], canvas_summary: str = "") -> dict | None:
-    if any(b.get("type") == "tool_use" for b in blocks):
+def unverified_write_notice(blocks: list[dict], canvas_summary: str = "", *,
+                            tool_telemetry_complete: bool = True) -> dict | None:
+    if not tool_telemetry_complete:
+        return {"type": "notice", "level": "warn", "text": (
+            "Tool telemetry is incomplete; tools may have executed without recorded receipts. "
+            "Canvas, workflow and library changes cannot be verified from this turn. "
+            "Check the live state before retrying any write.")}
+    if any(b.get("type") == "tool_use" or (
+            b.get("type") == "notice" and b.get("detail") in {
+                "hermes.tool.started", "hermes.tool.completed"}) for b in blocks):
         return None
     text = "\n".join(str(b.get("text") or "") for b in blocks if b.get("type") == "text")
     if not _WRITE_TOOL_RE.search(text):
@@ -159,6 +167,12 @@ def _derive_title(text: str) -> str:
 
 
 def _apply_event(state: _TurnState, ev: BotEvent) -> Optional[dict]:
+    if ev.t == "notice":
+        block = {"type": "notice", "level": "error" if ev.is_error else "info", "text": ev.text}
+        if ev.detail:
+            block["detail"] = ev.detail
+        state.blocks.append(block)
+        return {"event": "turn_notice", **block}
     if ev.t == "delta":
         if state.blocks and state.blocks[-1].get("type") == "text":
             state.blocks[-1]["text"] += ev.text
@@ -193,7 +207,10 @@ def _apply_event(state: _TurnState, ev: BotEvent) -> Optional[dict]:
 
 async def _run_turn(chat: dict, text: str, state: _TurnState, *,
                     provider_text: str | None = None,
-                    attachments: list[dict] | None = None) -> None:
+                    attachments: list[dict] | None = None,
+                    attachment_manifest: dict | None = None,
+                    task_input_json: str | None = None,
+                    provider_options_json: str | None = None) -> None:
     chat_id = chat["id"]
     provider = get_provider(chat["provider"])
     # The agent panel needs the POST ack before the first delta reaches it.
@@ -230,6 +247,12 @@ async def _run_turn(chat: dict, text: str, state: _TurnState, *,
 
     comfy_mcp_argv = _comfy_mcp_argv()
     try:
+        if task_input_json:
+            from .task_context_store import get_store
+            get_store().dispatch(json.loads(task_input_json)["context_ref"])
+        if attachment_manifest and not task_input_json:
+            from .bot_send import validate_image_ref_context
+            validate_image_ref_context(storage.get_bot_chat(chat_id) or chat, {}, text)
         result = await provider.send(
             TurnRequest(
                 chat_id=chat_id,
@@ -239,8 +262,13 @@ async def _run_turn(chat: dict, text: str, state: _TurnState, *,
                 mcp_endpoint=_mcp_endpoint(chat_id),
                 allowed_tools=_allowed_tools(comfy_mcp_argv),
                 attachments=attachments or [],
-                model=_provider_model(chat["provider"]),
+                attachment_manifest=attachment_manifest or {},
+                task_input_json=task_input_json,
+                model=(json.loads(provider_options_json)["model"] if provider_options_json else _provider_model(chat["provider"])),
+                config_fingerprint=(json.loads(provider_options_json).get("config_fingerprint", "") if provider_options_json else ""),
                 comfy_mcp_argv=comfy_mcp_argv,
+                message_id=state.message_id,
+                interaction_binding=getattr(state.handle, "_interaction_binding", None),
             ),
             emit,
             state.handle,
@@ -254,6 +282,13 @@ async def _run_turn(chat: dict, text: str, state: _TurnState, *,
         error = result.error
         status = "aborted" if result.aborted else ("error" if error else "done")
 
+    if task_input_json:
+        remote = getattr(state.handle, "_hermes", {}) or {}
+        if not remote.get("submitted") or remote.get("terminal"):
+            from .task_context_store import get_store
+            get_store().release(json.loads(task_input_json)["context_ref"]["id"])
+    from . import hermes_interactions
+    hermes_interactions.INTERACTIONS.invalidate(state.handle)
     ACTIVE_TURNS.pop(chat_id, None)
     from . import bot_asks
     bot_asks.cancel_chat_asks(chat_id)
@@ -262,7 +297,9 @@ async def _run_turn(chat: dict, text: str, state: _TurnState, *,
     if error:
         state.blocks.append({"type": "notice", "level": "error", "text": error})
     elif status == "done":
-        notice = unverified_write_notice(state.blocks, _live_canvas_summary())
+        notice = unverified_write_notice(
+            state.blocks, _live_canvas_summary(),
+            tool_telemetry_complete=result.tool_telemetry_complete if result is not None else False)
         if notice:
             state.blocks.append(notice)
     storage.update_bot_message(
@@ -292,7 +329,10 @@ async def _run_turn(chat: dict, text: str, state: _TurnState, *,
 
 
 def _begin_turn(chat: dict, *, text: str, provider_text: str,
-                attachments: list[dict], user_msg: dict) -> dict:
+                attachments: list[dict], user_msg: dict,
+                attachment_manifest: dict | None = None,
+                task_input_json: str | None = None,
+                provider_options_json: str | None = None) -> dict:
     assistant_msg = storage.create_bot_message(
         chat_id=chat["id"], role="assistant",
         content="[]", status="streaming", parent_id=user_msg["id"],
@@ -306,7 +346,8 @@ def _begin_turn(chat: dict, *, text: str, provider_text: str,
     })
     asyncio.create_task(
         _run_turn(chat, text, state, provider_text=provider_text,
-                  attachments=attachments),
+                  attachments=attachments, attachment_manifest=attachment_manifest,
+                  task_input_json=task_input_json, provider_options_json=provider_options_json),
         name=f"comfytv-bot-{chat['id'][:8]}",
     )
     return assistant_msg
@@ -328,4 +369,7 @@ def _drain_queue(chat_id: str) -> None:
     _begin_turn(chat, text=item["text"],
                 provider_text=item["provider_text"],
                 attachments=item["attachments"],
+                attachment_manifest=item.get("attachment_manifest"),
+                task_input_json=item.get("task_input_json"),
+                provider_options_json=item.get("provider_options_json"),
                 user_msg=user_msg or item["user_msg"])

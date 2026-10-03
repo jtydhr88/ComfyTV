@@ -13,6 +13,8 @@ interface UploadResult {
 export interface UseAttachmentOptions {
   upload: (file: File) => Promise<UploadResult>
   maxBytes?: (file: File) => number
+  allowed?: (file: File) => boolean
+  allowDeferred?: () => boolean
   onError?: (message: string) => void
   stage: (attachment: ComposerAttachment) => void
   update: (id: string, patch: Partial<ComposerAttachment>) => void
@@ -29,6 +31,10 @@ export function useAttachment(options: UseAttachmentOptions) {
   }
 
   function isTooLarge(file: File): boolean {
+    if (options.allowed && !options.allowed(file)) {
+      options.onError?.('Unsupported attachment for this provider. Only capability-approved media references are supported when enabled; documents and archives are unsupported.')
+      return true
+    }
     const maxBytes = options.maxBytes?.(file) ?? MAX_ATTACHMENT_BYTES
     if (file.size <= maxBytes) return false
 
@@ -80,6 +86,10 @@ export function useAttachment(options: UseAttachmentOptions) {
     name: string,
     resolve: () => Promise<File | undefined>
   ): Promise<File | undefined> {
+    if (options.allowDeferred?.() === false) {
+      options.onError?.('Deferred/Eagle attachments unavailable for this provider. Import images through the library first, then attach an existing image asset when enabled.')
+      return undefined
+    }
     const id = stage(name)
     const file = await resolve()
     if (!file) {

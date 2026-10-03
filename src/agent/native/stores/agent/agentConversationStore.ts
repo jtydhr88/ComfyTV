@@ -52,6 +52,7 @@ export const useAgentConversationStore = defineStore(
     let liveMessage: AssistantMessage | null = null
     const backgroundTurns = new Map<string, BackgroundTurn>()
     let hydratedMessageIds = new Set<string>()
+    let hydratedMessageTurnIds = new Map<string, TurnId>()
     let hydratedAssistantTurnIds = new Set<TurnId>()
     const activeIndex = ref(-1)
 
@@ -121,8 +122,29 @@ export const useAgentConversationStore = defineStore(
       transport = createAgentEventTransport(message, replaceActive)
     }
 
+    function reconcileInteraction(interaction: import('../../schemas/hermesInteractionSchema').TVInteraction): void {
+      const targetId = hydratedMessageTurnIds.get(interaction.message_id) ?? interaction.message_id
+      const candidates = interaction.thread_id === threadId.value
+        ? [...messages.value.filter(m => m.id === targetId || m.id === interaction.message_id), ...(liveMessage && activeTurnId.value === interaction.message_id ? [liveMessage] : [])]
+        : []
+      const background = backgroundTurns.get(interaction.thread_id)
+      if (background?.messageId === interaction.message_id) candidates.push(background.message)
+      if (!candidates.length && interaction.thread_id === threadId.value) {
+        const message = createAssistantMessage(targetId as TurnId); message.streaming = false
+        messages.value.push(message); candidates.push(message)
+      }
+      for (const message of candidates) {
+        const part = message.parts.find(p => p.type === 'hermes_interaction' && p.interaction.id === interaction.id)
+        if (part?.type === 'hermes_interaction') part.interaction = interaction
+        else message.parts.push({ type: 'hermes_interaction', interaction })
+      }
+    }
+
     function ingest(event: AgentChatEvent): void {
-      if (transport && event.data.message_id === activeTurnId.value) {
+      if (
+        transport && event.data.message_id === activeTurnId.value &&
+        (event.data.thread_id === undefined || event.data.thread_id === threadId.value)
+      ) {
         if (event.type === 'agent_message_done') {
           transport.settle()
           clearActive()
@@ -185,14 +207,12 @@ export const useAgentConversationStore = defineStore(
       // turn by the server's turn_id; row.id bridges the two. Matching turns by
       // identity, not by shared user text, is what stops a repeated prompt from
       // colliding with an unrelated turn.
-      const kept = messages.value.filter((m) => m.id !== entry.message.id)
-      const poppedHydratedCopy = removeHydratedCopy(entry, kept)
-      if (
-        entry.settled &&
-        !poppedHydratedCopy &&
-        hydratedMessageIds.has(entry.messageId)
+      if (entry.settled && hydratedMessageIds.has(entry.messageId)) return
+      const hydratedTurnId = hydratedMessageTurnIds.get(entry.messageId)
+      const kept = messages.value.filter(
+        (m) => m.id !== entry.message.id && m.id !== hydratedTurnId
       )
-        return
+      removeHydratedCopy(entry, kept)
       if (
         entry.userText !== undefined &&
         !userTexts.value.has(entry.message.id)
@@ -263,6 +283,7 @@ export const useAgentConversationStore = defineStore(
       dropAttachmentPreviews()
       threadId.value = null
       hydratedMessageIds = new Set()
+      hydratedMessageTurnIds = new Map()
       hydratedAssistantTurnIds = new Set()
       clearActive()
     }
@@ -276,6 +297,10 @@ export const useAgentConversationStore = defineStore(
       userWorkflowReferences.value = transcript.userWorkflowReferences
       latestWorkflowId.value = transcript.latestWorkflowId
       hydratedMessageIds = transcript.rowIds
+      hydratedMessageTurnIds = new Map(
+        history.filter((row) => row.role === 'assistant')
+          .map((row) => [row.id, row.turn_id as TurnId])
+      )
       hydratedAssistantTurnIds = transcript.assistantTurnIds
       dropAttachmentPreviews()
       userAttachments.value = transcript.userAttachments
@@ -332,6 +357,7 @@ export const useAgentConversationStore = defineStore(
       recordFailedSend,
       recordPaywall,
       startTurn,
+      reconcileInteraction,
       ingest,
       abortActiveTurn,
       stashActiveTurn,

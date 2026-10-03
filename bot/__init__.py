@@ -15,7 +15,10 @@ from .codex import CodexCodeProvider  # noqa: F401
 from .comfyui_llm_provider import ComfyUiLlmProvider  # noqa: F401
 from .deepseek_harness import DeepSeekHarnessProvider  # noqa: F401
 from .local_llm import LocalLlmProvider  # noqa: F401
+from .hermes import HermesProvider  # noqa: F401
 from .qwen_code import QwenCodeProvider  # noqa: F401
+
+register_provider(HermesProvider())
 
 register_provider(ClaudeCodeProvider())
 register_provider(CodexCodeProvider())

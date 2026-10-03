@@ -6,6 +6,13 @@ const saveSettings = vi.fn()
 const runDbBackup = vi.fn()
 const fetchEagleStatus = vi.fn()
 const fetchBlenderStatus = vi.fn()
+const status = vi.hoisted(() => ({ ensure: vi.fn(), invalidate: vi.fn() }))
+vi.mock('@/agent/status', async () => ({
+  agentProviders: (await import('vue')).ref([]),
+  ensureAgentStatus: status.ensure,
+  refreshAgentStatus: vi.fn(),
+  invalidateAgentStatus: status.invalidate,
+}))
 vi.mock('@/api', () => ({
   fetchSettings: (...a: any[]) => fetchSettings(...a),
   saveSettings: (...a: any[]) => saveSettings(...a),
@@ -81,6 +88,47 @@ beforeEach(() => {
 })
 
 describe('useSettingsPanel', () => {
+  it('hides protected Hermes ordinary editors and refreshes nonsecret settings without discarding unrelated drafts', async () => {
+    fetchSettings.mockResolvedValue({ settings: [row('enable-mcp', 'boolean', true), row('enable-bot', 'boolean', true), row('bot-hermes-url', 'string', 'https://old.example'), row('bot-hermes-mcp-server', 'string', 'old'), row('bot-model-hermes', 'string', 'model'), row('enable-bot-media', 'boolean', true), row('db-backup-path', 'string', 'before')] })
+    const panel = useSettingsPanel(() => true)
+    await flush()
+    expect(panel.sections.value.flatMap(s => s.rows.map(r => r.key))).not.toEqual(expect.arrayContaining(['bot-hermes-url', 'bot-hermes-mcp-server', 'bot-model-hermes']))
+    expect(panel.sections.value.flatMap(s => s.rows.map(r => r.key))).toContain('enable-bot-media')
+    panel.setValue('db-backup-path', 'draft')
+    fetchSettings.mockResolvedValue({ settings: [row('enable-mcp', 'boolean', true), row('enable-bot', 'boolean', true), row('bot-hermes-url', 'string', 'https://new.example'), row('db-backup-path', 'string', 'before')] })
+    await panel.refreshConnectionSettings()
+    expect(panel.values.value['db-backup-path']).toBe('draft')
+    expect(panel.values.value['bot-hermes-url']).toBe('https://new.example')
+    expect(panel.dirtyCount.value).toBe(1)
+  })
+  it('ensures shared status once on open and invalidates only a successfully saved relevant change', async () => {
+    fetchSettings.mockResolvedValue({ settings: [row('bot-model-hermes', 'string', '')] })
+    const panel = useSettingsPanel(() => true)
+    await flush()
+    expect(status.ensure).toHaveBeenCalledTimes(1)
+    panel.setValue('bot-model-hermes', 'draft')
+    expect(status.invalidate).not.toHaveBeenCalled()
+    saveSettings.mockRejectedValueOnce(new Error('save failed'))
+    await panel.save()
+    expect(status.invalidate).not.toHaveBeenCalled()
+    expect(panel.values.value['bot-model-hermes']).toBe('draft')
+    saveSettings.mockResolvedValueOnce({ settings: [row('bot-model-hermes', 'string', 'draft')] })
+    await panel.save()
+    expect(status.invalidate).toHaveBeenCalledTimes(1)
+  })
+  it('shows Hermes agent options only after its endpoint is configured', () => {
+    const values = { 'enable-mcp': true, 'enable-bot': true, 'bot-hermes-url': '' }
+    expect(sectionOf('bot-hermes-url')).toBe('agent')
+    expect(isSettingVisible('bot-hermes-url', values)).toBe(true)
+    expect(isSettingVisible('bot-hermes-mcp-server', values)).toBe(false)
+    expect(isSettingVisible('bot-model-hermes', values)).toBe(false)
+    values['bot-hermes-url'] = 'http://127.0.0.1:8642'
+    expect(isSettingVisible('bot-hermes-mcp-server', values)).toBe(true)
+    expect(isSettingVisible('bot-model-hermes', values)).toBe(true)
+    values['enable-bot'] = false
+    expect(isSettingVisible('bot-hermes-mcp-server', values)).toBe(false)
+  })
+
   it('loads only when the panel becomes active', async () => {
     const active = ref(false)
     const p = useSettingsPanel(() => active.value)

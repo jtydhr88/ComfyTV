@@ -38,37 +38,59 @@ def _disabled_response() -> web.Response:
 
 
 
+async def _provider_record(provider):
+    try:
+        return await _read_provider_record(provider)
+    except Exception:
+        # Exceptions can contain CLI credentials or transport URLs. Never log them.
+        return {'id': provider.id, 'label': provider.label, 'available': False,
+                'version': '', 'logged_in': None, 'detail': 'Provider status could not be verified.',
+                'stateful': True, 'attachments': False, 'attachment_transport': 'inline',
+                'attachment_media_types': [], 'models': []}
+
+
+async def _read_provider_record(provider):
+    st = await provider.probe()
+    caps = provider.capabilities()
+    try:
+        models = await provider.list_models()
+    except Exception:
+        models = []
+    entry = {
+        "id": provider.id,
+        "label": provider.label,
+        "available": st.available,
+        "version": st.version,
+        "logged_in": st.logged_in,
+        "detail": st.detail,
+        "stateful": caps.stateful,
+        "attachments": caps.attachments,
+        "attachment_transport": caps.attachment_transport,
+        "attachment_media_types": caps.attachment_media_types,
+        "models": models,
+    }
+    options = provider.model_options()
+    if options:
+        entry["model_options"] = options
+    if getattr(st, 'health', None) is not None:
+        entry['health'] = st.health
+    return entry
+
+
+@routes.get("/comfytv/bot/providers/hermes/health")
+async def hermes_health(request: web.Request) -> web.Response:
+    enabled = bot_enabled()
+    provider = get_provider('hermes') if enabled else None
+    entry = await _provider_record(provider) if provider is not None else None
+    return web.json_response({'enabled': enabled, 'provider': entry}, headers={'Cache-Control': 'no-store'})
+
+
 @routes.get("/comfytv/bot/status")
 async def bot_status(request: web.Request) -> web.Response:
-    enabled = bot_enabled()
-    if not enabled:
-        return web.json_response({"enabled": False, "providers": []})
-    out = []
-    for provider in list_providers():
-        st = await provider.probe()
-        caps = provider.capabilities()
-        try:
-            models = await provider.list_models()
-        except Exception:
-            _log.exception("[ComfyTV/bot] list_models failed for %s",
-                           provider.id)
-            models = []
-        entry = {
-            "id": provider.id,
-            "label": provider.label,
-            "available": st.available,
-            "version": st.version,
-            "logged_in": st.logged_in,
-            "detail": st.detail,
-            "stateful": caps.stateful,
-            "attachments": caps.attachments,
-            "models": models,
-        }
-        options = provider.model_options()
-        if options:
-            entry["model_options"] = options
-        out.append(entry)
-    return web.json_response({"enabled": True, "providers": out})
+    if not bot_enabled():
+        return web.json_response({'enabled': False, 'providers': []})
+    out = [await _provider_record(provider) for provider in list_providers()]
+    return web.json_response({'enabled': True, 'providers': out})
 
 
 @routes.get("/comfytv/bot/chats")
@@ -158,13 +180,18 @@ async def bot_delete_chat(request: web.Request) -> web.Response:
     chat, err = _chat_or_response(request)
     if err is not None:
         return err
-    QUEUED.pop(chat["id"], None)
+    # These never-submitted items lose their queue owner even if active stop
+    # fails. Release only their contexts; an ambiguous ACTIVE run retains its own.
+    for item in QUEUED.pop(chat["id"], []):
+        send_core.release_prepared(item)
     state = ACTIVE_TURNS.get(chat["id"])
     if state is not None:
         provider = get_provider(chat["provider"])
         if provider is not None:
             await provider.stop(state.handle)
     storage.delete_bot_chat(chat["id"])
+    from .task_context_store import get_store
+    get_store().release_chat(chat["id"])
     bot_turns._broadcast("chat_deleted", {"chat_id": chat["id"]})
     return web.json_response({"ok": True})
 
@@ -178,9 +205,22 @@ async def bot_send(request: web.Request) -> web.Response:
     if err is not None:
         return err
     try:
-        body = await request.json()
+        from .task_context import read_request
+        body = await read_request(request)
     except Exception:
         return web.json_response({"error": "invalid JSON body"}, status=400)
+    if not isinstance(body, dict):
+        return web.json_response({'error': 'body must be an object'}, status=400)
+    provider = get_provider(chat['provider'])
+    if provider and provider.capabilities().attachment_transport == 'asset_refs' and body.get('attachments'):
+        try:
+            send_core.validate_image_ref_context(chat, body, body.get('text', ''))
+            user_msg, assistant_msg = await send_core.submit_image_refs(
+                chat, body['attachments'], body.get('text', ''), body=body)
+        except ValueError as exc:
+            return web.json_response({'error': str(exc)}, status=400)
+        return web.json_response({'queued': assistant_msg is None,
+                                  'user_message': user_msg, 'assistant_message': assistant_msg})
     text = str(body.get("text") or "").strip()
     try:
         attachment_assets = _resolve_attachment_assets(body.get("attachments"))

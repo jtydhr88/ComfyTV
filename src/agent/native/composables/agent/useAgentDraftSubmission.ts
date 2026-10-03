@@ -10,6 +10,7 @@ import type { ComposerAttachment } from './useComposer'
 
 interface UseAgentDraftSubmissionOptions {
   canSubmit: () => boolean
+  captureMixedContext?: () => boolean
   target: () => ComfyWorkflow | null
   editableWorkflowId: () => string | undefined
   selection: Pick<
@@ -71,18 +72,27 @@ export function useAgentDraftSubmission(
     if (
       !options.canSubmit() ||
       composer.submission?.phase === 'pending' ||
-      target === null ||
       (!text.trim() && attachments.length === 0) ||
       attachments.some((attachment) => attachment.uploading)
     )
       return
 
-    const prompt = composer.prompt
-    const sentAttachments = [...attachments]
-    const sentReferences = [...references]
+    const capture = attachments.length > 0 && options.captureMixedContext?.() === true
+    const prompt = capture ? {
+      text: composer.prompt.text,
+      references: composer.prompt.references.map((reference) => {
+        if (reference.kind === 'node') return { ...reference, node: { ...reference.node } }
+        if (reference.kind === 'asset') return { ...reference, attachment: { ...reference.attachment } }
+        return { ...reference }
+      })
+    } : composer.prompt
+    const sentAttachments = capture ? attachments.map((item) => ({ ...item })) : [...attachments]
+    const sentReferences = capture ? references.map((item) => ({ ...item })) : [...references]
     selection.exit()
     const nodes =
-      selection.workflow() === target ? [...selection.staged.value] : []
+      selection.workflow() === target
+        ? selection.staged.value.map((node) => capture ? { ...node } : node)
+        : []
 
     selection.consume()
     const submissionId = composer.startSubmission({

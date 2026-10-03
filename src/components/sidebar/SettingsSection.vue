@@ -21,6 +21,7 @@
         <ComfyTVToggle :model-value="masterOn" @update:model-value="(v: boolean) => emit('master', v)" />
       </template>
     </div>
+    <slot name="diagnostics" />
     <div
       v-show="!collapsed && (section.master === null || masterOn)"
       class="ctv:border-t ctv:border-border-subtle ctv:flex ctv:flex-col ctv:divide-y ctv:divide-border-subtle"

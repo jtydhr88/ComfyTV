@@ -38,7 +38,7 @@ function resetTextWhenReferencesCleared(
 interface SubmittedDraft {
   attachments: ComposerAttachment[]
   nodes: SelectedNode[]
-  target: ComfyWorkflow
+  target: ComfyWorkflow | null
   prompt: ComposerPrompt
 }
 

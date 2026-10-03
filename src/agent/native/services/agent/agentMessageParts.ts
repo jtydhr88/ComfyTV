@@ -1,5 +1,8 @@
 import type { TurnId } from '../../schemas/agentApiSchema'
 
+import type { TVInteraction } from '../../schemas/hermesInteractionSchema'
+export interface HermesInteractionPart { type: 'hermes_interaction'; interaction: TVInteraction }
+
 export type PartState = 'streaming' | 'done'
 
 export interface TextPart {
@@ -28,6 +31,7 @@ export interface NoticePart {
   type: 'notice'
   level: 'info' | 'warning' | 'error'
   text: string
+  detail?: string
   /**
    * Seconds the server asked the client to wait before retrying (parsed from
    * a `Retry-After` response header), e.g. on `funds_unavailable` admission
@@ -60,6 +64,7 @@ export interface PaywallPart {
 export type ActivityPart = ThinkingPart | ToolPart
 
 export type MessagePart =
+  | HermesInteractionPart
   | TextPart
   | ThinkingPart
   | ToolPart

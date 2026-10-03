@@ -8,6 +8,7 @@ import type { AgentAssetAttachment } from './assets'
 import { ATTACHABLE_MEDIA, closeAssetPicker, toAttachment } from './assets'
 
 interface EaglePickerHandlers {
+  canPick?: () => boolean
   addedIds: () => number[]
   select: (asset: Asset) => void
   deselect: (asset: Asset) => void

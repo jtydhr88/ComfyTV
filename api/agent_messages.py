@@ -75,6 +75,12 @@ def native_blocks(blocks: list[dict]) -> list[dict]:
                             "tool_name": b.get("name"),
                             "status": b.get("status") or "success",
                             "result": b.get("text")})
+        elif kind == 'hermes_interaction':
+            from .hermes_interactions import history_card
+            try:
+                out.append({'type':'hermes_interaction','interaction':history_card(b.get('interaction'))})
+            except (ValueError,TypeError,KeyError):
+                pass
         elif kind in ("text", "notice", "ask", "skill", "ref"):
             out.append(dict(b))
     return out
@@ -90,6 +96,10 @@ def _attachment_ref(block: dict) -> Optional[str]:
 
 def user_content(blocks: list[dict]) -> dict:
     content: dict[str, Any] = {"text": _text_of(blocks)}
+    for block in blocks:
+        if block.get('type') == 'attachment_manifest':
+            content['attachment_manifest'] = block['manifest']
+            content['text'] = "\n".join(str(b.get('text') or '') for b in blocks if b.get('type') == 'text')
     refs, previews, labels = [], {}, {}
     for b in blocks:
         ref = _attachment_ref(b)

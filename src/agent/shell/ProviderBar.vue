@@ -25,30 +25,17 @@ import {
 import { agentBusy, requestNewChat } from '@agent/comfytv/actions'
 import { api } from '@agent/scripts/api'
 import { app } from '@agent/scripts/app'
-import { agentProviders } from '@/agent/status'
-
-interface ModelOption {
-  value: string
-  label: string
-  group?: string
-}
-
-interface ProviderInfo {
-  id: string
-  label: string
-  available: boolean
-  detail: string
-  version: string
-  models: string[]
-  model_options?: ModelOption[]
-  model: string
-}
+import { agentProviders, agentStatusGeneration, invalidateAgentStatus } from '@/agent/status'
+import ProviderDiagnostics from './ProviderDiagnostics.vue'
+import { diagnosticSummary } from './diagnostics'
 
 const { t } = useI18n()
-const providers = ref<ProviderInfo[]>([])
+const providers = agentProviders
 const provider = ref('')
 const model = ref('')
 const loaded = ref(false)
+const providerSaveError = ref(false)
+const providerSaving = ref(false)
 const providerOpen = ref(false)
 const providerTrigger = ref<HTMLElement | null>(null)
 const modelOpen = ref(false)
@@ -78,7 +65,7 @@ function routeLabel(group?: string): string {
 const statusText = computed(() => {
   const p = current.value
   if (!p) return ''
-  return p.available ? p.version || t('agentBar.ready') : p.detail
+  return p.id === 'hermes' ? diagnosticSummary(p.health, t) : [p.detail, p.version].filter(Boolean).join(' · ') || t('diagnostics.incomplete')
 })
 
 const chipClass =
@@ -101,45 +88,57 @@ function putSettings(values: Record<string, unknown>): Promise<any> {
   })
 }
 
-let settings: Record<string, unknown> = {}
+const settings = ref<Record<string, unknown>>({})
 
 async function load(): Promise<void> {
-  const rows = (await fetchJson('/comfytv/settings'))?.settings ?? []
-  settings = Object.fromEntries(rows.map((r: { key: string; value: unknown }) => [r.key, r.value]))
-  const data = await fetchJson('/comfytv/bot/status')
-  providers.value = (data?.providers ?? []).map((p: ProviderInfo) => ({
-    ...p,
-    model: String(settings[`bot-model-${p.id}`] ?? ''),
-  }))
-  const configured = String(settings['bot-provider'] ?? '')
-  provider.value = providers.value.some((p) => p.id === configured)
-    ? configured
-    : (providers.value.find((p) => p.available)?.id ?? '')
-  model.value = current.value?.model ?? ''
-  loaded.value = true
+  const generation = agentStatusGeneration.value
+  try {
+    const rows = (await fetchJson('/comfytv/settings'))?.settings
+    if (!Array.isArray(rows) || generation !== agentStatusGeneration.value) return
+    settings.value = Object.fromEntries(rows.map((r: { key: string; value: unknown }) => [r.key, r.value]))
+    const configured = String(settings.value['bot-provider'] ?? '')
+    provider.value = providers.value.some(p => p.id === configured) ? configured : providers.value.find(p => p.available)?.id ?? configured
+    model.value = String(settings.value[`bot-model-${provider.value}`] ?? '')
+    loaded.value = true
+  } catch { /* Keep established selection. Diagnostics owns fetch error presentation. */ }
 }
 
 async function setProvider(selected: unknown): Promise<void> {
   const id = typeof selected === 'string' ? selected : ''
   if (!id || id === provider.value || !providers.value.some((p) => p.id === id)) return
-  provider.value = id
-  model.value = current.value?.model ?? ''
-  await putSettings({ 'bot-provider': id })
-  requestNewChat()
+  if (providerSaving.value) return
+  providerSaving.value = true
+  providerSaveError.value = false
+  try {
+    const saved = await putSettings({ 'bot-provider': id })
+    if (!saved) { providerSaveError.value = true; return }
+    settings.value['bot-provider'] = id
+    provider.value = id
+    model.value = String(settings.value[`bot-model-${id}`] ?? '')
+    void invalidateAgentStatus()
+    requestNewChat()
+  } catch {
+    providerSaveError.value = true
+  } finally {
+    providerSaving.value = false
+  }
 }
 
 async function setModel(selected: unknown): Promise<void> {
   const value = typeof selected === 'string' ? selected : ''
-  model.value = value
-  if (current.value) current.value.model = value
-  await putSettings({ [`bot-model-${provider.value}`]: value })
+  const id = provider.value
+  const saved = await putSettings({ [`bot-model-${id}`]: value })
+  if (saved) {
+    settings.value[`bot-model-${id}`] = value
+    if (provider.value === id) model.value = value
+    void invalidateAgentStatus()
+  }
 }
 
 function onModelOpen(next: boolean): void {
   modelOpen.value = next
   if (!next) return
   modelDraft.value = model.value
-  void load()
 }
 
 async function commitModelDraft(): Promise<void> {
@@ -153,11 +152,11 @@ function openSettings(): void {
 }
 
 onMounted(() => void load())
-watch(agentProviders, () => void load())
+watch(agentStatusGeneration, () => void load())
 </script>
 
 <template>
-  <div class="ctv:border-agent-border ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1 ctv:border-b ctv:px-2.5 ctv:py-1.5">
+  <div class="ctv:border-agent-border ctv:flex ctv:flex-wrap ctv:shrink-0 ctv:items-center ctv:gap-1 ctv:border-b ctv:px-2.5 ctv:py-1.5">
     <DropdownMenuRoot v-model:open="providerOpen">
       <TooltipProvider v-bind="AGENT_REKA_TOOLTIP_PROVIDER_PROPS">
         <TooltipRoot>
@@ -165,6 +164,7 @@ watch(agentProviders, () => void load())
             <TooltipTrigger as-child>
               <button
                 ref="providerTrigger"
+                :aria-label="t('diagnostics.newChats')"
                 type="button"
                 :disabled="agentBusy"
                 :class="cn(chipClass, providerOpen && 'ctv:bg-agent-surface-hover', agentBusy && 'ctv:cursor-default ctv:opacity-50')"
@@ -192,7 +192,7 @@ watch(agentProviders, () => void load())
             <DropdownMenuRadioItem v-for="p in providers" :key="p.id" :value="p.id" :disabled="!p.available" :class="itemClass">
               <span :class="cn('ctv:size-[7px] ctv:shrink-0 ctv:rounded-full', p.available ? 'ctv:bg-agent-success' : 'ctv:bg-agent-danger')" />
               <span class="ctv:truncate">{{ p.label }}</span>
-              <span class="ctv:text-agent-fg-muted ctv:ml-1 ctv:min-w-0 ctv:truncate ctv:text-xs/4">{{ p.available ? p.version : p.detail }}</span>
+              <span class="ctv:text-agent-fg-muted ctv:ml-1 ctv:min-w-0 ctv:truncate ctv:text-xs/4">{{ p.id === 'hermes' ? diagnosticSummary(p.health, t) : [p.detail, p.version].filter(Boolean).join(' · ') }}</span>
               <span class="ctv:ml-auto ctv:flex ctv:size-4 ctv:shrink-0 ctv:items-center ctv:justify-center">
                 <DropdownMenuItemIndicator>
                   <span class="ctv:icon-[lucide--check] ctv:size-4" />
@@ -204,10 +204,13 @@ watch(agentProviders, () => void load())
       </DropdownMenuPortal>
     </DropdownMenuRoot>
 
+    <span v-if="providerSaveError" role="alert" class="ctv:order-last ctv:w-full ctv:shrink-0 ctv:text-agent-danger ctv:text-xs">{{ t('agentBar.providerSaveFailed') }}</span>
+    <ProviderDiagnostics compact />
+
     <DropdownMenuRoot :open="modelOpen" @update:open="onModelOpen">
       <DropdownMenuTrigger as-child>
-        <button type="button" :class="cn(chipClass, 'ctv:text-agent-fg-muted ctv:hover:text-agent-fg', modelOpen && 'ctv:bg-agent-surface-hover ctv:text-agent-fg')">
-          <span class="ctv:min-w-0 ctv:truncate">{{ modelLabel || t('agentBar.defaultModel') }}</span>
+        <button type="button" :disabled="agentBusy" :aria-label="t('diagnostics.savedModel')" :class="cn(chipClass, 'ctv:text-agent-fg-muted ctv:hover:text-agent-fg', modelOpen && 'ctv:bg-agent-surface-hover ctv:text-agent-fg')">
+          <span class="ctv:min-w-0 ctv:truncate">{{ current?.id === 'hermes' ? t('diagnostics.savedModel') + ': ' : '' }}{{ modelLabel || t('agentBar.defaultModel') }}</span>
           <span class="ctv:icon-[lucide--chevron-down] ctv:size-3 ctv:shrink-0" />
         </button>
       </DropdownMenuTrigger>

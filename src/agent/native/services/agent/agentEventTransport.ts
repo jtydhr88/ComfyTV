@@ -13,8 +13,10 @@ export type AgentChatEvent = Extract<
   AgentWsEvent,
   {
     type:
+      | 'agent_interaction'
       | 'agent_thinking'
       | 'agent_tool_call'
+      | 'agent_notice'
       | 'agent_message_delta'
       | 'agent_message_done'
       | 'agent_active_tab'
@@ -77,6 +79,28 @@ export function createAgentEventTransport(
   function ingest(event: AgentChatEvent): void {
     if (settled) return
     switch (event.type) {
+      case 'agent_interaction': {
+        const interaction = { ...event.data.interaction, can_respond: false }
+        const prior = message.parts.find(p => p.type === 'hermes_interaction' && p.interaction.id === interaction.id)
+        if (prior?.type === 'hermes_interaction') {
+          if (prior.interaction.state !== 'pending' && interaction.state === 'pending') return
+          prior.interaction = interaction
+        } else message.parts.push({ type: 'hermes_interaction', interaction })
+        break
+      }
+      case 'agent_notice':
+        closeOpenText()
+        closeOpenThinking()
+        message.thinking = false
+        message.thinkingText = undefined
+        // These are deliberately uncorrelated observations, not tool receipts.
+        message.parts.push({
+          type: 'notice',
+          text: event.data.text,
+          level: event.data.level === 'warn' ? 'warning' : event.data.level,
+          detail: event.data.detail
+        })
+        break
       case 'agent_thinking':
         closeOpenText()
         message.thinking = true

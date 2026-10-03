@@ -48,6 +48,7 @@ watch(isOpen, (open) => {
       class="comfytv-root ctv:absolute ctv:inset-x-4 ctv:bottom-40 ctv:z-30 ctv:max-h-[60%] ctv:overflow-y-auto"
     >
       <EaglePickerPopup
+        :can-pick="eaglePicker.handlers.canPick"
         :added-ids="eaglePicker.handlers.addedIds()"
         :media-types="['image', 'video', 'audio']"
         @select="eaglePicker.handlers.select"

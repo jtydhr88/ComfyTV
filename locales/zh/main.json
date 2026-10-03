@@ -1,4 +1,44 @@
 {
+  "hermesConnection": {
+    "title": "Hermes 连接",
+    "checking": "正在读取状态／执行操作…",
+    "source": "当前生效的凭据来源",
+    "sources": { "secure_store": "系统安全凭据库", "environment": "继承的环境变量（兼容模式）", "none": "尚未配置", "disabled": "已明确停用（禁止环境变量回退）" },
+    "endpoint": "Broker 地址（HTTPS 或本机 HTTP）",
+    "mcp": "绑定的 MCP 服务",
+    "model": "当前模型覆盖值（只读）",
+    "configured": "已配置；请测试当前连接以验证身份认证。",
+    "unconfigured": "当前没有生效的连接。",
+    "storage": "安全凭据库后端",
+    "storageUnavailable": "安全凭据库不可用。请启用系统凭据后端（Windows DPAPI 或受支持的系统钥匙串）后刷新；不会回退到明文存储。",
+    "readonly": "只读。请从同一台机器的本机回环地址打开设置，并建立本地交互租约后管理连接。局域网访问不能配对、导入、迁移、测试或断开连接。",
+    "pairHelp": "请让可信 Broker 服务器的所有者使用随附的 Broker 配对命令行生成短期一次性配对码。配对会授权访问现有 Broker 身份、历史记录及已配置的工具策略。重新配对会轮换唯一活动客户端凭据，不会建立隔离账户。",
+    "transportHelp": "须先配置好 Broker 和现有 Hermes API 桥接服务。已有 SSH 隧道可通过其本机回环 URL 使用；本界面不配置 SSH、不收集 SSH 密钥。上游主 API 凭据始终留在服务器。",
+    "code": "一次性配对码",
+    "pair": "配对／重新配对",
+    "advanced": "高级：导入已有的专用客户端令牌",
+    "importHelp": "仅导入已有的受限 Broker 客户端令牌，切勿输入上游主 API 令牌。服务器验证受限 Broker 协议后才会保存。输入的秘密仅保留在内存中，每次尝试或关闭面板时清空。",
+    "token": "专用客户端令牌",
+    "import": "验证并导入",
+    "migrate_legacy_dpapi": "迁移已有 Windows DPAPI 凭据",
+    "migrate_environment": "迁移继承的环境变量凭据",
+    "migrationHelp": "迁移由 ComfyTV 服务器读取已有秘密，不会传给浏览器；不删除或修改旧文件及进程环境变量。",
+    "test": "测试当前连接",
+    "refresh": "查看当前状态",
+    "disconnect": "断开连接",
+    "revokeRemote": "同时撤销远程凭据（推荐）",
+    "confirmDisconnect": "我确认断开此连接，并禁用环境变量回退。",
+    "localOnlyWarning": "仅本地断开：远程凭据仍有效，只停用此 ComfyTV 实例中的连接。",
+    "revokeHelp": "远程撤销须得到确认后才会本地停用；撤销阻止后续授权请求，不会停止已接纳的任务。",
+    "unavailable": "连接状态不可用或协议不兼容。不会显示秘密详情；操作前请检查当前状态。",
+    "failed": "操作被拒绝。请检查当前状态、本地授权、安全存储及 Broker 配置。未自动重试。",
+    "pending": "投递或配置结果待确认／未知。请勿认为已成功或已撤销。先检查当前状态；配对待确认时，请手动重新输入同一个配对码再试。不会自动重试有副作用的操作。",
+    "saved": "已保存，且状态回读验证一致。其他服务诊断正在刷新。",
+    "tested": "当前生效连接身份认证成功；未执行模型推理。",
+    "revoked": "远程撤销已确认，本地连接已停用，环境变量回退已禁止。",
+    "localOnly": "本地连接已停用；远程凭据仍有效，环境变量回退已禁止。",
+    "refreshFailed": "设置刷新不可用，请重新打开设置读取已保存的配置。"
+  },
   "pentradoActions": {
     "capture": "截图输出",
     "captureHint": "合成图层并输出到节点",
@@ -531,6 +571,21 @@
       "bot-comfyui-llm-thinking": {
         "label": "ComfyUI LLM 思考模式",
         "desc": "实验性 — 只对玩具性质的 ComfyUI LLM provider 生效。让 Qwen3 系模型先在隐藏的 <think> 块里推理再回答。工具调用明显更聪明,代价是每轮多花一些生成时间。"
+      },
+      "bot-hermes-url": {
+        "label": "Hermes Agent 端点",
+        "desc": "Hermes Agent API 根地址，不是订阅代理或模型端点。需在 ComfyUI 进程环境中设置 COMFYTV_HERMES_API_KEY。使用 SSH 隧道连接回环 HTTP，或使用远端 HTTPS。工具在 Hermes 主机执行。",
+        "placeholder": "http://127.0.0.1:8642"
+      },
+      "bot-hermes-mcp-server": {
+        "label": "Hermes 中的 ComfyTV MCP 名称",
+        "desc": "Hermes 已配置的 ComfyTV MCP 服务器名称。这只是路由指引，不是权限控制；请在 Hermes 侧限制工具。本 provider 不自动挂载逐会话 MCP。",
+        "placeholder": "comfytv"
+      },
+      "bot-model-hermes": {
+        "label": "Hermes 模型覆盖",
+        "desc": "可选，填写 Hermes 运行时识别的模型 ID；留空沿用其配置。不是 /v1/models 返回的 agent 别名。",
+        "placeholder": "Hermes 默认"
       },
       "bot-local-llm-url": {
         "label": "Local LLM 端点",

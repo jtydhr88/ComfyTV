@@ -1,4 +1,44 @@
 {
+  "hermesConnection": {
+    "title": "Hermes connection",
+    "checking": "Reading status / operation in progress…",
+    "source": "Effective credential source",
+    "sources": { "secure_store": "OS secure store (secure_store)", "environment": "Inherited environment (environment) — compatibility mode", "none": "Not configured (none)", "disabled": "Explicitly disabled (disabled) — environment fallback blocked" },
+    "endpoint": "Broker URL (HTTPS or loopback HTTP)",
+    "mcp": "Bound MCP server",
+    "model": "Current model override (read-only)",
+    "configured": "Configured; use Test current connection to verify authentication.",
+    "unconfigured": "No effective connection is configured.",
+    "storage": "Secure storage backend",
+    "storageUnavailable": "Secure storage is unavailable. Enable an OS credential backend (Windows DPAPI or a supported OS keyring), then refresh. No plaintext fallback is used.",
+    "readonly": "Read-only. Open Settings from the same-machine loopback origin and establish a local interaction lease to manage this connection. LAN access cannot pair, import, migrate, test or disconnect.",
+    "pairHelp": "On the trusted broker server, ask the owner to generate a short-lived one-time pairing code with the shipped broker pairing CLI. Pairing grants access to the existing broker principal, its history and configured tool policy. Re-pairing rotates the one active client credential; it does not create an isolated account.",
+    "transportHelp": "The broker and existing Hermes API bridge must already be configured. An already-configured SSH tunnel may be used through its loopback URL; this screen does not provision SSH or collect SSH keys. The upstream main API credential stays on the server.",
+    "code": "One-time pairing code",
+    "pair": "Pair / re-pair",
+    "advanced": "Advanced: import existing dedicated client token",
+    "importHelp": "Import only an existing restricted broker client token, never the upstream main API bearer. The server verifies the restricted broker contract before saving. Secrets are memory-only and cleared on every attempt or when this panel closes.",
+    "token": "Dedicated client token",
+    "import": "Verify and import",
+    "migrate_legacy_dpapi": "Migrate existing Windows DPAPI credential",
+    "migrate_environment": "Migrate inherited environment credential",
+    "migrationHelp": "Migration reads the existing secret on the ComfyTV server, without sending it to the browser. Legacy files and process environment are not deleted or modified.",
+    "test": "Test current connection",
+    "refresh": "Check current status",
+    "disconnect": "Disconnect",
+    "revokeRemote": "Also revoke the remote credential (recommended)",
+    "confirmDisconnect": "I confirm disconnecting this connection and disabling environment fallback.",
+    "localOnlyWarning": "Local-only disconnect: the remote credential remains valid. This only disables the connection on this ComfyTV installation.",
+    "revokeHelp": "Remote revoke must be acknowledged before local disable. It prevents future authorized requests, but does not stop already-admitted jobs.",
+    "unavailable": "Connection status unavailable or incompatible. No secret details are shown. Check current status before taking action.",
+    "failed": "Operation rejected. Check current status and local authorization, secure storage and broker configuration. No automatic retry was made.",
+    "pending": "Delivery or setup result is pending / unknown. Do not assume success or revocation. Check current status; for a pending pairing, explicitly retry by re-entering the SAME pairing code. No automatic side-effect retry is made.",
+    "saved": "Saved connection verified by status readback. Other provider diagnostics are being refreshed.",
+    "tested": "Current effective connection tested: authentication succeeded; no model inference was run.",
+    "revoked": "Remote revocation acknowledged and local connection disabled (revoked). Environment fallback is blocked.",
+    "localOnly": "Local connection disabled (localOnly). The remote credential remains valid; environment fallback is blocked.",
+    "refreshFailed": "Settings refresh unavailable; reopen Settings to read the saved configuration."
+  },
   "pentradoActions": {
     "capture": "Capture",
     "captureHint": "Composite the layers and send to the node output",
@@ -531,6 +571,21 @@
       "bot-comfyui-llm-thinking": {
         "label": "ComfyUI LLM thinking",
         "desc": "EXPERIMENTAL — only affects the toy ComfyUI LLM provider. Let Qwen3 models reason in a hidden <think> block before answering. Noticeably smarter tool use, at the cost of extra generation time per turn."
+      },
+      "bot-hermes-url": {
+        "label": "Hermes Agent endpoint",
+        "desc": "Hermes Agent API root (not the subscription proxy or a model endpoint). Requires COMFYTV_HERMES_API_KEY in the ComfyUI process environment. Use loopback HTTP via an SSH tunnel, or HTTPS for remote access. The agent executes tools on the Hermes host.",
+        "placeholder": "http://127.0.0.1:8642"
+      },
+      "bot-hermes-mcp-server": {
+        "label": "Hermes ComfyTV MCP name",
+        "desc": "Name of the ComfyTV MCP server already configured in Hermes. This is routing guidance, not an access-control rule. Configure tool permissions in Hermes; this provider does not mount a per-chat MCP server.",
+        "placeholder": "comfytv"
+      },
+      "bot-model-hermes": {
+        "label": "Hermes model override",
+        "desc": "Optional model ID understood by the Hermes agent runtime. Blank uses its configured model. This is not the agent alias returned by /v1/models.",
+        "placeholder": "Hermes default"
       },
       "bot-local-llm-url": {
         "label": "Local LLM endpoint",

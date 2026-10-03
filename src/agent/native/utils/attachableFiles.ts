@@ -1,6 +1,42 @@
 import type { MediaType } from '@agent/utils/formatUtil'
 import { getMediaTypeFromFilename } from '@agent/utils/formatUtil'
 
+export interface AttachmentCapability {
+  attachments?: boolean
+  attachment_transport?: string
+  attachment_media_types?: string[]
+  attachment_mixed_context?: boolean
+}
+
+export function attachmentPolicy(cap: AttachmentCapability) {
+  const references = cap.attachment_transport === 'asset_refs'
+  const enabled = cap.attachments !== false
+  const mixedContext = references && cap.attachments === true && cap.attachment_mixed_context === true
+  // Copy the advertised list; an existing policy must not follow later mutations.
+  // Older reference servers omitted the list and supported images only.
+  const mediaTypes = ['image', 'video', 'audio'].filter(kind =>
+    (cap.attachment_media_types ?? ['image']).includes(kind))
+  return {
+    references,
+    enabled,
+    mixedContext,
+    // Unknown deferred/Eagle media must first be imported via the library.
+    allowsDeferred: enabled && !references,
+    accept: references ? mediaTypes.map(kind => `${kind}/*`).join(',') : AGENT_ATTACH_ACCEPT,
+    label: references
+      ? enabled ? mediaTypes.some(kind => kind !== 'image')
+        ? `Media references · not inspected. Inspect metadata, video frames/timeline and audio waveform on demand; waveform is not hearing or transcription. Documents unsupported. ${mixedContext
+          ? 'Workflow drafts, root-level node selections, saved references and preferences are captured, not applied. Nested selections are currently unsupported and rejected. ComfyTV skills and request preference overrides remain unsupported.'
+          : 'Combining media with selection, skills, workflow context or saved preferences is unsupported and will be rejected. Send without media to keep that context, or use a separate chat without it.'} Nothing is automatically cleared. Deferred Eagle imports remain unsupported.`
+        : mixedContext
+        ? 'Image references · not inspected. Workflow drafts, root-level node selections, saved references and preferences are captured, not applied. Nested selections are currently unsupported and rejected. Unsupported or ambiguous context is rejected; nothing is automatically unlinked. ComfyTV skills, request preference overrides, video/audio/documents and deferred Eagle imports remain unsupported.'
+        : 'Image references only · not inspected. Video/audio/documents unsupported. Combining images with selection, skills, workflow context or saved preferences is unsupported and will be rejected. Send without images to keep that context, or use a separate chat without it. Nothing is automatically cleared.'
+        : 'Image references disabled pending cache and vision acceptance.'
+      : enabled ? '' : 'Attachments unsupported by this provider.',
+    allows: (kind: string) => enabled && (!references || mediaTypes.includes(kind))
+  }
+}
+
 const MEDIA_ATTACHABLE_KINDS = new Set<MediaType>(['image', 'video', 'audio'])
 
 /* Non-media formats approved for agent attach (Jo, FE-1323); extended as the

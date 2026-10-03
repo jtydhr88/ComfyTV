@@ -25,6 +25,9 @@ import type {
   UploadImageResult
 } from '../../schemas/agentApiSchema'
 
+import { createInteractionChannel } from './agentInteractionChannel'
+import { validInteractionDecision, zInteractionSnapshot, zInteractionResult, type TVInteraction, type InteractionDecision } from '../../schemas/hermesInteractionSchema'
+
 const CLOUD_WORKFLOW_PAGE_SIZE = 100
 
 export class AgentApiError extends Error {
@@ -108,6 +111,7 @@ function parseRetryAfter(header: string | null): number | undefined {
 }
 
 export function createAgentRestClient() {
+  const interactionChannel = createInteractionChannel((route, init) => api.fetchApi(route, init), window.location.origin)
   async function toApiError(response: Response): Promise<AgentApiError> {
     const body = parseErrorBody(await response.text())
     const message = getErrorMessage(body, response.statusText)
@@ -158,7 +162,7 @@ export function createAgentRestClient() {
     if (req.draft !== undefined) body.draft = req.draft
     return request(
       `/comfytv/agent/threads/${encodeURIComponent(threadId)}/messages`,
-      jsonInit('POST', body),
+      { ...jsonInit('POST', body), credentials: 'same-origin', redirect: 'error', headers: { 'Content-Type': 'application/json', ...interactionChannel.headers(`/comfytv/agent/threads/${encodeURIComponent(threadId)}/messages`) } },
       zAgentTurnAccepted
     )
   }
@@ -258,7 +262,21 @@ export function createAgentRestClient() {
     )
   }
 
+  async function getInteractions(threadId: string) {
+    const route = `/comfytv/agent/threads/${encodeURIComponent(threadId)}/interactions`
+    const snapshot = await request(route, { method: 'GET', credentials: 'same-origin', redirect: 'error', headers: interactionChannel.headers(route) }, zInteractionSnapshot)
+    if (snapshot.thread_id !== threadId) throw new Error('Interaction thread mismatch')
+    return snapshot
+  }
+  async function respondInteraction(interaction: TVInteraction, decision: InteractionDecision) {
+    if (!validInteractionDecision(interaction, decision)) throw new Error('Invalid interaction decision')
+    const route = `/comfytv/agent/threads/${encodeURIComponent(interaction.thread_id)}/interactions/${encodeURIComponent(interaction.id)}/response`
+    const headers = interactionChannel.headers(route)
+    if (!headers['X-ComfyTV-Interaction-CSRF']) throw new Error('Local interaction channel unavailable')
+    return request(route, { ...jsonInit('POST', { message_id: interaction.message_id, revision: interaction.revision, ...decision }), credentials: 'same-origin', redirect: 'error', headers: { 'Content-Type': 'application/json', ...headers } }, zInteractionResult)
+  }
   return {
+    interactionChannel, getInteractions, respondInteraction,
     postMessage,
     getMessages,
     listThreads,

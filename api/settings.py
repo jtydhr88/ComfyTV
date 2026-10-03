@@ -20,6 +20,15 @@ async def update_settings(request: web.Request) -> web.Response:
     values = body.get("values")
     if not isinstance(values, dict) or not values:
         return web.json_response({"error": "values must be a non-empty object"}, status=400)
+    protected = {'bot-hermes-url', 'bot-hermes-mcp-server', 'bot-model-hermes'}
+    if any(key in values and values[key] != storage.get_setting(key) for key in protected):
+        from .hermes_interactions import CHANNELS
+        from .hermes_connection import LOCK, work_active
+        try: CHANNELS.validate(request)
+        except ValueError:
+            return web.json_response({'error':'local_authorization_required'},status=403)
+        if LOCK.locked() or work_active():
+            return web.json_response({'error':'setup_busy'},status=409)
     if values.get("enable-mcp") is False:
         values = {**values, "enable-bot": False}
     if values.get("enable-bot") is True:

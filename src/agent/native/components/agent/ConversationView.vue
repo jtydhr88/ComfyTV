@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { InteractionResponse } from '../../schemas/hermesInteractionSchema'
 import { useIntersectionObserver } from '@vueuse/core'
 import { computed, nextTick, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -34,6 +35,7 @@ const {
 const emit = defineEmits<{
   feedback: [turnId: string, vote: 'up' | 'down' | null]
   editPrompt: [prompt: PromptSnapshot]
+  respondInteraction: [response: InteractionResponse]
   answerAsk: [askId: string, selection: 'run' | 'cancel']
   openWorkflow: [workflowId: string, workflowName?: string]
   openReferenceWorkflow: [workflowId: string, workflowName: string]
@@ -116,6 +118,7 @@ watch(
               :answering-ask-ids
               :paywall-presentation
               @feedback="emit('feedback', entry.id, $event)"
+              @respond-interaction="emit('respondInteraction', $event)"
               @answer-ask="
                 (askId: string, selection: 'run' | 'cancel') =>
                   emit('answerAsk', askId, selection)

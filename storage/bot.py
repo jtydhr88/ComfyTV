@@ -2,7 +2,7 @@ import json
 import uuid
 from typing import Optional
 
-from sqlalchemy import desc, select
+from sqlalchemy import delete, desc, select
 
 from .. import db
 from ..db import BotChat, BotMessage
@@ -16,6 +16,16 @@ def _prefs_from_json(raw: Optional[str]) -> list[str]:
     except (json.JSONDecodeError, TypeError):
         return []
     return [str(p) for p in parsed] if isinstance(parsed, list) else []
+
+
+def strict_bot_preferences(chat_id: str):
+    """Mixed snapshots must not use the legacy display-time string coercion."""
+    from ..api.task_context import strict_loads
+    with db.get_session() as s:
+        row = s.get(BotChat, chat_id)
+        if row is None:
+            raise ValueError('chat unavailable')
+        return strict_loads(row.prefs_json) if row.prefs_json else []
 
 
 def _chat_to_dict(r: BotChat) -> dict:
@@ -202,6 +212,14 @@ def create_bot_message(
         s.add(row)
         s.commit()
         return _message_to_dict(row)
+
+
+def discard_bot_submission(message_id: str) -> None:
+    """Rollback only an unbroadcast local admission, including provisional reply."""
+    with db.get_session() as s:
+        s.execute(delete(BotMessage).where(BotMessage.parent_id == message_id))
+        s.execute(delete(BotMessage).where(BotMessage.id == message_id))
+        s.commit()
 
 
 def update_bot_message(

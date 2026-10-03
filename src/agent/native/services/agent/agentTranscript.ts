@@ -1,3 +1,4 @@
+import { zTVInteraction } from '../../schemas/hermesInteractionSchema'
 import type { AgentMessages, TurnId } from '../../schemas/agentApiSchema'
 import type { WorkflowReference } from '../../types/workflowReference'
 import { parseWorkflowReferences } from '../../utils/workflowReferenceText'
@@ -144,21 +145,38 @@ export function normalizeAgentTranscript(
     if (row.role === 'assistant') {
       const message = assistants.get(turnId) ?? createAssistantMessage(turnId)
       message.streaming = false
-      if (text)
-        message.parts = [
-          ...message.parts,
-          { type: 'text', text, state: 'done' }
-        ]
-      if (
-        row.status === 'streaming' &&
-        row.pending_ask?.kind === 'run_approval'
-      ) {
-        message.parts.push({
-          type: 'runApproval',
-          askId: row.pending_ask.ask_id,
-          workflowId: row.pending_ask.context?.workflow_id || undefined,
-          workflowName: row.pending_ask.context?.workflow_name || undefined
-        })
+      const blocks = row.content?.blocks
+      // Native rows carry ordered blocks plus a text-only compatibility summary.
+      // Use the blocks once, never both copies of the same text.
+      if (Array.isArray(blocks)) {
+        for (const block of blocks) {
+          if (!block || typeof block !== 'object') continue
+          if (block.type === 'hermes_interaction') {
+            const parsed = zTVInteraction.safeParse(block.interaction)
+            if (parsed.success && parsed.data.message_id === row.id) message.parts.push({ type: 'hermes_interaction', interaction: { ...parsed.data, can_respond: false } })
+          } else if (block.type === 'text' && typeof block.text === 'string') {
+            message.parts.push({ type: 'text', text: block.text, state: 'done' })
+          } else if (block.type === 'notice' && typeof block.text === 'string') {
+            message.parts.push({
+              type: 'notice', text: block.text,
+              level: block.level === 'error' ? 'error'
+                : block.level === 'warn' || block.level === 'warning' ? 'warning' : 'info',
+              ...(typeof block.detail === 'string' ? { detail: block.detail } : {})
+            })
+          }
+        }
+      } else if (text) {
+        message.parts.push({ type: 'text', text, state: 'done' })
+      }
+      if (row.status === 'streaming') {
+        if (row.pending_ask?.kind === 'run_approval') {
+          message.parts.push({
+            type: 'runApproval',
+            askId: row.pending_ask.ask_id,
+            workflowId: row.pending_ask.context?.workflow_id || undefined,
+            workflowName: row.pending_ask.context?.workflow_name || undefined
+          })
+        }
         message.streaming = true
         pending = {
           messageId: row.id as TurnId,

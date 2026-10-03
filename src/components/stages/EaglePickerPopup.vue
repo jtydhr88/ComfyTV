@@ -134,6 +134,7 @@ import { app } from '@/lib/comfyApp'
 import { mediaTypeOfExt } from '@/utils/mediaFileTypes'
 
 const props = defineProps<{
+  canPick?: () => boolean
   addedIds?: number[]
   mediaTypes?: string[]
 }>()
@@ -185,6 +186,10 @@ function isAdded(item: EagleItem): boolean {
 
 async function onPick(item: EagleItem): Promise<void> {
   if (pendingId.value) return
+  // Capture this picker's guard before awaiting: a newer picker must not
+  // receive the result of an import begun in an older thread.
+  const canPick = props.canPick
+  if (canPick && !canPick()) return
   const known = importedEagleAsset(item.id)
   if (known) {
     toggle(known)
@@ -192,7 +197,9 @@ async function onPick(item: EagleItem): Promise<void> {
   }
   pendingId.value = item.id
   try {
-    toggle(await importEagleAsset(item.id))
+    const asset = await importEagleAsset(item.id)
+    if (canPick && (!canPick() || props.canPick !== canPick)) return
+    toggle(asset)
   } catch (e) {
     ;(app as any)?.extensionManager?.toast?.add?.({
       severity: 'error',

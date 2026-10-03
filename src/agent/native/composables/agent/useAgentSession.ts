@@ -1,4 +1,5 @@
 import { computed, ref } from 'vue'
+import { createAgentInteractions } from '../../services/agent/agentInteractions'
 
 import { i18n } from '@agent/i18n'
 import { reportError } from '@agent/platform/telemetry/reportError'
@@ -26,6 +27,8 @@ import { useAgentConversationStore } from '../../stores/agent/agentConversationS
 import { useAgentWorkflowTabBindingStore } from '../../stores/agent/agentWorkflowTabBindingStore'
 import type { WorkflowReference } from '../../types/workflowReference'
 import { serializeWorkflowReferences } from '../../utils/workflowReferenceText'
+import { copyWorkflowJson } from '../../utils/copyWorkflowJson'
+import { attachmentPolicy, type AttachmentCapability } from '../../utils/attachableFiles'
 
 export interface AgentEventSource {
   subscribe(listener: (raw: unknown) => void): () => void
@@ -44,6 +47,7 @@ interface SentAttachment {
 }
 
 interface SentTag {
+  locatorId?: string
   id: string
   title: string
 }
@@ -69,6 +73,7 @@ type PromptEditState =
 export interface AgentSessionDeps {
   rest: AgentRestClient
   events: AgentEventSource
+  attachmentCapability?: () => AttachmentCapability
   workflow?: {
     // origin, when given, pins resolution to the tab that initiated the send
     // instead of the target selected when this is called - it is read
@@ -76,6 +81,8 @@ export interface AgentSessionDeps {
     // describe the pre-await originating tab, not a later switch. See
     // TurnOrigin for why "no origin tab" is a value rather than an omission.
     current(origin?: TurnOrigin): WorkflowTurnContext | undefined
+    /** Stable host tab object; never serialized. Detect close/reopen at the same path. */
+    identity?(origin: TurnOrigin): object | undefined
     adopted(workflowId: string, sent: WorkflowTurnContext | undefined): void
     restored?(
       workflowId: string | undefined,
@@ -125,6 +132,8 @@ export function useAgentSession(deps: AgentSessionDeps) {
 
   const conversationStore = useAgentConversationStore()
   const bindingStore = useAgentWorkflowTabBindingStore()
+  const interactions = rest.interactionChannel ? createAgentInteractions(rest, conversationStore.reconcileInteraction) : undefined
+  let interactionRefresh: ReturnType<typeof setInterval> | undefined
   /**
    * The workflow the session is bound to (set on turn ack or an active-tab
    * switch, cleared by newChat/loadThread) - the CRDT follower's subscribe
@@ -174,6 +183,8 @@ export function useAgentSession(deps: AgentSessionDeps) {
       rememberedWorkflowId = null
       boundWorkflowId.value = null
     }
+    void rest.interactionChannel?.open().then(() => { if (conversationStore.threadId) void interactions?.refresh(conversationStore.threadId) })
+    interactionRefresh = setInterval(() => { if (conversationStore.threadId) void interactions?.refresh(conversationStore.threadId) }, 30000)
     unsubscribe = events.subscribe(onRaw)
     if (events.onStatus) unsubscribeStatus = events.onStatus(onStatus)
     const surviving = conversationStore.threadId
@@ -211,6 +222,7 @@ export function useAgentSession(deps: AgentSessionDeps) {
       const history = await rest.getMessages(threadId)
       if (conversationStore.threadId !== threadId || !isCurrent()) return false
       conversationStore.hydrate(history)
+      await interactions?.refresh(threadId)
       await workflow?.restored?.(conversationStore.latestWorkflowId, isCurrent)
       if (conversationStore.threadId !== threadId || !isCurrent()) return false
       return true
@@ -228,6 +240,8 @@ export function useAgentSession(deps: AgentSessionDeps) {
   }
 
   function stop(): void {
+    clearInterval(interactionRefresh)
+    rest.interactionChannel?.close()
     unsubscribe?.()
     unsubscribeStatus?.()
     unsubscribe = null
@@ -285,9 +299,13 @@ export function useAgentSession(deps: AgentSessionDeps) {
     wfContext: WorkflowTurnContext | undefined,
     attachments?: SentAttachment[],
     tags?: SentTag[],
-    workflowReferences?: WorkflowReference[]
+    workflowReferences?: WorkflowReference[],
+    mixed = false
   ): PostMessageInput {
-    const draft = workflow?.draft?.(origin)
+    const liveDraft = workflow?.draft?.(origin)
+    const draft = mixed && liveDraft
+      ? { ...liveDraft, content: copyWorkflowJson(liveDraft.content) }
+      : liveDraft
     return {
       content: serializeWorkflowReferences(text, workflowReferences ?? []),
       tabs: workflow?.tabs?.(origin),
@@ -295,9 +313,9 @@ export function useAgentSession(deps: AgentSessionDeps) {
         workflowReferences,
         wfContext?.id
       ),
-      selection: selectedNodes(tags),
+      selection: selectedNodes(tags, mixed),
       attachments: attachments?.map((attachment) => attachment.ref),
-      ...(canSendDraft(threadId, wfContext, draft) ? { draft } : {})
+      ...((mixed && draft !== undefined) || canSendDraft(threadId, wfContext, draft) ? { draft } : {})
     }
   }
 
@@ -313,9 +331,12 @@ export function useAgentSession(deps: AgentSessionDeps) {
       }))
   }
 
-  function selectedNodes(tags: SentTag[] | undefined) {
+  function selectedNodes(tags: SentTag[] | undefined, mixed = false) {
     if (tags === undefined || tags.length === 0) return undefined
-    return { node_ids: tags.map((tag) => tag.id) }
+    return {
+      node_ids: tags.map((tag) => tag.id),
+      ...(mixed ? { node_locators: tags.map((tag) => tag.locatorId ?? String(tag.id)) } : {})
+    }
   }
 
   function canSendDraft(
@@ -434,23 +455,69 @@ export function useAgentSession(deps: AgentSessionDeps) {
       originContext === undefined ? null : { tabPath: originContext.tabPath }
     let sentContext: WorkflowTurnContext | undefined
     try {
+      const capability = deps.attachmentCapability?.()
+      const policy = attachmentPolicy(capability ?? {})
+      const mixed = Boolean(attachments?.length) && policy.mixedContext
+      if (mixed || policy.references) {
+        attachments = attachments?.map((attachment) => ({ ...attachment }))
+      }
+      // Managed asset names are editable labels, not filenames. Ingress checks
+      // actual asset media_type; the backend authoritatively validates each ref.
+      if (policy.references && attachments?.some(attachment =>
+        !policy.enabled || !/^asset:\d+$/.test(attachment.ref)
+      )) throw new Error('Unsupported media reference. Attach capability-approved image/video/audio assets; documents and archives are unsupported.')
+      if (mixed) {
+        tags = tags?.map((tag) => ({ ...tag }))
+        workflowReferences = workflowReferences?.map((reference) => ({
+          ...reference
+        }))
+      }
+      const originAtClick =
+        mixed && originContext ? { ...originContext } : originContext
+      const identityAtClick = mixed ? workflow?.identity?.(origin) : undefined
+      // Compose the existing wire content, then detach every submitted value
+      // from the live editor/graph before preparation can yield. Draft JSON is
+      // copied/validated by buildPostInput; optional envelope fields may omit
+      // undefined exactly as they do in the REST serializer.
+      const captured: PostMessageInput | undefined = mixed
+        ? JSON.parse(JSON.stringify(
+            buildPostInput(
+              threadAtSend, text, origin, originAtClick,
+              attachments, tags, workflowReferences, true
+            ),
+            (_key, value) => {
+              if (typeof value === 'number' && !Number.isFinite(value))
+                throw new Error('Mixed context requires finite JSON values.')
+              return value
+            }
+          ))
+        : undefined
       await prepareWorkflow()
       if (generation !== loadGeneration) return false
       const wfContext = workflow?.current(origin)
-      if (workflowTargetChanged(originContext, wfContext)) {
+      const originUnavailable = mixed && origin !== null && (
+        wfContext?.tabPath !== origin.tabPath ||
+        (workflow?.identity && workflow.identity(origin) !== identityAtClick)
+      )
+      if (workflowTargetChanged(originAtClick, wfContext) || originUnavailable) {
         recordUnavailableTarget(text)
         return false
       }
       sentContext = wfContext
-      const ack = await postTurn(
-        threadAtSend,
-        text,
-        origin,
-        wfContext,
-        attachments,
-        tags,
-        workflowReferences
-      )
+      const ack = captured
+        ? await rest.postMessage(threadAtSend, {
+            ...captured,
+            ...(wfContext?.id === undefined ? {} : { workflowId: wfContext.id })
+          })
+        : await postTurn(
+            threadAtSend,
+            text,
+            origin,
+            wfContext,
+            attachments,
+            tags,
+            workflowReferences
+          )
       if (generation !== loadGeneration) return false
       acceptTurn(ack, text, wfContext, attachments, tags, workflowReferences)
       return true
@@ -542,16 +609,10 @@ export function useAgentSession(deps: AgentSessionDeps) {
     } catch (error) {
       setAskAnswering(askId, false)
       if (error instanceof AgentApiError && error.status === 409) {
-        conversationStore.ingest({
-          type: 'agent_ask_resolved',
-          data: {
-            thread_id: currentThreadId,
-            message_id: messageId,
-            ask_id: askId,
-            status: 'answered',
-            selected: null
-          }
-        })
+        // Conflict is not an answered receipt. Reconcile only the captured
+        // thread; a late callback must not hydrate a newly selected chat.
+        if (conversationStore.threadId === currentThreadId)
+          await hydrateFromServer(currentThreadId, () => conversationStore.threadId === currentThreadId)
         return
       }
       reportError(error, { errorType: 'agent_ask_answer_failed' })
@@ -612,6 +673,11 @@ export function useAgentSession(deps: AgentSessionDeps) {
       return
     }
     const event = parsed.data
+    if (event.type === 'agent_interaction') {
+      interactions?.hint(event.data.interaction)
+      void interactions?.refresh(event.data.thread_id)
+      return
+    }
     if (event.type === 'agent_ask_resolved')
       setAskAnswering(event.data.ask_id, false)
     switch (event.type) {
@@ -641,6 +707,8 @@ export function useAgentSession(deps: AgentSessionDeps) {
   }
 
   function onStatus(live: boolean): void {
+    if (rest.interactionChannel) rest.interactionChannel.connected.value = live
+    if (live && conversationStore.threadId) void interactions?.refresh(conversationStore.threadId)
     if (live) {
       everLive = true
       return
@@ -674,6 +742,8 @@ export function useAgentSession(deps: AgentSessionDeps) {
     stop,
     sendMessage,
     stopTurn,
+    interactionView: interactions?.view,
+    respondInteraction: interactions?.respond,
     answerAsk,
     answeringAskIds: computed(() => answeringAskIds.value),
     newChat,
