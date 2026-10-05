@@ -40,14 +40,22 @@ describe('customIo', () => {
     expect(classifyWidget(widget({ widget_type: 'WEIRD' }))).toBeNull()
   })
 
-  it('maps output nodes to kinds', () => {
-    expect(outputKindOf({ id: '1', type: 'SaveImage' })).toBe('image')
-    expect(outputKindOf({ id: '1', type: 'SaveVideo' })).toBe('video')
-    expect(outputKindOf({ id: '1', type: 'SaveGLB' })).toBe('model')
-    expect(outputKindOf({ id: '1', type: 'ShowText' })).toBe('text')
-    expect(outputKindOf({ id: '1', type: 'Foo', is_output: true, out_type: 'STRING' })).toBe('text')
-    expect(outputKindOf({ id: '1', type: 'Foo', is_output: true, out_type: 'LATENT' })).toBeNull()
-    expect(outputKindOf({ id: '1', type: 'KSampler', is_output: false, out_type: 'LATENT' })).toBeNull()
+  it('maps output nodes to kinds by data type', () => {
+    const out = (type: string, in_type: string | null) => outputKindOf({ id: '1', type, is_output: true, out_type: null, in_type })
+    expect(out('SaveImage', 'IMAGE')).toBe('image')
+    expect(out('ThirdPartySaveImage', 'IMAGE')).toBe('image')
+    expect(out('SaveVideo', 'VIDEO')).toBe('video')
+    expect(out('SaveAudio', 'AUDIO')).toBe('audio')
+    expect(out('SaveGLB', 'MESH,FILE_3D,FILE_3D_GLB')).toBe('model')
+    expect(out('Save3D', 'FILE_3D_GLB')).toBe('model')
+    expect(out('SaveText', 'STRING')).toBe('text')
+    expect(out('SaveWEBM', 'IMAGE')).toBe('video')
+    expect(out('VHS_VideoCombine', 'IMAGE')).toBe('video')
+    expect(out('SaveLatent', 'LATENT')).toBeNull()
+    expect(out('SaveImage', null)).toBeNull()
+    expect(outputKindOf({ id: '1', type: 'PreviewAny', is_output: true, out_type: 'STRING', in_type: 'IMAGE' })).toBe('text')
+    expect(outputKindOf({ id: '1', type: 'TextGenerate', is_output: false, out_type: 'STRING' })).toBe('text')
+    expect(outputKindOf({ id: '1', type: 'VAEDecode', is_output: false, out_type: 'IMAGE', in_type: 'LATENT' })).toBeNull()
   })
 
   it('toggles inputs and assigns per-kind slots and keys', () => {

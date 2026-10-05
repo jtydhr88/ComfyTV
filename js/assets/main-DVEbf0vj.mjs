@@ -17013,7 +17013,8 @@ const GuiNodeSchema = object({
   type: string(),
   title: string().nullable().optional(),
   is_output: boolean().nullable().optional(),
-  out_type: string().nullable().optional()
+  out_type: string().nullable().optional(),
+  in_type: string().nullable().optional()
 }).passthrough();
 const WorkflowConfigSchema = object({
   id: number$1(),
@@ -59963,7 +59964,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-DvZRmvjp.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-BRohN-A7.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -86572,7 +86573,7 @@ const _sfc_main$4p = /* @__PURE__ */ defineComponent({
       }
     });
     const AgentPanelRoot = /* @__PURE__ */ defineAsyncComponent({
-      loader: () => import("./AgentPanelRoot-Be9l8D9R.mjs"),
+      loader: () => import("./AgentPanelRoot-CXX_VEf8.mjs"),
       errorComponent: AgentPanelLoadError,
       onError: (error2, _retry, fail) => {
         reportError(error2, { errorType: "agent_panel_load_failure" });
@@ -90886,24 +90887,22 @@ const UPLOAD_KIND = [
   ["audio_upload", "audio"],
   ["file_upload", "model"]
 ];
-const OUTPUT_NODE_KIND = {
-  SaveImage: "image",
-  PreviewImage: "image",
-  SaveAnimatedWEBP: "image",
-  SaveAnimatedPNG: "image",
-  SaveVideo: "video",
-  SaveWEBM: "video",
-  VHS_VideoCombine: "video",
-  SaveAudio: "audio",
-  SaveAudioMP3: "audio",
-  SaveAudioOpus: "audio",
-  SaveAudioAdvanced: "audio",
-  SaveGLB: "model",
-  PreviewAny: "text",
-  ShowText: "text",
-  SaveText: "text",
-  DisplayAny: "text"
+const DATA_KIND = {
+  IMAGE: "image",
+  VIDEO: "video",
+  AUDIO: "audio",
+  STRING: "text",
+  MESH: "model",
+  SPLAT: "model"
 };
+const FRAME_ENCODERS = /* @__PURE__ */ new Set(["SaveWEBM", "VHS_VideoCombine"]);
+function dataKind(type) {
+  for (const t2 of String(type ?? "").split(",")) {
+    const k2 = DATA_KIND[t2] ?? (t2.startsWith("FILE_3D") ? "model" : null);
+    if (k2) return k2;
+  }
+  return null;
+}
 function inputKey(node, input) {
   return "cio_" + `${node}_${input}`.replace(/[^A-Za-z0-9_]+/g, "_").replace(/^_+|_+$/g, "");
 }
@@ -90923,10 +90922,10 @@ function classifyWidget(w) {
   }
 }
 function outputKindOf(n) {
-  const byType = OUTPUT_NODE_KIND[n.type];
-  if (byType) return byType;
-  if (n.is_output) return n.out_type === "STRING" ? "text" : null;
-  return n.out_type === "STRING" ? "text" : null;
+  if (n.out_type === "STRING") return "text";
+  if (!n.is_output) return null;
+  if (FRAME_ENCODERS.has(n.type)) return "video";
+  return dataKind(n.in_type);
 }
 function emptyCustomIo() {
   return { inputs: [], outputs: [] };
@@ -149155,7 +149154,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-C7GnX4rY.mjs");
+    const { STLLoader } = await import("./STLLoader-BtrnWhmi.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -149163,7 +149162,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-CzWo-3Yl.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-y5xWESij.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -244122,7 +244121,8 @@ function attach(node, kind, variant) {
     "v2-preview__busy",
     `<div class="v2-preview__spinner"></div><div class="v2-preview__busytext"><span></span><small></small></div>`
   );
-  preview.append(mediaAnchor, busy);
+  const cornerAnchor = el$8("div", "v2-corner-host");
+  preview.append(mediaAnchor, busy, cornerAnchor);
   const panel = el$8("div", "v2-panel");
   const refsAnchor = el$8("div", "v2-panel__refs");
   const promptAnchor = el$8("div", "v2-panel__prompthost");
@@ -244142,7 +244142,7 @@ function attach(node, kind, variant) {
   });
   ensureMinSize(node, 340, 480);
   const stageApi = useStageNode(node, kind, variant);
-  const { state: stageState, onRunRequest, onCancelRequest } = stageApi;
+  const { state: stageState, onRunRequest, onCancelRequest, onAction } = stageApi;
   const scope2 = createNodeScope(node);
   scope2.run(() => bindProgressRing(card, stageState));
   const ioStore = useCustomIoStore();
@@ -244267,6 +244267,14 @@ function attach(node, kind, variant) {
         text: previewKind.value === "text" ? stageState.output : null,
         hint: io2.value.outputs.length ? t("v2.generatorHint") : t("v2.custom.hint")
       })
+    });
+    islands.mount(cornerAnchor, {
+      render: () => {
+        const k2 = previewKind.value;
+        if (k2 === "text") return h(TextCornerV2, { state: stageState });
+        if (k2 === "model") return null;
+        return h(MediaCornerV2, { key: k2, state: stageState, source: "batch", mediaType: k2, onAction });
+      }
     });
     islands.mount(inputsAnchor, {
       render: () => h(CustomInputsV2, {
@@ -245092,4 +245100,4 @@ export {
   DropdownMenuRoot_default as y,
   DropdownMenuTrigger_default as z
 };
-//# sourceMappingURL=main-B6-UAK0j.mjs.map
+//# sourceMappingURL=main-DVEbf0vj.mjs.map

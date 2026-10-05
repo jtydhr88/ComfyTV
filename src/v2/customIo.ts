@@ -47,23 +47,23 @@ const UPLOAD_KIND: Array<[string, MediaKind]> = [
   ['file_upload', 'model'],
 ]
 
-const OUTPUT_NODE_KIND: Record<string, OutputKind> = {
-  SaveImage: 'image',
-  PreviewImage: 'image',
-  SaveAnimatedWEBP: 'image',
-  SaveAnimatedPNG: 'image',
-  SaveVideo: 'video',
-  SaveWEBM: 'video',
-  VHS_VideoCombine: 'video',
-  SaveAudio: 'audio',
-  SaveAudioMP3: 'audio',
-  SaveAudioOpus: 'audio',
-  SaveAudioAdvanced: 'audio',
-  SaveGLB: 'model',
-  PreviewAny: 'text',
-  ShowText: 'text',
-  SaveText: 'text',
-  DisplayAny: 'text',
+const DATA_KIND: Record<string, OutputKind> = {
+  IMAGE: 'image',
+  VIDEO: 'video',
+  AUDIO: 'audio',
+  STRING: 'text',
+  MESH: 'model',
+  SPLAT: 'model',
+}
+
+const FRAME_ENCODERS = new Set(['SaveWEBM', 'VHS_VideoCombine'])
+
+function dataKind(type: string | null | undefined): OutputKind | null {
+  for (const t of String(type ?? '').split(',')) {
+    const k = DATA_KIND[t] ?? (t.startsWith('FILE_3D') ? 'model' : null)
+    if (k) return k
+  }
+  return null
 }
 
 export function inputKey(node: string, input: string): string {
@@ -84,10 +84,10 @@ export function classifyWidget(w: ExposedWidget): InputKind | null {
 }
 
 export function outputKindOf(n: GuiNode): OutputKind | null {
-  const byType = OUTPUT_NODE_KIND[n.type]
-  if (byType) return byType
-  if (n.is_output) return n.out_type === 'STRING' ? 'text' : null
-  return n.out_type === 'STRING' ? 'text' : null
+  if (n.out_type === 'STRING') return 'text'
+  if (!n.is_output) return null
+  if (FRAME_ENCODERS.has(n.type)) return 'video'
+  return dataKind(n.in_type)
 }
 
 export function emptyCustomIo(): CustomIo {

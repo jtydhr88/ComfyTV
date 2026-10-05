@@ -141,6 +141,7 @@ export const GuiNodeSchema = z.object({
   title: z.string().nullable().optional(),
   is_output: z.boolean().nullable().optional(),
   out_type: z.string().nullable().optional(),
+  in_type: z.string().nullable().optional(),
 }).passthrough()
 export const WorkflowConfigSchema = z.object({
   id: z.number(),

@@ -18,6 +18,7 @@ import {
 } from '@/v2/customIo'
 import FooterSelectsV2, { type FooterAction } from '@/v2/FooterSelectsV2.vue'
 import { createIslandGroup } from '@/v2/islands'
+import MediaCornerV2 from '@/v2/MediaCornerV2.vue'
 import MediaPreviewV2 from '@/v2/MediaPreviewV2.vue'
 import { bindNodeDrag } from '@/v2/nodeDrag'
 import { attachOutputToolbar } from '@/v2/outputToolbar'
@@ -35,6 +36,7 @@ import {
   RUN_BUTTON_HTML,
 } from '@/v2/shellCommon'
 import { installV2ShellCss } from '@/v2/shellCss'
+import TextCornerV2 from '@/v2/TextCornerV2.vue'
 import { bindWheelCapture } from '@/v2/wheelCapture'
 
 const ICON_CUSTOM = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 10h18M9 10v10"/><circle cx="6" cy="7" r=".9" fill="currentColor"/></svg>`
@@ -86,7 +88,8 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant) {
   mediaAnchor.style.cssText = 'position:absolute;inset:0;'
   const busy = el('div', 'v2-preview__busy',
     `<div class="v2-preview__spinner"></div><div class="v2-preview__busytext"><span></span><small></small></div>`)
-  preview.append(mediaAnchor, busy)
+  const cornerAnchor = el('div', 'v2-corner-host')
+  preview.append(mediaAnchor, busy, cornerAnchor)
 
   const panel = el('div', 'v2-panel')
   const refsAnchor = el('div', 'v2-panel__refs')
@@ -109,7 +112,7 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant) {
   ensureMinSize(node, 340, 480)
 
   const stageApi = useStageNode(node as any, kind, variant)
-  const { state: stageState, onRunRequest, onCancelRequest } = stageApi
+  const { state: stageState, onRunRequest, onCancelRequest, onAction } = stageApi
   const scope = createNodeScope(node)
   scope.run(() => bindProgressRing(card, stageState))
 
@@ -232,6 +235,14 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant) {
         text: previewKind.value === 'text' ? stageState.output : null,
         hint: io.value.outputs.length ? t('v2.generatorHint') : t('v2.custom.hint'),
       }),
+    })
+    islands.mount(cornerAnchor, {
+      render: () => {
+        const k = previewKind.value
+        if (k === 'text') return h(TextCornerV2, { state: stageState })
+        if (k === 'model') return null
+        return h(MediaCornerV2 as any, { key: k, state: stageState, source: 'batch', mediaType: k, onAction })
+      },
     })
     islands.mount(inputsAnchor, {
       render: () => h(CustomInputsV2, {

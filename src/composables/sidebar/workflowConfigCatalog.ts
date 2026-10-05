@@ -19,6 +19,7 @@ export interface GuiNode {
   title?: string | null
   is_output?: boolean | null
   out_type?: string | null
+  in_type?: string | null
 }
 
 export interface ConfigPayload {

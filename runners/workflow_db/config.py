@@ -325,6 +325,13 @@ def _node_output_meta(class_type: str) -> tuple[Optional[bool], Optional[str]]:
     return is_output, out0
 
 
+def _node_input_type(node: dict) -> Optional[str]:
+    for inp in node.get("inputs") or []:
+        if isinstance(inp, dict) and inp.get("link") is not None and isinstance(inp.get("type"), str):
+            return inp["type"]
+    return None
+
+
 def _extract_gui_view(file_path: str) -> dict:
     if not file_path or not os.path.exists(file_path):
         return {}
@@ -363,6 +370,7 @@ def _extract_gui_view(file_path: str) -> dict:
             "mode":      n.get("mode", 0),
             "is_output": is_output,
             "out_type":  out_type,
+            "in_type":   _node_input_type(n),
         })
 
     gui_groups = []

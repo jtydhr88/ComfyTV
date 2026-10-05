@@ -245,6 +245,19 @@ class TestExtractGuiView:
         assert out["gui_notes"][0]["text"] == "hi"
         assert out["gui_groups"][0]["title"] == "Loaders"
 
+    def test_in_type_from_first_linked_input(self, tmp_path):
+        p = tmp_path / "wf.json"
+        p.write_text(json.dumps({"nodes": [
+            {"id": 9, "type": "SaveImage", "inputs": [{"name": "images", "type": "IMAGE", "link": 4}]},
+            {"id": 10, "type": "SaveGLB", "inputs": [
+                {"name": "extra", "type": "STRING", "link": None},
+                {"name": "mesh", "type": "MESH,FILE_3D", "link": 5},
+            ]},
+            {"id": 11, "type": "SaveAudio", "inputs": [{"name": "audio", "type": "AUDIO", "link": None}]},
+        ]}))
+        by_id = {n["id"]: n["in_type"] for n in wdb._extract_gui_view(str(p))["gui_nodes"]}
+        assert by_id == {"9": "IMAGE", "10": "MESH,FILE_3D", "11": None}
+
     def test_empty_path(self):
         assert wdb._extract_gui_view("") == {}
 
