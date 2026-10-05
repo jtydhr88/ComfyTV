@@ -27,6 +27,7 @@ from .config import (
     get_workflow_config,
     _bindings_to_inputs_dict, _node_widget_meta,
     _exposed_widgets, _extract_gui_view,
+    node_primitive_outputs,
 )
 from .custom_io import set_custom_io, duplicate_workflow
 from .bindings import (
@@ -56,6 +57,7 @@ __all__ = [
     "import_pulled_workflow",
     "pulled_workflows",
     "build_preset",
+    "node_primitive_outputs",
     "get_workflow_for_invoke",
     "get_workflow_config",
     "set_custom_io",

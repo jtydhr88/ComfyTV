@@ -381,6 +381,46 @@ class TestExposedWidgets:
         assert seed_row["override_value"] == "42"
         assert seed_row["cast"] == "int"
 
+    def test_referenced_primitive_outputs_listed(self, comfy_nodes, tmp_path):
+        class ResolutionSelector:
+            RETURN_TYPES = ("INT", "INT")
+            RETURN_NAMES = ("width", "height")
+
+            @classmethod
+            def INPUT_TYPES(cls):
+                return {"required": {"megapixels": ("FLOAT", {})}}
+
+        class EmptyLatentImage:
+            RETURN_TYPES = ("LATENT",)
+
+            @classmethod
+            def INPUT_TYPES(cls):
+                return {"required": {"width": ("INT", {}), "height": ("INT", {})}}
+
+        comfy_nodes.NODE_CLASS_MAPPINGS.update({
+            "ResolutionSelector": ResolutionSelector, "EmptyLatentImage": EmptyLatentImage,
+        })
+        path = tmp_path / "wf.json"
+        path.write_text(json.dumps({"nodes": [
+            {"id": 115, "type": "ResolutionSelector", "pos": [0, 0]},
+            {"id": 5, "type": "EmptyLatentImage", "pos": [0, 0]},
+        ]}))
+        api = {
+            "115": {"class_type": "ResolutionSelector", "inputs": {"megapixels": 0.4}},
+            "5": {"class_type": "EmptyLatentImage", "inputs": {"width": ["115", 0], "height": 512}},
+        }
+        from ComfyTV.db import WorkflowInputBinding
+        b = WorkflowInputBinding(workflow_id=1, node_id="115", input_name="output:0",
+                                 from_="computed:width", cast_="int")
+        out = wdb._exposed_widgets(1, str(path), [b], api)
+        rows = {(r["node_id"], r["widget_name"]): r for r in out}
+        assert rows[("115", "output:0")]["widget_type"] == "OUTPUT"
+        assert rows[("115", "output:0")]["widget_props"] == {"output_type": "INT", "output_name": "width"}
+        assert rows[("115", "output:0")]["stage_binding"] == "computed:width"
+        assert ("115", "output:1") not in rows
+        assert ("5", "width") not in rows
+        assert ("5", "height") in rows
+
 
 # ─── DB-touching: seed_workflows_from_disk + get/upsert/delete ───────────────
 
@@ -1128,6 +1168,60 @@ class TestPresetApplication:
         cfg = wdb.get_workflow_config("image", "x")
         assert len(cfg["bindings"]) == 1
         assert cfg["bindings"][0]["node_id"] == "6"
+
+
+class TestResolutionSelectorAutoBind:
+    _RS = {"type": "ResolutionSelector",
+           "outputs": [{"name": "width", "links": [1]}, {"name": "height", "links": [2]}]}
+
+    def _seed(self, tmp_path, monkeypatch, kind, doc, preset=None):
+        from pathlib import Path
+        wdir = tmp_path / "workflows"
+        kdir = wdir / kind
+        kdir.mkdir(parents=True)
+        (kdir / "x.json").write_text(json.dumps(doc))
+        if preset is not None:
+            (kdir / "x_preset.json").write_text(json.dumps(preset))
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
+        wdb.seed_workflows_from_disk((kind,))
+        return {(b["node_id"], b["input_name"]): b["from"]
+                for b in wdb.get_workflow_config(kind, "x")["bindings"]}
+
+    def test_top_level_and_subgraph_selectors_bound(self, reset_db, tmp_path, monkeypatch):
+        doc = {
+            "nodes": [{"id": 115, **self._RS}, {"id": 7, "type": "sg-1"}],
+            "definitions": {"subgraphs": [{"id": "sg-1", "nodes": [{"id": 3, **self._RS}]}]},
+        }
+        got = self._seed(tmp_path, monkeypatch, "video", doc)
+        assert got == {
+            ("115", "output:0"): "computed:width", ("115", "output:1"): "computed:height",
+            ("7:3", "output:0"): "computed:width", ("7:3", "output:1"): "computed:height",
+        }
+
+    def test_unlinked_output_left_alone(self, reset_db, tmp_path, monkeypatch):
+        rs = {"id": 115, "type": "ResolutionSelector",
+              "outputs": [{"name": "width", "links": [1]}, {"name": "height", "links": []}]}
+        got = self._seed(tmp_path, monkeypatch, "image", {"nodes": [rs]})
+        assert got == {("115", "output:0"): "computed:width"}
+
+    def test_kind_without_stage_size_skipped(self, reset_db, tmp_path, monkeypatch):
+        got = self._seed(tmp_path, monkeypatch, "panorama", {"nodes": [{"id": 115, **self._RS}]})
+        assert got == {}
+
+    def test_mapped_node_binds_its_listed_slots(self, reset_db, tmp_path, monkeypatch):
+        from ComfyTV.runners.workflow_db import auto_bind
+        monkeypatch.setitem(auto_bind.SIZE_NODE_OUTPUTS, "SizePreset",
+                            {1: "computed:width", 2: "computed:height"})
+        node = {"id": 9, "type": "SizePreset", "outputs": [
+            {"name": "latent", "links": [1]}, {"name": "w", "links": [2]}, {"name": "h", "links": [3]},
+        ]}
+        got = self._seed(tmp_path, monkeypatch, "image", {"nodes": [node]})
+        assert got == {("9", "output:1"): "computed:width", ("9", "output:2"): "computed:height"}
+
+    def test_preset_takes_precedence(self, reset_db, tmp_path, monkeypatch):
+        preset = {"inputs": {"6": {"seed": {"from": "option:seed"}}}}
+        got = self._seed(tmp_path, monkeypatch, "image", {"nodes": [{"id": 115, **self._RS}]}, preset)
+        assert got == {("6", "seed"): "option:seed"}
 
 
 # ─── build_preset: DB → preset.json round-trip ───────────────────────────────

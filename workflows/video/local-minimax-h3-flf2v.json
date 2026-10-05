@@ -2,7 +2,7 @@
  "id": "e3f2b845-8f2c-4b5a-9caf-eac1029d3e7e",
  "revision": 0,
  "last_node_id": 200,
- "last_link_id": 238,
+ "last_link_id": 240,
  "nodes": [
   {
    "id": 92,
@@ -109,7 +109,7 @@
      "widget": {
       "name": "width"
      },
-     "link": null
+     "link": 239
     },
     {
      "name": "height",
@@ -117,7 +117,7 @@
      "widget": {
       "name": "height"
      },
-     "link": null
+     "link": 240
     },
     {
      "label": "duration",
@@ -353,6 +353,54 @@
     "example.png",
     "image"
    ]
+  },
+  {
+   "id": 115,
+   "type": "ResolutionSelector",
+   "pos": [
+    -1080,
+    4850
+   ],
+   "size": [
+    270,
+    170
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "showAdvanced": false,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "width",
+     "type": "INT",
+     "links": [
+      239
+     ]
+    },
+    {
+     "name": "height",
+     "type": "INT",
+     "links": [
+      240
+     ]
+    }
+   ],
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.33.0",
+    "Node name for S&R": "ResolutionSelector"
+   },
+   "widgets_values": [
+    "1:1 (Square)",
+    0.4,
+    32
+   ],
+   "widgets_values_named": {
+    "aspect_ratio": "1:1 (Square)",
+    "megapixels": 0.4,
+    "multiple": 32
+   }
   }
  ],
  "links": [
@@ -387,6 +435,22 @@
    105,
    1,
    "IMAGE"
+  ],
+  [
+   239,
+   115,
+   0,
+   105,
+   2,
+   "INT"
+  ],
+  [
+   240,
+   115,
+   1,
+   105,
+   3,
+   "INT"
   ]
  ],
  "groups": [

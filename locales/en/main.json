@@ -961,6 +961,9 @@
       "batch": "Saved image batch"
     },
     "bindingRequired": "Required",
+    "outputs": "Outputs",
+    "useNodeOutput": "(use node output)",
+    "outputsTakenOver": "All outputs are bound to the stage — these values are not used.",
     "mentionStyle": {
       "label": "Refs",
       "natural": "Natural text (image 1)",

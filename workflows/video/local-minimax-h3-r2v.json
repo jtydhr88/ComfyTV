@@ -2,7 +2,7 @@
   "id": "e3f2b845-8f2c-4b5a-9caf-eac1029d3e7e",
   "revision": 0,
   "last_node_id": 403,
-  "last_link_id": 307,
+  "last_link_id": 309,
   "nodes": [
     {
       "id": 92,
@@ -828,7 +828,7 @@
           "widget": {
             "name": "width"
           },
-          "link": null
+          "link": 308
         },
         {
           "name": "height",
@@ -836,7 +836,7 @@
           "widget": {
             "name": "height"
           },
-          "link": null
+          "link": 309
         },
         {
           "name": "length",
@@ -1807,6 +1807,57 @@
       },
       "color": "#322",
       "bgcolor": "#533"
+    },
+    {
+      "id": 115,
+      "type": "ResolutionSelector",
+      "pos": [
+        -1100,
+        4940
+      ],
+      "size": [
+        270,
+        170
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "showAdvanced": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "width",
+          "type": "INT",
+          "links": [
+            308
+          ]
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "links": [
+            309
+          ]
+        }
+      ],
+      "title": "Resolution Selector (Size)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.33.0",
+        "Node name for S&R": "ResolutionSelector"
+      },
+      "widgets_values": [
+        "16:9 (Widescreen)",
+        0.4,
+        32
+      ],
+      "widgets_values_named": {
+        "aspect_ratio": "16:9 (Widescreen)",
+        "megapixels": 0.4,
+        "multiple": 32
+      },
+      "color": "#322",
+      "bgcolor": "#533"
     }
   ],
   "links": [
@@ -2184,6 +2235,22 @@
       0,
       124,
       1,
+      "INT"
+    ],
+    [
+      308,
+      115,
+      0,
+      136,
+      20,
+      "INT"
+    ],
+    [
+      309,
+      115,
+      1,
+      136,
+      21,
       "INT"
     ]
   ],

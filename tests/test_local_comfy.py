@@ -969,6 +969,39 @@ class TestApplyOverrides:
         lc._apply_overrides(wf, cfg, resolver)
         assert wf["301"]["inputs"]["file"] == "real.mp4 [output]"
 
+    def test_output_binding_replaces_every_consumer_ref(self):
+        wf = {
+            "115": {"class_type": "ResolutionSelector",
+                    "inputs": {"aspect_ratio": "1:1 (Square)", "megapixels": 0.4, "multiple": 32}},
+            "5": {"class_type": "EmptyLatentImage",
+                  "inputs": {"width": ["115", 0], "height": ["115", 1]}},
+            "6": {"class_type": "ModelSamplingFlux",
+                  "inputs": {"width": ["115", 0], "height": ["115", 1]}},
+        }
+        cfg = {"sizing": {"snap": 16}, "inputs": {"115": {
+            "output:0": {"from": "computed:width", "cast": "int"},
+            "output:1": {"from": "computed:height", "cast": "int"},
+        }}}
+        ctx = self._ctx(options={"aspect_ratio": "16:9", "resolution": "720P"})
+        lc._apply_overrides(wf, cfg, lc._Resolver(cfg, ctx))
+        for nid in ("5", "6"):
+            assert wf[nid]["inputs"] == {"width": 1280, "height": 720}
+        assert "output:0" not in wf["115"]["inputs"]
+
+    def test_consumer_input_binding_wins_over_output_binding(self):
+        wf = {
+            "115": {"class_type": "ResolutionSelector", "inputs": {}},
+            "5": {"class_type": "EmptyLatentImage",
+                  "inputs": {"width": ["115", 0], "height": ["115", 1]}},
+        }
+        cfg = {"inputs": {
+            "5": {"width": {"from": "literal:640", "cast": "int"}},
+            "115": {"output:0": {"from": "computed:width", "cast": "int"}},
+        }}
+        lc._apply_overrides(wf, cfg, lc._Resolver(cfg, self._ctx()))
+        assert wf["5"]["inputs"]["width"] == 640
+        assert wf["5"]["inputs"]["height"] == ["115", 1]
+
 
 # ─── _view_url + _save_files_from ────────────────────────────────────────────
 

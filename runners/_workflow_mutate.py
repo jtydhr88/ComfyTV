@@ -7,6 +7,7 @@ from ._workflow_resolve import (
     _UPSTREAM_PAT,
     _Resolver,
     KEEP_ORIGINAL,
+    OUTPUT_BINDING_PREFIX,
 )
 
 _log = logging.getLogger(__name__)
@@ -224,6 +225,14 @@ def _auto_prune_unbound(workflow: dict, config: dict, ctx: RunnerContext) -> set
     return pruned
 
 
+def _replace_output_refs(workflow: dict, node_id: str, slot: int, value) -> None:
+    for cnode in workflow.values():
+        inputs = cnode.get("inputs") or {}
+        for k, v in inputs.items():
+            if isinstance(v, list) and len(v) == 2 and str(v[0]) == node_id and v[1] == slot:
+                inputs[k] = value
+
+
 def _apply_overrides(workflow: dict, config: dict, resolver: _Resolver,
                      pruned_nodes: set[str] | None = None) -> None:
     pruned_nodes = pruned_nodes or set()
@@ -247,7 +256,11 @@ def _apply_overrides(workflow: dict, config: dict, resolver: _Resolver,
             value = resolver.resolve(where, spec)
             if value is KEEP_ORIGINAL:
                 continue
-            node_inputs[input_name] = value
+            if input_name.startswith(OUTPUT_BINDING_PREFIX):
+                _replace_output_refs(workflow, str(node_id),
+                                     int(input_name[len(OUTPUT_BINDING_PREFIX):]), value)
+            else:
+                node_inputs[input_name] = value
 
     if orphaned:
         from .notify import notify_toast

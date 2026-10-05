@@ -5,6 +5,7 @@ from typing import Optional
 from sqlalchemy import select
 
 from ... import db
+from .auto_bind import add_size_node_bindings
 from .seed import _label_from_stem, _is_gui_format
 
 _log = logging.getLogger(__name__)
@@ -130,6 +131,8 @@ def link_workflow(kind: str, rel_path: str, label: Optional[str] = None) -> dict
             order_=100,
         )
         s.add(row)
+        s.flush()
+        add_size_node_bindings(s, row, content)
         s.commit()
         result = {"kind": row.kind, "label": row.label, "id": row.id,
                   "file_path": row.file_path, "link_type": db.LINK_TYPE_NATIVE}

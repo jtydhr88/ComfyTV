@@ -18,6 +18,8 @@ _UPSTREAM_PAT = re.compile(
 
 KEEP_ORIGINAL = object()
 
+OUTPUT_BINDING_PREFIX = "output:"
+
 _MEDIA_KINDS = ("image", "video", "audio", "model")
 _NUMERIC_CASTS = ("int", "float")
 

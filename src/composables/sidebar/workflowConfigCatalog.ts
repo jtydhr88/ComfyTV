@@ -108,6 +108,26 @@ export function buildResultNodeOptions(
   return out
 }
 
+export function isOutputRow(w: ExposedWidget): boolean {
+  return w.widget_type === 'OUTPUT'
+}
+
+export function outputsTakenOver(node: NodeBlock): boolean {
+  const outputs = node.widgets.filter(isOutputRow)
+  return outputs.length > 0 && outputs.every(w => !!w.stage_binding)
+}
+
+export function outputBindingOptions(
+  options: Array<{ value: string; label: string }>,
+  outputType: string,
+): Array<{ value: string; label: string }> {
+  const text = outputType === 'STRING'
+  return options
+    .filter(o => o.value !== '__VALUE__')
+    .filter(o => o.value.startsWith('option:') || o.value.startsWith('computed:')
+      || (text && (o.value === 'main_prompt' || o.value.startsWith('upstream_text:'))))
+}
+
 export interface NodeBlock {
   node_id: string
   node_title: string

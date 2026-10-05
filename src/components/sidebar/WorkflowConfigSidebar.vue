@@ -158,10 +158,13 @@
             </button>
 
             <div v-if="!isNodeCollapsed(node.node_id)" class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2">
+              <span v-if="outputsTakenOver(node)" class="ctv:text-3xs ctv:italic ctv:text-muted-foreground">
+                {{ $t('configSidebar.outputsTakenOver') }}
+              </span>
               <div
-                v-for="w in node.widgets"
+                v-for="w in node.widgets.filter(w => !isOutputRow(w))"
                 :key="`${w.node_id}/${w.widget_name}`"
-                class="ctv:flex ctv:flex-col ctv:gap-1 ctv:[&_+_&]:pt-1.5 ctv:[&_+_&]:border-t ctv:[&_+_&]:border-solid ctv:[&_+_&]:border-border-subtle"
+                class="ctv:flex ctv:flex-col ctv:gap-1 ctv:[&_+_&]:pt-1.5 ctv:[&_+_&]:border-t ctv:[&_+_&]:border-border-subtle"
               >
                 <div class="ctv:text-2xs">
                   <span class="ctv:font-mono ctv:text-muted-foreground">.{{ w.widget_name }}</span>
@@ -175,7 +178,7 @@
                   :step="numProp(w, 'step')"
                   :precision="numProp(w, 'precision')"
                   :multiline="!!w.widget_props?.multiline"
-                  :disabled="isStageBound(w) || !!exposedOf(w)"
+                  :disabled="isStageBound(w) || !!exposedOf(w) || outputsTakenOver(node)"
                   @update:model-value="onValueChange(w, $event)"
                 />
                 <div v-if="exposedOf(w)" class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:mt-0.5 ctv:text-3xs ctv:text-muted-foreground">
@@ -204,6 +207,12 @@
                   {{ $t('configSidebar.bindingRequired') }}
                 </label>
               </div>
+              <NodeOutputBindings
+                v-if="node.widgets.some(isOutputRow)"
+                :outputs="node.widgets.filter(isOutputRow)"
+                :options="bindingOptions"
+                @change="onBindingChange"
+              />
             </div>
           </div>
         </div>
@@ -321,6 +330,7 @@ import IconSearch from '~icons/lucide/search'
 
 import ComfyTVWidget from '@/components/widgets/ComfyTVWidget.vue'
 import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
+import NodeOutputBindings from '@/components/sidebar/NodeOutputBindings.vue'
 import { useBindingWriter } from '@/composables/sidebar/useBindingWriter'
 import { useCollapsedFlag, useCollapsedNodeIds } from '@/composables/sidebar/useCollapsedState'
 import {
@@ -337,6 +347,8 @@ import {
   buildBindingOptions,
   customExposedOutputs,
   customExposureIndex,
+  isOutputRow,
+  outputsTakenOver,
   type ExposedWidget,
   type NodeBlock,
 } from '@/composables/sidebar/workflowConfigCatalog'

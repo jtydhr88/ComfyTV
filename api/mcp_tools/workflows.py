@@ -118,7 +118,14 @@ def _validate_bind_op(i: int, op: dict, api_nodes: dict | None) -> None:
                 f"ops[{i}]: node {node_id!r} not in this workflow's API graph "
                 f"(nodes: {sorted(api_nodes)})")
         inputs = node.get("inputs") or {}
-        if input_name not in inputs:
+        if input_name.startswith("output:"):
+            slots = [f"output:{slot}" for slot, _t, _n in
+                     workflow_db.node_primitive_outputs(str(node.get("class_type") or ""))]
+            if input_name not in slots:
+                raise ValueError(
+                    f"ops[{i}]: node {node_id} has no bindable output {input_name!r} "
+                    f"(outputs: {slots})")
+        elif input_name not in inputs:
             raise ValueError(
                 f"ops[{i}]: node {node_id} has no input {input_name!r} "
                 f"(inputs: {sorted(inputs)})")
@@ -389,7 +396,10 @@ TOOLS: dict[str, dict] = {
             "engine — use these for width/height so aspect settings apply), "
             "'literal:<value>', 'upstream_image:value[N]' (also :annotated / "
             ":masked) and upstream_video/audio/text/model:value[N]; cast is "
-            "int/float/str. {op:'unbind', node_id, input_name} removes a "
+            "int/float/str. input_name 'output:<slot>' binds a node's "
+            "INT/FLOAT/STRING/BOOLEAN output instead (every consumer of that "
+            "output gets the value — e.g. ResolutionSelector output:0/output:1 "
+            "-> computed:width/height). {op:'unbind', node_id, input_name} removes a "
             "binding. {op:'set_meta', description?/result_type?/result_node?/"
             "sizing?/prune_when_missing?/meta?} updates workflow meta. "
             "{op:'set_custom_io', inputs:[{node, input, kind:image|video|"

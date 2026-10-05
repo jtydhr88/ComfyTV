@@ -126,7 +126,7 @@ export function useBindingWriter(
                newBinding === 'computed:length') {
       cast = 'int'
     } else if (newBinding.startsWith('option:')) {
-      cast = inferCast(w.widget_type)
+      cast = inferCast(w.widget_type === 'OUTPUT' ? String(w.widget_props?.output_type) : w.widget_type)
     }
     const isUpstream = newBinding.startsWith('upstream_')
     w.stage_binding  = newBinding

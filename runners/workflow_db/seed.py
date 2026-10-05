@@ -9,6 +9,7 @@ from typing import Optional
 from sqlalchemy import select
 
 from ... import db
+from .auto_bind import add_size_node_bindings
 
 
 _log = logging.getLogger(__name__)
@@ -491,6 +492,7 @@ def _upsert_workflow_row(s, kind: str, file_path: Path) -> tuple[db.Workflow, bo
     row.file_path  = str(file_path)
     row.file_mtime = mtime
 
+    content = None
     if file_path.exists():
         try:
             content = file_path.read_text(encoding="utf-8")
@@ -512,6 +514,8 @@ def _upsert_workflow_row(s, kind: str, file_path: Path) -> tuple[db.Workflow, bo
             _apply_preset_to_new_row(s, row, preset)
             _log.info("[ComfyTV/workflow_db] applied preset for new workflow %s/%s",
                       kind, row.label)
+        elif content is not None and _is_gui_format(content):
+            add_size_node_bindings(s, row, content)
 
     return row, is_new_row
 

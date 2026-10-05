@@ -961,6 +961,9 @@
       "batch": "保存的图片批次"
     },
     "bindingRequired": "必填",
+    "outputs": "输出",
+    "useNodeOutput": "（使用节点输出）",
+    "outputsTakenOver": "输出已全部绑定到 stage，这些参数不再生效。",
     "mentionStyle": {
       "label": "引用",
       "natural": "自然文本（图1）",

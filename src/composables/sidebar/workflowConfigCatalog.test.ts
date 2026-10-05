@@ -352,3 +352,36 @@ describe('custom exposure index', () => {
     expect(customExposedOutputs({ kind: 'video', meta })).toEqual([])
   })
 })
+
+import { outputBindingOptions, outputsTakenOver } from '@/composables/sidebar/workflowConfigCatalog'
+
+describe('output bindings', () => {
+  const out = (slot: number, binding: string | null = null) => widget({
+    widget_name: `output:${slot}`, widget_type: 'OUTPUT',
+    widget_props: { output_type: 'INT', output_name: slot ? 'height' : 'width' },
+    current_value: null, stage_binding: binding,
+  })
+
+  it('offers only stage values for numeric outputs', () => {
+    const vals = outputBindingOptions(buildBindingOptions([], 'image'), 'INT').map(o => o.value)
+    expect(vals).toContain('computed:width')
+    expect(vals).toContain('option:seed')
+    expect(vals).not.toContain('__VALUE__')
+    expect(vals).not.toContain('main_prompt')
+    expect(vals.some(v => v.startsWith('upstream_'))).toBe(false)
+  })
+
+  it('adds the prompt and upstream text for string outputs', () => {
+    const vals = outputBindingOptions(buildBindingOptions([], 'image'), 'STRING').map(o => o.value)
+    expect(vals).toContain('main_prompt')
+    expect(vals).toContain('upstream_text:value[0]')
+    expect(vals).not.toContain('upstream_image:annotated[0]')
+  })
+
+  it('takes over the node only when every output is bound', () => {
+    const node = (widgets: ExposedWidget[]) => ({ node_id: '115', node_title: 'RS', node_type: 'ResolutionSelector', widgets })
+    expect(outputsTakenOver(node([widget(), out(0, 'computed:width'), out(1)]))).toBe(false)
+    expect(outputsTakenOver(node([widget(), out(0, 'computed:width'), out(1, 'computed:height')]))).toBe(true)
+    expect(outputsTakenOver(node([widget({ stage_binding: 'option:seed' })]))).toBe(false)
+  })
+})

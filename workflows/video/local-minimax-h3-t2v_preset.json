@@ -1,5 +1,5 @@
 {
-  "_comment": "Shipped preset for MiniMax H3 text-to-video+audio (t2va mode of the fl2va checkpoint). Flat graph: MiniMaxH3ImageToVideo #131 (no keyframes) -> sampler chain -> video+audio decode -> CreateVideo -> SaveVideo #92. Width/height come from the stage's resolution + aspect ratio via computed:width/height (snap 32); duration_s feeds PrimitiveFloat #133, and ComfyMathExpression #132 snaps the frame count onto the model's 17k+5 grid.",
+  "_comment": "Shipped preset for MiniMax H3 text-to-video+audio (t2va mode of the fl2va checkpoint). Flat graph: MiniMaxH3ImageToVideo #131 (no keyframes) -> sampler chain -> video+audio decode -> CreateVideo -> SaveVideo #92. ResolutionSelector #115 width/height outputs are bound to computed:width/height (snap 32); duration_s feeds PrimitiveFloat #133, and ComfyMathExpression #132 snaps the frame count onto the model's 17k+5 grid.",
 
   "label":       "Local MiniMax H3 T2V",
   "order":       31,
@@ -11,9 +11,11 @@
 
   "inputs": {
     "131": {
-      "prompt": {"from": "main_prompt", "required": true, "error": "MiniMax H3 needs a prompt."},
-      "width":  {"from": "computed:width",  "cast": "int"},
-      "height": {"from": "computed:height", "cast": "int"}
+      "prompt": {"from": "main_prompt", "required": true, "error": "MiniMax H3 needs a prompt."}
+    },
+    "115": {
+      "output:0": {"from": "computed:width",  "cast": "int"},
+      "output:1": {"from": "computed:height", "cast": "int"}
     },
     "133": {"value": {"from": "option:duration_s", "cast": "float"}},
     "129": {"noise_seed": {"from": "option:seed", "default": "random_int31", "cast": "int"}}

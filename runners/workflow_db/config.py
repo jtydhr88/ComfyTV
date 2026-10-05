@@ -6,6 +6,7 @@ from typing import Any, Optional
 from sqlalchemy import select
 
 from ... import db
+from .._workflow_resolve import OUTPUT_BINDING_PREFIX
 from .bindings import drop_stale_api
 
 
@@ -237,6 +238,13 @@ def _exposed_widgets(workflow_id: int, file_path: str,
                 composite = f"{top_id}:{inner_id}"
                 yield composite, inner, sg_title
 
+    referenced_outputs = {
+        (str(v[0]), v[1])
+        for api_node in api_json.values() if isinstance(api_node, dict)
+        for v in (api_node.get("inputs") or {}).values()
+        if isinstance(v, list) and len(v) == 2
+    }
+
     out: list[dict] = []
     for node_id, n, group_title in iter_nodes_with_ids():
         class_type = n.get("type") or ""
@@ -248,32 +256,53 @@ def _exposed_widgets(workflow_id: int, file_path: str,
             continue
         api_inputs = api_node.get("inputs") or {}
 
-        title       = n.get("title") or class_type
-        widget_meta = _node_widget_meta(class_type)
+        title = n.get("title") or class_type
 
-        for wm in widget_meta:
+        def row(name: str, type_: str, props: dict, current: Any) -> dict:
+            binding = bindings_by_key.get((node_id, name))
+            return {
+                "node_id":      node_id,
+                "node_title":   title,
+                "node_type":    class_type,
+                "group_title":  group_title,
+                "widget_name":  name,
+                "widget_type":  type_,
+                "widget_props": props,
+                "current_value": current,
+                "stage_binding": binding.from_ if binding else None,
+                "override_value": binding.default_value if binding else None,
+                "cast":           binding.cast_ if binding else None,
+                "required":       bool(binding.required) if binding else False,
+            }
+
+        for wm in _node_widget_meta(class_type):
             wname = wm["name"]
             if wname not in api_inputs:
                 continue
             current = api_inputs[wname]
             if isinstance(current, list) and len(current) == 2:
                 continue
+            out.append(row(wname, wm["type"], wm.get("options") or {}, current))
 
-            binding = bindings_by_key.get((node_id, wname))
-            out.append({
-                "node_id":      node_id,
-                "node_title":   title,
-                "node_type":    class_type,
-                "group_title":  group_title,
-                "widget_name":  wname,
-                "widget_type":  wm["type"],
-                "widget_props": wm.get("options") or {},
-                "current_value": current,
-                "stage_binding": binding.from_ if binding else None,
-                "override_value": binding.default_value if binding else None,
-                "cast":           binding.cast_ if binding else None,
-                "required":       bool(binding.required) if binding else False,
-            })
+        for slot, otype, oname in node_primitive_outputs(class_type):
+            if (node_id, slot) in referenced_outputs:
+                out.append(row(f"{OUTPUT_BINDING_PREFIX}{slot}", "OUTPUT",
+                               {"output_type": otype, "output_name": oname}, None))
+    return out
+
+
+def node_primitive_outputs(class_type: str) -> list[tuple[int, str, str]]:
+    import nodes
+    cls = nodes.NODE_CLASS_MAPPINGS.get(class_type)
+    if cls is None:
+        return []
+    types = getattr(cls, "RETURN_TYPES", ()) or ()
+    names = getattr(cls, "RETURN_NAMES", None) or types
+    out = []
+    for slot, t in enumerate(types):
+        t = t.value if hasattr(t, "value") else t
+        if isinstance(t, str) and t in ("INT", "FLOAT", "STRING", "BOOLEAN"):
+            out.append((slot, t, str(names[slot]) if slot < len(names) else t))
     return out
 
 
