@@ -41,6 +41,7 @@ import { mounts } from '@/composables/stages/widgetMounts'
 import { i18n } from '@/i18n'
 import { app } from '@/lib/comfyApp'
 import type { StageKind, StageVariant } from '@/stores/stageStore'
+import CustomParamsV2 from '@/v2/CustomParamsV2.vue'
 import { V2_SHELLS } from '@/v2/registry'
 import { hasOutputToolbar } from '@/v2/outputToolbar'
 import '@/v2/imageBatchShell'
@@ -527,6 +528,15 @@ describe('V2 shell smoke', () => {
       expect(await stackFor(1), cls).toBe('')
       expect(await stackFor(2), cls).toBe('1')
       expect(await stackFor(5), cls).toBe('2')
+      node.onRemoved?.()
+    }
+  })
+
+  it('workflow-driven fx shells mount the custom workflow params', () => {
+    for (const cls of ['ComfyTV.OutpaintStage', 'ComfyTV.EraseStage']) {
+      const node = makeNode(cls)
+      V2_SHELLS[cls](node as any, SHELL_META[cls].kind, 'generator')
+      expect(mounts.some(m => m.component === CustomParamsV2), cls).toBe(true)
       node.onRemoved?.()
     }
   })

@@ -7,6 +7,7 @@ import { useStageNode } from '@/composables/stages/useStageNode'
 import { t } from '@/i18n'
 import { app, type ComfyNode } from '@/lib/comfyApp'
 import CardEmbedV2 from '@/v2/CardEmbedV2.vue'
+import CustomParamsV2 from '@/v2/CustomParamsV2.vue'
 import FooterSelectsV2 from '@/v2/FooterSelectsV2.vue'
 import { attachOutputToolbar, type VideoToolbarFlavor } from '@/v2/outputToolbar'
 import MediaPreviewV2 from '@/v2/MediaPreviewV2.vue'
@@ -143,6 +144,7 @@ const FX_CSS = `
   border: 1px solid var(--v2-slab-border);
 }
 .v2-fx-promptpanel .comfytv-prompt-editor { min-height: 40px; font-size: 12px; }
+.v2-fx-custompanel:not(:has(.v2-cparams)) { display: none; }
 .v2-fx-seg.v2-fx-plain .v2-fx-embed,
 .v2-fx-meshprim.v2-fx-plain .v2-fx-embed {
   background: transparent;
@@ -320,12 +322,15 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant, config:
     })
   }
   let wfAnchor: HTMLElement | null = null
+  let customAnchor: HTMLElement | null = null
   if (config.hasRun && config.embed !== false) {
     const footer = el('div', 'v2-fx-footer')
     const spacer = el('div', 'v2-fx-footer__spacer')
     serverAnchor = el('div', 'v2-fx-footer__server')
     run = el('button', 'v2-run', RUN_BUTTON_HTML) as HTMLButtonElement
     if (config.linkKind) {
+      customAnchor = el('div', 'v2-fx-promptpanel v2-fx-custompanel')
+      card.appendChild(customAnchor)
       wfAnchor = el('div', 'v2-fx-footer__wf')
       footer.append(wfAnchor, spacer, serverAnchor, run)
     } else {
@@ -363,6 +368,9 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant, config:
     specs.push([StagePresetBar, { node }, presetAnchor])
     if (promptAnchor) {
       specs.push([MainPromptInput, { node }, promptAnchor])
+    }
+    if (customAnchor) {
+      specs.push([CustomParamsV2, { node, state: stageState }, customAnchor])
     }
     if (wfAnchor) {
       specs.push([FooterSelectsV2, {

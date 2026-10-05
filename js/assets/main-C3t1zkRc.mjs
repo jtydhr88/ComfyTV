@@ -59964,7 +59964,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-BGK64AJh.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-0Y3p_PsF.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -86579,7 +86579,7 @@ const _sfc_main$4p = /* @__PURE__ */ defineComponent({
       }
     });
     const AgentPanelRoot = /* @__PURE__ */ defineAsyncComponent({
-      loader: () => import("./AgentPanelRoot-B70z_sLO.mjs"),
+      loader: () => import("./AgentPanelRoot-NNF6ueRY.mjs"),
       errorComponent: AgentPanelLoadError,
       onError: (error2, _retry, fail) => {
         reportError(error2, { errorType: "agent_panel_load_failure" });
@@ -149158,7 +149158,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-C7S00hmP.mjs");
+    const { STLLoader } = await import("./STLLoader-D18Q_PyK.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -149166,7 +149166,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-CwrDgh5v.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-B6s-pzGw.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -240220,6 +240220,7 @@ const FX_CSS = `
   border: 1px solid var(--v2-slab-border);
 }
 .v2-fx-promptpanel .comfytv-prompt-editor { min-height: 40px; font-size: 12px; }
+.v2-fx-custompanel:not(:has(.v2-cparams)) { display: none; }
 .v2-fx-seg.v2-fx-plain .v2-fx-embed,
 .v2-fx-meshprim.v2-fx-plain .v2-fx-embed {
   background: transparent;
@@ -240399,12 +240400,15 @@ function attach$3(node, kind, variant, config2) {
     });
   }
   let wfAnchor = null;
+  let customAnchor = null;
   if (config2.hasRun && config2.embed !== false) {
     const footer = el$4("div", "v2-fx-footer");
     const spacer = el$4("div", "v2-fx-footer__spacer");
     serverAnchor = el$4("div", "v2-fx-footer__server");
     run3 = el$4("button", "v2-run", RUN_BUTTON_HTML);
     if (config2.linkKind) {
+      customAnchor = el$4("div", "v2-fx-promptpanel v2-fx-custompanel");
+      card.appendChild(customAnchor);
       wfAnchor = el$4("div", "v2-fx-footer__wf");
       footer.append(wfAnchor, spacer, serverAnchor, run3);
     } else {
@@ -240441,6 +240445,9 @@ function attach$3(node, kind, variant, config2) {
     specs.push([_sfc_main$44, { node }, presetAnchor]);
     if (promptAnchor) {
       specs.push([MainPromptInput, { node }, promptAnchor]);
+    }
+    if (customAnchor) {
+      specs.push([CustomParamsV2, { node, state: stageState }, customAnchor]);
     }
     if (wfAnchor) {
       specs.push([FooterSelectsV2, {
@@ -245091,4 +245098,4 @@ export {
   DropdownMenuRoot_default as y,
   DropdownMenuTrigger_default as z
 };
-//# sourceMappingURL=main-DoM_rsdm.mjs.map
+//# sourceMappingURL=main-C3t1zkRc.mjs.map
