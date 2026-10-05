@@ -59774,7 +59774,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-CdAybDvA.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-DY81G1mS.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -61032,7 +61032,7 @@ const _hoisted_20$D = {
 const _hoisted_21$x = { class: "ctv:py-1 ctv:px-2.5 ctv:rounded ctv:text-xs ctv:font-semibold ctv:bg-interface-panel-surface ctv:text-base-foreground" };
 const _hoisted_22$t = { class: "ctv:flex-1 ctv:truncate" };
 const _hoisted_23$s = { class: "ctv:flex-1 ctv:truncate" };
-const _hoisted_24$q = ["disabled", "title"];
+const _hoisted_24$r = ["disabled", "title"];
 const _hoisted_25$o = { class: "ctv:flex-1 ctv:truncate" };
 const _hoisted_26$m = ["title"];
 const _hoisted_27$l = {
@@ -61391,7 +61391,7 @@ const _sfc_main$4G = /* @__PURE__ */ defineComponent({
             }, [
               createVNode(unref(IconFolderSearch), { class: "ctv:size-4 ctv:shrink-0" }),
               createBaseVNode("span", _hoisted_25$o, toDisplayString$1(_ctx.$t("assets.scanFolder")), 1)
-            ], 10, _hoisted_24$q),
+            ], 10, _hoisted_24$r),
             unref(mediaDir) ? (openBlock(), createElementBlock("div", {
               key: 0,
               class: "ctv:px-2 ctv:pb-1 ctv:text-3xs ctv:text-muted-foreground ctv:break-all ctv:select-text",
@@ -64954,7 +64954,7 @@ const _hoisted_23$r = {
   key: 4,
   class: "ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-1.5"
 };
-const _hoisted_24$p = { class: "ctv:py-5 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60" };
+const _hoisted_24$q = { class: "ctv:py-5 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60" };
 const _hoisted_25$n = ["title", "draggable", "onDragstart", "onClick", "onMouseenter"];
 const _hoisted_26$l = ["src"];
 const _hoisted_27$k = {
@@ -65180,7 +65180,7 @@ const _sfc_main$4E = /* @__PURE__ */ defineComponent({
           ]),
           unref(error2) ? (openBlock(), createElementBlock("div", _hoisted_22$s, toDisplayString$1(unref(error2)), 1)) : createCommentVNode("", true),
           unref(items).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_23$r, [
-            createBaseVNode("div", _hoisted_24$p, toDisplayString$1(unref(loading2) ? _ctx.$t("eagle.loading") : _ctx.$t("eagle.empty")), 1)
+            createBaseVNode("div", _hoisted_24$q, toDisplayString$1(unref(loading2) ? _ctx.$t("eagle.loading") : _ctx.$t("eagle.empty")), 1)
           ])) : (openBlock(), createBlock(_sfc_main$4J, {
             key: 5,
             items: virtualItems.value,
@@ -66106,7 +66106,7 @@ const _hoisted_22$r = {
   class: "ctv:m-0 ctv:p-4 ctv:text-center ctv:italic ctv:text-muted-foreground"
 };
 const _hoisted_23$q = ["title", "placeholder"];
-const _hoisted_24$o = ["placeholder"];
+const _hoisted_24$p = ["placeholder"];
 const _hoisted_25$m = {
   key: 0,
   class: "ctv:text-2xs ctv:text-destructive-background"
@@ -66361,7 +66361,7 @@ const _sfc_main$4D = /* @__PURE__ */ defineComponent({
                   ["meta", "prevent"]
                 ), ["enter"]))
               ]
-            }, null, 42, _hoisted_24$o), [
+            }, null, 42, _hoisted_24$p), [
               [vModelText, unref(newDraft).content]
             ]),
             unref(newContentError) ? (openBlock(), createElementBlock("span", _hoisted_25$m, toDisplayString$1(unref(newContentError)), 1)) : createCommentVNode("", true),
@@ -68346,7 +68346,7 @@ const _hoisted_20$A = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
 const _hoisted_21$u = { class: "ctv:flex-1 ctv:min-w-0" };
 const _hoisted_22$q = { class: "ctv:font-semibold ctv:truncate" };
 const _hoisted_23$p = { class: "ctv:text-muted-foreground ctv:truncate" };
-const _hoisted_24$n = ["title"];
+const _hoisted_24$o = ["title"];
 const _hoisted_25$l = {
   key: 0,
   class: "ctv:text-2xs ctv:tabular-nums ctv:text-muted-foreground"
@@ -68508,7 +68508,7 @@ const _sfc_main$4z = /* @__PURE__ */ defineComponent({
                     class: normalizeClass(["ctv:size-1.5 ctv:rounded-full", statusDotClass(server)])
                   }, null, 2),
                   unref(statusBadge)(server) ? (openBlock(), createElementBlock("span", _hoisted_25$l, toDisplayString$1(unref(statusBadge)(server)), 1)) : createCommentVNode("", true)
-                ], 8, _hoisted_24$n)) : createCommentVNode("", true),
+                ], 8, _hoisted_24$o)) : createCommentVNode("", true),
                 createBaseVNode("button", {
                   class: normalizeClass(iconBtnClass$5),
                   disabled: unref(testingId) === server.id,
@@ -80629,7 +80629,7 @@ const _hoisted_23$o = {
   key: 1,
   class: "ctv:grid ctv:grid-cols-[repeat(auto-fill,minmax(64px,1fr))] ctv:gap-1"
 };
-const _hoisted_24$m = ["title", "onClick"];
+const _hoisted_24$n = ["title", "onClick"];
 const _hoisted_25$k = {
   key: 4,
   class: "ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:flex ctv:items-center ctv:justify-center ctv:size-4 ctv:rounded-full ctv:text-3xs ctv:leading-none ctv:bg-primary-background ctv:text-white"
@@ -80963,7 +80963,7 @@ const _sfc_main$4r = /* @__PURE__ */ defineComponent({
                   items: libraryLightboxItems.value,
                   index: libraryLightboxIndex(asset)
                 }, null, 8, ["items", "index"])) : createCommentVNode("", true)
-              ], 10, _hoisted_24$m);
+              ], 10, _hoisted_24$n);
             }), 128))
           ]))
         ], 512), [
@@ -86610,7 +86610,7 @@ const _sfc_main$4p = /* @__PURE__ */ defineComponent({
       }
     });
     const AgentPanelRoot = /* @__PURE__ */ defineAsyncComponent({
-      loader: () => import("./AgentPanelRoot-BUm2-qDI.mjs"),
+      loader: () => import("./AgentPanelRoot-C-e7EH2t.mjs"),
       errorComponent: AgentPanelLoadError,
       onError: (error2, _retry, fail) => {
         reportError(error2, { errorType: "agent_panel_load_failure" });
@@ -89245,7 +89245,7 @@ const _hoisted_21$p = {
 };
 const _hoisted_22$o = { class: "ctv:relative" };
 const _hoisted_23$n = ["placeholder"];
-const _hoisted_24$l = {
+const _hoisted_24$m = {
   key: 0,
   class: "ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1"
 };
@@ -89554,7 +89554,7 @@ const _sfc_main$4i = /* @__PURE__ */ defineComponent({
                   [vModelText, unref(searchQuery)]
                 ])
               ]),
-              unref(groupChips).length > 1 ? (openBlock(), createElementBlock("div", _hoisted_24$l, [
+              unref(groupChips).length > 1 ? (openBlock(), createElementBlock("div", _hoisted_24$m, [
                 createBaseVNode("button", {
                   class: normalizeClass(chipClass2(unref(groupFilter) === unref(ALL_GROUPS))),
                   onClick: _cache2[3] || (_cache2[3] = ($event) => groupFilter.value = unref(ALL_GROUPS))
@@ -89802,6 +89802,7 @@ function useStageWorkflowList(kind, isActive2, onKinds) {
   const defaultBusyId = /* @__PURE__ */ ref(null);
   const hiddenBusyId = /* @__PURE__ */ ref(null);
   const openBusyId = /* @__PURE__ */ ref(null);
+  const unlinkBusyId = /* @__PURE__ */ ref(null);
   const recentAdded = /* @__PURE__ */ ref(/* @__PURE__ */ new Set());
   async function reload() {
     loading2.value = true;
@@ -89873,6 +89874,24 @@ function useStageWorkflowList(kind, isActive2, onKinds) {
       hiddenBusyId.value = null;
     }
   }
+  async function onUnlink(row) {
+    const ok = await askConfirm({
+      title: t2("configSidebar.unlink"),
+      message: t2("configSidebar.unlinkConfirm", { label: row.label })
+    });
+    if (!ok) return;
+    unlinkBusyId.value = row.id;
+    try {
+      await unlinkWorkflow(row.id);
+      rows.value = rows.value.filter((r2) => r2.id !== row.id);
+      removeOptionEverywhere(row.kind, row.label);
+      invalidateWorkflowInfo();
+    } catch (e) {
+      toast$2("error", t2("configSidebar.unlinkFailed", { detail: String((e == null ? void 0 : e.message) || e) }));
+    } finally {
+      unlinkBusyId.value = null;
+    }
+  }
   async function onOpenInComfy(row) {
     openBusyId.value = row.id;
     try {
@@ -89939,12 +89958,14 @@ function useStageWorkflowList(kind, isActive2, onKinds) {
     defaultBusyId,
     hiddenBusyId,
     openBusyId,
+    unlinkBusyId,
     recentAdded,
     reload,
     onRescan,
     onImport,
     onSetDefault,
     onSetHidden,
+    onUnlink,
     onOpenInComfy,
     importFile
   };
@@ -89976,8 +89997,9 @@ const _hoisted_18$B = ["title"];
 const _hoisted_19$z = ["title", "disabled", "onClick"];
 const _hoisted_20$u = ["title", "disabled", "onClick"];
 const _hoisted_21$o = ["title", "disabled", "onClick"];
-const _hoisted_22$n = ["title"];
+const _hoisted_22$n = ["title", "disabled", "onClick"];
 const _hoisted_23$m = ["title"];
+const _hoisted_24$l = ["title"];
 const badge = "ctv:inline-flex ctv:items-center ctv:gap-1 ctv:py-px ctv:px-1.5 ctv:rounded ctv:text-3xs ctv:whitespace-nowrap";
 const iconBtn = "ctv:shrink-0 ctv:flex ctv:items-center ctv:justify-center ctv:size-6 ctv:rounded-sm ctv:cursor-pointer ctv:text-xs ctv:border-none ctv:bg-transparent ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:disabled:pointer-events-none ctv:disabled:opacity-50";
 const importBtn = "ctv:inline-flex ctv:items-center ctv:gap-1 ctv:h-6 ctv:px-2 ctv:rounded-sm ctv:text-xs ctv:font-medium ctv:cursor-pointer ctv:border-none ctv:text-secondary-foreground ctv:bg-secondary-background ctv:hover:bg-secondary-background-hover ctv:disabled:pointer-events-none ctv:disabled:opacity-50";
@@ -90000,12 +90022,14 @@ const _sfc_main$4h = /* @__PURE__ */ defineComponent({
       defaultBusyId,
       hiddenBusyId,
       openBusyId,
+      unlinkBusyId,
       recentAdded,
       reload,
       onRescan,
       onImport,
       onSetDefault,
       onSetHidden,
+      onUnlink,
       onOpenInComfy
     } = useStageWorkflowList(
       computed(() => props.kind),
@@ -90116,7 +90140,7 @@ const _sfc_main$4h = /* @__PURE__ */ defineComponent({
                 class: normalizeClass([badge, "ctv:bg-base-foreground/5 ctv:text-muted-foreground"]),
                 title: _ctx.$t("stageManager.badge.noApiHint")
               }, toDisplayString$1(_ctx.$t("stageManager.badge.noApi")), 11, _hoisted_18$B)) : createCommentVNode("", true),
-              _cache2[11] || (_cache2[11] = createBaseVNode("span", { class: "ctv:flex-1" }, null, -1)),
+              _cache2[12] || (_cache2[12] = createBaseVNode("span", { class: "ctv:flex-1" }, null, -1)),
               createBaseVNode("button", {
                 class: normalizeClass(["ctv-hover-reveal", iconBtn]),
                 title: _ctx.$t("openInComfy.tooltip"),
@@ -90144,17 +90168,26 @@ const _sfc_main$4h = /* @__PURE__ */ defineComponent({
                 createBaseVNode("i", {
                   class: normalizeClass(["pi", w.is_hidden ? "pi-eye-slash" : "pi-eye"])
                 }, null, 2)
-              ], 10, _hoisted_21$o)
+              ], 10, _hoisted_21$o),
+              w.link_type === unref(LINK_TYPE_NATIVE) ? (openBlock(), createElementBlock("button", {
+                key: 8,
+                class: normalizeClass(["ctv-hover-reveal", iconBtn]),
+                title: _ctx.$t("configSidebar.unlink"),
+                disabled: unref(unlinkBusyId) === w.id,
+                onClick: ($event) => unref(onUnlink)(w)
+              }, [..._cache2[11] || (_cache2[11] = [
+                createBaseVNode("i", { class: "pi pi-times" }, null, -1)
+              ])], 10, _hoisted_22$n)) : createCommentVNode("", true)
             ]),
             createBaseVNode("div", {
               class: "ctv:text-3xs ctv:font-mono ctv:text-muted-foreground ctv:truncate",
               title: w.file_path
-            }, toDisplayString$1(unref(workflowFileName)(w.file_path)), 9, _hoisted_22$n),
+            }, toDisplayString$1(unref(workflowFileName)(w.file_path)), 9, _hoisted_23$m),
             w.description ? (openBlock(), createElementBlock("div", {
               key: 0,
               class: "ctv:text-3xs ctv:text-muted-foreground/80 ctv:truncate",
               title: w.description
-            }, toDisplayString$1(w.description), 9, _hoisted_23$m)) : createCommentVNode("", true)
+            }, toDisplayString$1(w.description), 9, _hoisted_24$l)) : createCommentVNode("", true)
           ], 2);
         }), 128))
       ]);
@@ -149190,7 +149223,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-oLGqNnui.mjs");
+    const { STLLoader } = await import("./STLLoader-DyirNINg.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -149198,7 +149231,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-Bwkfc_Jx.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-Dit7JA2f.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -245131,4 +245164,4 @@ export {
   DropdownMenuRoot_default as y,
   DropdownMenuTrigger_default as z
 };
-//# sourceMappingURL=main-DJHOGc6i.mjs.map
+//# sourceMappingURL=main-hv189Cl5.mjs.map

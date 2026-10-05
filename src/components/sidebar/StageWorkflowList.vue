@@ -100,6 +100,15 @@
         >
           <i :class="['pi', w.is_hidden ? 'pi-eye-slash' : 'pi-eye']" />
         </button>
+        <button
+          v-if="w.link_type === LINK_TYPE_NATIVE"
+          :class="['ctv-hover-reveal', iconBtn]"
+          :title="$t('configSidebar.unlink')"
+          :disabled="unlinkBusyId === w.id"
+          @click="onUnlink(w)"
+        >
+          <i class="pi pi-times" />
+        </button>
       </div>
       <div class="ctv:text-3xs ctv:font-mono ctv:text-muted-foreground ctv:truncate" :title="w.file_path">
         {{ fileName(w.file_path) }}
@@ -132,12 +141,14 @@ const {
   defaultBusyId,
   hiddenBusyId,
   openBusyId,
+  unlinkBusyId,
   recentAdded,
   reload,
   onRescan,
   onImport,
   onSetDefault,
   onSetHidden,
+  onUnlink,
   onOpenInComfy,
 } = useStageWorkflowList(
   computed(() => props.kind),

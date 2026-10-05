@@ -8,12 +8,24 @@ const rescanWorkflows = vi.fn()
 const importWorkflow = vi.fn()
 const setDefaultWorkflow = vi.fn()
 const setHiddenWorkflow = vi.fn()
+const unlinkWorkflow = vi.fn()
 vi.mock('@/api', () => ({
   listWorkflowOverview: (...a: any[]) => listWorkflowOverview(...a),
   rescanWorkflows: (...a: any[]) => rescanWorkflows(...a),
   importWorkflow: (...a: any[]) => importWorkflow(...a),
   setDefaultWorkflow: (...a: any[]) => setDefaultWorkflow(...a),
   setHiddenWorkflow: (...a: any[]) => setHiddenWorkflow(...a),
+  unlinkWorkflow: (...a: any[]) => unlinkWorkflow(...a),
+}))
+
+const askConfirm = vi.fn(async (..._a: any[]) => true)
+vi.mock('@/composables/dialog/useConfirmDialog', () => ({
+  askConfirm: (...a: any[]) => askConfirm(...a),
+}))
+
+const invalidateWorkflowInfo = vi.fn()
+vi.mock('@/composables/stages/useWorkflowValidator', () => ({
+  invalidateWorkflowInfo: () => invalidateWorkflowInfo(),
 }))
 
 const addOptionEverywhere = vi.fn()
@@ -291,6 +303,33 @@ describe('useStageWorkflowList', () => {
       detail: 'nope',
     }))
     expect(list.hiddenBusyId.value).toBe(null)
+  })
+
+  it('onUnlink drops a confirmed linked row from the list and every stage combo', async () => {
+    listWorkflowOverview.mockResolvedValue(overview({
+      workflows: [
+        { id: 1, kind: 'image', label: 'A', has_api: false },
+        { id: 2, kind: 'image', label: 'Gone', has_api: false, link_type: 1, file_exists: false },
+      ],
+    }))
+    unlinkWorkflow.mockResolvedValue({ ok: true, kind: 'image', label: 'Gone' })
+    const list = withSetup(() => useStageWorkflowList(ref('image'), () => false, vi.fn()))
+    await flush()
+    await list.onUnlink(list.rows.value[1] as any)
+    expect(unlinkWorkflow).toHaveBeenCalledWith(2)
+    expect(list.rows.value.map(r => r.id)).toEqual([1])
+    expect(removeOptionEverywhere).toHaveBeenCalledWith('image', 'Gone')
+    expect(invalidateWorkflowInfo).toHaveBeenCalled()
+    expect(list.unlinkBusyId.value).toBe(null)
+  })
+
+  it('onUnlink does nothing when the confirm is declined', async () => {
+    askConfirm.mockResolvedValueOnce(false)
+    const list = withSetup(() => useStageWorkflowList(ref('image'), () => false, vi.fn()))
+    await flush()
+    await list.onUnlink(list.rows.value[0] as any)
+    expect(unlinkWorkflow).not.toHaveBeenCalled()
+    expect(list.rows.value).toHaveLength(1)
   })
 
   it('onOpenInComfy forwards the row and clears the busy id', async () => {

@@ -1,8 +1,10 @@
 import { onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { importWorkflow, listWorkflowOverview, rescanWorkflows, setDefaultWorkflow, setHiddenWorkflow } from '@/api'
+import { importWorkflow, listWorkflowOverview, rescanWorkflows, setDefaultWorkflow, setHiddenWorkflow, unlinkWorkflow } from '@/api'
 import type { WorkflowOverview } from '@/api'
+import { askConfirm } from '@/composables/dialog/useConfirmDialog'
+import { invalidateWorkflowInfo } from '@/composables/stages/useWorkflowValidator'
 import { addOptionEverywhere, removeOptionEverywhere, setDefaultOptionInDefs } from '@/composables/stages/workflowCombo'
 import { tryOpenWorkflowInComfy } from '@/composables/useOpenInComfy'
 import { app } from '@/lib/comfyApp'
@@ -32,6 +34,7 @@ export function useStageWorkflowList(
   const defaultBusyId = ref<number | null>(null)
   const hiddenBusyId = ref<number | null>(null)
   const openBusyId = ref<number | null>(null)
+  const unlinkBusyId = ref<number | null>(null)
   const recentAdded = ref<Set<string>>(new Set())
 
   async function reload() {
@@ -105,6 +108,25 @@ export function useStageWorkflowList(
     }
   }
 
+  async function onUnlink(row: WorkflowOverview) {
+    const ok = await askConfirm({
+      title: t('configSidebar.unlink'),
+      message: t('configSidebar.unlinkConfirm', { label: row.label }),
+    })
+    if (!ok) return
+    unlinkBusyId.value = row.id
+    try {
+      await unlinkWorkflow(row.id)
+      rows.value = rows.value.filter(r => r.id !== row.id)
+      removeOptionEverywhere(row.kind, row.label)
+      invalidateWorkflowInfo()
+    } catch (e: any) {
+      toast('error', t('configSidebar.unlinkFailed', { detail: String(e?.message || e) }))
+    } finally {
+      unlinkBusyId.value = null
+    }
+  }
+
   async function onOpenInComfy(row: WorkflowOverview) {
     openBusyId.value = row.id
     try {
@@ -170,12 +192,14 @@ export function useStageWorkflowList(
     defaultBusyId,
     hiddenBusyId,
     openBusyId,
+    unlinkBusyId,
     recentAdded,
     reload,
     onRescan,
     onImport,
     onSetDefault,
     onSetHidden,
+    onUnlink,
     onOpenInComfy,
     importFile,
   }
