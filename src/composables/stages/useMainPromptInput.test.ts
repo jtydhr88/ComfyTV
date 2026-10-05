@@ -386,6 +386,14 @@ describe('useMainPromptInput — tiptap integration points', () => {
     ])
   })
 
+  it('unwraps the Windows CF_HTML clipboard fragment before parsing', () => {
+    setup(makeNode(''))
+    const strip = holder.options.editorProps.transformPastedHTML
+    expect(strip('<html>\r\n<body>\r\n<!--StartFragment--><p data-pm-slice="1 1 []">上形</p><!--EndFragment-->\r\n</body>\r\n</html>'))
+      .toBe('<p data-pm-slice="1 1 []">上形</p>')
+    expect(strip('<p>plain</p>')).toBe('<p>plain</p>')
+  })
+
   it('upstreamTextInputs keeps only connected texts.* slots', () => {
     const inputs = [
       { slot: 'texts.text0', source: 'upstream', content: 'a poem' },

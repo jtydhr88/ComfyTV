@@ -59963,7 +59963,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-eYBtskMw.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-Dzgb1PtY.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -86570,7 +86570,7 @@ const _sfc_main$4o = /* @__PURE__ */ defineComponent({
       }
     });
     const AgentPanelRoot = /* @__PURE__ */ defineAsyncComponent({
-      loader: () => import("./AgentPanelRoot-CA2CMPMZ.mjs"),
+      loader: () => import("./AgentPanelRoot-sUYHM_Td.mjs"),
       errorComponent: AgentPanelLoadError,
       onError: (error2, _retry, fail) => {
         reportError(error2, { errorType: "agent_panel_load_failure" });
@@ -115352,6 +115352,10 @@ function usePromptEditorCore(opts) {
       })
     ],
     editorProps: {
+      transformPastedHTML: (html) => {
+        var _a2;
+        return ((_a2 = /<!--StartFragment-->([\s\S]*)<!--EndFragment-->/.exec(html)) == null ? void 0 : _a2[1]) ?? html;
+      },
       transformPasted: (slice3) => new Slice(chipifyFragment(slice3.content), slice3.openStart, slice3.openEnd),
       attributes: {
         class: "comfytv-prompt-prosemirror ctv:min-h-11 ctv:max-h-80 ctv:overflow-y-scroll ctv:py-1.5 ctv:px-2 ctv:rounded ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-default ctv:focus:border-primary-background ctv:text-xs ctv:leading-snug ctv:[font-family:inherit] ctv:outline-none ctv:box-border ctv:whitespace-pre-wrap ctv:break-words",
@@ -149003,7 +149007,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-BlmlRyVM.mjs");
+    const { STLLoader } = await import("./STLLoader-e4A1qEQF.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -149011,7 +149015,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-BdbIF-fp.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-DJkDmEkS.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -244940,4 +244944,4 @@ export {
   DropdownMenuRoot_default as y,
   DropdownMenuTrigger_default as z
 };
-//# sourceMappingURL=main-BtLzg4bM.mjs.map
+//# sourceMappingURL=main-Bdlhkdvt.mjs.map

@@ -188,6 +188,8 @@ export function usePromptEditorCore(opts: PromptEditorCoreOpts) {
       }),
     ],
     editorProps: {
+      transformPastedHTML: (html: string) =>
+        /<!--StartFragment-->([\s\S]*)<!--EndFragment-->/.exec(html)?.[1] ?? html,
       transformPasted: (slice: Slice) =>
         new Slice(chipifyFragment(slice.content), slice.openStart, slice.openEnd),
       attributes: {
