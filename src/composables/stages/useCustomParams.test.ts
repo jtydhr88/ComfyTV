@@ -153,9 +153,16 @@ describe('useCustomParams — def helpers', () => {
     expect(api.numVal('abc')).toBeNull()
   })
 
-  it('useSlider needs an int type with min and max', async () => {
+  it('useSlider needs a numeric type with min and max', async () => {
+    fakeParamStore.forKind.mockReturnValue([
+      ...DEFS,
+      { key: 'strength', label: 'Strength', type: 'float', config: { min: 0, max: 2, step: 0.1 }, origin: 1 },
+      { key: 'scale', label: 'Scale', type: 'float', config: { max: 2 }, origin: 1 },
+    ])
     const api = await setup(makeNode())
     expect(api.useSlider('steps')).toBe(true)
+    expect(api.useSlider('strength')).toBe(true)
+    expect(api.useSlider('scale')).toBe(false)
     expect(api.useSlider('note')).toBe(false)
   })
 })

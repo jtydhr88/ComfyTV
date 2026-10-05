@@ -51,6 +51,7 @@ export function useStageParamForm(activeKind: Ref<string>) {
     placeholder: '',
   })
   const error = ref('')
+  const editing = ref<StageParam | null>(null)
 
   const comboOptionsList = computed(() =>
     form.options.split(',').map(s => s.trim()).filter(Boolean),
@@ -70,6 +71,10 @@ export function useStageParamForm(activeKind: Ref<string>) {
   }
 
   watch(() => form.type, () => { error.value = '' })
+  watch(activeKind, () => onCancelEdit())
+  watch(rows, (list) => {
+    if (editing.value && !list.some(p => p.id === editing.value!.id)) onCancelEdit()
+  })
 
   function buildConfig(): Record<string, unknown> {
     const cfg: Record<string, unknown> = {}
@@ -111,6 +116,51 @@ export function useStageParamForm(activeKind: Ref<string>) {
     if (created) resetForm()
   }
 
+  function onEdit(p: StageParam) {
+    const num = (v: unknown) => (typeof v === 'number' ? v : null)
+    editing.value = p
+    error.value = ''
+    form.type = p.type
+    form.label = p.label
+    form.numDefault = num(p.default)
+    form.boolDefault = p.default === true
+    form.default = typeof p.default === 'string' ? p.default : ''
+    form.options = Array.isArray(p.config.options) ? p.config.options.join(', ') : ''
+    form.min = num(p.config.min)
+    form.max = num(p.config.max)
+    form.step = num(p.config.step)
+    form.placeholder = typeof p.config.placeholder === 'string' ? p.config.placeholder : ''
+  }
+
+  function onCancelEdit() {
+    if (!editing.value) return
+    editing.value = null
+    error.value = ''
+    resetForm()
+  }
+
+  async function onSave() {
+    const p = editing.value
+    if (!p) return
+    if (!form.label.trim()) {
+      error.value = t('stageParams.sidebar.labelRequired')
+      return
+    }
+    error.value = ''
+    const config: Record<string, unknown> = { ...p.config }
+    for (const k of ['min', 'max', 'step', 'options', 'placeholder']) delete config[k]
+    Object.assign(config, buildConfig())
+    const updated = await store.update(p.id, {
+      label: form.label.trim(),
+      default: buildDefault(),
+      config,
+    })
+    if (updated) {
+      editing.value = null
+      resetForm()
+    }
+  }
+
   async function onDelete(p: StageParam) {
     const ok = await askConfirm({
       title: t('stageParams.sidebar.delete'),
@@ -126,7 +176,11 @@ export function useStageParamForm(activeKind: Ref<string>) {
     error,
     typeOptions,
     comboDefaultOptions,
+    editing,
     onCreate,
+    onEdit,
+    onCancelEdit,
+    onSave,
     onDelete,
   }
 }

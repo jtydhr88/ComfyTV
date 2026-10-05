@@ -80,7 +80,8 @@ export function useCustomParams(node: LGraphNode, getState: () => StageState) {
     return Number.isFinite(n) ? n : null
   }
   function useSlider(key: string): boolean {
-    return defType(key) === 'int'
+    const t = defType(key)
+    return (t === 'int' || t === 'float')
       && cfgNum(key, 'min') !== undefined
       && cfgNum(key, 'max') !== undefined
   }

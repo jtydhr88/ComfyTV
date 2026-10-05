@@ -6,6 +6,7 @@
     :min="min"
     :max="max"
     :step="step ?? 1"
+    :step-snapping="stepSnapping"
     :format-options="formatOptions"
     @update:model-value="onChange"
   >
@@ -24,7 +25,7 @@ import {
   NumberFieldDecrement,
 } from 'reka-ui'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   modelValue: number | null
   disabled?: boolean
   min?:  number
@@ -32,7 +33,8 @@ const props = defineProps<{
   step?: number
   precision?: number
   showButtons?: boolean
-}>()
+  stepSnapping?: boolean
+}>(), { stepSnapping: true })
 const emit = defineEmits<{ 'update:modelValue': [v: number | null] }>()
 
 const showButtons = computed(() =>

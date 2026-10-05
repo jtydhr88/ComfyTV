@@ -59963,7 +59963,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-Dzgb1PtY.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-BSAiaOvA.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -61007,7 +61007,7 @@ const _hoisted_27$l = {
   key: 0,
   class: "ctv:px-1.5 ctv:py-1 ctv:text-2xs ctv:font-semibold ctv:text-muted-foreground"
 };
-const _hoisted_28$h = {
+const _hoisted_28$i = {
   key: 1,
   class: "ctv:py-2 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60 ctv:text-2xs"
 };
@@ -61386,7 +61386,7 @@ const _sfc_main$4F = /* @__PURE__ */ defineComponent({
             }, ["stop"]))
           }, [
             unref(editorAssets).length > 1 ? (openBlock(), createElementBlock("div", _hoisted_27$l, toDisplayString$1(_ctx.$t("assets.select.count", { count: unref(editorAssets).length })), 1)) : createCommentVNode("", true),
-            unref(store2).categories.length === 0 ? (openBlock(), createElementBlock("div", _hoisted_28$h, toDisplayString$1(_ctx.$t("assets.tagPopover.empty")), 1)) : createCommentVNode("", true),
+            unref(store2).categories.length === 0 ? (openBlock(), createElementBlock("div", _hoisted_28$i, toDisplayString$1(_ctx.$t("assets.tagPopover.empty")), 1)) : createCommentVNode("", true),
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(store2).categories, (cat2) => {
               return openBlock(), createElementBlock("button", {
                 key: cat2.id,
@@ -62586,7 +62586,7 @@ const servers$1 = { "title": "ComfyUI Servers", "add": "Add", "addTooltip": "Reg
 const stageManager$1 = { "title": "Stage Manager", "refresh": "Refresh list", "import": "Import", "rescan": "Rescan", "rescanTooltip": "Scan the workflow library on disk (comfytv/workflows/ in the ComfyUI user directory) for new, changed, or removed files — no backend restart needed", "rescanFound": "Found {n} new workflow(s)", "rescanNone": "No new workflows found", "rescanNoneDetail": "Make sure the file is a .json inside comfytv/workflows/<kind>/ in the ComfyUI user directory (preset and .api.json sidecars don't count).", "rescanFailed": "Rescan failed", "setDefault": "Set as default", "unsetDefault": "Unset default", "defaultSet": "{label} is now the default workflow for this stage", "defaultCleared": "{label} is no longer the default — the first listed workflow is used", "defaultFailed": "Could not change the default workflow", "hide": "Hide from stage node", "unhide": "Show on stage node", "hiddenSet": "{label} is now hidden from the workflow dropdown on stage nodes", "hiddenCleared": "{label} is shown in the workflow dropdown again", "hiddenFailed": "Could not change workflow visibility", "section": { "workflows": "Workflows", "params": "Parameters" }, "emptyWorkflows": "No workflows registered for this stage yet — import one here, or drop a .json into comfytv/workflows/<kind>/ in the ComfyUI user directory and hit Rescan.", "hint": "Workflows listed here are picked from the workflow dropdown on the matching stage node on the canvas.", "badge": { "linked": "linked", "linkedHint": "Linked from ComfyUI's native workflow folder (not managed by ComfyTV)", "fileMissing": "file missing", "notGui": "not GUI format", "notGuiHint": "Missing a top-level nodes array — open it in ComfyUI and re-save normally, not with Save (API Format)", "noApi": "API not generated", "noApiHint": "The API prompt is generated automatically the first time this workflow runs — normal for a freshly imported workflow.", "new": "new", "newHint": "Discovered in the most recent scan (startup or rescan)", "builtin": "built-in", "builtinHint": "Ships with ComfyTV (tracked in git). Workflows without this badge were imported or dropped in by a user.", "default": "default", "defaultHint": "Newly added stage nodes of this kind start with this workflow selected. If it is deleted or unlinked, the first listed workflow is used instead.", "hidden": "hidden", "hiddenHint": "Not offered in the workflow dropdown on stage nodes. Nodes that already selected it keep working." } };
 const assets$1 = { "title": "Asset Library", "empty": "No assets yet — add images, video, or audio to reuse them across projects.", "emptyCategory": "No assets in this category yet.", "add": "Add media", "addTooltip": "Upload images, video, or audio into the library (or drag & drop them onto this panel)", "uploading": "Uploading {done}/{total}…", "uploadFailed": "Upload failed: {detail}", "dropHint": "Drop files to add them to the library", "search": "Search assets", "noResults": "No assets match your search.", "scanFolder": "Scan media folder", "scanFolderHint": "Drop large files into this folder — they are adopted on scan without uploading", "view": { "settings": "Display settings", "list": "List view", "grid": "Grid view" }, "media": { "all": "All types", "image": "Images", "video": "Video", "audio": "Audio", "model": "3D models", "text": "Text" }, "category": { "all": "All", "none": "Uncategorized", "new": "New category", "newPrompt": "New category name:", "rename": "Rename category", "renamePrompt": "Category name:", "delete": "Delete category", "deleteConfirm": "Delete this category? It is removed from all assets; the assets and files on disk stay." }, "card": { "rename": "Rename", "renamePrompt": "Asset name:", "delete": "Remove from library", "deleteConfirm": "Remove this asset from the library? The file on disk stays.", "tags": "Edit tags", "loadNode": "Add as node to canvas", "makeProxy": "Generate preview proxy", "more": "More options", "playPreview": "Play", "pausePreview": "Pause", "fileMissing": "File missing", "fileMissingHint": "The file on disk was deleted; the library entry remains — re-import it or remove the asset" }, "tagPopover": { "empty": "No categories yet.", "create": "New category" }, "select": { "enter": "Select assets (Ctrl+click also works)", "exit": "Exit selection", "all": "Select all shown", "missing": "Select only the shown assets whose file is missing ({count})", "count": "{count} selected", "tags": "Edit tags of selected", "loadNodes": "Add selected as nodes to canvas", "remove": "Remove selected from library", "removeConfirm": "Remove {count} assets from the library? The files on disk stay." } };
 const assetLoader$1 = { "empty": "No matching assets in the library yet — add some in the Assets panel.", "pickHint": "Pick an asset from the library to use as this node's output.", "selected": "Selected: {name}", "fileMissing": "Selected asset {name} no longer exists on disk — re-import it or pick another", "upload": "Upload files into the library and select the last one" };
-const stageParams$1 = { "section": "Parameters", "add": "Add", "addHint": "Attach a parameter defined in the ComfyTV sidebar", "remove": "Detach from this node", "sidebar": { "title": "Stage Parameters", "kind": "Stage", "empty": "No parameters defined for this stage yet.", "customKindNote": "Custom Stage workflows do not use stage parameters — expose the workflow's own widgets from the card's Expose I/O panel instead.", "new": "New parameter", "label": "Label", "type": "Type", "default": "Default", "options": "Options (comma-separated)", "min": "Min", "max": "Max", "step": "Step", "sliderHint": "Set both min & max to show a slider on the node (otherwise a number field).", "multiline": "Multiline", "placeholder": "Placeholder", "create": "Create", "cancel": "Cancel", "delete": "Delete", "deleteConfirm": "Delete this parameter? Workflows binding to it will lose the binding.", "system": "Built-in", "labelRequired": "Label is required" } };
+const stageParams$1 = { "section": "Parameters", "add": "Add", "addHint": "Attach a parameter defined in the ComfyTV sidebar", "remove": "Detach from this node", "sidebar": { "title": "Stage Parameters", "kind": "Stage", "empty": "No parameters defined for this stage yet.", "customKindNote": "Custom Stage workflows do not use stage parameters — expose the workflow's own widgets from the card's Expose I/O panel instead.", "new": "New parameter", "edit": "Edit parameter", "save": "Save", "label": "Label", "type": "Type", "default": "Default", "options": "Options (comma-separated)", "min": "Min", "max": "Max", "step": "Step", "sliderHint": "Set both min & max to show a slider on the node (otherwise a number field).", "multiline": "Multiline", "placeholder": "Placeholder", "create": "Create", "cancel": "Cancel", "delete": "Delete", "deleteConfirm": "Delete this parameter? Workflows binding to it will lose the binding.", "system": "Built-in", "labelRequired": "Label is required" } };
 const promptHelper$1 = { "open": "Prompt helper — quick starters & enhancement tags", "templates": "Templates", "template": { "storyboardGrid": "Storyboard grid", "characterSheet": "Character sheet", "moodBoard": "Mood board", "upscale": "Upscale" }, "quickStart": "Quick starters", "quick": { "portrait": "Portrait", "landscape": "Landscape", "product": "Product", "fantasy": "Fantasy", "scifi": "Sci-Fi", "food": "Food", "architecture": "Architecture", "anime": "Anime" }, "category": { "quality": "Quality", "lighting": "Lighting", "mood": "Mood", "style": "Style" } };
 const cameraPrompt$1 = { "open": "Cinematic camera — compile camera/lens/aperture into the prompt", "camera": "Camera", "lens": "Lens", "focal": "Focal length", "aperture": "Aperture", "empty": "Pick a camera, lens, focal length or aperture to build a cinematic suffix.", "insert": "Insert into prompt", "clear": "Clear" };
 const imageRefs$1 = { "title": "Asset references", "empty": "No reference assets — click + to pin one from the library.", "add": "Add reference asset", "batchItem": "Batch image #{n}", "pinBatch": "Pin this batch — it appears in every Asset references panel without wiring", "pinnedToast": "Batch pinned ({n} images)", "pinEmpty": "Nothing to pin — the batch is empty.", "refreshBatch": "Re-snapshot from the source stage's current output", "unpinBatch": "Unpin this batch", "refreshFailed": "Refresh failed — source stage not found or has no batch output.", "remove": "Remove", "warnOverflow": "The workflow binds only {total} reference image(s) — the last {count} on this stage won't be consumed.", "warnNoSlots": "This workflow has no image input that can receive reference images — they'll be ignored at run.", "missing": "unavailable: asset removed or file missing" };
@@ -62774,7 +62774,7 @@ const servers = { "title": "ComfyUI 服务器", "add": "添加", "addTooltip": "
 const stageManager = { "title": "阶段管理", "refresh": "刷新列表", "import": "导入", "rescan": "重新扫描", "rescanTooltip": "扫描磁盘上的工作流库（ComfyUI user 目录下的 comfytv/workflows/），发现新增、变更或删除的文件 —— 无需重启后端", "rescanFound": "发现 {n} 个新工作流", "rescanNone": "没有发现新工作流", "rescanNoneDetail": "请确认文件是 .json 且放在 ComfyUI user 目录下的 comfytv/workflows/对应类别目录中（preset 和 .api.json 附属文件不算）。", "rescanFailed": "重新扫描失败", "setDefault": "设为默认", "unsetDefault": "取消默认", "defaultSet": "{label} 已设为该阶段的默认工作流", "defaultCleared": "{label} 已取消默认 —— 将使用列表中的第一个工作流", "defaultFailed": "修改默认工作流失败", "hide": "从阶段节点隐藏", "unhide": "在阶段节点显示", "hiddenSet": "{label} 已从阶段节点的 workflow 下拉框隐藏", "hiddenCleared": "{label} 已重新显示在 workflow 下拉框中", "hiddenFailed": "修改工作流可见性失败", "section": { "workflows": "工作流", "params": "参数" }, "emptyWorkflows": "该阶段下还没有已注册的工作流 —— 点「导入」上传，或把 .json 放入 ComfyUI user 目录下的 comfytv/workflows/对应类别目录后点「重新扫描」。", "hint": "这里列出的工作流，在画布上对应阶段节点的 workflow 下拉框中选用。", "badge": { "linked": "外链", "linkedHint": "链接自 ComfyUI 原生工作流目录（不由 ComfyTV 管理）", "fileMissing": "文件丢失", "notGui": "非 GUI 格式", "notGuiHint": "缺少顶层 nodes 数组 —— 在 ComfyUI 中打开后用普通「保存」重新导出，不要用「保存（API 格式）」", "noApi": "API 未生成", "noApiHint": "首次运行该工作流时会自动生成 API prompt，新导入的工作流出现此标记属于正常。", "new": "新", "newHint": "最近一次扫描（启动或重新扫描）新发现的工作流", "builtin": "内置", "builtinHint": "ComfyTV 自带的工作流（git 跟踪）。没有此标记的是用户导入或手动放入的。", "default": "默认", "defaultHint": "新添加的该类阶段节点会预选此工作流。若它被删除或取消链接，则回退到列表中的第一个。", "hidden": "已隐藏", "hiddenHint": "不出现在阶段节点的 workflow 下拉框中。已选中它的节点不受影响，仍可正常运行。" } };
 const assets = { "title": "资产库", "empty": "还没有资产 —— 添加图片、视频或音频后可跨项目复用。", "emptyCategory": "这个分类下还没有资产。", "add": "添加素材", "addTooltip": "上传图片、视频或音频到资产库（也可以直接拖拽文件到这个面板）", "uploading": "上传中 {done}/{total}…", "uploadFailed": "上传失败: {detail}", "dropHint": "松开把文件添加到资产库", "search": "搜索资产", "noResults": "没有匹配的资产。", "scanFolder": "扫描素材文件夹", "scanFolderHint": "大文件直接放进这个文件夹,扫描时自动收录,无需上传", "view": { "settings": "显示设置", "list": "列表视图", "grid": "网格视图" }, "media": { "all": "全部类型", "image": "图片", "video": "视频", "audio": "音频", "model": "3D 模型", "text": "文本" }, "category": { "all": "全部", "none": "未分类", "new": "新建分类", "newPrompt": "新分类名称：", "rename": "重命名分类", "renamePrompt": "分类名称：", "delete": "删除分类", "deleteConfirm": "删除这个分类？它会从所有资产上移除；资产和磁盘上的文件保留。" }, "card": { "rename": "重命名", "renamePrompt": "资产名称：", "delete": "从资产库移除", "deleteConfirm": "把这个资产从资产库移除？磁盘上的文件保留。", "tags": "编辑标签", "loadNode": "作为节点添加到画布", "makeProxy": "生成预览代理", "more": "更多操作", "playPreview": "试听", "pausePreview": "暂停", "fileMissing": "文件缺失", "fileMissingHint": "本地文件已被删除，资产条目仍保留；可重新导入或从资产库移除" }, "tagPopover": { "empty": "还没有分类。", "create": "新建分类" }, "select": { "enter": "多选资产（Ctrl+点击也可以）", "exit": "退出多选", "all": "全选当前显示", "missing": "只勾选当前显示中文件缺失的（{count} 个）", "count": "已选 {count} 个", "tags": "编辑所选的标签", "loadNodes": "把所选作为节点添加到画布", "remove": "从资产库移除所选", "removeConfirm": "把这 {count} 个资产从资产库移除？磁盘上的文件保留。" } };
 const assetLoader = { "empty": "资产库中还没有匹配的素材 —— 请先在资产面板中添加。", "pickHint": "从资产库中选择一个素材作为该节点的输出。", "selected": "已选择：{name}", "fileMissing": "所选资产 {name} 的本地文件已被删除，请重新导入或换一个", "upload": "上传文件到资产库并选中最后一个" };
-const stageParams = { "section": "参数", "add": "添加", "addHint": "挂载一个在 ComfyTV 侧栏中定义好的参数", "remove": "从该节点移除", "sidebar": { "title": "阶段参数", "kind": "阶段", "empty": "这个 stage 还没有定义任何参数。", "customKindNote": "自定义节点的工作流不使用阶段参数——请在卡片的“暴露输入输出”面板里直接暴露工作流自己的控件。", "new": "新建参数", "label": "名称", "type": "类型", "default": "默认值", "options": "选项（用逗号分隔）", "min": "最小值", "max": "最大值", "step": "步长", "sliderHint": "同时设置最小值和最大值即可在节点上显示滑块（否则是数字输入框）。", "multiline": "多行", "placeholder": "占位提示", "create": "创建", "cancel": "取消", "delete": "删除", "deleteConfirm": "删除这个参数？绑定到它的工作流将失去该绑定。", "system": "内置", "labelRequired": "名称不能为空" } };
+const stageParams = { "section": "参数", "add": "添加", "addHint": "挂载一个在 ComfyTV 侧栏中定义好的参数", "remove": "从该节点移除", "sidebar": { "title": "阶段参数", "kind": "阶段", "empty": "这个 stage 还没有定义任何参数。", "customKindNote": "自定义节点的工作流不使用阶段参数——请在卡片的“暴露输入输出”面板里直接暴露工作流自己的控件。", "new": "新建参数", "edit": "编辑参数", "save": "保存", "label": "名称", "type": "类型", "default": "默认值", "options": "选项（用逗号分隔）", "min": "最小值", "max": "最大值", "step": "步长", "sliderHint": "同时设置最小值和最大值即可在节点上显示滑块（否则是数字输入框）。", "multiline": "多行", "placeholder": "占位提示", "create": "创建", "cancel": "取消", "delete": "删除", "deleteConfirm": "删除这个参数？绑定到它的工作流将失去该绑定。", "system": "内置", "labelRequired": "名称不能为空" } };
 const promptHelper = { "open": "提示词助手 —— 快速起步 & 增强标签", "templates": "模板", "template": { "storyboardGrid": "分镜九宫格", "characterSheet": "角色设定表", "moodBoard": "情绪板", "upscale": "高清放大" }, "quickStart": "快速起步", "quick": { "portrait": "人像", "landscape": "风景", "product": "产品", "fantasy": "奇幻", "scifi": "科幻", "food": "美食", "architecture": "建筑", "anime": "动漫" }, "category": { "quality": "画质", "lighting": "光照", "mood": "氛围", "style": "风格" } };
 const cameraPrompt = { "open": "电影感相机 —— 把相机/镜头/光圈编译进提示词", "camera": "相机", "lens": "镜头", "focal": "焦段", "aperture": "光圈", "empty": "选择相机 / 镜头 / 焦段 / 光圈，自动拼出一段电影感后缀。", "insert": "插入提示词", "clear": "清空" };
 const imageRefs = { "title": "素材引用", "empty": "暂无参考素材 —— 点 + 从资产库选一个。", "add": "添加参考素材", "batchItem": "批次图 #{n}", "pinBatch": "钉住此批次 —— 无需连线即可在所有素材引用面板中使用", "pinnedToast": "批次已钉住({n} 张)", "pinEmpty": "没有可钉住的内容 —— 批次为空。", "refreshBatch": "从来源 stage 的当前输出重新快照", "unpinBatch": "取消钉住", "refreshFailed": "刷新失败 —— 找不到来源 stage 或其没有批次输出。", "remove": "移除", "warnOverflow": "该工作流只绑定了 {total} 张参考图 —— 本节点最后 {count} 张不会被使用。", "warnNoSlots": "该工作流没有可接收参考图的图片输入 —— 运行时这些图会被忽略。", "missing": "已失效：资产已移除或文件已丢失" };
@@ -64929,7 +64929,7 @@ const _hoisted_27$k = {
   key: 1,
   class: "ctv:flex ctv:w-full ctv:h-24 ctv:items-center ctv:justify-center ctv:bg-black/20"
 };
-const _hoisted_28$g = ["title", "onClick"];
+const _hoisted_28$h = ["title", "onClick"];
 const _hoisted_29$e = ["src"];
 const _hoisted_30$e = { class: "ctv:absolute ctv:top-1 ctv:left-1 ctv:px-1 ctv:rounded ctv:text-3xs ctv:uppercase ctv:bg-black/50 ctv:text-white/80" };
 const _hoisted_31$c = {
@@ -65188,7 +65188,7 @@ const _sfc_main$4D = /* @__PURE__ */ defineComponent({
                       key: 1,
                       class: "ctv:size-5 ctv:ml-0.5"
                     }))
-                  ], 10, _hoisted_28$g)
+                  ], 10, _hoisted_28$h)
                 ])) : (openBlock(), createElementBlock("img", {
                   key: 2,
                   src: unref(eagleThumbUrl)(item.eagleItem.id),
@@ -66081,7 +66081,7 @@ const _hoisted_25$m = {
 };
 const _hoisted_26$k = { class: "ctv:text-2xs ctv:text-muted-foreground" };
 const _hoisted_27$j = ["onUpdate:modelValue", "placeholder"];
-const _hoisted_28$f = ["onUpdate:modelValue", "placeholder"];
+const _hoisted_28$g = ["onUpdate:modelValue", "placeholder"];
 const _hoisted_29$d = { class: "ctv:flex ctv:justify-end ctv:gap-1.5" };
 const _hoisted_30$d = ["disabled"];
 const cardClass = "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2 ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-secondary-background/40";
@@ -66352,7 +66352,7 @@ const _sfc_main$4C = /* @__PURE__ */ defineComponent({
                   "onUpdate:modelValue": ($event) => unref(newDraft).metadata[f2.name] = $event,
                   class: normalizeClass(inputClass2()),
                   placeholder: f2.placeholder ?? ""
-                }, null, 10, _hoisted_28$f)), [
+                }, null, 10, _hoisted_28$g)), [
                   [vModelText, unref(newDraft).metadata[f2.name]]
                 ])
               ]);
@@ -68321,7 +68321,7 @@ const _hoisted_25$l = {
 };
 const _hoisted_26$j = ["disabled", "title", "onClick"];
 const _hoisted_27$i = ["title", "onClick"];
-const _hoisted_28$e = ["title", "onClick"];
+const _hoisted_28$f = ["title", "onClick"];
 const _hoisted_29$c = ["title", "onClick"];
 const _hoisted_30$c = {
   key: 0,
@@ -68504,7 +68504,7 @@ const _sfc_main$4y = /* @__PURE__ */ defineComponent({
                   onClick: ($event) => unref(openForm)(server)
                 }, [
                   createVNode(unref(IconPencil), { class: "ctv:size-3.5" })
-                ], 8, _hoisted_28$e),
+                ], 8, _hoisted_28$f),
                 createBaseVNode("button", {
                   class: normalizeClass([iconBtnClass$5, "ctv:hover:text-destructive-background"]),
                   title: _ctx.$t("servers.delete"),
@@ -79164,7 +79164,8 @@ const _sfc_main$4x = /* @__PURE__ */ defineComponent({
     max: {},
     step: {},
     precision: {},
-    showButtons: { type: Boolean }
+    showButtons: { type: Boolean },
+    stepSnapping: { type: Boolean, default: true }
   },
   emits: ["update:modelValue"],
   setup(__props, { emit: __emit }) {
@@ -79187,6 +79188,7 @@ const _sfc_main$4x = /* @__PURE__ */ defineComponent({
         min: __props.min,
         max: __props.max,
         step: __props.step ?? 1,
+        "step-snapping": __props.stepSnapping,
         "format-options": formatOptions.value,
         "onUpdate:modelValue": onChange
       }, {
@@ -79212,7 +79214,7 @@ const _sfc_main$4x = /* @__PURE__ */ defineComponent({
           })) : createCommentVNode("", true)
         ]),
         _: 1
-      }, 8, ["model-value", "disabled", "min", "max", "step", "format-options"]);
+      }, 8, ["model-value", "disabled", "min", "max", "step", "step-snapping", "format-options"]);
     };
   }
 });
@@ -86570,7 +86572,7 @@ const _sfc_main$4o = /* @__PURE__ */ defineComponent({
       }
     });
     const AgentPanelRoot = /* @__PURE__ */ defineAsyncComponent({
-      loader: () => import("./AgentPanelRoot-sUYHM_Td.mjs"),
+      loader: () => import("./AgentPanelRoot-SZowL_Hs.mjs"),
       errorComponent: AgentPanelLoadError,
       onError: (error2, _retry, fail) => {
         reportError(error2, { errorType: "agent_panel_load_failure" });
@@ -89159,7 +89161,7 @@ const _hoisted_26$h = {
   class: "ctv:py-1 ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground ctv:border-b ctv:border-border-subtle"
 };
 const _hoisted_27$h = ["aria-expanded", "onClick"];
-const _hoisted_28$d = { class: "ctv:text-xs ctv:font-semibold ctv:text-base-foreground" };
+const _hoisted_28$e = { class: "ctv:text-xs ctv:font-semibold ctv:text-base-foreground" };
 const _hoisted_29$b = {
   key: 0,
   class: "ctv:text-2xs ctv:font-mono ctv:text-muted-foreground/60"
@@ -89504,7 +89506,7 @@ const _sfc_main$4i = /* @__PURE__ */ defineComponent({
                       createBaseVNode("i", {
                         class: normalizeClass(["pi", isNodeCollapsed(node.node_id) ? "pi-chevron-right" : "pi-chevron-down", "ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground"])
                       }, null, 2),
-                      createBaseVNode("span", _hoisted_28$d, toDisplayString$1(node.node_title), 1),
+                      createBaseVNode("span", _hoisted_28$e, toDisplayString$1(node.node_title), 1),
                       node.node_title !== node.node_type ? (openBlock(), createElementBlock("span", _hoisted_29$b, " (" + toDisplayString$1(node.node_type) + ") ", 1)) : createCommentVNode("", true),
                       createBaseVNode("span", _hoisted_30$b, "#" + toDisplayString$1(node.node_id), 1),
                       _cache2[12] || (_cache2[12] = createBaseVNode("span", { class: "ctv:flex-1" }, null, -1)),
@@ -90191,6 +90193,7 @@ function useStageParamForm(activeKind) {
     placeholder: ""
   });
   const error2 = /* @__PURE__ */ ref("");
+  const editing = /* @__PURE__ */ ref(null);
   const comboOptionsList = computed(
     () => form.options.split(",").map((s) => s.trim()).filter(Boolean)
   );
@@ -90208,6 +90211,10 @@ function useStageParamForm(activeKind) {
   }
   watch(() => form.type, () => {
     error2.value = "";
+  });
+  watch(activeKind, () => onCancelEdit());
+  watch(rows, (list) => {
+    if (editing.value && !list.some((p2) => p2.id === editing.value.id)) onCancelEdit();
   });
   function buildConfig() {
     const cfg = {};
@@ -90251,6 +90258,48 @@ function useStageParamForm(activeKind) {
     });
     if (created) resetForm();
   }
+  function onEdit(p2) {
+    const num2 = (v) => typeof v === "number" ? v : null;
+    editing.value = p2;
+    error2.value = "";
+    form.type = p2.type;
+    form.label = p2.label;
+    form.numDefault = num2(p2.default);
+    form.boolDefault = p2.default === true;
+    form.default = typeof p2.default === "string" ? p2.default : "";
+    form.options = Array.isArray(p2.config.options) ? p2.config.options.join(", ") : "";
+    form.min = num2(p2.config.min);
+    form.max = num2(p2.config.max);
+    form.step = num2(p2.config.step);
+    form.placeholder = typeof p2.config.placeholder === "string" ? p2.config.placeholder : "";
+  }
+  function onCancelEdit() {
+    if (!editing.value) return;
+    editing.value = null;
+    error2.value = "";
+    resetForm();
+  }
+  async function onSave() {
+    const p2 = editing.value;
+    if (!p2) return;
+    if (!form.label.trim()) {
+      error2.value = t2("stageParams.sidebar.labelRequired");
+      return;
+    }
+    error2.value = "";
+    const config2 = { ...p2.config };
+    for (const k2 of ["min", "max", "step", "options", "placeholder"]) delete config2[k2];
+    Object.assign(config2, buildConfig());
+    const updated = await store2.update(p2.id, {
+      label: form.label.trim(),
+      default: buildDefault(),
+      config: config2
+    });
+    if (updated) {
+      editing.value = null;
+      resetForm();
+    }
+  }
   async function onDelete(p2) {
     const ok = await askConfirm({
       title: t2("stageParams.sidebar.delete"),
@@ -90265,7 +90314,11 @@ function useStageParamForm(activeKind) {
     error: error2,
     typeOptions,
     comboDefaultOptions,
+    editing,
     onCreate: onCreate2,
+    onEdit,
+    onCancelEdit,
+    onSave,
     onDelete
   };
 }
@@ -90288,10 +90341,7 @@ const _hoisted_13$12 = { class: "ctv:flex ctv:gap-1.5" };
 const _hoisted_14$X = { class: "ctv:flex-1" };
 const _hoisted_15$P = { class: "ctv:flex-1" };
 const _hoisted_16$J = { class: "ctv:flex-1" };
-const _hoisted_17$E = {
-  key: 0,
-  class: "ctv:text-3xs ctv:text-muted-foreground/70 ctv:italic"
-};
+const _hoisted_17$E = { class: "ctv:text-3xs ctv:text-muted-foreground/70 ctv:italic" };
 const _hoisted_18$A = { class: "ctv:flex ctv:items-center ctv:gap-2 ctv:mt-0.5" };
 const _hoisted_19$y = {
   key: 0,
@@ -90314,10 +90364,13 @@ const _hoisted_25$i = {
 };
 const _hoisted_26$g = { class: "ctv:text-3xs ctv:text-muted-foreground ctv:font-mono ctv:truncate" };
 const _hoisted_27$g = ["title", "onClick"];
+const _hoisted_28$d = ["title", "onClick"];
 const sectionToggle = "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:py-1 ctv:px-0 ctv:cursor-pointer ctv:[font-family:inherit] ctv:bg-transparent ctv:border-none ctv:text-inherit ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:font-semibold ctv:text-muted-foreground ctv:hover:text-base-foreground";
 const fieldRow = "ctv:flex ctv:flex-col ctv:gap-0.5";
 const fieldLabel = "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:opacity-55";
 const primaryBtn = "ctv:inline-flex ctv:items-center ctv:h-6 ctv:px-2.5 ctv:rounded-sm ctv:text-xs ctv:font-medium ctv:cursor-pointer ctv:border-none ctv:bg-primary-background ctv:text-base-foreground ctv:hover:bg-primary-background-hover";
+const secondaryBtn = "ctv:inline-flex ctv:items-center ctv:h-6 ctv:px-2.5 ctv:rounded-sm ctv:text-xs ctv:cursor-pointer ctv:border-none ctv:bg-transparent ctv:text-muted-foreground ctv:hover:text-base-foreground";
+const editBtn = "ctv:shrink-0 ctv:flex ctv:items-center ctv:justify-center ctv:size-5 ctv:rounded-full ctv:cursor-pointer ctv:text-xs ctv:border-none ctv:bg-transparent ctv:text-muted-foreground ctv:hover:text-base-foreground ctv:hover:bg-base-foreground/10";
 const deleteBtn = "ctv:shrink-0 ctv:flex ctv:items-center ctv:justify-center ctv:size-5 ctv:rounded-full ctv:cursor-pointer ctv:text-xs ctv:border-none ctv:bg-transparent ctv:text-destructive-background ctv:hover:bg-destructive-background/10";
 const _sfc_main$4g = /* @__PURE__ */ defineComponent({
   __name: "StageParamsPanel",
@@ -90334,7 +90387,11 @@ const _sfc_main$4g = /* @__PURE__ */ defineComponent({
       error: error2,
       typeOptions,
       comboDefaultOptions,
+      editing,
       onCreate: onCreate2,
+      onEdit,
+      onCancelEdit,
+      onSave,
       onDelete
     } = useStageParamForm(activeKind);
     return (_ctx, _cache2) => {
@@ -90391,7 +90448,7 @@ const _sfc_main$4g = /* @__PURE__ */ defineComponent({
               [vShow, !unref(paramsCollapsed)]
             ]) : withDirectives((openBlock(), createElementBlock("div", _hoisted_10$1y, [
               createBaseVNode("div", _hoisted_11$1m, [
-                createBaseVNode("div", _hoisted_12$1a, toDisplayString$1(_ctx.$t("stageParams.sidebar.new")), 1),
+                createBaseVNode("div", _hoisted_12$1a, toDisplayString$1(_ctx.$t(unref(editing) ? "stageParams.sidebar.edit" : "stageParams.sidebar.new")), 1),
                 createBaseVNode("label", {
                   class: normalizeClass(fieldRow)
                 }, [
@@ -90413,8 +90470,9 @@ const _sfc_main$4g = /* @__PURE__ */ defineComponent({
                   createVNode(_sfc_main$4w, {
                     "model-value": unref(form).type,
                     options: unref(typeOptions),
+                    disabled: !!unref(editing),
                     "onUpdate:modelValue": _cache2[4] || (_cache2[4] = ($event) => unref(form).type = String($event))
-                  }, null, 8, ["model-value", "options"])
+                  }, null, 8, ["model-value", "options", "disabled"])
                 ]),
                 unref(form).type === "combo" ? (openBlock(), createElementBlock("label", {
                   key: 0,
@@ -90437,8 +90495,9 @@ const _sfc_main$4g = /* @__PURE__ */ defineComponent({
                       }, toDisplayString$1(_ctx.$t("stageParams.sidebar.min")), 1),
                       createVNode(_sfc_main$4x, {
                         "model-value": unref(form).min,
+                        "step-snapping": unref(form).type === "int",
                         "onUpdate:modelValue": _cache2[6] || (_cache2[6] = ($event) => unref(form).min = $event)
-                      }, null, 8, ["model-value"])
+                      }, null, 8, ["model-value", "step-snapping"])
                     ]),
                     createBaseVNode("label", _hoisted_15$P, [
                       createBaseVNode("span", {
@@ -90446,8 +90505,9 @@ const _sfc_main$4g = /* @__PURE__ */ defineComponent({
                       }, toDisplayString$1(_ctx.$t("stageParams.sidebar.max")), 1),
                       createVNode(_sfc_main$4x, {
                         "model-value": unref(form).max,
+                        "step-snapping": unref(form).type === "int",
                         "onUpdate:modelValue": _cache2[7] || (_cache2[7] = ($event) => unref(form).max = $event)
-                      }, null, 8, ["model-value"])
+                      }, null, 8, ["model-value", "step-snapping"])
                     ]),
                     createBaseVNode("label", _hoisted_16$J, [
                       createBaseVNode("span", {
@@ -90455,11 +90515,12 @@ const _sfc_main$4g = /* @__PURE__ */ defineComponent({
                       }, toDisplayString$1(_ctx.$t("stageParams.sidebar.step")), 1),
                       createVNode(_sfc_main$4x, {
                         "model-value": unref(form).step,
+                        "step-snapping": unref(form).type === "int",
                         "onUpdate:modelValue": _cache2[8] || (_cache2[8] = ($event) => unref(form).step = $event)
-                      }, null, 8, ["model-value"])
+                      }, null, 8, ["model-value", "step-snapping"])
                     ])
                   ]),
-                  unref(form).type === "int" ? (openBlock(), createElementBlock("div", _hoisted_17$E, toDisplayString$1(_ctx.$t("stageParams.sidebar.sliderHint")), 1)) : createCommentVNode("", true)
+                  createBaseVNode("div", _hoisted_17$E, toDisplayString$1(_ctx.$t("stageParams.sidebar.sliderHint")), 1)
                 ], 64)) : createCommentVNode("", true),
                 unref(form).type === "string" ? (openBlock(), createElementBlock("label", {
                   key: 2,
@@ -90486,8 +90547,9 @@ const _sfc_main$4g = /* @__PURE__ */ defineComponent({
                   }, null, 8, ["model-value"])) : unref(form).type === "int" || unref(form).type === "float" ? (openBlock(), createBlock(_sfc_main$4x, {
                     key: 1,
                     "model-value": unref(form).numDefault,
+                    "step-snapping": unref(form).type === "int",
                     "onUpdate:modelValue": _cache2[11] || (_cache2[11] = ($event) => unref(form).numDefault = $event)
-                  }, null, 8, ["model-value"])) : unref(form).type === "combo" ? (openBlock(), createBlock(_sfc_main$4w, {
+                  }, null, 8, ["model-value", "step-snapping"])) : unref(form).type === "combo" ? (openBlock(), createBlock(_sfc_main$4w, {
                     key: 2,
                     "model-value": unref(form).default,
                     options: unref(comboDefaultOptions),
@@ -90500,18 +90562,27 @@ const _sfc_main$4g = /* @__PURE__ */ defineComponent({
                 ]),
                 createBaseVNode("div", _hoisted_18$A, [
                   unref(error2) ? (openBlock(), createElementBlock("span", _hoisted_19$y, toDisplayString$1(unref(error2)), 1)) : (openBlock(), createElementBlock("span", _hoisted_20$t)),
+                  unref(editing) ? (openBlock(), createElementBlock("button", {
+                    key: 2,
+                    class: normalizeClass(secondaryBtn),
+                    onClick: _cache2[14] || (_cache2[14] = //@ts-ignore
+                    (...args) => unref(onCancelEdit) && unref(onCancelEdit)(...args))
+                  }, toDisplayString$1(_ctx.$t("stageParams.sidebar.cancel")), 1)) : createCommentVNode("", true),
                   createBaseVNode("button", {
                     class: normalizeClass(primaryBtn),
-                    onClick: _cache2[14] || (_cache2[14] = //@ts-ignore
-                    (...args) => unref(onCreate2) && unref(onCreate2)(...args))
-                  }, toDisplayString$1(_ctx.$t("stageParams.sidebar.create")), 1)
+                    onClick: _cache2[15] || (_cache2[15] = ($event) => unref(editing) ? unref(onSave)() : unref(onCreate2)())
+                  }, toDisplayString$1(_ctx.$t(unref(editing) ? "stageParams.sidebar.save" : "stageParams.sidebar.create")), 1)
                 ])
               ]),
               unref(rows).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_21$n, toDisplayString$1(_ctx.$t("stageParams.sidebar.empty")), 1)) : createCommentVNode("", true),
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(rows), (p2) => {
+                var _a2;
                 return openBlock(), createElementBlock("div", {
                   key: p2.id,
-                  class: "ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2 ctv:rounded ctv:border ctv:border-border-subtle"
+                  class: normalizeClass([
+                    "ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2 ctv:rounded ctv:border",
+                    ((_a2 = unref(editing)) == null ? void 0 : _a2.id) === p2.id ? "ctv:border-primary-background" : "ctv:border-border-subtle"
+                  ])
                 }, [
                   createBaseVNode("div", _hoisted_22$m, [
                     createBaseVNode("div", _hoisted_23$l, [
@@ -90527,13 +90598,21 @@ const _sfc_main$4g = /* @__PURE__ */ defineComponent({
                   ]),
                   p2.origin !== 0 ? (openBlock(), createElementBlock("button", {
                     key: 0,
+                    class: normalizeClass(editBtn),
+                    title: _ctx.$t("stageParams.sidebar.edit"),
+                    onClick: ($event) => unref(onEdit)(p2)
+                  }, [..._cache2[16] || (_cache2[16] = [
+                    createBaseVNode("i", { class: "pi pi-pencil" }, null, -1)
+                  ])], 8, _hoisted_27$g)) : createCommentVNode("", true),
+                  p2.origin !== 0 ? (openBlock(), createElementBlock("button", {
+                    key: 1,
                     class: normalizeClass(deleteBtn),
                     title: _ctx.$t("stageParams.sidebar.delete"),
                     onClick: ($event) => unref(onDelete)(p2)
-                  }, [..._cache2[15] || (_cache2[15] = [
+                  }, [..._cache2[17] || (_cache2[17] = [
                     createBaseVNode("i", { class: "pi pi-times" }, null, -1)
-                  ])], 8, _hoisted_27$g)) : createCommentVNode("", true)
-                ]);
+                  ])], 8, _hoisted_28$d)) : createCommentVNode("", true)
+                ], 2);
               }), 128))
             ], 512)), [
               [vShow, !unref(paramsCollapsed)]
@@ -116747,7 +116826,8 @@ function useCustomParams(node, getState) {
     return Number.isFinite(n) ? n : null;
   }
   function useSlider(key) {
-    return defType(key) === "int" && cfgNum(key, "min") !== void 0 && cfgNum(key, "max") !== void 0;
+    const t2 = defType(key);
+    return (t2 === "int" || t2 === "float") && cfgNum(key, "min") !== void 0 && cfgNum(key, "max") !== void 0;
   }
   function comboOptions(key) {
     return comboOptionsOf(defByKey(key));
@@ -149007,7 +149087,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-e4A1qEQF.mjs");
+    const { STLLoader } = await import("./STLLoader-DHFu3AQQ.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -149015,7 +149095,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-DJkDmEkS.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-BRW8D2nO.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -244944,4 +245024,4 @@ export {
   DropdownMenuRoot_default as y,
   DropdownMenuTrigger_default as z
 };
-//# sourceMappingURL=main-Bdlhkdvt.mjs.map
+//# sourceMappingURL=main-BT14BYAb.mjs.map

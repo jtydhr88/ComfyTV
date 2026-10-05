@@ -4,6 +4,7 @@ import { nextTick, ref } from 'vue'
 const store = {
   forKind: vi.fn(() => []),
   create: vi.fn(async (p: any) => ({ id: 1, ...p })),
+  update: vi.fn(async (id: number, p: any) => ({ id, ...p })),
   remove: vi.fn(async () => true),
   ensureHydrated: vi.fn(),
   installWebSocketSync: vi.fn(),
@@ -152,5 +153,58 @@ describe('useStageParamForm', () => {
     expect(store.remove).not.toHaveBeenCalled()
     await f.onDelete({ id: 3 } as any)
     expect(store.remove).toHaveBeenCalledWith(3)
+  })
+
+  const strength = {
+    id: 9, kind: 'image', key: 'strength', label: 'Strength', type: 'float', default: 0.5,
+    config: { min: 0, max: 1, step: 0.05, multiline: true }, origin: 1, order: 0,
+  }
+
+  it('loads a param into the form for editing', () => {
+    const f = make()
+    f.onEdit(strength)
+    expect(f.editing.value?.id).toBe(9)
+    expect(f.form).toMatchObject({ label: 'Strength', type: 'float', numDefault: 0.5, min: 0, max: 1, step: 0.05 })
+  })
+
+  it('saves edits without changing the type and keeps unmanaged config keys', async () => {
+    const f = make()
+    f.onEdit(strength)
+    f.form.label = 'Power'
+    f.form.max = 2
+    f.form.step = null
+    f.form.numDefault = 1.25
+    await f.onSave()
+    expect(store.update).toHaveBeenCalledWith(9, {
+      label: 'Power',
+      default: 1.25,
+      config: { multiline: true, min: 0, max: 2 },
+    })
+    expect(f.editing.value).toBeNull()
+    expect(f.form.label).toBe('')
+  })
+
+  it('loads combo options and the string default', () => {
+    const f = make()
+    f.onEdit({ ...strength, type: 'combo', default: 'b', config: { options: ['a', 'b'] } })
+    expect(f.form.options).toBe('a, b')
+    expect(f.form.default).toBe('b')
+  })
+
+  it('cancel leaves edit mode and clears the form', () => {
+    const f = make()
+    f.onEdit(strength)
+    f.onCancelEdit()
+    expect(f.editing.value).toBeNull()
+    expect(f.form.label).toBe('')
+  })
+
+  it('switching kind cancels editing', async () => {
+    const f = make()
+    f.onEdit(strength)
+    activeKind.value = 'video'
+    await nextTick()
+    expect(f.editing.value).toBeNull()
+    activeKind.value = 'image'
   })
 })
