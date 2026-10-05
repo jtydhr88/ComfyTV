@@ -25,6 +25,11 @@ class TestStageParamCreate:
         assert a["key"] == "top_p"
         assert b["key"] == "top_p_2"
 
+    def test_non_ascii_label_keeps_its_characters(self, reset_db):
+        from ComfyTV import storage
+        a = _mk(storage, label="是否使用自定义尺寸 (v2)", type="boolean")
+        assert a["key"] == "是否使用自定义尺寸_v2"
+
     def test_same_label_different_kind_keeps_key(self, reset_db):
         from ComfyTV import storage
         a = _mk(storage, kind="audio", label="Strength", type="float")

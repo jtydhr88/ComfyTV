@@ -24,7 +24,7 @@ _UNSET = object()
 
 
 def _slugify_param_key(label: str) -> str:
-    base = _re.sub(r"[^a-z0-9]+", "_", (label or "").strip().lower()).strip("_")
+    base = _re.sub(r"[\W_]+", "_", (label or "").strip().lower()).strip("_")
     return base or "param"
 
 

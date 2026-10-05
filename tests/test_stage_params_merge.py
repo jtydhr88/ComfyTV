@@ -53,14 +53,25 @@ class TestCapsMerge:
         audio = caps["caps_by_kind"]["audio"]["option_keys"]
         assert "option:guidance" in audio
         assert "option:duration_s" in audio
-        assert caps["option_labels"]["option:guidance"] == "Guidance"
-        assert caps["option_labels"]["option:duration_s"] == "Stage duration (s)"
+        labels = caps["caps_by_kind"]["audio"]["option_labels"]
+        assert labels["option:guidance"] == "Guidance"
+        assert labels["option:duration_s"] == "Stage duration (s)"
+
+    def test_same_key_keeps_each_kinds_label(self, reset_db):
+        from ComfyTV import storage
+        from ComfyTV.nodes.stages.common.caps import caps_payload
+        storage.create_stage_param(kind="image-edit", label="Custom size", type="boolean")
+        storage.create_stage_param(kind="speech", label="Custom size", type="string")
+        storage.update_stage_param(storage.list_stage_params("speech")[0]["id"], label="Emotion")
+        caps = caps_payload()["caps_by_kind"]
+        assert caps["image-edit"]["option_labels"]["option:custom_size"] == "Custom size"
+        assert caps["speech"]["option_labels"]["option:custom_size"] == "Emotion"
 
     def test_option_keys_empty_without_seeding(self, reset_db):
         from ComfyTV.nodes.stages.common.caps import caps_payload
         caps = caps_payload()
         assert caps["caps_by_kind"]["audio"]["option_keys"] == []
-        assert caps["option_labels"] == {}
+        assert caps["caps_by_kind"]["audio"]["option_labels"] == {}
 
     def test_seeded_option_keys_match_static_vocabulary(self, reset_db):
         from ComfyTV import storage

@@ -3,20 +3,16 @@ import { beforeAll, describe, expect, it, vi } from 'vitest'
 const { CAPS } = vi.hoisted(() => ({
   CAPS: {
     caps_by_kind: {
-      image:    { upstream_kinds: ['image', 'text'],          option_keys: ['option:seed', 'option:batch_size'], computed_keys: ['computed:width', 'computed:height'] },
-      video:    { upstream_kinds: ['image', 'video', 'text'], option_keys: ['option:seed', 'option:duration_s', 'option:generate_audio'], computed_keys: ['computed:width', 'computed:height', 'computed:length'] },
-      audio:    { upstream_kinds: ['text', 'audio'],          option_keys: ['option:seed', 'option:duration_s', 'option:lyrics'], computed_keys: ['computed:length'] },
-      inpaint:  { upstream_kinds: ['image'],                  option_keys: ['option:seed', 'option:mask_data'], computed_keys: [] },
-      erase:    { upstream_kinds: ['image'],                  option_keys: ['option:seed', 'option:mask_data'], computed_keys: [] },
-      outpaint: { upstream_kinds: ['image'],                  option_keys: ['option:seed', 'option:pad_left'], computed_keys: [] },
+      image:    { upstream_kinds: ['image', 'text'],          option_keys: ['option:seed', 'option:batch_size'], computed_keys: ['computed:width', 'computed:height'], option_labels: { 'option:seed': 'Stage seed', 'option:batch_size': 'Stage batch size' } },
+      video:    { upstream_kinds: ['image', 'video', 'text'], option_keys: ['option:seed', 'option:duration_s', 'option:generate_audio'], computed_keys: ['computed:width', 'computed:height', 'computed:length'], option_labels: { 'option:seed': 'Stage seed', 'option:duration_s': 'Stage duration (s)', 'option:generate_audio': 'Stage generate audio' } },
+      audio:    { upstream_kinds: ['text', 'audio'],          option_keys: ['option:seed', 'option:duration_s', 'option:lyrics'], computed_keys: ['computed:length'], option_labels: { 'option:seed': 'Stage seed', 'option:duration_s': 'Stage duration (s)', 'option:lyrics': 'Stage lyrics' } },
+      inpaint:  { upstream_kinds: ['image'],                  option_keys: ['option:seed', 'option:mask_data'], computed_keys: [], option_labels: { 'option:seed': 'Stage seed', 'option:mask_data': 'Stage mask (painter output)' } },
+      erase:    { upstream_kinds: ['image'],                  option_keys: ['option:seed', 'option:mask_data'], computed_keys: [], option_labels: { 'option:seed': 'Stage seed', 'option:mask_data': 'Stage mask (painter output)' } },
+      outpaint: { upstream_kinds: ['image'],                  option_keys: ['option:seed', 'option:pad_left'], computed_keys: [], option_labels: { 'option:seed': 'Stage seed', 'option:pad_left': 'Stage pad left' } },
+      'image-edit': { upstream_kinds: ['image'],              option_keys: ['option:seed', 'option:custom_size'], computed_keys: [], option_labels: { 'option:seed': 'Stage seed', 'option:custom_size': 'Use custom size' } },
+      speech:   { upstream_kinds: ['text'],                   option_keys: ['option:seed', 'option:custom_size'], computed_keys: [], option_labels: { 'option:seed': 'Stage seed', 'option:custom_size': 'Emotion' } },
     },
-    fallback_caps: { upstream_kinds: ['image', 'video', 'audio', 'text'], option_keys: ['option:seed', 'option:batch_size'], computed_keys: ['computed:width', 'computed:height', 'computed:length'] },
-    option_labels: {
-      'option:seed': 'Stage seed',
-      'option:batch_size': 'Stage batch size', 'option:duration_s': 'Stage duration (s)',
-      'option:generate_audio': 'Stage generate audio', 'option:lyrics': 'Stage lyrics',
-      'option:mask_data': 'Stage mask (painter output)', 'option:pad_left': 'Stage pad left',
-    },
+    fallback_caps: { upstream_kinds: ['image', 'video', 'audio', 'text'], option_keys: ['option:seed', 'option:batch_size'], computed_keys: ['computed:width', 'computed:height', 'computed:length'], option_labels: {} },
   },
 }))
 
@@ -76,6 +72,13 @@ describe('buildBindingOptions', () => {
     const opts = buildBindingOptions([], 'audio')
     const lyrics = opts.find(o => o.value === 'option:lyrics')
     expect(lyrics?.label).toBe('Stage lyrics')
+  })
+
+  it('labels a custom key with the label of the workflow kind that owns it', () => {
+    const edit = buildBindingOptions([], 'image-edit').find(o => o.value === 'option:custom_size')
+    const speech = buildBindingOptions([], 'speech').find(o => o.value === 'option:custom_size')
+    expect(edit?.label).toBe('Use custom size')
+    expect(speech?.label).toBe('Emotion')
   })
 
   it('text-kind upstream uses :value suffix, image uses :annotated', () => {

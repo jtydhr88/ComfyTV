@@ -158,19 +158,18 @@ describe('workflow link api', () => {
 describe('workflow catalog api', () => {
   beforeEach(() => vi.resetModules())
 
-  const emptyCaps = { upstream_kinds: [], option_keys: [], computed_keys: [] }
+  const emptyCaps = { upstream_kinds: [], option_keys: [], computed_keys: [], option_labels: {} }
 
   it('fetchCaps hits /comfytv/caps and validates the payload', async () => {
     const fetchApi = vi.fn(async (_url: string) => json({
-      caps_by_kind: { image: emptyCaps },
+      caps_by_kind: { image: { ...emptyCaps, option_labels: { foo: 'Foo' } } },
       fallback_caps: emptyCaps,
-      option_labels: { foo: 'Foo' },
     }))
     const { fetchCaps } = await loadWithFetch(fetchApi)
     const res = await fetchCaps()
     expect(fetchApi.mock.calls[0]![0]).toBe('/comfytv/caps')
-    expect(res.caps_by_kind.image).toEqual(emptyCaps)
-    expect(res.option_labels.foo).toBe('Foo')
+    expect(res.caps_by_kind.image.option_labels.foo).toBe('Foo')
+    expect(res.fallback_caps).toEqual(emptyCaps)
   })
 
   it('importWorkflow posts kind/filename/content', async () => {

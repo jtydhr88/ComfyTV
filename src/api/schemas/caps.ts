@@ -4,12 +4,12 @@ export const CapsSchema = z.object({
   upstream_kinds: z.array(z.string()),
   option_keys:    z.array(z.string()),
   computed_keys:  z.array(z.string()),
+  option_labels:  z.record(z.string(), z.string()).default({}),
 })
 export type CapsResponse = z.infer<typeof CapsSchema>
 export const CapsPayloadSchema = z.object({
   caps_by_kind:  z.record(z.string(), CapsSchema),
   fallback_caps: CapsSchema,
-  option_labels: z.record(z.string(), z.string()).default({}),
 })
 export type CapsPayload = z.infer<typeof CapsPayloadSchema>
 export const CapabilityResourceSchema = z.object({

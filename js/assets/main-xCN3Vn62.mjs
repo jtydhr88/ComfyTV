@@ -17053,12 +17053,12 @@ const StageDefaultsSchema = object({
 const CapsSchema = object({
   upstream_kinds: array(string()),
   option_keys: array(string()),
-  computed_keys: array(string())
+  computed_keys: array(string()),
+  option_labels: record(string(), string()).default({})
 });
 const CapsPayloadSchema = object({
   caps_by_kind: record(string(), CapsSchema),
-  fallback_caps: CapsSchema,
-  option_labels: record(string(), string()).default({})
+  fallback_caps: CapsSchema
 });
 const CapabilityResourceSchema = object({
   filename: string(),
@@ -59964,7 +59964,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-BD97Gyon.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-C39Ef5xu.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -86573,7 +86573,7 @@ const _sfc_main$4p = /* @__PURE__ */ defineComponent({
       }
     });
     const AgentPanelRoot = /* @__PURE__ */ defineAsyncComponent({
-      loader: () => import("./AgentPanelRoot-BeMVbodS.mjs"),
+      loader: () => import("./AgentPanelRoot-BI38ec5b.mjs"),
       errorComponent: AgentPanelLoadError,
       onError: (error2, _retry, fail) => {
         reportError(error2, { errorType: "agent_panel_load_failure" });
@@ -87896,8 +87896,7 @@ function stageParamLabel(key, fallback) {
 }
 const capsState = /* @__PURE__ */ reactive({
   byKind: {},
-  fallback: null,
-  optionLabels: {}
+  fallback: null
 });
 let capsPromise = null;
 function loadCaps() {
@@ -87905,7 +87904,6 @@ function loadCaps() {
     capsPromise = fetchCaps().then((payload) => {
       capsState.byKind = payload.caps_by_kind;
       capsState.fallback = payload.fallback_caps;
-      capsState.optionLabels = payload.option_labels ?? {};
     }).catch((e) => {
       capsPromise = null;
       console.error("[ComfyTV] fetchCaps failed — caps are served from the backend; fix the API", e);
@@ -87941,7 +87939,7 @@ function buildBindingOptions(widgets, workflowKind) {
   ];
   if (!caps) return out;
   for (const k2 of caps.option_keys) {
-    out.push({ value: k2, label: stageParamLabel(k2.replace(/^option:/, ""), capsState.optionLabels[k2] ?? k2) });
+    out.push({ value: k2, label: stageParamLabel(k2.replace(/^option:/, ""), caps.option_labels[k2] ?? k2) });
   }
   for (const k2 of caps.computed_keys) {
     out.push({ value: k2, label: STAGE_COMPUTED_LABEL_KEYS[k2] ? t(STAGE_COMPUTED_LABEL_KEYS[k2]) : k2 });
@@ -149154,7 +149152,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-sCiWfmet.mjs");
+    const { STLLoader } = await import("./STLLoader-ZK12NqhD.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -149162,7 +149160,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-D3lWMAOj.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-D38wHMON.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -245088,4 +245086,4 @@ export {
   DropdownMenuRoot_default as y,
   DropdownMenuTrigger_default as z
 };
-//# sourceMappingURL=main-g5qNzoB3.mjs.map
+//# sourceMappingURL=main-xCN3Vn62.mjs.map

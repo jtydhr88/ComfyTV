@@ -212,6 +212,7 @@ export interface Caps {
   upstream_kinds: UpstreamKind[]
   option_keys:    string[]
   computed_keys:  string[]
+  option_labels:  Record<string, string>
 }
 
 const STAGE_COMPUTED_LABEL_KEYS: Record<string, string> = {
@@ -228,13 +229,11 @@ export function stageParamLabel(key: string, fallback: string): string {
 interface CapsState {
   byKind:   Record<string, Caps>
   fallback: Caps | null
-  optionLabels: Record<string, string>
 }
 
 const capsState = reactive<CapsState>({
   byKind:   {},
   fallback: null,
-  optionLabels: {},
 })
 
 let capsPromise: Promise<void> | null = null
@@ -244,7 +243,6 @@ export function loadCaps(): Promise<void> {
     capsPromise = fetchCaps().then((payload) => {
       capsState.byKind   = payload.caps_by_kind as Record<string, Caps>
       capsState.fallback = payload.fallback_caps as Caps
-      capsState.optionLabels = (payload.option_labels ?? {}) as Record<string, string>
     }).catch((e) => {
       capsPromise = null
       console.error('[ComfyTV] fetchCaps failed — caps are served from the backend; fix the API', e)
@@ -285,7 +283,7 @@ export function buildBindingOptions(
   ]
   if (!caps) return out
   for (const k of caps.option_keys) {
-    out.push({ value: k, label: stageParamLabel(k.replace(/^option:/, ''), capsState.optionLabels[k] ?? k) })
+    out.push({ value: k, label: stageParamLabel(k.replace(/^option:/, ''), caps.option_labels[k] ?? k) })
   }
   for (const k of caps.computed_keys) {
     out.push({ value: k, label: STAGE_COMPUTED_LABEL_KEYS[k] ? t(STAGE_COMPUTED_LABEL_KEYS[k]) : k })

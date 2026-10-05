@@ -103,10 +103,10 @@ def caps_payload() -> dict:
             "upstream_kinds": list(v["upstream_kinds"]),
             "option_keys":    [],
             "computed_keys":  list(v["computed_keys"]),
+            "option_labels":  {},
         }
         for k, v in CAPS_BY_KIND.items()
     }
-    option_labels: dict[str, str] = {}
 
     for p in storage.list_stage_params():
         kind = p["kind"]
@@ -115,14 +115,13 @@ def caps_payload() -> dict:
         key = f"option:{p['key']}"
         entry = by_kind.get(kind)
         if entry is None:
-            entry = {"upstream_kinds": [], "option_keys": [], "computed_keys": []}
+            entry = {"upstream_kinds": [], "option_keys": [], "computed_keys": [], "option_labels": {}}
             by_kind[kind] = entry
         if key not in entry["option_keys"]:
             entry["option_keys"].append(key)
-        option_labels[key] = p["label"]
+        entry["option_labels"][key] = p["label"]
 
     return {
         "caps_by_kind": by_kind,
         "fallback_caps": FALLBACK_CAPS,
-        "option_labels": option_labels,
     }
