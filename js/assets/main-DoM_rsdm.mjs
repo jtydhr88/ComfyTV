@@ -59964,7 +59964,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-C39Ef5xu.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-BGK64AJh.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -80055,15 +80055,21 @@ function cullOffscreen(canvas) {
     if (off === e.hidden) continue;
     e.hidden = off;
     e.root.style.visibility = off ? "hidden" : "";
+    if (off) pauseVideos(e.root, "video");
   }
+}
+function pauseVideos(root, selector) {
+  for (const v of root.querySelectorAll(selector)) v.pause();
 }
 const lodListeners = /* @__PURE__ */ new Set();
 function setFar(next) {
   if (next === far) return;
   far = next;
   const root = document.documentElement;
-  if (far) root.setAttribute(LOD_ATTR, "far");
-  else root.removeAttribute(LOD_ATTR);
+  if (far) {
+    root.setAttribute(LOD_ATTR, "far");
+    pauseVideos(document, ".v2-card[data-v2-lod-media] video");
+  } else root.removeAttribute(LOD_ATTR);
   for (const fn3 of [...lodListeners]) fn3(far);
 }
 function isLodFar() {
@@ -86573,7 +86579,7 @@ const _sfc_main$4p = /* @__PURE__ */ defineComponent({
       }
     });
     const AgentPanelRoot = /* @__PURE__ */ defineAsyncComponent({
-      loader: () => import("./AgentPanelRoot-BI38ec5b.mjs"),
+      loader: () => import("./AgentPanelRoot-B70z_sLO.mjs"),
       errorComponent: AgentPanelLoadError,
       onError: (error2, _retry, fail) => {
         reportError(error2, { errorType: "agent_panel_load_failure" });
@@ -149152,7 +149158,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-ZK12NqhD.mjs");
+    const { STLLoader } = await import("./STLLoader-C7S00hmP.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -149160,7 +149166,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-D38wHMON.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-CwrDgh5v.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -238521,7 +238527,6 @@ const _sfc_main$f = /* @__PURE__ */ defineComponent({
             poster: posterUrl.value,
             class: "v2-mp__video",
             controls: "",
-            muted: "",
             playsinline: "",
             preload: "none",
             onPointerdown: _cache2[0] || (_cache2[0] = withModifiers(() => {
@@ -238609,7 +238614,7 @@ const _sfc_main$f = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const MediaPreviewV2 = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["__scopeId", "data-v-538ea160"]]);
+const MediaPreviewV2 = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["__scopeId", "data-v-0e691bb8"]]);
 const PICKER_CSS = `
 .v2-picker-footer {
   flex: none;
@@ -245086,4 +245091,4 @@ export {
   DropdownMenuRoot_default as y,
   DropdownMenuTrigger_default as z
 };
-//# sourceMappingURL=main-xCN3Vn62.mjs.map
+//# sourceMappingURL=main-DoM_rsdm.mjs.map

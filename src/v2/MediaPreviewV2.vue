@@ -7,7 +7,6 @@
         :poster="posterUrl"
         class="v2-mp__video"
         controls
-        muted
         playsinline
         preload="none"
         @pointerdown.stop

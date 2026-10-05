@@ -137,7 +137,12 @@ function cullOffscreen(canvas: any): void {
     if (off === e.hidden) continue
     e.hidden = off
     e.root.style.visibility = off ? 'hidden' : ''
+    if (off) pauseVideos(e.root, 'video')
   }
+}
+
+function pauseVideos(root: ParentNode, selector: string): void {
+  for (const v of root.querySelectorAll<HTMLVideoElement>(selector)) v.pause()
 }
 const lodListeners = new Set<(far: boolean) => void>()
 
@@ -145,8 +150,10 @@ function setFar(next: boolean): void {
   if (next === far) return
   far = next
   const root = document.documentElement
-  if (far) root.setAttribute(LOD_ATTR, 'far')
-  else root.removeAttribute(LOD_ATTR)
+  if (far) {
+    root.setAttribute(LOD_ATTR, 'far')
+    pauseVideos(document, '.v2-card[data-v2-lod-media] video')
+  } else root.removeAttribute(LOD_ATTR)
   for (const fn of [...lodListeners]) fn(far)
 }
 
