@@ -1,6 +1,6 @@
 <template>
-  <PopoverRoot v-model:open="open">
-    <PopoverTrigger as-child>
+  <ComfyTVPopover v-model:open="open" side="top" width="292px">
+    <template #trigger>
       <button type="button" class="v2-genopt__chip" :aria-expanded="open" @pointerdown.stop>
         <span v-if="ratio" class="v2-genopt__icon"><span :style="ratioBoxStyle(ratio)" /></span>
         <span class="v2-genopt__label">{{ chipLabel }}</span>
@@ -8,51 +8,50 @@
           <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.4" />
         </svg>
       </button>
-    </PopoverTrigger>
-    <PopoverPortal>
-      <PopoverContent class="v2-genopt__pop" side="top" align="start" :side-offset="8" @pointerdown.stop>
-        <template v-if="resolution != null">
-          <div class="v2-genopt__title">{{ t('v2.genopt.resolution') }}</div>
-          <div class="v2-genopt__row">
-            <button
-              v-for="r in resolutionOptions" :key="r" type="button"
-              :class="['v2-genopt__opt', r === resolution && 'v2-genopt__opt--on']"
-              @click="pick('resolution', r)"
-            >{{ r }}</button>
-          </div>
-        </template>
-        <template v-if="ratio != null">
-          <div class="v2-genopt__title">{{ t('v2.genopt.ratio') }}</div>
-          <div class="v2-genopt__grid">
-            <button
-              v-for="r in ratioOptions" :key="r" type="button"
-              :class="['v2-genopt__cell', r === ratio && 'v2-genopt__opt--on']"
-              @click="pick('aspect_ratio', r)"
-            >
-              <span class="v2-genopt__icon v2-genopt__icon--cell"><span :style="ratioBoxStyle(r)" /></span>
-              <span>{{ r }}</span>
-            </button>
-          </div>
-        </template>
-        <template v-if="batch != null">
-          <div class="v2-genopt__title">{{ t('v2.genopt.count') }}</div>
-          <div class="v2-genopt__row">
-            <button
-              v-for="n in batchOptions" :key="n" type="button"
-              :class="['v2-genopt__opt', n === batch && 'v2-genopt__opt--on']"
-              @click="pick('batch_size', n)"
-            >{{ t('v2.batchCount', { n }) }}</button>
-          </div>
-        </template>
-      </PopoverContent>
-    </PopoverPortal>
-  </PopoverRoot>
+    </template>
+    <div class="v2-genopt__pop" @pointerdown.stop>
+      <template v-if="resolution != null">
+        <div class="v2-genopt__title">{{ t('v2.genopt.resolution') }}</div>
+        <div class="v2-genopt__row">
+          <button
+            v-for="r in resolutionOptions" :key="r" type="button"
+            :class="['v2-genopt__opt', r === resolution && 'v2-genopt__opt--on']"
+            @click="pick('resolution', r)"
+          >{{ r }}</button>
+        </div>
+      </template>
+      <template v-if="ratio != null">
+        <div class="v2-genopt__title">{{ t('v2.genopt.ratio') }}</div>
+        <div class="v2-genopt__grid">
+          <button
+            v-for="r in ratioOptions" :key="r" type="button"
+            :class="['v2-genopt__cell', r === ratio && 'v2-genopt__opt--on']"
+            @click="pick('aspect_ratio', r)"
+          >
+            <span class="v2-genopt__icon v2-genopt__icon--cell"><span :style="ratioBoxStyle(r)" /></span>
+            <span>{{ r }}</span>
+          </button>
+        </div>
+      </template>
+      <template v-if="batch != null">
+        <div class="v2-genopt__title">{{ t('v2.genopt.count') }}</div>
+        <div class="v2-genopt__row">
+          <button
+            v-for="n in batchOptions" :key="n" type="button"
+            :class="['v2-genopt__opt', n === batch && 'v2-genopt__opt--on']"
+            @click="pick('batch_size', n)"
+          >{{ t('v2.batchCount', { n }) }}</button>
+        </div>
+      </template>
+    </div>
+  </ComfyTVPopover>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigger } from 'reka-ui'
 import { useI18n } from 'vue-i18n'
+
+import ComfyTVPopover from '@/components/widgets/ComfyTVPopover.vue'
 
 const props = withDefaults(defineProps<{
   ratio?: string | null
@@ -121,13 +120,10 @@ function pick(name: string, value: string) {
 }
 .v2-genopt__icon--cell { width: 16px; height: 16px; margin: 0 auto; }
 .v2-genopt__pop {
-  z-index: 3000;
-  width: 292px;
   padding: 12px;
-  border-radius: 14px;
+  border-radius: 8px;
   background: var(--v2-slab-bg, #1c1c22);
   border: 1px solid var(--v2-slab-border, #2c2c34);
-  box-shadow: 0 10px 32px rgba(0, 0, 0, .5);
   color: var(--v2-text-mid, #b9b9c0);
   font: 500 11px/1.2 system-ui, sans-serif;
 }
@@ -180,7 +176,6 @@ function pick(name: string, value: string) {
 html:not(.dark-theme) .v2-genopt__pop {
   background: #ffffff;
   border-color: rgba(0, 0, 0, .1);
-  box-shadow: 0 10px 32px rgba(0, 0, 0, .18);
   color: #4a4a52;
 }
 html:not(.dark-theme) .v2-genopt__pop .v2-genopt__opt,

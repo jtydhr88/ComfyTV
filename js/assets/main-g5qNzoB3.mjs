@@ -59964,7 +59964,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-BRohN-A7.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-BD97Gyon.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -86573,7 +86573,7 @@ const _sfc_main$4p = /* @__PURE__ */ defineComponent({
       }
     });
     const AgentPanelRoot = /* @__PURE__ */ defineAsyncComponent({
-      loader: () => import("./AgentPanelRoot-CXX_VEf8.mjs"),
+      loader: () => import("./AgentPanelRoot-BeMVbodS.mjs"),
       errorComponent: AgentPanelLoadError,
       onError: (error2, _retry, fail) => {
         reportError(error2, { errorType: "agent_panel_load_failure" });
@@ -115789,7 +115789,7 @@ const _sfc_main$4d = /* @__PURE__ */ defineComponent({
                 side: __props.side,
                 align: __props.align,
                 "side-offset": 6,
-                "collision-padding": 10,
+                "collision-padding": { top: 10, bottom: 10, left: -Infinity, right: -Infinity },
                 "update-position-strategy": "always",
                 style: normalizeStyle(__props.width ? { width: __props.width } : void 0),
                 onWheel: _cache2[0] || (_cache2[0] = withModifiers(() => {
@@ -149154,7 +149154,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-BtrnWhmi.mjs");
+    const { STLLoader } = await import("./STLLoader-sCiWfmet.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -149162,7 +149162,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-y5xWESij.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-D3lWMAOj.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -235709,104 +235709,92 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
       emit2("update", name, value);
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(unref(PopoverRoot_default), {
+      return openBlock(), createBlock(_sfc_main$4d, {
         open: open.value,
-        "onUpdate:open": _cache2[2] || (_cache2[2] = ($event) => open.value = $event)
+        "onUpdate:open": _cache2[2] || (_cache2[2] = ($event) => open.value = $event),
+        side: "top",
+        width: "292px"
       }, {
+        trigger: withCtx(() => [
+          createBaseVNode("button", {
+            type: "button",
+            class: "v2-genopt__chip",
+            "aria-expanded": open.value,
+            onPointerdown: _cache2[0] || (_cache2[0] = withModifiers(() => {
+            }, ["stop"]))
+          }, [
+            __props.ratio ? (openBlock(), createElementBlock("span", _hoisted_2$j, [
+              createBaseVNode("span", {
+                style: normalizeStyle(ratioBoxStyle(__props.ratio))
+              }, null, 4)
+            ])) : createCommentVNode("", true),
+            createBaseVNode("span", _hoisted_3$i, toDisplayString$1(chipLabel.value), 1),
+            (openBlock(), createElementBlock("svg", {
+              viewBox: "0 0 10 6",
+              fill: "none",
+              class: normalizeClass(["v2-genopt__chev", open.value && "v2-genopt__chev--open"])
+            }, [..._cache2[3] || (_cache2[3] = [
+              createBaseVNode("path", {
+                d: "M1 1l4 4 4-4",
+                stroke: "currentColor",
+                "stroke-width": "1.4"
+              }, null, -1)
+            ])], 2))
+          ], 40, _hoisted_1$k)
+        ]),
         default: withCtx(() => [
-          createVNode(unref(PopoverTrigger_default), { "as-child": "" }, {
-            default: withCtx(() => [
-              createBaseVNode("button", {
-                type: "button",
-                class: "v2-genopt__chip",
-                "aria-expanded": open.value,
-                onPointerdown: _cache2[0] || (_cache2[0] = withModifiers(() => {
-                }, ["stop"]))
-              }, [
-                __props.ratio ? (openBlock(), createElementBlock("span", _hoisted_2$j, [
-                  createBaseVNode("span", {
-                    style: normalizeStyle(ratioBoxStyle(__props.ratio))
-                  }, null, 4)
-                ])) : createCommentVNode("", true),
-                createBaseVNode("span", _hoisted_3$i, toDisplayString$1(chipLabel.value), 1),
-                (openBlock(), createElementBlock("svg", {
-                  viewBox: "0 0 10 6",
-                  fill: "none",
-                  class: normalizeClass(["v2-genopt__chev", open.value && "v2-genopt__chev--open"])
-                }, [..._cache2[3] || (_cache2[3] = [
-                  createBaseVNode("path", {
-                    d: "M1 1l4 4 4-4",
-                    stroke: "currentColor",
-                    "stroke-width": "1.4"
-                  }, null, -1)
-                ])], 2))
-              ], 40, _hoisted_1$k)
-            ]),
-            _: 1
-          }),
-          createVNode(unref(PopoverPortal_default), null, {
-            default: withCtx(() => [
-              createVNode(unref(PopoverContent_default), {
-                class: "v2-genopt__pop",
-                side: "top",
-                align: "start",
-                "side-offset": 8,
-                onPointerdown: _cache2[1] || (_cache2[1] = withModifiers(() => {
-                }, ["stop"]))
-              }, {
-                default: withCtx(() => [
-                  __props.resolution != null ? (openBlock(), createElementBlock(Fragment$1, { key: 0 }, [
-                    createBaseVNode("div", _hoisted_4$g, toDisplayString$1(unref(t2)("v2.genopt.resolution")), 1),
-                    createBaseVNode("div", _hoisted_5$d, [
-                      (openBlock(true), createElementBlock(Fragment$1, null, renderList(__props.resolutionOptions, (r2) => {
-                        return openBlock(), createElementBlock("button", {
-                          key: r2,
-                          type: "button",
-                          class: normalizeClass(["v2-genopt__opt", r2 === __props.resolution && "v2-genopt__opt--on"]),
-                          onClick: ($event) => pick2("resolution", r2)
-                        }, toDisplayString$1(r2), 11, _hoisted_6$c);
-                      }), 128))
-                    ])
-                  ], 64)) : createCommentVNode("", true),
-                  __props.ratio != null ? (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
-                    createBaseVNode("div", _hoisted_7$b, toDisplayString$1(unref(t2)("v2.genopt.ratio")), 1),
-                    createBaseVNode("div", _hoisted_8$a, [
-                      (openBlock(true), createElementBlock(Fragment$1, null, renderList(__props.ratioOptions, (r2) => {
-                        return openBlock(), createElementBlock("button", {
-                          key: r2,
-                          type: "button",
-                          class: normalizeClass(["v2-genopt__cell", r2 === __props.ratio && "v2-genopt__opt--on"]),
-                          onClick: ($event) => pick2("aspect_ratio", r2)
-                        }, [
-                          createBaseVNode("span", _hoisted_10$9, [
-                            createBaseVNode("span", {
-                              style: normalizeStyle(ratioBoxStyle(r2))
-                            }, null, 4)
-                          ]),
-                          createBaseVNode("span", null, toDisplayString$1(r2), 1)
-                        ], 10, _hoisted_9$a);
-                      }), 128))
-                    ])
-                  ], 64)) : createCommentVNode("", true),
-                  __props.batch != null ? (openBlock(), createElementBlock(Fragment$1, { key: 2 }, [
-                    createBaseVNode("div", _hoisted_11$8, toDisplayString$1(unref(t2)("v2.genopt.count")), 1),
-                    createBaseVNode("div", _hoisted_12$7, [
-                      (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(batchOptions), (n) => {
-                        return openBlock(), createElementBlock("button", {
-                          key: n,
-                          type: "button",
-                          class: normalizeClass(["v2-genopt__opt", n === __props.batch && "v2-genopt__opt--on"]),
-                          onClick: ($event) => pick2("batch_size", n)
-                        }, toDisplayString$1(unref(t2)("v2.batchCount", { n })), 11, _hoisted_13$7);
-                      }), 128))
-                    ])
-                  ], 64)) : createCommentVNode("", true)
-                ]),
-                _: 1
-              })
-            ]),
-            _: 1
-          })
+          createBaseVNode("div", {
+            class: "v2-genopt__pop",
+            onPointerdown: _cache2[1] || (_cache2[1] = withModifiers(() => {
+            }, ["stop"]))
+          }, [
+            __props.resolution != null ? (openBlock(), createElementBlock(Fragment$1, { key: 0 }, [
+              createBaseVNode("div", _hoisted_4$g, toDisplayString$1(unref(t2)("v2.genopt.resolution")), 1),
+              createBaseVNode("div", _hoisted_5$d, [
+                (openBlock(true), createElementBlock(Fragment$1, null, renderList(__props.resolutionOptions, (r2) => {
+                  return openBlock(), createElementBlock("button", {
+                    key: r2,
+                    type: "button",
+                    class: normalizeClass(["v2-genopt__opt", r2 === __props.resolution && "v2-genopt__opt--on"]),
+                    onClick: ($event) => pick2("resolution", r2)
+                  }, toDisplayString$1(r2), 11, _hoisted_6$c);
+                }), 128))
+              ])
+            ], 64)) : createCommentVNode("", true),
+            __props.ratio != null ? (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
+              createBaseVNode("div", _hoisted_7$b, toDisplayString$1(unref(t2)("v2.genopt.ratio")), 1),
+              createBaseVNode("div", _hoisted_8$a, [
+                (openBlock(true), createElementBlock(Fragment$1, null, renderList(__props.ratioOptions, (r2) => {
+                  return openBlock(), createElementBlock("button", {
+                    key: r2,
+                    type: "button",
+                    class: normalizeClass(["v2-genopt__cell", r2 === __props.ratio && "v2-genopt__opt--on"]),
+                    onClick: ($event) => pick2("aspect_ratio", r2)
+                  }, [
+                    createBaseVNode("span", _hoisted_10$9, [
+                      createBaseVNode("span", {
+                        style: normalizeStyle(ratioBoxStyle(r2))
+                      }, null, 4)
+                    ]),
+                    createBaseVNode("span", null, toDisplayString$1(r2), 1)
+                  ], 10, _hoisted_9$a);
+                }), 128))
+              ])
+            ], 64)) : createCommentVNode("", true),
+            __props.batch != null ? (openBlock(), createElementBlock(Fragment$1, { key: 2 }, [
+              createBaseVNode("div", _hoisted_11$8, toDisplayString$1(unref(t2)("v2.genopt.count")), 1),
+              createBaseVNode("div", _hoisted_12$7, [
+                (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(batchOptions), (n) => {
+                  return openBlock(), createElementBlock("button", {
+                    key: n,
+                    type: "button",
+                    class: normalizeClass(["v2-genopt__opt", n === __props.batch && "v2-genopt__opt--on"]),
+                    onClick: ($event) => pick2("batch_size", n)
+                  }, toDisplayString$1(unref(t2)("v2.batchCount", { n })), 11, _hoisted_13$7);
+                }), 128))
+              ])
+            ], 64)) : createCommentVNode("", true)
+          ], 32)
         ]),
         _: 1
       }, 8, ["open"]);
@@ -245100,4 +245088,4 @@ export {
   DropdownMenuRoot_default as y,
   DropdownMenuTrigger_default as z
 };
-//# sourceMappingURL=main-DVEbf0vj.mjs.map
+//# sourceMappingURL=main-g5qNzoB3.mjs.map

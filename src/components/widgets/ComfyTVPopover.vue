@@ -12,7 +12,7 @@
         :side="side"
         :align="align"
         :side-offset="6"
-        :collision-padding="10"
+        :collision-padding="{ top: 10, bottom: 10, left: -Infinity, right: -Infinity }"
         update-position-strategy="always"
         :style="width ? { width } : undefined"
         @wheel.stop
@@ -61,7 +61,7 @@ onScopeDispose(() => { if (closeCurrent === close) closeCurrent = null })
 
 <style>
 .v2-pop {
-  z-index: 3000;
+  z-index: 998;
   display: flex;
   flex-direction: column;
   max-height: var(--reka-popover-content-available-height, 70vh);

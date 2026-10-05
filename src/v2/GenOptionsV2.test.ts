@@ -9,12 +9,15 @@ import GenOptionsV2 from './GenOptionsV2.vue'
 const RATIOS = ['1:1', '9:16', '16:9', '3:4', '4:3']
 const RES = ['1K', '2K', '4K']
 
+const mounted: Array<{ unmount: () => void }> = []
+
 async function openPopup(props: Record<string, unknown>) {
   const wrapper = mount(GenOptionsV2, {
     props,
     global: { plugins: [makeI18n()] },
     attachTo: document.body,
   })
+  mounted.push(wrapper)
   await wrapper.find('button.v2-genopt__chip').trigger('click')
   await nextTick()
   return wrapper
@@ -23,7 +26,10 @@ async function openPopup(props: Record<string, unknown>) {
 const pop = () => document.body.querySelector('.v2-genopt__pop')
 
 describe('GenOptionsV2', () => {
-  afterEach(() => { document.body.innerHTML = '' })
+  afterEach(() => {
+    while (mounted.length) mounted.pop()!.unmount()
+    document.body.innerHTML = ''
+  })
 
   it('chip summarises ratio, resolution and count', async () => {
     const wrapper = await openPopup({
