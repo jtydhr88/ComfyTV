@@ -15,8 +15,7 @@
         "error": "Describe the subject to generate on a transparent background.",
         "prefix": "This is an RGBA format image with transparency. ",
         "suffix": ". The image has an alpha channel and a transparent background."
-      },
-      "negative_prompt": { "from": "option:negative", "default": "" }
+      }
     },
     "5": {
       "width":      { "from": "computed:width",  "cast": "int" },

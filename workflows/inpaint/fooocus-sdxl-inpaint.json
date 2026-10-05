@@ -38,7 +38,7 @@
         "Node name for S&R": "CLIPTextEncode"
       },
       "widgets_values": [
-        "text, watermark"
+        "text, watermark, low quality, blurry"
       ],
       "color": "#322",
       "bgcolor": "#533"

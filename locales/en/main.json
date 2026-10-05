@@ -904,7 +904,6 @@
     },
     "maskedImage": "Upstream image + painted mask (alpha)",
     "option": {
-      "negative": "Stage negative prompt",
       "seed": "Stage seed",
       "batch_size": "Stage batch size",
       "duration_s": "Stage duration (s)",

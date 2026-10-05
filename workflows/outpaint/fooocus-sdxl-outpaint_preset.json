@@ -38,12 +38,6 @@
         "default": "natural continuation of the scene, seamless"
       }
     },
-    "10": {
-      "text": {
-        "from": "option:negative",
-        "default": "text, watermark, low quality, blurry"
-      }
-    },
     "40": {
       "seed": {
         "from": "option:seed",

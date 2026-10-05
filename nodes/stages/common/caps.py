@@ -9,11 +9,11 @@ def _caps(upstream_kinds, option_keys, computed_keys) -> dict:
 CAPS_BY_KIND: dict[str, dict] = {
     'text':          _caps(['text', 'image', 'video'],     ['option:seed'],
                            []),
-    'image':         _caps(['image', 'text'],              ['option:negative', 'option:seed', 'option:batch_size'],
+    'image':         _caps(['image', 'text'],              ['option:seed', 'option:batch_size'],
                            ['computed:width', 'computed:height']),
-    'shot-images':   _caps(['image', 'text'],              ['option:negative', 'option:seed', 'option:batch_size'],
+    'shot-images':   _caps(['image', 'text'],              ['option:seed', 'option:batch_size'],
                            ['computed:width', 'computed:height']),
-    'video':         _caps(['image', 'video', 'text', 'audio'], ['option:negative', 'option:seed', 'option:duration_s', 'option:generate_audio'],
+    'video':         _caps(['image', 'video', 'text', 'audio'], ['option:seed', 'option:duration_s', 'option:generate_audio'],
                            ['computed:width', 'computed:height', 'computed:length']),
     'audio':         _caps([],                             ['option:seed', 'option:duration_s', 'option:lyrics', 'option:bpm', 'option:timesignature', 'option:keyscale', 'option:language'],
                            ['computed:length']),
@@ -25,9 +25,9 @@ CAPS_BY_KIND: dict[str, dict] = {
                            []),
     'upscale':       _caps(['image'],                      ['option:seed', 'option:scale'],
                            []),
-    'outpaint':      _caps(['image'],                      ['option:seed', 'option:negative', 'option:pad_left', 'option:pad_top', 'option:pad_right', 'option:pad_bottom', 'option:feathering'],
+    'outpaint':      _caps(['image'],                      ['option:seed', 'option:pad_left', 'option:pad_top', 'option:pad_right', 'option:pad_bottom', 'option:feathering'],
                            []),
-    'inpaint':       _caps(['image'],                      ['option:seed', 'option:negative', 'option:mask_data'],
+    'inpaint':       _caps(['image'],                      ['option:seed', 'option:mask_data'],
                            []),
     'erase':         _caps(['image'],                      ['option:seed', 'option:mask_data'],
                            []),
@@ -56,13 +56,12 @@ CAPS_BY_KIND: dict[str, dict] = {
 
 FALLBACK_CAPS: dict = _caps(
     ['image', 'video', 'audio', 'text'],
-    ['option:negative', 'option:seed', 'option:batch_size'],
+    ['option:seed', 'option:batch_size'],
     ['computed:width', 'computed:height', 'computed:length'],
 )
 
 
 BUILTIN_OPTION_META: dict[str, tuple[str, str]] = {
-    'negative':       ('Stage negative prompt', 'string'),
     'seed':           ('Stage seed', 'int'),
     'batch_size':     ('Stage batch size', 'int'),
     'duration_s':     ('Stage duration (s)', 'float'),

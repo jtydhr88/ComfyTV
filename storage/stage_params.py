@@ -31,12 +31,20 @@ def _slugify_param_key(label: str) -> str:
 def seed_system_stage_params() -> int:
     from ..nodes.stages.common.caps import builtin_option_rows
     seeded = 0
+    builtin = builtin_option_rows()
+    builtin_keys = {(row["kind"], row["key"]) for row in builtin}
     with db.get_session() as s:
+        stale = [
+            r for r in s.execute(select(StageParam).where(StageParam.origin == 0)).scalars().all()
+            if (r.kind, r.key) not in builtin_keys
+        ]
+        for r in stale:
+            s.delete(r)
         existing = {
             (r.kind, r.key)
             for r in s.execute(select(StageParam.kind, StageParam.key)).all()
         }
-        for row in builtin_option_rows():
+        for row in builtin:
             kp = (row["kind"], row["key"])
             if kp in existing:
                 continue
@@ -47,7 +55,7 @@ def seed_system_stage_params() -> int:
             ))
             existing.add(kp)
             seeded += 1
-        if seeded:
+        if seeded or stale:
             s.commit()
     return seeded
 

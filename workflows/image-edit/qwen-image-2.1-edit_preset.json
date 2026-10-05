@@ -22,10 +22,6 @@
         "from": "main_prompt",
         "required": true,
         "error": "Describe the edit — e.g. 'change the background of @image_1 to a light-gray studio backdrop, keep the subject unchanged'."
-      },
-      "negative_prompt": {
-        "from": "option:negative",
-        "default": ""
       }
     },
     "7": {

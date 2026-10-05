@@ -13,8 +13,7 @@
         "from": "main_prompt",
         "required": true,
         "error": "Describe the image to generate."
-      },
-      "negative_prompt": { "from": "option:negative", "default": "" }
+      }
     },
     "5": {
       "width":      { "from": "computed:width",  "cast": "int" },

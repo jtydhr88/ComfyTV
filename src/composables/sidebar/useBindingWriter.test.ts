@@ -178,8 +178,8 @@ describe('useBindingWriter — mutation flows', () => {
     const { onBindingChange, postBinding } = setup()
     await onBindingChange(widget({ widget_type: 'INT' }), 'option:steps')
     expect(postBinding).toHaveBeenCalledWith(expect.objectContaining({ from: 'option:steps', cast: 'int' }))
-    await onBindingChange(widget({ widget_type: 'STRING' }), 'option:negative')
-    expect(postBinding).toHaveBeenLastCalledWith(expect.objectContaining({ from: 'option:negative', cast: null }))
+    await onBindingChange(widget({ widget_type: 'STRING' }), 'option:lyrics')
+    expect(postBinding).toHaveBeenLastCalledWith(expect.objectContaining({ from: 'option:lyrics', cast: null }))
   })
 
   it('onBindingChange to an upstream_* binding marks `required: true`', async () => {

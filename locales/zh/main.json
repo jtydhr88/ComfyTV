@@ -904,7 +904,6 @@
     },
     "maskedImage": "上游图片 + 绘制蒙版（alpha）",
     "option": {
-      "negative": "阶段负向提示词",
       "seed": "阶段种子",
       "batch_size": "阶段张数",
       "duration_s": "阶段时长（秒）",

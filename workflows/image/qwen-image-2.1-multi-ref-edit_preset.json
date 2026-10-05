@@ -23,8 +23,7 @@
         "from": "main_prompt",
         "required": true,
         "error": "Describe the edit and name the images — e.g. 'put the shirt from <image2> on the character in <image1>, keep pose and background'."
-      },
-      "negative_prompt": { "from": "option:negative", "default": "" }
+      }
     },
     "7": {
       "seed": { "from": "option:seed", "default": "random_int31", "cast": "int" }

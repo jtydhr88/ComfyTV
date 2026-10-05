@@ -3,16 +3,16 @@ import { beforeAll, describe, expect, it, vi } from 'vitest'
 const { CAPS } = vi.hoisted(() => ({
   CAPS: {
     caps_by_kind: {
-      image:    { upstream_kinds: ['image', 'text'],          option_keys: ['option:negative', 'option:seed', 'option:batch_size'], computed_keys: ['computed:width', 'computed:height'] },
-      video:    { upstream_kinds: ['image', 'video', 'text'], option_keys: ['option:negative', 'option:seed', 'option:duration_s', 'option:generate_audio'], computed_keys: ['computed:width', 'computed:height', 'computed:length'] },
+      image:    { upstream_kinds: ['image', 'text'],          option_keys: ['option:seed', 'option:batch_size'], computed_keys: ['computed:width', 'computed:height'] },
+      video:    { upstream_kinds: ['image', 'video', 'text'], option_keys: ['option:seed', 'option:duration_s', 'option:generate_audio'], computed_keys: ['computed:width', 'computed:height', 'computed:length'] },
       audio:    { upstream_kinds: ['text', 'audio'],          option_keys: ['option:seed', 'option:duration_s', 'option:lyrics'], computed_keys: ['computed:length'] },
-      inpaint:  { upstream_kinds: ['image'],                  option_keys: ['option:seed', 'option:negative', 'option:mask_data'], computed_keys: [] },
+      inpaint:  { upstream_kinds: ['image'],                  option_keys: ['option:seed', 'option:mask_data'], computed_keys: [] },
       erase:    { upstream_kinds: ['image'],                  option_keys: ['option:seed', 'option:mask_data'], computed_keys: [] },
-      outpaint: { upstream_kinds: ['image'],                  option_keys: ['option:seed', 'option:negative', 'option:pad_left'], computed_keys: [] },
+      outpaint: { upstream_kinds: ['image'],                  option_keys: ['option:seed', 'option:pad_left'], computed_keys: [] },
     },
-    fallback_caps: { upstream_kinds: ['image', 'video', 'audio', 'text'], option_keys: ['option:negative', 'option:seed', 'option:batch_size'], computed_keys: ['computed:width', 'computed:height', 'computed:length'] },
+    fallback_caps: { upstream_kinds: ['image', 'video', 'audio', 'text'], option_keys: ['option:seed', 'option:batch_size'], computed_keys: ['computed:width', 'computed:height', 'computed:length'] },
     option_labels: {
-      'option:negative': 'Stage negative prompt', 'option:seed': 'Stage seed',
+      'option:seed': 'Stage seed',
       'option:batch_size': 'Stage batch size', 'option:duration_s': 'Stage duration (s)',
       'option:generate_audio': 'Stage generate audio', 'option:lyrics': 'Stage lyrics',
       'option:mask_data': 'Stage mask (painter output)', 'option:pad_left': 'Stage pad left',
@@ -63,7 +63,6 @@ describe('buildBindingOptions', () => {
   it('emits option/computed/upstream entries for the kind', () => {
     const opts = buildBindingOptions([], 'image')
     const vals = opts.map(o => o.value)
-    expect(vals).toContain('option:negative')
     expect(vals).toContain('option:seed')
     expect(vals).toContain('option:batch_size')
     expect(vals).toContain('computed:width')

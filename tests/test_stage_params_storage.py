@@ -115,6 +115,19 @@ class TestStageParamSeed:
         assert again == 0
         assert len(storage.list_stage_params()) == first
 
+    def test_seed_prunes_retired_system_rows(self, reset_db):
+        from ComfyTV import db, storage
+        from ComfyTV.db import StageParam
+        storage.seed_system_stage_params()
+        with db.get_session() as s:
+            s.add(StageParam(kind="image", key="negative", label="Stage negative prompt",
+                             type="string", origin=0, order_=0))
+            s.commit()
+        storage.seed_system_stage_params()
+        keys = {p["key"] for p in storage.list_stage_params("image")}
+        assert "negative" not in keys
+        assert "seed" in keys
+
     def test_seed_coexists_with_user_rows(self, reset_db):
         from ComfyTV import storage
         storage.seed_system_stage_params()
