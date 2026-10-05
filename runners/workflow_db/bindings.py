@@ -7,6 +7,7 @@ from typing import Any, Optional
 from sqlalchemy import select
 
 from ... import db
+from .labels import _is_gui_format
 
 
 _log = logging.getLogger(__name__)
@@ -315,7 +316,6 @@ def list_workflows() -> list[dict]:
 
 
 def _gui_valid_for(path: Path) -> Optional[bool]:
-    from .seed import _is_gui_format
     if not path.exists():
         return None
     try:

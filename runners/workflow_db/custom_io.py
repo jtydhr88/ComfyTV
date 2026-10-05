@@ -10,7 +10,8 @@ from ..custom_io import (
 )
 from .bindings import delete_input_binding, upsert_input_binding
 from .config import get_workflow_config
-from .seed import _free_label, _safe_stem, import_workflow
+from .importer import import_workflow
+from .labels import _free_label, _safe_stem
 
 
 def set_custom_io(workflow_id: int, raw: Any) -> Optional[dict]:

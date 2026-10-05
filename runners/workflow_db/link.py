@@ -6,7 +6,7 @@ from sqlalchemy import select
 
 from ... import db
 from .auto_bind import add_size_node_bindings
-from .seed import _label_from_stem, _is_gui_format
+from .labels import _label_from_stem, _is_gui_format
 
 _log = logging.getLogger(__name__)
 

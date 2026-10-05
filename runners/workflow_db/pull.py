@@ -6,10 +6,8 @@ from typing import Optional
 from sqlalchemy import select
 
 from ... import db
-from .seed import (
-    _free_label, _is_gui_format, _label_from_stem, _safe_stem,
-    _upsert_workflow_row, _workflows_dir,
-)
+from .labels import _free_label, _is_gui_format, _label_from_stem, _safe_stem
+from .seed import _upsert_workflow_row, _workflows_dir
 
 _log = logging.getLogger(__name__)
 
