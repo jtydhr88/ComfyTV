@@ -482,6 +482,10 @@
         "label": "Auto-attach picker on run",
         "desc": "When an Image or Video stage runs with nothing connected to its output, add a Picker stage after it automatically."
       },
+      "drop-files-as-loaders": {
+        "label": "Drop media files as asset loaders",
+        "desc": "Images, videos and audio dropped onto empty canvas are imported into the asset library and placed as ComfyTV asset loader nodes, instead of ComfyUI loading them (a PNG no longer opens the workflow saved in it). Drops onto a node and other files are left to ComfyUI."
+      },
       "enable-db-backup": {
         "label": "Automatic backup on startup",
         "desc": "Back up the ComfyTV data directory (database + workflows) every time the server starts, before any migration runs."

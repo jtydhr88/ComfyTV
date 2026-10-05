@@ -1,9 +1,11 @@
 import type { Pinia } from 'pinia'
 
 import type { Asset } from '@/api/schemas'
+import { importAssetFiles } from '@/composables/sidebar/assetImport'
 import { clientToCanvasPos, createAssetLoaderNode } from '@/composables/stages/assetLoaderNode'
 import { app } from '@/lib/comfyApp'
 import { useAssetStore } from '@/stores/assetStore'
+import { mediaTypeOf, type AssetMediaType } from '@/utils/mediaFileTypes'
 
 export const ASSET_DRAG_MIME = 'application/x-comfytv-asset-id'
 export const EAGLE_DRAG_MIME = 'application/x-comfytv-eagle-item'
@@ -11,6 +13,14 @@ export const EAGLE_DRAG_MIME = 'application/x-comfytv-eagle-item'
 export type ResolveAsset = (id: number) => Asset | null
 
 const MULTI_DROP_STEP = 40
+const LOADER_FILE_KINDS = new Set<AssetMediaType | null>(['image', 'video', 'audio'])
+
+let dropFilesAsLoaders = false
+
+export function applyCanvasDropSetting(rows: Array<{ key: string; value: unknown }>): void {
+  const row = rows.find((r) => r.key === 'drop-files-as-loaders')
+  if (row) dropFilesAsLoaders = row.value === true
+}
 
 export function parseAssetDragIds(raw: string): number[] {
   const out: number[] = []
@@ -53,7 +63,10 @@ export function handleAssetDrop(e: DragEvent, resolveAsset: ResolveAsset): void 
     return
   }
 
-  if (!hasMime(e, ASSET_DRAG_MIME)) return
+  if (!hasMime(e, ASSET_DRAG_MIME)) {
+    handleFileDrop(e)
+    return
+  }
   e.preventDefault()
   e.stopPropagation()
 
@@ -70,6 +83,28 @@ export function handleAssetDrop(e: DragEvent, resolveAsset: ResolveAsset): void 
       select: true,
     })
   })
+}
+
+function handleFileDrop(e: DragEvent): void {
+  if (!dropFilesAsLoaders || (app as any).dragOverNode) return
+  const files = Array.from(e.dataTransfer?.files ?? [])
+  if (!files.length || !files.every((f) => LOADER_FILE_KINDS.has(mediaTypeOf(f)))) return
+  e.preventDefault()
+  e.stopPropagation()
+  const [x, y] = clientToCanvasPos(e.clientX, e.clientY)
+  void (async () => {
+    try {
+      const assets = await importAssetFiles(files)
+      assets.forEach((asset, i) => {
+        createAssetLoaderNode(asset, [x + i * MULTI_DROP_STEP, y + i * MULTI_DROP_STEP], {
+          anchor: 'center',
+          select: true,
+        })
+      })
+    } catch (err) {
+      console.warn('[ComfyTV/assets] file drop import failed:', err)
+    }
+  })()
 }
 
 let installed = false

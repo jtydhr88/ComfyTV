@@ -255,7 +255,7 @@ class TestSettingsApi:
         assert resp.status == 200
         rows = (await resp.json())["settings"]
         assert {r["key"] for r in rows} == {
-            "enable-v2", "v2-lod-scale", "v2-lod-fill", "auto-picker",
+            "enable-v2", "v2-lod-scale", "v2-lod-fill", "auto-picker", "drop-files-as-loaders",
             "enable-db-backup", "db-backup-max-count", "db-backup-path",
             "enable-mcp", "enable-bot",
             "bot-model-claude-code", "bot-model-codex", "bot-model-qwen-code",

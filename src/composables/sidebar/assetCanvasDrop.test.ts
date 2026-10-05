@@ -1,16 +1,19 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('@/lib/comfyApp', () => ({ app: { canvas: { canvas: undefined } } }))
+vi.mock('@/lib/comfyApp', () => ({ app: { canvas: { canvas: undefined }, dragOverNode: null } }))
 vi.mock('@/stores/assetStore', () => ({ useAssetStore: vi.fn() }))
 vi.mock('@/composables/stages/assetLoaderNode', () => ({
   clientToCanvasPos: vi.fn(() => [100, 200]),
   createAssetLoaderNode: vi.fn(),
 }))
+vi.mock('@/composables/sidebar/assetImport', () => ({ importAssetFiles: vi.fn() }))
 
+import { importAssetFiles } from '@/composables/sidebar/assetImport'
 import { clientToCanvasPos, createAssetLoaderNode } from '@/composables/stages/assetLoaderNode'
+import { app } from '@/lib/comfyApp'
 
 import {
-  ASSET_DRAG_MIME, handleAssetDragOver, handleAssetDrop, parseAssetDragIds,
+  ASSET_DRAG_MIME, applyCanvasDropSetting, handleAssetDragOver, handleAssetDrop, parseAssetDragIds,
 } from './assetCanvasDrop'
 
 function dragEvent(types: string[], data = ''): DragEvent {
@@ -96,6 +99,47 @@ describe('handleAssetDrop', () => {
       expect(e.stopPropagation).toHaveBeenCalled()
     }
     expect(createAssetLoaderNode).not.toHaveBeenCalled()
+  })
+})
+
+describe('file drops as asset loaders', () => {
+  const fileDrop = (...names: string[]) => {
+    const e = dragEvent(['Files'])
+    ;(e.dataTransfer as any).files = names.map(n => new File(['x'], n))
+    return e
+  }
+  const flush = () => new Promise(r => setTimeout(r, 0))
+
+  beforeEach(() => {
+    applyCanvasDropSetting([{ key: 'drop-files-as-loaders', value: true }])
+    ;(app as any).dragOverNode = null
+  })
+
+  it('imports media files and places one stepped loader per asset', async () => {
+    const second = { ...asset, id: 8 }
+    vi.mocked(importAssetFiles).mockResolvedValue([asset, second])
+    const e = fileDrop('a.png', 'b.mp4')
+    handleAssetDrop(e, resolveAsset)
+    expect(e.preventDefault).toHaveBeenCalled()
+    await flush()
+    expect(createAssetLoaderNode).toHaveBeenNthCalledWith(1, asset, [100, 200], { anchor: 'center', select: true })
+    expect(createAssetLoaderNode).toHaveBeenNthCalledWith(2, second, [140, 240], { anchor: 'center', select: true })
+  })
+
+  it('leaves the drop to ComfyUI when off, onto a node, or with a non-media file', () => {
+    applyCanvasDropSetting([{ key: 'drop-files-as-loaders', value: false }])
+    const off = fileDrop('a.png')
+    handleAssetDrop(off, resolveAsset)
+
+    applyCanvasDropSetting([{ key: 'drop-files-as-loaders', value: true }])
+    const workflow = fileDrop('a.png', 'flow.json')
+    handleAssetDrop(workflow, resolveAsset)
+    ;(app as any).dragOverNode = { id: 3 }
+    const onNode = fileDrop('a.png')
+    handleAssetDrop(onNode, resolveAsset)
+
+    for (const e of [off, workflow, onNode]) expect(e.preventDefault).not.toHaveBeenCalled()
+    expect(importAssetFiles).not.toHaveBeenCalled()
   })
 })
 

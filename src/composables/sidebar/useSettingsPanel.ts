@@ -4,6 +4,7 @@ import { computed, ref, watch } from 'vue'
 import { fetchSettings, runDbBackup, saveSettings } from '@/api'
 import type { BackupResult, SettingRow, SettingValue } from '@/api'
 import { fetchBlenderStatus } from '@/api/blender'
+import { applyCanvasDropSetting } from '@/composables/sidebar/assetCanvasDrop'
 import { applyAutoPickerSetting } from '@/composables/stages/autoPicker'
 import { applyLodSettings } from '@/v2/lodV2'
 import { fetchEagleStatus } from '@/api/eagle'
@@ -247,6 +248,7 @@ export function useSettingsPanel(
       syncValues()
       applyLodSettings(rows.value)
       applyAutoPickerSetting(rows.value)
+      applyCanvasDropSetting(rows.value)
       if (Object.keys(changed).some((k) => AGENT_TOGGLE_KEYS.has(k) || k.startsWith('bot-'))) {
         await refreshAgentStatus()
       }
