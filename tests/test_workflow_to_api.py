@@ -2656,3 +2656,26 @@ class TestSeedreamDynamicCombo:
         assert "model.images" not in inputs
         assert "fixed" not in inputs.values()
 
+
+
+class TestPromotedSubgraphWidget:
+    def test_host_value_overrides_interior_widget(self):
+        ui = json.loads((FIXTURES / "subgraph_promoted_vae_ui.json").read_text(encoding="utf-8"))
+        object_info = {
+            "VAELoader": {
+                "input": {"required": {"vae_name": [["ae.safetensors", "ae.sft"], {}]}},
+                "input_order": {"required": ["vae_name"]},
+                "output": ["VAE"],
+                "output_node": False,
+            },
+            "VAEDecode": {
+                "input": {"required": {"samples": ["LATENT"], "vae": ["VAE"]}},
+                "input_order": {"required": ["samples", "vae"]},
+                "output": ["IMAGE"],
+                "output_node": False,
+            },
+        }
+
+        result = convert_ui_to_api(ui, object_info)
+
+        assert result["3:1"]["inputs"]["vae_name"] == "ae.sft"
