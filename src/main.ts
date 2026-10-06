@@ -67,6 +67,7 @@ import { hydrateV2Flag, isV2Enabled } from '@/v2/flagV2'
 import { installPlaybackArbiter } from '@/composables/widgets/playbackArbiter'
 import { installCameraMotionLod } from '@/composables/widgets/cameraMotionLod'
 import { installV2Lod } from '@/v2/lodV2'
+import { installLinkDragHover } from '@/v2/nodeDrag'
 
 ;(window as any).__comfytv_host_pinia = getActivePinia()
 
@@ -80,6 +81,7 @@ const v2Ready = hydrateV2Flag()
 installPlaybackArbiter()
 installCameraMotionLod()
 installV2Lod()
+installLinkDragHover()
 
 useExecutionStore().bindToApi(app.api)
 

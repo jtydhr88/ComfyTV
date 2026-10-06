@@ -1,4 +1,4 @@
-import { useTimeoutFn } from '@vueuse/core'
+import { useEventListener, useTimeoutFn } from '@vueuse/core'
 import { effectScope, type EffectScope } from 'vue'
 
 import { app, type ComfyNode } from '@/lib/comfyApp'
@@ -33,10 +33,10 @@ export function nudgeSlotAnchors(root: HTMLElement) {
   nudgeTimer.start()
 }
 
+const CLUSTER = '[data-testid^="node-body-"] > div:first-child > div'
+
 export function bindClusterHoverIntent(root: HTMLElement, scope: EffectScope) {
-  const clusters = root.querySelectorAll<HTMLElement>(
-    '[data-testid^="node-body-"] > div:first-child > div',
-  )
+  const clusters = root.querySelectorAll<HTMLElement>(CLUSTER)
   for (const c of clusters) {
     if (c.dataset.v2Hover) continue
     c.dataset.v2Hover = '1'
@@ -125,4 +125,65 @@ export function bindNodeDrag(node: ComfyNode, surface: HTMLElement) {
   }
   surface.addEventListener('pointerup', endDrag)
   surface.addEventListener('pointercancel', endDrag)
+}
+
+let linkHoverNode: HTMLElement | null = null
+let linkHoverCluster: HTMLElement | null = null
+
+function setLinkHover(node: HTMLElement | null, cluster: HTMLElement | null): void {
+  if (node !== linkHoverNode) {
+    linkHoverNode?.removeAttribute('data-v2-link-hover')
+    node?.setAttribute('data-v2-link-hover', '')
+  }
+  if (cluster !== linkHoverCluster && linkHoverCluster && !linkHoverCluster.matches(':hover')) {
+    linkHoverCluster.classList.remove('v2-open')
+    if (linkHoverNode) nudgeSlotAnchors(linkHoverNode)
+  }
+  if (cluster && cluster !== linkHoverCluster && node) {
+    cluster.classList.add('v2-open')
+    nudgeSlotAnchors(node)
+  }
+  linkHoverNode = node
+  linkHoverCluster = cluster
+}
+
+function trackLinkDragHover(e: PointerEvent): void {
+  const connector = (app as any).canvas?.linkConnector
+  const side = connector?.isConnecting ? connector.state?.connectingTo : null
+  if (!side) {
+    if (linkHoverNode) setLinkHover(null, null)
+    return
+  }
+  const hit = document.elementFromPoint(e.clientX, e.clientY)
+  const node = hit?.closest<HTMLElement>('[data-node-id][data-v2-shell]') ?? null
+  const cluster = node ? hit!.closest<HTMLElement>(CLUSTER) : null
+  setLinkHover(node, cluster && cluster.classList.contains('ml-auto') === (side === 'output') ? cluster : null)
+}
+
+function dropCanvasLinkOnV2Slot(e: PointerEvent): void {
+  const canvas = (app as any).canvas
+  const connector = canvas?.linkConnector
+  if (!connector?.isConnecting || e.target !== canvas.canvas) return
+  const el = document.elementFromPoint(e.clientX, e.clientY)?.closest<HTMLElement>('[data-node-id][data-v2-shell]')
+  const node = el ? canvas.graph?.getNodeById(el.dataset.nodeId) : null
+  if (!node) return
+  const rect = canvas.canvas.getBoundingClientRect()
+  const [canvasX, canvasY] = canvas.ds.convertCanvasToOffset([e.clientX - rect.left, e.clientY - rect.top])
+  if (node.isPointInside(canvasX, canvasY)) return
+  connector.dropOnNode(node, { canvasX, canvasY })
+  connector.reset()
+}
+
+let linkHoverScope: EffectScope | null = null
+
+export function installLinkDragHover(root: Document = document): void {
+  if (linkHoverScope) return
+  linkHoverScope = effectScope(true)
+  linkHoverScope.run(() => {
+    useEventListener(root, 'pointermove', trackLinkDragHover, { capture: true, passive: true })
+    useEventListener(root, 'pointerup', (e: PointerEvent) => {
+      dropCanvasLinkOnV2Slot(e)
+      setLinkHover(null, null)
+    }, { capture: true, passive: true })
+  })
 }

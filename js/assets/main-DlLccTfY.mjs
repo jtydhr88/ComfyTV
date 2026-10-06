@@ -59774,7 +59774,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-QgHO4te9.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-XyzEHk6u.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -86610,7 +86610,7 @@ const _sfc_main$4p = /* @__PURE__ */ defineComponent({
       }
     });
     const AgentPanelRoot = /* @__PURE__ */ defineAsyncComponent({
-      loader: () => import("./AgentPanelRoot-DuQAmb6C.mjs"),
+      loader: () => import("./AgentPanelRoot-Af7AHPz9.mjs"),
       errorComponent: AgentPanelLoadError,
       onError: (error2, _retry, fail) => {
         reportError(error2, { errorType: "agent_panel_load_failure" });
@@ -149223,7 +149223,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-sLrKVZoU.mjs");
+    const { STLLoader } = await import("./STLLoader-B_QrXTdv.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -149231,7 +149231,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-DXMyrcfE.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-BxZT949P.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -236780,10 +236780,9 @@ function nudgeSlotAnchors(root) {
   nudgePending.add(root);
   nudgeTimer.start();
 }
+const CLUSTER = '[data-testid^="node-body-"] > div:first-child > div';
 function bindClusterHoverIntent(root, scope2) {
-  const clusters = root.querySelectorAll(
-    '[data-testid^="node-body-"] > div:first-child > div'
-  );
+  const clusters = root.querySelectorAll(CLUSTER);
   for (const c2 of clusters) {
     if (c2.dataset.v2Hover) continue;
     c2.dataset.v2Hover = "1";
@@ -236872,6 +236871,63 @@ function bindNodeDrag(node, surface) {
   };
   surface.addEventListener("pointerup", endDrag);
   surface.addEventListener("pointercancel", endDrag);
+}
+let linkHoverNode = null;
+let linkHoverCluster = null;
+function setLinkHover(node, cluster) {
+  if (node !== linkHoverNode) {
+    linkHoverNode == null ? void 0 : linkHoverNode.removeAttribute("data-v2-link-hover");
+    node == null ? void 0 : node.setAttribute("data-v2-link-hover", "");
+  }
+  if (cluster !== linkHoverCluster && linkHoverCluster && !linkHoverCluster.matches(":hover")) {
+    linkHoverCluster.classList.remove("v2-open");
+    if (linkHoverNode) nudgeSlotAnchors(linkHoverNode);
+  }
+  if (cluster && cluster !== linkHoverCluster && node) {
+    cluster.classList.add("v2-open");
+    nudgeSlotAnchors(node);
+  }
+  linkHoverNode = node;
+  linkHoverCluster = cluster;
+}
+function trackLinkDragHover(e) {
+  var _a2, _b2;
+  const connector = (_a2 = app$1.canvas) == null ? void 0 : _a2.linkConnector;
+  const side = (connector == null ? void 0 : connector.isConnecting) ? (_b2 = connector.state) == null ? void 0 : _b2.connectingTo : null;
+  if (!side) {
+    if (linkHoverNode) setLinkHover(null, null);
+    return;
+  }
+  const hit = document.elementFromPoint(e.clientX, e.clientY);
+  const node = (hit == null ? void 0 : hit.closest("[data-node-id][data-v2-shell]")) ?? null;
+  const cluster = node ? hit.closest(CLUSTER) : null;
+  setLinkHover(node, cluster && cluster.classList.contains("ml-auto") === (side === "output") ? cluster : null);
+}
+function dropCanvasLinkOnV2Slot(e) {
+  var _a2, _b2;
+  const canvas = app$1.canvas;
+  const connector = canvas == null ? void 0 : canvas.linkConnector;
+  if (!(connector == null ? void 0 : connector.isConnecting) || e.target !== canvas.canvas) return;
+  const el2 = (_a2 = document.elementFromPoint(e.clientX, e.clientY)) == null ? void 0 : _a2.closest("[data-node-id][data-v2-shell]");
+  const node = el2 ? (_b2 = canvas.graph) == null ? void 0 : _b2.getNodeById(el2.dataset.nodeId) : null;
+  if (!node) return;
+  const rect = canvas.canvas.getBoundingClientRect();
+  const [canvasX, canvasY] = canvas.ds.convertCanvasToOffset([e.clientX - rect.left, e.clientY - rect.top]);
+  if (node.isPointInside(canvasX, canvasY)) return;
+  connector.dropOnNode(node, { canvasX, canvasY });
+  connector.reset();
+}
+let linkHoverScope = null;
+function installLinkDragHover(root = document) {
+  if (linkHoverScope) return;
+  linkHoverScope = effectScope(true);
+  linkHoverScope.run(() => {
+    useEventListener(root, "pointermove", trackLinkDragHover, { capture: true, passive: true });
+    useEventListener(root, "pointerup", (e) => {
+      dropCanvasLinkOnV2Slot(e);
+      setLinkHover(null, null);
+    }, { capture: true, passive: true });
+  });
 }
 const COLLAPSED_PROP = "v2_panel_collapsed";
 function stageInfoLine(node, state2) {
@@ -237855,7 +237911,8 @@ body[data-v2-toolbar] [data-testid="selection-toolbox"] { display: none; }
   grid-area: 1 / 1;
 }
 .lg-node[data-v2-shell]:hover [data-testid^="node-body-"] > div:first-child > div,
-.lg-node[data-v2-shell][data-v2-selected] [data-testid^="node-body-"] > div:first-child > div {
+.lg-node[data-v2-shell][data-v2-selected] [data-testid^="node-body-"] > div:first-child > div,
+.lg-node[data-v2-shell][data-v2-link-hover] [data-testid^="node-body-"] > div:first-child > div {
   opacity: 1;
 }
 .lg-node[data-v2-shell] [data-testid^="node-body-"] > div:first-child > div:not(.ml-auto) { left: -11px; }
@@ -244592,6 +244649,7 @@ const v2Ready = hydrateV2Flag();
 installPlaybackArbiter();
 installCameraMotionLod();
 installV2Lod();
+installLinkDragHover();
 useExecutionStore().bindToApi(app$1.api);
 let mountKeySeq = 0;
 (function mountHost() {
@@ -245165,4 +245223,4 @@ export {
   DropdownMenuRoot_default as y,
   DropdownMenuTrigger_default as z
 };
-//# sourceMappingURL=main-CgtxvwZl.mjs.map
+//# sourceMappingURL=main-DlLccTfY.mjs.map

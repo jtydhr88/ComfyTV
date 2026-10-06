@@ -154,7 +154,8 @@ body[data-v2-toolbar] [data-testid="selection-toolbox"] { display: none; }
   grid-area: 1 / 1;
 }
 .lg-node[data-v2-shell]:hover [data-testid^="node-body-"] > div:first-child > div,
-.lg-node[data-v2-shell][data-v2-selected] [data-testid^="node-body-"] > div:first-child > div {
+.lg-node[data-v2-shell][data-v2-selected] [data-testid^="node-body-"] > div:first-child > div,
+.lg-node[data-v2-shell][data-v2-link-hover] [data-testid^="node-body-"] > div:first-child > div {
   opacity: 1;
 }
 .lg-node[data-v2-shell] [data-testid^="node-body-"] > div:first-child > div:not(.ml-auto) { left: -11px; }
