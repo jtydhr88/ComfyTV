@@ -1,36 +1,39 @@
-import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
-import { runInNewContext } from 'node:vm'
-import ts from 'typescript'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
-const source = ts.transpileModule(
-  readFileSync(resolve(__dirname, 'swapWorker.ts'), 'utf8'),
-  { compilerOptions: { target: ts.ScriptTarget.ES2020 } }
-).outputText
+class DedicatedWorkerGlobalScope {}
 
-function loadWorker(storage?: object) {
-  class DedicatedWorkerGlobalScope {}
+async function loadScope(scope: object) {
+  vi.resetModules()
+  vi.stubGlobal('DedicatedWorkerGlobalScope', DedicatedWorkerGlobalScope)
+  vi.stubGlobal('self', scope)
+  await import('./swapWorker')
+}
+
+async function loadWorker(storage?: object) {
   const scope = Object.assign(new DedicatedWorkerGlobalScope(), {
     navigator: { storage },
     postMessage: vi.fn(),
     onmessage: undefined as undefined | ((e: { data: unknown }) => Promise<void>)
   })
-  runInNewContext(source, { self: scope, DedicatedWorkerGlobalScope }, { timeout: 1000 })
+  await loadScope(scope)
   return { scope, send: (data: unknown) => scope.onmessage!({ data }) }
 }
 
 describe('swap worker isolation and protocol', () => {
-  it('does not replace a page message handler or post messages when auto-imported', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('does not replace a page message handler or post messages outside a worker', async () => {
     const onmessage = vi.fn()
     const page = { onmessage, postMessage: vi.fn() }
-    runInNewContext(source, { self: page }, { timeout: 1000 })
+    await loadScope(page)
     expect(page.onmessage).toBe(onmessage)
     expect(page.postMessage).not.toHaveBeenCalled()
   })
 
   it('ignores unrelated messages and its own no-handle reply', async () => {
-    const { scope, send } = loadWorker()
+    const { scope, send } = await loadWorker()
     for (const data of [null, undefined, 'message', {}, { type: 'loaded' }, { reqId: 1, error: 'no handle' }]) {
       await send(data)
     }
@@ -42,7 +45,7 @@ describe('swap worker isolation and protocol', () => {
   })
 
   it('reports unavailable OPFS once without a message loop', async () => {
-    const { scope, send } = loadWorker()
+    const { scope, send } = await loadWorker()
     await send({ op: 'init', reqId: 1 })
     expect(scope.postMessage).toHaveBeenCalledExactlyOnceWith({ reqId: 1, ok: false })
     await send(scope.postMessage.mock.calls[0][0])
@@ -61,7 +64,7 @@ describe('swap worker isolation and protocol', () => {
       keys: async function* () {},
       removeEntry: vi.fn(async () => {})
     }
-    const { scope, send } = loadWorker({ getDirectory: async () => directory })
+    const { scope, send } = await loadWorker({ getDirectory: async () => directory })
     await send({ op: 'init', reqId: 1 })
     expect(scope.postMessage).toHaveBeenLastCalledWith({ reqId: 1, ok: true })
     const tile = new Uint8Array(256 * 256 * 4).fill(137)
