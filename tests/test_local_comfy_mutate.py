@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from datetime import datetime
+
 import pytest
 
 from ComfyTV.runners import local_comfy as lc
@@ -402,3 +404,30 @@ class TestApplyOverrides:
         lc._apply_overrides(wf, cfg, lc._Resolver(cfg, self._ctx()))
         assert wf["5"]["inputs"]["width"] == 640
         assert wf["5"]["inputs"]["height"] == ["115", 1]
+
+
+class TestApplyTextReplacements:
+    NOW = datetime(2026, 9, 7, 8, 5, 3)
+
+    def test_date_tokens_match_the_frontend(self):
+        wf = {"9": {"class_type": "SaveImage", "inputs": {"filename_prefix": "%date:yyyy-MM-dd%/%date:yy_M_d_hh_mm_ss%_img"}}}
+        lc._apply_text_replacements(wf, self.NOW)
+        assert wf["9"]["inputs"]["filename_prefix"] == "2026-09-07/26_9_7_08_05_03_img"
+
+    def test_node_widget_lookup_by_type_then_title(self):
+        wf = {
+            "3": {"class_type": "KSampler", "inputs": {"seed": 42, "model": ["4", 0]}},
+            "6": {"class_type": "CLIPTextEncode", "_meta": {"title": "Pos"}, "inputs": {"text": "a/b:c"}},
+            "9": {"class_type": "VHS_VideoCombine", "inputs": {"filename_prefix": "%KSampler.seed%_%Pos.text%_%KSampler.model%_%Nope.x%_%width%"}},
+        }
+        lc._apply_text_replacements(wf, self.NOW)
+        assert wf["9"]["inputs"]["filename_prefix"] == "42_a_b_c_%KSampler.model%_%Nope.x%_%width%"
+
+    def test_only_string_filename_prefix_inputs_change(self):
+        wf = {
+            "6": {"class_type": "CLIPTextEncode", "inputs": {"text": "%date:yyyy%"}},
+            "9": {"class_type": "SaveImage", "inputs": {"filename_prefix": ["7", 0]}},
+        }
+        lc._apply_text_replacements(wf, self.NOW)
+        assert wf["6"]["inputs"]["text"] == "%date:yyyy%"
+        assert wf["9"]["inputs"]["filename_prefix"] == ["7", 0]

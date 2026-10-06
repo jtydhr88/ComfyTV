@@ -1,5 +1,6 @@
 import logging
 import uuid
+from datetime import datetime
 
 from .base import Runner, RunnerContext
 from ._workflow_resolve import (  # noqa: F401
@@ -16,6 +17,7 @@ from ._workflow_resolve import (  # noqa: F401
 from ._workflow_mutate import (  # noqa: F401
     _apply_overrides,
     _apply_prunes,
+    _apply_text_replacements,
     _auto_detect_result,
     _auto_prune_unbound,
     _output_node_ids,
@@ -56,6 +58,7 @@ def prepare_workflow(runner_id: str, kinds, ctx: RunnerContext) -> tuple[dict, d
     pruned_nodes |= _auto_prune_unbound(workflow, config, ctx)
     resolver = _Resolver(config, ctx)
     _apply_overrides(workflow, config, resolver, pruned_nodes)
+    _apply_text_replacements(workflow, datetime.now())
 
     result_meta = _custom_multi_result(config) or config.get("result") or {}
     if not result_meta.get("node"):

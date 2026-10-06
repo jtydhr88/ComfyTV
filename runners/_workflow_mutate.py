@@ -1,4 +1,6 @@
 import logging
+import re
+from datetime import datetime
 
 from .base import RunnerContext
 from ._workflow_resolve import (
@@ -283,3 +285,54 @@ def _output_node_ids(prompt: dict, hinted: str) -> list[str]:
         if cls is not None and getattr(cls, "OUTPUT_NODE", False):
             ids.append(nid)
     return ids
+
+
+_REPLACEMENT = re.compile(r"%([^%]+)%")
+_DATE_TOKEN = re.compile(r"dd?|MM?|hh?|mm?|ss?|yyy?y?")
+_UNSAFE_FILENAME = re.compile(r'[/?<>\\:*|"\x00-\x1F\x7F]')
+
+
+def _format_date(fmt: str, now: datetime) -> str:
+    parts = {"d": now.day, "M": now.month, "h": now.hour, "m": now.minute, "s": now.second}
+
+    def token(m: re.Match) -> str:
+        t = m.group(0)
+        if t == "yy":
+            return str(now.year)[2:]
+        if t == "yyyy":
+            return str(now.year)
+        if t[0] in parts:
+            return str(parts[t[0]]).zfill(len(t))
+        return t
+
+    return _DATE_TOKEN.sub(token, fmt)
+
+
+def _widget_text(value) -> str:
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if isinstance(value, float) and value.is_integer():
+        return str(int(value))
+    return str(value)
+
+
+def _apply_text_replacements(workflow: dict, now: datetime) -> None:
+    nodes = [n for n in workflow.values() if isinstance(n, dict)]
+
+    def replace(m: re.Match) -> str:
+        split = m.group(1).split(".")
+        if len(split) != 2:
+            return _format_date(split[0][5:], now) if split[0].startswith("date:") else m.group(0)
+        name, widget = split
+        matches = ([n for n in nodes if n.get("class_type") == name]
+                   or [n for n in nodes if (n.get("_meta") or {}).get("title") == name])
+        value = (matches[0].get("inputs") or {}).get(widget) if matches else None
+        if value is None or isinstance(value, list):
+            return m.group(0)
+        return _UNSAFE_FILENAME.sub("_", _widget_text(value))
+
+    for node in nodes:
+        inputs = node.get("inputs") or {}
+        prefix = inputs.get("filename_prefix")
+        if isinstance(prefix, str) and "%" in prefix:
+            inputs["filename_prefix"] = _REPLACEMENT.sub(replace, prefix)
