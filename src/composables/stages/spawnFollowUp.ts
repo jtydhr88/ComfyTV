@@ -7,6 +7,7 @@ import { useAssetStore } from '@/stores/assetStore'
 import { createAssetLoaderNode } from '@/composables/stages/assetLoaderNode'
 import { app } from '@/lib/comfyApp'
 import { findFreePos } from '@/composables/stages/placeFree'
+import { extractFilenameFromUrl } from '@/utils/download'
 
 const STAGE_CLASS_BY_KIND: Record<StageKind, string> = {
   text:           'ComfyTV.TextStage',
@@ -239,7 +240,7 @@ export async function spawnAssetImageLoader(srcNode: any, url: string, label?: s
   let asset = assetStore.byPayloadUrl(url) ?? null
   if (!asset) {
     asset = await assetStore.create({
-      name: label || mediaType,
+      name: extractFilenameFromUrl(url)?.replace(/\.[^.]+$/, '') || label || mediaType,
       payload_url: url,
       media_type: mediaType,
       category_ids: [],

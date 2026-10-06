@@ -433,7 +433,7 @@ class TestAutoSend:
             stage_class="ImageStage", params={"prompt": "cat"}) is True
         rows = storage.list_eagle_pending()
         assert rows[0]["folder"] == "雨夜追逐"
-        assert rows[0]["name"] == "ImageStage"
+        assert rows[0]["name"] == ""
         assert "prompt: cat" in rows[0]["annotation"]
         assert rows[0]["tags"] == ["comfytv", "雨夜追逐"]
 
@@ -454,8 +454,7 @@ class TestAutoSend:
             "/view?filename=b1.png&type=output",
             "/view?filename=b2.png&type=output",
         ]
-        assert rows[0]["name"] == "ImageStage #1"
-        assert rows[1]["name"] == "ImageStage #2"
+        assert [r["name"] for r in rows] == ["", ""]
 
     def test_skips_non_media_and_non_view(self, eagle_env):
         from ComfyTV import storage
@@ -524,6 +523,29 @@ class TestProbeModes:
         assert status["online"] is True
         assert status["library_match"] is False
         assert status["mode"] == "disk"
+
+    async def test_send_now_names_the_item_after_the_file(self, eagle_env, monkeypatch, tmp_path):
+        from ComfyTV.runners import eagle
+        sent = []
+
+        async def _fake_request(method, path, **kw):
+            if path == "/api/application/info":
+                return {"version": "4.0.0"}
+            if path == "/api/library/info":
+                return {"library": {"path": str(eagle_env)}}
+            sent.append(kw["json_body"])
+            return {}
+
+        async def _no_folder(name):
+            return None
+
+        monkeypatch.setattr(eagle, "_request", _fake_request)
+        monkeypatch.setattr(eagle, "_probe_cache", {"at": 0.0, "status": None})
+        monkeypatch.setattr(eagle, "find_or_create_folder", _no_folder)
+        f = tmp_path / "2026-10-05_sd15_42_00001_.png"
+        f.write_bytes(b"x")
+        await eagle.send_now(f)
+        assert sent[0]["name"] == "2026-10-05_sd15_42_00001_"
 
     async def test_send_now_refuses_on_mismatch(self, eagle_env, monkeypatch, tmp_path):
         from ComfyTV.runners import eagle

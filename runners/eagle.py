@@ -449,13 +449,9 @@ def auto_send_output(*, payload_url: str, output_type: str,
     annotation = format_annotation(
         stage_class=stage_class, project_name=project_name, params=params)
     tags = ["comfytv"] + ([project_name] if project_name else [])
-    for i, url in enumerate(urls):
-        name = stage_class or ""
-        if len(urls) > 1:
-            name = f"{name} #{i + 1}".strip()
+    for url in urls:
         storage.enqueue_eagle_send(
             payload_url=url,
-            name=name,
             tags=tags,
             annotation=annotation or None,
             folder=project_name or None,

@@ -59774,7 +59774,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-DY81G1mS.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-QgHO4te9.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -86610,7 +86610,7 @@ const _sfc_main$4p = /* @__PURE__ */ defineComponent({
       }
     });
     const AgentPanelRoot = /* @__PURE__ */ defineAsyncComponent({
-      loader: () => import("./AgentPanelRoot-C-e7EH2t.mjs"),
+      loader: () => import("./AgentPanelRoot-DuQAmb6C.mjs"),
       errorComponent: AgentPanelLoadError,
       onError: (error2, _retry, fail) => {
         reportError(error2, { errorType: "agent_panel_load_failure" });
@@ -149223,7 +149223,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-DyirNINg.mjs");
+    const { STLLoader } = await import("./STLLoader-sLrKVZoU.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -149231,7 +149231,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-Dit7JA2f.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-DXMyrcfE.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -231809,12 +231809,13 @@ function spawnPanoramaView(srcNode, mode) {
   setWidget(node, "view_count", mode === "four" ? 4 : 12);
 }
 async function spawnAssetImageLoader(srcNode, url, label, mediaType = "image") {
+  var _a2;
   const assetStore2 = useAssetStore();
   await assetStore2.hydrate();
   let asset = assetStore2.byPayloadUrl(url) ?? null;
   if (!asset) {
     asset = await assetStore2.create({
-      name: label || mediaType,
+      name: ((_a2 = extractFilenameFromUrl(url)) == null ? void 0 : _a2.replace(/\.[^.]+$/, "")) || label || mediaType,
       payload_url: url,
       media_type: mediaType,
       category_ids: []
@@ -245164,4 +245165,4 @@ export {
   DropdownMenuRoot_default as y,
   DropdownMenuTrigger_default as z
 };
-//# sourceMappingURL=main-hv189Cl5.mjs.map
+//# sourceMappingURL=main-CgtxvwZl.mjs.map

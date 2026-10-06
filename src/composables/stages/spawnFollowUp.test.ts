@@ -500,6 +500,14 @@ describe('spawnAssetImageLoader', () => {
       .toHaveBeenCalledWith(asset, [440, 200])
   })
 
+  it('names the asset after the output file rather than its batch label', async () => {
+    const asset = { id: 4, media_type: 'image', payload_url: 'v', category_ids: [] }
+    assetStoreMock.create.mockResolvedValue(asset)
+    await spawnAssetImageLoader(makeNode(), '/view?filename=SD1.5_00146_.png&subfolder=&type=output', '#1')
+    expect(assetStoreMock.create).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'SD1.5_00146_' }))
+  })
+
   it('falls back to the media type as name when label omitted', async () => {
     const asset = { id: 3, media_type: 'image', payload_url: 'u', category_ids: [] }
     assetStoreMock.create.mockResolvedValue(asset)
