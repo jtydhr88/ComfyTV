@@ -1,0 +1,36 @@
+{
+  "label":       "Qwen Image 2.1 Outpaint",
+  "order":       15,
+  "description": "Outpaint via Qwen Image 2.1 editing (no Fill model needed): the new area is padded white and the model is told to continue the scene into it; the prompt describes the scene. The original pixels are pasted back with a feathered edge, so only the extended area is new. Output size = source + pads.",
+
+  "result": { "type": "ui_save_url", "node": "9" },
+
+  "inputs": {
+    "11": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "Outpaint needs an upstream image — wire one into the stage's image input."
+      }
+    },
+    "25": {
+      "string_b": { "from": "main_prompt", "default": "" }
+    },
+    "7": {
+      "seed": { "from": "option:seed", "default": "random_int31", "cast": "int" }
+    },
+    "21": {
+      "left":   { "from": "option:pad_left",   "default": "0", "cast": "int" },
+      "top":    { "from": "option:pad_top",    "default": "0", "cast": "int" },
+      "right":  { "from": "option:pad_right",  "default": "0", "cast": "int" },
+      "bottom": { "from": "option:pad_bottom", "default": "0", "cast": "int" }
+    },
+    "27": {
+      "left":       { "from": "option:pad_left",   "default": "0",  "cast": "int" },
+      "top":        { "from": "option:pad_top",    "default": "0",  "cast": "int" },
+      "right":      { "from": "option:pad_right",  "default": "0",  "cast": "int" },
+      "bottom":     { "from": "option:pad_bottom", "default": "0",  "cast": "int" },
+      "feathering": { "from": "option:feathering", "default": "40", "cast": "int" }
+    }
+  }
+}

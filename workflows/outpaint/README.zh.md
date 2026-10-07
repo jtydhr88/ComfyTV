@@ -27,6 +27,7 @@
 
 - **Flux Fill Outpaint**（`flux-fill-outpaint.json` + `_preset.json`）, Flux Fill Dev fp8 outpaint，走 `ImagePadForOutpaint` + `InpaintModelConditioning`。测试通过。**不依赖第三方插件。**
 - **Fooocus SDXL Outpaint**（`fooocus-sdxl-outpaint.json` + `_preset.json`）, 改自 Acly 的 `comfyui-inpaint-nodes` 插件 `outpaint.json` 模板。SDXL base + Fooocus inpaint head/patch + `MaskedFill` / `MaskedBlur` 预填新 pad 区域。**需要安装插件 + 额外模型文件** , 见下文「可选：Fooocus 变种」。
+- **Qwen Image 2.1 Outpaint**（`qwen-image-2.1-outpaint.json` + `_preset.json`）, Qwen Image 2.1 没有 Fill 模型，所以走编辑：`ImagePadForOutpaint` + `EmptyImage` + `ImageCompositeMasked` 把新区域涂白，`TextEncodeQwenImage21` 收这张图，提示词是固定的「把白边延续成画面」指令后接 stage 的提示词（`StringConcatenate`），最后第二个 `ImagePadForOutpaint`（用 stage 的羽化）把原图像素贴回结果上。填充色就是 `EmptyImage` 的颜色。25 步，cfg 1。测试通过（5090 热启动 6~10 秒）。**不依赖第三方插件。**
 
 ## 需要的模型
 
@@ -34,6 +35,8 @@
 - `flux1-fill-dev_fp8.safetensors` , 和 Flux Fill Inpaint 同一个模型
 - `clip_l.safetensors` + `t5xxl_fp16.safetensors` , 放进 `models/clip/`
 - `ae.safetensors` , 放进 `models/vae/`
+
+**Qwen Image 2.1 Outpaint：** 和 Qwen Image 2.1 Edit 同一套, `qwen_image_2.1_int8_convrot.safetensors`(diffusion_models)、`qwen3vl_8b_int8_convrot.safetensors`(text_encoders)、`qwen_image_2.1_vae_bf16.safetensors`(vae), <https://huggingface.co/Comfy-Org/Qwen-Image-2.1>
 
 ## 可选：Fooocus SDXL 变种
 

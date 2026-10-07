@@ -27,6 +27,7 @@ To add your own workflow see [docs/custom-workflows.md](../../docs/custom-workfl
 
 - **Flux Fill Outpaint** (`flux-fill-outpaint.json` + `_preset.json`) — Flux Fill Dev fp8 outpaint via `ImagePadForOutpaint` + `InpaintModelConditioning`. Tested working. **No third-party plugins required.**
 - **Fooocus SDXL Outpaint** (`fooocus-sdxl-outpaint.json` + `_preset.json`) — Adapted from Acly's `comfyui-inpaint-nodes` plugin `outpaint.json` template. SDXL base + Fooocus inpaint head/patch + `MaskedFill` / `MaskedBlur` pre-fill for the new pad area. **Requires the plugin installed + extra model files** — see "Optional: Fooocus variant" below.
+- **Qwen Image 2.1 Outpaint** (`qwen-image-2.1-outpaint.json` + `_preset.json`) — Qwen Image 2.1 has no Fill model, so this is an edit: `ImagePadForOutpaint` + `EmptyImage` + `ImageCompositeMasked` paint the new area white, `TextEncodeQwenImage21` gets that image with a fixed "continue the scene into the white border" instruction followed by the stage prompt (`StringConcatenate`), and a second `ImagePadForOutpaint` (stage feathering) pastes the original pixels back over the result. The fill color is the `EmptyImage` color. 25 steps, cfg 1. Tested working (6–10 s warm on a 5090). **No third-party plugins required.**
 
 ## Models referenced
 
@@ -34,6 +35,8 @@ To add your own workflow see [docs/custom-workflows.md](../../docs/custom-workfl
 - `flux1-fill-dev_fp8.safetensors` — same model as Flux Fill Inpaint
 - `clip_l.safetensors` + `t5xxl_fp16.safetensors` → `models/clip/`
 - `ae.safetensors` → `models/vae/`
+
+**Qwen Image 2.1 Outpaint:** same models as Qwen Image 2.1 Edit — `qwen_image_2.1_int8_convrot.safetensors` (diffusion_models), `qwen3vl_8b_int8_convrot.safetensors` (text_encoders), `qwen_image_2.1_vae_bf16.safetensors` (vae), <https://huggingface.co/Comfy-Org/Qwen-Image-2.1>
 
 ## Optional: Fooocus SDXL variant
 

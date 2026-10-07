@@ -67,6 +67,8 @@
 !outpaint/flux-fill-outpaint_preset.json
 !outpaint/fooocus-sdxl-outpaint.json
 !outpaint/fooocus-sdxl-outpaint_preset.json
+!outpaint/qwen-image-2.1-outpaint.json
+!outpaint/qwen-image-2.1-outpaint_preset.json
 !panorama/qwen-edit-2511-img2pano.json
 !panorama/qwen-edit-2511-img2pano_preset.json
 !panorama/qwen-image-2512-360.json

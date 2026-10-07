@@ -1,0 +1,993 @@
+{
+  "id": "7a1f3c52-21d0-4c8e-9b77-5e0a2b6d9c14",
+  "revision": 0,
+  "last_node_id": 28,
+  "last_link_id": 26,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "UNETLoader",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        300,
+        120
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UNETLoader"
+      },
+      "widgets_values": [
+        "qwen_image_2.1_int8_convrot.safetensors",
+        "default"
+      ]
+    },
+    {
+      "id": 2,
+      "type": "QwenImage21Cache",
+      "pos": [
+        380,
+        40
+      ],
+      "size": [
+        300,
+        120
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            13
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "QwenImage21Cache"
+      },
+      "widgets_values": [
+        "auto",
+        "default"
+      ]
+    },
+    {
+      "id": 3,
+      "type": "CLIPLoader",
+      "pos": [
+        40,
+        200
+      ],
+      "size": [
+        300,
+        120
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            9
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPLoader"
+      },
+      "widgets_values": [
+        "qwen3vl_8b_int8_convrot.safetensors",
+        "qwen_image",
+        "default"
+      ]
+    },
+    {
+      "id": 4,
+      "type": "VAELoader",
+      "pos": [
+        40,
+        380
+      ],
+      "size": [
+        300,
+        120
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            10,
+            18
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "qwen_image_2.1_vae_bf16.safetensors"
+      ]
+    },
+    {
+      "id": 11,
+      "type": "LoadImage",
+      "pos": [
+        40,
+        520
+      ],
+      "size": [
+        300,
+        120
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            2,
+            22
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "title": "Source image"
+    },
+    {
+      "id": 21,
+      "type": "ImagePadForOutpaint",
+      "pos": [
+        380,
+        520
+      ],
+      "size": [
+        300,
+        120
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            3,
+            6
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            8
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImagePadForOutpaint"
+      },
+      "widgets_values": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "title": "Pad (white fill area)"
+    },
+    {
+      "id": 22,
+      "type": "GetImageSize",
+      "pos": [
+        700,
+        520
+      ],
+      "size": [
+        300,
+        120
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "width",
+          "type": "INT",
+          "links": [
+            4,
+            20
+          ]
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "links": [
+            5,
+            21
+          ]
+        },
+        {
+          "name": "batch_size",
+          "type": "INT",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "GetImageSize"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 23,
+      "type": "EmptyImage",
+      "pos": [
+        980,
+        520
+      ],
+      "size": [
+        300,
+        120
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "width",
+          "type": "INT",
+          "link": 4,
+          "widget": {
+            "name": "width"
+          }
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": 5,
+          "widget": {
+            "name": "height"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            7
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyImage"
+      },
+      "widgets_values": [
+        512,
+        512,
+        1,
+        16777215
+      ],
+      "title": "Fill color"
+    },
+    {
+      "id": 24,
+      "type": "ImageCompositeMasked",
+      "pos": [
+        1260,
+        520
+      ],
+      "size": [
+        300,
+        120
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "destination",
+          "type": "IMAGE",
+          "link": 6
+        },
+        {
+          "name": "source",
+          "type": "IMAGE",
+          "link": 7
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            11
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageCompositeMasked"
+      },
+      "widgets_values": [
+        0,
+        0,
+        false
+      ],
+      "title": "White-padded input"
+    },
+    {
+      "id": 25,
+      "type": "StringConcatenate",
+      "pos": [
+        380,
+        200
+      ],
+      "size": [
+        300,
+        120
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            12
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StringConcatenate"
+      },
+      "widgets_values": [
+        "Outpaint the image: fill the solid white border areas with a seamless, natural continuation of the scene, matching perspective, lighting and style. Keep the original picture in the center unchanged.",
+        "",
+        " Scene: "
+      ],
+      "title": "Outpaint instruction + scene"
+    },
+    {
+      "id": 6,
+      "type": "TextEncodeQwenImage21",
+      "pos": [
+        1560,
+        200
+      ],
+      "size": [
+        300,
+        120
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 9
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 10
+        },
+        {
+          "name": "images.image_1",
+          "type": "IMAGE",
+          "link": 11
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": 12,
+          "widget": {
+            "name": "prompt"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            14
+          ]
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "links": [
+            15
+          ]
+        },
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "links": [
+            16
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "TextEncodeQwenImage21"
+      },
+      "widgets_values": [
+        "",
+        "",
+        0
+      ]
+    },
+    {
+      "id": 7,
+      "type": "KSampler",
+      "pos": [
+        1900,
+        40
+      ],
+      "size": [
+        300,
+        120
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 13
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 14
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 15
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 16
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            17
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        0,
+        "randomize",
+        25,
+        1,
+        "euler",
+        "simple",
+        1
+      ]
+    },
+    {
+      "id": 8,
+      "type": "VAEDecode",
+      "pos": [
+        2240,
+        40
+      ],
+      "size": [
+        300,
+        120
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 17
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 18
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            19
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 26,
+      "type": "ImageScale",
+      "pos": [
+        2240,
+        200
+      ],
+      "size": [
+        300,
+        120
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 19
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "link": 20,
+          "widget": {
+            "name": "width"
+          }
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": 21,
+          "widget": {
+            "name": "height"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            24
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageScale"
+      },
+      "widgets_values": [
+        "lanczos",
+        512,
+        512,
+        "disabled"
+      ],
+      "title": "Back to padded size"
+    },
+    {
+      "id": 27,
+      "type": "ImagePadForOutpaint",
+      "pos": [
+        1900,
+        520
+      ],
+      "size": [
+        300,
+        120
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 22
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            23
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            25
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImagePadForOutpaint"
+      },
+      "widgets_values": [
+        0,
+        0,
+        0,
+        0,
+        40
+      ],
+      "title": "Pad (paste-back blend)"
+    },
+    {
+      "id": 28,
+      "type": "ImageCompositeMasked",
+      "pos": [
+        2560,
+        200
+      ],
+      "size": [
+        300,
+        120
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "destination",
+          "type": "IMAGE",
+          "link": 23
+        },
+        {
+          "name": "source",
+          "type": "IMAGE",
+          "link": 24
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 25
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            26
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageCompositeMasked"
+      },
+      "widgets_values": [
+        0,
+        0,
+        false
+      ],
+      "title": "Keep original pixels"
+    },
+    {
+      "id": 9,
+      "type": "SaveImage",
+      "pos": [
+        2880,
+        200
+      ],
+      "size": [
+        300,
+        120
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 26
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "comfytv-qwen21-outpaint"
+      ]
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      0,
+      2,
+      0,
+      "MODEL"
+    ],
+    [
+      2,
+      11,
+      0,
+      21,
+      0,
+      "IMAGE"
+    ],
+    [
+      3,
+      21,
+      0,
+      22,
+      0,
+      "IMAGE"
+    ],
+    [
+      4,
+      22,
+      0,
+      23,
+      0,
+      "INT"
+    ],
+    [
+      5,
+      22,
+      1,
+      23,
+      1,
+      "INT"
+    ],
+    [
+      6,
+      21,
+      0,
+      24,
+      0,
+      "IMAGE"
+    ],
+    [
+      7,
+      23,
+      0,
+      24,
+      1,
+      "IMAGE"
+    ],
+    [
+      8,
+      21,
+      1,
+      24,
+      2,
+      "MASK"
+    ],
+    [
+      9,
+      3,
+      0,
+      6,
+      0,
+      "CLIP"
+    ],
+    [
+      10,
+      4,
+      0,
+      6,
+      1,
+      "VAE"
+    ],
+    [
+      11,
+      24,
+      0,
+      6,
+      2,
+      "IMAGE"
+    ],
+    [
+      12,
+      25,
+      0,
+      6,
+      3,
+      "STRING"
+    ],
+    [
+      13,
+      2,
+      0,
+      7,
+      0,
+      "MODEL"
+    ],
+    [
+      14,
+      6,
+      0,
+      7,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      15,
+      6,
+      1,
+      7,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      16,
+      6,
+      2,
+      7,
+      3,
+      "LATENT"
+    ],
+    [
+      17,
+      7,
+      0,
+      8,
+      0,
+      "LATENT"
+    ],
+    [
+      18,
+      4,
+      0,
+      8,
+      1,
+      "VAE"
+    ],
+    [
+      19,
+      8,
+      0,
+      26,
+      0,
+      "IMAGE"
+    ],
+    [
+      20,
+      22,
+      0,
+      26,
+      1,
+      "INT"
+    ],
+    [
+      21,
+      22,
+      1,
+      26,
+      2,
+      "INT"
+    ],
+    [
+      22,
+      11,
+      0,
+      27,
+      0,
+      "IMAGE"
+    ],
+    [
+      23,
+      27,
+      0,
+      28,
+      0,
+      "IMAGE"
+    ],
+    [
+      24,
+      26,
+      0,
+      28,
+      1,
+      "IMAGE"
+    ],
+    [
+      25,
+      27,
+      1,
+      28,
+      2,
+      "MASK"
+    ],
+    [
+      26,
+      28,
+      0,
+      9,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.6,
+      "offset": [
+        0,
+        0
+      ]
+    }
+  },
+  "version": 0.4
+}
