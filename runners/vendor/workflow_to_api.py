@@ -175,10 +175,10 @@ def convert_ui_to_api(workflow: dict, object_info: dict) -> dict:
                 bypassed=bypassed,
                 nodes_to_exclude=nodes_to_exclude,
             )
-        except Exception:
-            # An individual malformed node should not torpedo the whole prompt.
-            # The executor will fail loudly on missing nodes if this matters.
-            logger.exception("Failed to convert node id=%s type=%s; skipping", node_id_str, node_type)
+        except Exception as e:
+            raise WorkflowConversionError(
+                f"Failed to convert node #{node_id_str} ({node_type}): {type(e).__name__}: {e}"
+            ) from e
 
     _strip_orphan_link_inputs(api_prompt)
     _overlay_promoted_host_values(api_prompt, workflow, subgraph_defs)

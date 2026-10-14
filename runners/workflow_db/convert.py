@@ -49,7 +49,7 @@ def build_object_info() -> dict:
         for name, cls in mappings.items():
             schema = _node_schema(name, cls)
             if schema is not None:
-                out[name] = schema
+                out[name] = json.loads(json.dumps(schema, default=str))
 
     if cache_ctx is not None:
         with cache_ctx:

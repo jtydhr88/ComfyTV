@@ -997,11 +997,9 @@ class TestMalformedInputHardening:
             result = convert_ui_to_api(workflow, object_info)
             assert "1" in result
 
-    def test_single_bad_node_does_not_abort_conversion(self, object_info, caplog):
+    def test_bad_node_aborts_conversion_naming_the_node(self, object_info):
         # We can't easily induce _build_api_node to throw on real input, so
         # monkeypatch it for this test.
-        import logging
-
         from ComfyTV.runners.vendor import workflow_to_api as mod
 
         workflow = {
@@ -1022,13 +1020,11 @@ class TestMalformedInputHardening:
 
         mod._build_api_node = flaky_build
         try:
-            with caplog.at_level(logging.ERROR, logger="ComfyTV.runners.vendor.workflow_to_api"):
-                result = convert_ui_to_api(workflow, object_info)
+            with pytest.raises(WorkflowConversionError,
+                               match=r"node #1 \(EmptyLatentImage\): RuntimeError: simulated converter bug"):
+                convert_ui_to_api(workflow, object_info)
         finally:
             mod._build_api_node = original_build
-        # The second node still made it in even though the first crashed.
-        assert "2" in result
-        assert any("Failed to convert node" in rec.message for rec in caplog.records)
 
 
 class TestControlAfterGenerate:
