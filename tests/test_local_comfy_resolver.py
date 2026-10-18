@@ -237,6 +237,17 @@ class TestAutoDetectResult:
             "type": "ui_save_url", "node": "9",
         }
 
+    def test_saveimage_advanced_image_kind_is_batch(self):
+        wf = {"12": {"class_type": "SaveImageAdvanced", "inputs": {}}}
+        assert lc._auto_detect_result(wf, "image") == {
+            "type": "ui_save_batch", "node": "12",
+        }
+
+    def test_saveimage_advanced_inpaint_kind_is_url(self):
+        wf = {"12": {"class_type": "SaveImageAdvanced", "inputs": {}}}
+        assert lc._auto_detect_result(wf, "inpaint") == {
+            "type": "ui_save_url", "node": "12",
+        }
     def test_save_video(self):
         wf = {"5": {"class_type": "SaveVideo", "inputs": {}}}
         assert lc._auto_detect_result(wf, "video") == {
