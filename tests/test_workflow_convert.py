@@ -34,6 +34,23 @@ class _Broken:
         raise RuntimeError("boom")
 
 
+class _AnyType(str):
+    def __eq__(self, _):
+        return True
+
+    def __ne__(self, _):
+        return False
+
+
+class _Passthrough:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {"reserved": ("FLOAT", {"default": 0.6})},
+            "optional": {"anything": (_AnyType("*"), {})},
+        }
+
+
 class _V3Style:
     @classmethod
     def GET_NODE_INFO_V1(cls):
@@ -66,6 +83,7 @@ GUI_DOC = {
 def registry(comfy_nodes):
     comfy_nodes.NODE_CLASS_MAPPINGS.update({
         "Gen": _Gen, "Save": _Save, "Broken": _Broken, "V3Style": _V3Style,
+        "Passthrough": _Passthrough,
     })
     return comfy_nodes
 
@@ -73,7 +91,7 @@ def registry(comfy_nodes):
 class TestBuildObjectInfo:
     def test_builds_schema_from_input_types(self, registry):
         info = conv.build_object_info()
-        assert info["Gen"]["input"] == _Gen.INPUT_TYPES()
+        assert info["Gen"]["input"] == json.loads(json.dumps(_Gen.INPUT_TYPES()))
         assert info["Gen"]["input_order"] == {"required": ["text", "steps"]}
         assert info["Gen"]["output_node"] is False
         assert info["Save"]["output_node"] is True
@@ -85,7 +103,11 @@ class TestBuildObjectInfo:
 
     def test_prefers_get_node_info_v1(self, registry):
         info = conv.build_object_info()
-        assert info["V3Style"]["input"]["required"]["value"] == ("INT", {"default": 1})
+        assert info["V3Style"]["input"]["required"]["value"] == ["INT", {"default": 1}]
+
+    def test_any_type_input_becomes_plain_string(self, registry):
+        spec = conv.build_object_info()["Passthrough"]["input"]["optional"]["anything"]
+        assert type(spec[0]) is str and spec[0] == "*"
 
     def test_empty_registry(self, comfy_nodes):
         assert conv.build_object_info() == {}
@@ -98,6 +120,23 @@ class TestConvertGuiToApi:
         assert api["1"]["inputs"]["text"] == "hello"
         assert api["1"]["inputs"]["steps"] == 30
         assert api["2"]["inputs"]["images"] == ["1", 0]
+
+    def test_any_type_node_keeps_downstream_link(self, registry):
+        doc = {
+            "nodes": [
+                {"id": 1, "type": "Gen", "widgets_values": ["hello", 30], "inputs": [],
+                 "outputs": [{"name": "IMAGE", "type": "IMAGE", "links": [7]}]},
+                {"id": 2, "type": "Passthrough", "widgets_values": [0.8],
+                 "inputs": [{"name": "anything", "type": "*", "link": 7}],
+                 "outputs": [{"name": "*", "type": "*", "links": [8]}]},
+                {"id": 3, "type": "Save",
+                 "inputs": [{"name": "images", "type": "IMAGE", "link": 8}], "outputs": []},
+            ],
+            "links": [[7, 1, 0, 2, 0, "IMAGE"], [8, 2, 0, 3, 0, "*"]],
+        }
+        api = conv.convert_gui_to_api(doc)
+        assert api["2"]["inputs"] == {"reserved": 0.8, "anything": ["1", 0]}
+        assert api["3"]["inputs"]["images"] == ["2", 0]
 
     def test_api_format_passes_through(self, registry):
         prompt = {"3": {"class_type": "Gen", "inputs": {"steps": 5}}}

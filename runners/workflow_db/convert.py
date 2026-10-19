@@ -48,8 +48,12 @@ def build_object_info() -> dict:
     def _build() -> None:
         for name, cls in mappings.items():
             schema = _node_schema(name, cls)
-            if schema is not None:
-                out[name] = schema
+            if schema is None:
+                continue
+            try:
+                out[name] = json.loads(json.dumps(schema))
+            except (TypeError, ValueError) as e:
+                _log.warning("[ComfyTV/convert] schema of %s is not JSON-serializable: %s", name, e)
 
     if cache_ctx is not None:
         with cache_ctx:
