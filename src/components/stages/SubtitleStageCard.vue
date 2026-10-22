@@ -65,7 +65,7 @@
       </details>
 
       <div class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('fx.fontLbl') }}</div>
-      <FxChips v-model="font" :options="FONTS" />
+      <FxChips v-model="font" :options="fontOptions" />
 
       <FxSlider v-model="size" :label="$t('fx.fontSize')" :min="8" :max="200" :step="1" :decimals="0" />
 
@@ -113,6 +113,7 @@ import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
+import { useFontLibrary } from '@/composables/stages/useFontLibrary'
 import { useSubtitleCues } from '@/composables/stages/useSubtitleCues'
 import { useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
 
@@ -125,12 +126,7 @@ const props = defineProps<{
   node: LGraphNode
 }>()
 
-const FONTS = [
-  { value: 'Inter-Regular', label: 'Inter' },
-  { value: 'NotoSansSC-Regular', label: 'Noto SC' },
-  { value: 'msyh', label: '雅黑' },
-  { value: 'arial', label: 'Arial' },
-]
+const { fontOptions } = useFontLibrary()
 
 const ANCHORS = [
   { value: 'bottom', label: 'Bottom' },

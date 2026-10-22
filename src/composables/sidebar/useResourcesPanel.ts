@@ -6,6 +6,7 @@ import { RESOURCE_KINDS } from '@/api'
 import type { Resource, ResourceKind } from '@/api'
 import { askConfirm } from '@/composables/dialog/useConfirmDialog'
 import { askText } from '@/composables/dialog/useTextInputDialog'
+import { notifyFontsChanged } from '@/composables/stages/useFontLibrary'
 
 export const RESOURCE_ACCEPT: Record<ResourceKind, string> = {
   lut: '.cube,.3dl,.dat,.m3d,.csp',
@@ -47,6 +48,7 @@ export function useResourcesPanel(isActive: () => boolean | undefined) {
     loading.value = true
     try {
       resources.value = (await listResources()).resources
+      notifyFontsChanged()
     } catch {
       resources.value = []
     } finally {
