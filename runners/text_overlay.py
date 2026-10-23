@@ -72,6 +72,73 @@ def _font_path(name: str):
     return None
 
 
+_FALLBACK_FONT = _ASSET_FONTS / 'NotoSansSC-Regular.ttf'
+
+
+def _glyph_ink(fnt, ch):
+    from PIL import Image, ImageDraw
+
+    box = fnt.getbbox(ch)
+    if box[2] <= box[0] or box[3] <= box[1]:
+        return None
+    img = Image.new('L', (box[2] - box[0], box[3] - box[1]))
+    ImageDraw.Draw(img).text((-box[0], -box[1]), ch, font=fnt, fill=255)
+    return img.tobytes()
+
+
+def _font_runs(text, fnt, fallback):
+    notdef = _glyph_ink(fnt, '\U0010FFFD')
+    covered = {}
+
+    def font_for(ch):
+        if ch.isspace():
+            return fnt
+        if ch not in covered:
+            ink = _glyph_ink(fnt, ch)
+            covered[ch] = ink is not None and ink != notdef
+        return fnt if covered[ch] else fallback
+
+    lines = []
+    for line in text.split('\n'):
+        runs = []
+        for ch in line:
+            f = font_for(ch)
+            if runs and runs[-1][1] is f:
+                runs[-1][0] += ch
+            else:
+                runs.append([ch, f])
+        lines.append(runs)
+    return lines
+
+
+def _render_runs_rgba(lines, base, *, color, stroke, stroke_color, align,
+                      spacing=4) -> np.ndarray:
+    from PIL import Image, ImageDraw
+
+    pad = 2 + int(stroke)
+    metrics = []
+    for runs in lines:
+        fonts = [f for _, f in runs] or [base]
+        asc = max(f.getmetrics()[0] for f in fonts)
+        desc = max(f.getmetrics()[1] for f in fonts)
+        width = sum(f.getlength(t) for t, f in runs)
+        metrics.append((asc, desc, width))
+    w = max(2, int(math.ceil(max(m[2] for m in metrics))) + 2 * pad)
+    h = max(2, sum(a + d for a, d, _ in metrics)
+            + spacing * (len(lines) - 1) + 2 * pad)
+    img = Image.new('RGBA', (w, h), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    y = pad
+    for runs, (asc, desc, width) in zip(lines, metrics):
+        x = {'left': pad, 'right': w - pad - width}.get(align, (w - width) / 2)
+        for t, f in runs:
+            d.text((x, y + asc), t, font=f, fill=color, anchor='ls',
+                   stroke_width=int(stroke), stroke_fill=stroke_color)
+            x += f.getlength(t)
+        y += asc + desc + spacing
+    return np.asarray(img, dtype=np.uint8)
+
+
 def render_text_rgba(text: str, *, font='', size=48, color='#FFFFFF',
                      stroke=0, stroke_color='#000000',
                      align='center', max_width=0) -> np.ndarray:
@@ -80,6 +147,13 @@ def render_text_rgba(text: str, *, font='', size=48, color='#FFFFFF',
     path = _font_path(font)
     fnt = ImageFont.truetype(path, size=int(size)) if path \
         else ImageFont.load_default()
+
+    if path and _FALLBACK_FONT.exists() and Path(path) != _FALLBACK_FONT:
+        fallback = ImageFont.truetype(str(_FALLBACK_FONT), size=int(size))
+        lines = _font_runs(text, fnt, fallback)
+        if any(f is fallback for runs in lines for _, f in runs):
+            return _render_runs_rgba(lines, fnt, color=color, stroke=stroke,
+                                     stroke_color=stroke_color, align=align)
 
     probe = Image.new('RGBA', (8, 8))
     d = ImageDraw.Draw(probe)
