@@ -9,6 +9,7 @@
         ? 'ctv:bg-secondary-background-selected ctv:border-primary-background ctv:text-primary-background'
         : 'ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background'"
       :title="opt.title ?? opt.label"
+      :style="opt.font ? { fontFamily: `${opt.font}, sans-serif` } : undefined"
       @click="$emit('update:modelValue', opt.value)"
     ><span v-if="opt.icon" class="ctv:inline-flex ctv:items-center ctv:justify-center ctv:gap-1 ctv:align-middle">
       <component :is="opt.icon" class="ctv:size-3 ctv:shrink-0" />
@@ -22,7 +23,7 @@ import type { Component } from 'vue'
 
 defineProps<{
   modelValue: string
-  options: { value: string; label: string; title?: string; icon?: Component }[]
+  options: { value: string; label: string; title?: string; icon?: Component; font?: string }[]
 }>()
 defineEmits<{ 'update:modelValue': [v: string] }>()
 </script>
