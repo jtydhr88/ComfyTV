@@ -62,3 +62,13 @@ class TestRenderFallback:
         h = left.shape[0]
         assert left[h // 2:, :left.shape[1] // 3, 3].any()
         assert right[h // 2:, -right.shape[1] // 3:, 3].any()
+
+
+class TestFontLabel:
+    def test_labels_share_one_em_box_and_fall_back_for_cjk(self):
+        from ComfyTV.runners.text_overlay import render_font_label
+        inter = render_font_label("Inter", "Inter-Regular")
+        noto = render_font_label("Noto SC", "NotoSansSC-Regular")
+        cjk = render_font_label("雅黑", "Inter-Regular")
+        assert inter.shape[0] == noto.shape[0] == cjk.shape[0]
+        assert cjk[..., 3].any()

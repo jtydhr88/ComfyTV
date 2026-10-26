@@ -9,12 +9,15 @@
         ? 'ctv:bg-secondary-background-selected ctv:border-primary-background ctv:text-primary-background'
         : 'ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background'"
       :title="opt.title ?? opt.label"
-      :style="opt.font ? { fontFamily: `${opt.font}, sans-serif` } : undefined"
       @click="$emit('update:modelValue', opt.value)"
     ><span v-if="opt.icon" class="ctv:inline-flex ctv:items-center ctv:justify-center ctv:gap-1 ctv:align-middle">
       <component :is="opt.icon" class="ctv:size-3 ctv:shrink-0" />
       <span>{{ opt.label }}</span>
-    </span><template v-else>{{ opt.label }}</template></button>
+    </span><span
+      v-else-if="opt.image"
+      class="ctv:inline-block ctv:align-middle ctv:bg-current"
+      :style="{ maskImage: `url(${opt.image})`, maskSize: '100% 100%' }"
+    ><img :src="opt.image" :alt="opt.label" class="ctv:block ctv:h-[1.6em] ctv:w-auto ctv:opacity-0"></span><template v-else>{{ opt.label }}</template></button>
   </div>
 </template>
 
@@ -23,7 +26,7 @@ import type { Component } from 'vue'
 
 defineProps<{
   modelValue: string
-  options: { value: string; label: string; title?: string; icon?: Component; font?: string }[]
+  options: { value: string; label: string; title?: string; icon?: Component; image?: string }[]
 }>()
 defineEmits<{ 'update:modelValue': [v: string] }>()
 </script>

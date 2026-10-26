@@ -38,6 +38,22 @@ async def get_text_font(request: web.Request) -> web.Response:
     return web.FileResponse(path)
 
 
+@routes.get('/comfytv/text_font_thumb')
+async def get_text_font_thumb(request: web.Request) -> web.Response:
+    import io as _io
+
+    from PIL import Image
+
+    from ..runners.text_overlay import render_font_label
+
+    arr = render_font_label(request.query.get('text', ''),
+                            request.query.get('name', ''))
+    buf = _io.BytesIO()
+    Image.fromarray(arr).save(buf, format='PNG')
+    return web.Response(body=buf.getvalue(), content_type='image/png',
+                        headers={'Cache-Control': 'public, max-age=86400'})
+
+
 @routes.get('/comfytv/luma_map')
 async def get_luma_map(request: web.Request) -> web.Response:
     import io as _io

@@ -168,6 +168,22 @@ def render_text_rgba(text: str, *, font='', size=48, color='#FFFFFF',
     return np.asarray(img, dtype=np.uint8)
 
 
+def render_font_label(text: str, font: str, size=32) -> np.ndarray:
+    from PIL import Image, ImageDraw, ImageFont
+
+    fnt = ImageFont.truetype(_font_path(font), size=size)
+    fallback = ImageFont.truetype(str(_FALLBACK_FONT), size=size)
+    runs = _font_runs(text.replace('\n', ' '), fnt, fallback)[0]
+    w = max(2, int(math.ceil(sum(f.getlength(t) for t, f in runs))) + 4)
+    img = Image.new('RGBA', (w, round(size * 1.4)), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    x = 2
+    for t, f in runs:
+        d.text((x, size * 1.1), t, font=f, fill='#FFFFFF', anchor='ls')
+        x += f.getlength(t)
+    return np.asarray(img, dtype=np.uint8)
+
+
 _ANCHORS = ('top-left', 'top', 'top-right', 'left', 'center', 'right',
             'bottom-left', 'bottom', 'bottom-right')
 

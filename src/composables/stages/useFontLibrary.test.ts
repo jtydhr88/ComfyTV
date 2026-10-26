@@ -9,7 +9,7 @@ vi.mock('@/api', () => ({
 
 import { notifyFontsChanged, useFontLibrary } from './useFontLibrary'
 
-function fontRow(name: string, filename: string, missing = false) {
+function fontRow(name: string, filename: string, missing = false, sha256: string | null = null) {
   return {
     id: 1,
     kind: 'font',
@@ -17,7 +17,7 @@ function fontRow(name: string, filename: string, missing = false) {
     filename,
     subfolder: 'comfytv/fonts',
     size: 10,
-    sha256: null,
+    sha256,
     created_at: null,
     url: `/view?filename=${filename}&subfolder=comfytv/fonts&type=input`,
     missing,
@@ -84,6 +84,15 @@ describe('useFontLibrary', () => {
     notifyFontsChanged()
     await flushPromises()
     expect(values(api)[0]).toBe('BrandSans')
+  })
+
+  it('gives every choice a thumbnail keyed by the uploaded file hash', async () => {
+    listResources.mockResolvedValue({ resources: [fontRow('BrandSans', 'BrandSans.ttf', false, 'abc')] })
+    const api = setup()
+    await flushPromises()
+    const [brand, inter] = api.fontOptions.value
+    expect(brand!.image).toBe('/comfytv/text_font_thumb?name=BrandSans&text=BrandSans&v=abc')
+    expect(inter!.image).toBe('/comfytv/text_font_thumb?name=Inter-Regular&text=Inter&v=')
   })
 
   it('keeps the built-in fonts when listing fails', async () => {

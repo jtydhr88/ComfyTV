@@ -1,8 +1,12 @@
 import { useEventListener, useRafFn } from '@vueuse/core'
 import { ref, watch, watchEffect, type Ref } from 'vue'
 
-import { loadFont, type LoadedFont } from '@/composables/stages/useFontLibrary'
-import { placeBlock, type OverlayText } from '@/composables/stages/textOverlayLayout'
+import {
+  cmapCoverage,
+  opszDefault,
+  placeBlock,
+  type OverlayText,
+} from '@/composables/stages/textOverlayLayout'
 
 export interface TextOverlayStyle {
   font: string
@@ -13,9 +17,33 @@ export interface TextOverlayStyle {
   anchor: string
 }
 
+interface LoadedFont {
+  family: string
+  opsz: number | null
+  covers: Set<number>
+}
+
 const FALLBACK_FONT = 'NotoSansSC-Regular'
 const LINE_GAP = 4
 const MAX_SIDE = 1920
+
+const loadedFonts = new Map<string, Promise<LoadedFont>>()
+
+function loadFont(name: string): Promise<LoadedFont> {
+  let font = loadedFonts.get(name)
+  if (!font) {
+    const family = `ctv-text-${loadedFonts.size}`
+    font = fetch(`/comfytv/text_font?name=${encodeURIComponent(name)}`)
+      .then((r) => r.arrayBuffer())
+      .then(async (buf) => {
+        document.fonts.add(await new FontFace(family, buf).load())
+        return { family, opsz: opszDefault(buf), covers: cmapCoverage(buf) }
+      })
+      .catch(() => ({ family: 'sans-serif', opsz: null, covers: new Set<number>() }))
+    loadedFonts.set(name, font)
+  }
+  return font
+}
 
 export function useTextOverlayPreview(opts: {
   canvas: Ref<HTMLCanvasElement | null>
