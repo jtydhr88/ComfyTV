@@ -98,7 +98,10 @@ def _rmtree(path: Path) -> None:
     def _onexc(fn, p, _exc):
         os.chmod(p, stat.S_IWRITE)
         fn(p)
-    shutil.rmtree(path, onexc=_onexc)
+    try:
+        shutil.rmtree(path, onexc=_onexc)
+    except TypeError:
+        shutil.rmtree(path, onerror=_onexc)
 
 
 @routes.post("/comfytv/skills/import")
