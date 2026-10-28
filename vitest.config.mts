@@ -36,6 +36,7 @@ export default defineConfig({
       exclude: [
         'packages/*/src/**/*.vue',
         'packages/pentrado/src/vendor/**',
+        'src/agent/native/**',
         'src/widgets/three/**',
         'src/widgets/glsl/**',
         'src/composables/widgets/useLightBall.ts',

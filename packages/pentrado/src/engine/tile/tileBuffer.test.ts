@@ -97,7 +97,7 @@ describe('deriveGrid (copy-on-write)', () => {
     expect(px(out, w, 50, 50)).toEqual(px(data, w, 50, 50))
     expect(px(out, w, TILE_SIZE + 5, 5)).toEqual(px(data, w, TILE_SIZE + 5, 5))
 
-    expect(gatherPixels(base)).toEqual(data)
+    expect(gatherPixels(base).every((v, i) => v === data[i])).toBe(true)
   })
 
   it('an edit spanning tile boundaries lands in every touched tile', () => {

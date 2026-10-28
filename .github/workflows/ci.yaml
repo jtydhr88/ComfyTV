@@ -18,29 +18,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-          run_install: false
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'pnpm'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
       - name: Type check (vue-tsc)
-        run: pnpm typecheck
+        run: npm run typecheck
 
       - name: Test with coverage (enforces thresholds)
-        run: pnpm test:coverage
+        run: npm run test:coverage
 
       - name: Build (vite)
-        run: pnpm build
+        run: npm run build
 
       - name: Upload coverage report
         if: always()
@@ -66,7 +60,7 @@ jobs:
       - name: Install test deps
         run: |
           python -m pip install --upgrade pip
-          pip install pytest pytest-asyncio pytest-cov aiohttp sqlalchemy av pillow numpy
+          pip install pytest pytest-asyncio pytest-cov aiohttp sqlalchemy av pillow numpy pyyaml
 
       - name: Run pytest (geometry coverage gate)
         # The mesh3d algorithm tier importorskips torch and is skipped here (same

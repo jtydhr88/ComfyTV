@@ -89,8 +89,11 @@ class TestBotEndpoints:
         assert fake_provider.last_turn.allowed_tools == ["mcp__comfytv__*"]
         assert "/comfytv/mcp?bot_chat=" in fake_provider.last_turn.mcp_endpoint
 
-    def test_claude_argv_disallows_builtin_tools(self):
+    def test_claude_argv_disallows_builtin_tools(self, monkeypatch):
+        from ComfyTV.bot import claude_code
         from ComfyTV.bot.claude_code import ClaudeCodeProvider
+        monkeypatch.setattr(claude_code, "resolve_claude_command",
+                            lambda: ["claude"])
         provider = ClaudeCodeProvider()
         argv = provider._build_argv(TurnRequest(
             chat_id="c", user_text="hi",

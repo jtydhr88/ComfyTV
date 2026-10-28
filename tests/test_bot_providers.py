@@ -171,9 +171,12 @@ class TestStreamInput:
         assert content[1]["source"]["media_type"] == "image/png"
         assert content[2]["text"] == "what is this?"
 
-    def test_argv_switches_to_stream_input(self):
+    def test_argv_switches_to_stream_input(self, monkeypatch):
+        from ComfyTV.bot import claude_code
         from ComfyTV.bot.claude_code import ClaudeCodeProvider
         from ComfyTV.bot.providers import TurnRequest
+        monkeypatch.setattr(claude_code, "resolve_claude_command",
+                            lambda: ["claude"])
         provider = ClaudeCodeProvider(home_dir=".")
         plain = provider._build_argv(TurnRequest(chat_id="c", user_text="hi"))
         assert "hi" in plain
@@ -187,9 +190,12 @@ class TestStreamInput:
 
 
 class TestModelOverride:
-    def test_claude_argv_model(self):
+    def test_claude_argv_model(self, monkeypatch):
+        from ComfyTV.bot import claude_code
         from ComfyTV.bot.claude_code import ClaudeCodeProvider
         from ComfyTV.bot.providers import TurnRequest
+        monkeypatch.setattr(claude_code, "resolve_claude_command",
+                            lambda: ["claude"])
         provider = ClaudeCodeProvider(home_dir=".")
         plain = provider._build_argv(TurnRequest(chat_id="c", user_text="hi"))
         assert "--model" not in plain

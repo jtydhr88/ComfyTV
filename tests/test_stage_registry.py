@@ -11,6 +11,7 @@ def registered():
 
 
 def test_registry_and_stage_meta_only_differ_by_the_documented_sets(registered):
+    pytest.importorskip("torch")
     from ComfyTV.nodes.bridges import ALL_BRIDGES
     from ComfyTV.nodes.stages.common.meta import (
         NON_STAGE_NODES, PENDING_STAGES, STAGE_META,
@@ -22,6 +23,7 @@ def test_registry_and_stage_meta_only_differ_by_the_documented_sets(registered):
 
 
 def test_every_registered_stage_builds_a_schema(registered):
+    pytest.importorskip("torch")
     from ComfyTV.nodes.bridges import ALL_BRIDGES
     bridge_names = {c.__name__ for c in ALL_BRIDGES}
     broken = {}

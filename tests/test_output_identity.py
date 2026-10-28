@@ -113,6 +113,7 @@ class TestPromptUid:
         assert emit._pnginfo_uid(object(), "5") is None
 
     def test_every_registered_stage_declares_extra_pnginfo(self):
+        pytest.importorskip("torch")
         import asyncio
         from comfy_api.latest import io
         from ComfyTV.nodes.stages import ComfyTVExtension

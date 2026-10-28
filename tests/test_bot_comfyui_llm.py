@@ -284,6 +284,7 @@ class TestLogitsPatch:
         assert torch.isfinite(out).all()
 
     def test_skips_non_generate_models(self):
+        pytest.importorskip("torch")
         clip, transformer = self._clip(None)
         transformer.logits = None
         engine._patch_logits(clip)
