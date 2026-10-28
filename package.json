@@ -1,6 +1,6 @@
 {
   "name": "comfytv",
-  "version": "1.11.1",
+  "version": "1.11.2",
   "private": true,
   "license": "MIT",
   "description": "LibTV-style Canvas pipeline for ComfyUI",
