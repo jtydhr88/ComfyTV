@@ -69,7 +69,7 @@ function unmount(mounted: Mounted | null): null {
 }
 
 function overlayRoot(): HTMLElement | null {
-  return document.querySelector('div.absolute.z-999 > div.flex-row')
+  return document.querySelector('#graph-canvas-container > div.absolute.z-999 > div.flex-1')
 }
 
 function actionsBar(): HTMLElement | null {
