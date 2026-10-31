@@ -59800,7 +59800,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-BlH-w-_A.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-CYu78fmW.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -86712,7 +86712,7 @@ const _sfc_main$4t = /* @__PURE__ */ defineComponent({
       }
     });
     const AgentPanelRoot = /* @__PURE__ */ defineAsyncComponent({
-      loader: () => import("./AgentPanelRoot-CX6PahTP.mjs"),
+      loader: () => import("./AgentPanelRoot-Cj_Yzfbp.mjs"),
       errorComponent: AgentPanelLoadError,
       onError: (error2, _retry, fail) => {
         reportError(error2, { errorType: "agent_panel_load_failure" });
@@ -116053,6 +116053,15 @@ const _sfc_main$4g = /* @__PURE__ */ defineComponent({
     const close2 = () => {
       open.value = false;
     };
+    const anchorRef = /* @__PURE__ */ ref();
+    const triggerRef2 = /* @__PURE__ */ ref();
+    useEventListener(() => open.value ? document : null, "pointerdown", (e) => {
+      var _a2, _b2;
+      const target = e.target;
+      if (target.closest("[data-reka-popper-content-wrapper]")) return;
+      if (((_a2 = unrefElement(anchorRef)) == null ? void 0 : _a2.contains(target)) || ((_b2 = unrefElement(triggerRef2)) == null ? void 0 : _b2.contains(target))) return;
+      close2();
+    }, { capture: true });
     watch(open, (isOpen) => {
       if (isOpen) {
         if (closeCurrent && closeCurrent !== close2) closeCurrent();
@@ -116072,22 +116081,26 @@ const _sfc_main$4g = /* @__PURE__ */ defineComponent({
         default: withCtx(() => [
           _ctx.$slots.anchor ? (openBlock(), createBlock(unref(PopoverAnchor_default), {
             key: 0,
+            ref_key: "anchorRef",
+            ref: anchorRef,
             "as-child": ""
           }, {
             default: withCtx(() => [
               renderSlot(_ctx.$slots, "anchor")
             ]),
             _: 3
-          })) : createCommentVNode("", true),
+          }, 512)) : createCommentVNode("", true),
           _ctx.$slots.trigger ? (openBlock(), createBlock(unref(PopoverTrigger_default), {
             key: 1,
+            ref_key: "triggerRef",
+            ref: triggerRef2,
             "as-child": ""
           }, {
             default: withCtx(() => [
               renderSlot(_ctx.$slots, "trigger")
             ]),
             _: 3
-          })) : createCommentVNode("", true),
+          }, 512)) : createCommentVNode("", true),
           createVNode(unref(PopoverPortal_default), null, {
             default: withCtx(() => [
               createVNode(unref(PopoverContent_default), {
@@ -149470,7 +149483,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-BpOiVqAu.mjs");
+    const { STLLoader } = await import("./STLLoader-BJpNq-kv.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -149478,7 +149491,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-CiiBt2mm.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-B4mMPtE2.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -246474,4 +246487,4 @@ export {
   DropdownMenuRoot_default as y,
   DropdownMenuTrigger_default as z
 };
-//# sourceMappingURL=main-BMDXXJMj.mjs.map
+//# sourceMappingURL=main-C3UnYXv7.mjs.map

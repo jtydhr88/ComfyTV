@@ -61,6 +61,46 @@ describe('ComfyTVPopover', () => {
     expect(document.body.querySelector('.panel')).toBeNull()
   })
 
+  it('closes when the pressed element stops propagation, like the canvas does', async () => {
+    await open()
+    const canvas = document.body.appendChild(document.createElement('canvas'))
+    canvas.addEventListener('pointerdown', e => e.stopPropagation())
+    canvas.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }))
+    await flush()
+    expect(document.body.querySelector('.panel')).toBeNull()
+  })
+
+  it('pressing the trigger leaves closing to the trigger click', async () => {
+    await open()
+    document.querySelector('button.t')!.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }))
+    await flush()
+    expect(document.body.querySelector('.panel')).toBeTruthy()
+    document.querySelector('button.t')!.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    await flush()
+    expect(document.body.querySelector('.panel')).toBeNull()
+  })
+
+  it('stays open when the anchor is pressed', async () => {
+    const wrapper = track(mount(AnchorHost, { attachTo: document.body }))
+    ;(wrapper.vm as any).shown = true
+    await flush()
+    const anchor = document.querySelector('.a')!
+    anchor.addEventListener('pointerdown', e => e.stopPropagation())
+    anchor.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }))
+    await flush()
+    expect(document.body.querySelector('.panel')).toBeTruthy()
+  })
+
+  it('stays open when a nested portaled layer is pressed', async () => {
+    await open()
+    const layer = document.body.appendChild(document.createElement('div'))
+    layer.setAttribute('data-reka-popper-content-wrapper', '')
+    layer.addEventListener('pointerdown', e => e.stopPropagation())
+    layer.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }))
+    await flush()
+    expect(document.body.querySelector('.panel')).toBeTruthy()
+  })
+
   it('still dismisses outside after the panel itself was clicked', async () => {
     await open()
     document.body.querySelector('.v2-pop')!

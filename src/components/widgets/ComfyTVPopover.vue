@@ -1,9 +1,9 @@
 <template>
   <PopoverRoot v-model:open="open">
-    <PopoverAnchor v-if="$slots.anchor" as-child>
+    <PopoverAnchor v-if="$slots.anchor" ref="anchorRef" as-child>
       <slot name="anchor" />
     </PopoverAnchor>
-    <PopoverTrigger v-if="$slots.trigger" as-child>
+    <PopoverTrigger v-if="$slots.trigger" ref="triggerRef" as-child>
       <slot name="trigger" />
     </PopoverTrigger>
     <PopoverPortal>
@@ -29,6 +29,7 @@ let closeCurrent: (() => void) | null = null
 </script>
 
 <script setup lang="ts">
+import { unrefElement, useEventListener } from '@vueuse/core'
 import { PopoverAnchor, PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigger } from 'reka-ui'
 import { computed, onScopeDispose, ref, watch } from 'vue'
 
@@ -47,6 +48,16 @@ const open = computed({
   set: (value) => { local.value = value; emit('update:open', value) },
 })
 const close = () => { open.value = false }
+
+const anchorRef = ref()
+const triggerRef = ref()
+
+useEventListener(() => (open.value ? document : null), 'pointerdown', (e: PointerEvent) => {
+  const target = e.target as Element
+  if (target.closest('[data-reka-popper-content-wrapper]')) return
+  if (unrefElement(anchorRef)?.contains(target) || unrefElement(triggerRef)?.contains(target)) return
+  close()
+}, { capture: true })
 
 watch(open, (isOpen) => {
   if (isOpen) {
