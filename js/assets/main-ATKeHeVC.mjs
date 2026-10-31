@@ -59800,7 +59800,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-B_4-pfnJ.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-FOquM1v7.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -86712,7 +86712,7 @@ const _sfc_main$4u = /* @__PURE__ */ defineComponent({
       }
     });
     const AgentPanelRoot = /* @__PURE__ */ defineAsyncComponent({
-      loader: () => import("./AgentPanelRoot-Bl__5kZN.mjs"),
+      loader: () => import("./AgentPanelRoot-Dq7v9LRE.mjs"),
       errorComponent: AgentPanelLoadError,
       onError: (error2, _retry, fail) => {
         reportError(error2, { errorType: "agent_panel_load_failure" });
@@ -149485,7 +149485,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-DRpxpiib.mjs");
+    const { STLLoader } = await import("./STLLoader-B-6JZWTi.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -149493,7 +149493,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-CgyyrR1R.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-CDaOUFwS.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -246339,6 +246339,18 @@ function mountProjectStage(node) {
 const extension = {
   name: "ComfyTV",
   topbarBadges: [execTopbarBadge, collabTopbarBadge],
+  actionBarButtons: [{
+    icon: "icon-[lucide--at-sign]",
+    label: "ComfyTV",
+    tooltip: i18n.global.t("menu.entriesButtonTooltip"),
+    onClick: () => {
+      useDialogStore().show({
+        title: i18n.global.t("menu.entriesTitle"),
+        component: EntryManagerPanel,
+        width: "900px"
+      });
+    }
+  }],
   commands: [
     {
       id: "ComfyTV.openEntryManager",
@@ -246353,7 +246365,7 @@ const extension = {
     }
   ],
   setup() {
-    var _a2, _b2, _c, _d, _e2, _f, _g;
+    var _a2, _b2, _c, _d;
     const selection = useSelectionStore();
     const a2 = app$1;
     installAssetCanvasDrop(pinia);
@@ -246380,33 +246392,11 @@ const extension = {
       resolveStageState: (node) => useStageStore(pinia).getStage(node)
     });
     installExecBadge();
-    try {
-      const ComfyButton = (_b2 = (_a2 = window.comfyAPI) == null ? void 0 : _a2.button) == null ? void 0 : _b2.ComfyButton;
-      const settingsGroup = (_c = a2.menu) == null ? void 0 : _c.settingsGroup;
-      if (ComfyButton && (settingsGroup == null ? void 0 : settingsGroup.append)) {
-        settingsGroup.append(
-          new ComfyButton({
-            icon: "at-sign",
-            tooltip: i18n.global.t("menu.entriesButtonTooltip"),
-            content: "ComfyTV",
-            action: () => {
-              useDialogStore().show({
-                title: i18n.global.t("menu.entriesTitle"),
-                component: EntryManagerPanel,
-                width: "900px"
-              });
-            }
-          })
-        );
-      }
-    } catch (e) {
-      console.warn("[ComfyTV] failed to add top-bar button", e);
-    }
     useEntryStore().installWebSocketSync();
     installWorkflowRegistrySync(a2);
     installAppModeHint(a2);
     try {
-      (_e2 = (_d = a2.api) == null ? void 0 : _d.addEventListener) == null ? void 0 : _e2.call(_d, "comfytv-toast", (event) => {
+      (_b2 = (_a2 = a2.api) == null ? void 0 : _a2.addEventListener) == null ? void 0 : _b2.call(_a2, "comfytv-toast", (event) => {
         var _a3, _b3, _c3;
         const d = (event == null ? void 0 : event.detail) ?? event ?? {};
         (_c3 = (_b3 = (_a3 = a2.extensionManager) == null ? void 0 : _a3.toast) == null ? void 0 : _b3.add) == null ? void 0 : _c3.call(_b3, {
@@ -246438,7 +246428,7 @@ const extension = {
     };
     hookSelection();
     let sidebarApp = null;
-    (_g = (_f = a2.extensionManager) == null ? void 0 : _f.registerSidebarTab) == null ? void 0 : _g.call(_f, {
+    (_d = (_c = a2.extensionManager) == null ? void 0 : _c.registerSidebarTab) == null ? void 0 : _d.call(_c, {
       id: "comfytv-workflow-config",
       title: "ComfyTV",
       icon: "pi pi-sliders-h",
@@ -246777,4 +246767,4 @@ export {
   DropdownMenuRoot_default as y,
   DropdownMenuTrigger_default as z
 };
-//# sourceMappingURL=main-8pUI9ASt.mjs.map
+//# sourceMappingURL=main-ATKeHeVC.mjs.map

@@ -225,6 +225,19 @@ const extension: ComfyExtension = {
 
   topbarBadges: [execTopbarBadge, collabTopbarBadge],
 
+  actionBarButtons: [{
+    icon: 'icon-[lucide--at-sign]',
+    label: 'ComfyTV',
+    tooltip: i18n.global.t('menu.entriesButtonTooltip'),
+    onClick: () => {
+      useDialogStore().show({
+        title: i18n.global.t('menu.entriesTitle'),
+        component: EntryManagerPanel,
+        width: '900px',
+      })
+    },
+  }],
+
   commands: [
     {
       id: 'ComfyTV.openEntryManager',
@@ -270,29 +283,6 @@ const extension: ComfyExtension = {
     })
 
     installExecBadge()
-
-    try {
-      const ComfyButton = (window as any).comfyAPI?.button?.ComfyButton
-      const settingsGroup = (a.menu as any)?.settingsGroup
-      if (ComfyButton && settingsGroup?.append) {
-        settingsGroup.append(
-          new ComfyButton({
-            icon: 'at-sign',
-            tooltip: i18n.global.t('menu.entriesButtonTooltip'),
-            content: 'ComfyTV',
-            action: () => {
-              useDialogStore().show({
-                title: i18n.global.t('menu.entriesTitle'),
-                component: EntryManagerPanel,
-                width: '900px',
-              })
-            },
-          }),
-        )
-      }
-    } catch (e) {
-      console.warn('[ComfyTV] failed to add top-bar button', e)
-    }
 
     useEntryStore().installWebSocketSync()
     installWorkflowRegistrySync(a)
