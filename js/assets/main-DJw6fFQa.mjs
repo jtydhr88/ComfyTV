@@ -59800,7 +59800,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-M7lbZvN5.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-B6c2VRyV.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -86712,7 +86712,7 @@ const _sfc_main$4u = /* @__PURE__ */ defineComponent({
       }
     });
     const AgentPanelRoot = /* @__PURE__ */ defineAsyncComponent({
-      loader: () => import("./AgentPanelRoot-DjU70Ri2.mjs"),
+      loader: () => import("./AgentPanelRoot-Cr07qKer.mjs"),
       errorComponent: AgentPanelLoadError,
       onError: (error2, _retry, fail) => {
         reportError(error2, { errorType: "agent_panel_load_failure" });
@@ -149485,7 +149485,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-R9jO5j62.mjs");
+    const { STLLoader } = await import("./STLLoader-CsaNr0-b.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -149493,7 +149493,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-3P1rr2oA.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-D6U0MmuC.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -216662,6 +216662,61 @@ function placeBlock(anchor2, fw, fh, tw, th, margin = 0.05) {
   const y = ay === "top" ? my : ay === "bottom" ? fh - th - my : Math.floor((fh - th) / 2);
   return [x, y];
 }
+const NO_LINE_START = new Set("，。、；：！？）》」』】〉〕］｝”’…—～%,.;:!?)]}");
+const NO_LINE_END = new Set("（《「『【〈〔［｛“‘([{");
+function isCjk(ch) {
+  const code = ch.codePointAt(0);
+  return code >= 11904 && code <= 40959 || code >= 63744 && code <= 64255 || code >= 65280 && code <= 65519 || code >= 131072 && code <= 196607;
+}
+function breakUnits(line) {
+  const units = [];
+  for (const ch of line) {
+    const last = units.length ? Array.from(units[units.length - 1]).pop() : "";
+    if (last && (/\s/.test(ch) || NO_LINE_START.has(ch) || NO_LINE_END.has(last) || !(isCjk(ch) || isCjk(last) || /\s/.test(last)))) {
+      units[units.length - 1] += ch;
+    } else {
+      units.push(ch);
+    }
+  }
+  return units;
+}
+function wrapLine(line, measure, maxWidth) {
+  if (measure(line.trimEnd()) <= maxWidth) return [line];
+  const units = breakUnits(line).flatMap(
+    (u) => measure(u.trimEnd()) <= maxWidth ? [u] : Array.from(u)
+  );
+  const full = units.map(measure);
+  const ink = units.map((u) => measure(u.trimEnd()));
+  const lineStarts = (limit) => {
+    const starts = [];
+    let end2 = units.length;
+    let width = 0;
+    for (let i = units.length - 1; i >= 0; i--) {
+      const add2 = i === end2 - 1 ? ink[i] : full[i];
+      if (i < end2 - 1 && width + add2 > limit) {
+        starts.unshift(i + 1);
+        end2 = i + 1;
+        width = ink[i];
+      } else {
+        width += add2;
+      }
+    }
+    return starts;
+  };
+  const target = lineStarts(maxWidth).length;
+  let low = Math.min(Math.max(...ink), maxWidth);
+  let high = maxWidth;
+  for (let i = 0; i < 24; i++) {
+    const mid = (low + high) / 2;
+    if (lineStarts(mid).length === target) high = mid;
+    else low = mid;
+  }
+  const bounds2 = [0, ...lineStarts(high), units.length];
+  return bounds2.slice(1).map((b, i) => units.slice(bounds2[i], b).join("").trimEnd());
+}
+function wrapText(text, measure, maxWidth) {
+  return text.split("\n").flatMap((line) => wrapLine(line, measure, maxWidth)).join("\n");
+}
 function resolveTokens(text, t2, fps2) {
   const pad = (n) => String(n).padStart(2, "0");
   return text.replace(TOKEN_RE, (_, name) => {
@@ -216692,7 +216747,7 @@ function typewriterSlice(text, t2, tStart, mode, stepS) {
   }
   return text.split("\n").slice(0, steps).join("\n");
 }
-function titleTextAt(title, t2, fps2) {
+function titleTextAt(title, t2, fps2, wrap2 = (s) => s) {
   if (!title.text.trim()) return null;
   const end2 = title.tEnd > 0 ? title.tEnd : 1e12;
   if (t2 < title.tStart || t2 > end2) return null;
@@ -216703,7 +216758,7 @@ function titleTextAt(title, t2, fps2) {
     opacity2 = Math.max(0, Math.min(1, opacity2));
   }
   const text = typewriterSlice(
-    resolveTokens(title.text, t2, fps2),
+    wrap2(resolveTokens(title.text, t2, fps2)),
     t2,
     title.tStart,
     title.typewriter,
@@ -216775,9 +216830,9 @@ function cmapCoverage(buf) {
   }
   return out;
 }
-function cueTextAt(cues, t2) {
+function cueTextAt(cues, t2, wrap2 = (s) => s) {
   const cue = cues.find((c2) => c2.start <= t2 && t2 <= c2.end && c2.text);
-  return cue ? { text: cue.text.replace(/<[^>]+>/g, ""), opacity: 1 } : null;
+  return cue ? { text: wrap2(cue.text.replace(/<[^>]+>/g, "")), opacity: 1 } : null;
 }
 const FALLBACK_FONT = "NotoSansSC-Regular";
 const LINE_GAP = 4;
@@ -216813,11 +216868,18 @@ function useTextOverlayPreview(opts) {
     canvas.width = Math.round(vw * k2);
     canvas.height = Math.round(vh * k2);
     const ctx = canvas.getContext("2d");
-    const item = opts.textAt(time2.value);
-    if (!ctx || !vw || !vh || !item || !fonts.value) return;
+    if (!ctx || !vw || !vh || !fonts.value) return;
     const [main2, fallback] = fonts.value;
     const st2 = opts.style();
     const stroke = Math.max(0, Math.round(st2.stroke));
+    const base2 = main2.opsz ?? st2.size;
+    const f2 = st2.size / base2;
+    const stack2 = `${base2}px ${main2.family}, ${fallback.family}`;
+    const item = opts.textAt(time2.value, (text) => {
+      ctx.font = stack2;
+      return wrapText(text, (s) => ctx.measureText(s).width * f2, vw * 0.9 - 2 * (2 + stroke));
+    });
+    if (!item) return;
     const measure = (family, text) => {
       ctx.font = `${st2.size}px ${family}`;
       return ctx.measureText(text);
@@ -216826,9 +216888,6 @@ function useTextOverlayPreview(opts) {
     const descent = (font2) => Math.ceil(measure(font2.family, "A").fontBoundingBoxDescent);
     const missing = (s) => main2 !== fallback && Array.from(s).some((ch) => ch.trim() && !main2.covers.has(ch.codePointAt(0)));
     const lines = item.text.split("\n");
-    const base2 = main2.opsz ?? st2.size;
-    const f2 = st2.size / base2;
-    const stack2 = `${base2}px ${main2.family}, ${fallback.family}`;
     ctx.font = stack2;
     const widths = lines.map((l) => ctx.measureText(l).width * f2);
     const tw = Math.ceil(Math.max(...widths)) + 4 + 2 * stroke;
@@ -216973,14 +217032,14 @@ const _sfc_main$1D = /* @__PURE__ */ defineComponent({
         strokeColor: strokeColor.value,
         anchor: anchor2.value
       }),
-      textAt: (t2) => titleTextAt({
+      textAt: (t2, wrap2) => titleTextAt({
         text: text.value,
         tStart: tStart.value,
         tEnd: tEnd.value,
         fadeS: fadeS.value,
         typewriter: typewriter.value,
         typeStep: typeStep.value
-      }, t2, fps2.value)
+      }, t2, fps2.value, wrap2)
     });
     const TYPEWRITERS = [
       { value: "off", label: "Off" },
@@ -217279,7 +217338,7 @@ const _sfc_main$1C = /* @__PURE__ */ defineComponent({
         strokeColor: "#000000",
         anchor: anchor2.value
       }),
-      textAt: (t2) => cueTextAt(cues.value, t2)
+      textAt: (t2, wrap2) => cueTextAt(cues.value, t2, wrap2)
     });
     return (_ctx, _cache2) => {
       return openBlock(), createBlock(_sfc_main$3M, { node: __props.node }, {
@@ -244641,7 +244700,7 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const TextOutputEditorV2 = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-e0161550"]]);
+const TextOutputEditorV2 = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-aec18b92"]]);
 const KIND_ICONS = {
   image: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="M4 18l5.2-5.2 3.4 3.4 3.2-3.2L21 18"/></svg>`,
   video: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M10 9.5l5 2.5-5 2.5z"/></svg>`,
@@ -246653,4 +246712,4 @@ export {
   DropdownMenuRoot_default as y,
   DropdownMenuTrigger_default as z
 };
-//# sourceMappingURL=main-CEJ5bRIB.mjs.map
+//# sourceMappingURL=main-DJw6fFQa.mjs.map

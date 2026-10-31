@@ -158,10 +158,10 @@ useTextOverlayPreview({
     font: font.value, size: size.value, color: color.value,
     stroke: stroke.value, strokeColor: strokeColor.value, anchor: anchor.value,
   }),
-  textAt: (t) => titleTextAt({
+  textAt: (t, wrap) => titleTextAt({
     text: text.value, tStart: tStart.value, tEnd: tEnd.value, fadeS: fadeS.value,
     typewriter: typewriter.value, typeStep: typeStep.value,
-  }, t, fps.value),
+  }, t, fps.value, wrap),
 })
 
 const TYPEWRITERS = [

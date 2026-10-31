@@ -10,10 +10,51 @@ import {
   resolveTokens,
   titleTextAt,
   typewriterSlice,
+  wrapText,
 } from './textOverlayLayout'
 
 const title = (over: Partial<Parameters<typeof titleTextAt>[0]> = {}) => ({
   text: 'Hello world', tStart: 0, tEnd: -1, fadeS: 0, typewriter: 'off', typeStep: 0.1, ...over,
+})
+
+describe('wrapText', () => {
+  const cells = (text: string) =>
+    Array.from(text).reduce((n, c) => n + (c.codePointAt(0)! > 0x2E7F ? 2 : 1), 0)
+
+  // Same cases as tests/test_text_wrap.py: preview and render must break alike.
+  it.each([
+    ['fits unchanged', '短句', 10, '短句'],
+    ['explicit breaks kept', '一二\n三四', 10, '一二\n三四'],
+    ['blank line kept', '一二\n\n三四', 10, '一二\n\n三四'],
+    ['cjk breaks between characters, bottom heavy', '一二三四五六七', 10, '一二三\n四五六七'],
+    ['latin breaks between words', 'aaa bbb ccc ddd', 8, 'aaa bbb\nccc ddd'],
+    ['balances instead of filling', 'aa bb cc dd ee', 10, 'aa bb\ncc dd ee'],
+    ['closing punctuation stays on the line', '一二三四，五六七八', 10, '一二三四，\n五六七八'],
+    ['opening punctuation stays with its word', '一二三四《五六七》', 10, '一二三四\n《五六七》'],
+    ['mixed scripts', '中文 mixed 文字 text', 12, '中文 mixed\n文字 text'],
+    ['long word splits by character', 'abcdefghijkl', 5, 'abcd\nefgh\nijkl'],
+    ['three lines keep the short one on top', '一二三四五六七八九十一二', 8, '一二三四\n五六七八\n九十一二'],
+    ['trailing spaces dropped when broken', 'aaaa   bbbb', 5, 'aaaa\nbbbb'],
+  ])('%s', (_name, text, width, expected) => {
+    expect(wrapText(text, cells, width)).toBe(expected)
+  })
+
+  it('still terminates when one character is wider than the frame', () => {
+    expect(wrapText('一二', cells, 1)).toBe('一\n二')
+  })
+
+  it('wraps a title before the typewriter slices it, so words never jump lines', () => {
+    const wrap = (s: string) => wrapText(s, cells, 8)
+    const at = (t: number) => titleTextAt(
+      title({ text: 'aaa bbb ccc ddd', typewriter: 'char', typeStep: 1 }), t, 24, wrap)?.text
+    expect(at(5)).toBe('aaa b')
+    expect(at(9)).toBe('aaa bbb\nc')
+  })
+
+  it('wraps subtitle cues', () => {
+    const cues = [{ start: 0, end: 1, text: '一二三四五六七' }] as Parameters<typeof cueTextAt>[0]
+    expect(cueTextAt(cues, 0.5, (s) => wrapText(s, cells, 10))?.text).toBe('一二三\n四五六七')
+  })
 })
 
 describe('placeBlock', () => {

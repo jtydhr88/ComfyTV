@@ -14,6 +14,8 @@ sidebarTitle: "Subtitles"
 
 You can supply the cues two ways: paste into the **subs** text box, or connect a **subs_text** (`COMFYTV_TEXT`) input — for example the output of **Subtitles · Speech-to-Text**. If both are present, the wired **subs_text** wins. The node needs a **video** and non-empty cue text, or Run errors.
 
+Long cues wrap automatically to 90% of the frame width, with the longer line at the bottom. CJK text breaks between characters, Latin text between words, and line breaks in the cue are kept. The preview wraps the same way.
+
 ## When to use it
 
 - Add open captions (baked-in subtitles) to a clip for social platforms.

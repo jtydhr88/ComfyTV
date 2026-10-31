@@ -2,6 +2,7 @@
 import math
 import os
 import re
+from functools import lru_cache
 from pathlib import Path
 
 import numpy as np
@@ -139,9 +140,92 @@ def _render_runs_rgba(lines, base, *, color, stroke, stroke_color, align,
     return np.asarray(img, dtype=np.uint8)
 
 
+_NO_LINE_START = set('，。、；：！？）》」』】〉〕］｝”’…—～%,.;:!?)]}')
+_NO_LINE_END = set('（《「『【〈〔［｛“‘([{')
+
+
+def _is_cjk(ch):
+    code = ord(ch)
+    return (0x2E80 <= code <= 0x9FFF or 0xF900 <= code <= 0xFAFF
+            or 0xFF00 <= code <= 0xFFEF or 0x20000 <= code <= 0x2FFFF)
+
+
+def _break_units(line):
+    units = []
+    for ch in line:
+        prev = units[-1][-1] if units else ''
+        if prev and (ch.isspace() or ch in _NO_LINE_START or prev in _NO_LINE_END
+                     or not (_is_cjk(ch) or _is_cjk(prev) or prev.isspace())):
+            units[-1] += ch
+        else:
+            units.append(ch)
+    return units
+
+
+def _wrap_line(line, measure, max_width):
+    if measure(line.rstrip()) <= max_width:
+        return [line]
+    units = []
+    for unit in _break_units(line):
+        units += [unit] if measure(unit.rstrip()) <= max_width else list(unit)
+    full = [measure(u) for u in units]
+    ink = [measure(u.rstrip()) for u in units]
+
+    def line_starts(limit):
+        starts = []
+        end = len(units)
+        width = 0.0
+        for i in reversed(range(len(units))):
+            add = ink[i] if i == end - 1 else full[i]
+            if i < end - 1 and width + add > limit:
+                starts.append(i + 1)
+                end = i + 1
+                width = ink[i]
+            else:
+                width += add
+        return starts[::-1]
+
+    target = len(line_starts(max_width))
+    low, high = min(max(ink), max_width), max_width
+    for _ in range(24):
+        mid = (low + high) / 2
+        if len(line_starts(mid)) == target:
+            high = mid
+        else:
+            low = mid
+    bounds = [0, *line_starts(high), len(units)]
+    return [''.join(units[a:b]).rstrip() for a, b in zip(bounds, bounds[1:])]
+
+
+def wrap_text(text, measure, max_width):
+    return '\n'.join(out for line in text.split('\n')
+                     for out in _wrap_line(line, measure, max_width))
+
+
+def _text_measure(font, size):
+    from PIL import ImageFont
+
+    path = _font_path(font)
+    fnt = ImageFont.truetype(path, size=int(size)) if path \
+        else ImageFont.load_default()
+    if not path or not _FALLBACK_FONT.exists() or Path(path) == _FALLBACK_FONT:
+        return fnt.getlength
+    fallback = ImageFont.truetype(str(_FALLBACK_FONT), size=int(size))
+    return lambda s: sum(f.getlength(t) for t, f in _font_runs(s, fnt, fallback)[0])
+
+
+def _text_wrapper(font, size, stroke):
+    measure = _text_measure(font, size)
+
+    @lru_cache(maxsize=512)
+    def wrap(text, frame_width):
+        return wrap_text(text, measure, frame_width * 0.9 - 2 * (2 + int(stroke)))
+    return wrap
+
+
 def render_text_rgba(text: str, *, font='', size=48, color='#FFFFFF',
                      stroke=0, stroke_color='#000000',
-                     align='center', max_width=0) -> np.ndarray:
+                     align='center') -> np.ndarray:
     from PIL import Image, ImageDraw, ImageFont
 
     path = _font_path(font)
@@ -276,6 +360,7 @@ def title_video(view_url: str, text: str, *, font='', size=48,
     fps = get_video_info(view_url)['fps'] or 24 if dynamic else 24
     t_end = None if t_end is None else float(t_end)
     cache = {}
+    wrap = _text_wrapper(font, size, stroke)
 
     def rgba_for(txt):
         if txt not in cache:
@@ -285,8 +370,6 @@ def title_video(view_url: str, text: str, *, font='', size=48,
                 txt, font=font, size=size, color=color,
                 stroke=stroke, stroke_color=stroke_color)
         return cache[txt]
-
-    static_rgba = None if dynamic else rgba_for(text)
 
     def frame_fn(bg, t):
         end = t_end if (t_end is not None and t_end > 0) else 1e12
@@ -299,14 +382,14 @@ def title_video(view_url: str, text: str, *, font='', size=48,
                 op = min(op, (end - t) / fade_s)
             op = max(0.0, min(1.0, op))
         if dynamic:
-            txt = _resolve_tokens(text, t, fps)
+            txt = wrap(_resolve_tokens(text, t, fps), bg.shape[1])
             txt = _typewriter_slice(txt, t, t_start, typewriter,
                                     float(type_step))
             if not txt.strip():
                 return bg
             rgba = rgba_for(txt)
         else:
-            rgba = static_rgba
+            rgba = rgba_for(wrap(text, bg.shape[1]))
         overlay = _overlay_fn_factory(bg.device)
         x, y = _place(anchor, bg.shape[1], bg.shape[0],
                       rgba.shape[1], rgba.shape[0])
@@ -346,6 +429,7 @@ def burn_subtitles(view_url: str, subs_raw: str, *, font='', size=36,
     if not cues:
         raise RuntimeError("subtitles: no cues parsed — check the SRT/VTT text")
     cache = {}
+    wrap = _text_wrapper(font, size, stroke)
 
     def rgba_for(text):
         if text not in cache:
@@ -358,7 +442,7 @@ def burn_subtitles(view_url: str, subs_raw: str, *, font='', size=36,
         active = next((c for c in cues if c['start'] <= t <= c['end']), None)
         if active is None:
             return bg
-        rgba = rgba_for(active['text'])
+        rgba = rgba_for(wrap(active['text'], bg.shape[1]))
         overlay = _overlay_fn_factory(bg.device)
         x, y = _place(anchor, bg.shape[1], bg.shape[0],
                       rgba.shape[1], rgba.shape[0])

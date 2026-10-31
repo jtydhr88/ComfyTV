@@ -34,6 +34,71 @@ export function placeBlock(
   return [x, y]
 }
 
+const NO_LINE_START = new Set('，。、；：！？）》」』】〉〕］｝”’…—～%,.;:!?)]}')
+const NO_LINE_END = new Set('（《「『【〈〔［｛“‘([{')
+
+export type WrapText = (text: string) => string
+
+function isCjk(ch: string): boolean {
+  const code = ch.codePointAt(0)!
+  return (code >= 0x2E80 && code <= 0x9FFF) || (code >= 0xF900 && code <= 0xFAFF)
+    || (code >= 0xFF00 && code <= 0xFFEF) || (code >= 0x20000 && code <= 0x2FFFF)
+}
+
+function breakUnits(line: string): string[] {
+  const units: string[] = []
+  for (const ch of line) {
+    const last = units.length ? Array.from(units[units.length - 1]).pop()! : ''
+    if (last && (/\s/.test(ch) || NO_LINE_START.has(ch) || NO_LINE_END.has(last)
+        || !(isCjk(ch) || isCjk(last) || /\s/.test(last)))) {
+      units[units.length - 1] += ch
+    } else {
+      units.push(ch)
+    }
+  }
+  return units
+}
+
+function wrapLine(line: string, measure: (s: string) => number, maxWidth: number): string[] {
+  if (measure(line.trimEnd()) <= maxWidth) return [line]
+  const units = breakUnits(line).flatMap(
+    (u) => (measure(u.trimEnd()) <= maxWidth ? [u] : Array.from(u)))
+  const full = units.map(measure)
+  const ink = units.map((u) => measure(u.trimEnd()))
+
+  const lineStarts = (limit: number): number[] => {
+    const starts: number[] = []
+    let end = units.length
+    let width = 0
+    for (let i = units.length - 1; i >= 0; i--) {
+      const add = i === end - 1 ? ink[i] : full[i]
+      if (i < end - 1 && width + add > limit) {
+        starts.unshift(i + 1)
+        end = i + 1
+        width = ink[i]
+      } else {
+        width += add
+      }
+    }
+    return starts
+  }
+
+  const target = lineStarts(maxWidth).length
+  let low = Math.min(Math.max(...ink), maxWidth)
+  let high = maxWidth
+  for (let i = 0; i < 24; i++) {
+    const mid = (low + high) / 2
+    if (lineStarts(mid).length === target) high = mid
+    else low = mid
+  }
+  const bounds = [0, ...lineStarts(high), units.length]
+  return bounds.slice(1).map((b, i) => units.slice(bounds[i], b).join('').trimEnd())
+}
+
+export function wrapText(text: string, measure: (s: string) => number, maxWidth: number): string {
+  return text.split('\n').flatMap((line) => wrapLine(line, measure, maxWidth)).join('\n')
+}
+
 export function resolveTokens(text: string, t: number, fps: number): string {
   const pad = (n: number) => String(n).padStart(2, '0')
   return text.replace(TOKEN_RE, (_, name: string) => {
@@ -68,7 +133,9 @@ export function typewriterSlice(
   return text.split('\n').slice(0, steps).join('\n')
 }
 
-export function titleTextAt(title: TitleTiming, t: number, fps: number): OverlayText | null {
+export function titleTextAt(
+  title: TitleTiming, t: number, fps: number, wrap: WrapText = (s) => s,
+): OverlayText | null {
   if (!title.text.trim()) return null
   const end = title.tEnd > 0 ? title.tEnd : 1e12
   if (t < title.tStart || t > end) return null
@@ -79,7 +146,7 @@ export function titleTextAt(title: TitleTiming, t: number, fps: number): Overlay
     opacity = Math.max(0, Math.min(1, opacity))
   }
   const text = typewriterSlice(
-    resolveTokens(title.text, t, fps), t, title.tStart, title.typewriter, title.typeStep)
+    wrap(resolveTokens(title.text, t, fps)), t, title.tStart, title.typewriter, title.typeStep)
   return text.trim() ? { text, opacity } : null
 }
 
@@ -148,7 +215,7 @@ export function cmapCoverage(buf: ArrayBuffer): Set<number> {
   return out
 }
 
-export function cueTextAt(cues: Cue[], t: number): OverlayText | null {
+export function cueTextAt(cues: Cue[], t: number, wrap: WrapText = (s) => s): OverlayText | null {
   const cue = cues.find((c) => c.start <= t && t <= c.end && c.text)
-  return cue ? { text: cue.text.replace(/<[^>]+>/g, ''), opacity: 1 } : null
+  return cue ? { text: wrap(cue.text.replace(/<[^>]+>/g, '')), opacity: 1 } : null
 }

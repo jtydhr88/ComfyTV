@@ -158,6 +158,6 @@ useTextOverlayPreview({
     font: font.value, size: size.value, color: color.value,
     stroke: stroke.value, strokeColor: '#000000', anchor: anchor.value,
   }),
-  textAt: (t) => cueTextAt(cues.value, t),
+  textAt: (t, wrap) => cueTextAt(cues.value, t, wrap),
 })
 </script>

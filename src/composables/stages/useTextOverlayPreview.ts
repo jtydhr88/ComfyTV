@@ -5,7 +5,9 @@ import {
   cmapCoverage,
   opszDefault,
   placeBlock,
+  wrapText,
   type OverlayText,
+  type WrapText,
 } from '@/composables/stages/textOverlayLayout'
 
 export interface TextOverlayStyle {
@@ -49,7 +51,7 @@ export function useTextOverlayPreview(opts: {
   canvas: Ref<HTMLCanvasElement | null>
   video: Ref<HTMLVideoElement | null>
   style: () => TextOverlayStyle
-  textAt: (t: number) => OverlayText | null
+  textAt: (t: number, wrap: WrapText) => OverlayText | null
 }) {
   const fonts = ref<[LoadedFont, LoadedFont] | null>(null)
   const time = ref(0)
@@ -70,12 +72,20 @@ export function useTextOverlayPreview(opts: {
     canvas.width = Math.round(vw * k)
     canvas.height = Math.round(vh * k)
     const ctx = canvas.getContext('2d')
-    const item = opts.textAt(time.value)
-    if (!ctx || !vw || !vh || !item || !fonts.value) return
+    if (!ctx || !vw || !vh || !fonts.value) return
 
     const [main, fallback] = fonts.value
     const st = opts.style()
     const stroke = Math.max(0, Math.round(st.stroke))
+    const base = main.opsz ?? st.size
+    const f = st.size / base
+    const stack = `${base}px ${main.family}, ${fallback.family}`
+    const item = opts.textAt(time.value, (text) => {
+      ctx.font = stack
+      return wrapText(text, (s) => ctx.measureText(s).width * f, vw * 0.9 - 2 * (2 + stroke))
+    })
+    if (!item) return
+
     const measure = (family: string, text: string) => {
       ctx.font = `${st.size}px ${family}`
       return ctx.measureText(text)
@@ -86,9 +96,6 @@ export function useTextOverlayPreview(opts: {
       && Array.from(s).some((ch) => ch.trim() && !main.covers.has(ch.codePointAt(0)!))
 
     const lines = item.text.split('\n')
-    const base = main.opsz ?? st.size
-    const f = st.size / base
-    const stack = `${base}px ${main.family}, ${fallback.family}`
     ctx.font = stack
     const widths = lines.map((l) => ctx.measureText(l).width * f)
     const tw = Math.ceil(Math.max(...widths)) + 4 + 2 * stroke
