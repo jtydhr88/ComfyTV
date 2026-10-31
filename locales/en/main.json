@@ -681,6 +681,9 @@
     "defaultSet": "{label} is now the default workflow for this stage",
     "defaultCleared": "{label} is no longer the default — the first listed workflow is used",
     "defaultFailed": "Could not change the default workflow",
+    "setFavorite": "Add to favorites",
+    "unsetFavorite": "Remove from favorites (also unsets default)",
+    "favoriteFailed": "Could not change favorites",
     "hide": "Hide from stage node",
     "unhide": "Show on stage node",
     "hiddenSet": "{label} is now hidden from the workflow dropdown on stage nodes",
@@ -705,7 +708,9 @@
       "builtin": "built-in",
       "builtinHint": "Ships with ComfyTV (tracked in git). Workflows without this badge were imported or dropped in by a user.",
       "default": "default",
-      "defaultHint": "Newly added stage nodes of this kind start with this workflow selected. If it is deleted or unlinked, the first listed workflow is used instead.",
+      "defaultHint": "Newly added stage nodes of this kind start with this workflow selected. Setting a default also favorites it and lists it first in the stage dropdown. If it is deleted or unlinked, the first listed workflow is used instead.",
+      "favorite": "favorite",
+      "favoriteHint": "Listed near the top of the stage dropdown, separated from other workflows by a line.",
       "hidden": "hidden",
       "hiddenHint": "Not offered in the workflow dropdown on stage nodes. Nodes that already selected it keep working."
     }

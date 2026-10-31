@@ -7,6 +7,7 @@ const listWorkflowOverview = vi.fn()
 const rescanWorkflows = vi.fn()
 const importWorkflow = vi.fn()
 const setDefaultWorkflow = vi.fn()
+const setFavoriteWorkflow = vi.fn()
 const setHiddenWorkflow = vi.fn()
 const unlinkWorkflow = vi.fn()
 vi.mock('@/api', () => ({
@@ -14,6 +15,7 @@ vi.mock('@/api', () => ({
   rescanWorkflows: (...a: any[]) => rescanWorkflows(...a),
   importWorkflow: (...a: any[]) => importWorkflow(...a),
   setDefaultWorkflow: (...a: any[]) => setDefaultWorkflow(...a),
+  setFavoriteWorkflow: (...a: any[]) => setFavoriteWorkflow(...a),
   setHiddenWorkflow: (...a: any[]) => setHiddenWorkflow(...a),
   unlinkWorkflow: (...a: any[]) => unlinkWorkflow(...a),
 }))
@@ -231,8 +233,23 @@ describe('useStageWorkflowList', () => {
     expect(setDefaultWorkflow).toHaveBeenCalledWith(2, true)
     expect(setDefaultOptionInDefs).toHaveBeenCalledWith('image', 'B')
     expect(list.rows.value.map(r => r.is_default)).toEqual([false, true])
+    expect(list.rows.value[1].is_favorite).toBe(true)
     expect(toastAdd).toHaveBeenCalledWith(expect.objectContaining({ severity: 'success' }))
     expect(list.defaultBusyId.value).toBe(null)
+  })
+
+  it('onSetFavorite(false) on the starred row clears both', async () => {
+    listWorkflowOverview.mockResolvedValue(overview({
+      workflows: [{ id: 1, kind: 'image', label: 'A', has_api: false, is_default: true, is_favorite: true }],
+    }))
+    setFavoriteWorkflow.mockResolvedValue({ ok: true, kind: 'image', label: 'A', is_favorite: false, is_default: false })
+    const list = withSetup(() => useStageWorkflowList(ref('image'), () => false, vi.fn()))
+    await flush()
+    await list.onSetFavorite(list.rows.value[0] as any, false)
+    expect(setFavoriteWorkflow).toHaveBeenCalledWith(1, false)
+    expect(list.rows.value[0].is_favorite).toBe(false)
+    expect(list.rows.value[0].is_default).toBe(false)
+    expect(list.favoriteBusyId.value).toBe(null)
   })
 
   it('onSetDefault(false) clears the default and toasts info', async () => {

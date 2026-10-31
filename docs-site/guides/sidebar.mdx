@@ -69,7 +69,8 @@ Pick a **stage kind** in the header dropdown; two sections follow.
 **Workflows** — every workflow registered for that kind, i.e. what the matching stage node's dropdown offers:
 
 - Badges tell you each row's story: **built-in** (ships with ComfyTV), **linked** (points into ComfyUI's native library), **new** (found in the most recent scan), **default**, plus health warnings — *file missing*, *not GUI format*, *API not generated* (normal until first run).
-- Hover a row to **★ set it as the default** — new stage nodes of this kind start with it selected.
+- Hover a row to **★ set it as the default** — new stage nodes of this kind start with it selected. Starring also favorites it.
+- Click **♥ to favorite** any number of rows. The stage's workflow dropdown lists the starred workflow first, then favorites, then a divider and everything else. Unstarring keeps the favorite; unfavoriting also removes the star.
 - **Import** a JSON here, or drop files into `user/comfytv/workflows/<kind>/` and hit **Rescan** — the library is re-scanned from disk with no backend restart.
 
 **Parameters** — define your own extra widgets for every stage of this kind:

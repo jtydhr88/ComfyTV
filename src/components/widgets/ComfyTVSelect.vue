@@ -49,21 +49,25 @@
           />
         </div>
         <div class="ctv:max-h-60 ctv:overflow-y-auto" role="presentation">
-          <ComboboxItem
-            v-for="opt in filteredOptions"
-            :key="opt.value"
-            :value="opt.value"
-            :text-value="opt.label"
-            class="ctv:relative ctv:flex ctv:w-full ctv:cursor-pointer ctv:items-center ctv:justify-between ctv:select-none
-                   ctv:gap-3 ctv:rounded-sm ctv:px-2 ctv:py-2 ctv:text-xs ctv:outline-none
-                   ctv:hover:bg-secondary-background-hover
-                   ctv:data-[highlighted]:bg-secondary-background-hover
-                   ctv:data-[state=checked]:bg-secondary-background-selected
-                   ctv:data-[state=checked]:hover:bg-secondary-background-selected"
-          >
-            <span class="ctv:truncate">{{ opt.label }}</span>
-            <ComboboxItemIndicator class="ctv:flex ctv:shrink-0 ctv:items-center ctv:justify-center ctv:text-base-foreground"><i class="pi pi-check" /></ComboboxItemIndicator>
-          </ComboboxItem>
+          <template v-for="(opt, i) in filteredOptions" :key="opt.value">
+            <ComboboxItem
+              :value="opt.value"
+              :text-value="opt.label"
+              class="ctv:relative ctv:flex ctv:w-full ctv:cursor-pointer ctv:items-center ctv:justify-between ctv:select-none
+                     ctv:gap-3 ctv:rounded-sm ctv:px-2 ctv:py-2 ctv:text-xs ctv:outline-none
+                     ctv:hover:bg-secondary-background-hover
+                     ctv:data-[highlighted]:bg-secondary-background-hover
+                     ctv:data-[state=checked]:bg-secondary-background-selected
+                     ctv:data-[state=checked]:hover:bg-secondary-background-selected"
+            >
+              <span class="ctv:truncate">{{ opt.label }}</span>
+              <ComboboxItemIndicator class="ctv:flex ctv:shrink-0 ctv:items-center ctv:justify-center ctv:text-base-foreground"><i class="pi pi-check" /></ComboboxItemIndicator>
+            </ComboboxItem>
+            <ComboboxSeparator
+              v-if="opt.value === separatorAfter && i < filteredOptions.length - 1"
+              class="ctv:my-1 ctv:h-px ctv:bg-border-default"
+            />
+          </template>
           <div v-if="!filteredOptions.length" class="ctv:px-3 ctv:pb-2 ctv:text-xs ctv:text-muted-foreground">
             no matches
           </div>
@@ -83,6 +87,7 @@ import {
   ComboboxItemIndicator,
   ComboboxPortal,
   ComboboxRoot,
+  ComboboxSeparator,
   ComboboxTrigger,
 } from 'reka-ui'
 
@@ -95,10 +100,12 @@ const props = withDefaults(defineProps<{
   filterable?: boolean
   filterPlaceholder?: string
   placeholder?: string
+  separatorAfter?: string
 }>(), {
   filterable: undefined,
   filterPlaceholder: undefined,
   placeholder: undefined,
+  separatorAfter: undefined,
 })
 const emit = defineEmits<{ 'update:modelValue': [v: string | number] }>()
 

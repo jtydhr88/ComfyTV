@@ -1,9 +1,26 @@
 import { ref } from 'vue'
 
+import { listFavoriteWorkflows } from '@/api'
 import { getStageMeta } from '@/composables/stages/stageMeta'
 import { app } from '@/lib/comfyApp'
 
 export const comboOptionsVersion = ref(0)
+
+const favoriteWorkflows = ref<Record<string, string[]>>({})
+
+export async function loadFavoriteWorkflows(): Promise<void> {
+  favoriteWorkflows.value = (await listFavoriteWorkflows()).favorites
+}
+
+export function lastFavoriteOption(kind: string, options: string[]): string | undefined {
+  const favorites = favoriteWorkflows.value[kind] ?? []
+  let last: string | undefined
+  for (const option of options) {
+    if (!favorites.includes(option)) break
+    last = option
+  }
+  return last
+}
 
 function workflowWidgetsForKind(kind: string): any[] {
   const out: any[] = []

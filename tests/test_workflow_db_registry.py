@@ -207,6 +207,53 @@ class TestDefaultWorkflow:
         (wdir / "image" / "bbb.json").unlink()
         assert default_for("image") == "aaa"
 
+    def test_star_implies_favorite_but_unstar_keeps_it(self, reset_db, tmp_path, monkeypatch):
+        _, ids = self._seed_two(tmp_path, monkeypatch)
+        wdb.set_default_workflow(ids["bbb"], True)
+        assert wdb.get_favorite_labels() == {"image": ["bbb"]}
+        wdb.set_default_workflow(ids["bbb"], False)
+        assert wdb.get_favorite_labels() == {"image": ["bbb"]}
+
+    def test_unfavorite_clears_star(self, reset_db, tmp_path, monkeypatch):
+        _, ids = self._seed_two(tmp_path, monkeypatch)
+        wdb.set_default_workflow(ids["bbb"], True)
+        res = wdb.set_favorite_workflow(ids["bbb"], False)
+        assert res["is_favorite"] is False and res["is_default"] is False
+        assert wdb.get_default_label("image") is None
+        assert wdb.get_favorite_labels() == {}
+
+    def test_favorite_keeps_existing_star(self, reset_db, tmp_path, monkeypatch):
+        _, ids = self._seed_two(tmp_path, monkeypatch)
+        wdb.set_default_workflow(ids["aaa"], True)
+        wdb.set_favorite_workflow(ids["bbb"], True)
+        assert wdb.get_default_label("image") == "aaa"
+
+    def test_labels_for_orders_star_favorites_then_rest(self, reset_db, tmp_path, monkeypatch):
+        from ComfyTV.runners import refresh_registry
+        from ComfyTV.nodes.stages.common.workflow_lists import labels_for
+
+        wdir, ids = self._seed_two(tmp_path, monkeypatch)
+        for name in ("ccc", "ddd"):
+            (wdir / "image" / f"{name}.json").write_text(json.dumps({"nodes": []}))
+        wdb.seed_workflows_from_disk(("image",))
+        ids = {r["label"]: r["id"] for r in wdb.list_workflows_overview("image")}
+        refresh_registry()
+        assert labels_for("image") == ["aaa", "bbb", "ccc", "ddd"]
+
+        wdb.set_favorite_workflow(ids["bbb"], True)
+        wdb.set_favorite_workflow(ids["ddd"], True)
+        assert labels_for("image") == ["bbb", "ddd", "aaa", "ccc"]
+
+        wdb.set_default_workflow(ids["ddd"], True)
+        assert labels_for("image") == ["ddd", "bbb", "aaa", "ccc"]
+
+        wdb.set_default_workflow(ids["ddd"], False)
+        assert labels_for("image") == ["bbb", "ddd", "aaa", "ccc"]
+
+        wdb.set_favorite_workflow(ids["bbb"], False)
+        wdb.set_favorite_workflow(ids["ddd"], False)
+        assert labels_for("image") == ["aaa", "bbb", "ccc", "ddd"]
+
 
 class TestHiddenWorkflow:
     def _seed_two(self, tmp_path, monkeypatch, kind="image"):

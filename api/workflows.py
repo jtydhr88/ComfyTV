@@ -32,6 +32,11 @@ async def workflow_rescan(_request: web.Request) -> web.Response:
     return web.json_response({"ok": True, **result})
 
 
+@routes.get("/comfytv/workflows/favorites")
+async def workflow_favorites(request: web.Request) -> web.Response:
+    return web.json_response({"favorites": workflow_db.get_favorite_labels()})
+
+
 @routes.get("/comfytv/workflows/state")
 async def workflow_state(request: web.Request) -> web.Response:
     kind  = request.query.get("kind") or ""
@@ -196,6 +201,23 @@ async def workflow_set_default(request: web.Request) -> web.Response:
     broadcast_workflow_event("default", {
         "kind": result["kind"], "label": result["label"],
         "default": bool(result.get("is_default"))})
+    return web.json_response(result)
+
+
+@routes.post("/comfytv/workflows/{wid}/set_favorite")
+async def workflow_set_favorite(request: web.Request) -> web.Response:
+    try:
+        wid = int(request.match_info["wid"])
+    except (KeyError, ValueError):
+        return web.json_response({"error": "invalid workflow id"}, status=400)
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+    result = workflow_db.set_favorite_workflow(wid, bool(body.get("favorite", True)))
+    if result is None:
+        return web.json_response({"error": "workflow not found"}, status=404)
+    broadcast_workflow_event("favorite", {"kind": result["kind"], "label": result["label"]})
     return web.json_response(result)
 
 

@@ -1,7 +1,7 @@
 import { onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { importWorkflow, listWorkflowOverview, rescanWorkflows, setDefaultWorkflow, setHiddenWorkflow, unlinkWorkflow } from '@/api'
+import { importWorkflow, listWorkflowOverview, rescanWorkflows, setDefaultWorkflow, setFavoriteWorkflow, setHiddenWorkflow, unlinkWorkflow } from '@/api'
 import type { WorkflowOverview } from '@/api'
 import { askConfirm } from '@/composables/dialog/useConfirmDialog'
 import { invalidateWorkflowInfo } from '@/composables/stages/useWorkflowValidator'
@@ -32,6 +32,7 @@ export function useStageWorkflowList(
   const importBusy = ref(false)
   const rescanBusy = ref(false)
   const defaultBusyId = ref<number | null>(null)
+  const favoriteBusyId = ref<number | null>(null)
   const hiddenBusyId = ref<number | null>(null)
   const openBusyId = ref<number | null>(null)
   const unlinkBusyId = ref<number | null>(null)
@@ -82,6 +83,7 @@ export function useStageWorkflowList(
     try {
       await setDefaultWorkflow(row.id, isDefault)
       for (const r of rows.value) r.is_default = isDefault && r.id === row.id
+      if (isDefault) row.is_favorite = true
       setDefaultOptionInDefs(row.kind, isDefault ? row.label : null)
       if (isDefault) toast('success', t('stageManager.defaultSet', { label: row.label }))
       else toast('info', t('stageManager.defaultCleared', { label: row.label }))
@@ -89,6 +91,19 @@ export function useStageWorkflowList(
       toast('error', t('stageManager.defaultFailed'), String(e?.message || e))
     } finally {
       defaultBusyId.value = null
+    }
+  }
+
+  async function onSetFavorite(row: WorkflowOverview, favorite: boolean) {
+    favoriteBusyId.value = row.id
+    try {
+      const res = await setFavoriteWorkflow(row.id, favorite)
+      row.is_favorite = res.is_favorite
+      row.is_default = res.is_default
+    } catch (e: any) {
+      toast('error', t('stageManager.favoriteFailed'), String(e?.message || e))
+    } finally {
+      favoriteBusyId.value = null
     }
   }
 
@@ -190,6 +205,7 @@ export function useStageWorkflowList(
     importBusy,
     rescanBusy,
     defaultBusyId,
+    favoriteBusyId,
     hiddenBusyId,
     openBusyId,
     unlinkBusyId,
@@ -198,6 +214,7 @@ export function useStageWorkflowList(
     onRescan,
     onImport,
     onSetDefault,
+    onSetFavorite,
     onSetHidden,
     onUnlink,
     onOpenInComfy,

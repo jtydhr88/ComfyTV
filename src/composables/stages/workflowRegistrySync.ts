@@ -1,5 +1,7 @@
 import {
   addOptionEverywhere,
+  comboOptionsVersion,
+  loadFavoriteWorkflows,
   removeOptionEverywhere,
   setDefaultOptionInDefs,
 } from '@/composables/stages/workflowCombo'
@@ -33,10 +35,14 @@ export function applyWorkflowEvent(app: any, detail: any): boolean {
       if (!kind) return false
       setDefaultOptionInDefs(kind, detail?.default && label ? label : null)
       break
+    case 'favorite':
+      if (!kind) return false
+      break
     default:
       return false
   }
-  void app?.refreshComboInNodes?.()
+  void loadFavoriteWorkflows()
+  void app?.refreshComboInNodes?.()?.then(() => { comboOptionsVersion.value++ })
   app?.graph?.setDirtyCanvas?.(true, true)
   return true
 }
@@ -46,6 +52,7 @@ export function installWorkflowRegistrySync(app: any): boolean {
   const api = app.api
   if (!api?.addEventListener) return false
   app.__comfytvWorkflowSyncInstalled = true
+  void loadFavoriteWorkflows()
   api.addEventListener('comfytv-workflows', (event: any) => {
     applyWorkflowEvent(app, event?.detail ?? event)
   })

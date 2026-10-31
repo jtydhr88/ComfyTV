@@ -40,6 +40,11 @@
               :title="$t('stageManager.badge.defaultHint')">
           <i class="pi pi-star-fill ctv:text-3xs" /> {{ $t('stageManager.badge.default') }}
         </span>
+        <span v-if="w.is_favorite"
+              :class="[badge, 'ctv:bg-warning-background/15 ctv:text-warning-background']"
+              :title="$t('stageManager.badge.favoriteHint')">
+          <i class="pi pi-heart-fill ctv:text-3xs" /> {{ $t('stageManager.badge.favorite') }}
+        </span>
         <span v-if="recentAdded.has(w.label)"
               :class="[badge, 'ctv:bg-success-background/15 ctv:text-success-background']"
               :title="$t('stageManager.badge.newHint')">
@@ -93,6 +98,14 @@
           <i :class="['pi', w.is_default ? 'pi-star-fill' : 'pi-star']" />
         </button>
         <button
+          :class="['ctv-hover-reveal', iconBtn, w.is_favorite ? 'ctv:text-warning-background' : '']"
+          :title="w.is_favorite ? $t('stageManager.unsetFavorite') : $t('stageManager.setFavorite')"
+          :disabled="favoriteBusyId === w.id"
+          @click="onSetFavorite(w, !w.is_favorite)"
+        >
+          <i :class="['pi', w.is_favorite ? 'pi-heart-fill' : 'pi-heart']" />
+        </button>
+        <button
           :class="['ctv-hover-reveal', iconBtn]"
           :title="w.is_hidden ? $t('stageManager.unhide') : $t('stageManager.hide')"
           :disabled="hiddenBusyId === w.id"
@@ -139,6 +152,7 @@ const {
   importBusy,
   rescanBusy,
   defaultBusyId,
+  favoriteBusyId,
   hiddenBusyId,
   openBusyId,
   unlinkBusyId,
@@ -147,6 +161,7 @@ const {
   onRescan,
   onImport,
   onSetDefault,
+  onSetFavorite,
   onSetHidden,
   onUnlink,
   onOpenInComfy,

@@ -235,12 +235,28 @@ def set_default_workflow(workflow_id: int, default: bool) -> Optional[dict]:
             ).scalars():
                 other.is_default = False
         row.is_default = default
+        if default:
+            row.is_favorite = True
         s.commit()
         result = {"ok": True, "kind": row.kind, "label": row.label,
                   "is_default": row.is_default}
     _log.info("[ComfyTV/workflow_db] default for %s: %s",
               result["kind"], result["label"] if default else "(cleared)")
     return result
+
+
+def set_favorite_workflow(workflow_id: int, favorite: bool) -> Optional[dict]:
+    db.init()
+    with db.get_session() as s:
+        row = s.get(db.Workflow, workflow_id)
+        if row is None:
+            return None
+        row.is_favorite = favorite
+        if not favorite:
+            row.is_default = False
+        s.commit()
+        return {"ok": True, "kind": row.kind, "label": row.label,
+                "is_favorite": row.is_favorite, "is_default": row.is_default}
 
 
 def set_hidden_workflow(workflow_id: int, hidden: bool) -> Optional[dict]:
@@ -271,6 +287,20 @@ def get_default_label(kind: str) -> Optional[str]:
         if not row.file_path or not Path(row.file_path).exists():
             return None
         return row.label
+
+
+def get_favorite_labels() -> dict[str, list[str]]:
+    db.init()
+    with db.get_session() as s:
+        rows = s.execute(
+            select(db.Workflow.kind, db.Workflow.label, db.Workflow.file_path)
+            .where(db.Workflow.is_favorite)
+        ).all()
+    out: dict[str, list[str]] = {}
+    for kind, label, file_path in rows:
+        if file_path and Path(file_path).exists():
+            out.setdefault(kind, []).append(label)
+    return out
 
 
 def list_workflow_bindings() -> list[dict]:
@@ -372,6 +402,7 @@ def list_workflows_overview(kind: Optional[str] = None) -> list[dict]:
                 "has_api":     bool(r.api_json),
                 "gui_valid":   _gui_valid_for(path) if path else None,
                 "is_default":  bool(getattr(r, "is_default", False)),
+                "is_favorite": bool(r.is_favorite),
                 "is_hidden":   bool(getattr(r, "is_hidden", False)),
             })
         return out

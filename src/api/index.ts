@@ -5,6 +5,7 @@ import { app } from '@/lib/comfyApp'
 
 import {
   AdoptAssetsSchema,
+  FavoriteWorkflowsSchema,
   BackupResultSchema,
   ListSettingsSchema,
   MutateSettingsSchema,
@@ -40,6 +41,7 @@ import {
   RemoteRunResultSchema,
   RescanResultSchema,
   SetDefaultWorkflowResultSchema,
+  SetFavoriteWorkflowResultSchema,
   SetHiddenWorkflowResultSchema,
   StageDefaultsSchema,
   TestServerResultSchema,
@@ -71,6 +73,8 @@ import type {
   RescanResult,
   ScoreEditorImport,
   SetDefaultWorkflowResult,
+  SetFavoriteWorkflowResult,
+  FavoriteWorkflows,
   SetHiddenWorkflowResult,
   TestServerResult,
 } from './schemas'
@@ -198,6 +202,17 @@ export function setDefaultWorkflow(
 ): Promise<SetDefaultWorkflowResult> {
   return apiSend(`/comfytv/workflows/${id}/set_default`, 'POST',
     SetDefaultWorkflowResultSchema, { default: isDefault })
+}
+
+export function setFavoriteWorkflow(
+  id: number, isFavorite: boolean,
+): Promise<SetFavoriteWorkflowResult> {
+  return apiSend(`/comfytv/workflows/${id}/set_favorite`, 'POST',
+    SetFavoriteWorkflowResultSchema, { favorite: isFavorite })
+}
+
+export function listFavoriteWorkflows(): Promise<FavoriteWorkflows> {
+  return apiFetch('/comfytv/workflows/favorites', FavoriteWorkflowsSchema)
 }
 
 export function setHiddenWorkflow(

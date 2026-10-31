@@ -7,7 +7,12 @@ vi.mock('@/composables/stages/stageMeta', () => ({
   getStageMeta: (...a: any[]) => getStageMeta(...a),
 }))
 
-import { addOptionEverywhere, comboOptionsVersion, removeOptionEverywhere, setDefaultOptionInDefs } from './workflowCombo'
+const listFavoriteWorkflows = vi.fn()
+vi.mock('@/api', () => ({
+  listFavoriteWorkflows: (...a: any[]) => listFavoriteWorkflows(...a),
+}))
+
+import { addOptionEverywhere, comboOptionsVersion, lastFavoriteOption, loadFavoriteWorkflows, removeOptionEverywhere, setDefaultOptionInDefs } from './workflowCombo'
 
 function stage(kind: string, value: string, values: string[], cb = vi.fn()) {
   return {
@@ -33,6 +38,16 @@ describe('workflowCombo', () => {
     }))
     ;(app as any).graph._nodes = []
     ;(window as any).LiteGraph = { registered_node_types: {} }
+  })
+
+  describe('lastFavoriteOption', () => {
+    it('returns the end of the leading favorites for that kind only', async () => {
+      listFavoriteWorkflows.mockResolvedValue({ favorites: { image: ['S', 'F'] } })
+      await loadFavoriteWorkflows()
+      expect(lastFavoriteOption('image', ['S', 'F', 'A'])).toBe('F')
+      expect(lastFavoriteOption('image', ['A', 'S'])).toBeUndefined()
+      expect(lastFavoriteOption('video', ['S', 'F'])).toBeUndefined()
+    })
   })
 
   describe('addOptionEverywhere', () => {

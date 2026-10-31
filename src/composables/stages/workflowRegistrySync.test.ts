@@ -2,6 +2,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const combo = vi.hoisted(() => ({
   addOptionEverywhere: vi.fn(),
+  comboOptionsVersion: { value: 0 },
+  loadFavoriteWorkflows: vi.fn(async () => {}),
   removeOptionEverywhere: vi.fn(),
   setDefaultOptionInDefs: vi.fn(),
 }))
@@ -45,6 +47,21 @@ describe('applyWorkflowEvent', () => {
     expect(combo.setDefaultOptionInDefs).toHaveBeenCalledWith('image', 'X')
     applyWorkflowEvent(app, { event: 'default', kind: 'image', label: 'X', default: false })
     expect(combo.setDefaultOptionInDefs).toHaveBeenCalledWith('image', null)
+  })
+
+  it('re-renders Vue combos once the reordered options have loaded', async () => {
+    const app = makeApp()
+    const before = combo.comboOptionsVersion.value
+    applyWorkflowEvent(app, { event: 'default', kind: 'image', label: 'X', default: true })
+    expect(combo.comboOptionsVersion.value).toBe(before)
+    await vi.waitFor(() => expect(combo.comboOptionsVersion.value).toBe(before + 1))
+  })
+
+  it('reloads favorites and combo order on a favorite event', () => {
+    const app = makeApp()
+    expect(applyWorkflowEvent(app, { event: 'favorite', kind: 'image', label: 'X' })).toBe(true)
+    expect(combo.loadFavoriteWorkflows).toHaveBeenCalledTimes(1)
+    expect(app.refreshComboInNodes).toHaveBeenCalledTimes(1)
   })
 
   it('ignores malformed or unknown events', () => {

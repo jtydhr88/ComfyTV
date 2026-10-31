@@ -71,6 +71,7 @@ export const WorkflowOverviewSchema = z.object({
   has_api: z.boolean(),
   gui_valid: z.boolean().nullable().optional(),
   is_default: z.boolean().optional(),
+  is_favorite: z.boolean().optional(),
   is_hidden: z.boolean().optional(),
 })
 export type WorkflowOverview = z.infer<typeof WorkflowOverviewSchema>
@@ -81,6 +82,18 @@ export const SetDefaultWorkflowResultSchema = z.object({
   is_default: z.boolean(),
 })
 export type SetDefaultWorkflowResult = z.infer<typeof SetDefaultWorkflowResultSchema>
+export const SetFavoriteWorkflowResultSchema = z.object({
+  ok: z.boolean(),
+  kind: z.string(),
+  label: z.string(),
+  is_favorite: z.boolean(),
+  is_default: z.boolean(),
+})
+export type SetFavoriteWorkflowResult = z.infer<typeof SetFavoriteWorkflowResultSchema>
+export const FavoriteWorkflowsSchema = z.object({
+  favorites: z.record(z.string(), z.array(z.string())),
+})
+export type FavoriteWorkflows = z.infer<typeof FavoriteWorkflowsSchema>
 export const SetHiddenWorkflowResultSchema = z.object({
   ok: z.boolean(),
   kind: z.string(),

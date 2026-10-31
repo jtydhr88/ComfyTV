@@ -70,7 +70,8 @@ ComfyTV 在 ComfyUI 左侧边栏注册一个 **ComfyTV** 页签，里面又分**
 **Workflows** —— 该 kind 注册的全部工作流，也就是画布上对应 stage 节点下拉框里的内容：
 
 - 徽章说明每一行的来历：**built-in**（随 ComfyTV 发布）、**linked**（指向 ComfyUI 原生库）、**new**（最近一次扫描新发现）、**default**，以及健康警告——*文件丢失*、*不是 GUI 格式*、*API 未生成*（首跑前属正常）。
-- 悬停某行可 **★ 设为默认**——此后新建的该 kind stage 默认选中它。
+- 悬停某行可 **★ 设为默认**——此后新建的该 kind stage 默认选中它，同时会被收藏。
+- 点 **♥ 收藏** 可以收藏多个。stage 的工作流下拉列表依次为：★ 默认、收藏、分隔线、其他。取消 ★ 保留收藏；取消收藏会同时取消 ★。
 - 可在这里 **Import** JSON，或把文件丢进 `user/comfytv/workflows/<kind>/` 后点 **Rescan**——直接重扫磁盘上的库，不用重启后端。
 
 **Parameters** —— 给这个 kind 的所有 stage 定义你自己的额外控件：

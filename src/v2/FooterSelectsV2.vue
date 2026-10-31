@@ -6,6 +6,7 @@
         :options="optionsOf('workflow')"
         :disabled="optionsOf('workflow').length === 0"
         :placeholder="optionsOf('workflow').length === 0 ? $t('stage.noWorkflowShort') : undefined"
+        :separator-after="lastFavorite()"
         @update:model-value="v => writeVal('workflow', v)"
       />
     </div>
@@ -84,7 +85,8 @@ import { useI18n } from 'vue-i18n'
 import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
 import GenOptionsV2 from '@/v2/GenOptionsV2.vue'
 import { openLinkWorkflow } from '@/composables/stages/openLinkWorkflow'
-import { comboOptionsVersion } from '@/composables/stages/workflowCombo'
+import { getStageMeta } from '@/composables/stages/stageMeta'
+import { comboOptionsVersion, lastFavoriteOption } from '@/composables/stages/workflowCombo'
 import type { LGraphNode } from '@/lib/comfyApp'
 import { useWidgetValues } from '@/v2/useWidgetValues'
 
@@ -111,6 +113,12 @@ function optionsOf(name: string): string[] {
   void comboOptionsVersion.value
   const vals = widgetOf(name)?.options?.values
   return Array.isArray(vals) ? vals.map(String) : []
+}
+
+function lastFavorite(): string | undefined {
+  const comfyClass = props.getNode()?.comfyClass
+  const kind = comfyClass ? getStageMeta(comfyClass)?.workflow_kind : undefined
+  return kind ? lastFavoriteOption(kind, optionsOf('workflow')) : undefined
 }
 
 function optNum(name: string, key: string): number | undefined {
