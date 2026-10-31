@@ -27,6 +27,7 @@ Text Stage can also take upstream **texts**, **images**, and **videos** as multi
 
 - A **stage** with **▶ Run** executes **only that node**—not the whole ComfyUI graph via global Queue.
 - After a run, the text snapshot is stored in the project; downstream stages read it on their next run and **do not automatically re-run** Text Stage.
+- Click the **pencil** on the result to edit it in place: click outside or press `Ctrl+Enter` to save, `Esc` to cancel. Downstream stages use the edited text, and **Restore** brings back the generated text. Running Text Stage again replaces the edit.
 - The **workflow** dropdown lists subgraphs from [`workflows/text/`](https://github.com/jtydhr88/ComfyTV/tree/main/workflows/text). ComfyTV maps `main_prompt`, seed, max_length, etc. into that subgraph.
 
 Text workflows have no `SaveImage`; ComfyTV reads the LLM node’s first string output via `graph_output_first` in the preset.

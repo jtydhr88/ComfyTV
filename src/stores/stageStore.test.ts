@@ -256,6 +256,29 @@ describe('stageStore.refreshStageInputs (fx passthrough resolution)', () => {
   })
 })
 
+describe('stageStore.applyExecutedPayload after a text edit', () => {
+  beforeEach(() => setActivePinia(createPinia()))
+
+  it('ignores a cached replay of the output the edit replaced', () => {
+    const store = useStageStore()
+    const state = freshState({ running: true, output: 'edited', outputs: ['edited'], outputId: 8, textEdited: true })
+    store.applyExecutedPayload(state, { output: ['generated'], output_id: [7] })
+    expect(state.output).toBe('edited')
+    expect(state.outputId).toBe(8)
+    expect(state.textEdited).toBe(true)
+    expect(state.running).toBe(false)
+  })
+
+  it('takes a real regeneration and clears the edited mark', () => {
+    const store = useStageStore()
+    const state = freshState({ output: 'edited', outputs: ['edited'], outputId: 8, textEdited: true })
+    store.applyExecutedPayload(state, { output: ['fresh'], output_id: [9] })
+    expect(state.output).toBe('fresh')
+    expect(state.outputId).toBe(9)
+    expect(state.textEdited).toBe(false)
+  })
+})
+
 describe('stageStore.applyExecutedPayload', () => {
   beforeEach(() => {
     setActivePinia(createPinia())

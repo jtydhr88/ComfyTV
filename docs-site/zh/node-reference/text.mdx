@@ -28,6 +28,7 @@ Text Stage 还可以接收上游的 **texts**、**images**、**videos** 作为�
 
 - **Stage** = 带 **▶ 运行** 的步骤；点运行**只执行本节点**，不会让整个 ComfyUI 图进入 Queue。
 - **快照**：Run 一次后，文本结果存进当前项目；下游 stage 再 Run 时读这份快照，**不会自动重跑** Text Stage。
+- **直接改结果**：点结果区的**铅笔**按钮就地编辑，点外面或按 `Ctrl+Enter` 保存，`Esc` 取消。下游使用改后的文本，**还原**可回到生成的原文。重新运行 Text Stage 会替换改动。
 - **workflow 下拉框** = 仓库 [`workflows/text/`](https://github.com/jtydhr88/ComfyTV/tree/main/workflows/text) 里注册的 ComfyUI 子工作流 JSON。ComfyTV 负责把 `main_prompt`、seed、max_length 等映射进子图。
 
 文本工作流不保存图片；ComfyTV 直接从 LLM 节点读取生成的字符串。

@@ -290,6 +290,75 @@ class TestStageUidIdentity:
         assert adopted["payload_url"] == "hello"
 
 
+class TestEditTextOutput:
+    def _generated(self, **kw):
+        from ComfyTV import storage
+        return storage.persist_output(
+            project_id="default", stage_class="ComfyTV.TextStage", stage_node_id="5",
+            output_type="text", payload_url="generated", stage_uid="uid-t",
+            params={"workflow": "w"}, duration_ms=12, **kw,
+        )
+
+    def test_edit_keeps_the_original_and_becomes_latest(self, reset_db):
+        from ComfyTV import storage
+        original = self._generated()
+        edited = storage.edit_text_output(original["id"], "changed")
+        assert edited["id"] > original["id"]
+        assert edited["payload_url"] == "changed"
+        assert edited["parent_output_id"] == original["id"]
+        assert edited["params_json"] == {"workflow": "w", "edited": True}
+        assert edited["duration_ms"] == 12
+        assert storage.latest_output_by_uid("default", "uid-t", output_type="text")["id"] == edited["id"]
+        kept = [o for o in storage.list_outputs("default", stage_node_id="5") if o["id"] == original["id"]]
+        assert kept[0]["payload_url"] == "generated"
+
+    def test_repeated_edits_all_point_at_the_original(self, reset_db):
+        from ComfyTV import storage
+        original = self._generated()
+        first = storage.edit_text_output(original["id"], "one")
+        second = storage.edit_text_output(first["id"], "two")
+        assert second["parent_output_id"] == original["id"]
+
+    def test_restore_brings_back_the_original_as_latest(self, reset_db):
+        from ComfyTV import storage
+        original = self._generated(parent_output_id=None)
+        first = storage.edit_text_output(original["id"], "one")
+        second = storage.edit_text_output(first["id"], "two")
+        restored = storage.restore_text_output(second["id"])
+        assert restored["payload_url"] == "generated"
+        assert restored["params_json"] == {"workflow": "w"}
+        assert storage.latest_output_by_uid("default", "uid-t")["id"] == restored["id"]
+
+    def test_edit_after_restore_still_keeps_the_generated_text(self, reset_db):
+        from ComfyTV import storage
+        original = self._generated()
+        restored = storage.restore_text_output(storage.edit_text_output(original["id"], "one")["id"])
+        again = storage.edit_text_output(restored["id"], "two")
+        assert storage.restore_text_output(again["id"])["payload_url"] == "generated"
+
+    def test_only_text_outputs_can_be_edited(self, reset_db):
+        from ComfyTV import storage
+        image = storage.persist_output(
+            project_id="default", stage_class="X", stage_node_id="5",
+            output_type="image", payload_url="/view?filename=x.png",
+        )
+        assert storage.edit_text_output(image["id"], "x") is None
+        assert storage.edit_text_output(99999, "x") is None
+
+    def test_restore_needs_an_edited_row(self, reset_db):
+        from ComfyTV import storage
+        assert storage.restore_text_output(self._generated()["id"]) is None
+        assert storage.restore_text_output(99999) is None
+
+    def test_retention_keeps_the_original_while_edits_reference_it(self, reset_db):
+        from ComfyTV import storage
+        original = self._generated()
+        last = original
+        for i in range(storage.OUTPUT_RETENTION_PER_STAGE + 5):
+            last = storage.edit_text_output(last["id"], f"v{i}")
+        assert storage.restore_text_output(last["id"])["payload_url"] == "generated"
+
+
 class TestLatestByUidOutputTypeGate:
     def _row(self, output_type, payload, uid="uid-shared", node_id="1"):
         from ComfyTV import storage

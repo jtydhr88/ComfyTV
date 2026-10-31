@@ -76,6 +76,8 @@ export interface StageState {
    durationMs?: number | null
    preparingWorkflow?: boolean
    directorClips?: string | null
+   textEdited?: boolean
+   textEditing?: boolean
 }
 
 export const FX_PASSTHROUGH_CLASSES = new Set([
@@ -284,7 +286,9 @@ export const useStageStore = defineStore('comfytv-stage', () => {
     state.running = false
     state.progress = null
     setLivePreview(state, null)
-    state.error = null  // success clears any prior error
+    state.error = null
+    if (state.textEdited && Number(outId) < Number(state.outputId)) return
+    state.textEdited = false  // success clears any prior error
     if (payload == null) return
     const s = typeof payload === 'string' ? payload : String(payload)
     state.output = s

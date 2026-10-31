@@ -279,6 +279,51 @@ def update_output_picked_index(output_id: int, picked_index: int) -> Optional[di
         return _output_to_dict(out)
 
 
+def _params_of(o: Output) -> dict:
+    params = json.loads(o.params_json) if o.params_json else None
+    return params if isinstance(params, dict) else {}
+
+
+def edit_text_output(output_id: int, text: str) -> Optional[dict]:
+    with db.get_session() as s:
+        src = s.get(Output, int(output_id))
+        if src is None or src.output_type != "text":
+            return None
+        params = _params_of(src)
+        fields = dict(
+            project_id=src.project_id,
+            stage_class=src.stage_class,
+            stage_node_id=src.stage_node_id,
+            stage_uid=src.stage_uid,
+            output_type=src.output_type,
+            duration_ms=src.duration_ms,
+            parent_output_id=src.parent_output_id if params.get("edited") else src.id,
+        )
+    return persist_output(payload_url=text, params={**params, "edited": True}, **fields)
+
+
+def restore_text_output(output_id: int) -> Optional[dict]:
+    with db.get_session() as s:
+        src = s.get(Output, int(output_id))
+        if src is None or not _params_of(src).get("edited") or src.parent_output_id is None:
+            return None
+        original = s.get(Output, src.parent_output_id)
+        if original is None:
+            return None
+        fields = dict(
+            project_id=src.project_id,
+            stage_class=src.stage_class,
+            stage_node_id=src.stage_node_id,
+            stage_uid=src.stage_uid,
+            output_type=src.output_type,
+            payload_url=original.payload_url,
+            params=_params_of(original) or None,
+            parent_output_id=original.parent_output_id,
+            duration_ms=original.duration_ms,
+        )
+    return persist_output(**fields)
+
+
 def _output_to_dict(o: Output) -> dict:
     return {
         "id": o.id,

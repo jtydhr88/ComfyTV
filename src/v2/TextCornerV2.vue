@@ -1,6 +1,30 @@
 <template>
   <div v-if="hasText" class="v2-corner" @pointerdown.stop>
     <button
+      v-if="editable && !state.textEditing"
+      type="button"
+      class="v2-corner__btn"
+      :disabled="state.running || !state.outputId"
+      :title="t('stage.action.editText')"
+      @click.stop="state.textEditing = true"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M4 20h4L19 9a2.1 2.1 0 00-3-3L5 17z" />
+      </svg>
+    </button>
+    <button
+      v-if="editable && state.textEdited && !state.textEditing"
+      type="button"
+      class="v2-corner__btn"
+      :disabled="state.running"
+      :title="t('stage.action.restoreText')"
+      @click.stop="restoreText"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M4 8h10a6 6 0 010 12H8M4 8l4-4M4 8l4 4" />
+      </svg>
+    </button>
+    <button
       type="button"
       class="v2-corner__btn"
       :data-done="textCopied ? '1' : ''"
@@ -42,13 +66,17 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { useTextOutputActions } from '@/composables/stages/useTextOutputActions'
+import { useTextOutputEdit } from '@/composables/stages/useTextOutputEdit'
 import type { StageState } from '@/stores/stageStore'
 
 const { t } = useI18n()
 
 const props = defineProps<{
   state: StageState
+  editable?: boolean
 }>()
+
+const { restoreText } = useTextOutputEdit(props.state)
 
 const hasText = computed(() => !!String(props.state.output ?? '').trim())
 

@@ -31,6 +31,7 @@ import { V2_SHELLS } from '@/v2/registry'
 import ServerSelectV2 from '@/v2/ServerSelectV2.vue'
 import StageControlsV2, { type ControlSpec } from '@/v2/StageControlsV2.vue'
 import TextCornerV2 from '@/v2/TextCornerV2.vue'
+import TextOutputEditorV2 from '@/v2/TextOutputEditorV2.vue'
 import type { StageKind, StageVariant } from '@/stores/stageStore'
 
 const KIND_ICONS: Record<string, string> = {
@@ -43,6 +44,7 @@ const KIND_ICONS: Record<string, string> = {
 
 interface GeneratorConfig {
   preview: 'image' | 'video' | 'audio' | 'text' | 'model'
+  editableText?: boolean
   linkKind?: string | null
   refTypes?: string[]
   corner?: boolean
@@ -119,10 +121,11 @@ function makeGeneratorShell(config: GeneratorConfig) {
         ...(config.controls ?? []).map(c => c.name),
       ]
       islands.mount(mediaAnchor, {
-        render: () => h(MediaPreviewV2, {
+        render: () => stageState.textEditing ? h(TextOutputEditorV2, { state: stageState }) : h(MediaPreviewV2, {
           kind: config.preview,
           url: config.preview === 'text' ? null : stageState.output,
           text: config.preview === 'text' ? stageState.output : null,
+          badge: stageState.textEdited ? t('stage.action.textEdited') : null,
           hint,
         }),
       })
@@ -147,7 +150,7 @@ function makeGeneratorShell(config: GeneratorConfig) {
       if (config.corner) {
         specs.push([MediaCornerV2, { state: stageState, source: 'batch', onAction }, cornerAnchor])
       } else if (config.preview === 'text') {
-        specs.push([TextCornerV2, { state: stageState }, cornerAnchor])
+        specs.push([TextCornerV2, { state: stageState, editable: config.editableText }, cornerAnchor])
       }
       for (const [comp, props, anchor] of specs) {
         islands.mountWhenVisible(card, anchor, comp as any, props ?? {})
@@ -210,7 +213,7 @@ function makeGeneratorShell(config: GeneratorConfig) {
 }
 
 const GENERATORS: Record<string, GeneratorConfig> = {
-  'ComfyTV.TextStage':             { preview: 'text',  linkKind: 'text' },
+  'ComfyTV.TextStage':             { preview: 'text',  linkKind: 'text', editableText: true },
   'ComfyTV.SubtitleGenStage':      { preview: 'text',  linkKind: 'speech-to-text' },
   'ComfyTV.UpscaleStage':          {
     preview: 'image', linkKind: 'upscale', corner: true,

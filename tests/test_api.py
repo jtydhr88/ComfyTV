@@ -283,6 +283,33 @@ class TestOutputsRoutes:
                                  json={"stage_uid": "uid-9"})
         assert resp.status == 404
 
+    async def test_edit_and_restore_text(self, client):
+        from ComfyTV import storage
+        out = storage.persist_output(
+            project_id="default", stage_class="ComfyTV.TextStage", stage_node_id="9",
+            output_type="text", payload_url="generated", stage_uid="uid-t",
+        )
+        resp = await client.post(f"/comfytv/outputs/{out['id']}/edit_text",
+                                 json={"text": "changed"})
+        assert resp.status == 200
+        edited = (await resp.json())["output"]
+        assert storage.latest_output_by_uid("default", "uid-t")["payload_url"] == "changed"
+
+        resp = await client.post(f"/comfytv/outputs/{edited['id']}/restore_text")
+        assert resp.status == 200
+        assert storage.latest_output_by_uid("default", "uid-t")["payload_url"] == "generated"
+
+    async def test_edit_text_rejects_blank_and_missing(self, client):
+        from ComfyTV import storage
+        out = storage.persist_output(
+            project_id="default", stage_class="ComfyTV.TextStage", stage_node_id="9",
+            output_type="text", payload_url="generated",
+        )
+        resp = await client.post(f"/comfytv/outputs/{out['id']}/edit_text", json={"text": "  "})
+        assert resp.status == 400
+        resp = await client.post("/comfytv/outputs/99999/edit_text", json={"text": "x"})
+        assert resp.status == 404
+
     async def test_adopt_outputs(self, client):
         from ComfyTV import storage
         storage.persist_output(

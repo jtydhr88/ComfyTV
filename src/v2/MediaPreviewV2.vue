@@ -22,6 +22,7 @@
     </template>
     <template v-else-if="kind === 'text'">
       <div v-if="text" class="v2-mp__text" @pointerdown.stop @wheel.stop>{{ text }}</div>
+      <span v-if="badge" class="v2-mp__badge">{{ badge }}</span>
     </template>
     <template v-else-if="kind === 'model'">
       <div v-if="url" class="v2-mp__model" @pointerdown.stop @wheel.stop>
@@ -58,6 +59,7 @@ const props = defineProps<{
   kind: 'image' | 'video' | 'audio' | 'text' | 'model'
   url?: string | null
   text?: string | null
+  badge?: string | null
   hint: string
   onCaptureView?: (url: string) => void
 }>()
@@ -190,6 +192,17 @@ const hasContent = computed(() =>
   text-align: left;
   cursor: text;
   user-select: text;
+}
+.v2-mp__badge {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(23, 23, 27, 0.75);
+  color: #ececf1;
+  font: 500 10px/1 system-ui, sans-serif;
+  pointer-events: none;
 }
 .v2-mp__hint {
   display: flex;

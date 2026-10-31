@@ -98,6 +98,37 @@ async def patch_output_stage_uid(request: web.Request) -> web.Response:
     return web.json_response({"output": row})
 
 
+@routes.post("/comfytv/outputs/{oid}/edit_text")
+async def edit_text_output(request: web.Request) -> web.Response:
+    try:
+        oid = int(request.match_info["oid"])
+    except ValueError:
+        return web.json_response({"error": "invalid output id"}, status=400)
+    try:
+        body = await request.json()
+    except Exception:
+        return web.json_response({"error": "invalid JSON body"}, status=400)
+    text = body.get("text")
+    if not isinstance(text, str) or not text.strip():
+        return web.json_response({"error": "text is required"}, status=400)
+    row = storage.edit_text_output(oid, text)
+    if row is None:
+        return web.json_response({"error": "text output not found"}, status=404)
+    return web.json_response({"output": row})
+
+
+@routes.post("/comfytv/outputs/{oid}/restore_text")
+async def restore_text_output(request: web.Request) -> web.Response:
+    try:
+        oid = int(request.match_info["oid"])
+    except ValueError:
+        return web.json_response({"error": "invalid output id"}, status=400)
+    row = storage.restore_text_output(oid)
+    if row is None:
+        return web.json_response({"error": "edited text output not found"}, status=404)
+    return web.json_response({"output": row})
+
+
 @routes.post("/comfytv/outputs/{oid}/picked_index")
 async def patch_output_picked_index(request: web.Request) -> web.Response:
     try:

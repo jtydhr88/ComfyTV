@@ -59,6 +59,7 @@ export function bindOutputRestore(opts: {
       state.outputId = Number(latest.id)
     }
     state.durationMs = latest.duration_ms != null ? Number(latest.duration_ms) : null
+    state.textEdited = !!latest.params_json?.edited
     if (restored && restored !== state.output) {
       store.setOutputSlot(state, 0, restored)
     }
