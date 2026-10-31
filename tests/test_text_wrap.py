@@ -61,6 +61,66 @@ def test_title_wraps_before_the_typewriter_slices():
     assert _typewriter_slice(wrapped, 9, 0, "char", 1.0) == "aaa bbb\nc"
 
 
+class TestSubtitleBox:
+    def _text(self):
+        arr = np.zeros((2, 2, 4), dtype=np.uint8)
+        arr[0, 0] = (255, 255, 255, 255)
+        arr[0, 1] = (255, 0, 0, 128)
+        return arr
+
+    def test_grows_by_the_padding_and_fills_with_the_box(self):
+        from ComfyTV.runners.text_overlay import _add_box
+
+        out = _add_box(self._text(), "#102030", 0.5, 3)
+        assert out.shape == (8, 8, 4)
+        assert tuple(out[0, 0]) == (16, 32, 48, 128)
+        assert tuple(out[4, 4]) == (16, 32, 48, 128)
+
+    def test_opaque_text_stays_on_top(self):
+        from ComfyTV.runners.text_overlay import _add_box
+
+        out = _add_box(self._text(), "#102030", 0.5, 3)
+        assert tuple(out[3, 3]) == (255, 255, 255, 255)
+
+    def test_soft_text_edges_blend_over_the_box(self):
+        from ComfyTV.runners.text_overlay import _add_box
+
+        r, g, _, a = _add_box(self._text(), "#000000", 1.0, 1)[1, 2]
+        assert a == 255
+        assert r == 128 and g == 0
+
+    def test_wrap_leaves_room_for_the_padding(self):
+        from ComfyTV.runners.text_overlay import _box_padding, _text_wrapper
+
+        text = "这是一句比较长的中文字幕，用来测试它在视频画面里会不会超出边界。" * 2
+        pad = _box_padding(48)
+        wrapped = _text_wrapper("NotoSansSC-Regular", 48, 2, pad)(text, 1280)
+        arr = render_text_rgba(wrapped, font="NotoSansSC-Regular", size=48, stroke=2)
+        assert arr.shape[1] + 2 * pad <= 1280 * 0.9 + 2
+
+
+def test_subtitle_stroke_zero_is_respected():
+    from ComfyTV.nodes.stages import video_text
+
+    seen = {}
+
+    def fake_burn(video, raw, **kw):
+        seen.update(kw)
+        return "/view?filename=x.mp4"
+
+    orig_burn, orig_emit = video_text.burn_subtitles, video_text._stage_emit_auto
+    video_text.burn_subtitles = fake_burn
+    video_text._stage_emit_auto = lambda *a, **k: None
+    try:
+        video_text.SubtitleStage.execute(
+            video="/view?filename=a.mp4", subs="1\n00:00:00,000 --> 00:00:01,000\nhi\n", stroke=0)
+    finally:
+        video_text.burn_subtitles, video_text._stage_emit_auto = orig_burn, orig_emit
+    assert seen["stroke"] == 0
+    assert seen["box_opacity"] == 0.0
+    assert seen["margin"] == 0.05
+
+
 def test_short_text_renders_as_before():
     from ComfyTV.runners.text_overlay import _text_wrapper
 

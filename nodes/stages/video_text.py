@@ -81,6 +81,10 @@ class SubtitleStage(io.ComfyNode):
                 _hidden_str("color", "#FFFFFF"),
                 _hidden_int("stroke", 2, 0, 20),
                 _hidden_combo("anchor", ['bottom', 'top'], 'bottom'),
+                _hidden_str("stroke_color", "#000000"),
+                _hidden_str("box_color", "#000000"),
+                _hidden_float("box_opacity", 0.0, 0.0, 1.0, step=0.01),
+                _hidden_float("margin", 0.05, 0.0, 0.4, step=0.01),
                 COMFYTV_VIDEO.Input("video", optional=True),
                 COMFYTV_TEXT.Input("subs_text", optional=True),
             ],
@@ -92,15 +96,20 @@ class SubtitleStage(io.ComfyNode):
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                 subs="", font='', size=36, color="#FFFFFF", stroke=2,
-                anchor='bottom', video="", subs_text=""):
+                anchor='bottom', stroke_color="#000000", box_color="#000000",
+                box_opacity=0.0, margin=0.05, video="", subs_text=""):
         _need_video(video, "Subtitles")
         raw = (subs_text or '').strip() or (subs or '').strip()
         if not raw:
             raise RuntimeError("Subtitles: paste SRT/VTT text or wire a text input.")
         payload = burn_subtitles(
             video, raw, font=font, size=min(200, max(8, int(size or 36))),
-            color=color or '#FFFFFF', stroke=min(20, max(0, int(stroke or 2))),
-            anchor=anchor, progress=_progress_cb(cls))
+            color=color or '#FFFFFF', stroke=min(20, max(0, int(stroke or 0))),
+            stroke_color=stroke_color or '#000000', anchor=anchor,
+            box_color=box_color or '#000000',
+            box_opacity=_f(box_opacity, 0, 1, 0.0),
+            margin=_f(margin, 0, 0.4, 0.05),
+            progress=_progress_cb(cls))
         return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
                                 parent_output_id=parent_output_id)
 

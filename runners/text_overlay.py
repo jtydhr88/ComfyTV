@@ -214,13 +214,35 @@ def _text_measure(font, size):
     return lambda s: sum(f.getlength(t) for t, f in _font_runs(s, fnt, fallback)[0])
 
 
-def _text_wrapper(font, size, stroke):
+def _text_wrapper(font, size, stroke, pad=0):
     measure = _text_measure(font, size)
 
     @lru_cache(maxsize=512)
     def wrap(text, frame_width):
-        return wrap_text(text, measure, frame_width * 0.9 - 2 * (2 + int(stroke)))
+        return wrap_text(text, measure,
+                         frame_width * 0.9 - 2 * (2 + int(stroke) + pad))
     return wrap
+
+
+def _box_padding(size):
+    return round(size * 0.25)
+
+
+def _add_box(rgba, color, opacity, pad):
+    from PIL import ImageColor
+
+    h, w = rgba.shape[:2]
+    out = np.zeros((h + 2 * pad, w + 2 * pad, 4), dtype=np.float32)
+    out[..., :3] = ImageColor.getrgb(color)[:3]
+    box_alpha = float(opacity)
+    text_alpha = rgba[..., 3:4].astype(np.float32) / 255.0
+    region = out[pad:pad + h, pad:pad + w]
+    alpha = text_alpha + box_alpha * (1 - text_alpha)
+    region[..., :3] = (rgba[..., :3] * text_alpha + region[..., :3] * box_alpha * (1 - text_alpha)) \
+        / np.maximum(alpha, 1e-6)
+    out[..., 3] = box_alpha * 255.0
+    region[..., 3:4] = alpha * 255.0
+    return np.clip(np.rint(out), 0, 255).astype(np.uint8)
 
 
 def render_text_rgba(text: str, *, font='', size=48, color='#FFFFFF',
@@ -424,18 +446,21 @@ def parse_subtitles(raw: str) -> list:
 
 def burn_subtitles(view_url: str, subs_raw: str, *, font='', size=36,
                    color='#FFFFFF', stroke=2, stroke_color='#000000',
-                   anchor='bottom', progress=None) -> str:
+                   anchor='bottom', box_color='#000000', box_opacity=0.0,
+                   margin=0.05, progress=None) -> str:
     cues = parse_subtitles(subs_raw)
     if not cues:
         raise RuntimeError("subtitles: no cues parsed — check the SRT/VTT text")
     cache = {}
-    wrap = _text_wrapper(font, size, stroke)
+    pad = _box_padding(size) if box_opacity > 0 else 0
+    wrap = _text_wrapper(font, size, stroke, pad)
 
     def rgba_for(text):
         if text not in cache:
-            cache[text] = render_text_rgba(
+            rgba = render_text_rgba(
                 text, font=font, size=size, color=color,
                 stroke=stroke, stroke_color=stroke_color)
+            cache[text] = _add_box(rgba, box_color, box_opacity, pad) if pad else rgba
         return cache[text]
 
     def frame_fn(bg, t):
@@ -445,7 +470,7 @@ def burn_subtitles(view_url: str, subs_raw: str, *, font='', size=36,
         rgba = rgba_for(wrap(active['text'], bg.shape[1]))
         overlay = _overlay_fn_factory(bg.device)
         x, y = _place(anchor, bg.shape[1], bg.shape[0],
-                      rgba.shape[1], rgba.shape[0])
+                      rgba.shape[1], rgba.shape[0], margin)
         return overlay(bg.clone(), rgba, x, y, 1.0)
 
     return torch_process_video(view_url, frame_fn, progress=progress)

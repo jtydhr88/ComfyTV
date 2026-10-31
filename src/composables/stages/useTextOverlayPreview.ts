@@ -2,6 +2,7 @@ import { useEventListener, useRafFn } from '@vueuse/core'
 import { ref, watch, watchEffect, type Ref } from 'vue'
 
 import {
+  boxPadding,
   cmapCoverage,
   opszDefault,
   placeBlock,
@@ -17,6 +18,9 @@ export interface TextOverlayStyle {
   stroke: number
   strokeColor: string
   anchor: string
+  boxColor?: string
+  boxOpacity?: number
+  margin?: number
 }
 
 interface LoadedFont {
@@ -55,6 +59,7 @@ export function useTextOverlayPreview(opts: {
 }) {
   const fonts = ref<[LoadedFont, LoadedFont] | null>(null)
   const time = ref(0)
+  const metadataLoads = ref(0)
 
   watch(() => opts.style().font, async (font) => {
     fonts.value = null
@@ -63,6 +68,8 @@ export function useTextOverlayPreview(opts: {
   }, { immediate: true })
 
   function draw(): void {
+    void metadataLoads.value
+    const now = time.value
     const canvas = opts.canvas.value
     const video = opts.video.value
     if (!canvas || !video) return
@@ -80,9 +87,11 @@ export function useTextOverlayPreview(opts: {
     const base = main.opsz ?? st.size
     const f = st.size / base
     const stack = `${base}px ${main.family}, ${fallback.family}`
-    const item = opts.textAt(time.value, (text) => {
+    const boxOpacity = st.boxOpacity ?? 0
+    const pad = boxOpacity > 0 ? boxPadding(st.size) : 0
+    const item = opts.textAt(now, (text) => {
       ctx.font = stack
-      return wrapText(text, (s) => ctx.measureText(s).width * f, vw * 0.9 - 2 * (2 + stroke))
+      return wrapText(text, (s) => ctx.measureText(s).width * f, vw * 0.9 - 2 * (2 + stroke + pad))
     })
     if (!item) return
 
@@ -121,7 +130,16 @@ export function useTextOverlayPreview(opts: {
       th = bottom - top + 4
       baselines = lines.map((_, i) => 2 - top + i * spacing + asc)
     }
-    const [x, y] = placeBlock(st.anchor, vw, vh, tw, th)
+    const [boxX, boxY] = placeBlock(st.anchor, vw, vh, tw + 2 * pad, th + 2 * pad, st.margin)
+    const x = boxX + pad
+    const y = boxY + pad
+
+    if (pad) {
+      ctx.setTransform(k, 0, 0, k, 0, 0)
+      ctx.globalAlpha = item.opacity * boxOpacity
+      ctx.fillStyle = st.boxColor ?? '#000000'
+      ctx.fillRect(boxX, boxY, tw + 2 * pad, th + 2 * pad)
+    }
 
     ctx.font = stack
     ctx.globalAlpha = item.opacity
@@ -140,7 +158,7 @@ export function useTextOverlayPreview(opts: {
   const syncTime = () => { time.value = opts.video.value?.currentTime ?? 0 }
   const playing = useRafFn(syncTime, { immediate: false })
   useEventListener(opts.video, ['timeupdate', 'seeked'], syncTime)
-  useEventListener(opts.video, 'loadedmetadata', () => { syncTime(); draw() })
+  useEventListener(opts.video, 'loadedmetadata', () => { syncTime(); metadataLoads.value++ })
   useEventListener(opts.video, 'play', playing.resume)
   useEventListener(opts.video, ['pause', 'ended'], playing.pause)
   watchEffect(draw, { flush: 'post' })

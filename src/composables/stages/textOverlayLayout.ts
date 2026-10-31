@@ -20,6 +20,10 @@ export function hasTimeTokens(text: string): boolean {
   return text.search(TOKEN_RE) >= 0
 }
 
+export function boxPadding(size: number): number {
+  return Math.round(size * 0.25)
+}
+
 export function placeBlock(
   anchor: string, fw: number, fh: number, tw: number, th: number, margin = 0.05,
 ): [number, number] {

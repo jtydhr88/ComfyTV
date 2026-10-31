@@ -58,6 +58,11 @@ describe('wrapText', () => {
 })
 
 describe('placeBlock', () => {
+  it('honors a custom vertical margin as a fraction of the frame height', () => {
+    expect(placeBlock('bottom', 1280, 704, 200, 50, 0.2)).toEqual([540, 514])
+    expect(placeBlock('top', 1280, 704, 200, 50, 0)).toEqual([540, 0])
+  })
+
   it('keeps a 5% margin like the burn-in renderer', () => {
     expect(placeBlock('bottom', 1280, 704, 200, 50)).toEqual([540, 619])
     expect(placeBlock('top-left', 1280, 704, 200, 50)).toEqual([64, 35])

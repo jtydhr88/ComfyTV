@@ -82,11 +82,29 @@
             class="ctv:h-6 ctv:w-10 ctv:cursor-pointer ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-secondary-background"
           />
         </label>
+        <label class="ctv:flex ctv:items-center ctv:gap-1.5">
+          <span class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('fx.strokeLbl') }}</span>
+          <input
+            v-model="strokeColor"
+            type="color"
+            class="ctv:h-6 ctv:w-10 ctv:cursor-pointer ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-secondary-background"
+          />
+        </label>
+        <label class="ctv:flex ctv:items-center ctv:gap-1.5">
+          <span class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('fx.boxLbl') }}</span>
+          <input
+            v-model="boxColor"
+            type="color"
+            class="ctv:h-6 ctv:w-10 ctv:cursor-pointer ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-secondary-background"
+          />
+        </label>
       </div>
       <FxSlider v-model="stroke" :label="$t('fx.strokeLbl')" :min="0" :max="20" :step="1" :decimals="0" />
+      <FxSlider v-model="boxOpacity" :label="$t('fx.boxOpacity')" :min="0" :max="1" :step="0.01" :reset-to="0" />
 
       <div class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('fx.anchor') }}</div>
       <FxChips v-model="anchor" :options="ANCHORS" />
+      <FxSlider v-model="margin" :label="$t('fx.edgeMargin')" :min="0" :max="0.4" :step="0.01" :reset-to="0.05" />
     </div>
 
     <div class="ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide">
@@ -146,6 +164,10 @@ const size = useNumWidget(props.node, 'size', 36)
 const color = useStrWidget(props.node, 'color', '#ffffff')
 const stroke = useNumWidget(props.node, 'stroke', 2)
 const anchor = useStrWidget(props.node, 'anchor', 'bottom')
+const strokeColor = useStrWidget(props.node, 'stroke_color', '#000000')
+const boxColor = useStrWidget(props.node, 'box_color', '#000000')
+const boxOpacity = useNumWidget(props.node, 'box_opacity', 0)
+const margin = useNumWidget(props.node, 'margin', 0.05)
 
 const { cues, addCue, removeCue, onCueNum, onCueText } = useSubtitleCues(subs)
 
@@ -156,7 +178,8 @@ useTextOverlayPreview({
   video: computed(() => playerRef.value?.videoEl ?? null),
   style: () => ({
     font: font.value, size: size.value, color: color.value,
-    stroke: stroke.value, strokeColor: '#000000', anchor: anchor.value,
+    stroke: stroke.value, strokeColor: strokeColor.value || '#000000', anchor: anchor.value,
+    boxColor: boxColor.value, boxOpacity: boxOpacity.value, margin: margin.value,
   }),
   textAt: (t, wrap) => cueTextAt(cues.value, t, wrap),
 })
