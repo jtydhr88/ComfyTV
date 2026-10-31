@@ -311,6 +311,7 @@ export const V2_CSS_PANELS = `
 .v2-collapse__info {
   display: none;
   flex: 1;
+  width: 0;
   min-width: 0;
   white-space: nowrap;
   overflow: hidden;
