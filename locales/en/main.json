@@ -487,7 +487,7 @@
       },
       "auto-picker": {
         "label": "Auto-attach picker on run",
-        "desc": "When an Image or Video stage runs with nothing connected to its output, add a Picker stage after it automatically."
+        "desc": "When an Image, Image Edit or Video stage runs with nothing connected to its output, add a Picker stage after it automatically."
       },
       "drop-files-as-loaders": {
         "label": "Drop media files as asset loaders",

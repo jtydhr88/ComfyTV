@@ -102,6 +102,14 @@ export function createStageRun(opts: {
 
     if (
       autoPicker
+      && node.comfyClass === 'ComfyTV.ImageEditStage'
+      && !outputHasLinks(node, 0)
+    ) {
+      spawnConsumingNode(node, 'ComfyTV.ImagePickerStage', 'batch')
+    }
+
+    if (
+      autoPicker
       && node.comfyClass === 'ComfyTV.VideoStage'
       && !outputHasLinks(node, 0)
     ) {
