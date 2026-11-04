@@ -123,6 +123,7 @@
       "muxAudio": "合成音轨 · 剪辑",
       "resize": "缩放 · 剪辑",
       "frames": "逐帧抽取 · 剪辑",
+      "extractFrame": "抽帧 · 剪辑",
       "timeRemap": "时间重映射 · 剪辑",
       "sequence": "片段序列 · 剪辑",
       "sceneDetect": "场景检测 · 剪辑",
@@ -1700,6 +1701,16 @@
     "addFirst": "拖到目标帧打点，然后 Run",
     "readyToRun": "已标记 {n} 帧 — 点 Run 抽取",
     "processing": "抽取中…",
+    "done": "抽帧完成 — 下游可直接使用"
+  },
+  "videoExtractFrame": {
+    "first": "首帧",
+    "middle": "中间",
+    "last": "尾帧",
+    "custom": "自定义",
+    "usePlayhead": "取当前帧",
+    "adjustThenRun": "选首帧/中间/尾帧，或拖到目标帧点「取当前帧」，然后 Run",
+    "processing": "抽帧中…",
     "done": "抽帧完成 — 下游可直接使用"
   },
   "videoResize": {

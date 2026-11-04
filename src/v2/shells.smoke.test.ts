@@ -128,6 +128,7 @@ const SHELL_META: Record<string, Meta> = {
   'ComfyTV.VideoMuxAudioStage': { kind: 'video' },
   'ComfyTV.VideoResizeStage': { kind: 'video' },
   'ComfyTV.VideoFramesStage': { kind: 'image-batch' },
+  'ComfyTV.VideoExtractFrameStage': { kind: 'image' },
   'ComfyTV.TimeRemapStage': { kind: 'video' },
   'ComfyTV.SequenceStage': { kind: 'video' },
   'ComfyTV.SceneDetectStage': { kind: 'image-batch' },

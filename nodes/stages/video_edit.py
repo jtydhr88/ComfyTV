@@ -1,5 +1,7 @@
 from ._common import *  # noqa: F401, F403
-from .common.fx_helpers import _progress_cb, _need_video, _simple_video_op  # noqa: F401
+from .common.fx_helpers import (  # noqa: F401
+    _progress_cb, _need_video, _simple_video_op, _hidden_combo, _hidden_float,
+)
 from ...runners.media import (
     extract_frame, trim_video, crop_video, resize_video, concat_videos,
     speed_video, transpose_video, adjust_volume, mux_audio, extract_frames_multi,
@@ -17,11 +19,10 @@ class VideoExtractFrameStage(io.ComfyNode):
             category="ComfyTV/Video",
             inputs=[
                 *_standard_stage_inputs(),
-                io.Combo.Input("position", options=['last', 'first', 'middle', 'custom'],
-                               default='last',
-                               tooltip="Which frame to grab. 'custom' uses at_seconds."),
-                io.Float.Input("at_seconds", default=0.0, min=0.0, max=3600.0, step=0.05,
-                               tooltip="Custom timestamp in seconds. Ignored unless position=custom."),
+                _hidden_combo("position", ['last', 'first', 'middle', 'custom'], 'last',
+                              tooltip="Which frame to grab. 'custom' uses at_seconds."),
+                _hidden_float("at_seconds", 0.0, 0.0, 3600.0, step=0.05,
+                              tooltip="Custom timestamp in seconds. Ignored unless position=custom."),
                 COMFYTV_VIDEO.Input("video", optional=True),
             ],
             outputs=[COMFYTV_IMAGE.Output("image")],

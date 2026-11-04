@@ -36,6 +36,7 @@ import VideoClipStageCard from '@/components/stages/VideoClipStageCard.vue'
 import VideoConcatStageCard from '@/components/stages/VideoConcatStageCard.vue'
 import VideoCropStageCard from '@/components/stages/VideoCropStageCard.vue'
 import VideoFramesStageCard from '@/components/stages/VideoFramesStageCard.vue'
+import VideoExtractFrameStageCard from '@/components/stages/VideoExtractFrameStageCard.vue'
 import VideoMuxAudioStageCard from '@/components/stages/VideoMuxAudioStageCard.vue'
 import VideoResizeStageCard from '@/components/stages/VideoResizeStageCard.vue'
 import VideoRotateStageCard from '@/components/stages/VideoRotateStageCard.vue'
@@ -60,6 +61,7 @@ const ICON_VOLUME = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" 
 const ICON_MUXAUDIO = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="5" width="13" height="10" rx="2"/><path d="M7 8.5l4 1.5-4 1.5z" fill="currentColor" stroke="none"/><path d="M19.5 8v8.2"/><circle cx="17.8" cy="17.5" r="1.8"/><path d="M19.5 8l2-.6"/></svg>`
 const ICON_RESIZE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="6" width="17" height="12" rx="2"/><path d="M7 15l3-3M7 12v3h3M17 9l-3 3M17 12V9h-3"/></svg>`
 const ICON_FRAMES = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="7" width="5.4" height="10" rx="1"/><rect x="9.3" y="7" width="5.4" height="10" rx="1"/><rect x="16.1" y="7" width="5.4" height="10" rx="1"/></svg>`
+const ICON_EXTRACTFRAME = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="7" width="5.4" height="10" rx="1" stroke-opacity=".45"/><rect x="16.1" y="7" width="5.4" height="10" rx="1" stroke-opacity=".45"/><rect x="9.3" y="5.5" width="5.4" height="13" rx="1"/><path d="M12 2v2M12 20v2"/></svg>`
 const ICON_TIMEREMAP = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.5 2"/><path d="M3.5 12c2-1.5 4-2.5 8.5-2.5" stroke-opacity=".4"/></svg>`
 const ICON_SEQUENCE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4.5" width="18" height="5" rx="1.5"/><rect x="3" y="12" width="12" height="5" rx="1.5"/><path d="M6 19.5h9"/></svg>`
 const ICON_SCENEDETECT = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="6" width="8.5" height="12" rx="1.5"/><rect x="13" y="6" width="8.5" height="12" rx="1.5"/><path d="M11 3l2 3-2-1-2 1z" fill="currentColor" stroke="none"/></svg>`
@@ -144,6 +146,10 @@ const CONFIGS: Record<string, FxShellConfig> = {
   'ComfyTV.VideoFramesStage': {
     titleKey: 'v2.fx.frames', icon: ICON_FRAMES,
     card: markRaw(VideoFramesStageCard), hasRun: true, plain: true, outputStrip: false,
+  },
+  'ComfyTV.VideoExtractFrameStage': {
+    titleKey: 'v2.fx.extractFrame', icon: ICON_EXTRACTFRAME,
+    card: markRaw(VideoExtractFrameStageCard), hasRun: true, plain: true, outputKind: 'image',
   },
   'ComfyTV.TimeRemapStage': {
     titleKey: 'v2.fx.timeRemap', icon: ICON_TIMEREMAP,

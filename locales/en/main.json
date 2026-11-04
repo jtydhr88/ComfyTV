@@ -123,6 +123,7 @@
       "muxAudio": "Mux Audio · Cut",
       "resize": "Resize · Cut",
       "frames": "Frames · Cut",
+      "extractFrame": "Extract Frame · Cut",
       "timeRemap": "Time Remap · Cut",
       "sequence": "Sequence · Cut",
       "sceneDetect": "Scene Detect · Cut",
@@ -1701,6 +1702,16 @@
     "readyToRun": "{n} frames marked — Run to extract",
     "processing": "Extracting…",
     "done": "Frames extracted — ready for downstream"
+  },
+  "videoExtractFrame": {
+    "first": "First",
+    "middle": "Middle",
+    "last": "Last",
+    "custom": "Custom",
+    "usePlayhead": "Use playhead",
+    "adjustThenRun": "Pick first/middle/last, or scrub and click Use playhead, then Run",
+    "processing": "Extracting…",
+    "done": "Frame extracted — ready for downstream"
   },
   "videoResize": {
     "source": "Source",
