@@ -19,7 +19,7 @@ Typical asks:
 
 ## No API keys, by design
 
-The bot does not talk to any cloud model API directly and ComfyTV never stores a key. Instead it drives an **agent CLI already installed on your machine** using that CLI's own login — or, with the Local LLM and ComfyUI LLM providers, a **model running on your own hardware**. Six providers ship today:
+The bot does not talk to any cloud model API directly and ComfyTV never stores a key. Instead it drives an **agent CLI already installed on your machine** using that CLI's own login — or, with the Local LLM and ComfyUI LLM providers, a **model running on your own hardware**. Seven providers ship today:
 
 | Provider | Install | Sign in | Attachments |
 | --- | --- | --- | --- |
@@ -27,6 +27,7 @@ The bot does not talk to any cloud model API directly and ComfyTV never stores a
 | [Codex](https://developers.openai.com/codex) | `npm install -g @openai/codex` | `codex login` | images / video / audio |
 | [Qwen Code](https://qwenlm.github.io/qwen-code-docs/) | official install script (see its docs) | run `qwen`, then `/auth` | not yet |
 | DeepSeek Harness | `dsh` (DeepSeek Harness command line) | sign in inside the DeepSeek Harness app | images, on vision models |
+| [Hermes](https://github.com/NousResearch/hermes-agent) | Hermes Agent on this machine or another one | configure a model in Hermes (`hermes setup`) | images, on vision models |
 | Local LLM | any OpenAI-compatible local server | none — set the endpoint URL in Settings | not yet |
 | ComfyUI LLM | a Qwen3- or Gemma-family checkpoint in `models/text_encoders` | none | not yet |
 
@@ -37,7 +38,7 @@ Prerequisites:
 
 The bar above the chat picks the engine (and, per engine, the model) for new chats; a chat keeps the engine it started with, so switching the engine starts a new chat. A red dot on the engine chip means it is not installed or not signed in — hover it for the reason.
 
-Provider isolation is per-engine: Claude Code runs with a strict per-turn MCP config and a tool whitelist; Codex runs `codex exec` sandboxed to the bot's working directory with shell and web search disabled, every MCP server except ComfyTV's turned off, and its localhost canvas-tool approvals routed through Codex's automatic reviewer (headless runs cannot prompt); Qwen Code runs against a project-scoped `.qwen/settings.json` inside the bot's working directory (ComfyTV MCP server only, built-in shell/file tools excluded); DeepSeek Harness runs `dsh` in ACP mode with a dedicated profile whose built-in tools are all disabled — your global CLI configuration and the app's own settings are never touched.
+Provider isolation is per-engine: Claude Code runs with a strict per-turn MCP config and a tool whitelist; Codex runs `codex exec` sandboxed to the bot's working directory with shell and web search disabled, every MCP server except ComfyTV's turned off, and its localhost canvas-tool approvals routed through Codex's automatic reviewer (headless runs cannot prompt); Qwen Code runs against a project-scoped `.qwen/settings.json` inside the bot's working directory (ComfyTV MCP server only, built-in shell/file tools excluded); DeepSeek Harness runs `dsh` in ACP mode with a dedicated profile whose built-in tools are all disabled; Hermes runs in ACP mode and keeps its own skills, memory and tools — your global CLI configuration and the app's own settings are never touched.
 
 ## Local LLM provider
 
@@ -76,6 +77,24 @@ Setup:
 - **Attachments**: images only, and only when the selected model accepts them; current DeepSeek models do not, so the turn is refused before it is sent.
 - **Files**: working directories live under ComfyUI's user directory in `comfytv/bot-home-deepseek-harness/chats/<chat id>`; a dedicated profile is created at `~/.dsh/profiles/comfytv-acp` on first use.
 
+## Hermes provider
+
+Each turn starts `hermes acp` once. The model, skills and memory come from Hermes's own configuration; ComfyTV never reads or stores credentials.
+
+- **Where it runs**: with **Hermes SSH host** blank, ComfyTV runs `hermes` from this machine's PATH. Set a host alias or `user@host` to run it on that machine over `ssh` (key login only; the remote side finds `hermes` through a login shell). Each turn opens a reverse tunnel (`ssh -R`) so Hermes reaches this machine's ComfyTV MCP — ComfyUI does not need to listen on the LAN.
+- **Dedicated profile**: ComfyTV runs `hermes -p <profile> acp`, with `comfytv` as the default profile name. Hermes's terminal, file and code-execution tools cannot be turned off in ACP mode, so give ComfyTV its own profile with no sudo password and a network-less docker terminal:
+
+  ```
+  hermes profile create comfytv --no-skills --no-alias
+  hermes -p comfytv config set terminal.backend docker
+  ```
+
+  Then add `docker_network: false` under `terminal:` in `~/.hermes/profiles/comfytv/config.yaml` and configure the model as needed. Hermes's commands then run only inside the container, away from the host's services and your main profile's configuration.
+- **Model**: blank uses the model configured in Hermes; the model list appears after the first chat.
+- **Tools**: Hermes keeps its built-in tools (terminal, files, browser and so on); they act on the machine Hermes runs on. Each new session starts by telling Hermes that the canvas is reachable only through the ComfyTV MCP tools, not through its terminal or local services. Dangerous actions that ask for approval are always rejected.
+- **Sessions**: each chat maps to one Hermes session and survives ComfyTV restarts. Chats cannot be branched. Deleting a ComfyTV chat leaves the Hermes session in place.
+- **Attachments**: images only; whether they are understood depends on Hermes's current model.
+
 ## Using the panel
 
 - **Canvas**: the bot always works on the tab on screen; switch tabs and it follows.
@@ -90,7 +109,7 @@ Setup:
 
 ## How it works, briefly
 
-CLI providers spawn a fresh headless process per turn and resume the chat's session. DeepSeek Harness starts `dsh` in ACP mode each turn and resumes its session. ComfyTV's database keeps a display mirror of the transcript. Canvas writes still follow MCP rules — an open ComfyTV page executes them, whether it is in Comfy Desktop or a browser.
+CLI providers spawn a fresh headless process per turn and resume the chat's session. DeepSeek Harness and Hermes start in ACP mode each turn and resume their session. ComfyTV's database keeps a display mirror of the transcript. Canvas writes still follow MCP rules — an open ComfyTV page executes them, whether it is in Comfy Desktop or a browser.
 
 ## Troubleshooting
 

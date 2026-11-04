@@ -263,7 +263,7 @@ class TestSettingsApi:
             "bot-comfyui-llm-thinking", "bot-local-llm-url",
             "bot-enable-comfy-mcp", "bot-comfy-mcp-command",
             "bot-always-allow-runs", "bot-provider", "bot-run-mode",
-            "bot-model-deepseek-harness",
+            "bot-model-deepseek-harness", "bot-hermes-ssh-host", "bot-hermes-profile", "bot-model-hermes",
             "enable-skills", "skills-disabled",
             "enable-collab",
             "enable-eagle", "eagle-api-url", "eagle-library-path",

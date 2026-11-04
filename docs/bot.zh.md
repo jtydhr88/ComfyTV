@@ -19,7 +19,7 @@
 
 ## 不碰 API key,这是设计
 
-Bot 不直接调用任何云端模型 API,ComfyTV 也永远不存 key。它驱动的是**你机器上已经装好的 agent CLI**(用 CLI 自己的登录态),或者通过 Local LLM / ComfyUI LLM provider 驱动**你自己硬件上跑的模型**。当前内置六个:
+Bot 不直接调用任何云端模型 API,ComfyTV 也永远不存 key。它驱动的是**你机器上已经装好的 agent CLI**(用 CLI 自己的登录态),或者通过 Local LLM / ComfyUI LLM provider 驱动**你自己硬件上跑的模型**。当前内置七个:
 
 | Provider | 安装 | 登录 | 附件 |
 | --- | --- | --- | --- |
@@ -27,6 +27,7 @@ Bot 不直接调用任何云端模型 API,ComfyTV 也永远不存 key。它驱�
 | [Codex](https://developers.openai.com/codex) | `npm install -g @openai/codex` | `codex login` | 图片/视频/音频 |
 | [Qwen Code](https://qwenlm.github.io/qwen-code-docs/zh/) | 官方安装脚本(见其文档) | 运行 `qwen` 后 `/auth` | 暂不支持 |
 | DeepSeek Harness | `dsh`(DeepSeek Harness 命令行) | 在 DeepSeek Harness 应用内登录 | 图片(需视觉模型) |
+| [Hermes](https://github.com/NousResearch/hermes-agent) | 本机或另一台机器装好 Hermes Agent | 在 Hermes 里配置好模型(`hermes setup`) | 图片(需视觉模型) |
 | Local LLM | 任意 OpenAI 兼容的本地模型服务 | 无 — 在设置里填端点 URL 即可 | 暂不支持 |
 | ComfyUI LLM | 往 `models/text_encoders` 放一个 Qwen3 或 Gemma 系权重 | 无 | 暂不支持 |
 
@@ -37,7 +38,7 @@ Bot 不直接调用任何云端模型 API,ComfyTV 也永远不存 key。它驱�
 
 聊天上方的工具条选择新对话用哪个引擎(以及每个引擎用哪个模型);对话固定用它开始时的引擎,切换引擎就会开一个新对话。引擎 chip 上的红点表示没装或没登录 — 悬停可看原因。
 
-隔离策略按引擎各自落实:Claude Code 走每轮独立的严格 MCP 配置+工具白名单;Codex 的 `codex exec` 沙箱限定在 bot 工作目录,shell 和联网搜索关闭,该回合只保留 ComfyTV 一个 MCP 服务,审批请求交给 Codex 自带的自动审察(headless 无法弹批准框);Qwen Code 走 bot 工作目录内的项目级 `.qwen/settings.json`(只挂 ComfyTV MCP,内置 shell/文件工具全部排除);DeepSeek Harness 以 ACP 模式运行 `dsh`,使用专用 profile,内置工具全部关闭 — 你的全局 CLI 配置和应用自身设置永远不被改动。
+隔离策略按引擎各自落实:Claude Code 走每轮独立的严格 MCP 配置+工具白名单;Codex 的 `codex exec` 沙箱限定在 bot 工作目录,shell 和联网搜索关闭,该回合只保留 ComfyTV 一个 MCP 服务,审批请求交给 Codex 自带的自动审察(headless 无法弹批准框);Qwen Code 走 bot 工作目录内的项目级 `.qwen/settings.json`(只挂 ComfyTV MCP,内置 shell/文件工具全部排除);DeepSeek Harness 以 ACP 模式运行 `dsh`,使用专用 profile,内置工具全部关闭;Hermes 以 ACP 模式运行,保留它自己的技能、记忆和工具 — 你的全局 CLI 配置和应用自身设置永远不被改动。
 
 ## Local LLM provider
 
@@ -76,6 +77,24 @@ ComfyUI LLM 更进一步:连外部服务也不需要 — 推理直接跑在 **Co
 - **附件**:只发送图片,且仅当所选模型支持图片输入;目前 DeepSeek 模型都不支持,会在发送前报错。
 - **文件位置**:工作目录在 ComfyUI 用户目录 `comfytv/bot-home-deepseek-harness/chats/<chat id>`;首次使用时在 `~/.dsh/profiles/comfytv-acp` 创建专用 profile。
 
+## Hermes provider
+
+每轮以 ACP 模式启动一次 `hermes acp`,模型、技能、记忆都用 Hermes 自己的配置,ComfyTV 不读也不存任何凭据。
+
+- **在哪跑**:**Hermes SSH 主机**留空时运行本机 PATH 上的 `hermes`;填上主机别名或 `user@host` 时,通过 `ssh` 在那台机器上运行(只支持密钥登录,远端用登录 shell 找 `hermes`)。ComfyTV 每轮开一条反向隧道(`ssh -R`),Hermes 经它连回本机的 ComfyTV MCP,所以 ComfyUI 不需要监听局域网。
+- **专用 profile**:ComfyTV 运行 `hermes -p <profile> acp`,默认 profile 名 `comfytv`。Hermes 的终端、文件和代码执行工具在 ACP 模式下无法关闭,所以给 ComfyTV 单独建一个 profile,不放 sudo 密码,终端放进断网的 docker 容器:
+
+  ```
+  hermes profile create comfytv --no-skills --no-alias
+  hermes -p comfytv config set terminal.backend docker
+  ```
+
+  再把 `~/.hermes/profiles/comfytv/config.yaml` 里 `terminal:` 下加一行 `docker_network: false`,模型按需配置。这样 Hermes 的命令只在容器里执行,碰不到宿主机的服务和你主 profile 的配置。
+- **模型**:留空用 Hermes 配置的默认模型;模型列表在第一次对话后出现。
+- **工具**:不关闭 Hermes 的内置工具(终端、文件、浏览器等),它们作用在 Hermes 所在的那台机器上。每个新会话开头会告诉 Hermes:画布只能通过 ComfyTV MCP 工具访问,不要用终端或本机服务去连 ComfyUI。需要审批的危险操作一律拒绝。
+- **会话**:每个对话对应一个 Hermes 会话,ComfyTV 重启后仍可继续。不能分支对话。删除 ComfyTV 对话不会删除 Hermes 侧的会话。
+- **附件**:只发送图片,由 Hermes 当前模型决定能否识图。
+
 ## 面板用法
 
 - **画布**:Bot 永远操作当前屏幕上的标签页,切换标签页它就跟着切。
@@ -90,7 +109,7 @@ ComfyUI LLM 更进一步:连外部服务也不需要 — 推理直接跑在 **Co
 
 ## 简述原理
 
-CLI provider 每回合启动一个新的 headless 进程并恢复对话会话。DeepSeek Harness 每回合以 ACP 模式启动 `dsh` 并恢复会话。ComfyTV 数据库保存一份用于显示的记录镜像。画布写操作仍遵循 MCP 规则——由打开着的 ComfyTV 页面执行，Comfy Desktop 与浏览器都可以。
+CLI provider 每回合启动一个新的 headless 进程并恢复对话会话。DeepSeek Harness 和 Hermes 每回合以 ACP 模式启动并恢复会话。ComfyTV 数据库保存一份用于显示的记录镜像。画布写操作仍遵循 MCP 规则——由打开着的 ComfyTV 页面执行，Comfy Desktop 与浏览器都可以。
 
 ## 排障
 

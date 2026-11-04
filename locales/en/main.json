@@ -566,6 +566,21 @@
         "desc": "The model also picks who pays: the desktop account or the API key. Blank = the first desktop-account model; it never falls back to the API key.",
         "placeholder": "Desktop account default"
       },
+      "bot-hermes-ssh-host": {
+        "label": "Hermes SSH host",
+        "desc": "Run Hermes on another machine over SSH (a host alias or user@host; key login only). ComfyTV opens a reverse tunnel so Hermes can reach this canvas. Blank = run the local hermes command.",
+        "placeholder": "spark"
+      },
+      "bot-hermes-profile": {
+        "label": "Hermes profile",
+        "desc": "The Hermes profile ComfyTV runs (hermes -p <name>). Use a profile made for ComfyTV, with no sudo password and a docker terminal backend — see the bot docs. Blank = Hermes's default profile.",
+        "placeholder": "comfytv"
+      },
+      "bot-model-hermes": {
+        "label": "Hermes model",
+        "desc": "Blank = the model configured in Hermes itself.",
+        "placeholder": "Hermes default"
+      },
       "enable-skills": {
         "label": "Enable Agent Skills",
         "desc": "Serve installed skills to agents over MCP (skill tool + prompts) and to the embedded bot."

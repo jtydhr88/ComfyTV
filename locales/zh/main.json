@@ -566,6 +566,21 @@
         "desc": "模型同时决定计费方式：桌面账号或 API Key。留空 = 桌面账号下的第一个模型，不会自动改用 API Key。",
         "placeholder": "桌面账号默认"
       },
+      "bot-hermes-ssh-host": {
+        "label": "Hermes SSH 主机",
+        "desc": "通过 SSH 使用另一台机器上的 Hermes(主机别名或 user@host,只支持密钥登录)。ComfyTV 会开一条反向隧道,让 Hermes 能连回这块画布。留空 = 运行本机的 hermes 命令。",
+        "placeholder": "spark"
+      },
+      "bot-hermes-profile": {
+        "label": "Hermes profile",
+        "desc": "ComfyTV 运行的 Hermes profile(hermes -p <名字>)。请用专门给 ComfyTV 建的 profile:不放 sudo 密码,终端后端用 docker,见 bot 文档。留空 = Hermes 的默认 profile。",
+        "placeholder": "comfytv"
+      },
+      "bot-model-hermes": {
+        "label": "Hermes 模型",
+        "desc": "留空 = 使用 Hermes 自己配置的模型。",
+        "placeholder": "Hermes 默认"
+      },
       "enable-skills": {
         "label": "启用 Agent Skills",
         "desc": "把已安装的技能通过 MCP(skill 工具 + prompts)提供给外部 agent 和内嵌 bot。"

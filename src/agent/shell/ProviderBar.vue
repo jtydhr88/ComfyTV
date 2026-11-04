@@ -56,7 +56,7 @@ const modelDraft = ref('')
 
 const LABELS: Record<string, string> = {
   'local-llm': 'Local LLM', 'claude-code': 'Claude Code', codex: 'Codex', 'qwen-code': 'Qwen Code',
-  'deepseek-harness': 'DeepSeek Harness',
+  'deepseek-harness': 'DeepSeek Harness', hermes: 'Hermes',
 }
 const ROUTES: Record<string, string> = {
   'deepseek-account': 'agentBar.routeAccount',

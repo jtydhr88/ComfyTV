@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 
+from ComfyTV.bot import _acp_provider as ap
 from ComfyTV.bot import deepseek_harness as dh
 from ComfyTV.bot import deepseek_harness_runtime as rt
 from ComfyTV.bot.providers import (
@@ -207,7 +208,7 @@ class TestResolveCommand:
         exe.write_text("@echo off\r\necho [%~1][%~2]\r\n")
         monkeypatch.setattr(rt.shutil, "which", lambda name: str(exe))
         argv, _ = rt.resolve_command()
-        code, out, _ = await dh.run_command([*argv, "--patch", str(tmp_path / "my dir" / "o.yml")], timeout=30)
+        code, out, _ = await ap.run_command([*argv, "--patch", str(tmp_path / "my dir" / "o.yml")], timeout=30)
         assert code == 0
         assert out.decode().strip() == f"[--patch][{tmp_path / 'my dir' / 'o.yml'}]"
 
@@ -381,7 +382,7 @@ class TestStop:
     async def test_cancel_mid_prompt_settles_as_aborted(self, fake_runtime, monkeypatch):
         seen = fake_runtime(hangOnPrompt=True, updates=[
             {"sessionUpdate": "tool_call", "toolCallId": "t5", "title": "mcp__comfytv__run_stage"}])
-        monkeypatch.setattr(dh, "CANCEL_GRACE_S", 5.0)
+        monkeypatch.setattr(ap, "CANCEL_GRACE_S", 5.0)
         provider = dh.DeepSeekHarnessProvider()
         started = asyncio.Event()
 
