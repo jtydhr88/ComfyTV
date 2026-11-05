@@ -1,4 +1,4 @@
-import { bn as defineComponent, bQ as onMounted, bP as onBeforeUnmount, bT as openBlock, be as createBlock, bd as createBaseVNode, bh as createElementBlock, bf as createCommentVNode, M as Fragment, cM as withModifiers, aH as Teleport, bb as computed } from "./main-Buwr2ADi.mjs";
+import { bn as defineComponent, bQ as onMounted, bP as onBeforeUnmount, bT as openBlock, be as createBlock, bd as createBaseVNode, bh as createElementBlock, bf as createCommentVNode, M as Fragment, cM as withModifiers, aH as Teleport, bb as computed } from "./main-BN47_KoA.mjs";
 const _hoisted_1 = ["src"];
 const _hoisted_2 = ["src"];
 const _hoisted_3 = ["src", "alt"];
@@ -96,4 +96,4 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
 export {
   _sfc_main as default
 };
-//# sourceMappingURL=MediaLightbox-376xZteu.mjs.map
+//# sourceMappingURL=MediaLightbox-DCAtu8VS.mjs.map

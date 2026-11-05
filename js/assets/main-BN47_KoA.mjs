@@ -59800,7 +59800,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-B9YVtMsW.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-CtqF3Y5r.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -86716,7 +86716,7 @@ const _sfc_main$4v = /* @__PURE__ */ defineComponent({
       }
     });
     const AgentPanelRoot = /* @__PURE__ */ defineAsyncComponent({
-      loader: () => import("./AgentPanelRoot-CH-FcNHe.mjs"),
+      loader: () => import("./AgentPanelRoot-CzTXDgcG.mjs"),
       errorComponent: AgentPanelLoadError,
       onError: (error2, _retry, fail) => {
         reportError(error2, { errorType: "agent_panel_load_failure" });
@@ -149490,7 +149490,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-CuMOFkIE.mjs");
+    const { STLLoader } = await import("./STLLoader-Bzm4iw0H.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -149498,7 +149498,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-DCCaoR3k.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-BsX5u703.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -239009,9 +239009,9 @@ const V2_CSS_CHROME = `
   --color-datatype-COMFYTV_TIMELINE: #818CF8;
   --color-datatype-COMFYTV_FXSPEC: #94A3B8;
 }
-html:not(.dark-theme) .lg-node[data-v2-shell],
-html:not(.dark-theme) .v2-lact__backdrop,
-html:not(.dark-theme) .v2-pop {
+html[style*="color-scheme: light"] .lg-node[data-v2-shell],
+html[style*="color-scheme: light"] .v2-lact__backdrop,
+html[style*="color-scheme: light"] .v2-pop {
   --v2-slot-halo: rgba(0,0,0,.12);
   --v2-slab-bg: #ffffff;
   --v2-slab-border: rgba(0,0,0,.08);
@@ -239056,14 +239056,14 @@ html:not(.dark-theme) .v2-pop {
   accent-color: var(--v2-accent);
 }
 .lg-node[data-v2-shell] .ctv\\:text-success-background { color: #a78bfa; }
-html:not(.dark-theme) .lg-node[data-v2-shell] {
+html[style*="color-scheme: light"] .lg-node[data-v2-shell] {
   --primary-background: rgba(124, 92, 230, 0.8);
   --primary-background-hover: rgba(124, 92, 230, 0.95);
   --accent-background: #7C5CE6;
   --secondary-background-selected: rgba(124, 92, 230, 0.22);
   --interface-menu-component-surface-selected: rgba(124, 92, 230, 0.18);
 }
-html:not(.dark-theme) .lg-node[data-v2-shell] .ctv\\:text-success-background { color: #7c5ce6; }
+html[style*="color-scheme: light"] .lg-node[data-v2-shell] .ctv\\:text-success-background { color: #7c5ce6; }
 .lg-node[data-v2-shell] .lg-node-header { display: none; }
 .lg-node[data-v2-shell] .lg-node-content { display: none; }
 .lg-node[data-v2-shell] .mt-auto { display: none; }
@@ -247012,4 +247012,4 @@ export {
   DropdownMenuRoot_default as y,
   DropdownMenuTrigger_default as z
 };
-//# sourceMappingURL=main-Buwr2ADi.mjs.map
+//# sourceMappingURL=main-BN47_KoA.mjs.map

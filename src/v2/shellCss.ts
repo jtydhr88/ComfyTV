@@ -42,9 +42,9 @@ const V2_CSS_CHROME = `
   --color-datatype-COMFYTV_TIMELINE: #818CF8;
   --color-datatype-COMFYTV_FXSPEC: #94A3B8;
 }
-html:not(.dark-theme) .lg-node[data-v2-shell],
-html:not(.dark-theme) .v2-lact__backdrop,
-html:not(.dark-theme) .v2-pop {
+html[style*="color-scheme: light"] .lg-node[data-v2-shell],
+html[style*="color-scheme: light"] .v2-lact__backdrop,
+html[style*="color-scheme: light"] .v2-pop {
   --v2-slot-halo: rgba(0,0,0,.12);
   --v2-slab-bg: #ffffff;
   --v2-slab-border: rgba(0,0,0,.08);
@@ -89,14 +89,14 @@ html:not(.dark-theme) .v2-pop {
   accent-color: var(--v2-accent);
 }
 .lg-node[data-v2-shell] .ctv\\:text-success-background { color: #a78bfa; }
-html:not(.dark-theme) .lg-node[data-v2-shell] {
+html[style*="color-scheme: light"] .lg-node[data-v2-shell] {
   --primary-background: rgba(124, 92, 230, 0.8);
   --primary-background-hover: rgba(124, 92, 230, 0.95);
   --accent-background: #7C5CE6;
   --secondary-background-selected: rgba(124, 92, 230, 0.22);
   --interface-menu-component-surface-selected: rgba(124, 92, 230, 0.18);
 }
-html:not(.dark-theme) .lg-node[data-v2-shell] .ctv\\:text-success-background { color: #7c5ce6; }
+html[style*="color-scheme: light"] .lg-node[data-v2-shell] .ctv\\:text-success-background { color: #7c5ce6; }
 .lg-node[data-v2-shell] .lg-node-header { display: none; }
 .lg-node[data-v2-shell] .lg-node-content { display: none; }
 .lg-node[data-v2-shell] .mt-auto { display: none; }

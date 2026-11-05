@@ -173,21 +173,21 @@ function pick(name: string, value: string) {
   border-color: var(--v2-text-strong, #ececf1);
   color: var(--v2-text-strong, #ececf1);
 }
-html:not(.dark-theme) .v2-genopt__pop {
+html[style*="color-scheme: light"] .v2-genopt__pop {
   background: #ffffff;
   border-color: rgba(0, 0, 0, .1);
   color: #4a4a52;
 }
-html:not(.dark-theme) .v2-genopt__pop .v2-genopt__opt,
-html:not(.dark-theme) .v2-genopt__pop .v2-genopt__cell {
+html[style*="color-scheme: light"] .v2-genopt__pop .v2-genopt__opt,
+html[style*="color-scheme: light"] .v2-genopt__pop .v2-genopt__cell {
   border-color: rgba(0, 0, 0, .12);
   color: #4a4a52;
 }
-html:not(.dark-theme) .v2-genopt__pop .v2-genopt__opt:hover,
-html:not(.dark-theme) .v2-genopt__pop .v2-genopt__cell:hover {
+html[style*="color-scheme: light"] .v2-genopt__pop .v2-genopt__opt:hover,
+html[style*="color-scheme: light"] .v2-genopt__pop .v2-genopt__cell:hover {
   background: rgba(0, 0, 0, .05);
 }
-html:not(.dark-theme) .v2-genopt__pop .v2-genopt__opt--on {
+html[style*="color-scheme: light"] .v2-genopt__pop .v2-genopt__opt--on {
   background: rgba(0, 0, 0, .07);
   border-color: #202024;
   color: #202024;
