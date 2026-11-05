@@ -6,7 +6,7 @@ from typing import Optional
 from aiohttp import web
 
 from .. import storage
-from ..bot import get_provider, list_providers
+from ..bot import ProviderStatus, get_provider, list_providers
 from . import bot_turns
 from . import bot_send as send_core
 from ._common import routes
@@ -45,7 +45,11 @@ async def bot_status(request: web.Request) -> web.Response:
         return web.json_response({"enabled": False, "providers": []})
     out = []
     for provider in list_providers():
-        st = await provider.probe()
+        try:
+            st = await provider.probe()
+        except Exception as e:
+            _log.exception("[ComfyTV/bot] probe failed for %s", provider.id)
+            st = ProviderStatus(available=False, detail=f"probe failed: {e}")
         caps = provider.capabilities()
         try:
             models = await provider.list_models()
@@ -90,6 +94,8 @@ async def bot_create_chat(request: web.Request) -> web.Response:
         body = await request.json()
     except Exception:
         body = {}
+    if not isinstance(body, dict):
+        return web.json_response({"error": "invalid JSON body"}, status=400)
     provider_id = str(body.get("provider") or "claude-code")
     if get_provider(provider_id) is None:
         return web.json_response({"error": f"unknown provider {provider_id!r}"},
@@ -134,6 +140,8 @@ async def bot_update_chat(request: web.Request) -> web.Response:
     try:
         body = await request.json()
     except Exception:
+        return web.json_response({"error": "invalid JSON body"}, status=400)
+    if not isinstance(body, dict):
         return web.json_response({"error": "invalid JSON body"}, status=400)
     title = body.get("title")
     run_mode = body.get("run_mode")
@@ -180,6 +188,8 @@ async def bot_send(request: web.Request) -> web.Response:
     try:
         body = await request.json()
     except Exception:
+        return web.json_response({"error": "invalid JSON body"}, status=400)
+    if not isinstance(body, dict):
         return web.json_response({"error": "invalid JSON body"}, status=400)
     text = str(body.get("text") or "").strip()
     try:
@@ -259,6 +269,8 @@ async def bot_branch_chat(request: web.Request) -> web.Response:
         body = await request.json()
     except Exception:
         return web.json_response({"error": "invalid JSON body"}, status=400)
+    if not isinstance(body, dict):
+        return web.json_response({"error": "invalid JSON body"}, status=400)
     message_id = str(body.get("message_id") or "")
     if not message_id:
         return web.json_response({"error": "message_id required"}, status=400)
@@ -288,6 +300,8 @@ async def bot_answer_ask(request: web.Request) -> web.Response:
     try:
         body = await request.json()
     except Exception:
+        return web.json_response({"error": "invalid JSON body"}, status=400)
+    if not isinstance(body, dict):
         return web.json_response({"error": "invalid JSON body"}, status=400)
     ask_id = request.match_info["aid"]
     selected = body.get("selected")

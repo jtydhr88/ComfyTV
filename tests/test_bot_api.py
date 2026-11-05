@@ -345,3 +345,19 @@ async def test_spawned_tasks_are_kept_until_done():
     await asyncio.sleep(0)
     assert task not in _common._TASKS
 
+
+
+async def test_status_survives_a_failing_probe(client, fake_provider, monkeypatch):
+    async def boom(self):
+        raise OSError("probe exploded")
+    monkeypatch.setattr(type(fake_provider), "probe", boom)
+    resp = await client.get("/comfytv/bot/status")
+    assert resp.status == 200
+    entry = next(p for p in (await resp.json())["providers"] if p["id"] == "fake-test")
+    assert entry["available"] is False and "probe exploded" in entry["detail"]
+
+
+async def test_non_object_bodies_are_rejected(client, fake_provider):
+    assert (await client.post("/comfytv/bot/chats", json=["x"])).status == 400
+    chat = (await (await client.post("/comfytv/bot/chats", json={"provider": "fake-test"})).json())["chat"]
+    assert (await client.post(f"/comfytv/bot/chats/{chat['id']}/send", json="hi")).status == 400

@@ -358,3 +358,31 @@ class TestServersTool:
         out = _tool_json(await _call_tool(client, "servers"))
         entry = next(s for s in out["servers"] if s["id"] == row["id"])
         assert entry["status"] is None
+
+
+class TestSyncedHardening:
+    async def test_command_goes_only_to_the_mirroring_tab(self, client, monkeypatch):
+        import server
+        from ComfyTV.api import mcp_commands
+        calls: list[tuple[str, object]] = []
+        monkeypatch.setattr(server.PromptServer.instance, "send_sync",
+                            lambda event, data, sid=None: calls.append((event, sid)))
+        monkeypatch.setattr(mcp_commands, "get_mirror_client_id", lambda _pid: "tab-9")
+        with pytest.raises(ValueError, match="check get_canvas before retrying|no ComfyTV page"):
+            await mcp_commands.submit_command("run_stage", {"node": "1"}, timeout=0.05)
+        assert calls == [("comfytv-mcp-command", "tab-9")]
+
+    async def test_result_body_must_be_an_object(self, client):
+        resp = await client.post("/comfytv/mcp_command_result", json=["not", "an", "object"])
+        assert resp.status == 400
+
+    async def test_only_a_real_chat_unlocks_the_bot_tools(self, client):
+        from ComfyTV import storage
+
+        async def tool_names(query: str) -> set[str]:
+            resp = await client.post(f"/comfytv/mcp{query}", json={"jsonrpc": "2.0", "id": 1, "method": "tools/list"})
+            return {t["name"] for t in (await resp.json())["result"]["tools"]}
+
+        chat = storage.create_bot_chat(provider="claude-code")
+        assert "ask_user" in await tool_names(f"?bot_chat={chat['id']}")
+        assert "ask_user" not in await tool_names("?bot_chat=forged")

@@ -26,7 +26,8 @@ def _timeout_message(action: str, timeout: float, project_id: str | None) -> str
                 f"a ComfyTV page is mirroring the canvas (last update "
                 f"{age:.0f}s ago) but did not pick up the {action!r} command "
                 f"within {timeout:.0f}s — its websocket connection is likely "
-                "broken; ask the user to reload the ComfyTV page"
+                "broken; ask the user to reload the ComfyTV page. The command "
+                "may still complete, so check get_canvas before retrying"
             )
     return (
         f"no ComfyTV page picked up the {action!r} command within "
@@ -58,7 +59,7 @@ async def submit_command(action: str, payload: dict,
         message["target_client_id"] = target
 
     try:
-        PromptServer.instance.send_sync(COMMAND_EVENT, message)
+        PromptServer.instance.send_sync(COMMAND_EVENT, message, target)
         return await asyncio.wait_for(future, timeout)
     except asyncio.TimeoutError:
         raise ValueError(_timeout_message(action, timeout, project_id))
@@ -83,6 +84,8 @@ async def post_command_result(request: web.Request) -> web.Response:
         body = await request.json()
     except Exception as e:
         return web.json_response({"error": f"invalid json: {e}"}, status=400)
+    if not isinstance(body, dict):
+        return web.json_response({"error": "body must be a JSON object"}, status=400)
     command_id = body.get("command_id")
     if not command_id:
         return web.json_response({"error": "command_id required"}, status=400)

@@ -7,6 +7,7 @@ import uuid
 from aiohttp import web
 from server import PromptServer
 
+from .. import storage
 from ._common import routes
 from .capabilities import VERSION
 from .mcp_tools import TOOLS
@@ -216,7 +217,6 @@ async def mcp_activity(_request: web.Request) -> web.Response:
 
 
 def _mcp_enabled() -> bool:
-    from .. import storage
     try:
         return bool(storage.get_setting("enable-mcp"))
     except Exception:
@@ -236,7 +236,7 @@ async def mcp_post(request: web.Request) -> web.Response:
     _mark_activity()
     try:
         msg = await request.json()
-    except Exception:
+    except ValueError:
         return web.json_response(_error(None, -32700, "parse error"), status=400)
     if isinstance(msg, list):
         return web.json_response(
@@ -246,7 +246,8 @@ async def mcp_post(request: web.Request) -> web.Response:
         return web.json_response(
             _error(None, -32600, "invalid JSON-RPC 2.0 message"), status=400,
         )
-    token = BOT_CHAT_ID.set(str(request.query.get("bot_chat") or ""))
+    chat_id = str(request.query.get("bot_chat") or "")
+    token = BOT_CHAT_ID.set(chat_id if chat_id and storage.get_bot_chat(chat_id) else "")
     try:
         response = await _dispatch(msg)
     finally:
