@@ -42,9 +42,9 @@ class TestBotWiring:
         assert _comfy_mcp_argv() == []
 
     def test_allowed_tools_extended_only_when_mounted(self, reset_db):
-        from ComfyTV.api.bot_turns import _allowed_tools
-        assert _allowed_tools([]) == ["mcp__comfytv__*"]
-        extended = _allowed_tools(["comfy-mcp"])
+        from ComfyTV.bot.turns import allowed_tools
+        assert allowed_tools("comfytv", []) == ["mcp__comfytv__*"]
+        extended = allowed_tools("comfytv", ["comfy-mcp"])
         assert extended[0] == "mcp__comfytv__*"
         assert "mcp__comfy__nodes" in extended
         assert "mcp__comfy__validate_workflow" in extended

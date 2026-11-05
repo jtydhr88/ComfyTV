@@ -14,8 +14,6 @@ from .bot_media import _resolve_attachment_assets, _resolve_refs
 from .bot_turns import (  # noqa: F401 — re-exported for callers and tests
     ACTIVE_TURNS,
     QUEUED,
-    _TurnState,
-    _begin_turn,
 )
 
 _log = logging.getLogger(__name__)

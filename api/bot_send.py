@@ -7,9 +7,10 @@ from urllib.parse import quote
 
 from .. import storage
 from . import bot_turns
-from .bot_docs import DOC_ERRORS, DOC_EXT, document_line, read_document
+from ..bot.documents import DOC_ERRORS, read_text
+from .bot_docs import DOC_EXT, document_line
 from .bot_media import _SHEET_NOTE, _prepare_attachment, _render_attachment, _render_video_sheet
-from .bot_turns import ACTIVE_TURNS, QUEUED, _begin_turn
+from .bot_turns import ACTIVE_TURNS, QUEUED, RUNNER
 
 _INPUT_MAX_COUNT = 6
 
@@ -39,7 +40,7 @@ def _prepare_input_file(name: str) -> tuple[Optional[dict], str]:
         return block, f"[Attached video: input/{name} — use media_probe for facts.{seen}]"
     if path.lower().endswith(DOC_EXT):
         try:
-            return None, document_line(f"input/{name}", read_document(path))
+            return None, document_line(f"input/{name}", read_text(path))
         except DOC_ERRORS as e:
             return None, f"[Attached document: input/{name} — could not read its text ({e})]"
     return None, f"[Attached file: input/{name} ({mime or 'unknown type'})]"
@@ -140,7 +141,7 @@ def queue_or_begin(chat: dict, *, text: str, provider_text: str,
         return user_msg, None
     user_msg = storage.create_bot_message(
         chat_id=chat["id"], role="user", content=json.dumps(display_blocks))
-    assistant_msg = _begin_turn(
+    assistant_msg = RUNNER.begin(
         chat, text=text, provider_text=provider_text,
         attachments=attachments, user_msg=user_msg)
     return user_msg, assistant_msg

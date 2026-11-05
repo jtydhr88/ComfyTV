@@ -23,13 +23,14 @@ def turn_context(reset_db, monkeypatch):
     from ComfyTV.api import bot as bot_api
     from ComfyTV.api.mcp import BOT_CHAT_ID
     from ComfyTV.bot.providers import TurnHandle
+    from ComfyTV.bot.turns import TurnState
 
     storage.set_settings({"enable-mcp": True, "enable-bot": True,
                           "bot-always-allow-runs": False})
     chat = storage.create_bot_chat(provider="claude-code")
     msg = storage.create_bot_message(
         chat_id=chat["id"], role="assistant", status="streaming")
-    state = bot_api._TurnState(TurnHandle(), msg["id"])
+    state = TurnState(TurnHandle(), chat["id"], msg["id"])
     bot_api.ACTIVE_TURNS[chat["id"]] = state
 
     broadcasts: list[tuple[str, dict]] = []

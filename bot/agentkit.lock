@@ -1,5 +1,5 @@
 {
-  "kit": "726c693",
+  "kit": "848c8ef",
   "files": {
     "_acp.py": "885a9eea51caad79a481485d8eecdf088c411313c7aaccee301ea51865b66e0d",
     "_acp_provider.py": "d99b8f3e53b2f850ffd58c25b450082651df716d95f68399e864ffc182bf477d",
@@ -8,12 +8,17 @@
     "bot_asks.py": "dd0453ef7ae2dd143e1b86719d35e44420083f34b9a15fe72133266b8bc8bdb8",
     "claude_code.py": "249119d305be7a48a7ea0e7a34df7bdf3a18411d6bba54eda1ed4a09b19b1dcd",
     "codex.py": "746f3c7324ad2b7a31209d2632df9bd5bcd650f197c0494b60d8f365fd04ac30",
+    "command_relay.py": "5f4708e0f5293a24f59afb8010ea1bf320f3ce9d48229797f96024b19b6094ea",
     "deepseek_harness.py": "116f797a46d8b62fa3e21bc7e73da3f28e110cfa55be2d685be69e53beceb290",
     "deepseek_harness_runtime.py": "5b3bc338a4ff09dbb9cef0051cc74dec74f6efc8345ba98286f5d2a60beec4e2",
+    "documents.py": "1ddd17ddbf39817fd068de6e39898427eea8f81ba43cba35e6f3a26ed2a0a017",
     "hermes.py": "0d61ba32cfdf82c96c601c04526137f012b83d4ba31f94f8440d16a03bac7c5e",
     "lms.py": "44a0257b94cf9259179d68081b8f3aaf53556e5825fc7038bdf5d5c6693b17b5",
     "local_llm.py": "6e3601a662090e76758ed42ce8c691ac4b5e2e423a1af8c34172f4e8fcbf3117",
+    "mcp_server.py": "165524dc919ba731947b64d670681f1ba9e3e2f855b5bfd74452a73d48ad9a13",
+    "media_sheet.py": "88e60531da0671b1147481edaa69c211d92c15814ca1972e2a03ae75d4db78cc",
     "providers.py": "73c51e858c603dfe9d3ce2bdd0005be5278c1a683d61cae41f23bfabca059d1d",
-    "qwen_code.py": "d88771bc356f0a344b8f32c62a6f67ae6a6faa31382827bf6f81bd118a959ded"
+    "qwen_code.py": "d88771bc356f0a344b8f32c62a6f67ae6a6faa31382827bf6f81bd118a959ded",
+    "turns.py": "c2f9691231b3e5b73168757f144ce789946dfc2b4b13f8fc2502046475c163c3"
   }
 }

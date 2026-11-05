@@ -297,12 +297,12 @@ class TestBotEndpoints:
     async def test_a_turn_whose_provider_is_gone_still_ends(self, client):
         from ComfyTV import storage
         from ComfyTV.api.bot import ACTIVE_TURNS
-        from ComfyTV.api.bot_turns import _begin_turn
+        from ComfyTV.api.bot_turns import RUNNER
         chat = storage.create_bot_chat(provider="fake-test")
         user_msg = storage.create_bot_message(
             chat_id=chat["id"], role="user", status="done")
-        _begin_turn({**chat, "provider": "removed"}, text="x",
-                    provider_text="x", attachments=[], user_msg=user_msg)
+        RUNNER.begin({**chat, "provider": "removed"}, text="x",
+                     provider_text="x", attachments=[], user_msg=user_msg)
         data = await _wait_done(client, chat["id"])
         assert data["messages"][-1]["status"] == "error"
         assert chat["id"] not in ACTIVE_TURNS

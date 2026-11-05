@@ -271,7 +271,7 @@ class TestImageContentBlocks:
             "inputSchema": {"type": "object", "properties": {}},
             "handler": fake_handler,
         })
-        out = await mcp._tools_call({"name": "fake_img_tool", "arguments": {}})
+        out = await mcp.SERVER.tools_call({"name": "fake_img_tool", "arguments": {}})
         assert out["isError"] is False
         assert [b["type"] for b in out["content"]] == ["text", "image"]
         assert out["content"][1]["data"] == "QUJD"
@@ -290,7 +290,7 @@ class TestImageContentBlocks:
             "inputSchema": {"type": "object", "properties": {}},
             "handler": fake_handler,
         })
-        out = await mcp._tools_call({"name": "fake_plain_tool", "arguments": {}})
+        out = await mcp.SERVER.tools_call({"name": "fake_plain_tool", "arguments": {}})
         assert [b["type"] for b in out["content"]] == ["text"]
 
 

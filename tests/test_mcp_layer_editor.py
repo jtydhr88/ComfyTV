@@ -11,13 +11,13 @@ from aiohttp.test_utils import TestClient, TestServer
 def clean_state():
     from ComfyTV.api.canvas_state import clear_canvas_state
     from ComfyTV.api.mcp import _reset_activity
-    from ComfyTV.api.mcp_commands import clear_pending
+    from ComfyTV.api.mcp_commands import RELAY
     clear_canvas_state()
-    clear_pending()
+    RELAY.clear()
     _reset_activity()
     yield
     clear_canvas_state()
-    clear_pending()
+    RELAY.clear()
     _reset_activity()
 
 

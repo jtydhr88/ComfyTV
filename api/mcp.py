@@ -1,13 +1,12 @@
 import contextvars
-import json
 import logging
 import time
-import uuid
 
 from aiohttp import web
 from server import PromptServer
 
 from .. import storage
+from ..bot.mcp_server import McpServer, rpc_error
 from ._common import routes
 from .capabilities import VERSION
 from .mcp_tools import TOOLS
@@ -41,9 +40,6 @@ def _reset_activity() -> None:
     _last_activity = None
     _last_broadcast = 0.0
 
-SUPPORTED_PROTOCOL_VERSIONS = ("2024-11-05", "2025-03-26", "2025-06-18")
-DEFAULT_PROTOCOL_VERSION = "2025-06-18"
-
 INSTRUCTIONS = (
     "Window into ComfyTV, the canvas-app layer running inside this ComfyUI. "
     "Call server_info first. Read tools report state (projects, canvas, "
@@ -61,30 +57,6 @@ INSTRUCTIONS = (
 )
 
 
-def _result(msg_id, result: dict) -> dict:
-    return {"jsonrpc": "2.0", "id": msg_id, "result": result}
-
-
-def _error(msg_id, code: int, message: str) -> dict:
-    return {"jsonrpc": "2.0", "id": msg_id, "error": {"code": code, "message": message}}
-
-
-def _initialize(params: dict) -> dict:
-    requested = params.get("protocolVersion")
-    version = requested if requested in SUPPORTED_PROTOCOL_VERSIONS \
-        else DEFAULT_PROTOCOL_VERSION
-    return {
-        "protocolVersion": version,
-        "capabilities": {"tools": {}, "prompts": {}},
-        "serverInfo": {
-            "name": "comfytv-mcp",
-            "title": "ComfyTV",
-            "version": VERSION,
-        },
-        "instructions": INSTRUCTIONS,
-    }
-
-
 def _tool_visible(name: str) -> bool:
     if name in ("ask_user", "remember"):
         return bool(BOT_CHAT_ID.get())
@@ -94,37 +66,20 @@ def _tool_visible(name: str) -> bool:
     return skill_store.skills_enabled()
 
 
-def _tools_list() -> dict:
-    tools = []
-    for name, spec in TOOLS.items():
-        if not _tool_visible(name):
-            continue
-        describe = spec.get("describe")
-        tools.append({
-            "name": name,
-            "description": describe() if describe else spec["description"],
-            "inputSchema": spec["inputSchema"],
-        })
-    return {"tools": tools}
-
-
-def _prompts_list() -> dict:
+def _prompts_list() -> list[dict]:
     from .. import skill_store
-    return {
-        "prompts": [
-            {
-                "name": s["name"],
-                "title": s.get("display_name") or s["name"],
-                "description": s["description"],
-            }
-            for s in skill_store.enabled_skills()
-        ]
-    }
+    return [
+        {
+            "name": s["name"],
+            "title": s.get("display_name") or s["name"],
+            "description": s["description"],
+        }
+        for s in skill_store.enabled_skills()
+    ]
 
 
-def _prompts_get(params: dict) -> dict | None:
+def _prompts_get(name: str) -> dict | None:
     from .. import skill_store
-    name = str(params.get("name") or "")
     entry = skill_store.find_enabled(name)
     if entry is None:
         return None
@@ -137,75 +92,8 @@ def _prompts_get(params: dict) -> dict | None:
     }
 
 
-def _payload_to_content(payload) -> list[dict]:
-    images = None
-    if isinstance(payload, dict):
-        images = payload.pop("_images", None)
-    blocks = [{
-        "type": "text",
-        "text": json.dumps(payload, ensure_ascii=False, default=str),
-    }]
-    for img in images or []:
-        blocks.append({
-            "type": "image",
-            "data": img["data"],
-            "mimeType": img.get("mime", "image/jpeg"),
-        })
-    return blocks
-
-
-async def _tools_call(params: dict) -> dict | None:
-    name = params.get("name")
-    spec = TOOLS.get(name)
-    if spec is None or not _tool_visible(name):
-        return None
-    arguments = params.get("arguments") or {}
-    if not isinstance(arguments, dict):
-        arguments = {}
-    try:
-        payload = await spec["handler"](arguments)
-        return {"content": _payload_to_content(payload), "isError": False}
-    except (ValueError, TypeError, KeyError) as e:
-        return {"content": [{"type": "text", "text": f"{type(e).__name__}: {e}"}],
-                "isError": True}
-    except Exception as e:
-        _log.exception("[ComfyTV/mcp] tool %s failed", name)
-        return {"content": [{"type": "text", "text": f"{type(e).__name__}: {e}"}],
-                "isError": True}
-
-
-async def _dispatch(msg: dict) -> dict | None:
-    method = msg.get("method")
-    msg_id = msg.get("id")
-    params = msg.get("params") or {}
-
-    if "id" not in msg:
-        return None
-
-    if method == "initialize":
-        return _result(msg_id, _initialize(params))
-    if method == "ping":
-        return _result(msg_id, {})
-    if method == "tools/list":
-        return _result(msg_id, _tools_list())
-    if method == "tools/call":
-        outcome = await _tools_call(params)
-        if outcome is None:
-            return _error(msg_id, -32602, f"unknown tool {params.get('name')!r}")
-        return _result(msg_id, outcome)
-    if method == "resources/list":
-        return _result(msg_id, {"resources": []})
-    if method == "resources/templates/list":
-        return _result(msg_id, {"resourceTemplates": []})
-    if method == "prompts/list":
-        return _result(msg_id, _prompts_list())
-    if method == "prompts/get":
-        outcome = _prompts_get(params)
-        if outcome is None:
-            return _error(msg_id, -32602,
-                          f"unknown prompt {params.get('name')!r}")
-        return _result(msg_id, outcome)
-    return _error(msg_id, -32601, f"method not found: {method}")
+SERVER = McpServer(name="comfytv-mcp", title="ComfyTV", version=VERSION, instructions=INSTRUCTIONS,
+                   tools=TOOLS, tool_visible=_tool_visible, prompts=_prompts_list, get_prompt=_prompts_get)
 
 
 @routes.get("/comfytv/mcp_activity")
@@ -228,36 +116,18 @@ def _mcp_enabled() -> bool:
 async def mcp_post(request: web.Request) -> web.Response:
     if not _mcp_enabled():
         return web.json_response(
-            _error(None, -32000,
-                   "ComfyTV MCP is disabled — enable it in the ComfyTV "
-                   "sidebar under Settings"),
+            rpc_error(None, -32000,
+                      "ComfyTV MCP is disabled — enable it in the ComfyTV "
+                      "sidebar under Settings"),
             status=403,
         )
     _mark_activity()
-    try:
-        msg = await request.json()
-    except ValueError:
-        return web.json_response(_error(None, -32700, "parse error"), status=400)
-    if isinstance(msg, list):
-        return web.json_response(
-            _error(None, -32600, "batch requests are not supported"), status=400,
-        )
-    if not isinstance(msg, dict) or msg.get("jsonrpc") != "2.0":
-        return web.json_response(
-            _error(None, -32600, "invalid JSON-RPC 2.0 message"), status=400,
-        )
     chat_id = str(request.query.get("bot_chat") or "")
     token = BOT_CHAT_ID.set(chat_id if chat_id and storage.get_bot_chat(chat_id) else "")
     try:
-        response = await _dispatch(msg)
+        return await SERVER.respond(request)
     finally:
         BOT_CHAT_ID.reset(token)
-    if response is None:
-        return web.Response(status=202)
-    http_response = web.json_response(response)
-    if msg.get("method") == "initialize" and "result" in response:
-        http_response.headers["Mcp-Session-Id"] = uuid.uuid4().hex
-    return http_response
 
 
 @routes.get("/comfytv/mcp")

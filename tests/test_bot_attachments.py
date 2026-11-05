@@ -284,7 +284,7 @@ class TestReplayBlocksText:
             {"type": "image", "url": "/view?filename=a.png", "asset_id": 7},
             {"type": "text", "text": "what is this?"},
         ])
-        assert _blocks_text(content) == (
+        assert _blocks_text(json.loads(content)) == (
             "[attached image: asset #7 /view?filename=a.png]\nwhat is this?")
 
     def test_tool_blocks_still_ignored(self):
@@ -293,7 +293,7 @@ class TestReplayBlocksText:
             {"type": "tool_use", "name": "assets", "input": {}},
             {"type": "text", "text": "done"},
         ])
-        assert _blocks_text(content) == "done"
+        assert _blocks_text(json.loads(content)) == "done"
 
 
 class TestDocumentInputs:

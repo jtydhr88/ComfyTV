@@ -23,4 +23,4 @@ def test_notice_reaches_the_next_turn_through_history():
         {"type": "text", "text": "add_stage done, node 2"},
         {"type": "notice", "level": "warn", "text": "This turn made no tool calls."},
     ])
-    assert _blocks_text(content) == "add_stage done, node 2\n[notice: This turn made no tool calls.]"
+    assert _blocks_text(json.loads(content)) == "add_stage done, node 2\n[notice: This turn made no tool calls.]"

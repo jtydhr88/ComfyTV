@@ -22,7 +22,7 @@ def skill_dirs(tmp_path, monkeypatch, reset_db):
 
 async def _dispatch(method: str, params: dict | None = None) -> dict:
     from ComfyTV.api import mcp
-    return await mcp._dispatch({
+    return await mcp.SERVER.dispatch({
         "jsonrpc": "2.0", "id": 1, "method": method, "params": params or {},
     })
 

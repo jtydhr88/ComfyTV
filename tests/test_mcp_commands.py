@@ -12,13 +12,13 @@ from aiohttp.test_utils import TestClient, TestServer
 def clean_state():
     from ComfyTV.api.canvas_state import clear_canvas_state
     from ComfyTV.api.mcp import _reset_activity
-    from ComfyTV.api.mcp_commands import clear_pending
+    from ComfyTV.api.mcp_commands import RELAY
     clear_canvas_state()
-    clear_pending()
+    RELAY.clear()
     _reset_activity()
     yield
     clear_canvas_state()
-    clear_pending()
+    RELAY.clear()
     _reset_activity()
 
 
@@ -90,10 +90,10 @@ class TestCommandRegistry:
         assert await task == {"graph_node_id": "7", "uid": "u-7"}
 
     async def test_submit_times_out_without_a_tab(self, client, sent):
-        from ComfyTV.api.mcp_commands import pending_count, submit_command
+        from ComfyTV.api.mcp_commands import RELAY, submit_command
         with pytest.raises(ValueError, match="no ComfyTV page"):
             await submit_command("run_stage", {"node": "1"}, timeout=0.05)
-        assert pending_count() == 0
+        assert not RELAY.pending
 
     async def test_frontend_error_becomes_value_error(self, client, sent):
         from ComfyTV.api.mcp_commands import submit_command
