@@ -10,9 +10,9 @@ from aiohttp.test_utils import TestClient, TestServer
 
 from ComfyTV.bot import comfyui_llm_chat as chat
 from ComfyTV.bot import comfyui_llm_engine as engine
-from ComfyTV.bot.comfyui_llm_provider import ComfyUiLlmProvider
+from ComfyTV.bot.comfyui_llm_provider import ComfyUiLlmProvider, shim_url
 from ComfyTV.bot.local_llm import LocalLlmProvider
-from ComfyTV.bot.providers import ProviderStatus
+from ComfyTV.bot.providers import ProviderStatus, get_provider
 
 
 class TestRenderPrompt:
@@ -293,15 +293,13 @@ class TestLogitsPatch:
 
 class TestProvider:
     def test_base_url_points_at_shim(self):
-        url = ComfyUiLlmProvider()._base_url()
-        assert url == "http://127.0.0.1:8188/comfytv/llm/v1"
+        assert shim_url() == "http://127.0.0.1:8188/comfytv/llm/v1"
 
-    def test_base_url_override(self):
-        provider = ComfyUiLlmProvider(base_url="http://x/v1/")
-        assert provider._base_url() == "http://x/v1"
+    def test_registered_provider_uses_the_shim(self):
+        assert get_provider("comfyui-llm")._base_url() == "http://127.0.0.1:8188/comfytv/llm/v1"
 
     def test_lms_never_used(self):
-        assert ComfyUiLlmProvider()._lms_bin() == ""
+        assert ComfyUiLlmProvider.unloads_lms_during_waits is False
 
     async def test_probe_rewords_no_models(self, monkeypatch):
         async def fake_probe(self):
@@ -310,7 +308,7 @@ class TestProvider:
                 detail="the endpoint is up but reports no models — load "
                        "a model first")
         monkeypatch.setattr(LocalLlmProvider, "probe", fake_probe)
-        status = await ComfyUiLlmProvider().probe()
+        status = await get_provider("comfyui-llm").probe()
         assert status.available is False
         assert "text_encoders" in status.detail
 

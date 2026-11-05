@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from typing import Any, Optional
 
 from ._acp import AcpError, AcpProcessError, AcpTransport
+from .agent_host import AgentHost
 from ._cli_common import (
     PROBE_CACHE_S,
     TOOL_RESULT_CAP,
@@ -28,7 +29,6 @@ from .providers import (
 _log = logging.getLogger(__name__)
 
 ACP_PROTOCOL_VERSION = 1
-MCP_SERVER_NAME = "comfytv"
 IMAGE_MIME_TYPES = frozenset({"image/png", "image/jpeg", "image/jpg", "image/webp", "image/gif"})
 
 VERSION_TIMEOUT_S = 15.0
@@ -55,11 +55,6 @@ class AcpLaunch:
     session_cwd: str
     mcp_url: str
 
-    def mcp_servers(self) -> list[dict]:
-        if not self.mcp_url:
-            return []
-        return [{"type": "http", "name": MCP_SERVER_NAME, "url": self.mcp_url, "headers": []}]
-
 
 def _usage(raw: Any) -> Optional[dict]:
     if not isinstance(raw, dict):
@@ -84,7 +79,9 @@ class AcpProvider(AgentProvider):
     supports_branch = False
     stop_reason_errors: dict[str, str] = {}
 
-    def __init__(self) -> None:
+    def __init__(self, *, host: AgentHost, home_dir: str) -> None:
+        self._host = host
+        self._home_dir = home_dir
         self._probe_cache: Optional[tuple[float, Optional[list[str]], ProviderStatus]] = None
         self._catalog: list[dict] = []
         self._live: dict[TurnHandle, list] = {}
@@ -97,6 +94,11 @@ class AcpProvider(AgentProvider):
 
     async def list_models(self) -> list[str]:
         return [row["value"] for row in self._catalog]
+
+    def _mcp_servers(self, launch: AcpLaunch) -> list[dict]:
+        if not launch.mcp_url:
+            return []
+        return [{"type": "http", "name": self._host.name, "url": launch.mcp_url, "headers": []}]
 
     def _command(self) -> tuple[Optional[list[str]], str]:
         raise NotImplementedError
@@ -228,7 +230,7 @@ class AcpProvider(AgentProvider):
 
         init = await transport.request("initialize", {
             "protocolVersion": ACP_PROTOCOL_VERSION,
-            "clientInfo": {"name": "comfytv", "version": "1.0"},
+            "clientInfo": {"name": self._host.name, "version": "1.0"},
             "clientCapabilities": {"fs": {"readTextFile": False, "writeTextFile": False},
                                    "terminal": False},
         }, timeout=SESSION_TIMEOUT_S) or {}
@@ -236,7 +238,7 @@ class AcpProvider(AgentProvider):
         image_supported = bool((caps.get("promptCapabilities") or {}).get("image"))
         live[2] = "close" in (caps.get("sessionCapabilities") or {})
 
-        mcp_servers = launch.mcp_servers()
+        mcp_servers = self._mcp_servers(launch)
         if turn.resume_token:
             opened = await transport.request("session/resume", {
                 "sessionId": turn.resume_token, "cwd": launch.session_cwd, "mcpServers": mcp_servers,
@@ -281,7 +283,7 @@ class AcpProvider(AgentProvider):
                 await transport.request("session/close", {"sessionId": session_id},
                                         timeout=CLOSE_TIMEOUT_S)
             except (AcpError, AcpProcessError) as e:
-                _log.warning("[ComfyTV/%s] session/close failed: %s", self.id, e)
+                _log.warning("[%s/%s] session/close failed: %s", self._host.label, self.id, e)
         await transport.close(CLOSE_TIMEOUT_S)
         if transport.returncode is None:
             await kill_process_tree(handle)

@@ -8,6 +8,11 @@ import time
 from pathlib import Path
 from typing import Optional
 
+try:
+    import tomllib
+except ImportError:
+    tomllib = None
+
 from ._cli_common import (
     PROBE_CACHE_S,
     TOOL_RESULT_CAP,
@@ -17,6 +22,7 @@ from ._cli_common import (
     run_cli_turn,
     run_command,
 )
+from .agent_host import AgentHost
 from .providers import (
     AgentProvider,
     BotEvent,
@@ -45,6 +51,11 @@ def resolve_codex_command() -> Optional[list[str]]:
         if exe:
             return [exe]
     found = shutil.which("codex")
+    if found and sys.platform == "win32" and Path(found).suffix.lower() == ".cmd":
+        cli_js = Path(found).parent / "node_modules" / "@openai" / "codex" / "bin" / "codex.js"
+        node = shutil.which("node")
+        if cli_js.exists() and node:
+            return [node, str(cli_js)]
     if found:
         return [found]
     candidates = [
@@ -63,39 +74,24 @@ def resolve_codex_command() -> Optional[list[str]]:
     return None
 
 
-_AGENT_INSTRUCTIONS = (
-    "# ComfyTV Bot\n\n"
-    "You are the ComfyTV canvas bot. The `comfytv` MCP server is mounted in "
-    "this session and its tools are directly callable — they are your eyes "
-    "and hands on the user's live ComfyTV canvas.\n\n"
-    "- Start with the `server_info` tool, then `get_canvas` to see the "
-    "current nodes, prompts and run states.\n"
-    "- Build and run: `add_stage`, `set_stage`, `connect_stages`, "
-    "`run_stage`, then block on `wait_stage` for the result.\n"
-    "- Look at results with `view_image` (returns real pixels), "
-    "`media_frame`, `fx_preview`.\n"
-    "- The `skill` tool lists installed skills (instruction packs). When a "
-    "task matches one, read it first (action='read') and follow it.\n"
-    "- Canvas writes work through either Comfy Desktop or a browser page. "
-    "A `tab_page_active` diagnostic is not permission to stop: make one "
-    "real write attempt before deciding it failed. If a write really fails, "
-    "quote its tool error accurately; do not invent a focus problem or ask "
-    "the user to click the canvas or reply 'ready'.\n\n"
-    "Never claim you cannot see the canvas — call `get_canvas`. Do not use "
-    "shell, file, web, or desktop-control tools; everything goes through the "
-    "comfytv MCP tools. Never claim you can activate an OS window or that you "
-    "lack an OS permission to do so.\n"
-)
+def read_codex_config() -> dict:
+    cfg = Path.home() / ".codex" / "config.toml"
+    if tomllib is None or not cfg.exists():
+        return {}
+    try:
+        return tomllib.loads(cfg.read_text(encoding="utf-8", errors="ignore"))
+    except (OSError, tomllib.TOMLDecodeError):
+        return {}
 
 
-def write_agent_instructions(home: str) -> Path:
+def write_agent_instructions(home: str, text: str) -> Path:
     path = Path(home) / "AGENTS.md"
     try:
         existing = path.read_text(encoding="utf-8") if path.exists() else ""
     except OSError:
         existing = ""
-    if existing != _AGENT_INSTRUCTIONS:
-        path.write_text(_AGENT_INSTRUCTIONS, encoding="utf-8")
+    if existing != text:
+        path.write_text(text, encoding="utf-8")
     return path
 
 
@@ -239,7 +235,8 @@ class CodexCodeProvider(AgentProvider):
     id = "codex"
     label = "Codex"
 
-    def __init__(self, *, home_dir: Optional[str] = None) -> None:
+    def __init__(self, *, host: AgentHost, home_dir: str) -> None:
+        self._host = host
         self._home_dir = home_dir
         self._probe_cache: Optional[tuple[float, ProviderStatus]] = None
 
@@ -247,38 +244,17 @@ class CodexCodeProvider(AgentProvider):
         return ProviderCaps(stateful=True, tools="mcp", attachments=True)
 
     def _resolve_home(self) -> str:
-        if self._home_dir:
-            os.makedirs(self._home_dir, exist_ok=True)
-            home = self._home_dir
-        else:
-            try:
-                import folder_paths
-                user = folder_paths.get_user_directory()
-            except Exception:
-                user = os.path.expanduser("~")
-            home = os.path.join(user, "comfytv", "bot-home-codex")
-            os.makedirs(home, exist_ok=True)
-            self._home_dir = home
-        write_agent_instructions(home)
-        return home
+        os.makedirs(self._home_dir, exist_ok=True)
+        write_agent_instructions(self._home_dir, self._host.codex_instructions)
+        return self._home_dir
 
     def _detect_logged_in(self) -> bool:
         try:
-            import tomllib
-        except Exception:
-            tomllib = None
-        home = Path.home()
-        auth = home / ".codex" / "auth.json"
-        if auth.exists() and auth.stat().st_size > 2:
-            return True
-        cfg = home / ".codex" / "config.toml"
-        if not cfg.exists() or tomllib is None:
-            return False
-        try:
-            data = tomllib.loads(cfg.read_text(encoding="utf-8", errors="ignore"))
-        except Exception:
-            return False
-        providers = data.get("model_providers") or {}
+            if (Path.home() / ".codex" / "auth.json").stat().st_size > 2:
+                return True
+        except OSError:
+            pass
+        providers = read_codex_config().get("model_providers") or {}
         if not isinstance(providers, dict):
             return False
         credential_keys = {
@@ -315,40 +291,17 @@ class CodexCodeProvider(AgentProvider):
 
     async def list_models(self) -> list[str]:
         def read() -> list[str]:
-            try:
-                import tomllib
-            except Exception:
-                return []
-            cfg = Path.home() / ".codex" / "config.toml"
-            if not cfg.exists():
-                return []
-            try:
-                data = tomllib.loads(
-                    cfg.read_text(encoding="utf-8", errors="ignore"))
-            except Exception:
-                return []
-            model = data.get("model")
+            model = read_codex_config().get("model")
             return [str(model)] if model else []
         return await asyncio.to_thread(read)
 
     def _mcp_lockdown_args(self) -> list[str]:
         args: list[str] = []
-        try:
-            import tomllib
-        except Exception:
-            return args
-        cfg = Path.home() / ".codex" / "config.toml"
-        if not cfg.exists():
-            return args
-        try:
-            data = tomllib.loads(cfg.read_text(encoding="utf-8", errors="ignore"))
-        except Exception:
-            return args
-        servers = data.get("mcp_servers") or {}
+        servers = read_codex_config().get("mcp_servers") or {}
         if not isinstance(servers, dict):
             return args
         for server_id in servers:
-            if server_id != "comfytv":
+            if server_id != self._host.name:
                 args += ["-c", f"mcp_servers.{server_id}.enabled=false"]
         return args
 
@@ -356,7 +309,7 @@ class CodexCodeProvider(AgentProvider):
                           index: int) -> Optional[str]:
         try:
             raw = base64.b64decode(data)
-        except Exception:
+        except ValueError:
             return None
         if not raw:
             return None
@@ -377,9 +330,9 @@ class CodexCodeProvider(AgentProvider):
         flags = ["--json", "--skip-git-repo-check"]
         if turn.mcp_endpoint:
             flags += [
-                "-c", 'mcp_servers.comfytv.url="%s"' % turn.mcp_endpoint,
-                "-c", "mcp_servers.comfytv.required=true",
-                "-c", f"mcp_servers.comfytv.tool_timeout_sec={_MCP_TOOL_TIMEOUT_SEC}",
+                "-c", f'mcp_servers.{self._host.name}.url="{turn.mcp_endpoint}"',
+                "-c", f"mcp_servers.{self._host.name}.required=true",
+                "-c", f"mcp_servers.{self._host.name}.tool_timeout_sec={_MCP_TOOL_TIMEOUT_SEC}",
             ]
         flags += self._mcp_lockdown_args()
         flags += ["-c", "features.shell_tool=false"]
@@ -404,7 +357,7 @@ class CodexCodeProvider(AgentProvider):
             argv += ["--approve-for-me", "resume"]
         else:
             argv += ["--approve-for-me"]
-        argv += flags
+        argv += flags + ["--"]
         if turn.resume_token:
             argv.append(turn.resume_token)
         argv.append(turn.user_text)

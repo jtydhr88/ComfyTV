@@ -8,8 +8,6 @@ from pathlib import Path
 from typing import Optional
 
 from ._cli_common import (
-    COMFY_MCP_ALLOWED_TOOLS,
-    CORE_MCP_TOOLS,
     CliStreamParser,
     MCP_TOOL_TIMEOUT_MS,
     PROBE_CACHE_S,
@@ -18,6 +16,7 @@ from ._cli_common import (
     run_cli_turn,
     run_command,
 )
+from .agent_host import COMFY_MCP_ALLOWED_TOOLS, AgentHost
 from .providers import (
     AgentProvider,
     EmitFn,
@@ -77,13 +76,18 @@ def resolve_qwen_command() -> Optional[list[str]]:
         p = Path(found)
         if p.suffix.lower() == ".exe" or sys.platform != "win32":
             return [str(p)]
-        cli_js = p.parent / "node_modules" / "@qwen-code" / "qwen-code" / "dist" / "index.js"
+        package = p.parent / "node_modules" / "@qwen-code" / "qwen-code"
+        try:
+            entry = json.loads((package / "package.json").read_text(encoding="utf-8"))["bin"]["qwen"]
+        except (OSError, ValueError, KeyError, TypeError):
+            entry = "dist/index.js"
+        cli_js = package / entry
         node = shutil.which("node")
         if cli_js.exists() and node:
             return [node, str(cli_js)]
         cmd = p.with_suffix(".cmd")
         if cmd.exists():
-            return [str(cmd)]
+            return ["cmd.exe", "/d", "/s", "/c", str(cmd)]
         return [str(p)]
     home = Path.home()
     nvm_dir = home / ".nvm"
@@ -99,7 +103,7 @@ def resolve_qwen_command() -> Optional[list[str]]:
     return None
 
 
-def write_project_settings(home_dir: str, mcp_endpoint: str,
+def write_project_settings(host: AgentHost, home_dir: str, mcp_endpoint: str,
                            comfy_mcp_argv: Optional[list[str]] = None) -> Path:
     path = Path(home_dir) / ".qwen" / "settings.json"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -114,13 +118,13 @@ def write_project_settings(home_dir: str, mcp_endpoint: str,
     servers = data.get("mcpServers")
     if not isinstance(servers, dict):
         servers = {}
-    servers["comfytv"] = {
+    servers[host.name] = {
         "httpUrl": mcp_endpoint,
         "trust": True,
         "timeout": MCP_TOOL_TIMEOUT_MS,
-        "includeTools": list(CORE_MCP_TOOLS),
+        "includeTools": list(host.core_tools),
     }
-    allow = ["comfytv"]
+    allow = [host.name]
     if comfy_mcp_argv:
         servers["comfy"] = {
             "command": comfy_mcp_argv[0],
@@ -141,6 +145,8 @@ def write_project_settings(home_dir: str, mcp_endpoint: str,
     generator.setdefault("timeout", _LLM_REQUEST_TIMEOUT_MS)
     data["contentGenerator"] = generator
     path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    if host.qwen_guide:
+        (Path(home_dir) / "QWEN.md").write_text(host.qwen_guide + "\n", encoding="utf-8")
     return path
 
 
@@ -148,7 +154,8 @@ class QwenCodeProvider(AgentProvider):
     id = "qwen-code"
     label = "Qwen Code"
 
-    def __init__(self, *, home_dir: Optional[str] = None) -> None:
+    def __init__(self, *, host: AgentHost, home_dir: str) -> None:
+        self._host = host
         self._home_dir = home_dir
         self._probe_cache: Optional[tuple[float, ProviderStatus]] = None
 
@@ -156,18 +163,8 @@ class QwenCodeProvider(AgentProvider):
         return ProviderCaps(stateful=True, tools="mcp", attachments=False)
 
     def _resolve_home(self) -> str:
-        if self._home_dir:
-            os.makedirs(self._home_dir, exist_ok=True)
-            return self._home_dir
-        try:
-            import folder_paths
-            user = folder_paths.get_user_directory()
-        except Exception:
-            user = os.path.expanduser("~")
-        d = os.path.join(user, "comfytv", "bot-home-qwen")
-        os.makedirs(d, exist_ok=True)
-        self._home_dir = d
-        return d
+        os.makedirs(self._home_dir, exist_ok=True)
+        return self._home_dir
 
     async def probe(self) -> ProviderStatus:
         now = time.monotonic()
@@ -233,7 +230,7 @@ class QwenCodeProvider(AgentProvider):
                    handle: TurnHandle) -> TurnResult:
         home = self._resolve_home()
         if turn.mcp_endpoint:
-            await asyncio.to_thread(write_project_settings, home,
+            await asyncio.to_thread(write_project_settings, self._host, home,
                                     turn.mcp_endpoint, turn.comfy_mcp_argv)
         return await run_cli_turn(
             self._build_argv(turn),

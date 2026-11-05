@@ -142,6 +142,6 @@ class TestPrompts:
 
 class TestBotWiring:
     def test_skill_in_core_mcp_tools(self):
-        from ComfyTV.bot._cli_common import CORE_MCP_TOOLS
+        from ComfyTV.bot.guide import CORE_MCP_TOOLS
         assert "skill" in CORE_MCP_TOOLS
 

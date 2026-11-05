@@ -63,7 +63,7 @@ def _comfy_mcp_argv() -> list[str]:
 
 
 def _allowed_tools(comfy_mcp_argv: list[str]) -> list[str]:
-    from ..bot._cli_common import COMFY_MCP_ALLOWED_TOOLS
+    from ..bot.agent_host import COMFY_MCP_ALLOWED_TOOLS
     tools = list(_ALLOWED_TOOLS)
     if comfy_mcp_argv:
         tools += [f"mcp__comfy__{t}" for t in COMFY_MCP_ALLOWED_TOOLS]

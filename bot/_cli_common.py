@@ -2,6 +2,9 @@ import asyncio
 import json
 import logging
 import os
+import shlex
+import shutil
+import signal
 import subprocess
 import sys
 import time
@@ -18,79 +21,7 @@ TOOL_RESULT_CAP = 4000
 PROBE_CACHE_S = 60
 MCP_TOOL_TIMEOUT_MS = 600_000
 
-CORE_MCP_TOOLS = [
-    "server_info",
-    "projects",
-    "stage_catalog",
-    "list_workflows",
-    "servers",
-    "jobs",
-    "exec_errors",
-    "resources",
-    "get_canvas",
-    "get_stage",
-    "outputs",
-    "assets",
-    "asset_edit",
-    "entries",
-    "add_stage",
-    "set_stage",
-    "connect_stages",
-    "run_stage",
-    "wait_stage",
-    "cancel_stage",
-    "remove_stage",
-    "view_image",
-    "media_probe",
-    "media_frame",
-    "media_waveform",
-    "media_timeline",
-    "fx_preview",
-    "pick_output",
-    "director_get",
-    "director_edit",
-    "scene_get",
-    "scene_edit",
-    "scene_capture",
-    "scene_record",
-    "layer_get",
-    "layer_edit",
-    "layer_capture",
-    "node_info",
-    "workflow_create",
-    "workflow_get",
-    "workflow_edit",
-    "stage_params",
-    "graph_get",
-    "graph_edit",
-    "graph_run",
-    "canvas_command",
-    "canvas_focus",
-    "arrange_canvas",
-    "skill",
-    "ask_user",
-    "remember",
-]
-
-COMFY_MCP_ALLOWED_TOOLS = [
-    "server_info",
-    "nodes",
-    "validate_workflow",
-    "search_models",
-    "search_templates",
-    "get_template",
-    "list_workflow_slots",
-    "list_workflow_notes",
-    "workflow_deps",
-    "node_dependencies",
-    "system_stats",
-    "which",
-]
-
-
 def resolve_comfy_mcp_argv(command: str) -> list[str]:
-    import shlex
-    import shutil
     command = (command or "").strip()
     if command:
         try:
@@ -289,7 +220,6 @@ async def kill_process_tree(handle: TurnHandle) -> None:
             )
             await killer.wait()
         else:
-            import signal
             os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
     except (OSError, ProcessLookupError):
         pass
@@ -334,7 +264,7 @@ async def run_cli_turn(
             await proc.stdin.drain()
             proc.stdin.close()
         except (OSError, ConnectionError) as e:
-            _log.warning("[ComfyTV/bot] stdin write failed: %s", e)
+            _log.warning("[%s] stdin write failed: %s", exe_label, e)
 
     stderr_buf: list[bytes] = []
 
@@ -367,7 +297,7 @@ async def run_cli_turn(
             except asyncio.TimeoutError:
                 continue
             except ValueError:
-                _log.warning("[ComfyTV/bot] oversized stream line skipped")
+                _log.warning("[%s] oversized stream line skipped", exe_label)
                 last_activity = time.monotonic()
                 continue
             if not line:

@@ -4,22 +4,19 @@ from .local_llm import LocalLlmProvider
 from .providers import ProviderStatus
 
 
+def shim_url() -> str:
+    try:
+        from server import PromptServer
+        port = getattr(PromptServer.instance, "port", None) or 8188
+    except Exception:
+        port = 8188
+    return f"http://127.0.0.1:{port}/comfytv/llm/v1"
+
+
 class ComfyUiLlmProvider(LocalLlmProvider):
     id = "comfyui-llm"
     label = "ComfyUI LLM (experimental)"
-
-    def _base_url(self) -> str:
-        if self._base_url_override is not None:
-            return self._base_url_override.rstrip("/")
-        try:
-            from server import PromptServer
-            port = getattr(PromptServer.instance, "port", None) or 8188
-        except Exception:
-            port = 8188
-        return f"http://127.0.0.1:{port}/comfytv/llm/v1"
-
-    def _lms_bin(self) -> str:
-        return ""
+    unloads_lms_during_waits = False
 
     async def probe(self) -> ProviderStatus:
         status = await super().probe()

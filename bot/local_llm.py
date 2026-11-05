@@ -3,20 +3,18 @@ import json
 import logging
 import os
 import re
-import shutil
-import sys
 import time
-from pathlib import Path
-from typing import Optional
+from typing import Callable, Optional
 
 import aiohttp
 
 from ._cli_common import (
-    CORE_MCP_TOOLS,
     PROBE_CACHE_S,
     TOOL_RESULT_CAP,
     merge_usage,
 )
+from . import lms
+from .agent_host import AgentHost
 from .providers import (
     AgentProvider,
     BotEvent,
@@ -29,37 +27,13 @@ from .providers import (
 )
 
 _log = logging.getLogger(__name__)
+_NET_ERRORS = (aiohttp.ClientError, asyncio.TimeoutError, OSError, RuntimeError, ValueError)
 
-_URL_SETTING = "bot-local-llm-url"
-_API_KEY_ENV = "COMFYTV_LOCAL_LLM_API_KEY"
 _MAX_ITERATIONS = 80
 _MAX_WAIT_SLICES = 12
 _LLM_TIMEOUT_S = 300
 _HISTORY_CHAR_CAP = 16_000
 _THINK_RE = re.compile(r"(?:<think>|^)([\s\S]*?)</think>|<think>([\s\S]*)$")
-
-_SYSTEM_PROMPT = (
-    "You are the ComfyTV canvas bot. The provided tools are your eyes and "
-    "hands on the user's live ComfyTV canvas.\n\n"
-    "- Look first: get_canvas shows the current nodes, prompts and run "
-    "states; server_info shows overall health.\n"
-    "- To render something: list_workflows for the exact workflow label, "
-    "add_stage (returns a uid), run_stage on that uid, then wait_stage on "
-    "the same uid until its status is 'done' or 'error', then outputs for "
-    "the result URL.\n"
-    "- Always copy strings exactly as tools return them. Never invent "
-    "workflow labels, node ids or URLs.\n"
-    "- Canvas writes work through either Comfy Desktop or a browser page. "
-    "Do not treat `tab_page_active` as a reason to stop: make one real write "
-    "attempt. If it fails, report the tool's exact error instead of inventing "
-    "a focus problem or asking the user to click the canvas or reply 'ready'.\n"
-    "- You have no OS window-control tool. Never claim you can activate a "
-    "window or lack permission to do so.\n"
-    "- The skill tool lists installed skills (instruction packs). When a "
-    "task matches one, call skill with action='read' and follow the "
-    "returned instructions.\n"
-    "Reply in the user's language."
-)
 
 
 def _user_content(text: str, attachments: Optional[list[dict]]):
@@ -77,28 +51,22 @@ def _user_content(text: str, attachments: Optional[list[dict]]):
 class LocalLlmProvider(AgentProvider):
     id = "local-llm"
     label = "Local LLM"
+    unloads_lms_during_waits = True
 
-    def __init__(self, *, base_url: Optional[str] = None,
-                 model: Optional[str] = None) -> None:
-        self._base_url_override = base_url
-        self._model_override = model
+    def __init__(self, *, host: AgentHost, base_url: Callable[[], str]) -> None:
+        self._host = host
+        self._base_url_source = base_url
         self._probe_cache: Optional[tuple[float, str, ProviderStatus]] = None
 
     def capabilities(self) -> ProviderCaps:
         return ProviderCaps(stateful=False, tools="mcp", attachments=True)
 
     def _base_url(self) -> str:
-        if self._base_url_override is not None:
-            return self._base_url_override.rstrip("/")
-        try:
-            from .. import storage
-            return str(storage.get_setting(_URL_SETTING) or "").strip().rstrip("/")
-        except Exception:
-            return ""
+        return self._base_url_source().strip().rstrip("/")
 
     def _api_headers(self) -> dict:
         headers = {"Content-Type": "application/json"}
-        key = os.environ.get(_API_KEY_ENV, "")
+        key = os.environ.get(self._host.local_llm_key_env, "")
         if key:
             headers["Authorization"] = f"Bearer {key}"
         return headers
@@ -132,7 +100,7 @@ class LocalLlmProvider(AgentProvider):
             status = ProviderStatus(
                 available=False,
                 detail="no endpoint configured — set the Local LLM endpoint "
-                       "URL under Settings → Agent & MCP",
+                       f"URL in {self._host.settings_location}",
             )
             self._probe_cache = (now, base, status)
             return status
@@ -154,7 +122,7 @@ class LocalLlmProvider(AgentProvider):
                 status = ProviderStatus(
                     available=True, version=models[0], logged_in=True,
                 )
-        except Exception as e:
+        except _NET_ERRORS as e:
             status = ProviderStatus(available=False, detail=str(e))
         self._probe_cache = (now, base, status)
         return status
@@ -171,64 +139,8 @@ class LocalLlmProvider(AgentProvider):
                 )
             models = [str(m.get("id") or "") for m in data.get("data") or []]
             return [m for m in models if m]
-        except Exception:
+        except _NET_ERRORS:
             return []
-
-    def _lms_bin(self) -> str:
-        executable = "lms.exe" if os.name == "nt" else "lms"
-        candidates = [
-            os.getenv("LMSTUDIO_LMS_PATH", ""),
-            str(Path.home() / ".lmstudio" / "bin" / executable),
-            "/Applications/LM Studio.app/Contents/Resources/app/.webpack/lms"
-            if sys.platform == "darwin" else "",
-            shutil.which("lms") or "",
-        ]
-        for candidate in candidates:
-            if candidate and Path(candidate).is_file():
-                return candidate
-        return ""
-
-    async def _run_lms(self, args: list[str], timeout: float = 600) -> str:
-        binary = self._lms_bin()
-        if not binary:
-            raise RuntimeError("lms executable not found")
-        process = await asyncio.create_subprocess_exec(
-            binary, *args,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
-        )
-        try:
-            stdout, stderr = await asyncio.wait_for(
-                process.communicate(), timeout=timeout)
-        except asyncio.TimeoutError:
-            process.kill()
-            await process.wait()
-            raise RuntimeError(f"lms {' '.join(args)} timed out")
-        if process.returncode != 0:
-            detail = "\n".join(part for part in (
-                stdout.decode("utf-8", "replace").strip(),
-                stderr.decode("utf-8", "replace").strip()) if part)
-            raise RuntimeError(f"lms {' '.join(args)} failed: {detail}")
-        return stdout.decode("utf-8", "replace").strip()
-
-    async def _unload_model(self) -> bool:
-        try:
-            await self._run_lms(["unload", "--all"], timeout=60)
-            return True
-        except Exception as e:
-            _log.warning("[ComfyTV/local-llm] model unload failed: %s", e)
-            return False
-
-    async def _reload_model(self, model: str) -> None:
-        if not model:
-            return
-        try:
-            await self._run_lms([
-                "load", model, "--identifier", model,
-                "--gpu", "max", "--yes",
-            ])
-        except Exception as e:
-            _log.warning("[ComfyTV/local-llm] model reload failed: %s", e)
 
     async def _mcp_list_tools(self, session: aiohttp.ClientSession,
                               endpoint: str) -> list[dict]:
@@ -238,7 +150,7 @@ class LocalLlmProvider(AgentProvider):
                        "params": {}}, timeout=30,
         )
         tools = (data.get("result") or {}).get("tools") or []
-        return [t for t in tools if t.get("name") in CORE_MCP_TOOLS]
+        return [t for t in tools if t.get("name") in self._host.core_tools]
 
     async def _mcp_call_tool(self, session: aiohttp.ClientSession,
                              endpoint: str, name: str,
@@ -304,17 +216,17 @@ class LocalLlmProvider(AgentProvider):
                                handle: TurnHandle) -> str:
         args = dict(args)
         args.setdefault("timeout_s", 170)
-        unloaded = bool(self._lms_bin()) and await self._unload_model()
+        unloaded = self.unloads_lms_during_waits and bool(lms.lms_bin()) and await lms.unload_models()
         try:
             raw = ""
             for _ in range(_MAX_WAIT_SLICES):
                 if handle.stop_requested:
                     break
                 raw, _images = await self._mcp_call_tool(
-                    session, endpoint, "wait_stage", args)
+                    session, endpoint, self._host.wait_tool, args)
                 try:
                     data = json.loads(raw)
-                except Exception:
+                except ValueError:
                     break
                 if not isinstance(data, dict) or data.get("status") != "running":
                     break
@@ -323,7 +235,7 @@ class LocalLlmProvider(AgentProvider):
             return raw
         finally:
             if unloaded:
-                await self._reload_model(model)
+                await lms.load_model(model)
 
     async def send(self, turn: TurnRequest, emit: EmitFn,
                    handle: TurnHandle) -> TurnResult:
@@ -331,14 +243,11 @@ class LocalLlmProvider(AgentProvider):
         if not base:
             return TurnResult(
                 error="no Local LLM endpoint configured — set the endpoint "
-                      "URL under Settings → Agent & MCP")
-        if not turn.mcp_endpoint:
-            return TurnResult(error="no mcp_endpoint provided")
-
+                      f"URL in {self._host.settings_location}")
         try:
             async with aiohttp.ClientSession() as session:
                 handle.process = session
-                model = self._model_override or turn.model
+                model = turn.model
                 if not model:
                     models = await self.list_models()
                     model = models[0] if models else ""
@@ -347,9 +256,9 @@ class LocalLlmProvider(AgentProvider):
                         error="no model available on the Local LLM endpoint")
 
                 tools = self._build_tools(
-                    await self._mcp_list_tools(session, turn.mcp_endpoint))
+                    await self._mcp_list_tools(session, turn.mcp_endpoint)) if turn.mcp_endpoint else []
                 messages: list[dict] = [
-                    {"role": "system", "content": _SYSTEM_PROMPT},
+                    *([{"role": "system", "content": self._host.local_llm_prompt}] if tools else []),
                     *self._history_messages(turn.history),
                     {"role": "user",
                      "content": _user_content(turn.user_text,
@@ -366,8 +275,7 @@ class LocalLlmProvider(AgentProvider):
                         json_body={
                             "model": model,
                             "messages": messages,
-                            "tools": tools,
-                            "tool_choice": "auto",
+                            **({"tools": tools, "tool_choice": "auto"} if tools else {}),
                             "temperature": 0.2,
                         },
                         timeout=_LLM_TIMEOUT_S,
@@ -402,7 +310,7 @@ class LocalLlmProvider(AgentProvider):
                         try:
                             args = (json.loads(raw_args)
                                     if isinstance(raw_args, str) else raw_args)
-                        except Exception:
+                        except ValueError:
                             args = {}
                         if not isinstance(args, dict):
                             args = {}
@@ -411,14 +319,14 @@ class LocalLlmProvider(AgentProvider):
                         tool_failed = False
                         images: list[str] = []
                         try:
-                            if name == "wait_stage":
+                            if self._host.wait_tool and name == self._host.wait_tool:
                                 result_text = await self._wait_stage_done(
                                     session, turn.mcp_endpoint, args, model,
                                     handle)
                             else:
                                 result_text, images = await self._mcp_call_tool(
                                     session, turn.mcp_endpoint, name, args)
-                        except Exception as e:
+                        except _NET_ERRORS as e:
                             result_text = f"[error] {type(e).__name__}: {e}"
                             tool_failed = True
                         if len(result_text) > TOOL_RESULT_CAP:
@@ -447,7 +355,7 @@ class LocalLlmProvider(AgentProvider):
         except Exception as e:
             if handle.stop_requested:
                 return TurnResult(aborted=True)
-            _log.exception("[ComfyTV/local-llm] turn failed")
+            _log.exception("[%s/local-llm] turn failed", self._host.label)
             return TurnResult(error=str(e) or type(e).__name__)
         finally:
             handle.process = None
@@ -456,7 +364,4 @@ class LocalLlmProvider(AgentProvider):
         handle.stop_requested = True
         session = handle.process
         if isinstance(session, aiohttp.ClientSession):
-            try:
-                await session.close()
-            except Exception:
-                pass
+            await session.close()

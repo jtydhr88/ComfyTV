@@ -89,7 +89,7 @@ class AcpTransport:
                 try:
                     line = await self.proc.stdout.readline()
                 except ValueError:
-                    _log.warning("[ComfyTV/acp] oversized stdout line skipped")
+                    _log.warning("[acp] oversized stdout line skipped")
                     continue
                 if not line:
                     break
@@ -139,7 +139,7 @@ class AcpTransport:
         try:
             await self._on_notification(method, params)
         except Exception:
-            _log.exception("[ComfyTV/acp] notification handler failed for %s", method)
+            _log.exception("[acp] notification handler failed for %s", method)
 
     async def _answer(self, rid: Any, method: str, params: dict) -> None:
         try:
@@ -149,7 +149,7 @@ class AcpTransport:
         try:
             await self._send({"jsonrpc": "2.0", "id": rid, **reply})
         except AcpProcessError:
-            _log.warning("[ComfyTV/acp] reply to %s could not be written", method)
+            _log.warning("[acp] reply to %s could not be written", method)
 
     async def _send(self, obj: dict) -> None:
         proc = self.proc

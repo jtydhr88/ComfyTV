@@ -73,7 +73,7 @@ def _err(result):
 class TestLayerEditorTools:
     def test_registered_and_whitelisted(self):
         from ComfyTV.api.mcp_tools import TOOLS
-        from ComfyTV.bot._cli_common import CORE_MCP_TOOLS
+        from ComfyTV.bot.guide import CORE_MCP_TOOLS
         for name in ("layer_get", "layer_edit", "layer_capture"):
             assert name in TOOLS
             assert name in CORE_MCP_TOOLS

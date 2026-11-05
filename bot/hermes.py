@@ -3,61 +3,23 @@ import random
 import re
 import shutil
 from pathlib import Path
-from typing import Optional
+from typing import Callable, Optional
 from urllib.parse import urlsplit, urlunsplit
 
 from ._acp import AcpTransport
 from ._acp_provider import SESSION_TIMEOUT_S, AcpLaunch, AcpProvider
+from .agent_host import AgentHost
 from .providers import TurnRequest
 
 _log = logging.getLogger(__name__)
 
-_SSH_HOST_SETTING = "bot-hermes-ssh-host"
-_PROFILE_SETTING = "bot-hermes-profile"
 _PROFILE_RE = re.compile(r"[a-z0-9][a-z0-9_-]*")
 _SSH_OPTIONS = ["-o", "BatchMode=yes", "-o", "ConnectTimeout=10"]
 TUNNEL_PORTS = (20000, 59999)
 
-SESSION_PREAMBLE = (
-    "[ComfyTV] You are working for the user through a ComfyTV chat. Their ComfyTV canvas and "
-    "its ComfyUI are reachable only through the `comfytv` MCP tools attached to this session "
-    "(named mcp__comfytv__*). They may run on a different machine than you, so 127.0.0.1, "
-    "local ComfyUI or ComfyTV services, and skills or memories about your own machine do not "
-    "refer to them. Never use the terminal, curl, systemctl or sudo to reach, start or stop "
-    "ComfyUI or ComfyTV. Start with server_info and get_canvas; when a task matches a ComfyTV "
-    "skill, read it with the comfytv skill tool."
-)
-
-
-def _setting(key: str) -> str:
-    try:
-        from .. import storage
-        return str(storage.get_setting(key) or "").strip()
-    except Exception:
-        return ""
-
-
-def ssh_host() -> str:
-    return _setting(_SSH_HOST_SETTING)
-
-
-def profile() -> str:
-    return _setting(_PROFILE_SETTING)
-
-
-def hermes_args(*args: str) -> list[str]:
-    name = profile()
-    return ["-p", name, *args] if name else list(args)
-
-
-def chat_cwd(chat_id: str) -> Path:
-    try:
-        import folder_paths
-        user = Path(folder_paths.get_user_directory())
-    except Exception:
-        user = Path.home()
+def chat_cwd(home: str, chat_id: str) -> Path:
     safe = re.sub(r"[^A-Za-z0-9_-]", "_", chat_id or "default")[:64] or "default"
-    path = user / "comfytv" / "bot-home-hermes" / "chats" / safe
+    path = Path(home) / "chats" / safe
     path.mkdir(parents=True, exist_ok=True)
     return path
 
@@ -91,10 +53,21 @@ class HermesProvider(AcpProvider):
         "max_turn_requests": "Hermes stopped after the maximum number of model requests.",
     }
 
+    def __init__(self, *, host: AgentHost, home_dir: str, ssh_host: Callable[[], str],
+                 profile: Callable[[], str]) -> None:
+        super().__init__(host=host, home_dir=home_dir)
+        self._ssh_host = ssh_host
+        self._profile = profile
+
+    def _hermes_args(self, *args: str) -> list[str]:
+        name = self._profile().strip()
+        return ["-p", name, *args] if name else list(args)
+
     def _command(self) -> tuple[Optional[list[str]], str]:
-        if profile() and not _PROFILE_RE.fullmatch(profile()):
-            return None, f"The Hermes profile name {profile()!r} is not valid; use lowercase letters, digits, - and _."
-        host = ssh_host()
+        name = self._profile().strip()
+        if name and not _PROFILE_RE.fullmatch(name):
+            return None, f"The Hermes profile name {name!r} is not valid; use lowercase letters, digits, - and _."
+        host = self._ssh_host().strip()
         if host:
             ssh = shutil.which("ssh")
             if not ssh:
@@ -107,24 +80,24 @@ class HermesProvider(AcpProvider):
                       "or set the Hermes SSH host to use it on another machine.")
 
     def _version_argv(self, argv: list[str]) -> list[str]:
-        if ssh_host():
-            return [*argv[:-1], *_SSH_OPTIONS, argv[-1], f"sh -lc 'hermes {' '.join(hermes_args('--version'))}'"]
-        return [*argv, *hermes_args("--version")]
+        if self._ssh_host().strip():
+            return [*argv[:-1], *_SSH_OPTIONS, argv[-1], f"sh -lc 'hermes {' '.join(self._hermes_args('--version'))}'"]
+        return [*argv, *self._hermes_args("--version")]
 
     async def _launch(self, turn: TurnRequest, argv: list[str]) -> tuple[Optional[AcpLaunch], str]:
-        cwd = str(chat_cwd(turn.chat_id))
-        if not ssh_host():
-            return AcpLaunch(argv=[*argv, *hermes_args("acp")], cwd=cwd, session_cwd=cwd,
+        cwd = str(chat_cwd(self._home_dir, turn.chat_id))
+        if not self._ssh_host().strip():
+            return AcpLaunch(argv=[*argv, *self._hermes_args("acp")], cwd=cwd, session_cwd=cwd,
                              mcp_url=turn.mcp_endpoint), ""
         forward, mcp_url = tunnel(turn.mcp_endpoint, random.randint(*TUNNEL_PORTS))
         return AcpLaunch(argv=[*argv[:-1], "-T", *_SSH_OPTIONS, *forward, argv[-1],
-                               f"sh -lc 'exec hermes {' '.join(hermes_args('acp'))}'"],
+                               f"sh -lc 'exec hermes {' '.join(self._hermes_args('acp'))}'"],
                          cwd=cwd, session_cwd=".", mcp_url=mcp_url), ""
 
     def _prompt_blocks(self, turn: TurnRequest, image_supported: bool) -> tuple[list[dict], str]:
         blocks, error = super()._prompt_blocks(turn, image_supported)
         if blocks and not turn.resume_token:
-            blocks.insert(0, {"type": "text", "text": SESSION_PREAMBLE})
+            blocks.insert(0, {"type": "text", "text": self._host.session_preamble})
         return blocks, error
 
     def _catalog_from(self, opened: dict) -> list[dict]:
@@ -138,7 +111,7 @@ class HermesProvider(AcpProvider):
                 "sessionId": session_id, "modelId": turn.model,
             }, timeout=SESSION_TIMEOUT_S)
             await transport.request("session/resume", {
-                "sessionId": session_id, "cwd": launch.session_cwd, "mcpServers": launch.mcp_servers(),
+                "sessionId": session_id, "cwd": launch.session_cwd, "mcpServers": self._mcp_servers(launch),
             }, timeout=SESSION_TIMEOUT_S)
-        _log.info("[ComfyTV/hermes] chat=%s model=%s", turn.chat_id, turn.model or "(Hermes default)")
+        _log.info("[%s/hermes] chat=%s model=%s", self._host.label, turn.chat_id, turn.model or "(Hermes default)")
         return ""

@@ -5,7 +5,6 @@ from typing import Any, Optional
 from ._acp import AcpTransport
 from ._acp_provider import SESSION_TIMEOUT_S, AcpLaunch, AcpProvider
 from .deepseek_harness_runtime import (
-    BOT_PROFILE,
     chat_cwd,
     ensure_profile,
     resolve_command,
@@ -50,16 +49,20 @@ class DeepSeekHarnessProvider(AcpProvider):
         "max_turn_requests": "DeepSeek Harness stopped after the maximum number of model requests.",
     }
 
+    @property
+    def profile(self) -> str:
+        return f"{self._host.name}-acp"
+
     def _command(self) -> tuple[Optional[list[str]], str]:
         return resolve_command()
 
     async def _launch(self, turn: TurnRequest, argv: list[str]) -> tuple[Optional[AcpLaunch], str]:
-        profile_error = await ensure_profile(argv)
+        profile_error = await ensure_profile(argv, self.profile)
         if profile_error:
             return None, profile_error
-        cwd = chat_cwd(turn.chat_id)
-        overlay = write_turn_overlay(cwd, parse_model_value(turn.model))
-        return AcpLaunch(argv=argv + ["--profile", BOT_PROFILE, "--patch", str(overlay)],
+        cwd = chat_cwd(self._home_dir, turn.chat_id)
+        overlay = write_turn_overlay(self._host.name, cwd, parse_model_value(turn.model))
+        return AcpLaunch(argv=argv + ["--profile", self.profile, "--patch", str(overlay)],
                          cwd=str(cwd), session_cwd=str(cwd), mcp_url=turn.mcp_endpoint), ""
 
     def _catalog_from(self, opened: dict) -> list[dict]:
@@ -89,5 +92,5 @@ class DeepSeekHarnessProvider(AcpProvider):
         await transport.request("session/set_config_option", {
             "sessionId": session_id, "configId": "model", "value": model,
         }, timeout=SESSION_TIMEOUT_S)
-        _log.info("[ComfyTV/deepseek-harness] chat=%s model=%s", turn.chat_id, model)
+        _log.info("[%s/deepseek-harness] chat=%s model=%s", self._host.label, turn.chat_id, model)
         return ""

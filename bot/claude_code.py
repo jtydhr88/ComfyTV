@@ -16,6 +16,7 @@ from ._cli_common import (
     run_command,
     tool_result_text,
 )
+from .agent_host import AgentHost
 from .providers import (
     AgentProvider,
     EmitFn,
@@ -95,7 +96,7 @@ def resolve_claude_command() -> Optional[list[str]]:
         return [node, str(cli_js)]
     cmd = p.with_suffix(".cmd")
     if cmd.exists():
-        return [str(cmd)]
+        return ["cmd.exe", "/d", "/s", "/c", str(cmd)]
     return None
 
 
@@ -103,7 +104,8 @@ class ClaudeCodeProvider(AgentProvider):
     id = "claude-code"
     label = "Claude Code"
 
-    def __init__(self, *, home_dir: Optional[str] = None) -> None:
+    def __init__(self, *, host: AgentHost, home_dir: str) -> None:
+        self._host = host
         self._home_dir = home_dir
         self._probe_cache: Optional[tuple[float, ProviderStatus]] = None
 
@@ -111,18 +113,8 @@ class ClaudeCodeProvider(AgentProvider):
         return ProviderCaps(stateful=True, tools="mcp", attachments=True)
 
     def _resolve_home(self) -> str:
-        if self._home_dir:
-            os.makedirs(self._home_dir, exist_ok=True)
-            return self._home_dir
-        try:
-            import folder_paths
-            user = folder_paths.get_user_directory()
-        except Exception:
-            user = os.path.expanduser("~")
-        d = os.path.join(user, "comfytv", "bot-home")
-        os.makedirs(d, exist_ok=True)
-        self._home_dir = d
-        return d
+        os.makedirs(self._home_dir, exist_ok=True)
+        return self._home_dir
 
     async def probe(self) -> ProviderStatus:
         now = time.monotonic()
@@ -172,7 +164,9 @@ class ClaudeCodeProvider(AgentProvider):
         if turn.model:
             argv += ["--model", turn.model]
         if turn.mcp_endpoint:
-            servers: dict = {"comfytv": {"type": "http", "url": turn.mcp_endpoint}}
+            if self._host.claude_prompt:
+                argv += ["--append-system-prompt", self._host.claude_prompt]
+            servers: dict = {self._host.name: {"type": "http", "url": turn.mcp_endpoint}}
             if turn.comfy_mcp_argv:
                 servers["comfy"] = {
                     "type": "stdio",
