@@ -261,7 +261,7 @@ async def _run_turn(chat: dict, text: str, state: _TurnState, *,
         status = "aborted" if result.aborted else ("error" if error else "done")
 
     ACTIVE_TURNS.pop(chat_id, None)
-    from . import bot_asks
+    from ..bot import bot_asks
     bot_asks.cancel_chat_asks(chat_id)
     token = result.resume_token if result else None
     usage = result.usage if result else None

@@ -14,7 +14,8 @@ def _bot_turn_state():
 async def _await_ask(chat_id: str, state, spec: dict, *,
                      timeout: float | None = None,
                      keep_pending_on_timeout: bool = False) -> dict:
-    from .. import agent_events, bot_asks
+    from .. import agent_events
+    from ...bot import bot_asks
     from ..bot_turns import _broadcast
 
     ask = bot_asks.create_ask(chat_id, state.message_id, spec)
@@ -77,7 +78,7 @@ async def _remember(args: dict) -> dict:
     return {"prefs": (chat or {}).get("prefs") or []}
 
 async def _ask_user(args: dict) -> dict:
-    from .. import bot_asks
+    from ...bot import bot_asks
 
     chat_id, state = _bot_turn_state()
     if not chat_id:
@@ -106,7 +107,7 @@ async def _maybe_ask_run_approval(action: str) -> dict | None:
     chat = storage.get_bot_chat(chat_id)
     if not chat or (chat.get("run_mode") or "auto") != "ask":
         return None
-    from .. import bot_asks
+    from ...bot import bot_asks
     outcome = bot_asks.take_run_approval_answer(chat_id, action)
     if outcome is None:
         outcome = await _await_ask(chat_id, state, {

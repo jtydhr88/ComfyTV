@@ -5,7 +5,7 @@ import pytest
 from aiohttp import web
 from aiohttp.test_utils import TestClient, TestServer
 
-from ComfyTV.api import bot_asks
+from ComfyTV.bot import bot_asks
 
 
 SPEC_ARGS = {
@@ -15,64 +15,6 @@ SPEC_ARGS = {
         {"id": "b", "label": "Option B", "description": "the safe one"},
     ],
 }
-
-
-class TestValidateSpec:
-    def test_happy_path_defaults(self):
-        spec = bot_asks.validate_spec(SPEC_ARGS)
-        assert spec["min_selections"] == 1
-        assert spec["max_selections"] == 1
-        assert spec["allow_other"] is False
-        assert [o["id"] for o in spec["options"]] == ["a", "b"]
-
-    def test_rejects_bad_input(self):
-        with pytest.raises(ValueError, match="prompt"):
-            bot_asks.validate_spec({"options": SPEC_ARGS["options"]})
-        with pytest.raises(ValueError, match="options"):
-            bot_asks.validate_spec({"prompt": "x", "options": [{"id": "a", "label": "A"}]})
-        with pytest.raises(ValueError, match="duplicate"):
-            bot_asks.validate_spec({"prompt": "x", "options": [
-                {"id": "a", "label": "A"}, {"id": "a", "label": "B"}]})
-        with pytest.raises(ValueError, match="min/max"):
-            bot_asks.validate_spec({**SPEC_ARGS, "min_selections": 3})
-
-
-class TestValidateAnswer:
-    def test_bounds_and_ids(self):
-        spec = bot_asks.validate_spec(SPEC_ARGS)
-        bot_asks.validate_answer(spec, ["a"], "")
-        with pytest.raises(ValueError, match="unknown"):
-            bot_asks.validate_answer(spec, ["zzz"], "")
-        with pytest.raises(ValueError, match="at most"):
-            bot_asks.validate_answer(spec, ["a", "b"], "")
-        with pytest.raises(ValueError, match="at least"):
-            bot_asks.validate_answer(spec, [], "")
-        with pytest.raises(ValueError, match="not allowed"):
-            bot_asks.validate_answer(spec, ["a"], "custom")
-
-    def test_other_text_substitutes_selection(self):
-        spec = bot_asks.validate_spec({**SPEC_ARGS, "allow_other": True})
-        bot_asks.validate_answer(spec, [], "my own words")
-
-
-class TestPendingLifecycle:
-    async def test_answer_resolves_future_once(self):
-        spec = bot_asks.validate_spec(SPEC_ARGS)
-        ask = bot_asks.create_ask("c1", "m1", spec)
-        resolved = bot_asks.resolve_ask(ask.id, "answered", ["a"], "")
-        assert resolved is ask
-        assert await ask.future == {"status": "answered", "selected": ["a"]}
-        assert bot_asks.resolve_ask(ask.id, "answered", ["b"], "") is None
-
-    async def test_cancel_chat_asks(self):
-        spec = bot_asks.validate_spec(SPEC_ARGS)
-        a1 = bot_asks.create_ask("c1", "m1", spec)
-        a2 = bot_asks.create_ask("c2", "m2", spec)
-        cancelled = bot_asks.cancel_chat_asks("c1")
-        assert [a.id for a in cancelled] == [a1.id]
-        assert (await a1.future)["status"] == "cancelled"
-        assert a2.id in bot_asks.PENDING
-        bot_asks.resolve_ask(a2.id, "cancelled")
 
 
 @pytest.fixture()
@@ -368,37 +310,3 @@ class TestAnswerEndpoint:
         bad = await client.patch(f"/comfytv/bot/chats/{chat['id']}",
                                  json={"run_mode": "yolo"})
         assert bad.status == 400
-
-
-class TestRunApprovals:
-    async def test_run_approvals_survive_turn_end_and_are_replayed(self):
-        spec = {**bot_asks.validate_spec(SPEC_ARGS), "kind": "run_approval", "prompt": "Run stage 4?"}
-        ask = bot_asks.create_ask("c9", "m9", spec)
-        plain = bot_asks.create_ask("c9", "m9", bot_asks.validate_spec(SPEC_ARGS))
-        cancelled = bot_asks.cancel_chat_asks("c9")
-        assert [a.id for a in cancelled] == [plain.id]
-        assert ask.id in bot_asks.PENDING
-        # the tool gave up waiting (future still pending under the shield); the human answers later
-        bot_asks.abandon_ask(ask.id)
-        assert not ask.future.done()
-        bot_asks.resolve_ask(ask.id, "answered", ["run"], "")
-        assert bot_asks.take_run_approval_answer("c9", "Run stage 4?") == {"status": "answered", "selected": ["run"]}
-        assert bot_asks.take_run_approval_answer("c9", "Run stage 4?") is None
-
-    async def test_live_waiter_consumes_the_answer_without_a_replay_entry(self):
-        spec = {**bot_asks.validate_spec(SPEC_ARGS), "kind": "run_approval", "prompt": "Run stage 5?"}
-        ask = bot_asks.create_ask("c7", "m7", spec)
-        bot_asks.resolve_ask(ask.id, "answered", ["run"], "")
-        assert (await ask.future)["selected"] == ["run"]
-        assert bot_asks.take_run_approval_answer("c7", "Run stage 5?") is None
-
-    async def test_new_run_approval_replaces_the_previous_pending_one(self):
-        spec = {**bot_asks.validate_spec(SPEC_ARGS), "kind": "run_approval", "prompt": "Run stage 1?"}
-        first = bot_asks.create_ask("c8", "m8", spec)
-        second = bot_asks.create_ask("c8", "m8", {**spec, "prompt": "Run stage 2?"})
-        assert first.id not in bot_asks.PENDING and second.id in bot_asks.PENDING
-        assert (await first.future)["status"] == "cancelled"
-        bot_asks.resolve_ask(second.id, "cancelled")
-
-    def test_wait_is_bounded_below_typical_client_timeouts(self):
-        assert bot_asks.RUN_APPROVAL_WAIT_S <= 60

@@ -188,7 +188,7 @@ async def agent_cancel(request: web.Request) -> web.Response:
     state = ACTIVE_TURNS.get(chat["id"])
     if state is None or state.message_id != request.match_info["mid"]:
         return _error("no active turn", 409)
-    from . import bot_asks
+    from ..bot import bot_asks
     bot_asks.cancel_chat_asks(chat["id"])
     provider = get_provider(chat["provider"])
     if provider is not None:
@@ -212,7 +212,7 @@ async def agent_answer_ask(request: web.Request) -> web.Response:
     if not isinstance(selected, list):
         return _error("selected must be a list")
     selected = [str(s) for s in selected]
-    from . import bot_asks
+    from ..bot import bot_asks
     ask_id = request.match_info["aid"]
     ask = bot_asks.PENDING.get(ask_id)
     if ask is None or ask.chat_id != chat["id"]:

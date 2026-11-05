@@ -418,7 +418,7 @@ async def bot_client(reset_db):
     from ComfyTV import storage as _storage
     _storage.set_settings({"enable-mcp": True, "enable-bot": True})
     from ComfyTV import api  # noqa: F401
-    from ComfyTV.api import bot_asks
+    from ComfyTV.bot import bot_asks
     from ComfyTV.api.bot import ACTIVE_TURNS, QUEUED
     import server
     ACTIVE_TURNS.clear()

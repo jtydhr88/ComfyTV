@@ -1,10 +1,11 @@
 {
-  "kit": "442b677",
+  "kit": "726c693",
   "files": {
     "_acp.py": "885a9eea51caad79a481485d8eecdf088c411313c7aaccee301ea51865b66e0d",
     "_acp_provider.py": "d99b8f3e53b2f850ffd58c25b450082651df716d95f68399e864ffc182bf477d",
     "_cli_common.py": "7b622a81454a2d35115f2e995cbed52c58ef04c97e444ffc8a3b98a63817d618",
     "agent_host.py": "14f3b3ec4ca44bdad0bf802e6fe9a72eaf422a26024067614cba5367725761f8",
+    "bot_asks.py": "dd0453ef7ae2dd143e1b86719d35e44420083f34b9a15fe72133266b8bc8bdb8",
     "claude_code.py": "249119d305be7a48a7ea0e7a34df7bdf3a18411d6bba54eda1ed4a09b19b1dcd",
     "codex.py": "746f3c7324ad2b7a31209d2632df9bd5bcd650f197c0494b60d8f365fd04ac30",
     "deepseek_harness.py": "116f797a46d8b62fa3e21bc7e73da3f28e110cfa55be2d685be69e53beceb290",

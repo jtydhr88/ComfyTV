@@ -240,7 +240,7 @@ async def bot_stop(request: web.Request) -> web.Response:
     state = ACTIVE_TURNS.get(chat["id"])
     if state is None:
         return web.json_response({"error": "no active turn"}, status=409)
-    from . import bot_asks
+    from ..bot import bot_asks
     bot_asks.cancel_chat_asks(chat["id"])
     provider = get_provider(chat["provider"])
     if provider is not None:
@@ -297,7 +297,7 @@ async def bot_answer_ask(request: web.Request) -> web.Response:
     selected = [str(s) for s in selected]
     other_text = str(body.get("other_text") or "")
 
-    from . import bot_asks
+    from ..bot import bot_asks
     ask = bot_asks.PENDING.get(ask_id)
     if ask is None or ask.chat_id != chat["id"]:
         return web.json_response(
