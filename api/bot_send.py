@@ -8,7 +8,7 @@ from urllib.parse import quote
 from .. import storage
 from . import bot_turns
 from .bot_docs import DOC_ERRORS, DOC_EXT, document_line, read_document
-from .bot_media import _prepare_attachment, _render_attachment
+from .bot_media import _SHEET_NOTE, _prepare_attachment, _render_attachment, _render_video_sheet
 from .bot_turns import ACTIVE_TURNS, QUEUED, _begin_turn
 
 _INPUT_MAX_COUNT = 6
@@ -32,11 +32,10 @@ def _prepare_input_file(name: str) -> tuple[Optional[dict], str]:
     if mime.startswith("video/"):
         block = None
         try:
-            from ..runners import media
-            block = _render_attachment(media.extract_frame(view_url, "middle"))
+            block = _render_video_sheet(view_url)
         except Exception:
             pass
-        seen = " The image below is its middle frame." if block else ""
+        seen = _SHEET_NOTE if block else ""
         return block, f"[Attached video: input/{name} — use media_probe for facts.{seen}]"
     if path.lower().endswith(DOC_EXT):
         try:

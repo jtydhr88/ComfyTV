@@ -5,26 +5,79 @@ _ATTACHABLE_TYPES = ("image", "video", "audio")
 _ATTACH_MAX_PX = 1024
 _ATTACH_JPEG_QUALITY = 85
 _ATTACH_MAX_COUNT = 6
+_SHEET_FRAMES = 4
 
 
-def _render_attachment(url: str) -> dict:
+def _jpeg(im) -> dict:
     import base64
     import io
 
-    from PIL import Image
-
-    from ..runners.media import localize
-
-    src = localize(url)
-    with Image.open(str(src)) as im:
-        im = im.convert("RGB")
-        im.thumbnail((_ATTACH_MAX_PX, _ATTACH_MAX_PX))
-        buf = io.BytesIO()
-        im.save(buf, "JPEG", quality=_ATTACH_JPEG_QUALITY)
+    im = im.convert("RGB")
+    im.thumbnail((_ATTACH_MAX_PX, _ATTACH_MAX_PX))
+    buf = io.BytesIO()
+    im.save(buf, "JPEG", quality=_ATTACH_JPEG_QUALITY)
     return {
         "data": base64.b64encode(buf.getvalue()).decode("ascii"),
         "media_type": "image/jpeg",
     }
+
+
+def _render_attachment(url: str) -> dict:
+    from PIL import Image
+
+    from ..runners.media import localize
+
+    with Image.open(str(localize(url))) as im:
+        return _jpeg(im)
+
+
+def _video_frames(path: str, count: int) -> list:
+    import av
+
+    with av.open(path) as container:
+        if not container.streams.video:
+            raise ValueError("the file has no video stream")
+        stream = container.streams.video[0]
+        if stream.duration and stream.time_base:
+            duration = float(stream.duration * stream.time_base)
+        else:
+            duration = container.duration / av.time_base if container.duration else 0.0
+        frames = []
+        for at in [duration * (i + 0.5) / count for i in range(count)]:
+            container.seek(int(at / stream.time_base), stream=stream)
+            for frame in container.decode(stream):
+                if frame.time is None or frame.time >= at - 0.05:
+                    frames.append((at, frame.to_image()))
+                    break
+    if not frames:
+        raise ValueError("video has no frames")
+    return frames
+
+
+def _render_video_sheet(url: str) -> dict:
+    import math
+
+    from PIL import Image, ImageDraw
+
+    from ..runners.media import localize
+
+    frames = _video_frames(str(localize(url)), _SHEET_FRAMES)
+    cols = math.ceil(math.sqrt(len(frames)))
+    rows = math.ceil(len(frames) / cols)
+    cell = _ATTACH_MAX_PX // cols
+    w, h = frames[0][1].size
+    ch = round(cell * h / w)
+    sheet = Image.new("RGB", (cell * cols, ch * rows))
+    draw = ImageDraw.Draw(sheet)
+    for i, (at, im) in enumerate(frames):
+        x, y = (i % cols) * cell, (i // cols) * ch
+        sheet.paste(im.convert("RGB").resize((cell, ch)), (x, y))
+        draw.rectangle((x, y, x + 52, y + 16), fill="black")
+        draw.text((x + 4, y + 2), f"{at:.1f}s", fill="white")
+    return _jpeg(sheet)
+
+
+_SHEET_NOTE = f" The image below shows {_SHEET_FRAMES} frames across it, labelled with their times."
 
 
 
@@ -149,12 +202,10 @@ def _prepare_attachment(asset: dict) -> tuple[dict | None, str]:
         except Exception:
             pass
         try:
-            frame_url = media.extract_frame(url, "middle")
-            block = _render_attachment(frame_url)
+            block = _render_video_sheet(url)
         except Exception:
             pass
-        seen = (" The image below is its middle frame."
-                if block else "")
+        seen = _SHEET_NOTE if block else ""
         return (block,
                 f"[Attached video: asset #{aid} ({name}) —{facts} {url} — "
                 f"{tail}{seen}")
@@ -165,8 +216,7 @@ def _prepare_attachment(asset: dict) -> tuple[dict | None, str]:
         facts = f" {dur:.2f}s —"
     block = None
     try:
-        wave_url = audio_render.render_waveform_image(url, 1200, 320)
-        block = _render_attachment(wave_url)
+        block = _jpeg(audio_render.waveform_image(url, 1200, 320))
     except Exception:
         pass
     seen = (" The image below is its waveform (RMS + clipping markers) — "

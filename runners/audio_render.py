@@ -15,9 +15,9 @@ def _lut(colormap: str):
     return ROSEUS_LUT if colormap == 'roseus' else _GRAY_LUT
 
 
-def render_waveform_image(view_url: str, width: int = 1200, height: int = 480,
-                          show_rms: bool = True, show_clipping: bool = True,
-                          db_axis: bool = False) -> str:
+def waveform_image(view_url: str, width: int = 1200, height: int = 480,
+                   show_rms: bool = True, show_clipping: bool = True,
+                   db_axis: bool = False):
     import numpy as np
     from PIL import Image
 
@@ -62,8 +62,14 @@ def render_waveform_image(view_url: str, width: int = 1200, height: int = 480,
         if show_clipping and clip_cols[x]:
             img[:, x] = (255, 40, 40)
 
+    return Image.fromarray(img, 'RGB')
+
+
+def render_waveform_image(view_url: str, width: int = 1200, height: int = 480,
+                          show_rms: bool = True, show_clipping: bool = True,
+                          db_axis: bool = False) -> str:
     out = fresh_output_path('.png', subfolder='comfytv/audio')
-    Image.fromarray(img, 'RGB').save(str(out), 'PNG')
+    waveform_image(view_url, width, height, show_rms, show_clipping, db_axis).save(str(out), 'PNG')
     return path_to_view_url(out)
 
 

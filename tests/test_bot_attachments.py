@@ -97,16 +97,24 @@ class TestAVAttachments:
 
     async def test_video_attachment_frame_and_facts(self, client, fake_provider,
                                                     tmp_path, monkeypatch):
+        import av
         from PIL import Image
         from ComfyTV.runners import media
-        frame = tmp_path / "frame.png"
-        Image.new("RGB", (640, 360), (5, 5, 5)).save(frame)
+        clip = tmp_path / "clip.mp4"
+        with av.open(str(clip), "w") as out:
+            stream = out.add_stream("mpeg4", rate=10)
+            stream.width, stream.height, stream.pix_fmt = 64, 48, "yuv420p"
+            for i in range(20):
+                frame = av.VideoFrame.from_image(Image.new("RGB", (64, 48), (i * 10, 0, 0)))
+                for packet in stream.encode(frame):
+                    out.mux(packet)
+            for packet in stream.encode():
+                out.mux(packet)
         monkeypatch.setattr(media, "get_video_info", lambda url: {
             "duration": 12.5, "fps": 24.0, "width": 1280, "height": 720,
             "has_audio": True})
-        monkeypatch.setattr(media, "extract_frame",
-                            lambda url, pos: "/view?frame.png")
-        monkeypatch.setattr(media, "localize", lambda url: frame)
+        monkeypatch.setattr(media, "localize", lambda url: clip)
+        monkeypatch.setattr(media, "fresh_output_path", lambda *a, **k: pytest.fail("attachments must not write files"))
 
         asset = self._make_asset("video", "mv-take")
         resp = await client.post("/comfytv/bot/chats",
@@ -122,21 +130,17 @@ class TestAVAttachments:
         turn = fake_provider.last_turn
         assert len(turn.attachments) == 1
         assert "12.50s 1280x720 @24fps with audio" in turn.user_text
-        assert "middle frame" in turn.user_text
+        assert "4 frames across it" in turn.user_text
         assert f"asset #{asset['id']}" in turn.user_text
 
     async def test_audio_attachment_waveform_and_duration(
             self, client, fake_provider, tmp_path, monkeypatch):
         from PIL import Image
-        from ComfyTV.api import bot as bot_api
         from ComfyTV.api import bot_media
-        from ComfyTV.runners import audio_render, media
-        wave = tmp_path / "wave.png"
-        Image.new("RGB", (1200, 320), (0, 0, 0)).save(wave)
+        from ComfyTV.runners import audio_render
         monkeypatch.setattr(bot_media, "_audio_duration_s", lambda url: 187.4)
-        monkeypatch.setattr(audio_render, "render_waveform_image",
-                            lambda url, w, h: "/view?wave.png")
-        monkeypatch.setattr(media, "localize", lambda url: wave)
+        monkeypatch.setattr(audio_render, "waveform_image",
+                            lambda url, w, h: Image.new("RGB", (w, h)))
 
         asset = self._make_asset("audio", "my-song")
         resp = await client.post("/comfytv/bot/chats",
@@ -163,7 +167,7 @@ class TestAVAttachments:
             raise RuntimeError("no decoder")
 
         monkeypatch.setattr(bot_media, "_audio_duration_s", lambda url: None)
-        monkeypatch.setattr(audio_render, "render_waveform_image", boom)
+        monkeypatch.setattr(audio_render, "waveform_image", boom)
         asset = self._make_asset("audio", "raw")
         resp = await client.post("/comfytv/bot/chats",
                                  json={"provider": "fake-test"})
