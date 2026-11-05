@@ -22,7 +22,6 @@ const EVENT_TYPES = [
 
 const DOCK_ID = 'comfytv-agent-dock'
 const ENTRY_ID = 'comfytv-agent-entry'
-const MAX_FRAMES = 600
 
 interface Mounted {
   host: HTMLElement
@@ -33,8 +32,7 @@ interface Mounted {
 let pinia: Pinia | null = null
 let dock: Mounted | null = null
 let entry: Mounted | null = null
-let dockRetry = 0
-let entryRetry = 0
+let observer: MutationObserver | null = null
 
 function store() {
   return pinia ? useAgentPanelStore(pinia) : null
@@ -76,37 +74,28 @@ function actionsBar(): HTMLElement | null {
   return document.querySelector('[data-testid="integrated-tab-bar-actions"]')
 }
 
-let dockPending = false
-let entryPending = false
+function createHost(id: string): HTMLElement {
+  document.getElementById(id)?.remove()
+  const host = document.createElement('div')
+  host.id = id
+  host.className = 'ctv:contents'
+  return host
+}
 
 function mountDock(): void {
   const root = overlayRoot()
-  if (!root) {
-    if (dockRetry++ < MAX_FRAMES) requestAnimationFrame(mountDock)
-    else dockPending = false
-    return
-  }
-  dockPending = false
-  document.getElementById(DOCK_ID)?.remove()
-  const host = document.createElement('div')
-  host.id = DOCK_ID
-  host.className = 'ctv:contents'
+  if (!root) return
+  unmount(dock)
+  const host = createHost(DOCK_ID)
   root.append(host)
   dock = mountInto(host, AgentDock)
 }
 
 function mountEntry(): void {
   const bar = actionsBar()
-  if (!bar) {
-    if (entryRetry++ < MAX_FRAMES) requestAnimationFrame(mountEntry)
-    else entryPending = false
-    return
-  }
-  entryPending = false
-  document.getElementById(ENTRY_ID)?.remove()
-  const host = document.createElement('div')
-  host.id = ENTRY_ID
-  host.className = 'ctv:contents'
+  if (!bar) return
+  unmount(entry)
+  const host = createHost(ENTRY_ID)
   bar.prepend(host)
   entry = mountInto(host, AgentEntryButton)
 }
@@ -114,18 +103,17 @@ function mountEntry(): void {
 function sync(): void {
   const s = store()
   if (!s) return
-  if (s.enabled && !entryPending && !(entry && entry.host.isConnected)) {
-    entry = unmount(entry)
-    entryPending = true
-    entryRetry = 0
-    mountEntry()
-  }
   if (!s.enabled) entry = unmount(entry)
-  if (s.isVisible && !dockPending && !(dock && dock.host.isConnected)) {
-    dock = unmount(dock)
-    dockPending = true
-    dockRetry = 0
-    mountDock()
+  else if (!entry?.host.isConnected) mountEntry()
+  if (s.isVisible && !dock?.host.isConnected) mountDock()
+  if (s.enabled || s.isVisible) {
+    if (!observer) {
+      observer = new MutationObserver(sync)
+      observer.observe(document.body, { childList: true, subtree: true })
+    }
+  } else {
+    observer?.disconnect()
+    observer = null
   }
 }
 

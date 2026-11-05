@@ -50,4 +50,24 @@ describe('agent panel mounting', () => {
     expect(row.querySelector('#comfytv-agent-dock')?.textContent).toBe('Bot panel')
     expect(document.querySelector('#comfytv-agent-entry')?.textContent).toBe('Bot button')
   })
+
+  it('mounts the Bot button once the tab bar appears and again after it is re-created', async () => {
+    panel.enabled = true
+    panel.isVisible = false
+    installAgentPanel(createPinia())
+    const addBar = () => {
+      const bar = document.createElement('div')
+      bar.dataset.testid = 'integrated-tab-bar-actions'
+      document.body.append(bar)
+      return bar
+    }
+
+    const bar = addBar()
+    await vi.waitFor(() => expect(bar.querySelector('#comfytv-agent-entry')).not.toBeNull())
+
+    bar.remove()
+    const next = addBar()
+    await vi.waitFor(() => expect(next.querySelector('#comfytv-agent-entry')?.textContent).toBe('Bot button'))
+    panel.isVisible = true
+  })
 })

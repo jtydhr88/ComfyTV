@@ -59800,7 +59800,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-CtqF3Y5r.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-CXjHrhBW.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -86716,7 +86716,7 @@ const _sfc_main$4v = /* @__PURE__ */ defineComponent({
       }
     });
     const AgentPanelRoot = /* @__PURE__ */ defineAsyncComponent({
-      loader: () => import("./AgentPanelRoot-CzTXDgcG.mjs"),
+      loader: () => import("./AgentPanelRoot-CSkx2pRI.mjs"),
       errorComponent: AgentPanelLoadError,
       onError: (error2, _retry, fail) => {
         reportError(error2, { errorType: "agent_panel_load_failure" });
@@ -87330,12 +87330,10 @@ const EVENT_TYPES = [
 ];
 const DOCK_ID = "comfytv-agent-dock";
 const ENTRY_ID = "comfytv-agent-entry";
-const MAX_FRAMES = 600;
 let pinia$1 = null;
 let dock = null;
 let entry = null;
-let dockRetry = 0;
-let entryRetry = 0;
+let observer$1 = null;
 function store$1() {
   return pinia$1 ? useAgentPanelStore(pinia$1) : null;
 }
@@ -87370,55 +87368,44 @@ function overlayRoot() {
 function actionsBar() {
   return document.querySelector('[data-testid="integrated-tab-bar-actions"]');
 }
-let dockPending = false;
-let entryPending = false;
-function mountDock() {
+function createHost(id) {
   var _a2;
-  const root = overlayRoot();
-  if (!root) {
-    if (dockRetry++ < MAX_FRAMES) requestAnimationFrame(mountDock);
-    else dockPending = false;
-    return;
-  }
-  dockPending = false;
-  (_a2 = document.getElementById(DOCK_ID)) == null ? void 0 : _a2.remove();
+  (_a2 = document.getElementById(id)) == null ? void 0 : _a2.remove();
   const host = document.createElement("div");
-  host.id = DOCK_ID;
+  host.id = id;
   host.className = "ctv:contents";
+  return host;
+}
+function mountDock() {
+  const root = overlayRoot();
+  if (!root) return;
+  unmount(dock);
+  const host = createHost(DOCK_ID);
   root.append(host);
   dock = mountInto(host, _sfc_main$4t);
 }
 function mountEntry() {
-  var _a2;
   const bar = actionsBar();
-  if (!bar) {
-    if (entryRetry++ < MAX_FRAMES) requestAnimationFrame(mountEntry);
-    else entryPending = false;
-    return;
-  }
-  entryPending = false;
-  (_a2 = document.getElementById(ENTRY_ID)) == null ? void 0 : _a2.remove();
-  const host = document.createElement("div");
-  host.id = ENTRY_ID;
-  host.className = "ctv:contents";
+  if (!bar) return;
+  unmount(entry);
+  const host = createHost(ENTRY_ID);
   bar.prepend(host);
   entry = mountInto(host, _sfc_main$4s);
 }
 function sync() {
   const s = store$1();
   if (!s) return;
-  if (s.enabled && !entryPending && !(entry && entry.host.isConnected)) {
-    entry = unmount(entry);
-    entryPending = true;
-    entryRetry = 0;
-    mountEntry();
-  }
   if (!s.enabled) entry = unmount(entry);
-  if (s.isVisible && !dockPending && !(dock && dock.host.isConnected)) {
-    dock = unmount(dock);
-    dockPending = true;
-    dockRetry = 0;
-    mountDock();
+  else if (!(entry == null ? void 0 : entry.host.isConnected)) mountEntry();
+  if (s.isVisible && !(dock == null ? void 0 : dock.host.isConnected)) mountDock();
+  if (s.enabled || s.isVisible) {
+    if (!observer$1) {
+      observer$1 = new MutationObserver(sync);
+      observer$1.observe(document.body, { childList: true, subtree: true });
+    }
+  } else {
+    observer$1 == null ? void 0 : observer$1.disconnect();
+    observer$1 = null;
   }
 }
 function installAgentPanel(activePinia2) {
@@ -149490,7 +149477,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-Bzm4iw0H.mjs");
+    const { STLLoader } = await import("./STLLoader-BE-5wdPD.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -149498,7 +149485,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-BsX5u703.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-bzVuLG2r.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -247012,4 +246999,4 @@ export {
   DropdownMenuRoot_default as y,
   DropdownMenuTrigger_default as z
 };
-//# sourceMappingURL=main-BN47_KoA.mjs.map
+//# sourceMappingURL=main-DF5mzbo0.mjs.map
