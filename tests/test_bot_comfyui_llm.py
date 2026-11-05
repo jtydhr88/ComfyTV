@@ -12,6 +12,7 @@ from ComfyTV.bot import comfyui_llm_chat as chat
 from ComfyTV.bot import comfyui_llm_engine as engine
 from ComfyTV.bot.comfyui_llm_provider import ComfyUiLlmProvider, shim_url
 from ComfyTV.bot.local_llm import LocalLlmProvider
+from ComfyTV.bot.guide import HOST
 from ComfyTV.bot.providers import ProviderStatus, get_provider
 
 
@@ -295,8 +296,8 @@ class TestProvider:
     def test_base_url_points_at_shim(self):
         assert shim_url() == "http://127.0.0.1:8188/comfytv/llm/v1"
 
-    def test_registered_provider_uses_the_shim(self):
-        assert get_provider("comfyui-llm")._base_url() == "http://127.0.0.1:8188/comfytv/llm/v1"
+    def test_provider_is_not_offered(self):
+        assert get_provider("comfyui-llm") is None
 
     def test_lms_never_used(self):
         assert ComfyUiLlmProvider.unloads_lms_during_waits is False
@@ -308,7 +309,7 @@ class TestProvider:
                 detail="the endpoint is up but reports no models — load "
                        "a model first")
         monkeypatch.setattr(LocalLlmProvider, "probe", fake_probe)
-        status = await get_provider("comfyui-llm").probe()
+        status = await ComfyUiLlmProvider(host=HOST, base_url=shim_url).probe()
         assert status.available is False
         assert "text_encoders" in status.detail
 

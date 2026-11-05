@@ -16,7 +16,7 @@ from .providers import (  # noqa: F401
 )
 from .claude_code import ClaudeCodeProvider  # noqa: F401
 from .codex import CodexCodeProvider  # noqa: F401
-from .comfyui_llm_provider import ComfyUiLlmProvider, shim_url  # noqa: F401
+from .comfyui_llm_provider import ComfyUiLlmProvider  # noqa: F401
 from .deepseek_harness import DeepSeekHarnessProvider  # noqa: F401
 from .guide import HOST
 from .hermes import HermesProvider  # noqa: F401
@@ -44,4 +44,3 @@ register_provider(HermesProvider(host=HOST, home_dir=_home("bot-home-hermes"),
                                  ssh_host=lambda: _setting("bot-hermes-ssh-host"),
                                  profile=lambda: _setting("bot-hermes-profile")))
 register_provider(LocalLlmProvider(host=HOST, base_url=lambda: _setting("bot-local-llm-url")))
-register_provider(ComfyUiLlmProvider(host=HOST, base_url=shim_url))
