@@ -59800,7 +59800,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-CXjHrhBW.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-2e4-gKfh.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -86716,7 +86716,7 @@ const _sfc_main$4v = /* @__PURE__ */ defineComponent({
       }
     });
     const AgentPanelRoot = /* @__PURE__ */ defineAsyncComponent({
-      loader: () => import("./AgentPanelRoot-CSkx2pRI.mjs"),
+      loader: () => import("./AgentPanelRoot-Bu3ww2Oa.mjs"),
       errorComponent: AgentPanelLoadError,
       onError: (error2, _retry, fail) => {
         reportError(error2, { errorType: "agent_panel_load_failure" });
@@ -149477,7 +149477,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-BE-5wdPD.mjs");
+    const { STLLoader } = await import("./STLLoader-ShYTiFrc.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -149485,7 +149485,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-bzVuLG2r.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-D6dNmoU8.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -241630,6 +241630,111 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
   }
 });
 const CardEmbedV2 = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["__scopeId", "data-v-b4d1bc12"]]);
+const _hoisted_1$8 = ["data-wide"];
+const _hoisted_2$7 = { class: "v2-ctl__label" };
+const _sfc_main$9 = /* @__PURE__ */ defineComponent({
+  __name: "StageControlsV2",
+  props: {
+    getNode: { type: Function },
+    controls: {}
+  },
+  setup(__props) {
+    const { t: t2 } = useI18n();
+    const props = __props;
+    const { values, widgetOf, write: writeRaw } = useWidgetValues(
+      props.getNode,
+      props.controls.map((c2) => c2.name)
+    );
+    const present = computed(() => props.controls.filter((c2) => !!widgetOf(c2.name)));
+    function numVal(name) {
+      const n = Number(values[name]);
+      return Number.isFinite(n) ? n : null;
+    }
+    function strVal(name) {
+      const v = values[name];
+      return v == null ? "" : String(v);
+    }
+    function optionsOf(name) {
+      var _a2, _b2;
+      const vals = (_b2 = (_a2 = widgetOf(name)) == null ? void 0 : _a2.options) == null ? void 0 : _b2.values;
+      return Array.isArray(vals) ? vals.map(String) : [];
+    }
+    function optNum(name, key) {
+      var _a2, _b2;
+      const v = (_b2 = (_a2 = widgetOf(name)) == null ? void 0 : _a2.options) == null ? void 0 : _b2[key];
+      return typeof v === "number" ? v : void 0;
+    }
+    function optStr(name, key) {
+      var _a2, _b2;
+      const v = (_b2 = (_a2 = widgetOf(name)) == null ? void 0 : _a2.options) == null ? void 0 : _b2[key];
+      return typeof v === "string" ? v : void 0;
+    }
+    function stepOf(name) {
+      return optNum(name, "step2") ?? optNum(name, "step") ?? 1;
+    }
+    function precisionOf(name) {
+      const p2 = optNum(name, "precision");
+      if (p2 !== void 0) return p2;
+      return stepOf(name) < 1 ? 2 : 0;
+    }
+    function write2(name, v) {
+      writeRaw(name, v);
+    }
+    return (_ctx, _cache2) => {
+      return present.value.length ? (openBlock(), createElementBlock("div", {
+        key: 0,
+        class: "v2-ctl",
+        onPointerdown: _cache2[0] || (_cache2[0] = withModifiers(() => {
+        }, ["stop"]))
+      }, [
+        (openBlock(true), createElementBlock(Fragment$1, null, renderList(present.value, (c2) => {
+          return openBlock(), createElementBlock("label", {
+            key: c2.name,
+            class: "v2-ctl__row",
+            "data-wide": c2.wide || c2.control === "textarea" ? "1" : ""
+          }, [
+            createBaseVNode("span", _hoisted_2$7, toDisplayString$1(unref(t2)(c2.labelKey)), 1),
+            c2.control === "slider" ? (openBlock(), createBlock(_sfc_main$4b, {
+              key: 0,
+              "model-value": numVal(c2.name),
+              min: optNum(c2.name, "min") ?? 0,
+              max: optNum(c2.name, "max") ?? 100,
+              step: stepOf(c2.name),
+              precision: precisionOf(c2.name),
+              "onUpdate:modelValue": (v) => write2(c2.name, v)
+            }, null, 8, ["model-value", "min", "max", "step", "precision", "onUpdate:modelValue"])) : c2.control === "toggle" ? (openBlock(), createBlock(_sfc_main$4C, {
+              key: 1,
+              "model-value": Boolean(unref(values)[c2.name]),
+              "onUpdate:modelValue": (v) => write2(c2.name, v)
+            }, null, 8, ["model-value", "onUpdate:modelValue"])) : c2.control === "number" ? (openBlock(), createBlock(_sfc_main$4E, {
+              key: 2,
+              "model-value": numVal(c2.name),
+              min: optNum(c2.name, "min"),
+              max: optNum(c2.name, "max"),
+              step: stepOf(c2.name),
+              precision: precisionOf(c2.name),
+              "onUpdate:modelValue": (v) => write2(c2.name, v)
+            }, null, 8, ["model-value", "min", "max", "step", "precision", "onUpdate:modelValue"])) : c2.control === "select" ? (openBlock(), createBlock(_sfc_main$4D, {
+              key: 3,
+              "model-value": strVal(c2.name),
+              options: optionsOf(c2.name),
+              filterable: optionsOf(c2.name).length > 12,
+              "onUpdate:modelValue": (v) => write2(c2.name, String(v))
+            }, null, 8, ["model-value", "options", "filterable", "onUpdate:modelValue"])) : (openBlock(), createBlock(_sfc_main$4G, {
+              key: 4,
+              "model-value": strVal(c2.name),
+              multiline: c2.control === "textarea",
+              rows: 2,
+              placeholder: optStr(c2.name, "placeholder"),
+              "onUpdate:modelValue": (v) => write2(c2.name, v)
+            }, null, 8, ["model-value", "multiline", "placeholder", "onUpdate:modelValue"]))
+          ], 8, _hoisted_1$8);
+        }), 128))
+      ], 32)) : createCommentVNode("", true);
+    };
+  }
+});
+const StageControlsV2 = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["__scopeId", "data-v-96cb81d5"]]);
 const FX_CSS = `
 .v2-fx-host:not(.v2-fx-plain) .v2-fx-embed > div > :first-child {
   border-radius: 12px;
@@ -241839,7 +241944,7 @@ function attachFxShell(node, kind, variant, config2) {
   return attach$3(node, kind, variant, config2);
 }
 function attach$3(node, kind, variant, config2) {
-  var _a2;
+  var _a2, _b2;
   installCss$4();
   const anyNode = node;
   const card = el$4("div", "v2-card");
@@ -241917,7 +242022,12 @@ function attach$3(node, kind, variant, config2) {
   }
   let wfAnchor = null;
   let customAnchor = null;
+  let controlsAnchor = null;
   if (config2.hasRun && config2.embed !== false) {
+    if ((_b2 = config2.controls) == null ? void 0 : _b2.length) {
+      controlsAnchor = el$4("div", "v2-fx-promptpanel");
+      card.appendChild(controlsAnchor);
+    }
     const footer = el$4("div", "v2-fx-footer");
     const spacer = el$4("div", "v2-fx-footer__spacer");
     serverAnchor = el$4("div", "v2-fx-footer__server");
@@ -241964,6 +242074,9 @@ function attach$3(node, kind, variant, config2) {
     }
     if (promptAnchor) {
       specs.push([MainPromptInput, { node }, promptAnchor]);
+    }
+    if (controlsAnchor) {
+      specs.push([StageControlsV2, { getNode: () => node, controls: config2.controls }, controlsAnchor]);
     }
     if (customAnchor) {
       specs.push([CustomParamsV2, { node, state: stageState }, customAnchor]);
@@ -242336,8 +242449,8 @@ const CONFIGS$3 = {
 for (const [cls, config2] of Object.entries(CONFIGS$3)) {
   V2_SHELLS[cls] = (node, kind, variant) => attachFxShell(node, kind, variant, { ...config2, videoToolbar: "vfx" });
 }
-const _hoisted_1$8 = { class: "fxc__stage" };
-const _hoisted_2$7 = { class: "fxc__live" };
+const _hoisted_1$7 = { class: "fxc__stage" };
+const _hoisted_2$6 = { class: "fxc__live" };
 const _hoisted_3$6 = {
   key: 0,
   class: "fxc__hint"
@@ -242390,7 +242503,7 @@ const _hoisted_30$1 = { class: "fxc__dlabel" };
 const _hoisted_31$1 = { class: "fxc__footer" };
 const _hoisted_32$1 = { class: "fxc__flabel" };
 const _hoisted_33$1 = ["data-busy"];
-const _sfc_main$9 = /* @__PURE__ */ defineComponent({
+const _sfc_main$8 = /* @__PURE__ */ defineComponent({
   __name: "FxChainCardV2",
   props: {
     node: {},
@@ -242493,8 +242606,8 @@ const _sfc_main$9 = /* @__PURE__ */ defineComponent({
       }, [
         createVNode(_sfc_main$3N, { node: __props.node }, {
           player: withCtx(() => [
-            createBaseVNode("div", _hoisted_1$8, [
-              withDirectives(createBaseVNode("div", _hoisted_2$7, [
+            createBaseVNode("div", _hoisted_1$7, [
+              withDirectives(createBaseVNode("div", _hoisted_2$6, [
                 createVNode(VideoPlayerLite, {
                   ref_key: "playerRef",
                   ref: playerRef,
@@ -242713,9 +242826,9 @@ const _sfc_main$9 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const FxChainCardV2 = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["__scopeId", "data-v-113561b6"]]);
-const _hoisted_1$7 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow" };
-const _hoisted_2$6 = { class: "ctv-mt-media ctv-mt-media--frames" };
+const FxChainCardV2 = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["__scopeId", "data-v-113561b6"]]);
+const _hoisted_1$6 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow" };
+const _hoisted_2$5 = { class: "ctv-mt-media ctv-mt-media--frames" };
 const _hoisted_3$5 = {
   key: 0,
   class: "ctv-mt-empty"
@@ -242755,7 +242868,7 @@ const _hoisted_20$1 = {
   class: "ctv-mt-status--ok"
 };
 const _hoisted_21$1 = { key: 3 };
-const _sfc_main$8 = /* @__PURE__ */ defineComponent({
+const _sfc_main$7 = /* @__PURE__ */ defineComponent({
   __name: "VideoExtractFrameStageCard",
   props: {
     state: {},
@@ -242812,7 +242925,7 @@ const _sfc_main$8 = /* @__PURE__ */ defineComponent({
       position.value = "custom";
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$7, [
+      return openBlock(), createElementBlock("div", _hoisted_1$6, [
         createBaseVNode("div", {
           class: "ctv-mt",
           onPointerdown: _cache2[8] || (_cache2[8] = withModifiers(() => {
@@ -242822,7 +242935,7 @@ const _sfc_main$8 = /* @__PURE__ */ defineComponent({
           onPointerup: _cache2[10] || (_cache2[10] = withModifiers(() => {
           }, ["stop"]))
         }, [
-          createBaseVNode("div", _hoisted_2$6, [
+          createBaseVNode("div", _hoisted_2$5, [
             !sourceVideoUrl.value ? (openBlock(), createElementBlock("div", _hoisted_3$5, [
               _cache2[11] || (_cache2[11] = createBaseVNode("svg", {
                 viewBox: "0 0 24 24",
@@ -243079,7 +243192,7 @@ const CONFIGS$2 = {
   "ComfyTV.VideoExtractFrameStage": {
     titleKey: "v2.fx.extractFrame",
     icon: ICON_EXTRACTFRAME,
-    card: markRaw(_sfc_main$8),
+    card: markRaw(_sfc_main$7),
     hasRun: true,
     plain: true,
     outputKind: "image"
@@ -243291,8 +243404,8 @@ const CONFIGS$2 = {
 for (const [cls, config2] of Object.entries(CONFIGS$2)) {
   V2_SHELLS[cls] = (node, kind, variant) => attachFxShell(node, kind, variant, config2);
 }
-const _hoisted_1$6 = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_2$5 = {
+const _hoisted_1$5 = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_2$4 = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
@@ -243308,7 +243421,7 @@ const _hoisted_5$3 = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _sfc_main$7 = /* @__PURE__ */ defineComponent({
+const _sfc_main$6 = /* @__PURE__ */ defineComponent({
   __name: "PassthroughCardV2",
   props: {
     state: {},
@@ -243340,8 +243453,8 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
           "source-video-url": sourceVideoUrl.value,
           "default-muted": false
         }, null, 8, ["source-video-url"]),
-        createBaseVNode("div", _hoisted_1$6, [
-          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_2$5, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_3$4, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_4$4, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_5$3, toDisplayString$1(hint.value), 1))
+        createBaseVNode("div", _hoisted_1$5, [
+          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_2$4, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_3$4, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_4$4, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_5$3, toDisplayString$1(hint.value), 1))
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -243520,14 +243633,14 @@ const CONFIGS$1 = {
   "ComfyTV.AudioVideoDemuxAudioStage": {
     titleKey: "v2.afx.demuxAudio",
     icon: ICON_DEMUXA,
-    card: markRaw(_sfc_main$7),
+    card: markRaw(_sfc_main$6),
     hasRun: true,
     outputKind: "audio"
   },
   "ComfyTV.AudioVideoDemuxVideoStage": {
     titleKey: "v2.afx.demuxVideo",
     icon: ICON_DEMUXV,
-    card: markRaw(_sfc_main$7),
+    card: markRaw(_sfc_main$6),
     hasRun: true,
     outputKind: "video"
   },
@@ -243904,7 +244017,9 @@ const CONFIGS = {
     plain: true,
     outputStrip: false,
     minW: 560,
-    minH: 680
+    minH: 680,
+    linkKind: "video",
+    controls: [{ name: "generate_audio", control: "toggle", labelKey: "v2.ctl.generateAudio" }]
   }
 };
 for (const [cls, config2] of Object.entries(CONFIGS)) {
@@ -244103,17 +244218,17 @@ function attach$1(node, kind, variant) {
   return stageApi;
 }
 V2_SHELLS["ComfyTV.RelightStage"] = attach$1;
-const _hoisted_1$5 = {
+const _hoisted_1$4 = {
   key: 0,
   class: "v2-al__name v2-al__name--missing"
 };
-const _hoisted_2$4 = {
+const _hoisted_2$3 = {
   key: 1,
   class: "v2-al__name"
 };
 const _hoisted_3$3 = ["title"];
 const _hoisted_4$3 = ["accept"];
-const _sfc_main$6 = /* @__PURE__ */ defineComponent({
+const _sfc_main$5 = /* @__PURE__ */ defineComponent({
   __name: "AssetLoaderV2",
   props: {
     node: {},
@@ -244205,7 +244320,7 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
                 onPointerdown: _cache2[4] || (_cache2[4] = withModifiers(() => {
                 }, ["stop"]))
               }, [
-                ((_b2 = unref(selectedAsset)) == null ? void 0 : _b2.file_missing) ? (openBlock(), createElementBlock("span", _hoisted_1$5, " ⚠ " + toDisplayString$1(unref(selectedAsset).name || "—"), 1)) : (openBlock(), createElementBlock("span", _hoisted_2$4, toDisplayString$1(((_c = unref(selectedAsset)) == null ? void 0 : _c.name) ?? _ctx.$t("v2.assetLoaderEmpty")), 1)),
+                ((_b2 = unref(selectedAsset)) == null ? void 0 : _b2.file_missing) ? (openBlock(), createElementBlock("span", _hoisted_1$4, " ⚠ " + toDisplayString$1(unref(selectedAsset).name || "—"), 1)) : (openBlock(), createElementBlock("span", _hoisted_2$3, toDisplayString$1(((_c = unref(selectedAsset)) == null ? void 0 : _c.name) ?? _ctx.$t("v2.assetLoaderEmpty")), 1)),
                 _cache2[12] || (_cache2[12] = createBaseVNode("span", { class: "v2-al__spacer" }, null, -1)),
                 createBaseVNode("button", {
                   type: "button",
@@ -244257,9 +244372,9 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const AssetLoaderV2 = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["__scopeId", "data-v-1d0ed70f"]]);
-const _hoisted_1$4 = ["title"];
-const _sfc_main$5 = /* @__PURE__ */ defineComponent({
+const AssetLoaderV2 = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["__scopeId", "data-v-1d0ed70f"]]);
+const _hoisted_1$3 = ["title"];
+const _sfc_main$4 = /* @__PURE__ */ defineComponent({
   __name: "LoaderActionsV2",
   props: {
     state: {},
@@ -244282,11 +244397,11 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
           class: "v2-lact__icon"
         }),
         createBaseVNode("span", null, toDisplayString$1(unref(t2)(unref(actionLabelKey)("model", "product-shot"))), 1)
-      ], 40, _hoisted_1$4)) : createCommentVNode("", true);
+      ], 40, _hoisted_1$3)) : createCommentVNode("", true);
     };
   }
 });
-const LoaderActionsV2 = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["__scopeId", "data-v-81381f88"]]);
+const LoaderActionsV2 = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["__scopeId", "data-v-81381f88"]]);
 const LOADER_CSS = `
 .v2-loader-preview { cursor: pointer; }
 .v2-loader-preview[data-drag="1"] {
@@ -244645,111 +244760,6 @@ V2_SHELLS["ComfyTV.AssetVideoLoaderStage"] = attachAssetLoader;
 V2_SHELLS["ComfyTV.AssetAudioLoaderStage"] = attachAssetLoader;
 V2_SHELLS["ComfyTV.AssetModelLoaderStage"] = attachAssetLoader;
 V2_SHELLS["ComfyTV.AssetTextLoaderStage"] = attachAssetLoader;
-const _hoisted_1$3 = ["data-wide"];
-const _hoisted_2$3 = { class: "v2-ctl__label" };
-const _sfc_main$4 = /* @__PURE__ */ defineComponent({
-  __name: "StageControlsV2",
-  props: {
-    getNode: { type: Function },
-    controls: {}
-  },
-  setup(__props) {
-    const { t: t2 } = useI18n();
-    const props = __props;
-    const { values, widgetOf, write: writeRaw } = useWidgetValues(
-      props.getNode,
-      props.controls.map((c2) => c2.name)
-    );
-    const present = computed(() => props.controls.filter((c2) => !!widgetOf(c2.name)));
-    function numVal(name) {
-      const n = Number(values[name]);
-      return Number.isFinite(n) ? n : null;
-    }
-    function strVal(name) {
-      const v = values[name];
-      return v == null ? "" : String(v);
-    }
-    function optionsOf(name) {
-      var _a2, _b2;
-      const vals = (_b2 = (_a2 = widgetOf(name)) == null ? void 0 : _a2.options) == null ? void 0 : _b2.values;
-      return Array.isArray(vals) ? vals.map(String) : [];
-    }
-    function optNum(name, key) {
-      var _a2, _b2;
-      const v = (_b2 = (_a2 = widgetOf(name)) == null ? void 0 : _a2.options) == null ? void 0 : _b2[key];
-      return typeof v === "number" ? v : void 0;
-    }
-    function optStr(name, key) {
-      var _a2, _b2;
-      const v = (_b2 = (_a2 = widgetOf(name)) == null ? void 0 : _a2.options) == null ? void 0 : _b2[key];
-      return typeof v === "string" ? v : void 0;
-    }
-    function stepOf(name) {
-      return optNum(name, "step2") ?? optNum(name, "step") ?? 1;
-    }
-    function precisionOf(name) {
-      const p2 = optNum(name, "precision");
-      if (p2 !== void 0) return p2;
-      return stepOf(name) < 1 ? 2 : 0;
-    }
-    function write2(name, v) {
-      writeRaw(name, v);
-    }
-    return (_ctx, _cache2) => {
-      return present.value.length ? (openBlock(), createElementBlock("div", {
-        key: 0,
-        class: "v2-ctl",
-        onPointerdown: _cache2[0] || (_cache2[0] = withModifiers(() => {
-        }, ["stop"]))
-      }, [
-        (openBlock(true), createElementBlock(Fragment$1, null, renderList(present.value, (c2) => {
-          return openBlock(), createElementBlock("label", {
-            key: c2.name,
-            class: "v2-ctl__row",
-            "data-wide": c2.wide || c2.control === "textarea" ? "1" : ""
-          }, [
-            createBaseVNode("span", _hoisted_2$3, toDisplayString$1(unref(t2)(c2.labelKey)), 1),
-            c2.control === "slider" ? (openBlock(), createBlock(_sfc_main$4b, {
-              key: 0,
-              "model-value": numVal(c2.name),
-              min: optNum(c2.name, "min") ?? 0,
-              max: optNum(c2.name, "max") ?? 100,
-              step: stepOf(c2.name),
-              precision: precisionOf(c2.name),
-              "onUpdate:modelValue": (v) => write2(c2.name, v)
-            }, null, 8, ["model-value", "min", "max", "step", "precision", "onUpdate:modelValue"])) : c2.control === "toggle" ? (openBlock(), createBlock(_sfc_main$4C, {
-              key: 1,
-              "model-value": Boolean(unref(values)[c2.name]),
-              "onUpdate:modelValue": (v) => write2(c2.name, v)
-            }, null, 8, ["model-value", "onUpdate:modelValue"])) : c2.control === "number" ? (openBlock(), createBlock(_sfc_main$4E, {
-              key: 2,
-              "model-value": numVal(c2.name),
-              min: optNum(c2.name, "min"),
-              max: optNum(c2.name, "max"),
-              step: stepOf(c2.name),
-              precision: precisionOf(c2.name),
-              "onUpdate:modelValue": (v) => write2(c2.name, v)
-            }, null, 8, ["model-value", "min", "max", "step", "precision", "onUpdate:modelValue"])) : c2.control === "select" ? (openBlock(), createBlock(_sfc_main$4D, {
-              key: 3,
-              "model-value": strVal(c2.name),
-              options: optionsOf(c2.name),
-              filterable: optionsOf(c2.name).length > 12,
-              "onUpdate:modelValue": (v) => write2(c2.name, String(v))
-            }, null, 8, ["model-value", "options", "filterable", "onUpdate:modelValue"])) : (openBlock(), createBlock(_sfc_main$4G, {
-              key: 4,
-              "model-value": strVal(c2.name),
-              multiline: c2.control === "textarea",
-              rows: 2,
-              placeholder: optStr(c2.name, "placeholder"),
-              "onUpdate:modelValue": (v) => write2(c2.name, v)
-            }, null, 8, ["model-value", "multiline", "placeholder", "onUpdate:modelValue"]))
-          ], 8, _hoisted_1$3);
-        }), 128))
-      ], 32)) : createCommentVNode("", true);
-    };
-  }
-});
-const StageControlsV2 = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["__scopeId", "data-v-96cb81d5"]]);
 function useTextOutputEdit(state2) {
   const { t: t2 } = useI18n();
   const store2 = useStageStore();
@@ -246999,4 +247009,4 @@ export {
   DropdownMenuRoot_default as y,
   DropdownMenuTrigger_default as z
 };
-//# sourceMappingURL=main-DF5mzbo0.mjs.map
+//# sourceMappingURL=main-f9eoP7Rx.mjs.map

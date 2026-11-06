@@ -167,6 +167,8 @@ const CONFIGS: Record<string, FxShellConfig> = {
   'ComfyTV.DirectorStage': {
     titleKey: 'v2.rich.director', icon: ICON_DIRECTOR,
     card: markRaw(DirectorStageCard), hasRun: true, plain: true, outputStrip: false, minW: 560, minH: 680,
+    linkKind: 'video',
+    controls: [{ name: 'generate_audio', control: 'toggle', labelKey: 'v2.ctl.generateAudio' }],
   },
 }
 

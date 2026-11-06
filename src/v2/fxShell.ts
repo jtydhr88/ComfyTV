@@ -14,6 +14,7 @@ import { attachOutputToolbar, type VideoToolbarFlavor } from '@/v2/outputToolbar
 import MediaPreviewV2 from '@/v2/MediaPreviewV2.vue'
 import MediaStripV2 from '@/v2/MediaStripV2.vue'
 import ServerSelectV2 from '@/v2/ServerSelectV2.vue'
+import StageControlsV2, { type ControlSpec } from '@/v2/StageControlsV2.vue'
 import { createIslandGroup } from '@/v2/islands'
 import { bindNodeDrag } from '@/v2/nodeDrag'
 import { bindShellChrome } from '@/v2/shellChrome'
@@ -41,6 +42,7 @@ export interface FxShellConfig {
   prompt?: boolean
   refTypes?: MediaType[]
   linkKind?: string
+  controls?: ControlSpec[]
   minW?: number
   minH?: number
   hostClass?: string
@@ -331,7 +333,12 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant, config:
   }
   let wfAnchor: HTMLElement | null = null
   let customAnchor: HTMLElement | null = null
+  let controlsAnchor: HTMLElement | null = null
   if (config.hasRun && config.embed !== false) {
+    if (config.controls?.length) {
+      controlsAnchor = el('div', 'v2-fx-promptpanel')
+      card.appendChild(controlsAnchor)
+    }
     const footer = el('div', 'v2-fx-footer')
     const spacer = el('div', 'v2-fx-footer__spacer')
     serverAnchor = el('div', 'v2-fx-footer__server')
@@ -379,6 +386,9 @@ function attach(node: ComfyNode, kind: StageKind, variant: StageVariant, config:
     }
     if (promptAnchor) {
       specs.push([MainPromptInput, { node }, promptAnchor])
+    }
+    if (controlsAnchor) {
+      specs.push([StageControlsV2, { getNode: () => node, controls: config.controls }, controlsAnchor])
     }
     if (customAnchor) {
       specs.push([CustomParamsV2, { node, state: stageState }, customAnchor])
