@@ -20,13 +20,14 @@
         <span class="v2-cin__dot" :data-kind="it.kind" :data-wired="isWired(it) ? '1' : ''" />
         {{ it.label }}
       </span>
-      <div v-if="it.kind === 'text'" class="v2-cin__control">
+      <div v-if="it.kind === 'text' && isWired(it)" class="v2-cin__control v2-cin__linked" :title="wiredText(it)">
+        <div class="v2-cin__linkedtext">{{ wiredText(it) || t('v2.custom.linked') }}</div>
+      </div>
+      <div v-else-if="it.kind === 'text'" class="v2-cin__control">
         <ComfyTVText
-          :model-value="isWired(it) ? wiredText(it) : strVal(it)"
+          :model-value="strVal(it)"
           :multiline="true"
           :rows="2"
-          :disabled="isWired(it)"
-          :placeholder="isWired(it) ? t('v2.custom.linked') : undefined"
           @update:model-value="setVal(it, $event)"
         />
       </div>
@@ -264,6 +265,21 @@ function wiredText(it: CustomIoInput): string {
 .v2-cin__chip[data-wired="1"] {
   border-color: var(--v2-accent-border);
   color: var(--v2-text-strong);
+}
+.v2-cin__linked {
+  padding: 4px 8px;
+  border: 1px dashed var(--v2-chip-border);
+  border-radius: 8px;
+}
+.v2-cin__linkedtext {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  color: var(--v2-text-muted);
+  font: 500 11px/1.4 system-ui, sans-serif;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 .v2-cin__random {
   color: var(--v2-text-muted);
