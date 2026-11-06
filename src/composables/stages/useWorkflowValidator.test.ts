@@ -71,13 +71,29 @@ describe('validateNode', () => {
     expect(w.image?.status).toBe('wired_but_unused')
   })
 
-  it('warns when the card has a prompt box but the workflow binds no prompt', async () => {
+  it('warns when a typed prompt goes to a workflow that binds no prompt', async () => {
     const { validateNode } = await loadModuleWithInfo(info)
     const node = makeNode({
-      widgets: [{ name: 'workflow', value: 'Linked, nothing bound' }, { name: 'main_prompt', value: '' }],
+      widgets: [{ name: 'workflow', value: 'Linked, nothing bound' }, { name: 'main_prompt', value: 'a cat' }],
     })
     const w = await validateNode(node, 'image')
     expect(w.main_prompt?.status).toBe('wired_but_unused')
+  })
+
+  it('does not warn about an empty prompt on a workflow that binds no prompt', async () => {
+    const { validateNode } = await loadModuleWithInfo(info)
+    const node = makeNode({
+      widgets: [{ name: 'workflow', value: 'Linked, nothing bound' }, { name: 'main_prompt', value: '  ' }],
+    })
+    expect((await validateNode(node, 'image')).main_prompt).toBeUndefined()
+  })
+
+  it('does not warn about a leftover prompt on a Custom Stage, which hides the box', async () => {
+    const { validateNode } = await loadModuleWithInfo(info)
+    const node = makeNode({
+      widgets: [{ name: 'workflow', value: 'Linked, nothing bound' }, { name: 'main_prompt', value: 'a cat' }],
+    })
+    expect((await validateNode(node, 'custom')).main_prompt).toBeUndefined()
   })
 
   it('does not warn about the prompt once it is bound', async () => {

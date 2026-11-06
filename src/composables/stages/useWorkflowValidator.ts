@@ -83,7 +83,7 @@ function countWiredOfKind(node: any, kind: Kind): number {
 
 export async function validateNode(
   node: any,
-  _stageKind: string,
+  stageKind: string,
   opts: ValidateOpts = {},
 ): Promise<SlotWarningMap> {
   const info = await loadWorkflowInfo()
@@ -99,7 +99,8 @@ export async function validateNode(
   }
   if (!entry) return out
 
-  if (entry.max_inputs.text === 0 && node?.widgets?.some((w: any) => w.name === 'main_prompt')) {
+  const prompt = node?.widgets?.find((w: any) => w.name === 'main_prompt')?.value
+  if (entry.max_inputs.text === 0 && stageKind !== 'custom' && String(prompt ?? '').trim()) {
     out.main_prompt = {
       status: 'wired_but_unused',
       message: t('stage.promptNotBound', { label }),

@@ -5,6 +5,7 @@ from aiohttp import web
 from ..nodes.stages import STAGE_META, registered_stage_names
 from ..nodes.stages.common.caps import caps_payload
 from ..runners import RUNNER_REGISTRY, WORKFLOW_KINDS
+from ..runners.custom_io import normalize_custom_io
 from ._common import routes
 
 
@@ -94,7 +95,14 @@ def workflow_info_payload() -> dict:
         kind = entry["kind"]
         if kind not in out:
             out[kind] = {}
-        out[kind][entry["label"]] = _compute_input_usage(entry["bindings"])
+        usage = _compute_input_usage(entry["bindings"])
+        if kind == "custom" and usage["max_inputs"]["text"] == 0:
+            cfg = workflow_db.get_workflow_config(kind, entry["label"]) or {}
+            custom_io = normalize_custom_io((cfg.get("meta") or {}).get("custom_io"))
+            texts = sum(it["kind"] == "text" for it in custom_io["inputs"])
+            usage["uses"]["text"] = texts > 0
+            usage["max_inputs"]["text"] = texts
+        out[kind][entry["label"]] = usage
 
     for r in RUNNER_REGISTRY.all():
         for k in r.kinds:

@@ -88,6 +88,10 @@ export function useStageNode(
     () => _selectionStore.bindingsVersion,
     () => { if (variant === 'generator') queueMicrotask(reValidate) },
   )
+  const stopPromptWatch = watch(
+    () => !!state.mainPrompt?.trim(),
+    () => { if (variant === 'generator') queueMicrotask(reValidate) },
+  )
   let _prepUnsub: (() => void) | null = null
   const meta = getStageMeta(node.comfyClass)
   const workflowKind = meta?.workflow_kind || null
@@ -182,6 +186,7 @@ export function useStageNode(
     stopPickerWatch?.()
     stopRestore()
     stopBindingsWatch()
+    stopPromptWatch()
     run.dispose()
     _prepUnsub?.()
     releaseStageUid(node)

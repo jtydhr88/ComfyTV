@@ -59800,7 +59800,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-IB8quXMN.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-BhudNsKB.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -86716,7 +86716,7 @@ const _sfc_main$4v = /* @__PURE__ */ defineComponent({
       }
     });
     const AgentPanelRoot = /* @__PURE__ */ defineAsyncComponent({
-      loader: () => import("./AgentPanelRoot-D2bs0lDO.mjs"),
+      loader: () => import("./AgentPanelRoot-DMIFR0K_.mjs"),
       errorComponent: AgentPanelLoadError,
       onError: (error2, _retry, fail) => {
         reportError(error2, { errorType: "agent_panel_load_failure" });
@@ -89015,8 +89015,8 @@ function countWiredOfKind(node, kind) {
   }
   return n;
 }
-async function validateNode(node, _stageKind, opts = {}) {
-  var _a2, _b2;
+async function validateNode(node, stageKind, opts = {}) {
+  var _a2, _b2, _c;
   const info = await loadWorkflowInfo();
   const out = {};
   const wfWidget = (_a2 = node == null ? void 0 : node.widgets) == null ? void 0 : _a2.find((w) => w.name === "workflow");
@@ -89030,7 +89030,8 @@ async function validateNode(node, _stageKind, opts = {}) {
     }
   }
   if (!entry2) return out;
-  if (entry2.max_inputs.text === 0 && ((_b2 = node == null ? void 0 : node.widgets) == null ? void 0 : _b2.some((w) => w.name === "main_prompt"))) {
+  const prompt = (_c = (_b2 = node == null ? void 0 : node.widgets) == null ? void 0 : _b2.find((w) => w.name === "main_prompt")) == null ? void 0 : _c.value;
+  if (entry2.max_inputs.text === 0 && stageKind !== "custom" && String(prompt ?? "").trim()) {
     out.main_prompt = {
       status: "wired_but_unused",
       message: t("stage.promptNotBound", { label })
@@ -149477,7 +149478,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-DnFox0j9.mjs");
+    const { STLLoader } = await import("./STLLoader-C080_uFD.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -149485,7 +149486,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-c4DCXvzX.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-BxO0eSew.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -234769,6 +234770,15 @@ function useStageNode(node, kind, variant = "generator") {
       if (variant === "generator") queueMicrotask(reValidate);
     }
   );
+  const stopPromptWatch = watch(
+    () => {
+      var _a3;
+      return !!((_a3 = state2.mainPrompt) == null ? void 0 : _a3.trim());
+    },
+    () => {
+      if (variant === "generator") queueMicrotask(reValidate);
+    }
+  );
   let _prepUnsub = null;
   const meta = getStageMeta(node.comfyClass);
   const workflowKind = (meta == null ? void 0 : meta.workflow_kind) || null;
@@ -234856,6 +234866,7 @@ function useStageNode(node, kind, variant = "generator") {
     stopPickerWatch == null ? void 0 : stopPickerWatch();
     stopRestore();
     stopBindingsWatch();
+    stopPromptWatch();
     run3.dispose();
     _prepUnsub == null ? void 0 : _prepUnsub();
     releaseStageUid(node);
@@ -247015,4 +247026,4 @@ export {
   DropdownMenuRoot_default as y,
   DropdownMenuTrigger_default as z
 };
-//# sourceMappingURL=main-dNbjiW1y.mjs.map
+//# sourceMappingURL=main-B7oRrPiu.mjs.map
