@@ -50,13 +50,16 @@ export function claimStageUid(node: any): string {
   let uid = ensureStageUid(node)
   if (prev && prev !== uid && liveUids.get(prev) === node) liveUids.delete(prev)
   const owner = liveUids.get(uid)
-  if (owner && owner !== node) {
+  const pasted = !prev && node.__comfytvConfigured && !node.__comfytvFromSave
+  if (pasted || (owner && owner !== node)) {
     uid = genUid()
     node.properties[PROP] = uid
     node.properties[PROP_AT] = new Date().toISOString()
-    console.warn(
-      `[ComfyTV/stage] node #${node.id}: stage uid already claimed by node #${owner.id} — regenerated`,
-    )
+    if (!pasted) {
+      console.warn(
+        `[ComfyTV/stage] node #${node.id}: stage uid already claimed by node #${owner.id} — regenerated`,
+      )
+    }
   }
   liveUids.set(uid, node)
   node.__comfytvClaimedUid = uid

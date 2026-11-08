@@ -94,6 +94,15 @@ describe('claimStageUid / releaseStageUid', () => {
     warn.mockRestore()
   })
 
+  it('mints a fresh uid for a pasted node whose original is not on the canvas', () => {
+    const pasted: any = { id: 4, __comfytvConfigured: true, properties: { comfytv_stage_uid: 'from-other-tab' } }
+    const uid = claimStageUid(pasted)
+    expect(uid).not.toBe('from-other-tab')
+    expect(claimStageUid(pasted)).toBe(uid)
+    const loaded: any = { id: 5, __comfytvConfigured: true, __comfytvFromSave: true, properties: { comfytv_stage_uid: 'saved' } }
+    expect(claimStageUid(loaded)).toBe('saved')
+  })
+
   it('keeps the uid across release + re-claim (tab switch)', () => {
     const node: any = { id: 1 }
     const uid = claimStageUid(node)

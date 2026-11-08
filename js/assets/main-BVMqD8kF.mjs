@@ -59800,7 +59800,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-BhudNsKB.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-CtpQy-Th.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -63867,13 +63867,16 @@ function claimStageUid(node) {
   let uid2 = ensureStageUid(node);
   if (prev && prev !== uid2 && liveUids.get(prev) === node) liveUids.delete(prev);
   const owner = liveUids.get(uid2);
-  if (owner && owner !== node) {
+  const pasted = !prev && node.__comfytvConfigured && !node.__comfytvFromSave;
+  if (pasted || owner && owner !== node) {
     uid2 = genUid();
     node.properties[PROP] = uid2;
     node.properties[PROP_AT] = (/* @__PURE__ */ new Date()).toISOString();
-    console.warn(
-      `[ComfyTV/stage] node #${node.id}: stage uid already claimed by node #${owner.id} — regenerated`
-    );
+    if (!pasted) {
+      console.warn(
+        `[ComfyTV/stage] node #${node.id}: stage uid already claimed by node #${owner.id} — regenerated`
+      );
+    }
   }
   liveUids.set(uid2, node);
   node.__comfytvClaimedUid = uid2;
@@ -86716,7 +86719,7 @@ const _sfc_main$4v = /* @__PURE__ */ defineComponent({
       }
     });
     const AgentPanelRoot = /* @__PURE__ */ defineAsyncComponent({
-      loader: () => import("./AgentPanelRoot-DMIFR0K_.mjs"),
+      loader: () => import("./AgentPanelRoot-BABmt186.mjs"),
       errorComponent: AgentPanelLoadError,
       onError: (error2, _retry, fail) => {
         reportError(error2, { errorType: "agent_panel_load_failure" });
@@ -149478,7 +149481,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-C080_uFD.mjs");
+    const { STLLoader } = await import("./STLLoader-Cnj8BYz3.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -149486,7 +149489,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-BxO0eSew.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-BqE-sepj.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -247026,4 +247029,4 @@ export {
   DropdownMenuRoot_default as y,
   DropdownMenuTrigger_default as z
 };
-//# sourceMappingURL=main-B7oRrPiu.mjs.map
+//# sourceMappingURL=main-BVMqD8kF.mjs.map
