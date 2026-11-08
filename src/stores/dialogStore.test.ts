@@ -31,6 +31,17 @@ describe('dialogStore', () => {
     expect(s.width).toBe('420px')
   })
 
+  it('a dialog shown right after close() survives the delayed clear', () => {
+    const s = useDialogStore()
+    s.show({ title: 'First', component: Cmp })
+    s.close()
+    s.show({ title: 'Second', component: Cmp })
+    vi.advanceTimersByTime(500)
+    expect(s.open).toBe(true)
+    expect(s.title).toBe('Second')
+    expect(s.component).toBe(Cmp)
+  })
+
   it('show() without props or width falls back to defaults', () => {
     const s = useDialogStore()
     s.show({ title: 'A', component: Cmp })

@@ -14,8 +14,10 @@ export const useDialogStore = defineStore('comfytv-dialog', () => {
   const component = shallowRef<Component | null>(null)
   const props = ref<Record<string, unknown>>({})
   const width = ref('720px')
+  let clearTimer: ReturnType<typeof setTimeout> | undefined
 
   function show(opts: DialogOpenOpts) {
+    clearTimeout(clearTimer)
     title.value = opts.title
     component.value = opts.component
     props.value = opts.props ?? {}
@@ -25,7 +27,7 @@ export const useDialogStore = defineStore('comfytv-dialog', () => {
 
   function close() {
     open.value = false
-    setTimeout(() => {
+    clearTimer = setTimeout(() => {
       component.value = null
       props.value = {}
       title.value = ''

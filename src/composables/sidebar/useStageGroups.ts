@@ -6,6 +6,8 @@ import { deleteStageGroup, listStageGroups, renameStageGroup, saveStageGroup } f
 import { askConfirm } from '@/composables/dialog/useConfirmDialog'
 import { askText } from '@/composables/dialog/useTextInputDialog'
 import { insertStageGroup, serializeSelectedStages, STAGE_GROUP_DRAG_MIME } from '@/composables/sidebar/stageGroupCanvas'
+import { renderStageGroupThumbnail } from '@/composables/sidebar/stageGroupThumbnail'
+import { stageDisplayName } from '@/composables/sidebar/usePresetsPanel'
 import { useSelectionStore } from '@/stores/selectionStore'
 
 export function nodeCountOf(group: StageGroup): number {
@@ -43,7 +45,7 @@ export function useStageGroups(isActive: () => boolean | undefined) {
       })
       if (!ok) return
     }
-    await saveStageGroup(name, data)
+    await saveStageGroup(name, data, renderStageGroupThumbnail(data, stageDisplayName))
     await load()
   }
 

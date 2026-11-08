@@ -6,8 +6,12 @@ export async function listStageGroups(): Promise<StageGroup[]> {
   return (await apiFetch('/comfytv/stage_groups', ListStageGroupsSchema)).groups
 }
 
-export async function saveStageGroup(name: string, data: Record<string, unknown>): Promise<StageGroup> {
-  return (await apiSend('/comfytv/stage_groups', 'POST', MutateStageGroupSchema, { name, data })).group
+export async function saveStageGroup(
+  name: string,
+  data: Record<string, unknown>,
+  thumbnail: string | null,
+): Promise<StageGroup> {
+  return (await apiSend('/comfytv/stage_groups', 'POST', MutateStageGroupSchema, { name, data, thumbnail })).group
 }
 
 export async function renameStageGroup(id: number, name: string): Promise<StageGroup> {

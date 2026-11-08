@@ -18,29 +18,44 @@
       {{ $t('stageGroups.empty') }}
     </div>
 
-    <div
-      v-for="g in groups"
-      :key="g.id"
-      draggable="true"
-      class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:py-1.5 ctv:px-2 ctv:rounded-lg ctv:cursor-grab
-             ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:hover:bg-secondary-background-hover"
-      :title="$t('stageGroups.insertHint')"
-      @click="onInsert(g)"
-      @dragstart="onDragStart(g, $event)"
-    >
-      <IconBoxes class="ctv:size-3.5 ctv:shrink-0 ctv:text-muted-foreground" />
-      <span class="ctv:flex-1 ctv:min-w-0 ctv:truncate ctv:font-semibold">{{ g.name }}</span>
-      <span class="ctv:text-2xs ctv:tabular-nums ctv:text-muted-foreground">{{ nodeCountOf(g) }}</span>
-      <button :class="iconBtnClass" :title="$t('stageGroups.rename')" @click.stop="onRename(g)">
-        <IconPencil class="ctv:size-3.5" />
-      </button>
-      <button
-        :class="[iconBtnClass, 'ctv:hover:text-destructive-background']"
-        :title="$t('stageGroups.delete')"
-        @click.stop="onDelete(g)"
+    <div class="ctv:grid ctv:grid-cols-[repeat(auto-fill,minmax(150px,1fr))] ctv:gap-2">
+      <div
+        v-for="g in groups"
+        :key="g.id"
+        draggable="true"
+        class="ctv:group ctv:relative ctv:flex ctv:flex-col ctv:rounded-lg ctv:overflow-hidden ctv:cursor-grab
+               ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:hover:border-primary-background"
+        :title="$t('stageGroups.insertHint')"
+        @click="onInsert(g)"
+        @dragstart="onDragStart(g, $event)"
       >
-        <IconTrash2 class="ctv:size-3.5" />
-      </button>
+        <div class="ctv:aspect-[8/5] ctv:flex ctv:items-center ctv:justify-center ctv:bg-base-background">
+          <img
+            v-if="g.thumbnail_url"
+            :src="g.thumbnail_url"
+            :alt="g.name"
+            draggable="false"
+            class="ctv:size-full ctv:object-contain"
+          >
+          <IconBoxes v-else class="ctv:size-6 ctv:text-muted-foreground" />
+        </div>
+        <div class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:py-1.5 ctv:px-2">
+          <span class="ctv:flex-1 ctv:min-w-0 ctv:truncate ctv:font-semibold">{{ g.name }}</span>
+          <span class="ctv:text-2xs ctv:tabular-nums ctv:text-muted-foreground">{{ nodeCountOf(g) }}</span>
+        </div>
+        <div class="ctv:absolute ctv:top-1 ctv:right-1 ctv:flex ctv:gap-0.5 ctv:opacity-0 ctv:group-hover:opacity-100">
+          <button :class="iconBtnClass" :title="$t('stageGroups.rename')" @click.stop="onRename(g)">
+            <IconPencil class="ctv:size-3.5" />
+          </button>
+          <button
+            :class="[iconBtnClass, 'ctv:hover:text-destructive-background']"
+            :title="$t('stageGroups.delete')"
+            @click.stop="onDelete(g)"
+          >
+            <IconTrash2 class="ctv:size-3.5" />
+          </button>
+        </div>
+      </div>
     </div>
   </section>
 </template>
@@ -61,6 +76,6 @@ const saveBtnClass = 'ctv:inline-flex ctv:items-center ctv:gap-1 ctv:cursor-poin
   + 'ctv:rounded-md ctv:border-none ctv:bg-secondary-background ctv:py-1 ctv:px-2 ctv:text-2xs ctv:text-base-foreground '
   + 'ctv:hover:bg-secondary-background-hover ctv:disabled:opacity-50 ctv:disabled:pointer-events-none'
 const iconBtnClass = 'ctv:inline-flex ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:shrink-0 '
-  + 'ctv:rounded-md ctv:border-none ctv:bg-transparent ctv:p-1 ctv:text-muted-foreground '
+  + 'ctv:rounded-md ctv:border-none ctv:bg-secondary-background ctv:p-1 ctv:text-muted-foreground '
   + 'ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground'
 </script>

@@ -151,6 +151,7 @@ class Asset(Base):
     size_bytes:  Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     source:      Mapped[Optional[str]] = mapped_column(String, nullable=True)
     metadata_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    is_hidden:   Mapped[bool] = mapped_column(Boolean, default=False, server_default="0")
     created_at:  Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
     updated_at:  Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
 
@@ -189,6 +190,7 @@ class StageGroup(Base):
     id:         Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     name:       Mapped[str] = mapped_column(String, unique=True)
     data:       Mapped[str] = mapped_column(Text)
+    thumbnail_asset_id: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
 
@@ -484,6 +486,15 @@ def _migrate_additive_columns(engine) -> None:
                     "ALTER TABLE comfytv_workflows ADD COLUMN meta_json TEXT"
                 ))
             logging.info("[ComfyTV] migrated: comfytv_workflows + meta_json")
+
+        asset_cols = {c["name"] for c in insp.get_columns("comfytv_assets")}
+        if "is_hidden" not in asset_cols:
+            with engine.begin() as conn:
+                conn.execute(text(
+                    "ALTER TABLE comfytv_assets ADD COLUMN is_hidden BOOLEAN "
+                    "NOT NULL DEFAULT 0"
+                ))
+            logging.info("[ComfyTV] migrated: comfytv_assets + is_hidden")
     except Exception as e:
         logging.warning("[ComfyTV] additive migration failed: %s", e)
 

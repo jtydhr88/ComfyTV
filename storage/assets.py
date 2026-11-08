@@ -155,7 +155,7 @@ def list_assets(
     offset: int = 0,
 ) -> list[dict]:
     with db.get_session() as s:
-        q = select(Asset)
+        q = select(Asset).where(Asset.is_hidden.is_(False))
         if uncategorized:
             q = q.where(Asset.id.not_in(select(AssetCategoryLink.asset_id)))
         elif category_id is not None:
@@ -181,6 +181,7 @@ def create_asset(
     size_bytes: Optional[int] = None,
     source: Optional[str] = None,
     metadata: Optional[dict] = None,
+    is_hidden: bool = False,
 ) -> Optional[dict]:
     payload_url = (payload_url or "").strip()
     if not payload_url:
@@ -202,6 +203,7 @@ def create_asset(
             size_bytes=int(size_bytes) if size_bytes is not None else None,
             source=source,
             metadata_json=json.dumps(metadata) if metadata else None,
+            is_hidden=is_hidden,
         )
         s.add(asset)
         s.flush()
