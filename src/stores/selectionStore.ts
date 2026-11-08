@@ -12,6 +12,7 @@ interface SelectedStage {
 
 export const useSelectionStore = defineStore('comfytv-selection', () => {
   const selected = ref<SelectedStage | null>(null)
+  const nodeCount = ref(0)
 
   const selectedKey = computed(() =>
     selected.value
@@ -33,6 +34,7 @@ export const useSelectionStore = defineStore('comfytv-selection', () => {
         nodes = Object.values(selectedNodes)
       }
     }
+    nodeCount.value = nodes.length
     if (nodes.length !== 1) {
       if (selected.value !== null) selected.value = null
       return
@@ -64,5 +66,5 @@ export const useSelectionStore = defineStore('comfytv-selection', () => {
     }
   }
 
-  return { selected, selectedKey, bindingsVersion, bumpBindings, refreshFromCanvas }
+  return { selected, nodeCount, selectedKey, bindingsVersion, bumpBindings, refreshFromCanvas }
 })

@@ -183,6 +183,15 @@ class Preset(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
 
+class StageGroup(Base):
+    __tablename__ = "comfytv_stage_groups"
+
+    id:         Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    name:       Mapped[str] = mapped_column(String, unique=True)
+    data:       Mapped[str] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+
+
 class Resource(Base):
     __tablename__ = "comfytv_resources"
     __table_args__ = (UniqueConstraint("kind", "filename", name="uq_resource_kind_filename"),)

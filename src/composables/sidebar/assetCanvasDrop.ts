@@ -2,6 +2,7 @@ import type { Pinia } from 'pinia'
 
 import type { Asset } from '@/api/schemas'
 import { importAssetFiles } from '@/composables/sidebar/assetImport'
+import { insertStageGroup, STAGE_GROUP_DRAG_MIME } from '@/composables/sidebar/stageGroupCanvas'
 import { clientToCanvasPos, createAssetLoaderNode } from '@/composables/stages/assetLoaderNode'
 import { app } from '@/lib/comfyApp'
 import { useAssetStore } from '@/stores/assetStore'
@@ -37,12 +38,19 @@ function hasMime(e: DragEvent, mime: string): boolean {
 }
 
 export function handleAssetDragOver(e: DragEvent): void {
-  if (!hasMime(e, ASSET_DRAG_MIME) && !hasMime(e, EAGLE_DRAG_MIME)) return
+  if (!hasMime(e, ASSET_DRAG_MIME) && !hasMime(e, EAGLE_DRAG_MIME) && !hasMime(e, STAGE_GROUP_DRAG_MIME)) return
   e.preventDefault()
   if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy'
 }
 
 export function handleAssetDrop(e: DragEvent, resolveAsset: ResolveAsset): void {
+  if (hasMime(e, STAGE_GROUP_DRAG_MIME)) {
+    e.preventDefault()
+    e.stopPropagation()
+    insertStageGroup(JSON.parse(e.dataTransfer!.getData(STAGE_GROUP_DRAG_MIME)), clientToCanvasPos(e.clientX, e.clientY))
+    return
+  }
+
   if (hasMime(e, EAGLE_DRAG_MIME)) {
     e.preventDefault()
     e.stopPropagation()

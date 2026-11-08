@@ -12,6 +12,7 @@ from . import scene3d_assets  # noqa: F401
 from . import resources  # noqa: F401
 from . import video_fx    # noqa: F401
 from . import presets    # noqa: F401
+from . import stage_groups  # noqa: F401
 from . import capabilities  # noqa: F401
 from . import fx_preview  # noqa: F401
 from . import expression_eval  # noqa: F401

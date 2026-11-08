@@ -6,6 +6,8 @@
     </div>
 
     <div class="ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5 ctv:flex ctv:flex-col ctv:gap-2.5">
+      <StageGroupsSection :active="active" />
+
       <div
         v-if="groups.length === 0"
         class="ctv:py-5 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60"
@@ -62,6 +64,7 @@
 </template>
 
 <script setup lang="ts">
+import StageGroupsSection from '@/components/sidebar/StageGroupsSection.vue'
 import { usePresetsPanel } from '@/composables/sidebar/usePresetsPanel'
 
 import IconLock from '~icons/lucide/lock'

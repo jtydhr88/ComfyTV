@@ -1144,6 +1144,21 @@
       "rename": "重命名预设"
     }
   },
+  "stageGroups": {
+    "title": "Stage 组",
+    "save": "保存选中",
+    "saveTitle": "保存为 Stage 组",
+    "nameLabel": "组名称",
+    "empty": "在画布上选中几个 stage，点「保存选中」存成一组，之后点击或拖进画布就能整组插入。",
+    "insertHint": "点击插入到画布中央，或拖到画布上的指定位置",
+    "rename": "重命名",
+    "renameTitle": "重命名 Stage 组",
+    "delete": "删除",
+    "deleteTitle": "删除 Stage 组",
+    "deleteConfirm": "删除 Stage 组“{name}”？",
+    "overwriteTitle": "覆盖 Stage 组",
+    "overwriteConfirm": "已有名为“{name}”的 Stage 组，用当前选中的 stage 覆盖它？"
+  },
   "resources": {
     "panel": {
       "title": "资源",

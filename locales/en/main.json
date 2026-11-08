@@ -1144,6 +1144,21 @@
       "rename": "Rename preset"
     }
   },
+  "stageGroups": {
+    "title": "Stage Groups",
+    "save": "Save selected",
+    "saveTitle": "Save as Stage Group",
+    "nameLabel": "Group name",
+    "empty": "Select a few stages on the canvas and click Save selected. Click a group or drag it onto the canvas to insert the whole set.",
+    "insertHint": "Click to insert at the canvas center, or drag to a spot on the canvas",
+    "rename": "Rename",
+    "renameTitle": "Rename Stage Group",
+    "delete": "Delete",
+    "deleteTitle": "Delete Stage Group",
+    "deleteConfirm": "Delete Stage Group \"{name}\"?",
+    "overwriteTitle": "Overwrite Stage Group",
+    "overwriteConfirm": "A Stage Group named \"{name}\" already exists. Replace it with the selected stages?"
+  },
   "resources": {
     "panel": {
       "title": "Resources",
