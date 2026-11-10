@@ -6,7 +6,6 @@
         :before-image="imageA"
         :after-image="imageB"
       />
-      <div v-if="!imageA && !imageB" class="v2-ed__empty">{{ $t('v2.ed.compareHint') }}</div>
     </div>
 
     <div class="v2-ed__status">
