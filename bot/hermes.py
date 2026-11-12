@@ -68,6 +68,8 @@ class HermesProvider(AcpProvider):
         if name and not _PROFILE_RE.fullmatch(name):
             return None, f"The Hermes profile name {name!r} is not valid; use lowercase letters, digits, - and _."
         host = self._ssh_host().strip()
+        if host.startswith("-"):
+            return None, f"The Hermes SSH host {host!r} is not valid; it cannot start with -."
         if host:
             ssh = shutil.which("ssh")
             if not ssh:

@@ -1,9 +1,13 @@
 import asyncio
+import ipaddress
 
 from aiohttp import web
 
 from .. import backup, storage
+from ..settings import coerce
 from ._common import routes
+
+LOCAL_ONLY = ("enable-mcp", "enable-bot", "bot-enable-comfy-mcp", "bot-comfy-mcp-command", "bot-hermes-ssh-host")
 
 
 @routes.get("/comfytv/settings")
@@ -32,6 +36,11 @@ async def update_settings(request: web.Request) -> web.Response:
         if not mcp_on:
             return web.json_response(
                 {"error": "enable-bot requires enable-mcp"}, status=400)
+    if not ipaddress.ip_address(request.remote).is_loopback:
+        blocked = [k for k in LOCAL_ONLY if k in values and coerce(k, values[k]) != storage.get_setting(k)]
+        if blocked:
+            return web.json_response(
+                {"error": f"{', '.join(blocked)} can only be changed from the machine running ComfyUI"}, status=403)
     try:
         rows = storage.set_settings(values)
     except KeyError as e:

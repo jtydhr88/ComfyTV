@@ -112,3 +112,22 @@ class TestSettingsDependency:
         rows = {r["key"]: r["value"] for r in (await resp.json())["settings"]}
         assert rows["enable-mcp"] is False
         assert rows["enable-bot"] is False
+
+
+class TestLanClients:
+    async def test_cannot_change_what_the_agent_runs(self, client, monkeypatch):
+        monkeypatch.setattr(web.BaseRequest, "remote", "192.168.0.50")
+        for values in ({"enable-mcp": True}, {"enable-mcp": True, "enable-bot": True},
+                       {"bot-enable-comfy-mcp": True}, {"bot-comfy-mcp-command": "calc"},
+                       {"bot-hermes-ssh-host": "evil"}):
+            resp = await client.put("/comfytv/settings", json={"values": values})
+            assert resp.status == 403
+            assert next(iter(values)) in (await resp.json())["error"]
+
+    async def test_other_settings_and_unchanged_values_pass(self, client, monkeypatch):
+        monkeypatch.setattr(web.BaseRequest, "remote", "192.168.0.50")
+        resp = await client.put("/comfytv/settings", json={
+            "values": {"enable-mcp": False, "bot-model-claude-code": "sonnet"}})
+        assert resp.status == 200
+        rows = {r["key"]: r["value"] for r in (await resp.json())["settings"]}
+        assert rows["bot-model-claude-code"] == "sonnet"
