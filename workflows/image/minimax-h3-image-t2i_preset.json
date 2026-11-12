@@ -1,0 +1,40 @@
+{
+  "label": "MiniMax H3 Image T2I",
+  "order": 18,
+  "description": "The official MiniMax-H3-Image text-to-image graph (int8 DiT + Qwen3-VL-32B encoder, 6 steps, euler, cfg 1). The model is tuned for 2048x2048 of area: pick the 2K resolution tier. Your prompt is sent as written; turn on the switch on the subgraph node to have the prompt expander (Qwen3.5-9B) rewrite it into a detailed caption first, which adds a few minutes per image.",
+  "result": {
+    "type": "ui_save_batch",
+    "node": "9"
+  },
+  "sizing": {
+    "type": "image",
+    "base": 2048,
+    "snap": 32
+  },
+  "inputs": {
+    "23:24": {
+      "value": {
+        "from": "main_prompt",
+        "required": true,
+        "error": "Describe the image to generate."
+      }
+    },
+    "14": {
+      "output:0": {
+        "from": "computed:width",
+        "cast": "int"
+      },
+      "output:1": {
+        "from": "computed:height",
+        "cast": "int"
+      }
+    },
+    "23:7": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    }
+  }
+}

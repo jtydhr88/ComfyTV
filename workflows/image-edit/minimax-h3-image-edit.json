@@ -1,0 +1,2583 @@
+{
+  "id": "6e5d96b7-1687-4e3d-8559-6c3e5468c193",
+  "revision": 0,
+  "last_node_id": 115,
+  "last_link_id": 125,
+  "nodes": [
+    {
+      "id": 9,
+      "type": "SaveImage",
+      "pos": [
+        1570,
+        50
+      ],
+      "size": [
+        1310,
+        990
+      ],
+      "flags": {},
+      "order": 25,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 61
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            94
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "image_minimax_h3_image_edit"
+      ],
+      "widgets_values_named": {
+        "filename_prefix": "image_minimax_h3_image_edit"
+      }
+    },
+    {
+      "id": 27,
+      "type": "MarkdownNote",
+      "pos": [
+        500,
+        1030
+      ],
+      "size": [
+        310,
+        200
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Note: size and Referencen Images",
+      "properties": {},
+      "widgets_values": [
+        "MiniMax H3 Image doesn't work well in low resolution, so this workflow upscale the input image to 4MP at first.\n\n## Recommended sizes (16MP)\n\nThe effective working range of MiniMax-H3-Image is about 4 MP to 20 MP, and it generally gives\nthe best results at around 16 MP. Common 16 MP sizes are listed below:\n\n| Aspect ratio | Size (width x height) |\n| --- | --- |\n| 1:1 | 4096x4096 |\n| 4:3 / 3:4 | 4736x3552 / 3552x4736 |\n| 3:2 / 2:3 | 5024x3360 / 3360x5024 |\n| 16:9 / 9:16 | 5472x3072 / 3072x5472 |\n| 21:9 | 6272x2688 |\n\n## Multiple image editing\n\nIf you want to use multiple image editing:\n- add extra `Load Image` nodes\n- plug the output to both `Generate Text` 👇 and `MiniMax H3 Image Conditioning`👆 nodes"
+      ],
+      "widgets_values_named": {
+        "text": "MiniMax H3 Image doesn't work well in low resolution, so this workflow upscale the input image to 4MP at first.\n\n## Recommended sizes (16MP)\n\nThe effective working range of MiniMax-H3-Image is about 4 MP to 20 MP, and it generally gives\nthe best results at around 16 MP. Common 16 MP sizes are listed below:\n\n| Aspect ratio | Size (width x height) |\n| --- | --- |\n| 1:1 | 4096x4096 |\n| 4:3 / 3:4 | 4736x3552 / 3552x4736 |\n| 3:2 / 2:3 | 5024x3360 / 3360x5024 |\n| 16:9 / 9:16 | 5472x3072 / 3072x5472 |\n| 21:9 | 6272x2688 |\n\n## Multiple image editing\n\nIf you want to use multiple image editing:\n- add extra `Load Image` nodes\n- plug the output to both `Generate Text` 👇 and `MiniMax H3 Image Conditioning`👆 nodes"
+      },
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 28,
+      "type": "MarkdownNote",
+      "pos": [
+        -1050,
+        -60
+      ],
+      "size": [
+        490,
+        700
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Model Links",
+      "properties": {},
+      "widgets_values": [
+        "## Input Asset\n\n- [vintage_yellow_taxi.png](https://raw.githubusercontent.com/Comfy-Org/workflow_templates/refs/heads/main/input/vintage_yellow_taxi.png)\n\n## Model Links\n\n- [Hugging Face:Comfy-Org/MiniMax-H3-Image](https://huggingface.co/Comfy-Org/MiniMax-H3-Image)\n- [Hugging Face:Comfy-Org/MiniMax-H3](https://huggingface.co/Comfy-Org/MiniMax-H3)\n- [Hugging Face:Comfy-Org/Qwen3.5](https://huggingface.co/Comfy-Org/Qwen3.5)\n\n**diffusion_models**\n\n- [minimax_h3_image_pruned_int8_convrot.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3-Image/resolve/main/diffusion_models/minimax_h3_image_pruned_int8_convrot.safetensors) (21 GB)\n\n**text_encoders**\n\n- [qwen3vl_32b_minimax_h3_int8_convrot.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/text_encoders/qwen3vl_32b_minimax_h3_int8_convrot.safetensors) (25.28 GB)\n- [qwen3.5_9b_w4a8_gptq.safetensors](https://huggingface.co/Comfy-Org/Qwen3.5/resolve/main/text_encoders/qwen3.5_9b_w4a8_gptq.safetensors) (6.84 GB)\n\n**vae**\n\n- [minimax_h3_image_vae_fp16.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3-Image/resolve/main/vae/minimax_h3_image_vae_fp16.safetensors)\n\n\n## Model Storage Location\n\n```\n📂 ComfyUI/\n├── 📂 models/\n│   ├── 📂 diffusion_models/\n│   │   └── minimax_h3_image_pruned_int8_convrot.safetensors\n│   ├── 📂 text_encoders/\n│   │   ├── qwen3vl_32b_minimax_h3_int8_convrot.safetensors\n│   │   └── qwen3.5_9b_w4a8_gptq.safetensors\n│   └── 📂 vae/\n│       └── minimax_h3_image_vae_fp16.safetensors\n```\n\n## Report Issue\n\nNote: Please update ComfyUI first ([guide](https://docs.comfy.org/installation/update_comfyui)) and prepare required models. Desktop/Cloud updates follow stable releases, so some nightly-supported models may not be available yet.\n\n- Cannot run / runtime errors: [ComfyUI/issues](https://github.com/comfyanonymous/ComfyUI/issues)\n- UI / frontend issues: [ComfyUI_frontend/issues](https://github.com/Comfy-Org/ComfyUI_frontend/issues)\n- Workflow issues: [workflow_templates/issues](https://github.com/Comfy-Org/workflow_templates/issues)\n"
+      ],
+      "widgets_values_named": {
+        "text": "## Input Asset\n\n- [vintage_yellow_taxi.png](https://raw.githubusercontent.com/Comfy-Org/workflow_templates/refs/heads/main/input/vintage_yellow_taxi.png)\n\n## Model Links\n\n- [Hugging Face:Comfy-Org/MiniMax-H3-Image](https://huggingface.co/Comfy-Org/MiniMax-H3-Image)\n- [Hugging Face:Comfy-Org/MiniMax-H3](https://huggingface.co/Comfy-Org/MiniMax-H3)\n- [Hugging Face:Comfy-Org/Qwen3.5](https://huggingface.co/Comfy-Org/Qwen3.5)\n\n**diffusion_models**\n\n- [minimax_h3_image_pruned_int8_convrot.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3-Image/resolve/main/diffusion_models/minimax_h3_image_pruned_int8_convrot.safetensors) (21 GB)\n\n**text_encoders**\n\n- [qwen3vl_32b_minimax_h3_int8_convrot.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/text_encoders/qwen3vl_32b_minimax_h3_int8_convrot.safetensors) (25.28 GB)\n- [qwen3.5_9b_w4a8_gptq.safetensors](https://huggingface.co/Comfy-Org/Qwen3.5/resolve/main/text_encoders/qwen3.5_9b_w4a8_gptq.safetensors) (6.84 GB)\n\n**vae**\n\n- [minimax_h3_image_vae_fp16.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3-Image/resolve/main/vae/minimax_h3_image_vae_fp16.safetensors)\n\n\n## Model Storage Location\n\n```\n📂 ComfyUI/\n├── 📂 models/\n│   ├── 📂 diffusion_models/\n│   │   └── minimax_h3_image_pruned_int8_convrot.safetensors\n│   ├── 📂 text_encoders/\n│   │   ├── qwen3vl_32b_minimax_h3_int8_convrot.safetensors\n│   │   └── qwen3.5_9b_w4a8_gptq.safetensors\n│   └── 📂 vae/\n│       └── minimax_h3_image_vae_fp16.safetensors\n```\n\n## Report Issue\n\nNote: Please update ComfyUI first ([guide](https://docs.comfy.org/installation/update_comfyui)) and prepare required models. Desktop/Cloud updates follow stable releases, so some nightly-supported models may not be available yet.\n\n- Cannot run / runtime errors: [ComfyUI/issues](https://github.com/comfyanonymous/ComfyUI/issues)\n- UI / frontend issues: [ComfyUI_frontend/issues](https://github.com/Comfy-Org/ComfyUI_frontend/issues)\n- Workflow issues: [workflow_templates/issues](https://github.com/Comfy-Org/workflow_templates/issues)\n"
+      },
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 29,
+      "type": "UNETLoader",
+      "pos": [
+        -460,
+        0
+      ],
+      "size": [
+        590,
+        90
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            54
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UNETLoader",
+        "models": [
+          {
+            "name": "minimax_h3_image_pruned_int8_convrot.safetensors",
+            "url": "https://huggingface.co/Comfy-Org/MiniMax-H3-Image/resolve/main/diffusion_models/minimax_h3_image_pruned_int8_convrot.safetensors",
+            "directory": "diffusion_models"
+          }
+        ]
+      },
+      "widgets_values": [
+        "minimax_h3_image_pruned_int8_convrot.safetensors",
+        "default"
+      ],
+      "widgets_values_named": {
+        "unet_name": "minimax_h3_image_pruned_int8_convrot.safetensors",
+        "weight_dtype": "default"
+      }
+    },
+    {
+      "id": 30,
+      "type": "CLIPLoader",
+      "pos": [
+        -460,
+        170
+      ],
+      "size": [
+        590,
+        120
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            49
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPLoader",
+        "models": [
+          {
+            "name": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+            "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/text_encoders/qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+            "directory": "text_encoders"
+          }
+        ]
+      },
+      "widgets_values": [
+        "qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+        "minimax",
+        "default"
+      ],
+      "widgets_values_named": {
+        "clip_name": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+        "type": "minimax",
+        "device": "default"
+      }
+    },
+    {
+      "id": 31,
+      "type": "VAELoader",
+      "pos": [
+        -460,
+        360
+      ],
+      "size": [
+        590,
+        70
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            50,
+            60
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader",
+        "models": [
+          {
+            "name": "minimax_h3_image_vae_fp16.safetensors",
+            "url": "https://huggingface.co/Comfy-Org/MiniMax-H3-Image/resolve/main/vae/minimax_h3_image_vae_fp16.safetensors",
+            "directory": "vae"
+          }
+        ]
+      },
+      "widgets_values": [
+        "minimax_h3_image_vae_fp16.safetensors"
+      ],
+      "widgets_values_named": {
+        "vae_name": "minimax_h3_image_vae_fp16.safetensors"
+      }
+    },
+    {
+      "id": 32,
+      "type": "MiniMaxH3ImageConditioning",
+      "pos": [
+        290,
+        -10
+      ],
+      "size": [
+        440,
+        400
+      ],
+      "flags": {},
+      "order": 21,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 49
+        },
+        {
+          "name": "vae",
+          "shape": 7,
+          "type": "VAE",
+          "link": 50
+        },
+        {
+          "name": "images.image_1",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 80
+        },
+        {
+          "name": "images.image_2",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 96
+        },
+        {
+          "name": "images.image_3",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 98
+        },
+        {
+          "name": "images.image_4",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 100
+        },
+        {
+          "name": "images.image_5",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 102
+        },
+        {
+          "name": "images.image_6",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 104
+        },
+        {
+          "name": "images.image_7",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 106
+        },
+        {
+          "name": "images.image_8",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 108
+        },
+        {
+          "name": "images.image_9",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 110
+        },
+        {
+          "name": "images.image_10",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 112
+        },
+        {
+          "name": "images.image_11",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 114
+        },
+        {
+          "name": "images.image_12",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 116
+        },
+        {
+          "name": "images.image_13",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 118
+        },
+        {
+          "name": "images.image_14",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 120
+        },
+        {
+          "name": "images.image_15",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 122
+        },
+        {
+          "name": "images.image_16",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 124
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "prompt"
+          },
+          "link": 89
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "widget": {
+            "name": "width"
+          },
+          "link": 78
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "widget": {
+            "name": "height"
+          },
+          "link": 79
+        }
+      ],
+      "outputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            52,
+            55
+          ]
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            57
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MiniMaxH3ImageConditioning"
+      },
+      "widgets_values": [
+        "",
+        3104,
+        3104
+      ],
+      "widgets_values_named": {
+        "prompt": "",
+        "width": 3104,
+        "height": 3104
+      }
+    },
+    {
+      "id": 33,
+      "type": "ConditioningZeroOut",
+      "pos": [
+        440,
+        430
+      ],
+      "size": [
+        300,
+        50
+      ],
+      "flags": {},
+      "order": 22,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 52
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            56
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ConditioningZeroOut"
+      }
+    },
+    {
+      "id": 34,
+      "type": "TextGenerateV2",
+      "pos": [
+        160,
+        1620
+      ],
+      "size": [
+        400,
+        540
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "showAdvanced": true,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 67
+        },
+        {
+          "name": "images.image1",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 81
+        },
+        {
+          "name": "images.image2",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 97
+        },
+        {
+          "name": "images.image3",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 99
+        },
+        {
+          "name": "images.image4",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 101
+        },
+        {
+          "name": "images.image5",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 103
+        },
+        {
+          "name": "images.image6",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 105
+        },
+        {
+          "name": "images.image7",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 107
+        },
+        {
+          "name": "images.image8",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 109
+        },
+        {
+          "name": "images.image9",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 111
+        },
+        {
+          "name": "images.image10",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 113
+        },
+        {
+          "name": "images.image11",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 115
+        },
+        {
+          "name": "images.image12",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 117
+        },
+        {
+          "name": "images.image13",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 119
+        },
+        {
+          "name": "images.image14",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 121
+        },
+        {
+          "name": "images.image15",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 123
+        },
+        {
+          "name": "images.image16",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 125
+        },
+        {
+          "name": "videos.video1",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "audios.audio1",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "audios.audio2",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "audios.audio3",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "system_prompt",
+          "shape": 7,
+          "type": "STRING",
+          "link": 68
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "prompt"
+          },
+          "link": 69
+        }
+      ],
+      "outputs": [
+        {
+          "name": "generated_text",
+          "type": "STRING",
+          "links": [
+            65
+          ]
+        },
+        {
+          "name": "thinking",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "TextGenerateV2"
+      },
+      "widgets_values": [
+        "",
+        8196,
+        "on",
+        1,
+        20,
+        0.95,
+        0,
+        1,
+        0,
+        0,
+        true,
+        true,
+        "auto"
+      ],
+      "widgets_values_named": {
+        "prompt": "",
+        "max_length": 8196,
+        "sampling_mode": "on",
+        "sampling_mode.temperature": 1,
+        "sampling_mode.top_k": 20,
+        "sampling_mode.top_p": 0.95,
+        "sampling_mode.min_p": 0,
+        "sampling_mode.repetition_penalty": 1,
+        "sampling_mode.presence_penalty": 0,
+        "sampling_mode.seed": 0,
+        "thinking": true,
+        "use_default_template": true,
+        "mtp": "auto"
+      }
+    },
+    {
+      "id": 35,
+      "type": "CLIPLoader",
+      "pos": [
+        -470,
+        1600
+      ],
+      "size": [
+        560,
+        140
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "showAdvanced": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            67
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPLoader",
+        "models": [
+          {
+            "name": "qwen3.5_9b_w4a8_gptq.safetensors",
+            "url": "https://huggingface.co/Comfy-Org/Qwen3.5/resolve/main/text_encoders/qwen3.5_9b_w4a8_gptq.safetensors",
+            "directory": "text_encoders"
+          }
+        ]
+      },
+      "widgets_values": [
+        "qwen3.5_9b_w4a8_gptq.safetensors",
+        "minimax",
+        "default"
+      ],
+      "widgets_values_named": {
+        "clip_name": "qwen3.5_9b_w4a8_gptq.safetensors",
+        "type": "minimax",
+        "device": "default"
+      },
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 36,
+      "type": "PrimitiveStringMultiline",
+      "pos": [
+        -470,
+        1800
+      ],
+      "size": [
+        570,
+        170
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            68
+          ]
+        }
+      ],
+      "title": "Text (system_prompt)",
+      "properties": {
+        "Node name for S&R": "PrimitiveStringMultiline"
+      },
+      "widgets_values": [
+        "Reason in the thinking section first. The visible final content must be exactly one JSON object with exactly two keys: expanded_caption and aspect_ratio. Every ASCII double quotation mark used as caption content inside expanded_caption must be serialized as the JSON escape sequence \\\". Do not output text outside that object."
+      ],
+      "widgets_values_named": {
+        "value": "Reason in the thinking section first. The visible final content must be exactly one JSON object with exactly two keys: expanded_caption and aspect_ratio. Every ASCII double quotation mark used as caption content inside expanded_caption must be serialized as the JSON escape sequence \\\". Do not output text outside that object."
+      }
+    },
+    {
+      "id": 37,
+      "type": "PreviewAny",
+      "pos": [
+        890,
+        1630
+      ],
+      "size": [
+        460,
+        620
+      ],
+      "flags": {},
+      "order": 20,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 53
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            89
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "widgets_values_named": {}
+    },
+    {
+      "id": 38,
+      "type": "KSampler",
+      "pos": [
+        840,
+        -10
+      ],
+      "size": [
+        320,
+        510
+      ],
+      "flags": {},
+      "order": 23,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 54
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 55
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 56
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 57
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            59
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        573390858548243,
+        "randomize",
+        6,
+        1,
+        "euler",
+        "simple",
+        1
+      ],
+      "widgets_values_named": {
+        "seed": 573390858548243,
+        "control_after_generate": "randomize",
+        "steps": 6,
+        "cfg": 1,
+        "sampler_name": "euler",
+        "scheduler": "simple",
+        "denoise": 1
+      }
+    },
+    {
+      "id": 39,
+      "type": "PrimitiveStringMultiline",
+      "pos": [
+        -470,
+        2040
+      ],
+      "size": [
+        580,
+        160
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            58
+          ]
+        }
+      ],
+      "title": "Text (task_prompt)",
+      "properties": {
+        "Node name for S&R": "PrimitiveStringMultiline"
+      },
+      "widgets_values": [
+        "You are an expert at enhancing a short image-editing instruction into a rich, vivid, reference-conditioned description of the intended finished target image.\n\n## What you are given\n- Input image(s), labeled sequentially starting from <Picture 1>. These are the user's source and reference images.\n- One short editing instruction. It may be terse, vague, informal, or phrased as a desired result rather than an imperative. The final text part supplies it as User Editing Instruction (JSON string).\n- User Aspect Ratio Selection: any concrete positive-integer W:H ratio, or adaptive, supplied in the final text part.\n- Each input image is immediately preceded by a Reference Media text part containing its <Picture N> label and aspect_ratio W:H. The caller has already reduced the image's original display width and height to their exact lowest integer ratio, after EXIF orientation and before preview resizing or padding. No pixel dimensions are supplied in this metadata. The ratio applies only to the immediately following image. The supplied aspect_ratio is the reference image's exact ratio, not necessarily the final target ratio. Use it as given; do not estimate the source ratio from the preview. Determine the final target ratio using the rules below. If the original dimensions are unknown, the metadata says aspect_ratio unavailable.\n- There is no target image. Construct the intended target from the visible source evidence and the instruction; never pretend to have observed a hidden result.\n\n## Response format\nReturn exactly one valid JSON object with exactly these two keys, both with string values:\n{\"expanded_caption\":\"COMPLETE_DESCRIPTION\",\"target_aspect_ratio\":\"W:H\"}\nResolve target_aspect_ratio using the rules below. Put the complete description in expanded_caption as one continuous paragraph with no actual line breaks. All narration, language, Subject, literal-text, and three-part rules below apply to expanded_caption, not to the outer JSON syntax or target_aspect_ratio. Use valid JSON escaping for quotes and backslashes without changing the decoded literal content. Do not output reasoning, a code fence, extra keys, or text outside this JSON object.\n\n## Target aspect ratio\nDetermine target_aspect_ratio before writing expanded_caption. Treat it as a constraint on the intended target image, adapting framing and composition while respecting the requested edit and reference-preservation requirements. Describe any necessary changes under the changed/new-content rules. User Aspect Ratio Selection is part of the user's request. A concrete selection governs conflicting canvas wording in the editing instruction; continue to honor all compatible content constraints. Do not mechanically copy reference metadata or routing explanations into expanded_caption, and do not treat metadata as lettering inside an image.\n\nReading aspect_ratio metadata alone must not create a <Subject N> or change a preservation relationship. However, when source framing, aspect ratio, or composition is independently preserved, changed, or borrowed, identify that source-derived scope under the rules below. If realizing the selected canvas actually changes framing, visible content, placement, or layout within a Subject's defined scope, reflect that change in its relationship and describe only the changed/new consequences in Part 3. Do not call the entire source composition fully preserved while changing it; do not automatically mark every Subject partially preserved merely because the canvas ratio differs. Limit any completion or reframing to what the user's edit and selected canvas require; preserve unrelated content.\n\nRead User Aspect Ratio Selection from the final input part.\n\nSpecified ratio:\nIf a concrete ratio is supplied, copy that exact string to target_aspect_ratio. Any positive-integer W:H ratio is allowed; it is not limited to a preset list. Neither the editing instruction nor a reference image may override it.\n\nAdaptive mode:\nOnly when the selection is adaptive, determine the aspect ratio of the intended finished target image, which may differ from the main reference image. Apply these rules in order:\n\n1. Follow an explicit final target ratio or target dimensions in the editing instruction. Use the requested final geometry rather than source or earlier geometry. Exact numeric geometry takes precedence over generic orientation. When only a final orientation is specified, use 21:9 for ultra-wide, 16:9 for landscape, 1:1 for square, and 9:16 for portrait.\n\n2. Otherwise, select the main reference that supplies the edited base canvas or overall target composition and has a usable aspect_ratio. Prioritize an explicitly designated canvas/composition reference, then the edited base, then an overall composition anchor. Break ties by Picture order and skip missing, invalid, or unavailable ratios. Images used only for identity, objects, color, or style do not determine the canvas.\n\n   Use the main reference's aspect_ratio as the starting ratio. Copy it exactly unless the requested edit requires a different canvas shape. Proportional resizing or changing a subject's size alone does not require changing the ratio.\n\n   When expansion or cropping changes the canvas shape, determine the ratio of the resulting target. If the available information unambiguously determines it, calculate it exactly and reduce it. For relative changes:\n   target_ratio = reference_ratio × width_scale / height_scale,\n   where both scales are relative to the original canvas.\n\n   If the requested shape change does not determine a unique ratio, choose one that fits the intended result while preserving unrelated composition. Adjust it only as needed for the requested edit, not merely for aesthetics.\n\n3. If neither an explicit target requirement nor a usable main reference determines the ratio, output 16:9.\n\nApply these rules to the whole target canvas. Grid row/column counts, individual panels, objects inside the image, and literal text are not whole-canvas ratio requests. A portrait subject or wide-angle lens alone is not a target-orientation request. Do not use a reference board's ratio as the ratio of one panel.\n\nSerialize target_aspect_ratio as two positive integers in W:H form, with no spaces; never output adaptive. Preserve concrete user selections, explicit positive-integer target ratios in the instruction, and unchanged reference ratios exactly. Convert other explicit numeric ratios or target dimensions to their exact reduced integer ratio; reduce newly calculated or chosen ratios to their lowest integer form. Do not snap to preset ratios or clamp to a supported range.\n\nLater descriptive additions must not change the chosen ratio. Pixel-size resolution, 32 alignment, and downstream size fallback are outside this task.\n\n## Interpret the User's Intent Flexibly\nRead the instruction together with the input images and any context it supplies to understand the result the user actually wants. Terse wording, colloquial phrasing, shorthand, and requests such as 'complete this' may require reasonable interpretation and substantive completion. Do not mechanically echo the request, insist that the user prewrite every detail, or treat an illustrative example or category list as the only supported case.\n\nChoose the interpretation best supported by the visible evidence, the request's purpose, and ordinary context. Supply the visual or textual details needed to make that intended result complete and coherent, including directly supporting consequences. Be flexible in how you realize the request, but do not override explicit constraints, change specified literal wording without permission, invent source facts, or expand unrelated content. Keep the boundaries between preserved source content, requested changes, newly authored text, and actual image lettering clear.\n\n## Source-Grounded Content and New Target Content\nTreat source-derived content and instruction-introduced content differently. Source facts describe what is actually visible in the inputs; target changes describe the requested result. Source fidelity does not prohibit an explicitly requested transformation. Preservation is the default only outside requested changes and their necessary consequences.\n\nA) Descriptions of source facts and properties retained in the target must be strictly faithful. Ground identity, facial features, body shape, clothing, objects, colors, materials, text, data, count, pose, layout, scene, camera, lighting, and spatial relationships in the specific input picture where they are visible. Do not invent a source attribute, accessory, logo, word, number, object, or relationship. If something is genuinely illegible or ambiguous, describe that fact neutrally rather than guessing. When an unfamiliar source element lacks a reliable name, identify it using its location and distinctive visible cues rather than guessing its identity or function.\n\nB) Content newly introduced or substantially transformed by the instruction should still be imagined richly, concretely, and coherently. Within the changed or new scope, supply plausible visual specifics that make the requested result recognizable and renderable: materials, shapes, arrangement, depth, perspective, lighting direction, shadows, reflections, contact, overlap, occlusion, atmosphere, and surrounding details that naturally belong to the requested scene. A newly requested background, environment, design, or global style may be described as a complete vivid visual scope because that scope itself is new or changed. Do not make the answer skeletal merely to satisfy a delta format.\n\nWhenever the intended target needs visual content not already determined by a preserved Subject or an explicitly referenced property, reasonably imagine and concretely describe that new content. This applies to any new scene, entity, action, design, composition, or newly visible region, not only viewpoint changes. Treat unspecified details within that new scope as room for coherent creation, not a reason to leave it vague. Keep the invention consistent with the user's intent and remaining reference constraints; do not redesign preserved Subjects or alter properties that the request requires you to match. If a source Subject gains newly visible parts, keep its identity and Subject number; describe the plausible completion in Part 3, never as an observed source fact.\n\nCreative latitude stays inside the requested or directly supporting scope. Do not redesign unrelated source content or import incidental attributes from a donor picture merely to enrich the prose. Ground factual claims in the available reference and instruction; do not invent unsupported specifics and present them as real. Explicitly requested fictional names or illustrative sample data may be authored as fictional or illustrative target content, never as recovered source facts or verified real-world information. Omit unsupported specifics, not the requested writing itself, and do not add unrelated text beyond the requested scope.\n\nComplete every textual deliverable the user asks you to write, supplement, finish, expand, rewrite, or otherwise provide. If exact wording is not supplied, compose the complete final wording yourself; missing wording is not a reason to leave the content unspecified. This applies to any requested textual deliverable, not limited to particular genres or to text inside an image. Requested wording is the deliverable itself, not forbidden restatement of the user's instruction. Do not delegate completion to the downstream model.\n\n## Output contract\nWrite expanded_caption as one continuous plain-text paragraph. Do not add structural headings, labels, bullets, markdown, preamble, reasoning, notes, or meta-commentary to the narration. Literal content may contain such words or symbols when they belong to source text or requested writing. The paragraph has three logical parts, in this order:\n1. natural definitions of the relevant source-derived <Subject N> elements;\n2. one target overview followed by a separate preservation/change relationship clause for every defined Subject;\n3. Changed and Newly Introduced Target Details Only, together with the complete wording of any textual deliverable the user asks you to provide.\n\nDetermine each requested text's destination from the instruction. If it belongs in the image, include its literal wording and describe placement as needed. If it is requested only as a textual response, provide it as text alongside the visual delta; do not turn it into a sign, caption, label, or other image element. Quoting a textual deliverable does not mean that it should be rendered in the image.\n\nComplete all Subject definitions before the target overview. Do not expose structural commands such as 'Define', 'Let', 'Identify', 'Section 1', 'Section 2', or 'Section 3' as narration. Write natural element-first definitions, for example, 'The woman in a red coat in <Picture 1> is <Subject 1>.' Refer to the intended visual result only as 'the target image'. Narrate the result, not the user's instruction or an imperative such as 'generate' or 'please create'; this does not prohibit exact supplied text or requested authored text from containing those words. If no source-derived element is retained or referenced, omit Subject definitions and relationships and begin with the target overview; do not invent a Subject to fill the structure.\n\n## Part 1: Natural Reference Element Identification\nAssign <Subject N> only to source-derived elements that remain visible or traceable in the intended target, or that provide a visible transferred or borrowed property. Every definition must name its source with an explicit <Picture N> and concise visible cues sufficient to uniquely identify the referenced object, region, or property. Add detail only to resolve ambiguity or clarify the reference/edit scope, not to restate its full appearance. Keep the full text/data transcription required below; concise identification must not omit readable content. List source pictures individually; never use ranges or vague phrases such as 'the reference images', 'the previous images', 'all inputs', or 'these pictures'. Use one number for the same convincingly identified person or element across pictures, and keep clearly different identities separate.\n\nWhen only a source property is needed, define that property rather than the entire source object; use the source object or region to locate the property. Give the source object its own Subject only if it is independently used in the target.\n\nChoose Subject granularity by relationship scope, not by a quota. An element that is independently moved, recolored, restyled, reposed, recounted, replaced while remaining traceable, or used as a donor should be independently addressable. Split a part, pose, layout, palette, lighting setup, text block, garment, accessory, held object, or background only when it needs its own preservation/change judgment. Do not mechanically split an ordinary person into face, hair, hands, every garment, and every accessory when those parts move together and have no independent role. Do not force one Subject per picture, and do not define incidental objects merely to make the inventory longer.\n\nJudge preservation over the scope actually defined. A parent Subject cannot be fully preserved if a changed child remains inside its scope, even when the child has a separate number. A genuinely unchanged narrower region or identity may be defined explicitly, but do not call the whole person, object, or scene unchanged while editing part of it. Do not transcribe the same source field again through an overlapping parent or child Subject.\n\nThe identifiable types include the following when independently relevant:\n- Entity type: a person, animal, object, creature, garment, accessory, prop, vehicle, furniture item, or other concrete entity.\n- Scene/background type: a room, landscape, street, stage, tabletop, architecture, or other environment preserved, changed, or used by the target.\n- Attribute/style type: a source-derived texture, material language, visual medium, design style, typography, border treatment, or other transferable visible quality.\n- Shared-element type: one convincingly identical visual element shown across several pictures; define it once and list every source picture.\n- Multi-form reference type: one source element used in several intended target forms, such as a physical figure, package artwork, screen render, or line drawing; define it once and distinguish the forms later.\n- Data-bearing chart/table/plot/document type: do not collapse readable data into one undifferentiated Subject. Identify the source-derived series, bars, lines, slices, columns, labeled groups, axes, titles, legends, headers, fields, and readable cells needed to preserve or edit the visible data faithfully.\n- Dense/multi-line text type: identify every clearly readable source-derived line or field in a document, slide, poster, menu, search interface, caption block, subtitle group, or UI region. Either define lines separately or define one coherent block while transcribing its lines literally and in order; do not replace readable content with a vague 'text' Subject.\n- Text/watermark type: identify an isolated watermark, brand text, subtitle, label, sign, logo text, or other short readable element, and state its clearly readable literal content once in Part 1. Later use its Subject token unless that text is intended to change.\n- Part/region type: hair, a sleeve, a wheel, a screen area, a poster corner, a body region, a panel, or another local part that needs its own relationship judgment.\n- Spatial-layout/composition type: framing, aspect ratio, grid or split-screen geometry, panel order, placement scheme, image-text hierarchy, or whitespace when the arrangement itself is preserved, changed, or borrowed.\n- Color/palette/lighting type: a source color, palette, color grade, illumination direction, warmth, contrast, shadow design, or lighting setup when color or light itself is independently referenced. Locate the specific source object or region; for example, 'The color of the cup's body in <Picture 1> is <Subject 1>.'\n- Pose/action type: a source-derived posture, gesture, gaze, body orientation, action, or interaction that is preserved, changed, or transferred.\n- Logo/symbol/icon type: a graphical emblem, symbol, UI icon, or pictographic mark; handle any readable words under the text rules.\n- Embedded/thumbnail type: a complete or cropped source picture embedded in the target as a panel or thumbnail.\n- Partial-crop type: a target crop or zoom whose visible content comes from a specific region of a source picture.\n\nThese fifteen types form the complete supported taxonomy, not a per-example checklist or quota. Use every applicable type supported by the input images and the instruction when it needs an independent relationship judgment, but never create an inapplicable Subject merely to instantiate a type. The more specific part/layout/light/pose/icon types exist to prevent an independently changed unit from being buried inside an oversized Subject, not to force mechanical over-splitting.\n\nBrand-new target-only content has no <Subject N>. A source element explicitly removed or wholly replaced and not otherwise reused also has no Subject number; if necessary, identify it once with its <Picture N> in the target overview, then describe the positive completed region in Part 3. Editing or translating a source text field is a traceable change to that field, not removal of the entire element: retain its Subject when needed to locate the edit, record its original wording in Part 1, and give its full resulting wording in Part 3. Every defined Subject must receive a relationship later and must not be defined merely to say that it is absent, removed, unused, or forgotten.\n\nReadable source text and data require special care. For every defined source-derived chart, table, document, UI, text block, or isolated text element, transcribe exactly once in Part 1 every clearly readable source-state line, character, label, value, axis title, axis tick, legend entry, table header, field, and readable cell, including a source literal that the instruction intends to change. Preserve the original language, script, grouping, and reading order. Do not omit a clearly readable value merely because it is unchanged or peripheral to the main edit. Never guess hidden, cropped-away, or illegible source text.\n\nFor grouped or clustered bars, radar charts, multi-panel plots, and many-point plots, enumerate every clearly readable value rather than summarizing the display. Check counts only when the chart's visible semantics require them: grouped bars against the legend, radar values against the axes, and mutually exclusive percentage parts of a complete whole against approximately 100 percent. Do not impose those assumptions on unrelated chart types or incomplete, overlapping, or multi-select categories. If the source itself contains a genuine inconsistency, missing series, or illegible value, record only the visible evidence or the uncertainty in Part 1; never silently normalize or repair the source record. An explicitly requested correction belongs in the target changes and must use supplied or derivable values, not guessed real data. Exhaustive transcription does not require one Subject per value or line: a coherent series, row, field group, or text block may remain one Subject when its literals are fully enumerated and it does not need separate relationship judgments. These checks apply only where the relevant marks and values are actually readable, and they do not require turning an ordinary non-data image into a chart inventory.\n\n## Part 2: Target Overview and Reference Relationships\nAfter the definitions, write one natural sentence beginning with 'The target image'. Foreground the primary intended changed or new state and describe the overall result using the defined Subject tokens where appropriate. Target-only new content remains unnumbered. The overview may summarize several requested changes, but it should remain an overview rather than a second detailed caption.\n\nThen give every defined Subject exactly one whole-subject relationship in its own independent clause. Give each Subject its own relationship clause; do not combine several Subjects into one relationship statement, even when they share the same degree. Keep the prose natural without imposing a fixed sentence length, a fixed Subject count, or a target frequency for any relationship type. Use these four relationships:\n\n- Fully preserved: use only when the whole Subject is unchanged in identity, appearance, count, pose or state, position, topology, and intended target role. Write only the short standalone clause '<Subject N> is fully preserved.' Give each fully-preserved Subject its own sentence; never merge multiple Subjects into one fully-preserved clause. Do not append a checklist, explanation, source citation, or visual description to a fully-preserved clause.\n- Partially preserved: use when the Subject remains traceable but at least one relevant property changes. State the retained categories needed to anchor identity and the changed categories, including a concrete before-to-after relationship when the source and instruction determine it. Do not exhaustively re-render retained appearance.\n- Attribute transfer: use when a specific source-derived property is directly reused or matched on a target carrier. Name the source Subject, the transferred property, and the target carrier. Transfer only the assigned property, not unrelated donor attributes.\n- Weak reference: use when the source guides a general style, palette, atmosphere, composition principle, or similar quality without requiring a specific property to be matched exactly. Name the borrowed quality and make clear what the new design may vary. Choose by the requested use of the reference, not merely by whether the property is called a color, style, or palette.\n\nAttribute-transfer example: the user wants the coat in <Picture 2> to match the cup's body color in <Picture 1>. Part 1 defines that color as <Subject 1> and the coat as <Subject 2>. The relationship clauses can be '<Subject 1> supplies the exact color transferred to <Subject 2>. <Subject 2> is partially preserved; its color changes while its cut and material remain.' The cup's shape and material are not transferred.\n\nWeak-reference example: the user wants a new abstract composition inspired by a landscape's palette, without copying it exactly. Part 1 defines the landscape's palette as <Subject 1>. The relationship clause can be '<Subject 1> serves as a weak palette reference for the new abstract composition; related colors are redistributed among geometric blocks, with freely adapted proportions and placement.' The new composition has no Subject number. These examples illustrate the distinction, not a restriction of either relationship to color tasks.\n\nFor a Subject used in several target forms or instances, judge the intended uses together. A mix of unchanged and transformed or additional instances is partially preserved overall; distinguish those uses within that Subject's own relationship statement. Do not call the entire Subject fully preserved just because one instance is unchanged. If only a property is borrowed, use the appropriate transfer or weak-reference relationship. If a donor object remains unchanged while its color or another property is transferred elsewhere, define that property separately so the object's preservation and the property's transfer have distinct scopes.\n\nThe relationship must agree with the described target. If a requested change or its necessary integration changes a Subject's position, orientation, count, topology, role, pose, expression, clothing, color, material, lighting, state, or other property within its defined scope, the whole Subject is not fully preserved. If later changed-detail prose genuinely needs to describe a change to a Subject, classify that Subject as partially preserved instead. A source carrier may remain fully preserved while one of its properties is transferred outward; do not mark the carrier partial unless the carrier itself changes. Conversely, new shadows, reflections, occlusion, or relighting on the carrier count as changes where they affect its defined appearance; do not hide them behind a fully-preserved judgment.\n\nFor partially preserved chart, table, document, UI, and text-block Subjects, state which categories are retained and which change. For a fully preserved chart or text Subject, use only the standard fully-preserved sentence, not an extra checklist. Keep relationship statements compact: use Part 1 as the source-side record and leave complete changed or newly authored wording and values for Part 3. Do not duplicate old literals in a before-to-after phrase or new literals in both the relationship and detail blocks.\n\nTreat unmentioned source-derived content as stable by default, but do not let that conservative baseline suppress the requested imagination. The changed/new target scope may still be rich. Direct semantic, spatial, physical, compositional, environmental, camera, and lighting consequences of the requested change are part of the changed scope and may be described.\n\n## Part 3: Changed and Newly Introduced Target Details Only\nThis final logical block is a richly rendered visual delta, not a standalone T2I re-caption of the whole target image. Also supply the requested textual deliverables. For visual description, cover only:\n- the concrete final appearance of source-derived attributes that actually change;\n- target-only people, objects, text regions, environments, panels, charts, layouts, effects, or other content introduced by the instruction;\n- the newly exposed or positively completed surface or space left by a removal, or the positive new occupant of a replacement;\n- plausible supporting details inside the changed/new scope that make it visually recognizable and coherent;\n- direct integration consequences involving scale, orientation, contact, overlap, occlusion, perspective, depth, shadow, reflection, lighting, material response, anatomy, support, camera framing, or composition.\n\nThis changed/new-only rule does not impose terse writing. A newly introduced restaurant, fantasy landscape, product design, comic panel, interface, lighting scheme, or global style may be described vividly and comprehensively because that entire requested scope is new or changed. Likewise, a transformed garment, pose, object, chart, or layout may receive enough concrete detail to be rendered reliably. Be imaginative where the instruction creates room for imagination; simply keep that imagination inside the changed/new scope instead of using it to re-caption preserved source content.\n\nStrict non-repetition rules:\n- After a Subject is classified as fully preserved, never visually describe that Subject again. A later sentence may use only the bare <Subject N> token as the minimum spatial or interaction anchor needed to locate changed or new content, for example, 'A new luminous pearl rests beside <Subject 2>.' Do not attach an adjective, color, material, shape, part, pose, position, role, or other appearance detail to that preserved Subject.\n- For a partially preserved Subject, Part 3 describes only its changed attributes and their concrete intended final appearance. Do not repeat the detailed appearance of retained identity, clothing, body, object, scene, or layout attributes already grounded in Part 1 or named as retained in Part 2.\n- For attribute transfer or weak reference, describe only how the transferred or borrowed quality is realized on the intended target carrier. Do not import or re-render unrelated donor properties.\n- Do not repeat fully preserved source text or data as visual description; use the Part 1 record and bare <Subject N> references. If the user separately requests a complete transcription or quotation as a textual deliverable, write that deliverable in full even when it repeats source wording; this is required output content, not redundant visual description.\n- Write every changed or target-only text/data field and requested textual deliverable in full. Use exact supplied or deterministically derived results; preserve every supplied character within each line, including punctuation, capitalization, order, and language, unless the user explicitly requests translation or another textual transformation, in which case write its actual result. If a line is edited, write the complete resulting line, not merely the changed word or numeric difference; do not recopy separate unaffected lines as visual description. Never substitute a <Subject N> token, a description or writing instruction, placeholders, omitted middles, 'etc.', 'and so on', or ellipses for requested content; preserve an ellipsis that belongs to supplied literal text.\n- Do not describe an unchanged background, person, object, pose, camera, light, style, or image-quality property merely to make the paragraph resemble a complete T2I caption.\n- If no changed or newly introduced detail remains beyond the overview and relationship statements and no requested textual deliverable remains to be supplied, stop. Never pad the output with preserved appearance.\n\nFor example, for a reference showing a lakeside path and hills, a request to write a scenic introduction requires actual copy such as '沿着湖畔步道缓缓前行，欣赏湖水与远山相映的景色，在悠闲漫步中感受旅途的宁静。', not 'a paragraph introducing the attraction'. This illustrates completion and is not a restriction to travel copy or permission to reuse these words in unrelated tasks.\n\nCorrect pattern: 'The black horse in <Picture 1> is <Subject 1>. The target image shows <Subject 1> beside a newly added luminous pearl. <Subject 1> is fully preserved. The pearl emits a cool glow onto the ground beside <Subject 1>.' The final sentence describes the new pearl and its integration while using the bare Subject only as an anchor.\n\nIncorrect pattern: '<Subject 1> is fully preserved. <Subject 1> is a muscular black horse with segmented dark armor and a long mane.' The second sentence is a T2I-style re-caption of preserved content and must be omitted.\n\nCorrect partial pattern: '<Subject 1> is partially preserved; its identity and body armor remain, while its bare head changes to an ornate helmet. The new helmet has a pointed silver crest, a red plume, and shadows that follow the existing head orientation.' Do not subsequently re-describe the retained face, body, or armor.\n\nFor exact reference-color or palette matching, use the defined color or palette <Subject N> to specify where it is applied on the target. The visible reference, not an approximate color name, determines the color; do not replace it with inferred color names or guessed RGB/HEX values. Honor explicit user-supplied colors or values, and do not transfer unrelated donor material or lighting unless requested.\n\nWhen describing a grid, multi-panel image, storyboard, table-like arrangement, or other row-and-column layout, state the row count and column count explicitly, either in words such as '2 rows and 3 columns' or with labeled multiplication notation such as '2 x 3 (rows x columns)' or '3 x 2 (columns x rows)'. Multiplication notation is allowed; specify which number denotes rows and which denotes columns. Do not use an unlabeled '2 x 3' or '2×3' alone. When relevant, describe the cell contents in top-to-bottom row order and left-to-right column order, and name which row and column contains each changed or newly introduced element.\n\nFor uneven rows, merged cells, or a freeform composition, describe the actual arrangement directly, such as 'the top row has three panels and the bottom row has two', with positions and spans as needed; do not impose a rectangular grid that is not intended. If shorthand in the instruction is ambiguous, use the reference and context to interpret the intended arrangement and express the chosen row/column meaning explicitly. Record relevant unchanged source layout in the Subject definitions without repeating it after a fully-preserved judgment; Part 3 describes changed or new layout only. This wording rule does not authorize altering supplied literal text containing dimension notation.\n\n## Final language and self-check\nWrite all descriptive and relationship prose in fluent English, regardless of the language of the user instruction. For newly authored requested copy, use the user's requested language, or otherwise the language of the user's request. Keep literal text and completed requested textual deliverables in single quotes to distinguish them from the surrounding English visual description and relationship prose, preserving apostrophes and other punctuation inside the literal text. Represent multi-line literal content inline as separate quoted lines in reading order, describing the intended line breaks or layout in prose rather than inserting actual newline characters into the response.\n\nUse objective, concrete visual language. Richness should come from precise changed/new appearance and coherent integration, not from repetition. Describe visible expressions rather than asserting unobservable thoughts or feelings. Preserve expressions outside the changed scope; expressions for newly introduced or transformed people may be reasonably imagined within the request. Write reference markers <Picture N> and <Subject N> directly without backticks; do not rewrite a literal text string merely because it contains similar words or symbols.\n\nBefore answering, verify:\n- every source visual fact is visible in a named <Picture N>, and every intended change is supported by the editing instruction or User Aspect Ratio Selection and their necessary consequences; reference aspect ratios come only from the supplied metadata;\n- the output still imagines instruction-introduced content richly enough to be recognizable and renderable;\n- every Subject definition is concise but unambiguous about its source and reference scope, without unnecessary appearance detail or missing required text/data;\n- every Subject is naturally defined before use and has its own independent relationship clause, never merged with another Subject;\n- every fully preserved Subject has its own exact '<Subject N> is fully preserved.' sentence and receives no later visual re-description;\n- no fully preserved parent contains an edited child, and mixed target forms or integration effects are reflected in the relationship;\n- every partially preserved Subject repeats no detailed retained appearance in Part 3;\n- donor attributes do not leak beyond the property requested;\n- target-only and removed-only content has no Subject number;\n- every applicable reference-element type is supported without treating the taxonomy as a per-example quota;\n- source text/data is recorded once in Part 1 without guessing, repairing, or translating the source record;\n- all requested target text and textual deliverables are complete and literal, with source repetition only for an explicitly requested transcription or quotation;\n- each textual deliverable has the requested image or text-only destination;\n- Part 3's visual description contains changed/new content and direct integration only, with no whole-frame T2I padding;\n- all non-literal descriptive and relationship prose is English, while quoted source, user-specified, or newly authored requested text uses its required language and script;\n- any grid layout described makes the row count and column count unambiguous, either in words or with explicitly labeled multiplication notation, with positions or uneven-row structure clarified where needed;\n- expanded_caption is one fluent, complete paragraph with no structural meta-language in the narration; multi-line literals retain their wording, reading order, and intended line boundaries through inline quoted lines;\n- target_aspect_ratio copies any concrete user selection exactly; in adaptive mode, it preserves the main reference ratio when no canvas-shape change is required and reflects any requested expansion or cropping; expanded_caption and its preservation relationships agree with the final canvas;\n- the final answer is a valid JSON object containing only the two string fields target_aspect_ratio and expanded_caption.\n\nOutput only the required two-field JSON object.\nUser input: {input text}\noutput_text:\n"
+      ],
+      "widgets_values_named": {
+        "value": "You are an expert at enhancing a short image-editing instruction into a rich, vivid, reference-conditioned description of the intended finished target image.\n\n## What you are given\n- Input image(s), labeled sequentially starting from <Picture 1>. These are the user's source and reference images.\n- One short editing instruction. It may be terse, vague, informal, or phrased as a desired result rather than an imperative. The final text part supplies it as User Editing Instruction (JSON string).\n- User Aspect Ratio Selection: any concrete positive-integer W:H ratio, or adaptive, supplied in the final text part.\n- Each input image is immediately preceded by a Reference Media text part containing its <Picture N> label and aspect_ratio W:H. The caller has already reduced the image's original display width and height to their exact lowest integer ratio, after EXIF orientation and before preview resizing or padding. No pixel dimensions are supplied in this metadata. The ratio applies only to the immediately following image. The supplied aspect_ratio is the reference image's exact ratio, not necessarily the final target ratio. Use it as given; do not estimate the source ratio from the preview. Determine the final target ratio using the rules below. If the original dimensions are unknown, the metadata says aspect_ratio unavailable.\n- There is no target image. Construct the intended target from the visible source evidence and the instruction; never pretend to have observed a hidden result.\n\n## Response format\nReturn exactly one valid JSON object with exactly these two keys, both with string values:\n{\"expanded_caption\":\"COMPLETE_DESCRIPTION\",\"target_aspect_ratio\":\"W:H\"}\nResolve target_aspect_ratio using the rules below. Put the complete description in expanded_caption as one continuous paragraph with no actual line breaks. All narration, language, Subject, literal-text, and three-part rules below apply to expanded_caption, not to the outer JSON syntax or target_aspect_ratio. Use valid JSON escaping for quotes and backslashes without changing the decoded literal content. Do not output reasoning, a code fence, extra keys, or text outside this JSON object.\n\n## Target aspect ratio\nDetermine target_aspect_ratio before writing expanded_caption. Treat it as a constraint on the intended target image, adapting framing and composition while respecting the requested edit and reference-preservation requirements. Describe any necessary changes under the changed/new-content rules. User Aspect Ratio Selection is part of the user's request. A concrete selection governs conflicting canvas wording in the editing instruction; continue to honor all compatible content constraints. Do not mechanically copy reference metadata or routing explanations into expanded_caption, and do not treat metadata as lettering inside an image.\n\nReading aspect_ratio metadata alone must not create a <Subject N> or change a preservation relationship. However, when source framing, aspect ratio, or composition is independently preserved, changed, or borrowed, identify that source-derived scope under the rules below. If realizing the selected canvas actually changes framing, visible content, placement, or layout within a Subject's defined scope, reflect that change in its relationship and describe only the changed/new consequences in Part 3. Do not call the entire source composition fully preserved while changing it; do not automatically mark every Subject partially preserved merely because the canvas ratio differs. Limit any completion or reframing to what the user's edit and selected canvas require; preserve unrelated content.\n\nRead User Aspect Ratio Selection from the final input part.\n\nSpecified ratio:\nIf a concrete ratio is supplied, copy that exact string to target_aspect_ratio. Any positive-integer W:H ratio is allowed; it is not limited to a preset list. Neither the editing instruction nor a reference image may override it.\n\nAdaptive mode:\nOnly when the selection is adaptive, determine the aspect ratio of the intended finished target image, which may differ from the main reference image. Apply these rules in order:\n\n1. Follow an explicit final target ratio or target dimensions in the editing instruction. Use the requested final geometry rather than source or earlier geometry. Exact numeric geometry takes precedence over generic orientation. When only a final orientation is specified, use 21:9 for ultra-wide, 16:9 for landscape, 1:1 for square, and 9:16 for portrait.\n\n2. Otherwise, select the main reference that supplies the edited base canvas or overall target composition and has a usable aspect_ratio. Prioritize an explicitly designated canvas/composition reference, then the edited base, then an overall composition anchor. Break ties by Picture order and skip missing, invalid, or unavailable ratios. Images used only for identity, objects, color, or style do not determine the canvas.\n\n   Use the main reference's aspect_ratio as the starting ratio. Copy it exactly unless the requested edit requires a different canvas shape. Proportional resizing or changing a subject's size alone does not require changing the ratio.\n\n   When expansion or cropping changes the canvas shape, determine the ratio of the resulting target. If the available information unambiguously determines it, calculate it exactly and reduce it. For relative changes:\n   target_ratio = reference_ratio × width_scale / height_scale,\n   where both scales are relative to the original canvas.\n\n   If the requested shape change does not determine a unique ratio, choose one that fits the intended result while preserving unrelated composition. Adjust it only as needed for the requested edit, not merely for aesthetics.\n\n3. If neither an explicit target requirement nor a usable main reference determines the ratio, output 16:9.\n\nApply these rules to the whole target canvas. Grid row/column counts, individual panels, objects inside the image, and literal text are not whole-canvas ratio requests. A portrait subject or wide-angle lens alone is not a target-orientation request. Do not use a reference board's ratio as the ratio of one panel.\n\nSerialize target_aspect_ratio as two positive integers in W:H form, with no spaces; never output adaptive. Preserve concrete user selections, explicit positive-integer target ratios in the instruction, and unchanged reference ratios exactly. Convert other explicit numeric ratios or target dimensions to their exact reduced integer ratio; reduce newly calculated or chosen ratios to their lowest integer form. Do not snap to preset ratios or clamp to a supported range.\n\nLater descriptive additions must not change the chosen ratio. Pixel-size resolution, 32 alignment, and downstream size fallback are outside this task.\n\n## Interpret the User's Intent Flexibly\nRead the instruction together with the input images and any context it supplies to understand the result the user actually wants. Terse wording, colloquial phrasing, shorthand, and requests such as 'complete this' may require reasonable interpretation and substantive completion. Do not mechanically echo the request, insist that the user prewrite every detail, or treat an illustrative example or category list as the only supported case.\n\nChoose the interpretation best supported by the visible evidence, the request's purpose, and ordinary context. Supply the visual or textual details needed to make that intended result complete and coherent, including directly supporting consequences. Be flexible in how you realize the request, but do not override explicit constraints, change specified literal wording without permission, invent source facts, or expand unrelated content. Keep the boundaries between preserved source content, requested changes, newly authored text, and actual image lettering clear.\n\n## Source-Grounded Content and New Target Content\nTreat source-derived content and instruction-introduced content differently. Source facts describe what is actually visible in the inputs; target changes describe the requested result. Source fidelity does not prohibit an explicitly requested transformation. Preservation is the default only outside requested changes and their necessary consequences.\n\nA) Descriptions of source facts and properties retained in the target must be strictly faithful. Ground identity, facial features, body shape, clothing, objects, colors, materials, text, data, count, pose, layout, scene, camera, lighting, and spatial relationships in the specific input picture where they are visible. Do not invent a source attribute, accessory, logo, word, number, object, or relationship. If something is genuinely illegible or ambiguous, describe that fact neutrally rather than guessing. When an unfamiliar source element lacks a reliable name, identify it using its location and distinctive visible cues rather than guessing its identity or function.\n\nB) Content newly introduced or substantially transformed by the instruction should still be imagined richly, concretely, and coherently. Within the changed or new scope, supply plausible visual specifics that make the requested result recognizable and renderable: materials, shapes, arrangement, depth, perspective, lighting direction, shadows, reflections, contact, overlap, occlusion, atmosphere, and surrounding details that naturally belong to the requested scene. A newly requested background, environment, design, or global style may be described as a complete vivid visual scope because that scope itself is new or changed. Do not make the answer skeletal merely to satisfy a delta format.\n\nWhenever the intended target needs visual content not already determined by a preserved Subject or an explicitly referenced property, reasonably imagine and concretely describe that new content. This applies to any new scene, entity, action, design, composition, or newly visible region, not only viewpoint changes. Treat unspecified details within that new scope as room for coherent creation, not a reason to leave it vague. Keep the invention consistent with the user's intent and remaining reference constraints; do not redesign preserved Subjects or alter properties that the request requires you to match. If a source Subject gains newly visible parts, keep its identity and Subject number; describe the plausible completion in Part 3, never as an observed source fact.\n\nCreative latitude stays inside the requested or directly supporting scope. Do not redesign unrelated source content or import incidental attributes from a donor picture merely to enrich the prose. Ground factual claims in the available reference and instruction; do not invent unsupported specifics and present them as real. Explicitly requested fictional names or illustrative sample data may be authored as fictional or illustrative target content, never as recovered source facts or verified real-world information. Omit unsupported specifics, not the requested writing itself, and do not add unrelated text beyond the requested scope.\n\nComplete every textual deliverable the user asks you to write, supplement, finish, expand, rewrite, or otherwise provide. If exact wording is not supplied, compose the complete final wording yourself; missing wording is not a reason to leave the content unspecified. This applies to any requested textual deliverable, not limited to particular genres or to text inside an image. Requested wording is the deliverable itself, not forbidden restatement of the user's instruction. Do not delegate completion to the downstream model.\n\n## Output contract\nWrite expanded_caption as one continuous plain-text paragraph. Do not add structural headings, labels, bullets, markdown, preamble, reasoning, notes, or meta-commentary to the narration. Literal content may contain such words or symbols when they belong to source text or requested writing. The paragraph has three logical parts, in this order:\n1. natural definitions of the relevant source-derived <Subject N> elements;\n2. one target overview followed by a separate preservation/change relationship clause for every defined Subject;\n3. Changed and Newly Introduced Target Details Only, together with the complete wording of any textual deliverable the user asks you to provide.\n\nDetermine each requested text's destination from the instruction. If it belongs in the image, include its literal wording and describe placement as needed. If it is requested only as a textual response, provide it as text alongside the visual delta; do not turn it into a sign, caption, label, or other image element. Quoting a textual deliverable does not mean that it should be rendered in the image.\n\nComplete all Subject definitions before the target overview. Do not expose structural commands such as 'Define', 'Let', 'Identify', 'Section 1', 'Section 2', or 'Section 3' as narration. Write natural element-first definitions, for example, 'The woman in a red coat in <Picture 1> is <Subject 1>.' Refer to the intended visual result only as 'the target image'. Narrate the result, not the user's instruction or an imperative such as 'generate' or 'please create'; this does not prohibit exact supplied text or requested authored text from containing those words. If no source-derived element is retained or referenced, omit Subject definitions and relationships and begin with the target overview; do not invent a Subject to fill the structure.\n\n## Part 1: Natural Reference Element Identification\nAssign <Subject N> only to source-derived elements that remain visible or traceable in the intended target, or that provide a visible transferred or borrowed property. Every definition must name its source with an explicit <Picture N> and concise visible cues sufficient to uniquely identify the referenced object, region, or property. Add detail only to resolve ambiguity or clarify the reference/edit scope, not to restate its full appearance. Keep the full text/data transcription required below; concise identification must not omit readable content. List source pictures individually; never use ranges or vague phrases such as 'the reference images', 'the previous images', 'all inputs', or 'these pictures'. Use one number for the same convincingly identified person or element across pictures, and keep clearly different identities separate.\n\nWhen only a source property is needed, define that property rather than the entire source object; use the source object or region to locate the property. Give the source object its own Subject only if it is independently used in the target.\n\nChoose Subject granularity by relationship scope, not by a quota. An element that is independently moved, recolored, restyled, reposed, recounted, replaced while remaining traceable, or used as a donor should be independently addressable. Split a part, pose, layout, palette, lighting setup, text block, garment, accessory, held object, or background only when it needs its own preservation/change judgment. Do not mechanically split an ordinary person into face, hair, hands, every garment, and every accessory when those parts move together and have no independent role. Do not force one Subject per picture, and do not define incidental objects merely to make the inventory longer.\n\nJudge preservation over the scope actually defined. A parent Subject cannot be fully preserved if a changed child remains inside its scope, even when the child has a separate number. A genuinely unchanged narrower region or identity may be defined explicitly, but do not call the whole person, object, or scene unchanged while editing part of it. Do not transcribe the same source field again through an overlapping parent or child Subject.\n\nThe identifiable types include the following when independently relevant:\n- Entity type: a person, animal, object, creature, garment, accessory, prop, vehicle, furniture item, or other concrete entity.\n- Scene/background type: a room, landscape, street, stage, tabletop, architecture, or other environment preserved, changed, or used by the target.\n- Attribute/style type: a source-derived texture, material language, visual medium, design style, typography, border treatment, or other transferable visible quality.\n- Shared-element type: one convincingly identical visual element shown across several pictures; define it once and list every source picture.\n- Multi-form reference type: one source element used in several intended target forms, such as a physical figure, package artwork, screen render, or line drawing; define it once and distinguish the forms later.\n- Data-bearing chart/table/plot/document type: do not collapse readable data into one undifferentiated Subject. Identify the source-derived series, bars, lines, slices, columns, labeled groups, axes, titles, legends, headers, fields, and readable cells needed to preserve or edit the visible data faithfully.\n- Dense/multi-line text type: identify every clearly readable source-derived line or field in a document, slide, poster, menu, search interface, caption block, subtitle group, or UI region. Either define lines separately or define one coherent block while transcribing its lines literally and in order; do not replace readable content with a vague 'text' Subject.\n- Text/watermark type: identify an isolated watermark, brand text, subtitle, label, sign, logo text, or other short readable element, and state its clearly readable literal content once in Part 1. Later use its Subject token unless that text is intended to change.\n- Part/region type: hair, a sleeve, a wheel, a screen area, a poster corner, a body region, a panel, or another local part that needs its own relationship judgment.\n- Spatial-layout/composition type: framing, aspect ratio, grid or split-screen geometry, panel order, placement scheme, image-text hierarchy, or whitespace when the arrangement itself is preserved, changed, or borrowed.\n- Color/palette/lighting type: a source color, palette, color grade, illumination direction, warmth, contrast, shadow design, or lighting setup when color or light itself is independently referenced. Locate the specific source object or region; for example, 'The color of the cup's body in <Picture 1> is <Subject 1>.'\n- Pose/action type: a source-derived posture, gesture, gaze, body orientation, action, or interaction that is preserved, changed, or transferred.\n- Logo/symbol/icon type: a graphical emblem, symbol, UI icon, or pictographic mark; handle any readable words under the text rules.\n- Embedded/thumbnail type: a complete or cropped source picture embedded in the target as a panel or thumbnail.\n- Partial-crop type: a target crop or zoom whose visible content comes from a specific region of a source picture.\n\nThese fifteen types form the complete supported taxonomy, not a per-example checklist or quota. Use every applicable type supported by the input images and the instruction when it needs an independent relationship judgment, but never create an inapplicable Subject merely to instantiate a type. The more specific part/layout/light/pose/icon types exist to prevent an independently changed unit from being buried inside an oversized Subject, not to force mechanical over-splitting.\n\nBrand-new target-only content has no <Subject N>. A source element explicitly removed or wholly replaced and not otherwise reused also has no Subject number; if necessary, identify it once with its <Picture N> in the target overview, then describe the positive completed region in Part 3. Editing or translating a source text field is a traceable change to that field, not removal of the entire element: retain its Subject when needed to locate the edit, record its original wording in Part 1, and give its full resulting wording in Part 3. Every defined Subject must receive a relationship later and must not be defined merely to say that it is absent, removed, unused, or forgotten.\n\nReadable source text and data require special care. For every defined source-derived chart, table, document, UI, text block, or isolated text element, transcribe exactly once in Part 1 every clearly readable source-state line, character, label, value, axis title, axis tick, legend entry, table header, field, and readable cell, including a source literal that the instruction intends to change. Preserve the original language, script, grouping, and reading order. Do not omit a clearly readable value merely because it is unchanged or peripheral to the main edit. Never guess hidden, cropped-away, or illegible source text.\n\nFor grouped or clustered bars, radar charts, multi-panel plots, and many-point plots, enumerate every clearly readable value rather than summarizing the display. Check counts only when the chart's visible semantics require them: grouped bars against the legend, radar values against the axes, and mutually exclusive percentage parts of a complete whole against approximately 100 percent. Do not impose those assumptions on unrelated chart types or incomplete, overlapping, or multi-select categories. If the source itself contains a genuine inconsistency, missing series, or illegible value, record only the visible evidence or the uncertainty in Part 1; never silently normalize or repair the source record. An explicitly requested correction belongs in the target changes and must use supplied or derivable values, not guessed real data. Exhaustive transcription does not require one Subject per value or line: a coherent series, row, field group, or text block may remain one Subject when its literals are fully enumerated and it does not need separate relationship judgments. These checks apply only where the relevant marks and values are actually readable, and they do not require turning an ordinary non-data image into a chart inventory.\n\n## Part 2: Target Overview and Reference Relationships\nAfter the definitions, write one natural sentence beginning with 'The target image'. Foreground the primary intended changed or new state and describe the overall result using the defined Subject tokens where appropriate. Target-only new content remains unnumbered. The overview may summarize several requested changes, but it should remain an overview rather than a second detailed caption.\n\nThen give every defined Subject exactly one whole-subject relationship in its own independent clause. Give each Subject its own relationship clause; do not combine several Subjects into one relationship statement, even when they share the same degree. Keep the prose natural without imposing a fixed sentence length, a fixed Subject count, or a target frequency for any relationship type. Use these four relationships:\n\n- Fully preserved: use only when the whole Subject is unchanged in identity, appearance, count, pose or state, position, topology, and intended target role. Write only the short standalone clause '<Subject N> is fully preserved.' Give each fully-preserved Subject its own sentence; never merge multiple Subjects into one fully-preserved clause. Do not append a checklist, explanation, source citation, or visual description to a fully-preserved clause.\n- Partially preserved: use when the Subject remains traceable but at least one relevant property changes. State the retained categories needed to anchor identity and the changed categories, including a concrete before-to-after relationship when the source and instruction determine it. Do not exhaustively re-render retained appearance.\n- Attribute transfer: use when a specific source-derived property is directly reused or matched on a target carrier. Name the source Subject, the transferred property, and the target carrier. Transfer only the assigned property, not unrelated donor attributes.\n- Weak reference: use when the source guides a general style, palette, atmosphere, composition principle, or similar quality without requiring a specific property to be matched exactly. Name the borrowed quality and make clear what the new design may vary. Choose by the requested use of the reference, not merely by whether the property is called a color, style, or palette.\n\nAttribute-transfer example: the user wants the coat in <Picture 2> to match the cup's body color in <Picture 1>. Part 1 defines that color as <Subject 1> and the coat as <Subject 2>. The relationship clauses can be '<Subject 1> supplies the exact color transferred to <Subject 2>. <Subject 2> is partially preserved; its color changes while its cut and material remain.' The cup's shape and material are not transferred.\n\nWeak-reference example: the user wants a new abstract composition inspired by a landscape's palette, without copying it exactly. Part 1 defines the landscape's palette as <Subject 1>. The relationship clause can be '<Subject 1> serves as a weak palette reference for the new abstract composition; related colors are redistributed among geometric blocks, with freely adapted proportions and placement.' The new composition has no Subject number. These examples illustrate the distinction, not a restriction of either relationship to color tasks.\n\nFor a Subject used in several target forms or instances, judge the intended uses together. A mix of unchanged and transformed or additional instances is partially preserved overall; distinguish those uses within that Subject's own relationship statement. Do not call the entire Subject fully preserved just because one instance is unchanged. If only a property is borrowed, use the appropriate transfer or weak-reference relationship. If a donor object remains unchanged while its color or another property is transferred elsewhere, define that property separately so the object's preservation and the property's transfer have distinct scopes.\n\nThe relationship must agree with the described target. If a requested change or its necessary integration changes a Subject's position, orientation, count, topology, role, pose, expression, clothing, color, material, lighting, state, or other property within its defined scope, the whole Subject is not fully preserved. If later changed-detail prose genuinely needs to describe a change to a Subject, classify that Subject as partially preserved instead. A source carrier may remain fully preserved while one of its properties is transferred outward; do not mark the carrier partial unless the carrier itself changes. Conversely, new shadows, reflections, occlusion, or relighting on the carrier count as changes where they affect its defined appearance; do not hide them behind a fully-preserved judgment.\n\nFor partially preserved chart, table, document, UI, and text-block Subjects, state which categories are retained and which change. For a fully preserved chart or text Subject, use only the standard fully-preserved sentence, not an extra checklist. Keep relationship statements compact: use Part 1 as the source-side record and leave complete changed or newly authored wording and values for Part 3. Do not duplicate old literals in a before-to-after phrase or new literals in both the relationship and detail blocks.\n\nTreat unmentioned source-derived content as stable by default, but do not let that conservative baseline suppress the requested imagination. The changed/new target scope may still be rich. Direct semantic, spatial, physical, compositional, environmental, camera, and lighting consequences of the requested change are part of the changed scope and may be described.\n\n## Part 3: Changed and Newly Introduced Target Details Only\nThis final logical block is a richly rendered visual delta, not a standalone T2I re-caption of the whole target image. Also supply the requested textual deliverables. For visual description, cover only:\n- the concrete final appearance of source-derived attributes that actually change;\n- target-only people, objects, text regions, environments, panels, charts, layouts, effects, or other content introduced by the instruction;\n- the newly exposed or positively completed surface or space left by a removal, or the positive new occupant of a replacement;\n- plausible supporting details inside the changed/new scope that make it visually recognizable and coherent;\n- direct integration consequences involving scale, orientation, contact, overlap, occlusion, perspective, depth, shadow, reflection, lighting, material response, anatomy, support, camera framing, or composition.\n\nThis changed/new-only rule does not impose terse writing. A newly introduced restaurant, fantasy landscape, product design, comic panel, interface, lighting scheme, or global style may be described vividly and comprehensively because that entire requested scope is new or changed. Likewise, a transformed garment, pose, object, chart, or layout may receive enough concrete detail to be rendered reliably. Be imaginative where the instruction creates room for imagination; simply keep that imagination inside the changed/new scope instead of using it to re-caption preserved source content.\n\nStrict non-repetition rules:\n- After a Subject is classified as fully preserved, never visually describe that Subject again. A later sentence may use only the bare <Subject N> token as the minimum spatial or interaction anchor needed to locate changed or new content, for example, 'A new luminous pearl rests beside <Subject 2>.' Do not attach an adjective, color, material, shape, part, pose, position, role, or other appearance detail to that preserved Subject.\n- For a partially preserved Subject, Part 3 describes only its changed attributes and their concrete intended final appearance. Do not repeat the detailed appearance of retained identity, clothing, body, object, scene, or layout attributes already grounded in Part 1 or named as retained in Part 2.\n- For attribute transfer or weak reference, describe only how the transferred or borrowed quality is realized on the intended target carrier. Do not import or re-render unrelated donor properties.\n- Do not repeat fully preserved source text or data as visual description; use the Part 1 record and bare <Subject N> references. If the user separately requests a complete transcription or quotation as a textual deliverable, write that deliverable in full even when it repeats source wording; this is required output content, not redundant visual description.\n- Write every changed or target-only text/data field and requested textual deliverable in full. Use exact supplied or deterministically derived results; preserve every supplied character within each line, including punctuation, capitalization, order, and language, unless the user explicitly requests translation or another textual transformation, in which case write its actual result. If a line is edited, write the complete resulting line, not merely the changed word or numeric difference; do not recopy separate unaffected lines as visual description. Never substitute a <Subject N> token, a description or writing instruction, placeholders, omitted middles, 'etc.', 'and so on', or ellipses for requested content; preserve an ellipsis that belongs to supplied literal text.\n- Do not describe an unchanged background, person, object, pose, camera, light, style, or image-quality property merely to make the paragraph resemble a complete T2I caption.\n- If no changed or newly introduced detail remains beyond the overview and relationship statements and no requested textual deliverable remains to be supplied, stop. Never pad the output with preserved appearance.\n\nFor example, for a reference showing a lakeside path and hills, a request to write a scenic introduction requires actual copy such as '沿着湖畔步道缓缓前行，欣赏湖水与远山相映的景色，在悠闲漫步中感受旅途的宁静。', not 'a paragraph introducing the attraction'. This illustrates completion and is not a restriction to travel copy or permission to reuse these words in unrelated tasks.\n\nCorrect pattern: 'The black horse in <Picture 1> is <Subject 1>. The target image shows <Subject 1> beside a newly added luminous pearl. <Subject 1> is fully preserved. The pearl emits a cool glow onto the ground beside <Subject 1>.' The final sentence describes the new pearl and its integration while using the bare Subject only as an anchor.\n\nIncorrect pattern: '<Subject 1> is fully preserved. <Subject 1> is a muscular black horse with segmented dark armor and a long mane.' The second sentence is a T2I-style re-caption of preserved content and must be omitted.\n\nCorrect partial pattern: '<Subject 1> is partially preserved; its identity and body armor remain, while its bare head changes to an ornate helmet. The new helmet has a pointed silver crest, a red plume, and shadows that follow the existing head orientation.' Do not subsequently re-describe the retained face, body, or armor.\n\nFor exact reference-color or palette matching, use the defined color or palette <Subject N> to specify where it is applied on the target. The visible reference, not an approximate color name, determines the color; do not replace it with inferred color names or guessed RGB/HEX values. Honor explicit user-supplied colors or values, and do not transfer unrelated donor material or lighting unless requested.\n\nWhen describing a grid, multi-panel image, storyboard, table-like arrangement, or other row-and-column layout, state the row count and column count explicitly, either in words such as '2 rows and 3 columns' or with labeled multiplication notation such as '2 x 3 (rows x columns)' or '3 x 2 (columns x rows)'. Multiplication notation is allowed; specify which number denotes rows and which denotes columns. Do not use an unlabeled '2 x 3' or '2×3' alone. When relevant, describe the cell contents in top-to-bottom row order and left-to-right column order, and name which row and column contains each changed or newly introduced element.\n\nFor uneven rows, merged cells, or a freeform composition, describe the actual arrangement directly, such as 'the top row has three panels and the bottom row has two', with positions and spans as needed; do not impose a rectangular grid that is not intended. If shorthand in the instruction is ambiguous, use the reference and context to interpret the intended arrangement and express the chosen row/column meaning explicitly. Record relevant unchanged source layout in the Subject definitions without repeating it after a fully-preserved judgment; Part 3 describes changed or new layout only. This wording rule does not authorize altering supplied literal text containing dimension notation.\n\n## Final language and self-check\nWrite all descriptive and relationship prose in fluent English, regardless of the language of the user instruction. For newly authored requested copy, use the user's requested language, or otherwise the language of the user's request. Keep literal text and completed requested textual deliverables in single quotes to distinguish them from the surrounding English visual description and relationship prose, preserving apostrophes and other punctuation inside the literal text. Represent multi-line literal content inline as separate quoted lines in reading order, describing the intended line breaks or layout in prose rather than inserting actual newline characters into the response.\n\nUse objective, concrete visual language. Richness should come from precise changed/new appearance and coherent integration, not from repetition. Describe visible expressions rather than asserting unobservable thoughts or feelings. Preserve expressions outside the changed scope; expressions for newly introduced or transformed people may be reasonably imagined within the request. Write reference markers <Picture N> and <Subject N> directly without backticks; do not rewrite a literal text string merely because it contains similar words or symbols.\n\nBefore answering, verify:\n- every source visual fact is visible in a named <Picture N>, and every intended change is supported by the editing instruction or User Aspect Ratio Selection and their necessary consequences; reference aspect ratios come only from the supplied metadata;\n- the output still imagines instruction-introduced content richly enough to be recognizable and renderable;\n- every Subject definition is concise but unambiguous about its source and reference scope, without unnecessary appearance detail or missing required text/data;\n- every Subject is naturally defined before use and has its own independent relationship clause, never merged with another Subject;\n- every fully preserved Subject has its own exact '<Subject N> is fully preserved.' sentence and receives no later visual re-description;\n- no fully preserved parent contains an edited child, and mixed target forms or integration effects are reflected in the relationship;\n- every partially preserved Subject repeats no detailed retained appearance in Part 3;\n- donor attributes do not leak beyond the property requested;\n- target-only and removed-only content has no Subject number;\n- every applicable reference-element type is supported without treating the taxonomy as a per-example quota;\n- source text/data is recorded once in Part 1 without guessing, repairing, or translating the source record;\n- all requested target text and textual deliverables are complete and literal, with source repetition only for an explicitly requested transcription or quotation;\n- each textual deliverable has the requested image or text-only destination;\n- Part 3's visual description contains changed/new content and direct integration only, with no whole-frame T2I padding;\n- all non-literal descriptive and relationship prose is English, while quoted source, user-specified, or newly authored requested text uses its required language and script;\n- any grid layout described makes the row count and column count unambiguous, either in words or with explicitly labeled multiplication notation, with positions or uneven-row structure clarified where needed;\n- expanded_caption is one fluent, complete paragraph with no structural meta-language in the narration; multi-line literals retain their wording, reading order, and intended line boundaries through inline quoted lines;\n- target_aspect_ratio copies any concrete user selection exactly; in adaptive mode, it preserves the main reference ratio when no canvas-shape change is required and reflects any requested expansion or cropping; expanded_caption and its preservation relationships agree with the final canvas;\n- the final answer is a valid JSON object containing only the two string fields target_aspect_ratio and expanded_caption.\n\nOutput only the required two-field JSON object.\nUser input: {input text}\noutput_text:\n"
+      }
+    },
+    {
+      "id": 40,
+      "type": "StringReplace",
+      "pos": [
+        -130,
+        2270
+      ],
+      "size": [
+        400,
+        200
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "string",
+          "type": "STRING",
+          "widget": {
+            "name": "string"
+          },
+          "link": 58
+        },
+        {
+          "name": "replace",
+          "type": "STRING",
+          "widget": {
+            "name": "replace"
+          },
+          "link": 70
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            69
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StringReplace"
+      },
+      "widgets_values": [
+        "",
+        "{input text}",
+        ""
+      ],
+      "widgets_values_named": {
+        "string": "",
+        "find": "{input text}",
+        "replace": ""
+      }
+    },
+    {
+      "id": 41,
+      "type": "ComfySwitchNode",
+      "pos": [
+        600,
+        1660
+      ],
+      "size": [
+        270,
+        80
+      ],
+      "flags": {},
+      "order": 19,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "on_false",
+          "shape": 7,
+          "type": "STRING",
+          "link": 62
+        },
+        {
+          "name": "on_true",
+          "shape": 7,
+          "type": "STRING",
+          "link": 66
+        },
+        {
+          "name": "switch",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "switch"
+          },
+          "link": 92
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "STRING",
+          "links": [
+            53
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ComfySwitchNode"
+      },
+      "widgets_values": [
+        true
+      ],
+      "widgets_values_named": {
+        "switch": true
+      }
+    },
+    {
+      "id": 42,
+      "type": "VAEDecode",
+      "pos": [
+        1200,
+        0
+      ],
+      "size": [
+        230,
+        60
+      ],
+      "flags": {},
+      "order": 24,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 59
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 60
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            61
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
+      "id": 43,
+      "type": "PrimitiveStringMultiline",
+      "pos": [
+        -460,
+        670
+      ],
+      "size": [
+        420,
+        570
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            62,
+            70
+          ]
+        }
+      ],
+      "title": "Text (user_prompt)",
+      "properties": {
+        "Node name for S&R": "PrimitiveStringMultiline"
+      },
+      "widgets_values": [
+        "Replace the vintage yellow taxi in <Picture 1> with a pastel pink ice-cream truck with a scalloped awning and a glowing service window, sitting in the same side profile at the curb."
+      ],
+      "widgets_values_named": {
+        "value": "Replace the vintage yellow taxi in <Picture 1> with a pastel pink ice-cream truck with a scalloped awning and a glowing service window, sitting in the same side profile at the curb."
+      },
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 44,
+      "type": "JsonExtractString",
+      "pos": [
+        310,
+        2250
+      ],
+      "size": [
+        410,
+        200
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "json_string",
+          "type": "STRING",
+          "widget": {
+            "name": "json_string"
+          },
+          "link": 65
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            66
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "JsonExtractString"
+      },
+      "widgets_values": [
+        "",
+        "expanded_caption"
+      ],
+      "widgets_values_named": {
+        "json_string": "",
+        "key": "expanded_caption"
+      }
+    },
+    {
+      "id": 45,
+      "type": "LoadImage",
+      "pos": [
+        50,
+        680
+      ],
+      "size": [
+        420,
+        390
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            87
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "vintage_yellow_taxi.png",
+        "image"
+      ],
+      "widgets_values_named": {
+        "image": "vintage_yellow_taxi.png",
+        "upload": "image"
+      }
+    },
+    {
+      "id": 48,
+      "type": "ResizeImageMaskNode",
+      "pos": [
+        520,
+        680
+      ],
+      "size": [
+        270,
+        110
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "input",
+          "type": "IMAGE,MASK",
+          "link": 88
+        }
+      ],
+      "outputs": [
+        {
+          "name": "resized",
+          "type": "IMAGE",
+          "links": [
+            77,
+            80,
+            81,
+            95
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ResizeImageMaskNode"
+      },
+      "widgets_values": [
+        "scale to multiple",
+        32,
+        "area"
+      ],
+      "widgets_values_named": {
+        "resize_type": "scale to multiple",
+        "resize_type.multiple": 32,
+        "scale_method": "area"
+      }
+    },
+    {
+      "id": 50,
+      "type": "GetImageSize",
+      "pos": [
+        870,
+        680
+      ],
+      "size": [
+        140,
+        70
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 77
+        }
+      ],
+      "outputs": [
+        {
+          "name": "width",
+          "type": "INT",
+          "links": [
+            78
+          ]
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "links": [
+            79
+          ]
+        },
+        {
+          "name": "batch_size",
+          "type": "INT",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "GetImageSize"
+      }
+    },
+    {
+      "id": 55,
+      "type": "MarkdownNote",
+      "pos": [
+        -850,
+        1600
+      ],
+      "size": [
+        330,
+        140
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Note: PE model",
+      "properties": {},
+      "widgets_values": [
+        "For MiniMax H3 Image's PE model it’s not tied to any specific model\n\n[MiniMax H3 Image PE](https://huggingface.co/MiniMaxAI/MiniMax-H3-Image-PE) repo is using `Qwen3.8-27B, FP4` and we are using Qwen3.5 9B in this workflow"
+      ],
+      "widgets_values_named": {
+        "text": "For MiniMax H3 Image's PE model it’s not tied to any specific model\n\n[MiniMax H3 Image PE](https://huggingface.co/MiniMaxAI/MiniMax-H3-Image-PE) repo is using `Qwen3.8-27B, FP4` and we are using Qwen3.5 9B in this workflow"
+      },
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 56,
+      "type": "ResizeImageMaskNode",
+      "pos": [
+        520,
+        860
+      ],
+      "size": [
+        270,
+        110
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "input",
+          "type": "IMAGE,MASK",
+          "link": 87
+        }
+      ],
+      "outputs": [
+        {
+          "name": "resized",
+          "type": "IMAGE",
+          "links": [
+            88
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ResizeImageMaskNode"
+      },
+      "widgets_values": [
+        "scale total pixels",
+        4,
+        "area"
+      ],
+      "widgets_values_named": {
+        "resize_type": "scale total pixels",
+        "resize_type.megapixels": 4,
+        "scale_method": "area"
+      }
+    },
+    {
+      "id": 59,
+      "type": "MarkdownNote",
+      "pos": [
+        1510,
+        1580
+      ],
+      "size": [
+        210,
+        90
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Note",
+      "properties": {},
+      "widgets_values": [
+        "Hover on the `prompt output` or `right click -> show link` to restore the link"
+      ],
+      "widgets_values_named": {
+        "text": "Hover on the `prompt output` or `right click -> show link` to restore the link"
+      },
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 61,
+      "type": "PrimitiveBoolean",
+      "pos": [
+        -450,
+        1350
+      ],
+      "size": [
+        410,
+        70
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "BOOLEAN",
+          "type": "BOOLEAN",
+          "links": [
+            92
+          ]
+        }
+      ],
+      "title": "Boolean (Enable PE?)",
+      "properties": {
+        "Node name for S&R": "PrimitiveBoolean"
+      },
+      "widgets_values": [
+        true
+      ],
+      "widgets_values_named": {
+        "value": true
+      },
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 62,
+      "type": "ImageCompare",
+      "pos": [
+        2910,
+        50
+      ],
+      "size": [
+        1180,
+        990
+      ],
+      "flags": {},
+      "order": 26,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image_a",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 95
+        },
+        {
+          "name": "image_b",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 94
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "ImageCompare"
+      },
+      "widgets_values": [],
+      "widgets_values_named": {}
+    },
+    {
+      "id": 101,
+      "type": "LoadImage",
+      "title": "Reference image 2",
+      "pos": [
+        -3400,
+        560
+      ],
+      "size": [
+        420,
+        390
+      ],
+      "flags": {},
+      "order": 27,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            96,
+            97
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "vintage_yellow_taxi.png",
+        "image"
+      ]
+    },
+    {
+      "id": 102,
+      "type": "LoadImage",
+      "title": "Reference image 3",
+      "pos": [
+        -2950,
+        560
+      ],
+      "size": [
+        420,
+        390
+      ],
+      "flags": {},
+      "order": 28,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            98,
+            99
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "vintage_yellow_taxi.png",
+        "image"
+      ]
+    },
+    {
+      "id": 103,
+      "type": "LoadImage",
+      "title": "Reference image 4",
+      "pos": [
+        -2500,
+        560
+      ],
+      "size": [
+        420,
+        390
+      ],
+      "flags": {},
+      "order": 29,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            100,
+            101
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "vintage_yellow_taxi.png",
+        "image"
+      ]
+    },
+    {
+      "id": 104,
+      "type": "LoadImage",
+      "title": "Reference image 5",
+      "pos": [
+        -2050,
+        560
+      ],
+      "size": [
+        420,
+        390
+      ],
+      "flags": {},
+      "order": 30,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            102,
+            103
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "vintage_yellow_taxi.png",
+        "image"
+      ]
+    },
+    {
+      "id": 105,
+      "type": "LoadImage",
+      "title": "Reference image 6",
+      "pos": [
+        -1600,
+        560
+      ],
+      "size": [
+        420,
+        390
+      ],
+      "flags": {},
+      "order": 31,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            104,
+            105
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "vintage_yellow_taxi.png",
+        "image"
+      ]
+    },
+    {
+      "id": 106,
+      "type": "LoadImage",
+      "title": "Reference image 7",
+      "pos": [
+        -3400,
+        1000
+      ],
+      "size": [
+        420,
+        390
+      ],
+      "flags": {},
+      "order": 32,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            106,
+            107
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "vintage_yellow_taxi.png",
+        "image"
+      ]
+    },
+    {
+      "id": 107,
+      "type": "LoadImage",
+      "title": "Reference image 8",
+      "pos": [
+        -2950,
+        1000
+      ],
+      "size": [
+        420,
+        390
+      ],
+      "flags": {},
+      "order": 33,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            108,
+            109
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "vintage_yellow_taxi.png",
+        "image"
+      ]
+    },
+    {
+      "id": 108,
+      "type": "LoadImage",
+      "title": "Reference image 9",
+      "pos": [
+        -2500,
+        1000
+      ],
+      "size": [
+        420,
+        390
+      ],
+      "flags": {},
+      "order": 34,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            110,
+            111
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "vintage_yellow_taxi.png",
+        "image"
+      ]
+    },
+    {
+      "id": 109,
+      "type": "LoadImage",
+      "title": "Reference image 10",
+      "pos": [
+        -2050,
+        1000
+      ],
+      "size": [
+        420,
+        390
+      ],
+      "flags": {},
+      "order": 35,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            112,
+            113
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "vintage_yellow_taxi.png",
+        "image"
+      ]
+    },
+    {
+      "id": 110,
+      "type": "LoadImage",
+      "title": "Reference image 11",
+      "pos": [
+        -1600,
+        1000
+      ],
+      "size": [
+        420,
+        390
+      ],
+      "flags": {},
+      "order": 36,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            114,
+            115
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "vintage_yellow_taxi.png",
+        "image"
+      ]
+    },
+    {
+      "id": 111,
+      "type": "LoadImage",
+      "title": "Reference image 12",
+      "pos": [
+        -3400,
+        1440
+      ],
+      "size": [
+        420,
+        390
+      ],
+      "flags": {},
+      "order": 37,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            116,
+            117
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "vintage_yellow_taxi.png",
+        "image"
+      ]
+    },
+    {
+      "id": 112,
+      "type": "LoadImage",
+      "title": "Reference image 13",
+      "pos": [
+        -2950,
+        1440
+      ],
+      "size": [
+        420,
+        390
+      ],
+      "flags": {},
+      "order": 38,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            118,
+            119
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "vintage_yellow_taxi.png",
+        "image"
+      ]
+    },
+    {
+      "id": 113,
+      "type": "LoadImage",
+      "title": "Reference image 14",
+      "pos": [
+        -2500,
+        1440
+      ],
+      "size": [
+        420,
+        390
+      ],
+      "flags": {},
+      "order": 39,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            120,
+            121
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "vintage_yellow_taxi.png",
+        "image"
+      ]
+    },
+    {
+      "id": 114,
+      "type": "LoadImage",
+      "title": "Reference image 15",
+      "pos": [
+        -2050,
+        1440
+      ],
+      "size": [
+        420,
+        390
+      ],
+      "flags": {},
+      "order": 40,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            122,
+            123
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "vintage_yellow_taxi.png",
+        "image"
+      ]
+    },
+    {
+      "id": 115,
+      "type": "LoadImage",
+      "title": "Reference image 16",
+      "pos": [
+        -1600,
+        1440
+      ],
+      "size": [
+        420,
+        390
+      ],
+      "flags": {},
+      "order": 41,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            124,
+            125
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "vintage_yellow_taxi.png",
+        "image"
+      ]
+    }
+  ],
+  "links": [
+    [
+      52,
+      32,
+      0,
+      33,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      53,
+      41,
+      0,
+      37,
+      0,
+      "*"
+    ],
+    [
+      54,
+      29,
+      0,
+      38,
+      0,
+      "MODEL"
+    ],
+    [
+      55,
+      32,
+      0,
+      38,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      56,
+      33,
+      0,
+      38,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      57,
+      32,
+      1,
+      38,
+      3,
+      "LATENT"
+    ],
+    [
+      58,
+      39,
+      0,
+      40,
+      0,
+      "STRING"
+    ],
+    [
+      59,
+      38,
+      0,
+      42,
+      0,
+      "LATENT"
+    ],
+    [
+      60,
+      31,
+      0,
+      42,
+      1,
+      "VAE"
+    ],
+    [
+      61,
+      42,
+      0,
+      9,
+      0,
+      "IMAGE"
+    ],
+    [
+      62,
+      43,
+      0,
+      41,
+      0,
+      "STRING"
+    ],
+    [
+      65,
+      34,
+      0,
+      44,
+      0,
+      "STRING"
+    ],
+    [
+      66,
+      44,
+      0,
+      41,
+      1,
+      "STRING"
+    ],
+    [
+      77,
+      48,
+      0,
+      50,
+      0,
+      "IMAGE"
+    ],
+    [
+      92,
+      61,
+      0,
+      41,
+      2,
+      "BOOLEAN"
+    ],
+    [
+      94,
+      9,
+      0,
+      62,
+      1,
+      "IMAGE"
+    ],
+    [
+      95,
+      48,
+      0,
+      62,
+      0,
+      "IMAGE"
+    ],
+    [
+      70,
+      43,
+      0,
+      40,
+      1,
+      "STRING"
+    ],
+    [
+      49,
+      30,
+      0,
+      32,
+      0,
+      "CLIP"
+    ],
+    [
+      50,
+      31,
+      0,
+      32,
+      1,
+      "VAE"
+    ],
+    [
+      80,
+      48,
+      0,
+      32,
+      2,
+      "IMAGE"
+    ],
+    [
+      67,
+      35,
+      0,
+      34,
+      0,
+      "CLIP"
+    ],
+    [
+      81,
+      48,
+      0,
+      34,
+      1,
+      "IMAGE"
+    ],
+    [
+      68,
+      36,
+      0,
+      34,
+      21,
+      "STRING"
+    ],
+    [
+      69,
+      40,
+      0,
+      34,
+      22,
+      "STRING"
+    ],
+    [
+      88,
+      56,
+      0,
+      48,
+      0,
+      "IMAGE"
+    ],
+    [
+      87,
+      45,
+      0,
+      56,
+      0,
+      "IMAGE"
+    ],
+    [
+      89,
+      37,
+      0,
+      32,
+      18,
+      "STRING"
+    ],
+    [
+      78,
+      50,
+      0,
+      32,
+      19,
+      "INT"
+    ],
+    [
+      79,
+      50,
+      1,
+      32,
+      20,
+      "INT"
+    ],
+    [
+      96,
+      101,
+      0,
+      32,
+      3,
+      "IMAGE"
+    ],
+    [
+      97,
+      101,
+      0,
+      34,
+      2,
+      "IMAGE"
+    ],
+    [
+      98,
+      102,
+      0,
+      32,
+      4,
+      "IMAGE"
+    ],
+    [
+      99,
+      102,
+      0,
+      34,
+      3,
+      "IMAGE"
+    ],
+    [
+      100,
+      103,
+      0,
+      32,
+      5,
+      "IMAGE"
+    ],
+    [
+      101,
+      103,
+      0,
+      34,
+      4,
+      "IMAGE"
+    ],
+    [
+      102,
+      104,
+      0,
+      32,
+      6,
+      "IMAGE"
+    ],
+    [
+      103,
+      104,
+      0,
+      34,
+      5,
+      "IMAGE"
+    ],
+    [
+      104,
+      105,
+      0,
+      32,
+      7,
+      "IMAGE"
+    ],
+    [
+      105,
+      105,
+      0,
+      34,
+      6,
+      "IMAGE"
+    ],
+    [
+      106,
+      106,
+      0,
+      32,
+      8,
+      "IMAGE"
+    ],
+    [
+      107,
+      106,
+      0,
+      34,
+      7,
+      "IMAGE"
+    ],
+    [
+      108,
+      107,
+      0,
+      32,
+      9,
+      "IMAGE"
+    ],
+    [
+      109,
+      107,
+      0,
+      34,
+      8,
+      "IMAGE"
+    ],
+    [
+      110,
+      108,
+      0,
+      32,
+      10,
+      "IMAGE"
+    ],
+    [
+      111,
+      108,
+      0,
+      34,
+      9,
+      "IMAGE"
+    ],
+    [
+      112,
+      109,
+      0,
+      32,
+      11,
+      "IMAGE"
+    ],
+    [
+      113,
+      109,
+      0,
+      34,
+      10,
+      "IMAGE"
+    ],
+    [
+      114,
+      110,
+      0,
+      32,
+      12,
+      "IMAGE"
+    ],
+    [
+      115,
+      110,
+      0,
+      34,
+      11,
+      "IMAGE"
+    ],
+    [
+      116,
+      111,
+      0,
+      32,
+      13,
+      "IMAGE"
+    ],
+    [
+      117,
+      111,
+      0,
+      34,
+      12,
+      "IMAGE"
+    ],
+    [
+      118,
+      112,
+      0,
+      32,
+      14,
+      "IMAGE"
+    ],
+    [
+      119,
+      112,
+      0,
+      34,
+      13,
+      "IMAGE"
+    ],
+    [
+      120,
+      113,
+      0,
+      32,
+      15,
+      "IMAGE"
+    ],
+    [
+      121,
+      113,
+      0,
+      34,
+      14,
+      "IMAGE"
+    ],
+    [
+      122,
+      114,
+      0,
+      32,
+      16,
+      "IMAGE"
+    ],
+    [
+      123,
+      114,
+      0,
+      34,
+      15,
+      "IMAGE"
+    ],
+    [
+      124,
+      115,
+      0,
+      32,
+      17,
+      "IMAGE"
+    ],
+    [
+      125,
+      115,
+      0,
+      34,
+      16,
+      "IMAGE"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 6,
+      "title": "Models",
+      "bounding": [
+        -490,
+        -90,
+        650,
+        620
+      ],
+      "color": "#A88",
+      "flags": {}
+    },
+    {
+      "id": 7,
+      "title": "Conditioning",
+      "bounding": [
+        190,
+        -90,
+        580,
+        620
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 8,
+      "title": "Sampling & Decoding",
+      "bounding": [
+        800,
+        -90,
+        670,
+        620
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 9,
+      "title": "Prompt Enhancer",
+      "bounding": [
+        -480,
+        1530,
+        1950,
+        900
+      ],
+      "color": "#444",
+      "flags": {}
+    },
+    {
+      "id": 10,
+      "title": "User Inputs",
+      "bounding": [
+        -480,
+        560,
+        1950,
+        930
+      ],
+      "color": "#A88",
+      "flags": {}
+    },
+    {
+      "id": 11,
+      "title": "Output",
+      "bounding": [
+        1500,
+        -90,
+        2620,
+        1580
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 12,
+      "title": "Reference images 2-16",
+      "bounding": [
+        -3430,
+        480,
+        2290,
+        1380
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.39103196198742995,
+      "offset": [
+        1811.3695155013972,
+        655.5717246840129
+      ]
+    },
+    "frontendVersion": "1.58.5",
+    "linkPresentation": {
+      "89": {
+        "hidden": true,
+        "label": "prompt output"
+      }
+    }
+  },
+  "version": 0.4
+}

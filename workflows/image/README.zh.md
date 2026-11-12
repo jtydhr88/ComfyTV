@@ -32,6 +32,7 @@
 - **Qwen Image 2.1 Multi-Ref Edit**(`qwen-image-2.1-multi-ref-edit.json` + `_preset.json`) , 最多 4 张图的指令编辑:images[0] 是编辑目标(输出尺寸跟它),images[1..3] 是参考图。提示词里直接用 stage 的 `@image_1`..`@image_4` 提及(打 `@` 选);preset 设了 `mention_style: qwen_tags`,发给模型时会展开成 `<image1>`..`<image4>`("把 `@image_2` 里的杯子放到 `@image_1` 人物手里")。没接的槽位会自动剪掉,接 1~4 张都能跑。分辨率 / 比例 / 批量不生效。单图编辑用图像编辑 stage 的 **Qwen Image 2.1 Edit**。测试通过。
 - **FLUX.3 Klein T2I**(`flux3-klein-t2i.json` + `_preset.json`) , 官方 FLUX.3 Image Klein 蒸馏版文生图:int8 DiT + Qwen3-VL-4B int8 编码器(`CLIPLoader` 类型 `flux3`)+ Flux2 VAE,`KSampler` 16 步,euler / simple,cfg 1,所以没有负面提示词。要带参考图编辑用图像编辑 stage 的 **FLUX.3 Klein Edit**。测试通过(5090 上模型已加载时 1024×1808 约 4 秒)。
 - **MOSS-Image T2I**(`moss-image-t2i.json` + `_preset.json`) , 官方 MOSS-Image 文生图:SFT int8 DiT + Qwen3.5-9B w4a8 编码器(`CLIPLoader` 类型 `moss_image`)+ 小号 Flux2 VAE,`KSampler` 25 步,er_sde / simple,cfg 2.5,负面提示词沿用模板里的固定值。它是用整段画面描述训练的,提示词写成完整描述,别只写几个关键词。测试通过(5090 上 1808×1024 约 27 秒)。
+- **MiniMax H3 Image T2I**(`minimax-h3-image-t2i.json` + `_preset.json`) , 官方 MiniMax-H3-Image 文生图模板,子图原样保留:int8 DiT + Qwen3-VL-32B int8 编码器(`CLIPLoader` 类型 `minimax`)+ H3 Image VAE,`MiniMaxH3ImageConditioning` → `KSampler` 6 步,euler / simple,cfg 1。模型按 2048×2048 的面积调校,分辨率选 **2K**。提示词按原文发送。打开子图节点上的 `switch`,提示词扩写(`TextGenerateV2` + Qwen3.5-9B)会先把它改写成详细画面描述;5090 上这样约 4 分钟一张,大部分时间花在三个模型的换入换出上。每次运行出一张。测试通过(5090 上 模型已加载时 3616×2048 约 26 秒一张,2048×2048 约 9 秒一张)。
 
 ## 需要的模型
 
@@ -42,4 +43,5 @@
 - Qwen Image 2.1(T2I / Transparent / Multi-Ref Edit 共用,约 17 GB):`qwen_image_2.1_int8_convrot.safetensors`(diffusion_models)、`qwen3vl_8b_int8_convrot.safetensors`(text_encoders)、`qwen_image_2.1_vae_bf16.safetensors`(vae),都在 <https://huggingface.co/Comfy-Org/Qwen-Image-2.1>。需要带 `TextEncodeQwenImage21` 节点的 ComfyUI(v0.37+)。
 - FLUX.3 Klein T2I:`flux3-image-klein-int8-convrot.safetensors`(diffusion_models)、`qwen3vl_4b_int8_convrot.safetensors`(text_encoders)、`flux2-vae.safetensors`(vae), <https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy>(需先在页面上同意协议)
 - MOSS-Image T2I:`moss_image_sft_int8_convrot.safetensors`(diffusion_models)、`qwen3.5_9b_w4a8_gptq.safetensors`(text_encoders)、`flux2-vae_small.safetensors`(vae), <https://huggingface.co/Comfy-Org/MOSS-Image>
+- MiniMax H3 Image T2I:`minimax_h3_image_pruned_int8_convrot.safetensors`(diffusion_models)、`qwen3vl_32b_minimax_h3_int8_convrot.safetensors` 和 `qwen3.5_9b_w4a8_gptq.safetensors`(text_encoders)、`minimax_h3_image_vae_fp16.safetensors`(vae), DiT 和 VAE 在 <https://huggingface.co/Comfy-Org/MiniMax-H3-Image>,Qwen3-VL-32B 编码器在 <https://huggingface.co/Comfy-Org/MiniMax-H3>,扩写用的 Qwen3.5-9B 在 <https://huggingface.co/Comfy-Org/Qwen3.5>
 

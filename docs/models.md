@@ -29,10 +29,13 @@ Download: <https://huggingface.co/Comfy-Org/flux2-klein/tree/main/split_files/te
 | **Qwen Image 2.1 T2I** / **Transparent (RGBA)** / **Multi-Ref Edit** | `qwen_image_2.1_int8_convrot.safetensors`, `qwen3vl_8b_int8_convrot.safetensors`, `qwen_image_2.1_vae_bf16.safetensors` | `diffusion_models/`, `text_encoders/`, `vae/` |
 | **FLUX.3 Klein T2I** | `flux3-image-klein-int8-convrot.safetensors`, `qwen3vl_4b_int8_convrot.safetensors`, `flux2-vae.safetensors` | `diffusion_models/`, `text_encoders/`, `vae/` |
 | **MOSS-Image T2I** | `moss_image_sft_int8_convrot.safetensors`, `qwen3.5_9b_w4a8_gptq.safetensors`, `flux2-vae_small.safetensors` | `diffusion_models/`, `text_encoders/`, `vae/` |
+| **MiniMax H3 Image T2I** | `minimax_h3_image_pruned_int8_convrot.safetensors`, `qwen3vl_32b_minimax_h3_int8_convrot.safetensors`, `qwen3.5_9b_w4a8_gptq.safetensors`, `minimax_h3_image_vae_fp16.safetensors` | `diffusion_models/`, `text_encoders/`, `text_encoders/`, `vae/` |
 
 Qwen Image 2.1 files: <https://huggingface.co/Comfy-Org/Qwen-Image-2.1> (~17 GB for the int8 set; bf16 variants also exist there). Requires ComfyUI v0.37+ for `TextEncodeQwenImage21`.
 
 FLUX.3 Klein files: <https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy> (gated: accept the licence on the page first). MOSS-Image files: <https://huggingface.co/Comfy-Org/MOSS-Image>.
+
+MiniMax H3 Image files: DiT and VAE at <https://huggingface.co/Comfy-Org/MiniMax-H3-Image>, the Qwen3-VL-32B encoder at <https://huggingface.co/Comfy-Org/MiniMax-H3>, the Qwen3.5-9B expander at <https://huggingface.co/Comfy-Org/Qwen3.5>.
 
 ---
 
@@ -111,6 +114,7 @@ Download:
 | **Flux Canny Edit** (image-edit) | `flux1-canny-dev.safetensors`, `t5xxl_fp16.safetensors` *(or `t5xxl_fp8_e4m3fn_scaled.safetensors`)*, `clip_l.safetensors`, `ae.safetensors` | `diffusion_models/`, `text_encoders/`, `text_encoders/`, `vae/` |
 | **Qwen Image 2.1 Edit** (image-edit) | `qwen_image_2.1_int8_convrot.safetensors`, `qwen3vl_8b_int8_convrot.safetensors`, `qwen_image_2.1_vae_bf16.safetensors` — same set as the Image-stage Qwen Image 2.1 workflows | `diffusion_models/`, `text_encoders/`, `vae/` |
 | **FLUX.3 Klein Edit** (image-edit) | `flux3-image-klein-int8-convrot.safetensors`, `qwen3vl_4b_int8_convrot.safetensors`, `flux2-vae.safetensors` — same set as the Image-stage FLUX.3 Klein T2I | `diffusion_models/`, `text_encoders/`, `vae/` |
+| **MiniMax H3 Image Edit** (image-edit) | `minimax_h3_image_pruned_int8_convrot.safetensors`, `qwen3vl_32b_minimax_h3_int8_convrot.safetensors`, `qwen3.5_9b_w4a8_gptq.safetensors`, `minimax_h3_image_vae_fp16.safetensors` — same set as the Image-stage MiniMax H3 Image T2I | `diffusion_models/`, `text_encoders/`, `text_encoders/`, `vae/` |
 | **Flux Fill Inpaint** (inpaint) | `flux1-fill-dev.safetensors`, t5 + clip\_l + ae (same as above) | `diffusion_models/`, `text_encoders/`, `text_encoders/`, `vae/` |
 | **Fooocus SDXL Inpaint** (inpaint) | `juggernautXL_version6Rundiffusion.safetensors`, `fooocus_inpaint_head.pth` | `checkpoints/`, `inpaint/` |
 | **Flux Fill Outpaint** (outpaint) | same as Flux Fill Inpaint | same |

@@ -1,0 +1,307 @@
+{
+  "label": "MiniMax H3 Image Edit",
+  "order": 8,
+  "description": "The official MiniMax-H3-Image edit graph (int8 DiT + Qwen3-VL-32B encoder, 6 steps, euler, cfg 1) with up to 16 images: the first image is the edit target, scaled to about 4 MP, and the output takes its size; the rest are references. Refer to them with @image_1..@image_16 (type @ in the prompt); they reach the model as <Picture 1>..<Picture 16>. The prompt expander (Qwen3.5-9B) looks at the images and rewrites a short instruction into a full description of the result; turn it off with the Enable PE? switch in the workflow to send your prompt as written.",
+  "result": {
+    "type": "ui_save_url",
+    "node": "9"
+  },
+  "meta": {
+    "mention_style": "minimax_tags"
+  },
+  "inputs": {
+    "45": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "Image edit needs an edit target — add a reference image with ＋ on the card, or wire one in; image 1 is the one that gets edited."
+      }
+    },
+    "43": {
+      "value": {
+        "from": "main_prompt",
+        "required": true,
+        "error": "Describe the edit — e.g. 'replace the taxi in @image_1 with a pink ice-cream truck, keep the street unchanged'."
+      }
+    },
+    "38": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    },
+    "101": {
+      "image": {
+        "from": "upstream_image:annotated[1]"
+      }
+    },
+    "102": {
+      "image": {
+        "from": "upstream_image:annotated[2]"
+      }
+    },
+    "103": {
+      "image": {
+        "from": "upstream_image:annotated[3]"
+      }
+    },
+    "104": {
+      "image": {
+        "from": "upstream_image:annotated[4]"
+      }
+    },
+    "105": {
+      "image": {
+        "from": "upstream_image:annotated[5]"
+      }
+    },
+    "106": {
+      "image": {
+        "from": "upstream_image:annotated[6]"
+      }
+    },
+    "107": {
+      "image": {
+        "from": "upstream_image:annotated[7]"
+      }
+    },
+    "108": {
+      "image": {
+        "from": "upstream_image:annotated[8]"
+      }
+    },
+    "109": {
+      "image": {
+        "from": "upstream_image:annotated[9]"
+      }
+    },
+    "110": {
+      "image": {
+        "from": "upstream_image:annotated[10]"
+      }
+    },
+    "111": {
+      "image": {
+        "from": "upstream_image:annotated[11]"
+      }
+    },
+    "112": {
+      "image": {
+        "from": "upstream_image:annotated[12]"
+      }
+    },
+    "113": {
+      "image": {
+        "from": "upstream_image:annotated[13]"
+      }
+    },
+    "114": {
+      "image": {
+        "from": "upstream_image:annotated[14]"
+      }
+    },
+    "115": {
+      "image": {
+        "from": "upstream_image:annotated[15]"
+      }
+    }
+  },
+  "prune_when_missing": [
+    {
+      "when": "upstream_image:value[1]",
+      "drop_upstream_of": [
+        {
+          "node": "32",
+          "input": "images.image_2"
+        },
+        {
+          "node": "34",
+          "input": "images.image2"
+        }
+      ]
+    },
+    {
+      "when": "upstream_image:value[2]",
+      "drop_upstream_of": [
+        {
+          "node": "32",
+          "input": "images.image_3"
+        },
+        {
+          "node": "34",
+          "input": "images.image3"
+        }
+      ]
+    },
+    {
+      "when": "upstream_image:value[3]",
+      "drop_upstream_of": [
+        {
+          "node": "32",
+          "input": "images.image_4"
+        },
+        {
+          "node": "34",
+          "input": "images.image4"
+        }
+      ]
+    },
+    {
+      "when": "upstream_image:value[4]",
+      "drop_upstream_of": [
+        {
+          "node": "32",
+          "input": "images.image_5"
+        },
+        {
+          "node": "34",
+          "input": "images.image5"
+        }
+      ]
+    },
+    {
+      "when": "upstream_image:value[5]",
+      "drop_upstream_of": [
+        {
+          "node": "32",
+          "input": "images.image_6"
+        },
+        {
+          "node": "34",
+          "input": "images.image6"
+        }
+      ]
+    },
+    {
+      "when": "upstream_image:value[6]",
+      "drop_upstream_of": [
+        {
+          "node": "32",
+          "input": "images.image_7"
+        },
+        {
+          "node": "34",
+          "input": "images.image7"
+        }
+      ]
+    },
+    {
+      "when": "upstream_image:value[7]",
+      "drop_upstream_of": [
+        {
+          "node": "32",
+          "input": "images.image_8"
+        },
+        {
+          "node": "34",
+          "input": "images.image8"
+        }
+      ]
+    },
+    {
+      "when": "upstream_image:value[8]",
+      "drop_upstream_of": [
+        {
+          "node": "32",
+          "input": "images.image_9"
+        },
+        {
+          "node": "34",
+          "input": "images.image9"
+        }
+      ]
+    },
+    {
+      "when": "upstream_image:value[9]",
+      "drop_upstream_of": [
+        {
+          "node": "32",
+          "input": "images.image_10"
+        },
+        {
+          "node": "34",
+          "input": "images.image10"
+        }
+      ]
+    },
+    {
+      "when": "upstream_image:value[10]",
+      "drop_upstream_of": [
+        {
+          "node": "32",
+          "input": "images.image_11"
+        },
+        {
+          "node": "34",
+          "input": "images.image11"
+        }
+      ]
+    },
+    {
+      "when": "upstream_image:value[11]",
+      "drop_upstream_of": [
+        {
+          "node": "32",
+          "input": "images.image_12"
+        },
+        {
+          "node": "34",
+          "input": "images.image12"
+        }
+      ]
+    },
+    {
+      "when": "upstream_image:value[12]",
+      "drop_upstream_of": [
+        {
+          "node": "32",
+          "input": "images.image_13"
+        },
+        {
+          "node": "34",
+          "input": "images.image13"
+        }
+      ]
+    },
+    {
+      "when": "upstream_image:value[13]",
+      "drop_upstream_of": [
+        {
+          "node": "32",
+          "input": "images.image_14"
+        },
+        {
+          "node": "34",
+          "input": "images.image14"
+        }
+      ]
+    },
+    {
+      "when": "upstream_image:value[14]",
+      "drop_upstream_of": [
+        {
+          "node": "32",
+          "input": "images.image_15"
+        },
+        {
+          "node": "34",
+          "input": "images.image15"
+        }
+      ]
+    },
+    {
+      "when": "upstream_image:value[15]",
+      "drop_upstream_of": [
+        {
+          "node": "32",
+          "input": "images.image_16"
+        },
+        {
+          "node": "34",
+          "input": "images.image16"
+        }
+      ]
+    }
+  ]
+}

@@ -27,8 +27,11 @@ ComfyUI 通常会在首次启动时自动建好所有子目录;缺哪个手动�
 | **Local SD1.5** / **Local SD1.5 I2I** | `v1-5-pruned-emaonly-fp16.safetensors` | `checkpoints/` |
 | **Image Ideogram4 T2I** | `ideogram4_fp8_scaled.safetensors`、`ideogram4_unconditional_fp8_scaled.safetensors`、`qwen3vl_8b_fp8_scaled.safetensors`、`flux2-vae.safetensors` | `diffusion_models/`、`diffusion_models/`、`text_encoders/`、`vae/` |
 | **Qwen Image 2.1 T2I** / **Transparent (RGBA)** / **Multi-Ref Edit** | `qwen_image_2.1_int8_convrot.safetensors`、`qwen3vl_8b_int8_convrot.safetensors`、`qwen_image_2.1_vae_bf16.safetensors` | `diffusion_models/`、`text_encoders/`、`vae/` |
+| **MiniMax H3 Image T2I** | `minimax_h3_image_pruned_int8_convrot.safetensors`、`qwen3vl_32b_minimax_h3_int8_convrot.safetensors`、`qwen3.5_9b_w4a8_gptq.safetensors`、`minimax_h3_image_vae_fp16.safetensors` | `diffusion_models/`、`text_encoders/`、`text_encoders/`、`vae/` |
 
 Qwen Image 2.1 文件:<https://huggingface.co/Comfy-Org/Qwen-Image-2.1>(int8 一套约 17 GB;bf16 版也在那)。需要 ComfyUI v0.37+ 的 `TextEncodeQwenImage21` 节点。
+
+MiniMax H3 Image 文件:DiT 和 VAE 在 <https://huggingface.co/Comfy-Org/MiniMax-H3-Image>,Qwen3-VL-32B 编码器在 <https://huggingface.co/Comfy-Org/MiniMax-H3>,扩写用的 Qwen3.5-9B 在 <https://huggingface.co/Comfy-Org/Qwen3.5>。
 
 ---
 
@@ -103,6 +106,7 @@ ACE-Step v1 和 MiniMax Music 3 都是 ComfyUI 核心原生支持,不需要装�
 |---|---|---|
 | **Flux Canny Edit**(image-edit) | `flux1-canny-dev.safetensors`、`t5xxl_fp16.safetensors` *(或 `t5xxl_fp8_e4m3fn_scaled.safetensors`)*、`clip_l.safetensors`、`ae.safetensors` | `diffusion_models/`、`text_encoders/`、`text_encoders/`、`vae/` |
 | **Qwen Image 2.1 Edit**(image-edit) | `qwen_image_2.1_int8_convrot.safetensors`、`qwen3vl_8b_int8_convrot.safetensors`、`qwen_image_2.1_vae_bf16.safetensors`,和图像 stage 的 Qwen Image 2.1 工作流共用 | `diffusion_models/`、`text_encoders/`、`vae/` |
+| **MiniMax H3 Image Edit**(image-edit) | `minimax_h3_image_pruned_int8_convrot.safetensors`、`qwen3vl_32b_minimax_h3_int8_convrot.safetensors`、`qwen3.5_9b_w4a8_gptq.safetensors`、`minimax_h3_image_vae_fp16.safetensors`,和图像 stage 的 MiniMax H3 Image T2I 共用 | `diffusion_models/`、`text_encoders/`、`text_encoders/`、`vae/` |
 | **Flux Fill Inpaint**(inpaint) | `flux1-fill-dev.safetensors`、t5 + clip\_l + ae(同上) | `diffusion_models/`、`text_encoders/`、`text_encoders/`、`vae/` |
 | **Fooocus SDXL Inpaint**(inpaint) | `juggernautXL_version6Rundiffusion.safetensors`、`fooocus_inpaint_head.pth` | `checkpoints/`、`inpaint/` |
 | **Flux Fill Outpaint**(outpaint) | 同 Flux Fill Inpaint | 同 |
