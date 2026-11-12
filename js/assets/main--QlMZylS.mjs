@@ -59817,7 +59817,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-DJI4UMQh.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-DURppwZh.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -87123,7 +87123,7 @@ const _sfc_main$4v = /* @__PURE__ */ defineComponent({
       }
     });
     const AgentPanelRoot = /* @__PURE__ */ defineAsyncComponent({
-      loader: () => import("./AgentPanelRoot-DFVHve4r.mjs"),
+      loader: () => import("./AgentPanelRoot-BskDPelC.mjs"),
       errorComponent: AgentPanelLoadError,
       onError: (error2, _retry, fail) => {
         reportError(error2, { errorType: "agent_panel_load_failure" });
@@ -134508,7 +134508,7 @@ const _hoisted_2$3H = {
   class: "ctv:text-2xs ctv:text-center ctv:font-mono ctv:text-muted-foreground"
 };
 const _hoisted_3$3B = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
-const _hoisted_4$3b = { class: "ctv:flex ctv:gap-0.5 ctv:p-0.5 ctv:rounded ctv:bg-secondary-background" };
+const _hoisted_4$3b = { class: "ctv:col-span-2 ctv:flex ctv:gap-0.5 ctv:p-0.5 ctv:rounded ctv:bg-secondary-background" };
 const _hoisted_5$30 = ["title", "onClick"];
 const _hoisted_6$2L = ["value"];
 const _hoisted_7$2b = ["value"];
@@ -134586,7 +134586,7 @@ const _sfc_main$3Z = /* @__PURE__ */ defineComponent({
     ];
     function toolBtnClass(active2) {
       return [
-        "ctv:flex-1 ctv:py-0.5 ctv:px-2 ctv:text-[11px] ctv:cursor-pointer ctv:border-0 ctv:bg-transparent ctv:rounded-sm",
+        "ctv:flex-1 ctv:py-0.5 ctv:px-0 ctv:text-[11px] ctv:cursor-pointer ctv:border-0 ctv:bg-transparent ctv:rounded-sm",
         active2 ? "ctv:bg-secondary-background-selected ctv:text-primary-background ctv:font-semibold" : "ctv:text-muted-foreground ctv:hover:text-base-foreground"
       ].join(" ");
     }
@@ -149812,7 +149812,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-DX7gLtQF.mjs");
+    const { STLLoader } = await import("./STLLoader-pow0yzUM.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -149820,7 +149820,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-MuetLZwV.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-DpyA14qA.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -239541,6 +239541,7 @@ body[data-v2-slot-hover] .p-tooltip { display: none !important; }
 .lg-node[data-v2-shell] .lg-node-widget:has(.v2-card) { flex: 1; min-height: 0; }
 .lg-node[data-v2-shell] .lg-node-widget > div:first-child { display: none; }
 .lg-node[data-v2-shell] .lg-node-widget > *:last-child { flex: 1; min-width: 0; }
+.lg-node[data-v2-shell] .lg-node-widget :has(> .v2-card) { min-width: 0; }
 .lg-node[data-v2-shell] .lg-node-widget:not(:has(.v2-card)) { display: none; }
 
 .v2-card {
@@ -247355,4 +247356,4 @@ export {
   DropdownMenuRoot_default as y,
   DropdownMenuTrigger_default as z
 };
-//# sourceMappingURL=main-M7sGPKw3.mjs.map
+//# sourceMappingURL=main--QlMZylS.mjs.map

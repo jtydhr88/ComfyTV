@@ -242,6 +242,7 @@ body[data-v2-slot-hover] .p-tooltip { display: none !important; }
 .lg-node[data-v2-shell] .lg-node-widget:has(.v2-card) { flex: 1; min-height: 0; }
 .lg-node[data-v2-shell] .lg-node-widget > div:first-child { display: none; }
 .lg-node[data-v2-shell] .lg-node-widget > *:last-child { flex: 1; min-width: 0; }
+.lg-node[data-v2-shell] .lg-node-widget :has(> .v2-card) { min-width: 0; }
 .lg-node[data-v2-shell] .lg-node-widget:not(:has(.v2-card)) { display: none; }
 
 .v2-card {

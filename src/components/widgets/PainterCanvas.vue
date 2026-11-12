@@ -43,7 +43,7 @@
     <div class="ctv:flex ctv:flex-col ctv:gap-1">
       <div :class="rowClass">
         <span :class="labelClass">{{ $t('painter.tool') }}</span>
-        <div class="ctv:flex ctv:gap-0.5 ctv:p-0.5 ctv:rounded ctv:bg-secondary-background">
+        <div class="ctv:col-span-2 ctv:flex ctv:gap-0.5 ctv:p-0.5 ctv:rounded ctv:bg-secondary-background">
           <button v-for="t in TOOLS" :key="t.id" type="button"
                   :class="toolBtnClass(tool === t.id)"
                   :title="$t(t.i18n)"
@@ -181,7 +181,7 @@ const valueClass = 'ctv:text-right ctv:text-base-foreground'
 
 function toolBtnClass(active: boolean) {
   return [
-    'ctv:flex-1 ctv:py-0.5 ctv:px-2 ctv:text-[11px] ctv:cursor-pointer ctv:border-0 ctv:bg-transparent ctv:rounded-sm',
+    'ctv:flex-1 ctv:py-0.5 ctv:px-0 ctv:text-[11px] ctv:cursor-pointer ctv:border-0 ctv:bg-transparent ctv:rounded-sm',
     active
       ? 'ctv:bg-secondary-background-selected ctv:text-primary-background ctv:font-semibold'
       : 'ctv:text-muted-foreground ctv:hover:text-base-foreground',
