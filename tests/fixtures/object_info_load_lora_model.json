@@ -1,0 +1,131 @@
+{
+  "LoadLoraModel": {
+    "input": {
+      "required": {
+        "model": [
+          "MODEL",
+          {
+            "tooltip": "The diffusion model the LoRAs will be applied to."
+          }
+        ],
+        "loras": [
+          "COMFY_DYNAMICGROUP_V3",
+          {
+            "tooltip": "Each row applies one LoRA to the model.",
+            "template": {
+              "required": {
+                "lora_name": [
+                  "COMBO",
+                  {
+                    "tooltip": "The name of the LoRA file to apply.",
+                    "multiselect": false,
+                    "options": [
+                      "styleA.safetensors",
+                      "detail_v2.safetensors",
+                      "sub/styleB.safetensors"
+                    ]
+                  }
+                ],
+                "strength": [
+                  "FLOAT",
+                  {
+                    "tooltip": "How strongly to apply this LoRA. 0 = off, negative inverts the effect.",
+                    "default": 1.0,
+                    "min": -100.0,
+                    "max": 100.0,
+                    "step": 0.01
+                  }
+                ],
+                "enabled": [
+                  "BOOLEAN",
+                  {
+                    "tooltip": "Turn off to skip this LoRA without changing its file or strength.",
+                    "default": true
+                  }
+                ]
+              }
+            },
+            "min": 1,
+            "max": 20,
+            "group_name": "LoRA"
+          }
+        ]
+      }
+    },
+    "input_order": {
+      "required": [
+        "model",
+        "loras"
+      ]
+    },
+    "is_input_list": false,
+    "output": [
+      "MODEL"
+    ],
+    "output_is_list": [
+      false
+    ],
+    "output_name": [
+      "MODEL"
+    ],
+    "output_tooltips": [
+      "The modified diffusion model."
+    ],
+    "output_matchtypes": null,
+    "name": "LoadLoraModel",
+    "display_name": "Load LoRA (Model)",
+    "description": "Apply a stack of LoRAs to a diffusion model. Add one row per LoRA; each row picks a LoRA file and its strength.",
+    "python_module": null,
+    "category": "model/loaders",
+    "output_node": false,
+    "deprecated": false,
+    "experimental": false,
+    "dev_only": false,
+    "api_node": false,
+    "price_badge": null,
+    "search_aliases": [
+      "lora",
+      "load lora",
+      "apply lora",
+      "lora model",
+      "lora stack"
+    ],
+    "essentials_category": null,
+    "has_intermediate_output": false
+  },
+  "UNETLoader": {
+    "input": {
+      "required": {
+        "unet_name": [
+          [
+            "flux1-dev.safetensors"
+          ]
+        ],
+        "weight_dtype": [
+          [
+            "default",
+            "fp8_e4m3fn",
+            "fp8_e4m3fn_fast",
+            "fp8_e5m2"
+          ],
+          {
+            "advanced": true
+          }
+        ]
+      }
+    },
+    "input_order": {
+      "required": [
+        "unet_name",
+        "weight_dtype"
+      ]
+    },
+    "output": [
+      "MODEL"
+    ],
+    "output_name": [
+      "MODEL"
+    ],
+    "name": "UNETLoader"
+  }
+}

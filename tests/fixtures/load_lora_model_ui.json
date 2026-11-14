@@ -1,0 +1,191 @@
+{
+  "id": "b1c8c7a4-532e-4d3a-9a51-6f3a2b6c0532",
+  "revision": 0,
+  "last_node_id": 2,
+  "last_link_id": 1,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "UNETLoader",
+      "pos": [
+        0,
+        0
+      ],
+      "size": [
+        300,
+        82
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "localized_name": "MODEL",
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UNETLoader"
+      },
+      "widgets_values": [
+        "flux1-dev.safetensors",
+        "default"
+      ]
+    },
+    {
+      "id": 2,
+      "type": "LoadLoraModel",
+      "pos": [
+        360,
+        0
+      ],
+      "size": [
+        320,
+        250
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "model",
+          "name": "model",
+          "type": "MODEL",
+          "link": 1
+        },
+        {
+          "label": "LoRA #1 lora_name",
+          "localized_name": "LoRA #1 lora_name",
+          "name": "loras.0.lora_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "loras.0.lora_name"
+          },
+          "link": null
+        },
+        {
+          "label": "LoRA #1 strength",
+          "localized_name": "LoRA #1 strength",
+          "name": "loras.0.strength",
+          "type": "FLOAT",
+          "widget": {
+            "name": "loras.0.strength"
+          },
+          "link": null
+        },
+        {
+          "label": "LoRA #1 enabled",
+          "localized_name": "LoRA #1 enabled",
+          "name": "loras.0.enabled",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "loras.0.enabled"
+          },
+          "link": null
+        },
+        {
+          "label": "LoRA #2 lora_name",
+          "localized_name": "LoRA #2 lora_name",
+          "name": "loras.1.lora_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "loras.1.lora_name"
+          },
+          "link": null
+        },
+        {
+          "label": "LoRA #2 strength",
+          "localized_name": "LoRA #2 strength",
+          "name": "loras.1.strength",
+          "type": "FLOAT",
+          "widget": {
+            "name": "loras.1.strength"
+          },
+          "link": null
+        },
+        {
+          "label": "LoRA #2 enabled",
+          "localized_name": "LoRA #2 enabled",
+          "name": "loras.1.enabled",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "loras.1.enabled"
+          },
+          "link": null
+        },
+        {
+          "label": "LoRA #3 lora_name",
+          "localized_name": "LoRA #3 lora_name",
+          "name": "loras.2.lora_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "loras.2.lora_name"
+          },
+          "link": null
+        },
+        {
+          "label": "LoRA #3 strength",
+          "localized_name": "LoRA #3 strength",
+          "name": "loras.2.strength",
+          "type": "FLOAT",
+          "widget": {
+            "name": "loras.2.strength"
+          },
+          "link": null
+        },
+        {
+          "label": "LoRA #3 enabled",
+          "localized_name": "LoRA #3 enabled",
+          "name": "loras.2.enabled",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "loras.2.enabled"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "MODEL",
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadLoraModel"
+      },
+      "widgets_values": [
+        3,
+        "styleA.safetensors",
+        0.95,
+        true,
+        "sub/styleB.safetensors",
+        0.6,
+        false,
+        "detail_v2.safetensors",
+        -0.3,
+        true
+      ]
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      0,
+      2,
+      0,
+      "MODEL"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

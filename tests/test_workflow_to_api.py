@@ -2679,3 +2679,24 @@ class TestPromotedSubgraphWidget:
         result = convert_ui_to_api(ui, object_info)
 
         assert result["3:1"]["inputs"]["vae_name"] == "ae.sft"
+
+
+class TestLoadLoraModelDynamicGroup:
+    def test_rows_skip_the_row_count_slot(self):
+        ui = json.loads((FIXTURES / "load_lora_model_ui.json").read_text(encoding="utf-8"))
+        object_info = json.loads((FIXTURES / "object_info_load_lora_model.json").read_text(encoding="utf-8"))
+
+        result = convert_ui_to_api(ui, object_info)
+
+        assert result["2"]["inputs"] == {
+            "model": ["1", 0],
+            "loras.0.lora_name": "styleA.safetensors",
+            "loras.0.strength": 0.95,
+            "loras.0.enabled": True,
+            "loras.1.lora_name": "sub/styleB.safetensors",
+            "loras.1.strength": 0.6,
+            "loras.1.enabled": False,
+            "loras.2.lora_name": "detail_v2.safetensors",
+            "loras.2.strength": -0.3,
+            "loras.2.enabled": True,
+        }

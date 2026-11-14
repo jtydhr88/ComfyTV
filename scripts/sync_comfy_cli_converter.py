@@ -10,11 +10,15 @@ VENDOR = Path(__file__).resolve().parent.parent / "runners" / "vendor"
 FILES = {
     "comfy_cli/workflow_to_api.py": "workflow_to_api.py",
     "comfy_cli/cql/promoted.py": "cql_promoted.py",
+    "comfy_cli/model_variants.py": "model_variants.py",
 }
 ENGINE = "comfy_cli/cql/engine.py"
 IMPORTS = [
     (re.compile(r"from comfy_cli\.cql\.engine import"), "from .cql_engine import"),
     (re.compile(r"from comfy_cli\.cql import promoted as"), "from . import cql_promoted as"),
+    (re.compile(r"from comfy_cli\.cql\.promoted import"), "from .cql_promoted import"),
+    (re.compile(r"from comfy_cli\.workflow_to_api import"), "from .workflow_to_api import"),
+    (re.compile(r"from comfy_cli\.model_variants import"), "from .model_variants import"),
 ]
 
 
@@ -38,16 +42,29 @@ def engine_names(sources: list[str]) -> list[str]:
     names = []
     for src in sources:
         for node in ast.walk(ast.parse(src)):
-            if isinstance(node, ast.ImportFrom) and node.module == "comfy_cli.cql.engine" and node.col_offset == 0:
+            if isinstance(node, ast.ImportFrom) and node.module == "comfy_cli.cql.engine":
                 names += [a.name for a in node.names if a.name not in names]
     return names
+
+
+def runtime_names(node: ast.AST):
+    stack = [node]
+    while stack:
+        n = stack.pop()
+        if isinstance(n, ast.Name):
+            yield n.id
+        hidden = {id(getattr(n, attr, None)) for attr in ("returns", "annotation")}
+        stack += [c for c in ast.iter_child_nodes(n) if id(c) not in hidden]
 
 
 def extract_engine(src: str, wanted: list[str]) -> str:
     tree = ast.parse(src)
     defs = {}
     for node in tree.body:
-        if isinstance(node, (ast.FunctionDef, ast.ClassDef)):
+        if isinstance(node, (ast.Import, ast.ImportFrom)) and getattr(node, "module", None) != "__future__":
+            for a in node.names:
+                defs[(a.asname or a.name).split(".")[0]] = node
+        elif isinstance(node, (ast.FunctionDef, ast.ClassDef)):
             defs[node.name] = node
         elif isinstance(node, (ast.Assign, ast.AnnAssign)):
             for t in node.targets if isinstance(node, ast.Assign) else [node.target]:
@@ -59,13 +76,19 @@ def extract_engine(src: str, wanted: list[str]) -> str:
         if name not in defs:
             sys.exit(f"{ENGINE}: {name} is not a top-level definition; extend the sync script")
         node = defs[name]
+        if isinstance(node, ast.ImportFrom) and (node.module or "").startswith("comfy_cli"):
+            sys.exit(f"{ENGINE}: {name} comes from {node.module}; extend the sync script")
         if node in keep:
             continue
         keep.add(node)
-        stack += [n.id for n in ast.walk(node) if isinstance(n, ast.Name) and n.id in defs]
+        stack += [n for n in runtime_names(node) if n in defs]
+        stack += [n.id for n in ast.walk(node) if isinstance(n, ast.Name) and isinstance(defs.get(n.id), (ast.Import, ast.ImportFrom))]
     lines = src.splitlines(keepends=True)
-    return "from __future__ import annotations\n\n\n" + "\n\n".join(
-        "".join(lines[n.lineno - 1:n.end_lineno]) for n in tree.body if n in keep
+    chunk = lambda n: "".join(lines[min([d.lineno for d in getattr(n, "decorator_list", [])] + [n.lineno]) - 1:n.end_lineno])
+    kept = [n for n in tree.body if n in keep]
+    imports = [n for n in kept if isinstance(n, (ast.Import, ast.ImportFrom))]
+    return "from __future__ import annotations\n\n" + "".join(map(chunk, imports)) + "\n\n" + "\n\n".join(
+        chunk(n) for n in kept if n not in imports
     )
 
 
@@ -73,14 +96,13 @@ def main() -> None:
     sha = resolve_sha(sys.argv[1] if len(sys.argv) > 1 else "main")
     raw = f"https://raw.githubusercontent.com/{REPO}/{sha}/"
     sources = {path: fetch(raw + path) for path in FILES}
+    sources[ENGINE] = extract_engine(fetch(raw + ENGINE), engine_names(list(sources.values())))
     for path, src in sources.items():
         for pattern, repl in IMPORTS:
             src = pattern.sub(repl, src)
         if re.search(r"^\s*(from|import) comfy_cli\b", src, re.M):
             sys.exit(f"{path}: unhandled comfy_cli import; extend IMPORTS")
-        (VENDOR / FILES[path]).write_text(header(sha, path) + src, encoding="utf-8", newline="\n")
-    engine = extract_engine(fetch(raw + ENGINE), engine_names(list(sources.values())))
-    (VENDOR / "cql_engine.py").write_text(header(sha, ENGINE) + engine, encoding="utf-8", newline="\n")
+        (VENDOR / FILES.get(path, "cql_engine.py")).write_text(header(sha, path) + src, encoding="utf-8", newline="\n")
     print(f"synced {REPO}@{sha}")
 
 
