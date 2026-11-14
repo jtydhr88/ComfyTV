@@ -50,3 +50,29 @@ def test_exec_errors_keep_the_inner_traceback():
     assert "Sam3Segment #3" in entry["error_text"]
     assert entry["traceback_tail"].startswith("ZeroDivisionError: division by zero")
     assert "--- ComfyTV wrapper ---" in entry["traceback_tail"]
+
+
+async def test_invalid_inputs_fail_before_execution(monkeypatch):
+    import execution
+    import pytest
+    from ComfyTV.runners._nested_exec import NestedWorkflowError, _run_subprompt
+
+    async def validate_inputs(prompt_id, prompt, item, validated, visiting=None):
+        validated["1"] = (True, [], "1")
+        validated["2"] = (False, [{
+            "type": "value_not_in_list", "message": "Value not in list",
+            "details": "loras.0.lora_name: '3' not in ['styleA.safetensors']",
+        }], "2")
+        validated[item] = validated.get(item, (False, [], item))
+        return validated[item]
+
+    monkeypatch.setattr(execution, "validate_inputs", validate_inputs, raising=False)
+    prompt = {"1": {"class_type": "UNETLoader", "inputs": {}},
+              "2": {"class_type": "LoadLoraModel", "inputs": {"model": ["1", 0]}},
+              "3": {"class_type": "SaveImage", "inputs": {}}}
+    with pytest.raises(NestedWorkflowError) as err:
+        await _run_subprompt(prompt, "comfytv-5", execute_outputs=["3"])
+    assert str(err.value) == (
+        "Local workflow failed — LoadLoraModel #2 raised ValidationError: Value not in list: "
+        "loras.0.lora_name: '3' not in ['styleA.safetensors'] (sub_prompt_id=comfytv-5)"
+    )

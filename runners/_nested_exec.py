@@ -50,6 +50,23 @@ def last_execution_error(executor) -> dict | None:
     return None
 
 
+async def _validation_error(sub_prompt: dict, sub_prompt_id: str,
+                            execute_outputs: list[str]) -> dict | None:
+    from execution import validate_inputs
+    validated = {}
+    for node_id in execute_outputs:
+        await validate_inputs(sub_prompt_id, sub_prompt, node_id, validated)
+    for node_id, (valid, reasons, _) in validated.items():
+        if valid is not True and reasons:
+            return {
+                'node_id': node_id,
+                'node_type': sub_prompt[node_id].get('class_type'),
+                'exception_type': 'ValidationError',
+                'exception_message': '; '.join(f"{r['message']}: {r['details']}" for r in reasons),
+            }
+    return None
+
+
 def _get_nested_executor():
     global _NESTED_EXECUTOR
     if _NESTED_EXECUTOR is not None:
@@ -104,6 +121,10 @@ def _filter_subprompt_preview(event, data, sub_prompt_id, outer_node_id, preview
 
 async def _run_subprompt(sub_prompt: dict, sub_prompt_id: str,
                           execute_outputs: list[str]):
+
+    invalid = await _validation_error(sub_prompt, sub_prompt_id, execute_outputs)
+    if invalid:
+        raise NestedWorkflowError(sub_prompt_id, invalid)
 
     from server import BinaryEventTypes, PromptServer
 
