@@ -139,8 +139,10 @@ def build_elements_html(elements, ctx, image_uris):
     parts = []
     s = ctx.get("scale", 1.0)
     for el in elements:
-        x = float(el.get("x", 0)); y = float(el.get("y", 0))
-        w = float(el.get("w", 0.2)); h = float(el.get("h", 0.2))
+        x = float(el.get("x", 0))
+        y = float(el.get("y", 0))
+        w = float(el.get("w", 0.2))
+        h = float(el.get("h", 0.2))
         style = (
             f"position:absolute;left:{x * 100:.3f}%;top:{y * 100:.3f}%;"
             f"width:{w * 100:.3f}%;height:{h * 100:.3f}%;"

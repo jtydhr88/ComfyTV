@@ -32,8 +32,10 @@ def make_sphere(n_lat=64, n_lon=64, radius=0.4):
     z = radius * np.sin(tt) * np.sin(ll)
     v = np.stack([x, y, z], axis=-1).reshape(-1, 3).astype(np.float32)
     idx = np.arange((n_lat + 1) * (n_lon + 1)).reshape(n_lat + 1, n_lon + 1)
-    a = idx[:-1, :-1].ravel(); b = idx[1:, :-1].ravel()
-    c = idx[1:, 1:].ravel();  d = idx[:-1, 1:].ravel()
+    a = idx[:-1, :-1].ravel()
+    b = idx[1:, :-1].ravel()
+    c = idx[1:, 1:].ravel()
+    d = idx[:-1, 1:].ravel()
     f = np.concatenate([np.stack([a, b, c], -1), np.stack([a, c, d], -1)]).astype(np.int64)
     return v, f
 
