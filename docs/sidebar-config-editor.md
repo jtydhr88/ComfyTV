@@ -35,6 +35,19 @@ Each widget row has three pieces:
 - **Value editor** — the widget's native input control (number box / text box / dropdown / toggle). Editing here means "replace the workflow's factory value with this constant". When the row is bound to a stage input (the dropdown shows anything other than `(use this value)`), the value editor is greyed out — at run time the value comes from upstream instead.
 - **Bind to:** — see the next section.
 
+### Hiding nodes from the list
+
+Most workflows have nodes whose values should stay as saved — model loaders, sampler settings, and so on. Put those nodes in a group whose title contains `@ComfyTVHidden@` and they leave the widget list:
+
+1. Open the workflow in ComfyUI's main canvas.
+2. Select the nodes and press **Ctrl+G** to wrap them in a group.
+3. Title the group `@ComfyTVHidden@`. You can add your own text around the marker, e.g. `@ComfyTVHidden@ Model loading`.
+4. Save the workflow.
+
+Hidden nodes run with the values saved in the workflow. A node belongs to the group when its top-left corner sits inside the group's frame, and a hidden group can sit inside another group.
+
+Rows that already have a binding stay visible, listed as ungrouped, so you can still review or change them. Set such a row back to **(use this value)** to hide it with the rest of its node. The Custom Stage's input picker follows the same list.
+
 ---
 
 ## Binding options (the `Bind to` dropdown)
