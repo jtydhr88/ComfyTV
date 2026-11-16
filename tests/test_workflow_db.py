@@ -432,3 +432,38 @@ class TestExposedWidgets:
         assert ("115", "output:1") not in rows
         assert ("5", "width") not in rows
         assert ("5", "height") in rows
+
+    def _hidden_group_doc(self, tmp_path):
+        path = tmp_path / "wf.json"
+        path.write_text(json.dumps({
+            "nodes": [
+                {"id": 3, "type": "KSampler", "pos": [50, 50]},
+                {"id": 9, "type": "SaveImage", "pos": [900, 50]},
+                {"id": 17, "type": "LoadImage", "pos": [1500, 50]},
+            ],
+            "groups": [
+                {"title": "Sampling", "bounding": [0, 0, 1200, 400]},
+                {"title": "@ComfyTVHidden@ defaults", "bounding": [20, 20, 400, 300]},
+            ],
+        }))
+        api = {
+            "3": {"class_type": "KSampler", "inputs": {"seed": 1, "steps": 20}},
+            "9": {"class_type": "SaveImage", "inputs": {"filename_prefix": "x"}},
+            "17": {"class_type": "LoadImage", "inputs": {"image": "a.png"}},
+        }
+        return path, api
+
+    def test_hidden_group_nodes_skipped(self, comfy_nodes, tmp_path):
+        self._register_classes(comfy_nodes)
+        path, api = self._hidden_group_doc(tmp_path)
+        out = wdb._exposed_widgets(1, str(path), [], api)
+        assert {r["node_id"] for r in out} == {"9", "17"}
+
+    def test_hidden_group_keeps_bound_rows(self, comfy_nodes, tmp_path):
+        self._register_classes(comfy_nodes)
+        path, api = self._hidden_group_doc(tmp_path)
+        from ComfyTV.db import WorkflowInputBinding
+        b = WorkflowInputBinding(workflow_id=1, node_id="3", input_name="seed",
+                                 from_="option:seed", cast_="int")
+        out = wdb._exposed_widgets(1, str(path), [b], api)
+        assert [(r["node_id"], r["widget_name"], r["group_title"]) for r in out if r["node_id"] == "3"] == [("3", "seed", None)]

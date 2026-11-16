@@ -12,6 +12,8 @@ from .bindings import drop_stale_api
 
 _log = logging.getLogger(__name__)
 
+HIDDEN_GROUP_MARKER = "@ComfyTVHidden@"
+
 
 def _bindings_to_inputs_dict(rows: list[db.WorkflowInputBinding]) -> dict:
     out: dict[str, dict[str, dict]] = {}
@@ -193,18 +195,23 @@ def _exposed_widgets(workflow_id: int, file_path: str,
         if isinstance(g, dict) and isinstance(g.get("bounding"), list):
             groups.append({"title": g.get("title"), "bounding": g["bounding"]})
 
-    def group_for_pos(pos):
+    def groups_for_pos(pos):
         if not pos or len(pos) < 2:
-            return None
+            return None, False
         x, y = pos[0], pos[1]
+        titles = []
         for g in groups:
             b = g["bounding"]
             if len(b) != 4:
                 continue
             gx, gy, gw, gh = b
             if gx <= x <= gx + gw and gy <= y <= gy + gh:
-                return g["title"]
-        return None
+                titles.append(g["title"])
+        if not titles:
+            return None, False
+        if any(isinstance(t, str) and HIDDEN_GROUP_MARKER in t for t in titles):
+            return None, True
+        return titles[0], False
 
     subgraph_defs: dict[str, dict] = {}
     for sub in (doc.get("definitions") or {}).get("subgraphs") or []:
@@ -213,12 +220,13 @@ def _exposed_widgets(workflow_id: int, file_path: str,
             subgraph_defs[str(sid)] = sub
 
     def iter_nodes_with_ids():
-        deferred_subgraphs: list[tuple[str, dict, str]] = []
+        deferred_subgraphs: list[tuple[str, dict, str, bool]] = []
         for top in doc["nodes"]:
             if not isinstance(top, dict):
                 continue
             top_id = str(top.get("id")) if top.get("id") is not None else ""
             top_type = top.get("type") or ""
+            group_title, hidden = groups_for_pos(top.get("pos"))
             if top_type in subgraph_defs:
                 sdef = subgraph_defs[top_type]
                 sg_title = (
@@ -226,17 +234,17 @@ def _exposed_widgets(workflow_id: int, file_path: str,
                     or top.get("title")
                     or f"Subgraph #{top_id}"
                 )
-                deferred_subgraphs.append((top_id, sdef, sg_title))
+                deferred_subgraphs.append((top_id, sdef, sg_title, hidden))
                 continue
-            yield top_id, top, group_for_pos(top.get("pos"))
+            yield top_id, top, group_title, hidden
 
-        for top_id, sdef, sg_title in deferred_subgraphs:
+        for top_id, sdef, sg_title, hidden in deferred_subgraphs:
             for inner in (sdef.get("nodes") or []):
                 if not isinstance(inner, dict):
                     continue
                 inner_id = str(inner.get("id")) if inner.get("id") is not None else ""
                 composite = f"{top_id}:{inner_id}"
-                yield composite, inner, sg_title
+                yield composite, inner, sg_title, hidden
 
     referenced_outputs = {
         (str(v[0]), v[1])
@@ -246,7 +254,7 @@ def _exposed_widgets(workflow_id: int, file_path: str,
     }
 
     out: list[dict] = []
-    for node_id, n, group_title in iter_nodes_with_ids():
+    for node_id, n, group_title, hidden in iter_nodes_with_ids():
         class_type = n.get("type") or ""
         if class_type in ("Note", "MarkdownNote", "Reroute", "PrimitiveNode"):
             continue
@@ -282,11 +290,16 @@ def _exposed_widgets(workflow_id: int, file_path: str,
             current = api_inputs[wname]
             if isinstance(current, list) and len(current) == 2:
                 continue
+            if hidden and (node_id, wname) not in bindings_by_key:
+                continue
             out.append(row(wname, wm["type"], wm.get("options") or {}, current))
 
         for slot, otype, oname in node_primitive_outputs(class_type):
+            oinput = f"{OUTPUT_BINDING_PREFIX}{slot}"
+            if hidden and (node_id, oinput) not in bindings_by_key:
+                continue
             if (node_id, slot) in referenced_outputs:
-                out.append(row(f"{OUTPUT_BINDING_PREFIX}{slot}", "OUTPUT",
+                out.append(row(oinput, "OUTPUT",
                                {"output_type": otype, "output_name": oname}, None))
     return out
 
