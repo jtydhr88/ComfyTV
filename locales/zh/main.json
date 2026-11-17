@@ -41,6 +41,8 @@
     },
     "stageHint": "连入参考，点 ↑ 生成",
     "pickerHint": "连入上游批次，点选一张",
+    "pickerGridView": "网格查看",
+    "pickerSingleView": "单张查看",
     "cropHint": "连入上游图片开始裁剪",
     "batchCount": "{n}张",
     "batchPos": "{i}/{n}张",

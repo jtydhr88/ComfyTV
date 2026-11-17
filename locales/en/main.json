@@ -41,6 +41,8 @@
     },
     "stageHint": "Connect references, press ↑ to generate",
     "pickerHint": "Connect an upstream batch, click to pick",
+    "pickerGridView": "Grid view",
+    "pickerSingleView": "Single view",
     "cropHint": "Connect an upstream image to start cropping",
     "batchCount": "{n}",
     "batchPos": "{i}/{n}",

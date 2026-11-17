@@ -15,6 +15,7 @@ import { createIslandGroup } from '@/v2/islands'
 import { mediaItems } from '@/v2/mediaItems'
 import { V2_SHELLS } from '@/v2/registry'
 import { attachOutputToolbar } from '@/v2/outputToolbar'
+import { createPickerGrid } from '@/v2/pickerGrid'
 import { usePinnedBatchStore } from '@/stores/pinnedBatchStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { toImagePoolJson, useStageStore, type StageKind, type StageVariant } from '@/stores/stageStore'
@@ -164,6 +165,12 @@ function makePoolPicker(previewKind: 'image' | 'video' | 'audio') {
     let batchList: Array<{ url: string }> = []
     let pickedIdx = 1
 
+    const grid = previewKind === 'audio' ? null : createPickerGrid(node, preview, {
+      onPick: (i) => applyPick(i),
+      onRemove: (i) => onAction('remove-pool-item', { index: String(i), imageUrl: batchList[i - 1].url }),
+    })
+    if (grid) footer.insertBefore(grid.button, pinBtn)
+
     const islands = createIslandGroup()
 
     if (previewKind !== 'image') {
@@ -246,6 +253,7 @@ function makePoolPicker(previewKind: 'image' | 'video' | 'audio') {
         img.removeAttribute('src')
       }
       renderStrip()
+      grid?.render(batchList, pickedIdx)
     }
 
     const applyPick = (i: number) => {
