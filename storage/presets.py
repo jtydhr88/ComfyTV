@@ -13,6 +13,8 @@ from ..db import (
     Preset, Project, ProxyMedia, RemoteJob, Resource, StageParam,
 )
 
+from .tags import drop_category_links, with_categories
+
 logger = logging.getLogger(__name__)
 
 
@@ -36,7 +38,7 @@ def list_presets(kind: Optional[str] = None) -> list[dict]:
         if kind:
             q = q.where(Preset.kind == kind)
         rows = s.execute(q.order_by(Preset.name, Preset.id)).scalars().all()
-        return [_preset_to_dict(p) for p in rows]
+        return with_categories(s, "preset", [_preset_to_dict(p) for p in rows])
 
 
 def save_preset(kind: str, name: str, config: dict) -> Optional[dict]:
@@ -54,7 +56,7 @@ def save_preset(kind: str, name: str, config: dict) -> Optional[dict]:
         else:
             row.config = json.dumps(config)
         s.commit()
-        return _preset_to_dict(row)
+        return with_categories(s, "preset", [_preset_to_dict(row)])[0]
 
 
 def update_preset(
@@ -85,7 +87,7 @@ def update_preset(
                 return None
             row.config = json.dumps(config)
         s.commit()
-        return _preset_to_dict(row)
+        return with_categories(s, "preset", [_preset_to_dict(row)])[0]
 
 
 def delete_preset(preset_id: int) -> bool:
@@ -93,6 +95,7 @@ def delete_preset(preset_id: int) -> bool:
         row = s.get(Preset, preset_id)
         if row is None:
             return False
+        drop_category_links(s, "preset", [preset_id])
         s.delete(row)
         s.commit()
         return True

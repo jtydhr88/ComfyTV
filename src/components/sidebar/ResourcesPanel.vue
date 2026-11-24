@@ -6,6 +6,8 @@
     </div>
 
     <div class="ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5 ctv:flex ctv:flex-col ctv:gap-2.5">
+      <TagFilterChips v-model="filter" :chips="chips" :total="resources.length" />
+
       <section v-for="group in groups" :key="group.kind">
         <div class="ctv:flex ctv:items-center ctv:gap-1">
           <button
@@ -15,7 +17,7 @@
           >
             <i :class="['pi', isCollapsed(group.kind) ? 'pi-chevron-right' : 'pi-chevron-down', 'ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground']" />
             <span class="ctv:flex-1 ctv:text-left ctv:truncate">{{ group.label }}</span>
-            <span class="ctv:text-2xs ctv:tabular-nums ctv:text-muted-foreground">{{ group.resources.length }}</span>
+            <span class="ctv:text-2xs ctv:tabular-nums ctv:text-muted-foreground">{{ group.resources.filter(matches).length }}</span>
           </button>
           <button
             :class="iconBtnClass"
@@ -34,13 +36,13 @@
         </div>
         <div v-show="!isCollapsed(group.kind)" class="ctv:mt-1.5 ctv:flex ctv:flex-col ctv:gap-1">
           <div
-            v-if="group.resources.length === 0"
+            v-if="group.resources.filter(matches).length === 0"
             class="ctv:py-2 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60"
           >
             {{ $t('resources.panel.empty') }}
           </div>
           <div
-            v-for="r in group.resources"
+            v-for="r in group.resources.filter(matches)"
             :key="r.id"
             class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:py-1.5 ctv:px-2 ctv:rounded-lg
                    ctv:bg-secondary-background ctv:border ctv:border-border-subtle"
@@ -56,6 +58,11 @@
             <span v-else class="ctv:shrink-0 ctv:text-2xs ctv:tabular-nums ctv:text-muted-foreground">
               {{ formatResourceSize(r.size) }}
             </span>
+            <ItemTagButton
+              :category-ids="r.category_ids"
+              @toggle="toggleTag(r, $event)"
+              @create="createTag(r, $event)"
+            />
             <button
               :class="iconBtnClass"
               :title="$t('resources.rename')"
@@ -81,6 +88,9 @@
 import type { ComponentPublicInstance } from 'vue'
 
 import type { ResourceKind } from '@/api'
+import ItemTagButton from '@/components/sidebar/ItemTagButton.vue'
+import TagFilterChips from '@/components/sidebar/TagFilterChips.vue'
+import { useItemTags } from '@/composables/sidebar/useItemTags'
 import { formatResourceSize, useResourcesPanel } from '@/composables/sidebar/useResourcesPanel'
 
 import IconPencil from '~icons/lucide/pencil'
@@ -89,8 +99,10 @@ import IconUpload from '~icons/lucide/upload'
 
 const props = defineProps<{ active?: boolean }>()
 
-const { groups, isCollapsed, toggleGroup, onRename, onRemove, onUpload } =
+const { resources, groups, isCollapsed, toggleGroup, onRename, onRemove, onUpload } =
   useResourcesPanel(() => props.active)
+
+const { chips, filter, matches, toggleTag, createTag } = useItemTags('resource', () => resources.value)
 
 const fileInputs = new Map<ResourceKind, HTMLInputElement>()
 

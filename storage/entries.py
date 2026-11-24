@@ -13,6 +13,8 @@ from ..db import (
     Preset, Project, ProxyMedia, RemoteJob, Resource, StageParam,
 )
 
+from .tags import drop_category_links, with_categories
+
 logger = logging.getLogger(__name__)
 
 
@@ -52,7 +54,7 @@ def list_entries(project_id: str) -> list[dict]:
                 .where(Entry.project_id == project_id)
                 .order_by(Entry.kind, Entry.label, Entry.id)
         ).scalars().all()
-        return [_entry_to_dict(e) for e in rows]
+        return with_categories(s, "entry", [_entry_to_dict(e) for e in rows])
 
 
 def upsert_entry(
@@ -98,7 +100,7 @@ def upsert_entry(
             )
             s.add(row)
         s.commit()
-        return _entry_to_dict(row)
+        return with_categories(s, "entry", [_entry_to_dict(row)])[0]
 
 
 def delete_entry(project_id: str, entry_id: int) -> bool:
@@ -106,6 +108,7 @@ def delete_entry(project_id: str, entry_id: int) -> bool:
         row = s.get(Entry, entry_id)
         if row is None or row.project_id != project_id:
             return False
+        drop_category_links(s, "entry", [entry_id])
         s.delete(row)
         s.commit()
         return True

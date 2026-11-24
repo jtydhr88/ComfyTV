@@ -5,6 +5,7 @@ from sqlalchemy import select
 
 from .. import db
 from ..db import Asset, StageGroup
+from .tags import drop_category_links, with_categories
 
 
 def _group_to_dict(s, g: StageGroup) -> dict:
@@ -33,7 +34,7 @@ def _drop_thumbnail(s, asset_id: Optional[int]) -> None:
 def list_stage_groups() -> list[dict]:
     with db.get_session() as s:
         rows = s.execute(select(StageGroup).order_by(StageGroup.name, StageGroup.id)).scalars().all()
-        return [_group_to_dict(s, g) for g in rows]
+        return with_categories(s, "stage_group", [_group_to_dict(s, g) for g in rows])
 
 
 def save_stage_group(name: str, data: dict, thumbnail_asset_id: Optional[int]) -> dict:
@@ -48,7 +49,7 @@ def save_stage_group(name: str, data: dict, thumbnail_asset_id: Optional[int]) -
             row.data = json.dumps(data)
             row.thumbnail_asset_id = thumbnail_asset_id
         s.commit()
-        return _group_to_dict(s, row)
+        return with_categories(s, "stage_group", [_group_to_dict(s, row)])[0]
 
 
 def rename_stage_group(group_id: int, name: str) -> Optional[dict]:
@@ -63,7 +64,7 @@ def rename_stage_group(group_id: int, name: str) -> Optional[dict]:
             return None
         row.name = name
         s.commit()
-        return _group_to_dict(s, row)
+        return with_categories(s, "stage_group", [_group_to_dict(s, row)])[0]
 
 
 def delete_stage_group(group_id: int) -> bool:
@@ -72,6 +73,7 @@ def delete_stage_group(group_id: int) -> bool:
         if row is None:
             return False
         _drop_thumbnail(s, row.thumbnail_asset_id)
+        drop_category_links(s, "stage_group", [group_id])
         s.delete(row)
         s.commit()
         return True

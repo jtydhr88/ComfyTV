@@ -13,6 +13,8 @@ from ..db import (
     Preset, Project, ProxyMedia, RemoteJob, Resource, StageParam,
 )
 
+from .tags import drop_category_links, with_categories
+
 logger = logging.getLogger(__name__)
 
 
@@ -35,7 +37,7 @@ def list_resources(kind: Optional[str] = None) -> list[dict]:
         if kind:
             q = q.where(Resource.kind == kind)
         rows = s.execute(q.order_by(Resource.name, Resource.id)).scalars().all()
-        return [_resource_to_dict(r) for r in rows]
+        return with_categories(s, "resource", [_resource_to_dict(r) for r in rows])
 
 
 def register_resource(
@@ -75,7 +77,7 @@ def register_resource(
             if sha256 is not None:
                 row.sha256 = sha256
         s.commit()
-        return _resource_to_dict(row)
+        return with_categories(s, "resource", [_resource_to_dict(row)])[0]
 
 
 def rename_resource(resource_id: int, name: str) -> Optional[dict]:
@@ -88,7 +90,7 @@ def rename_resource(resource_id: int, name: str) -> Optional[dict]:
             return None
         row.name = name
         s.commit()
-        return _resource_to_dict(row)
+        return with_categories(s, "resource", [_resource_to_dict(row)])[0]
 
 
 def unregister_resource(resource_id: int) -> bool:
@@ -96,6 +98,7 @@ def unregister_resource(resource_id: int) -> bool:
         row = s.get(Resource, resource_id)
         if row is None:
             return False
+        drop_category_links(s, "resource", [resource_id])
         s.delete(row)
         s.commit()
         return True

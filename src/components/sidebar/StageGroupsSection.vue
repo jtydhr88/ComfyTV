@@ -14,13 +14,15 @@
       </button>
     </div>
 
+    <TagFilterChips v-model="filter" :chips="chips" :total="groups.length" />
+
     <div v-if="groups.length === 0" class="ctv:py-2 ctv:px-1.5 ctv:italic ctv:text-muted-foreground/60">
       {{ $t('stageGroups.empty') }}
     </div>
 
     <div class="ctv:grid ctv:grid-cols-[repeat(auto-fill,minmax(150px,1fr))] ctv:gap-2">
       <div
-        v-for="g in groups"
+        v-for="g in groups.filter(matches)"
         :key="g.id"
         draggable="true"
         class="ctv:group ctv:relative ctv:flex ctv:flex-col ctv:rounded-lg ctv:overflow-hidden ctv:cursor-grab
@@ -44,6 +46,12 @@
           <span class="ctv:text-2xs ctv:tabular-nums ctv:text-muted-foreground">{{ nodeCountOf(g) }}</span>
         </div>
         <div class="ctv:absolute ctv:top-1 ctv:right-1 ctv:flex ctv:gap-0.5 ctv:opacity-0 ctv:group-hover:opacity-100">
+          <ItemTagButton
+            class="ctv:bg-secondary-background"
+            :category-ids="g.category_ids"
+            @toggle="toggleTag(g, $event)"
+            @create="createTag(g, $event)"
+          />
           <button :class="iconBtnClass" :title="$t('stageGroups.rename')" @click.stop="onRename(g)">
             <IconPencil class="ctv:size-3.5" />
           </button>
@@ -61,6 +69,9 @@
 </template>
 
 <script setup lang="ts">
+import ItemTagButton from '@/components/sidebar/ItemTagButton.vue'
+import TagFilterChips from '@/components/sidebar/TagFilterChips.vue'
+import { useItemTags } from '@/composables/sidebar/useItemTags'
 import { nodeCountOf, useStageGroups } from '@/composables/sidebar/useStageGroups'
 
 import IconBoxes from '~icons/lucide/boxes'
@@ -71,6 +82,8 @@ import IconTrash2 from '~icons/lucide/trash-2'
 const props = defineProps<{ active?: boolean }>()
 
 const { groups, canSave, onSave, onRename, onDelete, onInsert, onDragStart } = useStageGroups(() => props.active)
+
+const { chips, filter, matches, toggleTag, createTag } = useItemTags('stage_group', () => groups.value)
 
 const saveBtnClass = 'ctv:inline-flex ctv:items-center ctv:gap-1 ctv:cursor-pointer ctv:shrink-0 ctv:[font-family:inherit] '
   + 'ctv:rounded-md ctv:border-none ctv:bg-secondary-background ctv:py-1 ctv:px-2 ctv:text-2xs ctv:text-base-foreground '

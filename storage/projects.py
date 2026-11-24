@@ -15,6 +15,7 @@ from ..db import (
 
 logger = logging.getLogger(__name__)
 from .entries import _seed_defaults
+from .tags import drop_category_links
 
 
 DEFAULT_PROJECT_ID = "default"
@@ -75,6 +76,7 @@ def delete_project(project_id: str) -> bool:
         if proj is None:
             return False
         s.query(Output).filter(Output.project_id == project_id).delete()
+        drop_category_links(s, "entry", select(Entry.id).where(Entry.project_id == project_id))
         s.delete(proj)
         s.commit()
         return True

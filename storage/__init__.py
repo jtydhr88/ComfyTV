@@ -2,6 +2,7 @@ from .projects import *  # noqa: F401,F403
 from .entries import *  # noqa: F401,F403
 from .outputs import *  # noqa: F401,F403
 from .assets import *  # noqa: F401,F403
+from .tags import *  # noqa: F401,F403
 from .stage_params import *  # noqa: F401,F403
 from .presets import *  # noqa: F401,F403
 from .stage_groups import *  # noqa: F401,F403

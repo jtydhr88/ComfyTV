@@ -19,6 +19,7 @@
         @keydown.stop
       />
     </div>
+    <TagFilterChips v-model="filter" :chips="chips" :total="allRows.length" />
     <div v-if="allRows.length > 0 && rows.length === 0"
          class="ctv:py-2 ctv:text-center ctv:italic ctv:text-muted-foreground">
       {{ $t('promptEntries.noMatch') }}
@@ -59,6 +60,8 @@
 import { computed, ref } from 'vue'
 
 import type { Entry } from '@/api/schemas'
+import TagFilterChips from '@/components/sidebar/TagFilterChips.vue'
+import { useItemTags } from '@/composables/sidebar/useItemTags'
 import { useEntryStore } from '@/stores/entryStore'
 import { useProjectStore } from '@/stores/projectStore'
 
@@ -75,10 +78,13 @@ const allRows = computed<Entry[]>(() =>
   entryStore.list(projectStore.currentProjectId || ''),
 )
 
+const { chips, filter, matches } = useItemTags('entry', () => allRows.value)
+
 const rows = computed<Entry[]>(() => {
+  const tagged = allRows.value.filter(matches)
   const q = query.value.trim().toLowerCase()
-  if (!q) return allRows.value
-  return allRows.value.filter(e =>
+  if (!q) return tagged
+  return tagged.filter(e =>
     e.label.toLowerCase().includes(q) || e.content.toLowerCase().includes(q),
   )
 })

@@ -1,6 +1,7 @@
 from . import projects   # noqa: F401
 from . import entries    # noqa: F401
 from . import assets     # noqa: F401
+from . import tags       # noqa: F401
 from . import outputs    # noqa: F401
 from . import stages     # noqa: F401
 from . import stage_params  # noqa: F401

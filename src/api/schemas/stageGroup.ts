@@ -6,6 +6,7 @@ export const StageGroupSchema = z.object({
   data:       z.record(z.string(), z.unknown()),
   thumbnail_url: z.string().nullable(),
   created_at: z.string().nullable().optional(),
+  category_ids: z.array(z.number()).default([]),
 })
 export type StageGroup = z.infer<typeof StageGroupSchema>
 export const ListStageGroupsSchema = z.object({

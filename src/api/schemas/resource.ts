@@ -13,6 +13,7 @@ export const ResourceSchema = z.object({
   created_at: z.string().nullable().optional(),
   url:        z.string(),
   missing:    z.boolean().default(false),
+  category_ids: z.array(z.number()).default([]),
 })
 export type Resource = z.infer<typeof ResourceSchema>
 export const ListResourcesSchema = z.object({

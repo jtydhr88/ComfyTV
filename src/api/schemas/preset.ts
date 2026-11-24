@@ -7,6 +7,7 @@ export const StagePresetSchema = z.object({
   config:     z.record(z.string(), z.unknown()).default({}),
   builtin:    z.boolean().default(false),
   created_at: z.string().nullable().optional(),
+  category_ids: z.array(z.number()).default([]),
 })
 export type StagePreset = z.infer<typeof StagePresetSchema>
 export const ListStagePresetsSchema = z.object({

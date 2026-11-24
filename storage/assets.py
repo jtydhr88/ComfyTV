@@ -9,7 +9,7 @@ from sqlalchemy import desc, select
 
 from .. import db
 from ..db import (
-    Asset, AssetCategory, AssetCategoryLink, ComfyServer, Entry, Output,
+    CATEGORY_LINKS, Asset, AssetCategory, AssetCategoryLink, ComfyServer, Entry, Output,
     Preset, Project, ProxyMedia, RemoteJob, Resource, StageParam,
 )
 
@@ -142,6 +142,8 @@ def delete_asset_category(category_id: int) -> bool:
         s.query(AssetCategoryLink) \
             .filter(AssetCategoryLink.category_id == category_id) \
             .delete(synchronize_session=False)
+        for links in CATEGORY_LINKS.values():
+            s.execute(links.delete().where(links.c.category_id == category_id))
         s.delete(cat)
         s.commit()
         return True

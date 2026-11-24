@@ -7,6 +7,7 @@ export const EntrySchema = z.object({
   content:    z.string(),
   metadata:   z.record(z.string(), z.unknown()).default({}),
   updated_at: z.string().nullable().optional(),
+  category_ids: z.array(z.number()).default([]),
 })
 export type Entry = z.infer<typeof EntrySchema>
 export const ListEntriesSchema = z.object({

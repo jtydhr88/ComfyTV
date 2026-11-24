@@ -7,7 +7,7 @@ import { getAllModules, modulesForSurface } from './catalog'
 import { userSnippetModules } from './userModules'
 
 function entry(id: number, label: string, content: string): Entry {
-  return { id, label, content, kind: 'fragment', metadata: {} }
+  return { id, label, content, kind: 'fragment', metadata: {}, category_ids: [] }
 }
 
 const ENTRIES = [entry(1, 'hero', 'a brave knight'), entry(2, 'villain', 'a shadow lord')]

@@ -54,9 +54,13 @@
       </button>
     </div>
 
+    <div v-if="chips.length" class="ctv:shrink-0 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle">
+      <TagFilterChips v-model="filter" :chips="chips" :total="activeRows.length" />
+    </div>
+
     <div class="comfytv-entries-scroll ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5 ctv:flex ctv:flex-col ctv:gap-2">
       <div
-        v-for="entry in activeRows"
+        v-for="entry in activeRows.filter(matches)"
         :key="entry.id"
         :class="cardClass"
       >
@@ -67,6 +71,11 @@
             @blur="saveIfDirty(entry)"
             @keydown.ctrl.enter.prevent="saveIfDirty(entry)"
             @keydown.meta.enter.prevent="saveIfDirty(entry)"
+          />
+          <ItemTagButton
+            :category-ids="entry.category_ids"
+            @toggle="toggleTag(entry, $event)"
+            @create="createTag(entry, $event)"
           />
           <button :class="btnClass('del')"
                   :title="$t('entries.deleteTitle', { label: entry.label })"
@@ -167,7 +176,10 @@ import {
   KIND_LABELS,
   KIND_META_FIELDS,
 } from '@/composables/dialog/entryCatalog'
+import ItemTagButton from '@/components/sidebar/ItemTagButton.vue'
+import TagFilterChips from '@/components/sidebar/TagFilterChips.vue'
 import { entryContentError, useEntryEditor } from '@/composables/dialog/useEntryEditor'
+import { useItemTags } from '@/composables/sidebar/useItemTags'
 import { useEntryTransfer } from '@/composables/sidebar/useEntryTransfer'
 import { useProjectStore } from '@/stores/projectStore'
 import { ENTRY_KINDS, type EntryKind } from '@/stores/entryStore'
@@ -191,6 +203,8 @@ const {
   startCreate, cancelCreate, saveNew,
   kickHydrate,
 } = useEntryEditor(projectId, activeKind, metaFields)
+
+const { chips, filter, matches, toggleTag, createTag } = useItemTags('entry', () => activeRows.value)
 
 onMounted(kickHydrate)
 watch(() => props.active, (active) => { if (active) kickHydrate() })

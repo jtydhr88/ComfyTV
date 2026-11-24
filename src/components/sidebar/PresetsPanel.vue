@@ -15,7 +15,9 @@
         {{ $t('stagePresets.panel.empty') }}
       </div>
 
-      <section v-for="group in groups" :key="group.kind">
+      <TagFilterChips v-model="filter" :chips="chips" :total="presets.length" />
+
+      <section v-for="group in visibleGroups" :key="group.kind">
         <button
           :class="sectionToggle"
           :aria-expanded="!isCollapsed(group.kind)"
@@ -41,6 +43,11 @@
               <IconLock class="ctv:size-3.5" />
             </span>
             <template v-else>
+              <ItemTagButton
+                :category-ids="p.category_ids"
+                @toggle="toggleTag(p, $event)"
+                @create="createTag(p, $event)"
+              />
               <button
                 :class="iconBtnClass"
                 :title="$t('stagePresets.panel.rename')"
@@ -64,7 +71,12 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+
+import ItemTagButton from '@/components/sidebar/ItemTagButton.vue'
 import StageGroupsSection from '@/components/sidebar/StageGroupsSection.vue'
+import TagFilterChips from '@/components/sidebar/TagFilterChips.vue'
+import { useItemTags } from '@/composables/sidebar/useItemTags'
 import { usePresetsPanel } from '@/composables/sidebar/usePresetsPanel'
 
 import IconLock from '~icons/lucide/lock'
@@ -73,7 +85,14 @@ import IconTrash2 from '~icons/lucide/trash-2'
 
 const props = defineProps<{ active?: boolean }>()
 
-const { groups, isCollapsed, toggleGroup, onRename, onDelete } = usePresetsPanel(() => props.active)
+const { presets, groups, isCollapsed, toggleGroup, onRename, onDelete } = usePresetsPanel(() => props.active)
+
+const { chips, filter, matches, toggleTag, createTag } = useItemTags('preset', () => presets.value)
+
+const visibleGroups = computed(() =>
+  groups.value
+    .map(g => ({ ...g, presets: g.presets.filter(matches) }))
+    .filter(g => g.presets.length > 0))
 
 const sectionToggle = 'ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:py-1 ctv:px-0 ctv:cursor-pointer ctv:[font-family:inherit]'
   + ' ctv:bg-transparent ctv:border-none ctv:text-inherit ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:font-semibold ctv:text-muted-foreground'

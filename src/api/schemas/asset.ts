@@ -14,6 +14,10 @@ export const MutateAssetCategorySchema = z.object({
   ok: z.literal(true),
   category: AssetCategorySchema,
 })
+export const SetItemTagsSchema = z.object({
+  ok: z.literal(true),
+  category_ids: z.array(z.number()),
+})
 export const AssetSchema = z.object({
   id:          z.number(),
   category_ids: z.array(z.number()).default([]),
